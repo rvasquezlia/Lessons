@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6th Grade Math Refresher | Lincoln International Academy</title>
+
+    <!-- Google Fonts: Fredoka (Headings) & Nunito (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- MathJax 3 Config & Script -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        },
+        startup: {
+          pageReady: () => {
+            return MathJax.startup.defaultPageReady().then(() => {
+              if (typeof renderSlide === 'function') renderSlide();
+            });
+          }
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --accent-blue: #38bdf8;
+            --accent-yellow: #facc15;
+            --accent-green: #4ade80;
+            --accent-purple: #c084fc;
+            --accent-pink: #f472b6;
+            --text-color: #f8fafc;
+            --subtext-color: #94a3b8;
+            --box-bg: #0f172a;
+        }
+
+        body.light-mode {
+            --bg-color: #f0fdf4;
+            --card-bg: #ffffff;
+            --card-border: #cbd5e1;
+            --accent-blue: #0284c7;
+            --accent-yellow: #d97706;
+            --accent-green: #15803d;
+            --accent-purple: #7e22ce;
+            --accent-pink: #db2777;
+            --text-color: #0f172a;
+            --subtext-color: #475569;
+            --box-bg: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', sans-serif;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        h1, h2, h3, .font-heading {
+            font-family: 'Fredoka', cursive, sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        header {
+            width: 100%;
+            max-width: 950px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 22px;
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            color: var(--accent-yellow);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .theme-btn {
+            background: var(--box-bg);
+            color: var(--text-color);
+            border: 2px solid var(--card-border);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .topic-selector {
+            background: var(--box-bg);
+            color: var(--text-color);
+            border: 2px solid var(--card-border);
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Disclaimer Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(6px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 3px solid var(--accent-blue);
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 620px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-content h2 {
+            color: var(--accent-yellow);
+            font-size: 2rem;
+            margin-bottom: 14px;
+        }
+
+        .modal-content p {
+            color: var(--text-color);
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .modal-btn {
+            background: var(--accent-blue);
+            color: #ffffff;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 14px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
+        }
+
+        .progress-container {
+            width: 100%;
+            max-width: 950px;
+            background: var(--card-border);
+            height: 10px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .slide-container {
+            width: 100%;
+            max-width: 950px;
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 24px;
+            padding: 32px;
+            min-height: 520px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+            flex-grow: 1;
+        }
+
+        .header-tags {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .category-badge {
+            background: rgba(56, 189, 248, 0.18);
+            color: var(--accent-blue);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .ccss-badge {
+            background: rgba(192, 132, 252, 0.18);
+            color: var(--accent-purple);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+
+        .slide-title {
+            font-size: 2rem;
+            color: var(--text-color);
+            margin-bottom: 16px;
+        }
+
+        .content-box {
+            font-size: 1.15rem;
+            line-height: 1.65;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .key-concept {
+            background: var(--box-bg);
+            border-left: 5px solid var(--accent-yellow);
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin: 14px 0;
+        }
+
+        .teacher-example {
+            background: rgba(56, 189, 248, 0.1);
+            border: 2px solid var(--accent-blue);
+            padding: 16px 20px;
+            border-radius: 14px;
+            margin: 14px 0;
+        }
+
+        .guided-practice {
+            background: rgba(74, 222, 128, 0.1);
+            border: 2px dashed var(--accent-green);
+            padding: 20px;
+            border-radius: 14px;
+            margin-top: 10px;
+        }
+
+        .hook-box {
+            background: rgba(244, 114, 182, 0.12);
+            border: 2px dashed var(--accent-pink);
+            padding: 20px;
+            border-radius: 16px;
+            margin-top: 15px;
+        }
+
+        .reveal-btn {
+            background: var(--accent-green);
+            color: #052e16;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 14px;
+            display: inline-block;
+        }
+
+        .reveal-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .solution-content {
+            display: none;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 2px solid var(--card-border);
+            color: var(--text-color);
+        }
+
+        .controls {
+            width: 100%;
+            max-width: 950px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 18px;
+        }
+
+        .nav-btn {
+            background: var(--accent-blue);
+            color: #ffffff;
+            border: none;
+            padding: 12px 26px;
+            border-radius: 12px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn:disabled {
+            background: var(--card-border);
+            color: var(--subtext-color);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .slide-counter {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--subtext-color);
+        }
+
+        footer {
+            margin-top: 24px;
+            padding: 14px 20px;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--subtext-color);
+            font-weight: 700;
+            border-top: 2px solid var(--card-border);
+            width: 100%;
+            max-width: 950px;
+        }
+
+        footer span {
+            color: var(--accent-yellow);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Disclaimer Welcome Modal -->
+    <div id="disclaimerModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Welcome, 6th Graders!</h2>
+            <p>
+                Today's class is a <strong>Diagnostic Refresher Session</strong>. We will review key signal keywords, multi-step word problems, operations with whole numbers, decimals, fractions, and 2D/3D geometry properties.
+            </p>
+            <p>
+                This session builds direct preparation for next week's unit on <strong>Lesson 1.2: Add, Subtract, and Multiply Decimals</strong>!
+            </p>
+            <button class="modal-btn" onclick="closeDisclaimer()">Start Refresher</button>
+        </div>
+    </div>
+
+    <header>
+        <h1>6th Grade Math Refresher</h1>
+        <div class="header-controls">
+            <button id="themeToggle" class="theme-btn" onclick="toggleTheme()">Light Mode</button>
+            <select id="topicSelect" class="topic-selector" onchange="jumpToTopic(this.value)">
+                <option value="0">1. Operation Keywords</option>
+                <option value="4">2. Whole Number Word Problems</option>
+                <option value="8">3. Decimal Operations</option>
+                <option value="12">4. Fraction Operations</option>
+                <option value="16">5. Geometric Classification</option>
+                <option value="20">6. Next Week Teaser (Lesson 1.2)</option>
+            </select>
+        </div>
+    </header>
+
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <main class="slide-container">
+        <div>
+            <div class="header-tags">
+                <span id="badge" class="category-badge">Category</span>
+                <span id="ccssBadge" class="ccss-badge">CCSS</span>
+            </div>
+            <h2 id="title" class="slide-title">Slide Title</h2>
+            <div id="content" class="content-box">Slide Content</div>
+        </div>
+
+        <div class="controls">
+            <button id="prevBtn" class="nav-btn" onclick="prevSlide()">← Previous</button>
+            <span id="counter" class="slide-counter">Slide 1 of 22</span>
+            <button id="nextBtn" class="nav-btn" onclick="nextSlide()">Next →</button>
+        </div>
+    </main>
+
+    <footer>
+        Made with dark roast, digital ink, and <span>endless enthusiasm</span> for 7th grade students at <strong>Lincoln International Academy</strong> by <strong>Rodrigo Vasquez</strong> (Math Teacher & <span>Lord of the Order of Operations</span>)
+    </footer>
+
+    <script>
+        const slides = [
+            // TOPIC 1: OPERATION KEYWORDS & TERM ASSOCIATION
+            {
+                category: "Operation Keywords",
+                ccss: "CCSS.MATH.CONTENT.5.OA.A.2",
+                title: "1. Keywords: Addition & Subtraction (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Terms for Word Problems:</strong>
+                        <br>• <strong>Addition ($+$):</strong> Sum, Total, Altogether, Combined, In all, Increased by, Perimeter.
+                        <br>• <strong>Subtraction ($-$):</strong> Difference, How many more, How much left, Remaining, Decreased by, Less than, Fewer.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> "Find the difference between 1,200 and 450."
+                        <br>Keyword: <em>Difference</em> $\\rightarrow$ Subtraction ($1,200 - 450 = 750$).
+                    </div>
+                `
+            },
+            {
+                category: "Operation Keywords",
+                ccss: "CCSS.MATH.CONTENT.5.OA.A.2",
+                title: "1. Keywords: Addition & Subtraction (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>Identify the operation ($+$ or $-$) and solve:
+                        <br>1. A library had $4,520$ books. After a donation, the total was increased by $850$ books. How many books are there altogether?
+                        <br>2. A runner goal is $5,000$ meters. She has completed $3,150$ meters. How many meters remain?
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol1')">Check Answer</button>
+                        <div id="sol1" class="solution-content">
+                            1. <strong>Addition:</strong> $4,520 + 850 = 5,370$ books.
+                            <br>2. <strong>Subtraction:</strong> $5,000 - 3,150 = 1,850$ meters remaining.
+                        </div>
+                    </div>
+                `
+            },
+            {
+                category: "Operation Keywords",
+                ccss: "CCSS.MATH.CONTENT.5.OA.A.2",
+                title: "2. Keywords: Multiplication & Division (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Terms for Word Problems:</strong>
+                        <br>• <strong>Multiplication ($\\times$):</strong> Product, Times, Each (when finding total), In all (equal groups), Area, Of.
+                        <br>• <strong>Division ($\\div$):</strong> Quotient, Split equally, Shared equally, Divided into, Per, Ratio, Out of.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> "Calculate the product of 15 and 8."
+                        <br>Keyword: <em>Product</em> $\\rightarrow$ Multiplication ($15 \\times 8 = 120$).
+                    </div>
+                `
+            },
+            {
+                category: "Operation Keywords",
+                ccss: "CCSS.MATH.CONTENT.5.OA.A.2",
+                title: "2. Keywords: Multiplication & Division (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>Identify the operation ($\\times$ or $\\div$) and solve:
+                        <br>1. A theater has $24$ rows of seats with $15$ seats in each row. How many seats are there in all?
+                        <br>2. A prize fund of $1,800$ dollars is split equally among $6$ winners. How much does per winner receive?
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol2')">Check Answer</button>
+                        <div id="sol2" class="solution-content">
+                            1. <strong>Multiplication:</strong> $24 \\times 15 = 360$ seats.
+                            <br>2. <strong>Division:</strong> $1,800 \\div 6 = 300$ dollars per winner.
+                        </div>
+                    </div>
+                `
+            },
+
+            // TOPIC 2: MULTI-DIGIT WHOLE NUMBER WORD PROBLEMS
+            {
+                category: "Whole Number Problems",
+                ccss: "CCSS.MATH.CONTENT.5.NBT.B.5",
+                title: "3. Multi-Digit Addition & Subtraction (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Strategy for Multi-Digit Word Problems:</strong>
+                        <br>1. Read the problem and highlight key action words.
+                        <br>2. Align place value columns strictly (Ones, Tens, Hundreds, Thousands).
+                        <br>3. Regroup or borrow carefully across multi-zero numbers.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> A warehouse stocked $15,400$ units. It shipped $8,650$ units on Monday. How many units remain?
+                        <br>$$15,400 - 8,650 = 6,750 \\text{ units}$$
+                    </div>
+                `
+            },
+            {
+                category: "Whole Number Problems",
+                ccss: "CCSS.MATH.CONTENT.5.NBT.B.5",
+                title: "3. Multi-Digit Addition & Subtraction (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. School A collected $12,450$ cans. School B collected $14,880$ cans. What is the combined total collected by both schools?
+                        <br>2. A stadium has $45,000$ seats. For a concert, $38,240$ tickets were sold. How many seats were left empty?
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol3')">Check Answer</button>
+                        <div id="sol3" class="solution-content">
+                            1. <strong>$27,330$ cans</strong> ($12,450 + 14,880$)
+                            <br>2. <strong>$6,760$ empty seats</strong> ($45,000 - 38,240$)
+                        </div>
+                    </div>
+                `
+            },
+            {
+                category: "Whole Number Problems",
+                ccss: "CCSS.MATH.CONTENT.5.NBT.B.6",
+                title: "4. Multi-Digit Multiplication & Long Division (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Strategy for Multi-Digit Operations:</strong>
+                        <br>• Use partial products or standard algorithm for multiplication.
+                        <br>• For long division, apply step sequence: Divide $\\rightarrow$ Multiply $\\rightarrow$ Subtract $\\rightarrow$ Bring Down.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> An orchard packages $3,450$ apples into boxes of $15$ apples each. How many full boxes are produced?
+                        <br>$$3,450 \\div 15 = 230 \\text{ boxes}$$
+                    </div>
+                `
+            },
+            {
+                category: "Whole Number Problems",
+                ccss: "CCSS.MATH.CONTENT.5.NBT.B.6",
+                title: "4. Multi-Digit Multiplication & Long Division (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. A delivery truck makes $32$ trips carrying $425$ kilograms per trip. What is the total payload weight transported?
+                        <br>2. A factory produces $2,880$ toys over a $24$-hour shift. How many toys are manufactured per hour?
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol4')">Check Answer</button>
+                        <div id="sol4" class="solution-content">
+                            1. <strong>$13,600$ kg</strong> ($425 \\times 32$)
+                            <br>2. <strong>$120$ toys per hour</strong> ($2,880 \\div 24$)
+                        </div>
+                    </div>
+                `
+            },
+
+            // TOPIC 3: DECIMAL OPERATIONS WORD PROBLEMS
+            {
+                category: "Decimal Operations",
+                ccss: "CCSS.MATH.CONTENT.5.NBT.B.7",
+                title: "5. Decimal Addition & Subtraction (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept: Decimal Alignment</strong>
+                        <br>In money, distance, and measurement word problems, line up the decimal point before calculating. Fill missing place values with zeros.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> Maria spent $14.50 on lunch and $3.75 on juice. She paid with a $20.00 bill. How much change does she receive?
+                        <br>• Total cost: $14.50 + 3.75 = 18.25$
+                        <br>• Change: $20.00 - 18.25 = 1.75$ dollars.
+                    </div>
+                `
+            },
+            {
+                category: "Decimal Operations",
+                ccss: "CCSS.MATH.CONTENT.5.NBT.B.7",
+                title: "5. Decimal Addition & Subtraction (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. A worker cuts $4.25$ meters and $2.8$ meters from a $10.0$-meter timber beam. What length of timber remains?
+                        <br>2. John ran $5.6$ kilometers on Saturday and $8.45$ kilometers on Sunday. What is his total distance combined?
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol5')">Check Answer</button>
+                        <div id="sol5" class="solution-content">
+                            1. <strong>$2.95$ meters remaining</strong> ($10.0 - 4.25 - 2.80 = 2.95$)
+                            <br>2. <strong>$14.05$ kilometers total</strong> ($5.60 + 8.45 = 14.05$)
+                        </div>
+                    </div>
+                `
+            },
+            {
+                category: "Decimal Operations",
+                ccss: "CCSS.MATH.CONTENT.5.NBT.B.7",
+                title: "6. Decimal Multiplication & Division (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept: Decimal Rules</strong>
+                        <br>• <strong>Multiplication:</strong> Count total decimal digits in both factors and move decimal left in product.
+                        <br>• <strong>Division by Whole Number:</strong> Place the decimal in the quotient directly above dividend decimal.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> A ribbon costs $2.40$ per meter. How much do $3.5$ meters cost?
+                        <br>$$2.40 \\times 3.5 = 8.40 \\text{ dollars}$$
+                    </div>
+                `
+            },
+            {
+                category: "Decimal Operations",
+                ccss: "CCSS.MATH.CONTENT.5.NBT.B.7",
+                title: "6. Decimal Multiplication & Division (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. Gasoline costs $3.25$ per gallon. If a driver buys $12$ gallons, what is the total cost?
+                        <br>2. A bill of $48.60$ is divided equally among $4$ friends. How much does each person pay?
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol6')">Check Answer</button>
+                        <div id="sol6" class="solution-content">
+                            1. <strong>$39.00</strong> ($3.25 \\times 12 = 39.00$)
+                            <br>2. <strong>$12.15 per person</strong> ($48.60 \\div 4 = 12.15$)
+                        </div>
+                    </div>
+                `
+            },
+
+            // TOPIC 4: OPERATIONS WITH FRACTIONS WORD PROBLEMS
+            {
+                category: "Operations with Fractions",
+                ccss: "CCSS.MATH.CONTENT.5.NF.A.2",
+                title: "7. Fraction Addition & Subtraction (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept: Common Denominators</strong>
+                        <br>When word problems involve combining or comparing parts of a whole, convert all fractions to equivalent fractions with a common denominator first.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> A recipe calls for $\\frac{1}{2}$ cup of sugar and $\\frac{1}{3}$ cup of flour. What is the total volume of ingredients combined?
+                        <br>$$\\frac{1}{2} + \\frac{1}{3} = \\frac{3}{6} + \\frac{2}{6} = \\frac{5}{6} \\text{ cup}$$
+                    </div>
+                `
+            },
+            {
+                category: "Operations with Fractions",
+                ccss: "CCSS.MATH.CONTENT.5.NF.A.2",
+                title: "7. Fraction Addition & Subtraction (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. A student completed $\\frac{3}{4}$ of his project on Friday and $\\frac{1}{8}$ on Saturday. What fraction of the project has he finished altogether?
+                        <br>2. A container held $\\frac{7}{10}$ liters of milk. A chef used $\\frac{2}{5}$ liters for a sauce. How much milk is left in the container?
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol7')">Check Answer</button>
+                        <div id="sol7" class="solution-content">
+                            1. <strong>$\\frac{7}{8}$ of the project</strong> ($\\frac{6}{8} + \\frac{1}{8} = \\frac{7}{8}$)
+                            <br>2. <strong>$\\frac{3}{10}$ liters remaining</strong> ($\\frac{7}{10} - \\frac{4}{10} = \\frac{3}{10}$)
+                        </div>
+                    </div>
+                `
+            },
+            {
+                category: "Operations with Fractions",
+                ccss: "CCSS.MATH.CONTENT.5.NF.B.6",
+                title: "8. Fraction Multiplication & Division (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Rules:</strong>
+                        <br>• <strong>Multiplication ("fraction of a quantity"):</strong> Multiply numerators together and denominators together.
+                        <br>• <strong>Division (unit fraction & whole numbers):</strong> Determines how many unit fractional parts fit into a whole amount, or splitting a fraction among equal groups.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> A pan of brownies is $\\frac{1}{2}$ full. If $3$ friends share it equally, what fraction of the full pan does each person get?
+                        <br>$$\\frac{1}{2} \\div 3 = \\frac{1}{6} \\text{ of the pan}$$
+                    </div>
+                `
+            },
+            {
+                category: "Operations with Fractions",
+                ccss: "CCSS.MATH.CONTENT.5.NF.B.6",
+                title: "8. Fraction Multiplication & Division (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. A farm covers $20$ acres. Crops are planted on $\\frac{3}{4}$ of the farm. How many acres are planted with crops?
+                        <br>2. A chef has $4$ kilograms of rice. Each serving requires $\\frac{1}{3}$ kilogram. How many total servings can be made?
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol8')">Check Answer</button>
+                        <div id="sol8" class="solution-content">
+                            1. <strong>$15$ acres</strong> ($\\frac{20}{1} \\times \\frac{3}{4} = \\frac{60}{4} = 15$)
+                            <br>2. <strong>$12$ servings</strong> ($4 \\div \\frac{1}{3} = 4 \\times 3 = 12$)
+                        </div>
+                    </div>
+                `
+            },
+
+            // TOPIC 5: GEOMETRIC MEASUREMENT & CLASSIFICATION
+            {
+                category: "Geometry & Measurement",
+                ccss: "CCSS.MATH.CONTENT.5.G.B.3",
+                title: "9. 2D Polygons & Perimeter (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>2D Geometry & Perimeter:</strong>
+                        <br>• <strong>Quadrilaterals:</strong> 4-sided polygons (Parallelogram, Rectangle, Rhombus, Square, Trapezoid).
+                        <br>• <strong>Perimeter ($P$):</strong> Total distance around the outside edge of a 2D shape. Add all side lengths together.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> A rectangular garden has length $12\\text{ m}$ and width $7\\text{ m}$.
+                        <br>$$P = 12 + 7 + 12 + 7 = 38\\text{ meters}$$
+                    </div>
+                `
+            },
+            {
+                category: "Geometry & Measurement",
+                ccss: "CCSS.MATH.CONTENT.5.G.B.4",
+                title: "9. 2D Polygons & Perimeter (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. A square playground has a side length of $15.5$ meters. What is its total perimeter?
+                        <br>2. A triangle has sides measuring $8\\text{ cm}$, $11\\text{ cm}$, and $14\\text{ cm}$. Calculate its perimeter.
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol9')">Check Answer</button>
+                        <div id="sol9" class="solution-content">
+                            1. <strong>$62$ meters</strong> ($15.5 \\times 4 = 62$)
+                            <br>2. <strong>$33\\text{ cm}$</strong> ($8 + 11 + 14 = 33$)
+                        </div>
+                    </div>
+                `
+            },
+            {
+                category: "Geometry & Measurement",
+                ccss: "CCSS.MATH.CONTENT.5.G.B.3",
+                title: "10. 3D Figure Classification (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Properties of Three-Dimensional Figures:</strong>
+                        <br>• <strong>Faces:</strong> Flat polygon surfaces.
+                        <br>• <strong>Edges:</strong> Line segments where two faces meet.
+                        <br>• <strong>Vertices:</strong> Corner points where three or more edges intersect.
+                        <br>• <strong>Prisms:</strong> 2 identical parallel bases connected by rectangular faces.
+                        <br>• <strong>Pyramids:</strong> 1 base with triangular faces meeting at a top vertex.
+                    </div>
+                `
+            },
+            {
+                category: "Geometry & Measurement",
+                ccss: "CCSS.MATH.CONTENT.5.G.B.3",
+                title: "10. 3D Figure Classification (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>Identify the 3D figure from these descriptions:
+                        <br>1. A figure with $6$ identical square faces, $12$ edges, and $8$ vertices.
+                        <br>2. A figure with $1$ square base and $4$ triangular side faces meeting at a point.
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol10')">Check Answer</button>
+                        <div id="sol10" class="solution-content">
+                            1. <strong>Cube</strong> (or Square Prism).
+                            <br>2. <strong>Square Pyramid</strong>.
+                        </div>
+                    </div>
+                `
+            },
+
+            // TOPIC 6: NEXT WEEK TEASER HOOK (LESSON 1.2)
+            {
+                category: "Next Week Teaser Hook",
+                ccss: "CCSS.MATH.CONTENT.6.NS.B.3",
+                title: "11. Lesson 1.2 Preview: Multi-Step Decimals",
+                content: `
+                    <div class="hook-box">
+                        <h3>Upcoming Unit: Lesson 1.2 (Add, Subtract, & Multiply Decimals)</h3>
+                        <p>Starting next week, we master combining operations with decimals in multi-step word problems (financial balances, store receipts, rate calculations).</p>
+                        <p style="margin-top:10px;"><strong>Key Skill:</strong> Correctly setting up equations from word problems and performing precise operations with decimals.</p>
+                    </div>
+                    <p style="margin-top:15px; font-weight:800;">Get ready for practice drills and our Graded Classwork later next week!</p>
+                `
+            },
+            {
+                category: "Next Week Teaser Hook",
+                ccss: "CCSS.MATH.CONTENT.6.NS.B.3",
+                title: "11. Lesson 1.2 Teaser Exercise",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Lesson 1.2 Teaser Challenge:</strong>
+                        <br>An athletic team orders $4$ water bottles at $2.75$ each and $2$ towels at $5.50$ each. The tax added is $1.20$. What is the total cost of the order?
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol11')">Reveal Teaser Solution</button>
+                        <div id="sol11" class="solution-content">
+                            <strong>Step 1 (Water Bottles):</strong> $4 \\times 2.75 = 11.00$<br>
+                            <strong>Step 2 (Towels):</strong> $2 \\times 5.50 = 11.00$<br>
+                            <strong>Step 3 (Add Tax):</strong> $11.00 + 11.00 + 1.20 = \\mathbf{\\$23.20}$<br>
+                            <em>Mastering these multi-step real-world problems is our goal for Lesson 1.2!</em>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        let currentSlide = 0;
+        let isDarkMode = true;
+
+        function closeDisclaimer() {
+            document.getElementById('disclaimerModal').style.display = 'none';
+        }
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            const body = document.body;
+            const themeBtn = document.getElementById('themeToggle');
+
+            if (isDarkMode) {
+                body.classList.remove('light-mode');
+                themeBtn.innerHTML = 'Light Mode';
+            } else {
+                body.classList.add('light-mode');
+                themeBtn.innerHTML = 'Dark Mode';
+            }
+        }
+
+        function safeMathTypeset(targetEl) {
+            if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+                MathJax.typesetPromise(targetEl ? [targetEl] : []).catch(function(err) {
+                    console.warn('MathJax typeset warning:', err);
+                });
+            }
+        }
+
+        function renderSlide() {
+            const slide = slides[currentSlide];
+            document.getElementById('badge').innerText = slide.category;
+            document.getElementById('ccssBadge').innerText = slide.ccss;
+            document.getElementById('title').innerText = slide.title;
+            
+            const contentEl = document.getElementById('content');
+            contentEl.innerHTML = slide.content;
+
+            document.getElementById('counter').innerText = `Slide ${currentSlide + 1} of ${slides.length}`;
+            document.getElementById('prevBtn').disabled = (currentSlide === 0);
+            document.getElementById('nextBtn').disabled = (currentSlide === slides.length - 1);
+
+            const progress = ((currentSlide + 1) / slides.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+
+            const topicSelect = document.getElementById('topicSelect');
+            if (currentSlide < 4) topicSelect.value = "0";
+            else if (currentSlide < 8) topicSelect.value = "4";
+            else if (currentSlide < 12) topicSelect.value = "8";
+            else if (currentSlide < 16) topicSelect.value = "12";
+            else if (currentSlide < 20) topicSelect.value = "16";
+            else topicSelect.value = "20";
+
+            safeMathTypeset(contentEl);
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                renderSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                renderSlide();
+            }
+        }
+
+        function jumpToTopic(slideIndex) {
+            currentSlide = parseInt(slideIndex);
+            renderSlide();
+        }
+
+        function toggleSolution(id) {
+            const el = document.getElementById(id);
+            if (el.style.display === "block") {
+                el.style.display = "none";
+            } else {
+                el.style.display = "block";
+                safeMathTypeset(el);
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // Initial render
+        renderSlide();
+    </script>
+</body>
+</html>
