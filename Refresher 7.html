@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7th Grade Math Warm-Up | Lincoln International Academy</title>
+
+    <!-- Google Fonts: Fredoka (Headings) & Nunito (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- MathJax 3 Config & Script -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        },
+        startup: {
+          pageReady: () => {
+            return MathJax.startup.defaultPageReady().then(() => {
+              if (typeof renderSlide === 'function') renderSlide();
+            });
+          }
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --accent-blue: #38bdf8;
+            --accent-yellow: #facc15;
+            --accent-green: #4ade80;
+            --accent-purple: #c084fc;
+            --accent-pink: #f472b6;
+            --text-color: #f8fafc;
+            --subtext-color: #94a3b8;
+            --box-bg: #0f172a;
+        }
+
+        body.light-mode {
+            --bg-color: #f0fdf4;
+            --card-bg: #ffffff;
+            --card-border: #cbd5e1;
+            --accent-blue: #0284c7;
+            --accent-yellow: #d97706;
+            --accent-green: #15803d;
+            --accent-purple: #7e22ce;
+            --accent-pink: #db2777;
+            --text-color: #0f172a;
+            --subtext-color: #475569;
+            --box-bg: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', sans-serif;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        h1, h2, h3, .font-heading {
+            font-family: 'Fredoka', cursive, sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        header {
+            width: 100%;
+            max-width: 950px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 22px;
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            color: var(--accent-yellow);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .theme-btn {
+            background: var(--box-bg);
+            color: var(--text-color);
+            border: 2px solid var(--card-border);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .topic-selector {
+            background: var(--box-bg);
+            color: var(--text-color);
+            border: 2px solid var(--card-border);
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Disclaimer Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(6px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 3px solid var(--accent-blue);
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 620px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-content h2 {
+            color: var(--accent-yellow);
+            font-size: 2rem;
+            margin-bottom: 14px;
+        }
+
+        .modal-content p {
+            color: var(--text-color);
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .modal-btn {
+            background: var(--accent-blue);
+            color: #ffffff;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 14px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
+        }
+
+        .progress-container {
+            width: 100%;
+            max-width: 950px;
+            background: var(--card-border);
+            height: 10px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .slide-container {
+            width: 100%;
+            max-width: 950px;
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 24px;
+            padding: 32px;
+            min-height: 520px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+            flex-grow: 1;
+        }
+
+        .header-tags {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .category-badge {
+            background: rgba(56, 189, 248, 0.18);
+            color: var(--accent-blue);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .ccss-badge {
+            background: rgba(192, 132, 252, 0.18);
+            color: var(--accent-purple);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+
+        .slide-title {
+            font-size: 2rem;
+            color: var(--text-color);
+            margin-bottom: 16px;
+        }
+
+        .content-box {
+            font-size: 1.15rem;
+            line-height: 1.65;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .key-concept {
+            background: var(--box-bg);
+            border-left: 5px solid var(--accent-yellow);
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin: 14px 0;
+        }
+
+        .teacher-example {
+            background: rgba(56, 189, 248, 0.1);
+            border: 2px solid var(--accent-blue);
+            padding: 16px 20px;
+            border-radius: 14px;
+            margin: 14px 0;
+        }
+
+        .guided-practice {
+            background: rgba(74, 222, 128, 0.1);
+            border: 2px dashed var(--accent-green);
+            padding: 20px;
+            border-radius: 14px;
+            margin-top: 10px;
+        }
+
+        .hook-box {
+            background: rgba(244, 114, 182, 0.12);
+            border: 2px dashed var(--accent-pink);
+            padding: 20px;
+            border-radius: 16px;
+            margin-top: 15px;
+        }
+
+        .reveal-btn {
+            background: var(--accent-green);
+            color: #052e16;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 14px;
+            display: inline-block;
+        }
+
+        .reveal-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .solution-content {
+            display: none;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 2px solid var(--card-border);
+            color: var(--text-color);
+        }
+
+        .controls {
+            width: 100%;
+            max-width: 950px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 18px;
+        }
+
+        .nav-btn {
+            background: var(--accent-blue);
+            color: #ffffff;
+            border: none;
+            padding: 12px 26px;
+            border-radius: 12px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn:disabled {
+            background: var(--card-border);
+            color: var(--subtext-color);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .slide-counter {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--subtext-color);
+        }
+
+        footer {
+            margin-top: 24px;
+            padding: 14px 20px;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--subtext-color);
+            font-weight: 700;
+            border-top: 2px solid var(--card-border);
+            width: 100%;
+            max-width: 950px;
+        }
+
+        footer span {
+            color: var(--accent-yellow);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Disclaimer Welcome Modal -->
+    <div id="disclaimerModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Welcome, 7th Graders!</h2>
+            <p>
+                Today's class is a <strong>Pre-Algebra Readiness Review</strong>. We will review key 6th-grade foundational topics including number lines, the coordinate plane, operations, algebra expressions, and basic geometry.
+            </p>
+            <p>
+                This session helps refresh your memory and builds a bridge to next week's formal unit on <strong>Integers & Operations</strong>.
+            </p>
+            <button class="modal-btn" onclick="closeDisclaimer()">Start Session</button>
+        </div>
+    </div>
+
+    <header>
+        <h1>Math Foundation Deck</h1>
+        <div class="header-controls">
+            <button id="themeToggle" class="theme-btn" onclick="toggleTheme()">Light Mode</button>
+            <select id="topicSelect" class="topic-selector" onchange="jumpToTopic(this.value)">
+                <option value="0">1. Number Line & Absolute Value</option>
+                <option value="6">2. The Coordinate Plane</option>
+                <option value="10">3. Decimals & Fraction Division</option>
+                <option value="12">4. Exponents & Algebra Basics</option>
+                <option value="16">5. Ratios & Percentages</option>
+                <option value="20">6. Geometry Foundations</option>
+                <option value="24">7. Next Week Teaser Hook</option>
+            </select>
+        </div>
+    </header>
+
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <main class="slide-container">
+        <div>
+            <div class="header-tags">
+                <span id="badge" class="category-badge">Category</span>
+                <span id="ccssBadge" class="ccss-badge">CCSS</span>
+            </div>
+            <h2 id="title" class="slide-title">Slide Title</h2>
+            <div id="content" class="content-box">Slide Content</div>
+        </div>
+
+        <div class="controls">
+            <button id="prevBtn" class="nav-btn" onclick="prevSlide()">← Previous</button>
+            <span id="counter" class="slide-counter">Slide 1 of 26</span>
+            <button id="nextBtn" class="nav-btn" onclick="nextSlide()">Next →</button>
+        </div>
+    </main>
+
+    <footer>
+        Made with coffee, pixel magic, and <span>infinite patience</span> for 7th grade students at <strong>Lincoln International Academy</strong> by <strong>Rodrigo Vasquez</strong> (Math Teacher & <span>Chief Integer Whisperer</span>)
+    </footer>
+
+    <script>
+        const slides = [
+            // TOPIC 1: THE NUMBER LINE & ABSOLUTE VALUE
+            {
+                category: "Number Line Basics",
+                ccss: "CCSS.MATH.CONTENT.6.NS.C.6",
+                title: "1. The Horizontal Number Line (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept:</strong> The horizontal number line is a visual framework anchored at zero ($0$).
+                        <br>• <strong>Positive Values:</strong> Located to the <strong>RIGHT</strong> of zero ($>0$).
+                        <br>• <strong>Negative Values:</strong> Located to the <strong>LEFT</strong> of zero ($<0$).
+                        <br>• Moving right increases value; moving left decreases value.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> Starting at $3$ on the number line and moving $4$ units to the right brings you to $7$ ($3 + 4 = 7$).
+                    </div>
+                `
+            },
+            {
+                category: "Number Line Basics",
+                ccss: "CCSS.MATH.CONTENT.6.NS.C.6",
+                title: "1. The Horizontal Number Line (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. You start at $9$ on the number line and move $6$ units to the left. What number do you land on?
+                        <br>2. You start at $2$ and move $5$ units right, then $3$ units left. Where do you end up?
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol1')">Check Answer</button>
+                        <div id="sol1" class="solution-content">
+                            1. <strong>Land on: $3$</strong> ($9 - 6 = 3$)
+                            <br>2. <strong>Land on: $4$</strong> ($2 + 5 = 7$, then $7 - 3 = 4$)
+                        </div>
+                    </div>
+                `
+            },
+            {
+                category: "Number Line Basics",
+                ccss: "CCSS.MATH.CONTENT.6.NS.C.7.C",
+                title: "2. Absolute Value (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept:</strong> Absolute value represents <strong>distance from zero</strong> on a number line.
+                        <br>• Distance is <em>always non-negative</em> (you cannot walk negative meters).
+                        <br>• Notation: $|x|$ denotes the absolute value of $x$.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> 
+                        <br>• $|8| = 8$ ($8$ units away from zero)
+                        <br>• $|-8| = 8$ (also $8$ units away from zero)
+                    </div>
+                `
+            },
+            {
+                category: "Number Line Basics",
+                ccss: "CCSS.MATH.CONTENT.6.NS.C.7.C",
+                title: "2. Absolute Value (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>Evaluate the following expressions:
+                        <br>1. $|-18|$
+                        <br>2. $|-12.5| + |4|$
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol2')">Check Answer</button>
+                        <div id="sol2" class="solution-content">
+                            1. <strong>$18$</strong>
+                            <br>2. <strong>$16.5$</strong> ($12.5 + 4 = 16.5$)
+                        </div>
+                    </div>
+                `
+            },
+            {
+                category: "Number Line Basics",
+                ccss: "CCSS.MATH.CONTENT.6.NS.C.7.A",
+                title: "3. Comparing Rational Numbers (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept:</strong> On a horizontal number line, whichever number sits further to the <strong>RIGHT</strong> has a greater value ($>$).
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> Compare $0.8$ and $\\frac{3}{4}$.
+                        <br>• Convert $\\frac{3}{4}$ to a decimal: $3 \\div 4 = 0.75$.
+                        <br>• Since $0.80$ is further right than $0.75$, $0.8 > \\frac{3}{4}$.
+                    </div>
+                `
+            },
+            {
+                category: "Number Line Basics",
+                ccss: "CCSS.MATH.CONTENT.6.NS.C.7.A",
+                title: "3. Comparing Rational Numbers (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>Insert $>$, $<$, or $=$ to make each statement true:
+                        <br>1. $\\frac{1}{2}$ _____ $0.55$
+                        <br>2. $|-6|$ _____ $|4|$
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol3')">Check Answer</button>
+                        <div id="sol3" class="solution-content">
+                            1. <strong>$<$</strong> (because $\\frac{1}{2} = 0.50$, and $0.50 < 0.55$)
+                            <br>2. <strong>$>$</strong> (because $|-6| = 6$ and $|4| = 4$, and $6 > 4$)
+                        </div>
+                    </div>
+                `
+            },
+
+            // TOPIC 2: COORDINATE PLANE & PLOTTING POINTS
+            {
+                category: "Coordinate Plane",
+                ccss: "CCSS.MATH.CONTENT.6.NS.C.6.C",
+                title: "4. Anatomy of the Coordinate Plane (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept:</strong> A coordinate plane is formed by two perpendicular number lines intersecting at the <strong>Origin $(0,0)$</strong>.
+                        <br>• <strong>x-axis:</strong> The horizontal line (Left / Right).
+                        <br>• <strong>y-axis:</strong> The vertical line (Down / Up).
+                        <br>• <strong>Quadrants:</strong> The plane is divided into 4 regions (I, II, III, IV).
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Quadrant Signs:</strong>
+                        <br>• Quadrant I: $(+, +)$
+                        <br>• Quadrant II: $(-, +)$
+                        <br>• Quadrant III: $(-, -)$
+                        <br>• Quadrant IV: $(+, -)$
+                    </div>
+                `
+            },
+            {
+                category: "Coordinate Plane",
+                ccss: "CCSS.MATH.CONTENT.6.NS.C.6.C",
+                title: "4. Anatomy of the Coordinate Plane (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>Identify the quadrant or axis for each location:
+                        <br>1. Point with coordinates $(-4, 5)$
+                        <br>2. Point with coordinates $(6, -2)$
+                        <br>3. Where do the x-axis and y-axis intersect?
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol4')">Check Answer</button>
+                        <div id="sol4" class="solution-content">
+                            1. <strong>Quadrant II</strong> ($x$ is negative, $y$ is positive)
+                            <br>2. <strong>Quadrant IV</strong> ($x$ is positive, $y$ is negative)
+                            <br>3. <strong>The Origin $(0, 0)$</strong>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                category: "Coordinate Plane",
+                ccss: "CCSS.MATH.CONTENT.6.NS.C.6.C",
+                title: "5. Plotting Ordered Pairs (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept:</strong> Locations on a plane are written as an <strong>ordered pair $(x, y)$</strong>.
+                        <br>• Step 1: Start at the origin $(0,0)$.
+                        <br>• Step 2: Move along the <strong>x-axis</strong> (Right if $+$, Left if $-$).
+                        <br>• Step 3: Move along the <strong>y-axis</strong> (Up if $+$, Down if $-$).
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> Plotting $(-3, 4)$:
+                        <br>Start at $(0,0) \\rightarrow$ Move $3$ units Left $\\rightarrow$ Move $4$ units Up.
+                    </div>
+                `
+            },
+            {
+                category: "Coordinate Plane",
+                ccss: "CCSS.MATH.CONTENT.6.NS.C.6.C",
+                title: "5. Plotting Ordered Pairs (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. State the directions to plot the point $(-5, -2)$ starting from the origin.
+                        <br>2. If you start at $(0,0)$ and move $7$ units Right and $0$ units Up/Down, what is your ordered pair?
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol5')">Check Answer</button>
+                        <div id="sol5" class="solution-content">
+                            1. <strong>Move 5 units Left, then 2 units Down</strong>.
+                            <br>2. <strong>$(7, 0)$</strong> (This point lies directly on the x-axis).
+                        </div>
+                    </div>
+                `
+            },
+
+            // TOPIC 3: OPERATIONS (DECIMALS & FRACTIONS)
+            {
+                category: "Decimals & Fractions",
+                ccss: "CCSS.MATH.CONTENT.6.NS.A.1",
+                title: "6. Fraction Division & Decimals (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept: Fraction Division</strong>
+                        <br>Multiply by the reciprocal using <strong>Keep-Change-Flip</strong>:
+                        <br>$$\\frac{a}{b} \\div \\frac{c}{d} = \\frac{a}{b} \\times \\frac{d}{c}$$
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> Solve $\\frac{3}{4} \\div \\frac{1}{2}$.
+                        <br>$$\\frac{3}{4} \\times \\frac{2}{1} = \\frac{6}{4} = \\frac{3}{2} = 1.5$$
+                    </div>
+                `
+            },
+            {
+                category: "Decimals & Fractions",
+                ccss: "CCSS.MATH.CONTENT.6.NS.B.3",
+                title: "6. Fraction Division & Decimals (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. Solve: $\\frac{2}{5} \\div \\frac{1}{3}$
+                        <br>2. Solve: $14.50 - 6.25$
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol6')">Check Answer</button>
+                        <div id="sol6" class="solution-content">
+                            1. <strong>$\\frac{6}{5}$ or $1\\frac{1}{5}$</strong> ($\\frac{2}{5} \\times \\frac{3}{1} = \\frac{6}{5}$)
+                            <br>2. <strong>$8.25$</strong>
+                        </div>
+                    </div>
+                `
+            },
+
+            // TOPIC 4: EXPONENTS & ALGEBRA BASICS
+            {
+                category: "Exponents & Expressions",
+                ccss: "CCSS.MATH.CONTENT.6.EE.A.1",
+                title: "7. Exponents & Expressions (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept:</strong> An exponent indicates repeated multiplication of a base number.
+                        <br>$$a^n = \\underbrace{a \\times a \\times \\dots \\times a}_{n \\text{ times}}$$
+                        <br><em>Note:</em> $3^2 = 3 \\times 3 = 9$ (Not $3 \\times 2 = 6$).
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> Evaluate $2x^2 + 3$ when $x = 4$.
+                        <br>$$2(4^2) + 3 = 2(16) + 3 = 32 + 3 = 35$$
+                    </div>
+                `
+            },
+            {
+                category: "Exponents & Expressions",
+                ccss: "CCSS.MATH.CONTENT.6.EE.A.2",
+                title: "7. Exponents & Expressions (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. Evaluate $5^3$.
+                        <br>2. Evaluate $3y - 4$ when $y = 6$.
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol7')">Check Answer</button>
+                        <div id="sol7" class="solution-content">
+                            1. <strong>$125$</strong> ($5 \\times 5 \\times 5 = 125$)
+                            <br>2. <strong>$14$</strong> ($3(6) - 4 = 18 - 4 = 14$)
+                        </div>
+                    </div>
+                `
+            },
+            {
+                category: "Exponents & Expressions",
+                ccss: "CCSS.MATH.CONTENT.6.EE.A.3",
+                title: "8. Combining Like Terms (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept:</strong> Terms with identical variables and powers can be combined by adding or subtracting their coefficients.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> Simplify $4x + 7 + 2x - 3$.
+                        <br>• Combine $x$-terms: $4x + 2x = 6x$.
+                        <br>• Combine constants: $7 - 3 = 4$.
+                        <br>• Result: $6x + 4$.
+                    </div>
+                `
+            },
+            {
+                category: "Exponents & Expressions",
+                ccss: "CCSS.MATH.CONTENT.6.EE.A.3",
+                title: "8. Combining Like Terms (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>Simplify the following algebraic expressions:
+                        <br>1. $8m + 3m - 2m$
+                        <br>2. $5a + 9 + 3a - 4$
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol8')">Check Answer</button>
+                        <div id="sol8" class="solution-content">
+                            1. <strong>$9m$</strong> ($8 + 3 - 2 = 9$)
+                            <br>2. <strong>$8a + 5$</strong> ($5a + 3a = 8a$, and $9 - 4 = 5$)
+                        </div>
+                    </div>
+                `
+            },
+
+            // TOPIC 5: RATIOS & PERCENTAGES
+            {
+                category: "Ratios & Rates",
+                ccss: "CCSS.MATH.CONTENT.6.RP.A.2",
+                title: "9. Unit Rates & Percentages (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept: Unit Rates & Percents</strong>
+                        <br>• <strong>Unit Rate:</strong> Ratio comparing a quantity to 1 single unit.
+                        <br>• <strong>Percent of a Number:</strong> Convert percentage to a decimal and multiply ($P \\% \\times \\text{Total}$).
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Examples:</strong>
+                        <br>• Unit Rate: $150 \\text{ miles in } 3 \\text{ hours} \\rightarrow \\frac{150}{3} = 50 \\text{ mph}$.
+                        <br>• Percent: $20\\%$ of $80 \\rightarrow 0.20 \\times 80 = 16$.
+                    </div>
+                `
+            },
+            {
+                category: "Ratios & Rates",
+                ccss: "CCSS.MATH.CONTENT.6.RP.A.3.C",
+                title: "9. Unit Rates & Percentages (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. A pack of 4 notebooks costs $12.00. What is the cost per notebook?
+                        <br>2. What is $15\\%$ of $60$?
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol9')">Check Answer</button>
+                        <div id="sol9" class="solution-content">
+                            1. <strong>$3.00 per notebook</strong> ($12 \\div 4 = 3$)
+                            <br>2. <strong>$9$</strong> ($0.15 \\times 60 = 9$)
+                        </div>
+                    </div>
+                `
+            },
+
+            // TOPIC 6: GEOMETRY FOUNDATIONS
+            {
+                category: "Geometry Foundations",
+                ccss: "CCSS.MATH.CONTENT.6.G.A.1",
+                title: "10. Perimeter & Area Foundations (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Definitions:</strong>
+                        <br>• <strong>Perimeter ($P$):</strong> Total distance around the outer boundary of a 2D shape.
+                        <br>• <strong>Area ($A$):</strong> Total 2D space inside a shape (measured in square units $u^2$).
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Essential Formulas:</strong>
+                        <br>• Rectangle Area: $A = l \\times w$
+                        <br>• Triangle Area: $A = \\frac{1}{2} \\times b \\times h$
+                    </div>
+                `
+            },
+            {
+                category: "Geometry Foundations",
+                ccss: "CCSS.MATH.CONTENT.6.G.A.1",
+                title: "10. Perimeter & Area Foundations (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. Calculate the area of a rectangle with length $8\\text{ cm}$ and width $5\\text{ cm}$.
+                        <br>2. Calculate the area of a triangle with base $b = 10\\text{ m}$ and height $h = 6\\text{ m}$.
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol10')">Check Answer</button>
+                        <div id="sol10" class="solution-content">
+                            1. <strong>$40\\text{ cm}^2$</strong> ($8 \\times 5 = 40$)
+                            <br>2. <strong>$30\\text{ m}^2$</strong> ($\\frac{1}{2} \\times 10 \\times 6 = 30$)
+                        </div>
+                    </div>
+                `
+            },
+            {
+                category: "Geometry Foundations",
+                ccss: "CCSS.MATH.CONTENT.6.G.A.2",
+                title: "11. Volume of Rectangular Prisms (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept:</strong> Volume ($V$) measures the 3D space occupied by an object (measured in cubic units $u^3$).
+                        <br>$$\\text{Volume} = \\text{Length} \\times \\text{Width} \\times \\text{Height}$$
+                        <br>$$V = l \\cdot w \\cdot h \\quad \\text{or} \\quad V = B \\cdot h$$
+                        <br><em>(where $B$ is the area of the base rectangle)</em>.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> Box with length $4\\text{ in}$, width $3\\text{ in}$, height $2\\text{ in}$:
+                        <br>$$V = 4 \\times 3 \\times 2 = 24\\text{ in}^3$$
+                    </div>
+                `
+            },
+            {
+                category: "Geometry Foundations",
+                ccss: "CCSS.MATH.CONTENT.6.G.A.2",
+                title: "11. Volume of Rectangular Prisms (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. A storage box measures $6\\text{ ft}$ long, $3\\text{ ft}$ wide, and $4\\text{ ft}$ high. What is its volume?
+                        <br>2. A cube has edge lengths of $5\\text{ cm}$. What is its total volume?
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol11')">Check Answer</button>
+                        <div id="sol11" class="solution-content">
+                            1. <strong>$72\\text{ ft}^3$</strong> ($6 \\times 3 \\times 4 = 72$)
+                            <br>2. <strong>$125\\text{ cm}^3$</strong> ($5 \\times 5 \\times 5 = 125$)
+                        </div>
+                    </div>
+                `
+            },
+
+            // TOPIC 7: NEXT WEEK TEASER HOOK
+            {
+                category: "Unit 1 Preview Hook",
+                ccss: "CCSS.MATH.CONTENT.6.NS.C.5 (Intro to 7.NS.A.1)",
+                title: "12. Hook: Numbers Below Zero",
+                content: `
+                    <div class="hook-box">
+                        <h3>Real-World Quantities Below Zero</h3>
+                        <p>In physical applications, values extend below zero into negative territory:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>Temperature:</strong> $5^\\circ\\text{C}$ below zero $\\rightarrow -5^\\circ\\text{C}$</li>
+                            <li><strong>Finance:</strong> Account debt of $20 \\rightarrow -\\$20$</li>
+                            <li><strong>Elevation:</strong> $50\\text{ meters}$ below sea level $\\rightarrow -50\\text{ m}$</li>
+                        </ul>
+                    </div>
+                    <p style="margin-top:15px; font-weight: 800;">Next week in Lessons 1.1–1.4: We unlock full operational rules for Integers!</p>
+                `
+            },
+            {
+                category: "Unit 1 Preview Hook",
+                ccss: "CCSS.MATH.CONTENT.6.NS.C.6.A",
+                title: "13. Hook: Opposite Numbers & Inverses",
+                content: `
+                    <div class="key-concept">
+                        <strong>Opposite Numbers:</strong> Two numbers positioned at the exact same distance from zero on a number line, but on opposite sides.
+                        <br>• The opposite of $+7$ is $-7$.
+                        <br>• The opposite of $-12$ is $+12$.
+                    </div>
+                    <div class="guided-practice">
+                        <strong>Teaser Question:</strong> What result do you always obtain when you add any number to its exact opposite?
+                        <br><em>Example:</em> $8 + (-8) = ?$
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol12')">Reveal Mystery</button>
+                        <div id="sol12" class="solution-content">
+                            <strong>Always ZERO ($0$)!</strong><br>
+                            This fundamental principle is called the <em>Additive Inverse Property</em>. We will explore integer arithmetic models using this property starting Monday!
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        let currentSlide = 0;
+        let isDarkMode = true;
+
+        function closeDisclaimer() {
+            document.getElementById('disclaimerModal').style.display = 'none';
+        }
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            const body = document.body;
+            const themeBtn = document.getElementById('themeToggle');
+
+            if (isDarkMode) {
+                body.classList.remove('light-mode');
+                themeBtn.innerHTML = 'Light Mode';
+            } else {
+                body.classList.add('light-mode');
+                themeBtn.innerHTML = 'Dark Mode';
+            }
+        }
+
+        function safeMathTypeset(targetEl) {
+            if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+                MathJax.typesetPromise(targetEl ? [targetEl] : []).catch(function(err) {
+                    console.warn('MathJax typeset warning:', err);
+                });
+            }
+        }
+
+        function renderSlide() {
+            const slide = slides[currentSlide];
+            document.getElementById('badge').innerText = slide.category;
+            document.getElementById('ccssBadge').innerText = slide.ccss;
+            document.getElementById('title').innerText = slide.title;
+            
+            const contentEl = document.getElementById('content');
+            contentEl.innerHTML = slide.content;
+
+            document.getElementById('counter').innerText = `Slide ${currentSlide + 1} of ${slides.length}`;
+            document.getElementById('prevBtn').disabled = (currentSlide === 0);
+            document.getElementById('nextBtn').disabled = (currentSlide === slides.length - 1);
+
+            const progress = ((currentSlide + 1) / slides.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+
+            const topicSelect = document.getElementById('topicSelect');
+            if (currentSlide < 6) topicSelect.value = "0";
+            else if (currentSlide < 10) topicSelect.value = "6";
+            else if (currentSlide < 12) topicSelect.value = "10";
+            else if (currentSlide < 16) topicSelect.value = "12";
+            else if (currentSlide < 20) topicSelect.value = "16";
+            else if (currentSlide < 24) topicSelect.value = "20";
+            else topicSelect.value = "24";
+
+            safeMathTypeset(contentEl);
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                renderSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                renderSlide();
+            }
+        }
+
+        function jumpToTopic(slideIndex) {
+            currentSlide = parseInt(slideIndex);
+            renderSlide();
+        }
+
+        function toggleSolution(id) {
+            const el = document.getElementById(id);
+            if (el.style.display === "block") {
+                el.style.display = "none";
+            } else {
+                el.style.display = "block";
+                safeMathTypeset(el);
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // Initial render
+        renderSlide();
+    </script>
+</body>
+</html>
