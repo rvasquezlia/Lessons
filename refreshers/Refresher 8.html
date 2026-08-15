@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8th Grade Algebra I Refresher | Lincoln International Academy</title>
+
+    <!-- Google Fonts: Fredoka (Headings) & Nunito (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- MathJax 3 Config & Script -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        },
+        startup: {
+          pageReady: () => {
+            return MathJax.startup.defaultPageReady().then(() => {
+              if (typeof renderSlide === 'function') renderSlide();
+            });
+          }
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <link rel="stylesheet" href="refresher.css">
+</head>
+<body>
+
+    <!-- Disclaimer Welcome Modal -->
+    <div id="disclaimerModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Welcome, 8th Graders!</h2>
+            <p>
+                Today's class is an <strong>Algebra I Readiness Review</strong>. We will review order of operations, integer operations, evaluating expressions, the distributive property, solving one- and two-step equations, and the coordinate plane.
+            </p>
+            <p>
+                This session builds direct preparation for next week's unit on <strong>Lesson 1: Properties of Real Numbers</strong>!
+            </p>
+            <button class="modal-btn" onclick="closeDisclaimer()">Start Refresher</button>
+        </div>
+    </div>
+
+    <header>
+        <h1>Algebra I Warm-Up Deck</h1>
+        <div class="header-controls">
+            <button id="themeToggle" class="theme-btn" onclick="toggleTheme()">Light Mode</button>
+            <select id="topicSelect" class="topic-selector" onchange="jumpToTopic(this.value)">
+                <option value="0">1. Order of Operations</option>
+                <option value="2">2. Integer Operations</option>
+                <option value="6">3. Evaluating Expressions</option>
+                <option value="8">4. Distributive Property</option>
+                <option value="10">5. Solving Equations</option>
+                <option value="14">6. Coordinate Plane Review</option>
+                <option value="16">7. Next Week Teaser Hook</option>
+            </select>
+        </div>
+    </header>
+
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <main class="slide-container">
+        <div>
+            <div class="header-tags">
+                <span id="badge" class="category-badge">Category</span>
+                <span id="ccssBadge" class="ccss-badge">CCSS</span>
+            </div>
+            <h2 id="title" class="slide-title">Slide Title</h2>
+            <div id="content" class="content-box">Slide Content</div>
+        </div>
+
+        <div class="controls">
+            <button id="prevBtn" class="nav-btn" onclick="prevSlide()">← Previous</button>
+            <span id="counter" class="slide-counter">Slide 1 of 18</span>
+            <button id="nextBtn" class="nav-btn" onclick="nextSlide()">Next →</button>
+        </div>
+    </main>
+
+    <footer>
+        Made with dark roast, digital ink, and <span>endless enthusiasm</span> for 8th grade students at <strong>Lincoln International Academy</strong> by <strong>Rodrigo Vasquez</strong> (Math Teacher & <span>Guardian of the Equal Sign</span>)
+    </footer>
+
+    <script>
+        const slides = [
+            // TOPIC 1: ORDER OF OPERATIONS
+            {
+                category: "Order of Operations",
+                ccss: "CCSS.MATH.CONTENT.6.EE.A.2.C",
+                title: "1. PEMDAS: Order of Operations (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept:</strong> Follow this order: Parentheses, Exponents, Multiplication & Division (left to right), Addition & Subtraction (left to right).
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> Evaluate $3 + 4 \\times (6 - 2)^2 \\div 8$.
+                        <br>$$3 + 4 \\times (4)^2 \\div 8 = 3 + 4 \\times 16 \\div 8 = 3 + 64 \\div 8 = 3 + 8 = 11$$
+                    </div>
+                `
+            },
+            {
+                category: "Order of Operations",
+                ccss: "CCSS.MATH.CONTENT.6.EE.A.2.C",
+                title: "1. PEMDAS: Order of Operations (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. Evaluate $5 + 2 \\times (8 - 3)^2$
+                        <br>2. Evaluate $(12 - 4) \\div 2 + 3^2$
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol1')">Check Answer</button>
+                        <div id="sol1" class="solution-content">
+                            1. <strong>$55$</strong> ($5 + 2 \\times 25 = 5 + 50 = 55$)
+                            <br>2. <strong>$13$</strong> ($8 \\div 2 + 9 = 4 + 9 = 13$)
+                        </div>
+                    </div>
+                `
+            },
+
+            // TOPIC 2: INTEGER OPERATIONS
+            {
+                category: "Integer Operations",
+                ccss: "CCSS.MATH.CONTENT.7.NS.A.1.B",
+                title: "2. Adding & Subtracting Integers (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept:</strong> Same signs: add the absolute values and keep the sign. Different signs: subtract the smaller absolute value from the larger, and keep the sign of the number with the larger absolute value. Subtracting a number is the same as adding its opposite.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Examples:</strong>
+                        <br>• $-8 + 5 = -3$ (different signs, keep the sign of $8$)
+                        <br>• $-6 - (-9) = -6 + 9 = 3$
+                    </div>
+                `
+            },
+            {
+                category: "Integer Operations",
+                ccss: "CCSS.MATH.CONTENT.7.NS.A.1.B",
+                title: "2. Adding & Subtracting Integers (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. Evaluate $-14 + 9$
+                        <br>2. Evaluate $7 - (-12)$
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol2')">Check Answer</button>
+                        <div id="sol2" class="solution-content">
+                            1. <strong>$-5$</strong> ($14 - 9 = 5$, keep the negative sign)
+                            <br>2. <strong>$19$</strong> ($7 + 12 = 19$)
+                        </div>
+                    </div>
+                `
+            },
+            {
+                category: "Integer Operations",
+                ccss: "CCSS.MATH.CONTENT.7.NS.A.2.A",
+                title: "3. Multiplying & Dividing Integers (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept:</strong> Same signs produce a <strong>positive</strong> result. Different signs produce a <strong>negative</strong> result.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Examples:</strong>
+                        <br>• $(-6) \\times (-4) = 24$ (same signs)
+                        <br>• $(-36) \\div 9 = -4$ (different signs)
+                    </div>
+                `
+            },
+            {
+                category: "Integer Operations",
+                ccss: "CCSS.MATH.CONTENT.7.NS.A.2.A",
+                title: "3. Multiplying & Dividing Integers (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. Evaluate $(-7) \\times 8$
+                        <br>2. Evaluate $(-45) \\div (-5)$
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol3')">Check Answer</button>
+                        <div id="sol3" class="solution-content">
+                            1. <strong>$-56$</strong>
+                            <br>2. <strong>$9$</strong> (same signs, positive result)
+                        </div>
+                    </div>
+                `
+            },
+
+            // TOPIC 3: EVALUATING ALGEBRAIC EXPRESSIONS
+            {
+                category: "Algebraic Expressions",
+                ccss: "CCSS.MATH.CONTENT.6.EE.A.2.C",
+                title: "4. Evaluating Algebraic Expressions (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept:</strong> Substitute the given value(s) for the variable(s), then apply the order of operations.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> Evaluate $3x^2 - 5$ when $x = 4$.
+                        <br>$$3(4)^2 - 5 = 3(16) - 5 = 48 - 5 = 43$$
+                    </div>
+                `
+            },
+            {
+                category: "Algebraic Expressions",
+                ccss: "CCSS.MATH.CONTENT.6.EE.A.2.C",
+                title: "4. Evaluating Algebraic Expressions (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. Evaluate $2a + 7$ when $a = -3$.
+                        <br>2. Evaluate $x^2 - 4x + 1$ when $x = 5$.
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol4')">Check Answer</button>
+                        <div id="sol4" class="solution-content">
+                            1. <strong>$1$</strong> ($2(-3) + 7 = -6 + 7 = 1$)
+                            <br>2. <strong>$6$</strong> ($25 - 20 + 1 = 6$)
+                        </div>
+                    </div>
+                `
+            },
+
+            // TOPIC 4: DISTRIBUTIVE PROPERTY & COMBINING LIKE TERMS
+            {
+                category: "Expressions",
+                ccss: "CCSS.MATH.CONTENT.7.EE.A.1",
+                title: "5. Distributive Property & Combining Like Terms (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept:</strong> Distribute first: $a(b + c) = ab + ac$. Then combine like terms (same variable and exponent) by adding or subtracting their coefficients.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> Simplify $3(2x + 5) - 4x$.
+                        <br>$$3(2x + 5) - 4x = 6x + 15 - 4x = 2x + 15$$
+                    </div>
+                `
+            },
+            {
+                category: "Expressions",
+                ccss: "CCSS.MATH.CONTENT.7.EE.A.1",
+                title: "5. Distributive Property & Combining Like Terms (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. Simplify $4(x - 3) + 2x$
+                        <br>2. Simplify $-2(3y + 1) + 5y$
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol5')">Check Answer</button>
+                        <div id="sol5" class="solution-content">
+                            1. <strong>$6x - 12$</strong> ($4x - 12 + 2x = 6x - 12$)
+                            <br>2. <strong>$-y - 2$</strong> ($-6y - 2 + 5y = -y - 2$)
+                        </div>
+                    </div>
+                `
+            },
+
+            // TOPIC 5: SOLVING EQUATIONS
+            {
+                category: "Solving Equations",
+                ccss: "CCSS.MATH.CONTENT.7.EE.B.4.A",
+                title: "6. One-Step Equations (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept:</strong> Use the inverse operation to isolate the variable. Whatever you do to one side of the equation, you must do to the other.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Examples:</strong>
+                        <br>• $x + 9 = 15 \\rightarrow x = 6$
+                        <br>• $-3x = 21 \\rightarrow x = -7$
+                    </div>
+                `
+            },
+            {
+                category: "Solving Equations",
+                ccss: "CCSS.MATH.CONTENT.7.EE.B.4.A",
+                title: "6. One-Step Equations (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. Solve $x - 8 = 13$
+                        <br>2. Solve $\\frac{x}{4} = -9$
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol6')">Check Answer</button>
+                        <div id="sol6" class="solution-content">
+                            1. <strong>$x = 21$</strong>
+                            <br>2. <strong>$x = -36$</strong>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                category: "Solving Equations",
+                ccss: "CCSS.MATH.CONTENT.7.EE.B.4.A",
+                title: "7. Two-Step Equations (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept:</strong> Undo addition or subtraction first, then undo multiplication or division.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> Solve $3x + 4 = 19$.
+                        <br>$$3x = 15 \\rightarrow x = 5$$
+                    </div>
+                `
+            },
+            {
+                category: "Solving Equations",
+                ccss: "CCSS.MATH.CONTENT.7.EE.B.4.A",
+                title: "7. Two-Step Equations (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. Solve $2x - 5 = 11$
+                        <br>2. Solve $-4x + 7 = -9$
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol7')">Check Answer</button>
+                        <div id="sol7" class="solution-content">
+                            1. <strong>$x = 8$</strong> ($2x = 16$)
+                            <br>2. <strong>$x = 4$</strong> ($-4x = -16$)
+                        </div>
+                    </div>
+                `
+            },
+
+            // TOPIC 6: COORDINATE PLANE REVIEW
+            {
+                category: "Coordinate Plane",
+                ccss: "CCSS.MATH.CONTENT.6.NS.C.6.C",
+                title: "8. Coordinate Plane Review (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept:</strong> Points are written as ordered pairs $(x, y)$. Quadrant signs: I $(+,+)$, II $(-,+)$, III $(-,-)$, IV $(+,-)$.
+                    </div>
+                    <div class="teacher-example">
+                        <strong>Example:</strong> The point $(-2, 5)$ lies in <strong>Quadrant II</strong> ($x$ negative, $y$ positive).
+                    </div>
+                `
+            },
+            {
+                category: "Coordinate Plane",
+                ccss: "CCSS.MATH.CONTENT.6.NS.C.6.C",
+                title: "8. Coordinate Plane Review (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Practice Exercise:</strong>
+                        <br>1. Which quadrant is the point $(4, -6)$ in?
+                        <br>2. State the directions to plot $(-3, -5)$ starting from the origin.
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol8')">Check Answer</button>
+                        <div id="sol8" class="solution-content">
+                            1. <strong>Quadrant IV</strong> ($x$ is positive, $y$ is negative)
+                            <br>2. <strong>Move 3 units left, then 5 units down.</strong>
+                        </div>
+                    </div>
+                `
+            },
+
+            // TOPIC 7: NEXT WEEK TEASER HOOK
+            {
+                category: "Unit 1 Preview Hook",
+                ccss: "CCSS.MATH.CONTENT.8.EE.A / 8.NS.A.1",
+                title: "9. Lesson 1 Preview: Properties of Real Numbers",
+                content: `
+                    <div class="hook-box">
+                        <h3>Upcoming Unit: Lesson 1 (Properties of Real Numbers)</h3>
+                        <p>Starting next week, we launch into 8th Grade Algebra I! Lesson 1 explores the Properties of Real Numbers (Commutative, Associative, Distributive, Identity) — the "grammar rules" that make every algebra shortcut valid.</p>
+                    </div>
+                    <p style="margin-top:15px; font-weight:800;">Get ready to prove why the shortcuts you already use actually work!</p>
+                `
+            },
+            {
+                category: "Unit 1 Preview Hook",
+                ccss: "CCSS.MATH.CONTENT.8.EE.A / 8.NS.A.1",
+                title: "9. Lesson 1 Teaser Exercise",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Lesson 1 Teaser Challenge:</strong>
+                        <br>Which property justifies each statement?
+                        <br>1. $5 + (3 + 8) = (5 + 3) + 8$
+                        <br>2. $4(x + 2) = 4x + 8$
+                        <br><button class="reveal-btn" onclick="toggleSolution('sol9')">Reveal Teaser Solution</button>
+                        <div id="sol9" class="solution-content">
+                            1. <strong>Associative Property of Addition</strong> — regrouping the addends does not change the sum.<br>
+                            2. <strong>Distributive Property</strong> — multiplying across the parentheses.<br>
+                            <em>We'll formalize all of the Properties of Real Numbers starting Monday!</em>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+    </script>
+    <script src="refresher.js"></script>
+</body>
+</html>
