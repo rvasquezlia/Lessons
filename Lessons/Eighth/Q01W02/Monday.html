@@ -317,13 +317,13 @@
     const p = warmupProblems[idx];
     const val = document.getElementById(`wu-${idx}-input`).value;
     const fb = document.getElementById(`wu-${idx}-feedback`);
-    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
 
-    LessonCheck.check(`wu-${idx}`, correct, fb, {
-      correct: `Correct! \\(x = \\mathbf{${p.a}}\\)`,
-      retry: "Not quite yet. Identify the inverse operation and apply it to both sides, then try again.",
-      reveal: `Here's the correct procedure for \\(${p.q}\\): apply the inverse operation to both sides. \\(x = \\mathbf{${p.a}}\\)`
-    }, { label: `Warm-Up: ${p.q}`, answer: val });
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter your answer before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: `wu-${idx}`, label: `Warm-Up: ${p.q}`, answer: val, section: '1. Warm-Up' });
   }
 
   // ==========================================
@@ -349,6 +349,15 @@
         "<strong>Step 1 - Distribute:</strong> \\(2x - 6 + 4 = 10\\)",
         "<strong>Step 2 - Combine like terms, then subtract 2 from both sides:</strong> \\(2x - 2 = 10 \\;\\rightarrow\\; 2x = 12\\)",
         "<strong>Step 3 - Divide both sides by 2:</strong> \\(x = \\mathbf{6}\\)"
+      ]
+    },
+    {
+      title: "Example 3: \\(5(x - 2) + 3 = 23\\)",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1 - Distribute:</strong> \\(5x - 10 + 3 = 23\\)",
+        "<strong>Step 2 - Combine like terms, then add 7 to both sides:</strong> \\(5x - 7 = 23 \\;\\rightarrow\\; 5x = 30\\)",
+        "<strong>Step 3 - Divide both sides by 5:</strong> \\(x = \\mathbf{6}\\)"
       ]
     }
   ];
@@ -387,7 +396,9 @@
     { q: "\\(2x - 5 = 11\\)", a: 8, tol: 0.001 },
     { q: "\\(4x + 7 = -9\\)", a: -4, tol: 0.001 },
     { q: "\\(-3x + 8 = 2\\)", a: 2, tol: 0.001 },
-    { q: "\\(5(x - 3) = 20\\)", a: 7, tol: 0.001 }
+    { q: "\\(5(x - 3) = 20\\)", a: 7, tol: 0.001 },
+    { q: "\\(7x - 9 = 19\\)", a: 4, tol: 0.001 },
+    { q: "\\(-4x + 6 = -14\\)", a: 5, tol: 0.001 }
   ];
 
   function renderL12Practice() {
@@ -400,6 +411,7 @@
       </div>
     `).join('');
     document.getElementById('l12-practice-list').innerHTML = html;
+    l12Practice.forEach((p, i) => LessonProgress.preRegister(`l12p-${i}`, `Lesson 1-2 Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '2. Lesson 1-2'));
   }
 
   function checkL12Practice(idx) {
@@ -412,7 +424,7 @@
       correct: `Correct! ${p.q} \\(\\rightarrow x = \\mathbf{${p.a}}\\)`,
       retry: "Not quite yet. Simplify each side first, then undo operations in reverse order. Try again.",
       reveal: `Here's the correct procedure: simplify, then apply inverse operations to isolate \\(x\\). ${p.q} \\(\\rightarrow x = \\mathbf{${p.a}}\\)`
-    }, { label: `Lesson 1-2 Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val });
+    }, { label: `Lesson 1-2 Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '2. Lesson 1-2' });
   }
 
   function checkL12Challenge() {
@@ -421,16 +433,11 @@
     const fb = document.getElementById('l12-challenge-feedback');
 
     if (!x.trim() || explain.length <= 5) {
-      LessonCheck.incomplete(fb, "Enter your solution and explain your first move before checking - this won't count as an attempt yet.");
+      LessonCheck.incomplete(fb, "Enter your solution and explain your first move before submitting.");
       return;
     }
 
-    const correct = LessonCheck.numericMatch(x, 5, 0.001);
-    LessonCheck.check('l12-challenge', correct, fb, {
-      correct: "Correct! \\(2(3x-4)+5=27 \\rightarrow 6x-8+5=27 \\rightarrow 6x-3=27 \\rightarrow 6x=30 \\rightarrow x=\\mathbf{5}\\).",
-      retry: "Not quite yet. Distribute the 2 first, combine the constant terms, then isolate x. Try again.",
-      reveal: "Here's the correct procedure: distribute, \\(6x - 8 + 5 = 27\\); combine like terms, \\(6x - 3 = 27\\); add 3, \\(6x = 30\\); divide by 6, \\(x = \\mathbf{5}\\)."
-    }, { label: 'Lesson 1-2 Challenge: 2(3x-4)+5=27', answer: `x=${x}` });
+    LessonCheck.submit(fb, { key: 'l12-challenge', label: 'Lesson 1-2 Challenge: 2(3x-4)+5=27', answer: `x=${x}`, section: '2. Lesson 1-2' });
   }
 
   // ==========================================
@@ -456,6 +463,15 @@
         "<strong>Step 1 - Subtract \\(3x\\) from both sides:</strong> \\(4x - 4 = 16\\)",
         "<strong>Step 2 - Add 4 to both sides:</strong> \\(4x = 20\\)",
         "<strong>Step 3 - Divide both sides by 4:</strong> \\(x = \\mathbf{5}\\)"
+      ]
+    },
+    {
+      title: "Example 3: \\(9x - 2 = 4x + 23\\)",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1 - Subtract \\(4x\\) from both sides:</strong> \\(5x - 2 = 23\\)",
+        "<strong>Step 2 - Add 2 to both sides:</strong> \\(5x = 25\\)",
+        "<strong>Step 3 - Divide both sides by 5:</strong> \\(x = \\mathbf{5}\\)"
       ]
     }
   ];
@@ -493,7 +509,9 @@
   const l13Practice = [
     { q: "\\(6x + 9 = 2x - 7\\)", type: "number", a: -4, tol: 0.001 },
     { q: "\\(3(x + 4) = x + 18\\)", type: "number", a: 3, tol: 0.001 },
-    { q: "\\(5x - 2 = 5x + 9\\)", type: "special", a: "no solution" }
+    { q: "\\(5x - 2 = 5x + 9\\)", type: "special", a: "no solution" },
+    { q: "\\(8x - 1 = 3x + 24\\)", type: "number", a: 5, tol: 0.001 },
+    { q: "\\(2(x - 3) = x + 1\\)", type: "number", a: 7, tol: 0.001 }
   ];
 
   function renderL13Practice() {
@@ -506,6 +524,7 @@
       </div>
     `).join('');
     document.getElementById('l13-practice-list').innerHTML = html;
+    l13Practice.forEach((p, i) => LessonProgress.preRegister(`l13p-${i}`, `Lesson 1-3 Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '3. Lesson 1-3'));
   }
 
   function checkL13Practice(idx) {
@@ -524,7 +543,7 @@
       correct: `Correct! ${p.q} \\(\\rightarrow\\) ${answerText}`,
       retry: "Not quite yet. Collect variable terms on one side first, then simplify. Try again.",
       reveal: `Here's the correct procedure: collect variable terms on one side, then simplify. ${p.q} \\(\\rightarrow\\) ${answerText}`
-    }, { label: `Lesson 1-3 Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw });
+    }, { label: `Lesson 1-3 Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '3. Lesson 1-3' });
   }
 
   function checkL13Challenge() {
@@ -533,16 +552,11 @@
     const fb = document.getElementById('l13-challenge-feedback');
 
     if (!x.trim() || explain.length <= 5) {
-      LessonCheck.incomplete(fb, "Enter your solution and explain your first move before checking - this won't count as an attempt yet.");
+      LessonCheck.incomplete(fb, "Enter your solution and explain your first move before submitting.");
       return;
     }
 
-    const correct = LessonCheck.numericMatch(x, 15, 0.001);
-    LessonCheck.check('l13-challenge', correct, fb, {
-      correct: "Correct! \\(8x-3=5x+2(x+6) \\rightarrow 8x-3=5x+2x+12 \\rightarrow 8x-3=7x+12 \\rightarrow x=\\mathbf{15}\\).",
-      retry: "Not quite yet. Distribute the right side first, combine like terms, then collect variable terms. Try again.",
-      reveal: "Here's the correct procedure: distribute, \\(8x-3=5x+2x+12\\); combine like terms, \\(8x-3=7x+12\\); subtract \\(7x\\), \\(x-3=12\\); add 3, \\(x=\\mathbf{15}\\)."
-    }, { label: 'Lesson 1-3 Challenge: 8x-3=5x+2(x+6)', answer: `x=${x}` });
+    LessonCheck.submit(fb, { key: 'l13-challenge', label: 'Lesson 1-3 Challenge: 8x-3=5x+2(x+6)', answer: `x=${x}`, section: '3. Lesson 1-3' });
   }
 
   // ==========================================
@@ -554,28 +568,23 @@
     const fb = document.getElementById('mix-feedback');
 
     if (!mx.trim() || !other.trim()) {
-      LessonCheck.incomplete(fb, "Enter both the liters of 50% solution and the liters of 20% solution before checking - this won't count as an attempt yet.");
+      LessonCheck.incomplete(fb, "Enter both the liters of 50% solution and the liters of 20% solution before submitting.");
       return;
     }
 
-    const correct = LessonCheck.numericMatch(mx, 4, 0.05) && LessonCheck.numericMatch(other, 8, 0.05);
-    LessonCheck.check('mon-mixture', correct, fb, {
-      correct: "Correct! \\(0.5x + 0.2(12-x) = 0.3(12) \\rightarrow 0.5x + 2.4 - 0.2x = 3.6 \\rightarrow 0.3x = 1.2 \\rightarrow x = \\mathbf{4}\\) liters of 50% solution, and \\(12 - 4 = \\mathbf{8}\\) liters of 20% solution.",
-      retry: "Not quite yet. Distribute \\(0.2(12-x)\\), combine like terms, then isolate x. Try again.",
-      reveal: "Here's the correct procedure: \\(0.5x + 2.4 - 0.2x = 3.6 \\rightarrow 0.3x + 2.4 = 3.6 \\rightarrow 0.3x = 1.2 \\rightarrow x = \\mathbf{4}\\) liters of 50% solution, and \\(12 - 4 = \\mathbf{8}\\) liters of 20% solution."
-    }, { label: 'Mixture Investigation: 50% and 20% solutions', answer: `50% solution=${mx}L, 20% solution=${other}L` });
+    LessonCheck.submit(fb, { key: 'mon-mixture', label: 'Mixture Investigation: 50% and 20% solutions', answer: `50% solution=${mx}L, 20% solution=${other}L`, section: '4. Applications' });
   }
 
   function checkWorkTime() {
     const val = document.getElementById('wt-x').value;
     const fb = document.getElementById('wt-feedback');
-    const correct = LessonCheck.numericMatch(val, 20, 0.5);
 
-    LessonCheck.check('mon-worktime', correct, fb, {
-      correct: "Correct! \\(5x + 8x = 260 \\rightarrow 13x = 260 \\rightarrow x = \\mathbf{20}\\) minutes.",
-      retry: "Not quite yet. Each printer's rate times x gives its share of the pages; the two shares must add to 260. Try again.",
-      reveal: "Here's the correct procedure: \\(5x + 8x = 260 \\rightarrow 13x = 260 \\rightarrow x = \\mathbf{20}\\) minutes."
-    }, { label: 'Work & Time: two printers, 260 pages', answer: `${val} minutes` });
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter the time in minutes before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: 'mon-worktime', label: 'Work & Time: two printers, 260 pages', answer: `${val} minutes`, section: '4. Applications' });
   }
 
   // ==========================================
@@ -583,7 +592,7 @@
   // ==========================================
   function confirmIXL(cb) {
     if (cb.checked) {
-      LessonProgress.record('mon-confirm-ixl', 'Confirmed: completed IXL skill 28N', 'Yes', 'reflection');
+      LessonProgress.record('mon-confirm-ixl', 'Confirmed: completed IXL skill 28N', 'Yes', 'reflection', '5. IXL Practice');
     }
   }
 
@@ -603,14 +612,11 @@
       return;
     }
 
-    const mathOk = LessonCheck.numericMatch(a1, 6, 0.001);
     fb.className = "feedback-msg success";
-    fb.innerText = mathOk
-      ? "Correct and complete - Exit Ticket submitted and logged successfully!"
-      : "Exit Ticket submitted. Double-check Question 1: 6x - 7 = 29 solves to x = 6.";
+    fb.innerText = "Exit Ticket submitted and logged successfully!";
     fb.style.display = "block";
-    LessonProgress.record('mon-exit-1', 'Exit Ticket: solve 6x-7=29', a1, mathOk ? 'correct' : 'incomplete');
-    LessonProgress.recordText('Exit Ticket: which step keeps both sides equal', a2);
+    LessonProgress.record('mon-exit-1', 'Exit Ticket: solve 6x-7=29', a1, 'reflection', '6. Exit Ticket');
+    LessonProgress.recordText('Exit Ticket: which step keeps both sides equal', a2, '6. Exit Ticket');
   }
 
   // Initial render
@@ -618,6 +624,16 @@
   renderL12Practice();
   renderL13();
   renderL13Practice();
+
+  // Pre-register every question so the printed report always shows the
+  // full page, blank for anything never attempted.
+  warmupProblems.forEach((p, i) => LessonProgress.preRegister(`wu-${i}`, `Warm-Up: ${p.q}`, '1. Warm-Up'));
+  LessonProgress.preRegister('l12-challenge', 'Lesson 1-2 Challenge: 2(3x-4)+5=27', '2. Lesson 1-2');
+  LessonProgress.preRegister('l13-challenge', 'Lesson 1-3 Challenge: 8x-3=5x+2(x+6)', '3. Lesson 1-3');
+  LessonProgress.preRegister('mon-mixture', 'Mixture Investigation: 50% and 20% solutions', '4. Applications');
+  LessonProgress.preRegister('mon-worktime', 'Work & Time: two printers, 260 pages', '4. Applications');
+  LessonProgress.preRegister('mon-confirm-ixl', 'Confirmed: completed IXL skill 28N', '5. IXL Practice');
+  LessonProgress.preRegister('mon-exit-1', 'Exit Ticket: solve 6x-7=29', '6. Exit Ticket');
 </script>
 <div id="print-report"></div>
 </body>

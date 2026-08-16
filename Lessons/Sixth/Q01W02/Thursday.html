@@ -43,7 +43,7 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Your teacher gave your table a physical set of 8 problem cards in one real-world topic. Go to Tab 1, pick that same group, then type and check each of your 8 answers. When your table finishes, go to Tab 2 to rotate and share with another group. Finish on Tab 3 with the strategy checklist and reflection, then type your name above and click <strong>Print My Progress</strong>.
+    Your teacher gave your table a physical set of 10 problem cards in one real-world topic. Go to Tab 1, do the Guided Practice warm-up, pick that same group, then type and submit each of your 10 answers. When your table finishes, go to Tab 2 to rotate and share with another group. Finish on Tab 3 with the strategy checklist and reflection, then type your name above and click <strong>Print My Progress</strong>.
   </div>
 
   <nav class="nav-tabs">
@@ -58,8 +58,14 @@
     <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Thursday, August 20, 2026 &middot; 45 min &middot; CCSS.Math.Content.6.NS.B.3 &amp; MP1: Make Sense of Problems and Persevere in Solving Them</p>
 
     <div class="explainer-box">
-      Every group is solving the <strong>same kind of decimal problems</strong> - but set in a different real job. Medicine, market/business, engineering, and the arts all depend on getting decimals right. Solve your group's 8 problems together on your physical cards, then type and check each answer below so it saves to your progress.
+      Every group is solving the <strong>same kind of decimal problems</strong> - but set in a different real job. Medicine, market/business, engineering, and the arts all depend on getting decimals right. Solve your group's 10 problems together on your physical cards, then type and submit each answer below so it saves to your progress.
     </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Guided Practice</div>
+      <p style="margin:0;">Before you pick your group, warm up with 5 quick problems - type your answer and check each one.</p>
+    </div>
+    <div id="thu-guided-practice-list"></div>
 
     <div id="group-picker-box" class="station-card">
       <span class="station-label">Step 1</span>
@@ -77,7 +83,7 @@
       <div id="group-context" class="notebook-box"></div>
       <div class="howto-box">
         <strong class="howto-label">What to do here</strong>
-        Solve each problem on your physical card with your group first, then type your own answer in each box below and click Check right after solving it.
+        Solve each problem on your physical card with your group first, then type your own answer in each box below and click Submit right after solving it.
       </div>
       <div id="group-problems"></div>
     </div>
@@ -88,7 +94,7 @@
     <div class="section-title">Share What You Learned</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Once your table finishes all 8 problems, rotate around the room and visit a table from a <strong>different</strong> group. Ask them what their problems were about and why decimal precision matters in their field. Then come back here, pick which group you visited, and write 2-3 sentences about what you learned.
+      Once your table finishes all 10 problems, rotate around the room and visit a table from a <strong>different</strong> group. Ask them what their problems were about and why decimal precision matters in their field. Then come back here, pick which group you visited, and write 2-3 sentences about what you learned.
     </div>
 
     <div id="share-locked-notice" class="explainer-box">
@@ -164,6 +170,44 @@
     triggerMathJax();
   }
 
+  // ==========================================
+  // GUIDED PRACTICE (shared warm-up, before groups)
+  // ==========================================
+  const thuGuidedPractice = [
+    { q: "\\(14.6 + 9.35\\)", a: 23.95, tol: 0.01 },
+    { q: "\\(52.8 - 26.45\\)", a: 26.35, tol: 0.01 },
+    { q: "\\(6.2 \\times 4.5\\)", a: 27.9, tol: 0.02 },
+    { q: "\\(0.35 \\times 8.8\\)", a: 3.08, tol: 0.01 },
+    { q: "\\(71.05 - 33.6\\)", a: 37.45, tol: 0.01 }
+  ];
+
+  function renderThuGuidedPractice() {
+    const html = thuGuidedPractice.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="thugp-${i}-input" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkThuGuidedPractice(${i})">Check</button>
+        <div id="thugp-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('thu-guided-practice-list').innerHTML = html;
+    thuGuidedPractice.forEach((p, i) => LessonProgress.preRegister(`thugp-${i}`, `Guided Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '1. My Group'));
+    triggerMathJax();
+  }
+
+  function checkThuGuidedPractice(idx) {
+    const p = thuGuidedPractice[idx];
+    const val = document.getElementById(`thugp-${idx}-input`).value;
+    const fb = document.getElementById(`thugp-${idx}-feedback`);
+    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
+
+    LessonCheck.check(`thugp-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(= \\mathbf{${p.a}}\\)`,
+      retry: "Not quite yet. Line up decimals for add/subtract, or count total decimal places for multiplication. Try again.",
+      reveal: `Here's the correct procedure: ${p.q} \\(= \\mathbf{${p.a}}\\)`
+    }, { label: `Guided Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '1. My Group' });
+  }
+
   // Group data: each group has the same kind of decimal work, set in a different real-world job.
   const groups = {
     medicine: {
@@ -177,7 +221,9 @@
         { type: 'quick', q: "\\(1.5 \\times 8\\)", a: 12.0, tol: 0.05 },
         { type: 'quick', q: "\\(0.75 \\times 6\\)", a: 4.5, tol: 0.05 },
         { type: 'quick', q: "\\(2.2 \\times 3.5\\)", a: 7.7, tol: 0.05 },
-        { type: 'quick', q: "\\(3.2 \\times 2.5\\)", a: 8.0, tol: 0.05 }
+        { type: 'quick', q: "\\(3.2 \\times 2.5\\)", a: 8.0, tol: 0.05 },
+        { type: 'quick', q: "\\(0.4 \\times 15\\)", a: 6.0, tol: 0.05 },
+        { type: 'quick', q: "\\(1.25 \\times 4.4\\)", a: 5.5, tol: 0.05 }
       ]
     },
     market: {
@@ -191,7 +237,9 @@
         { type: 'quick', q: "\\(0.75 \\times 12\\)", a: 9.0, tol: 0.05 },
         { type: 'quick', q: "\\(4.20 \\times 3\\)", a: 12.6, tol: 0.05 },
         { type: 'quick', q: "\\(2.60 \\times 5.5\\)", a: 14.3, tol: 0.05 },
-        { type: 'quick', q: "\\(6.5 \\times 1.4\\)", a: 9.1, tol: 0.05 }
+        { type: 'quick', q: "\\(6.5 \\times 1.4\\)", a: 9.1, tol: 0.05 },
+        { type: 'quick', q: "\\(3.75 \\times 2.2\\)", a: 8.25, tol: 0.05 },
+        { type: 'quick', q: "\\(0.9 \\times 15\\)", a: 13.5, tol: 0.05 }
       ]
     },
     engineering: {
@@ -205,7 +253,9 @@
         { type: 'quick', q: "\\(0.6 \\times 12\\)", a: 7.2, tol: 0.05 },
         { type: 'quick', q: "\\(15.4 - 3.75\\)", a: 11.65, tol: 0.05 },
         { type: 'quick', q: "\\(8.2 \\times 0.5\\)", a: 4.1, tol: 0.05 },
-        { type: 'quick', q: "\\(3.6 \\times 2.5\\)", a: 9.0, tol: 0.05 }
+        { type: 'quick', q: "\\(3.6 \\times 2.5\\)", a: 9.0, tol: 0.05 },
+        { type: 'quick', q: "\\(6.4 - 2.75\\)", a: 3.65, tol: 0.05 },
+        { type: 'quick', q: "\\(4.5 \\times 1.5\\)", a: 6.75, tol: 0.05 }
       ]
     },
     arts: {
@@ -219,7 +269,9 @@
         { type: 'quick', q: "\\(12.25 - 4.6\\)", a: 7.65, tol: 0.05 },
         { type: 'quick', q: "\\(2.4 \\times 6.5\\)", a: 15.6, tol: 0.05 },
         { type: 'quick', q: "\\(5.5 \\times 2.2\\)", a: 12.1, tol: 0.05 },
-        { type: 'quick', q: "\\(1.8 \\times 0.5\\)", a: 0.9, tol: 0.05 }
+        { type: 'quick', q: "\\(1.8 \\times 0.5\\)", a: 0.9, tol: 0.05 },
+        { type: 'quick', q: "\\(2.6 \\times 3.5\\)", a: 9.1, tol: 0.05 },
+        { type: 'quick', q: "\\(9.4 - 3.65\\)", a: 5.75, tol: 0.05 }
       ]
     }
   };
@@ -263,7 +315,7 @@
     document.getElementById('group-picker-box').innerHTML = `
       <span class="station-label">Locked In</span>
       <h3 style="margin-top:8px; color:var(--primary);">🔒 Your group: ${g.icon} ${g.name}</h3>
-      <p>Your group is locked in for today. Scroll down to solve your 8 problems.</p>
+      <p>Your group is locked in for today. Scroll down to solve your 10 problems.</p>
     `;
 
     document.getElementById('group-context').innerHTML = `<div class="notebook-header">${g.icon} ${g.name}</div><p style="margin:0;">${g.context}</p>`;
@@ -271,6 +323,7 @@
     document.getElementById('group-content').style.display = 'block';
 
     setupShareTab();
+    LessonProgress.preRegister('thu-share-visited', 'Group Sharing: visited group', '2. Share What You Learned');
 
     triggerMathJax();
   }
@@ -287,31 +340,27 @@
           ${prompt}
           <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
             <input type="text" id="grp-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
-            <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkGroupItem(${i})">Check</button>
+            <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkGroupItem(${i})">Submit</button>
           </div>
           <div id="grp-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
         </div>
       `;
     }).join('');
     document.getElementById('group-problems').innerHTML = html;
+    g.problems.forEach((p, i) => LessonProgress.preRegister(`thu-grp-${i}`, `${g.name} Group #${i + 1}`, '1. My Group'));
   }
 
   function checkGroupItem(idx) {
     const g = groups[chosenGroup];
-    const p = g.problems[idx];
     const val = document.getElementById(`grp-${idx}-input`).value;
     const fb = document.getElementById(`grp-${idx}-feedback`);
-    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
 
-    const answerText = p.type === 'word'
-      ? `\\(\\mathbf{${p.a}${p.unit || ''}}\\)`
-      : `${p.q} \\(= \\mathbf{${p.a}}\\)`;
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter your answer before submitting.");
+      return;
+    }
 
-    LessonCheck.check(`thu-grp-${idx}`, correct, fb, {
-      correct: `Correct! ${answerText}`,
-      retry: "Not quite yet. Recheck your decimal alignment or your decimal-place count, then try again.",
-      reveal: `Here's the correct procedure: line up decimal points for addition/subtraction, or count total decimal places for multiplication. ${answerText}`
-    }, { label: `${g.name} Group #${idx + 1}`, answer: val });
+    LessonCheck.submit(fb, { key: `thu-grp-${idx}`, label: `${g.name} Group #${idx + 1}`, answer: val, section: '1. My Group' });
   }
 
   // Share tab: populate the "which group did you visit" dropdown with every group except your own
@@ -346,8 +395,8 @@
     }
 
     const visitedName = `${groups[visitedKey].icon} ${groups[visitedKey].name}`;
-    LessonProgress.record('thu-share-visited', 'Group Sharing: visited group', visitedName, 'reflection');
-    LessonProgress.recordText('Group Sharing: what I learned', notes);
+    LessonProgress.record('thu-share-visited', 'Group Sharing: visited group', visitedName, 'reflection', '2. Share What You Learned');
+    LessonProgress.recordText('Group Sharing: what I learned', notes, '2. Share What You Learned');
 
     fb.className = "feedback-msg success";
     fb.innerText = `Saved! Logged that you visited the ${visitedName} group.`;
@@ -363,13 +412,16 @@
     if (a1.length > 5) {
       fb.className = "feedback-msg success";
       fb.innerText = "Reflection submitted and logged successfully! See you tomorrow for Graded Classwork.";
-      LessonProgress.recordText('Reflection: strategy for tomorrow', a1);
+      LessonProgress.recordText('Reflection: strategy for tomorrow', a1, '3. Wrap-Up');
     } else {
       fb.className = "feedback-msg error";
       fb.innerText = "Please write a complete reflection before submitting.";
     }
     fb.style.display = "block";
   }
+
+  // Initial render
+  renderThuGuidedPractice();
 </script>
 <div id="print-report"></div>
 </body>

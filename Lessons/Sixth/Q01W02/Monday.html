@@ -218,6 +218,13 @@
       </div>
     </div>
 
+    <!-- ADDITION & SUBTRACTION GUIDED PRACTICE -->
+    <div class="notebook-box" style="margin-top:24px;">
+      <div class="notebook-header">Guided Practice</div>
+      <p style="margin:0;">Solve each problem, then type your answer and check it.</p>
+    </div>
+    <div id="addsub-practice-list"></div>
+
     <!-- ADDITION CHALLENGE -->
     <div class="challenge-box">
       <h3 style="margin-top:0; color:#b45309;">Addition & Subtraction Challenge Problem</h3>
@@ -228,7 +235,7 @@
         <input type="text" id="add-challenge-x" class="form-control-lg" style="max-width:160px;" placeholder="X = ?">
         <textarea id="add-challenge-explain" class="form-control-lg" rows="2" style="margin-top:10px;" placeholder="Explain your reasoning..."></textarea>
       </div>
-      <button class="btn-lg" onclick="checkAddChallenge()">Check My Work</button>
+      <button class="btn-lg" onclick="checkAddChallenge()">Submit My Work</button>
       <div id="add-challenge-feedback" class="feedback-msg"></div>
     </div>
   </div>
@@ -330,6 +337,13 @@
       </div>
     </div>
 
+    <!-- MULTIPLICATION GUIDED PRACTICE -->
+    <div class="notebook-box" style="margin-top:24px;">
+      <div class="notebook-header">Guided Practice</div>
+      <p style="margin:0;">Solve each problem, then type your answer and check it.</p>
+    </div>
+    <div id="mult-practice-list"></div>
+
     <!-- MULTIPLICATION CHALLENGE -->
     <div class="challenge-box">
       <h3 style="margin-top:0; color:#b45309;">Multiplication Challenge Problem</h3>
@@ -339,7 +353,7 @@
         <input type="text" id="mult-challenge-cost" class="form-control-lg" style="max-width:220px;" placeholder="$ total cost">
         <textarea id="mult-challenge-explain" class="form-control-lg" rows="2" style="margin-top:10px;" placeholder="Show your steps: area, then total cost..."></textarea>
       </div>
-      <button class="btn-lg" onclick="checkMultChallenge()">Check My Work</button>
+      <button class="btn-lg" onclick="checkMultChallenge()">Submit My Work</button>
       <div id="mult-challenge-feedback" class="feedback-msg"></div>
     </div>
   </div>
@@ -365,7 +379,7 @@
     </div>
 
     <div style="text-align: center; margin-top: 20px;">
-      <button class="btn-lg" onclick="checkWhiteboard()">Check Whiteboard Solution</button>
+      <button class="btn-lg" onclick="checkWhiteboard()">Submit Whiteboard Solution</button>
     </div>
     <div id="wb-feedback" class="feedback-msg"></div>
   </div>
@@ -406,7 +420,7 @@
         <label>C. If you pay with a \(\$50.00\) bill, how much change should you receive?</label>
         <input type="text" id="ps-fin-c" class="form-control-lg" style="max-width:220px;" placeholder="$ change">
       </div>
-      <button class="btn-lg" onclick="checkFinancialLiteracy()">Check My Work</button>
+      <button class="btn-lg" onclick="checkFinancialLiteracy()">Submit My Work</button>
       <div id="ps-fin-feedback" class="feedback-msg"></div>
     </div>
   </div>
@@ -482,15 +496,6 @@
     document.getElementById('inspector-title').innerText = detail.title;
     document.getElementById('inspector-body').innerText = detail.body;
     triggerMathJax();
-  }
-
-  // Helper for flexible digit matching (treats "" and "0" as equal for empty/zero cells)
-  function isDigitMatch(userVal, expectedVal) {
-    const u = (userVal || "").trim();
-    const e = (expectedVal || "").trim();
-    if (u === e) return true;
-    if ((u === "" || u === "0") && (e === "" || e === "0")) return true;
-    return false;
   }
 
   // ==========================================
@@ -1194,16 +1199,7 @@
         return;
       }
 
-      const p1Valid = isDigitMatch(p1_0, prob.p1[0]) && isDigitMatch(p1_1, prob.p1[1]) && isDigitMatch(p1_2, prob.p1[2]) && isDigitMatch(p1_3, prob.p1[3]);
-      const p2Valid = isDigitMatch(p2_0, prob.p2[0]) && isDigitMatch(p2_1, prob.p2[1]) && isDigitMatch(p2_2, prob.p2[2]) && isDigitMatch(p2_3, prob.p2[3]);
-      const finalValid = isDigitMatch(u0, prob.ans[0]) && isDigitMatch(u1, prob.ans[1]) && isDigitMatch(u2, prob.ans[2]) && isDigitMatch(u3, prob.ans[3]);
-      const decValid = (parseInt(decPlaces, 10) === prob.decimalPlaces);
-
-      LessonCheck.check(`wb-${currentWBProb}`, p1Valid && p2Valid && finalValid && decValid, fb, {
-        correct: "Whiteboard multiplication solution verified! Integer partial products (490, 7350), sum (7840), and 3 total decimal places placed correctly (7.840) are all correct.",
-        retry: "Not quite yet. Recheck your two partial products and their sum before worrying about the decimal point.",
-        reveal: `Here's the correct procedure: partial products are 0490 and 7350, integer sum 7840. Both factors together have 3 decimal places, so the final answer is 7.840.`
-      }, { label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${p1_0}${p1_1}${p1_2}${p1_3} / ${p2_0}${p2_1}${p2_2}${p2_3} / ${u0}${u1}${u2}${u3}, ${decPlaces} decimal places` });
+      LessonCheck.submit(fb, { key: `wb-${currentWBProb}`, label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${p1_0}${p1_1}${p1_2}${p1_3} / ${p2_0}${p2_1}${p2_2}${p2_3} / ${u0}${u1}${u2}${u3}, ${decPlaces} decimal places`, section: '4. Whiteboard Suite' });
     } else {
       const u0 = document.getElementById('wb-i0').value;
       const u1 = document.getElementById('wb-i1').value;
@@ -1211,20 +1207,90 @@
       const u3 = document.getElementById('wb-i3').value;
 
       if (![u0, u1, u2, u3].every(v => v.trim() !== '')) {
-        LessonCheck.incomplete(fb, "Fill in all four digit boxes before checking - this won't count as an attempt yet.");
+        LessonCheck.incomplete(fb, "Fill in all four digit boxes before submitting.");
         return;
       }
 
-      LessonCheck.check(`wb-${currentWBProb}`, isDigitMatch(u0, prob.ans[0]) && isDigitMatch(u1, prob.ans[1]) && isDigitMatch(u2, prob.ans[2]) && isDigitMatch(u3, prob.ans[3]), fb, {
-        correct: "Whiteboard solution verified! Place value columns correctly calculated.",
-        retry: "Not quite yet. Recheck each column, starting from the right - did you regroup/borrow correctly?",
-        reveal: `Here's the correct procedure: work right to left, column by column. The correct digits are ${prob.ans.join('')}.`
-      }, { label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${u0}${u1}${u2}${u3}` });
+      LessonCheck.submit(fb, { key: `wb-${currentWBProb}`, label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${u0}${u1}${u2}${u3}`, section: '4. Whiteboard Suite' });
     }
   }
 
   // Initial load for whiteboard
   loadWBProblem(1);
+
+  // ==========================================
+  // ADDITION & SUBTRACTION GUIDED PRACTICE
+  // ==========================================
+  const addsubPractice = [
+    { q: "\\(16.35 + 8.9\\)", a: 25.25, tol: 0.01 },
+    { q: "\\(40.6 - 17.85\\)", a: 22.75, tol: 0.01 },
+    { q: "\\(9.75 + 22.4\\)", a: 32.15, tol: 0.01 },
+    { q: "\\(63.2 - 28.47\\)", a: 34.73, tol: 0.01 },
+    { q: "\\(11.08 + 34.7\\)", a: 45.78, tol: 0.01 }
+  ];
+
+  function renderAddsubPractice() {
+    const html = addsubPractice.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="addsub-${i}-input" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkAddsubPractice(${i})">Check</button>
+        <div id="addsub-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('addsub-practice-list').innerHTML = html;
+    addsubPractice.forEach((p, i) => LessonProgress.preRegister(`addsub-${i}`, `Addition/Subtraction Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '2. Addition & Subtraction'));
+  }
+
+  function checkAddsubPractice(idx) {
+    const p = addsubPractice[idx];
+    const val = document.getElementById(`addsub-${idx}-input`).value;
+    const fb = document.getElementById(`addsub-${idx}-feedback`);
+    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
+
+    LessonCheck.check(`addsub-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(= \\mathbf{${p.a}}\\)`,
+      retry: "Not quite yet. Line up the decimal points (padding zeros if needed), then try again.",
+      reveal: `Here's the correct procedure: line up the decimal points, padding zeros where needed. ${p.q} \\(= \\mathbf{${p.a}}\\)`
+    }, { label: `Addition/Subtraction Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '2. Addition & Subtraction' });
+  }
+
+  // ==========================================
+  // MULTIPLICATION GUIDED PRACTICE
+  // ==========================================
+  const multPractice = [
+    { q: "\\(3.6 \\times 2.5\\)", a: 9.0, tol: 0.02 },
+    { q: "\\(0.8 \\times 7.25\\)", a: 5.8, tol: 0.02 },
+    { q: "\\(12.4 \\times 0.5\\)", a: 6.2, tol: 0.02 },
+    { q: "\\(0.06 \\times 9.2\\)", a: 0.552, tol: 0.005 },
+    { q: "\\(5.5 \\times 4.4\\)", a: 24.2, tol: 0.02 }
+  ];
+
+  function renderMultPractice() {
+    const html = multPractice.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="mult-${i}-input" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkMultPractice(${i})">Check</button>
+        <div id="mult-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('mult-practice-list').innerHTML = html;
+    multPractice.forEach((p, i) => LessonProgress.preRegister(`mult-${i}`, `Multiplication Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '3. Multiplication Algorithm'));
+  }
+
+  function checkMultPractice(idx) {
+    const p = multPractice[idx];
+    const val = document.getElementById(`mult-${idx}-input`).value;
+    const fb = document.getElementById(`mult-${idx}-feedback`);
+    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
+
+    LessonCheck.check(`mult-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(= \\mathbf{${p.a}}\\)`,
+      retry: "Not quite yet. Multiply as whole numbers, then count the total decimal places in the factors. Try again.",
+      reveal: `Here's the correct procedure: multiply as whole numbers, then shift the decimal point by the total decimal places in both factors. ${p.q} \\(= \\mathbf{${p.a}}\\)`
+    }, { label: `Multiplication Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '3. Multiplication Algorithm' });
+  }
 
   // ==========================================
   // CHALLENGE PROBLEMS (Panels 2 & 3)
@@ -1235,17 +1301,11 @@
     const fb = document.getElementById('add-challenge-feedback');
 
     if (!x.trim() || explain.length <= 5) {
-      LessonCheck.incomplete(fb, "Fill in the missing digit and write your explanation before checking - this won't count as an attempt yet.");
+      LessonCheck.incomplete(fb, "Fill in the missing digit and write your explanation before submitting.");
       return;
     }
 
-    const correct = LessonCheck.numericMatch(x, 4, 0.001) && explain.length > 5;
-
-    LessonCheck.check('mon-add-challenge', correct, fb, {
-      correct: "Correct! In the tenths column, \\(X + 2 = 6\\), so \\(X = 4\\). Full equation: \\(14.45 + 3.20 = 17.65\\).",
-      retry: "Not quite yet. Look only at the tenths column: what digit, plus 2, makes 6? Write your reasoning and try again.",
-      reveal: "Here's the correct procedure: in the tenths column, \\(X + 2 = 6\\), so \\(X = \\mathbf{4}\\). Full equation: \\(14.45 + 3.20 = 17.65\\)."
-    }, { label: 'Addition Challenge: find X in 14.X5 + 3.20 = 17.65', answer: `X = ${x}` });
+    LessonCheck.submit(fb, { key: 'mon-add-challenge', label: 'Addition Challenge: find X in 14.X5 + 3.20 = 17.65', answer: `X = ${x}`, section: '2. Addition & Subtraction' });
   }
 
   function checkMultChallenge() {
@@ -1254,17 +1314,11 @@
     const fb = document.getElementById('mult-challenge-feedback');
 
     if (!cost.trim() || explain.length <= 5) {
-      LessonCheck.incomplete(fb, "Fill in the total cost and write your explanation before checking - this won't count as an attempt yet.");
+      LessonCheck.incomplete(fb, "Fill in the total cost and write your explanation before submitting.");
       return;
     }
 
-    const correct = LessonCheck.numericMatch(cost, 26.40, 0.02) && explain.length > 5;
-
-    LessonCheck.check('mon-mult-challenge', correct, fb, {
-      correct: "Correct! Area \\(= 5.5 \\times 3.2 = 17.6\\text{ m}^2\\). Total cost \\(= 17.6 \\times \\$1.50 = \\mathbf{\\$26.40}\\).",
-      retry: "Not quite yet. This is two steps: find the garden's area first, then multiply the area by the cost per square meter.",
-      reveal: "Here's the correct procedure: Area \\(= 5.5 \\times 3.2 = 17.6\\text{ m}^2\\). Total cost \\(= 17.6 \\times \\$1.50 = \\mathbf{\\$26.40}\\)."
-    }, { label: 'Multiplication Challenge: garden seed cost', answer: `$${cost}` });
+    LessonCheck.submit(fb, { key: 'mon-mult-challenge', label: 'Multiplication Challenge: garden seed cost', answer: `$${cost}`, section: '3. Multiplication Algorithm' });
   }
 
   // ==========================================
@@ -1291,12 +1345,13 @@
         <strong>${i + 1}.</strong> ${p.q}
         <div style="margin-top:10px;">
           <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Your answer">
-          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkPracticeSetItem('${keyPrefix}', ${i})">Check</button>
+          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkPracticeSetItem('${keyPrefix}', ${i})">Submit</button>
         </div>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
       </div>
     `).join('');
     document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, `Practice Set: ${p.q.replace(/\\\(|\\\)/g, '')}`, '5. Weekly Practice Set'));
   }
 
   function checkPracticeSetItem(keyPrefix, idx) {
@@ -1304,13 +1359,13 @@
     const p = problems[idx];
     const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
-    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
 
-    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
-      correct: `Correct! \\(\\mathbf{${p.a}}\\)`,
-      retry: "Not quite yet. Estimate first by rounding, then recheck your alignment and try again.",
-      reveal: `Here's the correct procedure: ${p.work}`
-    }, { label: `Practice Set: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val });
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter your answer before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: `${keyPrefix}-${idx}`, label: `Practice Set: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '5. Weekly Practice Set' });
   }
 
   function checkFinancialLiteracy() {
@@ -1320,21 +1375,25 @@
     const fb = document.getElementById('ps-fin-feedback');
 
     if (!a.trim() || !b.trim() || !c.trim()) {
-      LessonCheck.incomplete(fb, "Fill in the subtotal, total, and change before checking - this won't count as an attempt yet.");
+      LessonCheck.incomplete(fb, "Fill in the subtotal, total, and change before submitting.");
       return;
     }
 
-    const correct = LessonCheck.numericMatch(a, 24.09, 0.02) && LessonCheck.numericMatch(b, 25.77, 0.02) && LessonCheck.numericMatch(c, 24.23, 0.02);
-
-    LessonCheck.check('ps-financial', correct, fb, {
-      correct: "Correct! Subtotal: \\(2.89 + 12.45 + 8.75 = \\$24.09\\). Total with tax: \\(24.09 + 1.68 = \\$25.77\\). Change from \\$50: \\(50.00 - 25.77 = \\$24.23\\).",
-      retry: "Not quite yet. Work top to bottom: subtotal first, then add tax for the total, then subtract that total from \\$50.00 for the change.",
-      reveal: "Here's the correct procedure: Subtotal \\(= 2.89 + 12.45 + 8.75 = \\mathbf{\\$24.09}\\). Total \\(= 24.09 + 1.68 = \\mathbf{\\$25.77}\\). Change \\(= 50.00 - 25.77 = \\mathbf{\\$24.23}\\)."
-    }, { label: 'Financial Literacy: subtotal / total / change', answer: `A=$${a}, B=$${b}, C=$${c}` });
+    LessonCheck.submit(fb, { key: 'ps-financial', label: 'Financial Literacy: subtotal / total / change', answer: `A=$${a}, B=$${b}, C=$${c}`, section: '5. Weekly Practice Set' });
   }
 
   renderPracticeSetList('ps-part1-list', practiceSetPart1, 'ps1');
   renderPracticeSetList('ps-part2-list', practiceSetPart2, 'ps2');
+  renderAddsubPractice();
+  renderMultPractice();
+
+  // Pre-register every question so the printed report always shows the
+  // full page, blank for anything never attempted.
+  Object.keys(wbProblems).forEach((id) => LessonProgress.preRegister(`wb-${id}`, `Whiteboard: ${wbProblems[id].title.replace(/\\\(|\\\)/g, '')}`, '4. Whiteboard Suite'));
+  LessonProgress.preRegister('mon-add-challenge', 'Addition Challenge: find X in 14.X5 + 3.20 = 17.65', '2. Addition & Subtraction');
+  LessonProgress.preRegister('mon-mult-challenge', 'Multiplication Challenge: garden seed cost', '3. Multiplication Algorithm');
+  LessonProgress.preRegister('ps-financial', 'Financial Literacy: subtotal / total / change', '5. Weekly Practice Set');
+  LessonProgress.preRegister('mon-exit-ticket', 'Exit Ticket: sum and product', '6. Exit Ticket');
 
   // Exit Ticket Submission
   function submitExitTicket(e) {
@@ -1346,22 +1405,13 @@
     const fb = document.getElementById('exit-feedback');
 
     if (!a1.trim() || !a2.trim() || exp.length <= 5 || ref.length <= 5) {
-      LessonCheck.incomplete(fb, "Fill in the sum, the product, and both explanation boxes before submitting - this won't count as an attempt yet.");
+      LessonCheck.incomplete(fb, "Fill in the sum, the product, and both explanation boxes before submitting.");
       return;
     }
 
-    const correct = LessonCheck.numericMatch(a1, 4.75, 0.01) && LessonCheck.numericMatch(a2, 4.375, 0.005) && exp.length > 5 && ref.length > 5;
-
-    LessonCheck.check('mon-exit-ticket', correct, fb, {
-      correct: "Correct and complete - Exit Ticket submitted and logged successfully!",
-      retry: "Not quite yet. Double-check your sum and product, and make sure both explanation boxes are filled in, then resubmit.",
-      reveal: "Here's the correct procedure: Sum \\(= 3.5 + 1.25 = \\mathbf{4.75}\\). Product \\(= 3.5 \\times 1.25 = \\mathbf{4.375}\\) (multiply as whole numbers \\(35 \\times 125 = 4375\\), then shift 3 decimal places). Make sure both explanation boxes are filled in before resubmitting."
-    }, { label: 'Exit Ticket: sum and product', answer: `Sum=${a1}, Product=${a2}` });
-
-    if (correct) {
-      LessonProgress.recordText('Exit Ticket: procedural difference explanation', exp);
-      LessonProgress.recordText('Exit Ticket: metacognition reflection', ref);
-    }
+    LessonCheck.submit(fb, { key: 'mon-exit-ticket', label: 'Exit Ticket: sum and product', answer: `Sum=${a1}, Product=${a2}`, section: '6. Exit Ticket' }, "Exit Ticket submitted and logged successfully!");
+    LessonProgress.recordText('Exit Ticket: procedural difference explanation', exp, '6. Exit Ticket');
+    LessonProgress.recordText('Exit Ticket: metacognition reflection', ref, '6. Exit Ticket');
   }
 </script>
 <div id="print-report"></div>

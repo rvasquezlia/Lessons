@@ -118,7 +118,7 @@
 
   function confirmClasswork(cb) {
     if (cb.checked) {
-      LessonProgress.record('fri-confirm-classwork', 'Confirmed: completed and turned in paper Graded Classwork', 'Yes', 'reflection');
+      LessonProgress.record('fri-confirm-classwork', 'Confirmed: completed and turned in paper Graded Classwork', 'Yes', 'reflection', "1. Today's Assessment");
     }
   }
 
@@ -131,14 +131,17 @@
     if (a1.length > 5 && a2.length > 5) {
       fb.className = "feedback-msg success";
       fb.innerText = "Reflection submitted and logged successfully! Great work this week.";
-      LessonProgress.recordText('Reflection: skill to review before the test', a1);
-      LessonProgress.recordText('Reflection: most challenging problem', a2);
+      LessonProgress.recordText('Reflection: skill to review before the test', a1, '2. Reflection');
+      LessonProgress.recordText('Reflection: most challenging problem', a2, '2. Reflection');
     } else {
       fb.className = "feedback-msg error";
       fb.innerText = "Please write a complete answer for both questions.";
     }
     fb.style.display = "block";
   }
+
+  // Initial render
+  LessonProgress.preRegister('fri-confirm-classwork', 'Confirmed: completed and turned in paper Graded Classwork', "1. Today's Assessment");
 </script>
 <div id="print-report"></div>
 </body>

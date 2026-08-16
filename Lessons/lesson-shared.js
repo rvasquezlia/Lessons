@@ -10,29 +10,49 @@
 // answered (LessonProgress) so the page can print a "proof of completion"
 // summary - see printProgressReport() below.
 const LessonProgress = (() => {
-  const items = []; // ordered list of {key, label, answer, verdict}
+  const items = []; // ordered list of {key, label, section, answer, verdict}
   let openEndedCounter = 0;
 
   // Records/updates one practice item. verdict is 'correct', 'incomplete'
-  // (never got it right), or 'reflection' (open-ended, no right answer).
-  function record(key, label, answer, verdict) {
+  // (never got it right), 'reflection' (open-ended or submit-only, no
+  // right answer graded on screen), or 'not-attempted' (pre-registered,
+  // never touched). `section` is the tab/section name shown on the
+  // printed report - pass it every time an item is first registered.
+  function record(key, label, answer, verdict, section) {
     const idx = items.findIndex((i) => i.key === key);
-    const entry = { key, label, answer: answer || '(blank)', verdict };
+    const entry = {
+      key,
+      label,
+      section: section || (idx >= 0 ? items[idx].section : ''),
+      answer: (answer === '' || answer === undefined || answer === null) ? '(blank)' : answer,
+      verdict
+    };
     if (idx >= 0) items[idx] = entry;
     else items.push(entry);
   }
 
   // For open-ended reflection fields that don't go through LessonCheck.
-  function recordText(label, text) {
+  function recordText(label, text, section) {
     openEndedCounter++;
-    record(`text-${openEndedCounter}-${label}`, label, text, 'reflection');
+    record(`text-${openEndedCounter}-${label}`, label, text, 'reflection', section);
+  }
+
+  // Pre-registers a question as "not attempted" so it always shows up on
+  // the printed report, in its correct section and position, even if the
+  // student never touches it. Call once per question at render time -
+  // record()/submit() later update this same entry in place once the
+  // student actually answers, without disturbing its position.
+  function preRegister(key, label, section) {
+    if (!items.find((i) => i.key === key)) {
+      items.push({ key, label, section: section || '', answer: '', verdict: 'not-attempted' });
+    }
   }
 
   function all() {
     return items;
   }
 
-  return { record, recordText, all };
+  return { record, recordText, preRegister, all };
 })();
 
 const LessonCheck = (() => {
@@ -97,8 +117,9 @@ const LessonCheck = (() => {
   }
 
   // One call that evaluates + renders together, for the common case.
-  // Pass `record` as {label, answer} to log this item for the printable
-  // progress report; omit it for items that shouldn't appear there.
+  // Pass `record` as {label, answer, section} to log this item for the
+  // printable progress report; omit it for items that shouldn't appear
+  // there.
   function check(key, isCorrect, feedbackEl, messages, record) {
     const outcome = evaluate(key, isCorrect);
     show(feedbackEl, outcome, messages);
@@ -108,7 +129,7 @@ const LessonCheck = (() => {
     // 'locked' means this was already recorded when it first revealed -
     // never overwrite that with a later (possibly copied-in) answer.
     if (record && outcome !== 'locked') {
-      LessonProgress.record(key, record.label, record.answer, outcome === 'correct' ? 'correct' : 'incomplete');
+      LessonProgress.record(key, record.label, record.answer, outcome === 'correct' ? 'correct' : 'incomplete', record.section);
     }
     return outcome;
   }
@@ -132,7 +153,26 @@ const LessonCheck = (() => {
     }
   }
 
-  return { evaluate, reset, show, check, numericMatch, incomplete };
+  // For "submit-only" items (anything that isn't a formally labeled
+  // Guided Practice section): records the answer for the printed report
+  // without grading it on screen. No right/wrong verdict, no attempt
+  // counter, no lock - correctness is checked later from the printout,
+  // not on the page. `record` is required: {key, label, answer, section}.
+  function submit(feedbackEl, record, message) {
+    if (feedbackEl) {
+      feedbackEl.style.display = 'block';
+      feedbackEl.className = 'feedback-msg success';
+      feedbackEl.innerHTML = message || 'Submitted! This will be reviewed from your printed progress report.';
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        MathJax.typesetPromise([feedbackEl]).catch((err) => console.log(err));
+      }
+    }
+    if (record) {
+      LessonProgress.record(record.key, record.label, record.answer, 'reflection', record.section);
+    }
+  }
+
+  return { evaluate, reset, show, check, numericMatch, incomplete, submit };
 })();
 
 // ==========================================
@@ -148,36 +188,58 @@ function printProgressReport(lessonTitle) {
   const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   const items = LessonProgress.all();
 
+  const verdictLabel = (v) => v === 'correct' ? 'Correct'
+    : v === 'reflection' ? 'Submitted'
+    : v === 'not-attempted' ? 'Not attempted'
+    : 'Needs review';
+
   let rows = '';
   if (items.length === 0) {
-    rows = '<tr><td colspan="3" style="text-align:center; padding:16px;">No activities completed yet - work through the tabs on this page, then come back and print.</td></tr>';
+    rows = '<tr><td colspan="3" style="text-align:center; padding:16px;">No activities on this page yet - work through the tabs, then come back and print.</td></tr>';
   } else {
-    items.forEach((item, i) => {
-      const verdictLabel = item.verdict === 'correct' ? 'Correct'
-        : item.verdict === 'reflection' ? 'Submitted'
-        : 'Needs review';
-      rows += `
-        <tr>
-          <td>${i + 1}. ${item.label}</td>
-          <td>${item.answer}</td>
-          <td>${verdictLabel}</td>
-        </tr>`;
+    // Group by section, preserving the order sections were first seen
+    // (which matches tab/page order, since items are pre-registered at
+    // render time in that same order).
+    const sectionOrder = [];
+    const bySection = {};
+    items.forEach((item) => {
+      const sec = item.section || 'This Page';
+      if (!bySection[sec]) { bySection[sec] = []; sectionOrder.push(sec); }
+      bySection[sec].push(item);
+    });
+
+    let n = 0;
+    sectionOrder.forEach((sec) => {
+      rows += `<tr class="print-section-row"><td colspan="3">${sec}</td></tr>`;
+      bySection[sec].forEach((item) => {
+        n++;
+        const answerText = item.verdict === 'not-attempted'
+          ? '<span class="print-blank">&mdash;</span>'
+          : item.answer;
+        rows += `
+          <tr>
+            <td>${n}. ${item.label}</td>
+            <td>${answerText}</td>
+            <td>${verdictLabel(item.verdict)}</td>
+          </tr>`;
+      });
     });
   }
 
   const total = items.length;
+  const attempted = items.filter((i) => i.verdict !== 'not-attempted').length;
   const correct = items.filter((i) => i.verdict === 'correct').length;
 
   const report = document.getElementById('print-report');
   report.innerHTML = `
     <h1>${lessonTitle}</h1>
     <p class="print-meta"><strong>Student:</strong> ${name} &nbsp;&nbsp; <strong>Date:</strong> ${today}</p>
-    <p class="print-meta"><strong>Activities logged:</strong> ${total} &nbsp;&nbsp; <strong>Correct on first or second try:</strong> ${correct}</p>
+    <p class="print-meta"><strong>Questions on this page:</strong> ${total} &nbsp;&nbsp; <strong>Attempted:</strong> ${attempted} &nbsp;&nbsp; <strong>Correct on first or second try:</strong> ${correct}</p>
     <table class="print-table">
-      <thead><tr><th>Activity</th><th>Your Answer</th><th>Result</th></tr></thead>
+      <thead><tr><th>Activity</th><th>Answer Given</th><th>Result</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>
-    <p class="print-footer">Printed from the interactive lesson page as proof of completion.</p>
+    <p class="print-footer">Printed from the interactive lesson page as a full record of this student's work, section by section.</p>
   `;
 
   window.print();

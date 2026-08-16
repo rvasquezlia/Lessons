@@ -39,7 +39,7 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Tab 1 is a quick warm-up, Tab 2 is mixed review practice. Tab 3 is the Strategy Challenge - your teacher will hand your group a physical card with one equation; solve it and defend your approach. Tab 4 is the Decision-Making Scenario. Tab 5 is IXL. Finish on Tab 6, then print your progress for tomorrow's Graded Classwork readiness check.
+    Tab 2's Guided Practice checks your answers on screen as you go, with up to 2 tries per problem. Everything else on this page (Warm-Up, Strategy Challenge, Decision-Making, IXL, Exit Ticket) just submits and saves your work - your teacher reviews it from your printed progress report, not on screen. Finish every tab, then type your name in the blue bar and click Print My Progress for tomorrow's Graded Classwork readiness check.
   </div>
 
   <nav class="nav-tabs">
@@ -64,7 +64,7 @@
       <strong>1.</strong> \(3x + 7 = 22\)
       <div style="margin-top:10px;">
         <input type="text" id="wu-0-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="x =">
-        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkWarmup(0)">Check</button>
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkWarmup(0)">Submit</button>
       </div>
       <div id="wu-0-feedback" class="feedback-msg" style="margin-top:10px;"></div>
     </div>
@@ -72,7 +72,7 @@
       <strong>2.</strong> \(5x - 3 = 3x + 9\)
       <div style="margin-top:10px;">
         <input type="text" id="wu-1-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="x =">
-        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkWarmup(1)">Check</button>
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkWarmup(1)">Submit</button>
       </div>
       <div id="wu-1-feedback" class="feedback-msg" style="margin-top:10px;"></div>
     </div>
@@ -93,9 +93,12 @@
     <div class="section-title">Mixed Equation Practice</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      These equations mix every type from this week - one solution, no solution, and infinitely many. Solve each and type "no solution" or "infinite" where the variable cancels.
+      These equations mix every type from this week - one solution, no solution, and infinitely many. Solve each and type "no solution" or "infinite" where the variable cancels. This is Guided Practice: your answers are checked on screen, with up to 2 tries per problem.
     </div>
-    <div id="mixed-list"></div>
+    <div class="notebook-box">
+      <div class="notebook-header">Guided Practice</div>
+      <div id="mixed-list"></div>
+    </div>
   </div>
 
   <!-- TAB 3: STRATEGY CHALLENGE -->
@@ -129,7 +132,7 @@
           <label>What strategy did you use first (distribute, collect variable terms, etc.), and why was it the most efficient choice for this equation?</label>
           <textarea id="strategy-explain" class="form-control-lg" rows="3" placeholder="I started by..."></textarea>
         </div>
-        <button class="btn-lg" onclick="checkStrategy()">Check My Work</button>
+        <button class="btn-lg" onclick="checkStrategy()">Submit My Work</button>
         <div id="strategy-feedback" class="feedback-msg"></div>
       </div>
     </div>
@@ -140,7 +143,7 @@
     <div class="section-title">Real-Life Application: Decision-Making Scenario</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Set the two total-cost expressions equal, solve for the number of months, then use the result to make a recommendation.
+      Set the two total-cost expressions equal, solve for the number of months, then use the result to make a recommendation. This submits your work for your teacher to review - it isn't graded on screen.
     </div>
 
     <div class="step-box">
@@ -156,7 +159,7 @@
         <label>Which provider is the better choice for a full year of service, and why?</label>
         <textarea id="decision-explain" class="form-control-lg" rows="2" placeholder="For a full year..."></textarea>
       </div>
-      <button class="btn-lg" onclick="checkDecision()">Check My Work</button>
+      <button class="btn-lg" onclick="checkDecision()">Submit My Work</button>
       <div id="decision-feedback" class="feedback-msg"></div>
     </div>
   </div>
@@ -222,22 +225,20 @@
     const p = warmupProblems[idx];
     const val = document.getElementById(`wu-${idx}-input`).value;
     const fb = document.getElementById(`wu-${idx}-feedback`);
-    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
 
-    LessonCheck.check(`wu-${idx}`, correct, fb, {
-      correct: `Correct! \\(x = \\mathbf{${p.a}}\\)`,
-      retry: "Not quite yet. Simplify and isolate x, then try again.",
-      reveal: `Here's the correct procedure for ${p.q}: \\(x = \\mathbf{${p.a}}\\)`
-    }, { label: `Warm-Up: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val });
+    LessonCheck.submit(fb, { key: `wu-${idx}`, label: `Warm-Up: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '1. Warm-Up' });
   }
 
-  // Mixed Review
+  // Mixed Review (Guided Practice - checked on screen)
   const mixedProblems = [
     { q: "\\(2x + 9 = 21\\)", type: "number", a: 6 },
     { q: "\\(7 - 3x = -8\\)", type: "number", a: 5 },
     { q: "\\(4(x - 1) = 2x + 6\\)", type: "number", a: 5 },
     { q: "\\(5x - 2 = 5x + 6\\)", type: "special", a: "no solution" },
-    { q: "\\(3(x + 2) = 3x + 6\\)", type: "special", a: "infinite" }
+    { q: "\\(3(x + 2) = 3x + 6\\)", type: "special", a: "infinite" },
+    { q: "\\(6x - 4 = 2x + 16\\)", type: "number", a: 5 },
+    { q: "\\(5(x + 1) = 5x + 5\\)", type: "special", a: "infinite" },
+    { q: "\\(3x - 9 = 3x + 2\\)", type: "special", a: "no solution" }
   ];
 
   function renderMixed() {
@@ -250,6 +251,7 @@
       </div>
     `).join('');
     document.getElementById('mixed-list').innerHTML = html;
+    mixedProblems.forEach((p, i) => LessonProgress.preRegister(`mix-${i}`, `Mixed Review #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '2. Mixed Review'));
     triggerMathJax();
   }
 
@@ -270,7 +272,7 @@
       correct: `Correct! ${p.q} \\(\\rightarrow\\) ${answerText}`,
       retry: "Not quite yet. Simplify fully and watch what happens to the variable term. Try again.",
       reveal: `Here's the correct procedure: ${p.q} \\(\\rightarrow\\) ${answerText}`
-    }, { label: `Mixed Review #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw });
+    }, { label: `Mixed Review #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '2. Mixed Review' });
   }
 
   // Strategy Challenge (choose-confirm-lock group picker, same pattern as Tuesday's batches)
@@ -322,6 +324,7 @@
     document.getElementById('strategy-title').innerText = g.title;
     document.getElementById('strategy-equation').innerHTML = g.eq;
     document.getElementById('strategy-content').style.display = 'block';
+    LessonProgress.preRegister(`strategy-${key}`, `Strategy Challenge (Group ${key}): ${g.eq.replace(/\\\(|\\\)/g, '')}`, '3. Strategy Challenge');
     triggerMathJax();
   }
 
@@ -332,24 +335,11 @@
     const fb = document.getElementById('strategy-feedback');
 
     if (!raw.trim() || explain.length <= 5) {
-      LessonCheck.incomplete(fb, "Enter your solution and defend your strategy before checking - this won't count as an attempt yet.");
+      LessonCheck.incomplete(fb, "Enter your solution and defend your strategy before submitting.");
       return;
     }
 
-    let correct;
-    if (g.type === "number") {
-      correct = LessonCheck.numericMatch(raw, g.a, 0.001);
-    } else {
-      const norm = raw.trim().toLowerCase();
-      correct = g.a === "no solution" ? (norm.includes("no solution") || norm === "none") : norm.includes("infinite");
-    }
-    const answerText = g.type === "number" ? `x = \\(\\mathbf{${g.a}}\\)` : `<strong>${g.a}</strong>`;
-
-    LessonCheck.check(`strategy-${chosenStrategyGroup}`, correct, fb, {
-      correct: `Correct! ${g.eq} \\(\\rightarrow\\) ${answerText}`,
-      retry: "Not quite yet. Reconsider your first move, then try again.",
-      reveal: `Here's the correct procedure: ${g.eq} \\(\\rightarrow\\) ${answerText}`
-    }, { label: `Strategy Challenge (Group ${chosenStrategyGroup}): ${g.eq.replace(/\\\(|\\\)/g, '')}`, answer: raw });
+    LessonCheck.submit(fb, { key: `strategy-${chosenStrategyGroup}`, label: `Strategy Challenge (Group ${chosenStrategyGroup}): ${g.eq.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '3. Strategy Challenge' });
   }
 
   // Decision-Making Scenario
@@ -359,22 +349,17 @@
     const fb = document.getElementById('decision-feedback');
 
     if (!x.trim() || explain.length <= 5) {
-      LessonCheck.incomplete(fb, "Enter the number of months and your recommendation before checking - this won't count as an attempt yet.");
+      LessonCheck.incomplete(fb, "Enter the number of months and your recommendation before submitting.");
       return;
     }
 
-    const correct = LessonCheck.numericMatch(x, 4, 0.001);
-    LessonCheck.check('thu-decision', correct, fb, {
-      correct: "Correct! \\(45+20x=65+15x \\rightarrow 5x=20 \\rightarrow x=\\mathbf{4}\\) months. After month 4, Provider B's lower monthly rate makes it cheaper - for a full year, Provider B costs less overall.",
-      retry: "Not quite yet. Set the two total-cost expressions equal and solve for x. Try again.",
-      reveal: "Here's the correct procedure: \\(45+20x=65+15x \\rightarrow 5x=20 \\rightarrow x=\\mathbf{4}\\) months. After that point, Provider B (lower monthly rate) is cheaper overall."
-    }, { label: 'Decision-Making: internet providers', answer: `x=${x} months` });
+    LessonCheck.submit(fb, { key: 'thu-decision', label: 'Decision-Making: internet providers', answer: `x=${x} months`, section: '4. Decision-Making' });
   }
 
   // IXL confirmation
   function confirmIXL(cb) {
     if (cb.checked) {
-      LessonProgress.record('thu-confirm-ixl', 'Confirmed: completed IXL skill H9G', 'Yes', 'reflection');
+      LessonProgress.record('thu-confirm-ixl', 'Confirmed: completed IXL skill H9G', 'Yes', 'reflection', '5. IXL Practice');
     }
   }
 
@@ -387,7 +372,7 @@
     if (a1.length > 5) {
       fb.className = "feedback-msg success";
       fb.innerText = "Reflection submitted and logged successfully! See you tomorrow for Graded Classwork.";
-      LessonProgress.recordText('Exit Ticket: strongest and weakest strategy', a1);
+      LessonProgress.recordText('Exit Ticket: strongest and weakest strategy', a1, '6. Exit Ticket');
     } else {
       fb.className = "feedback-msg error";
       fb.innerText = "Please write a complete reflection before submitting.";
@@ -397,6 +382,9 @@
 
   // Initial render
   renderMixed();
+  warmupProblems.forEach((p, i) => LessonProgress.preRegister(`wu-${i}`, `Warm-Up: ${p.q.replace(/\\\(|\\\)/g, '')}`, '1. Warm-Up'));
+  LessonProgress.preRegister('thu-decision', 'Decision-Making: internet providers', '4. Decision-Making');
+  LessonProgress.preRegister('thu-confirm-ixl', 'Confirmed: completed IXL skill H9G', '5. IXL Practice');
 </script>
 <div id="print-report"></div>
 </body>
