@@ -118,7 +118,21 @@ const LessonCheck = (() => {
     return !isNaN(v) && Math.abs(v - expected) <= tolerance;
   }
 
-  return { evaluate, reset, show, check, numericMatch };
+  // For multi-field problems (a number plus an explanation, several sub-
+  // answers, etc.): call this instead of check() when some field is still
+  // blank. It shows a "fill everything in" message WITHOUT touching the
+  // attempt counter, so a student mid-filling the form never burns one of
+  // their two tries just for not being done yet.
+  function incomplete(feedbackEl, message) {
+    feedbackEl.style.display = 'block';
+    feedbackEl.className = 'feedback-msg error';
+    feedbackEl.innerHTML = message || "Please fill in every field before checking - an incomplete submission doesn't count as an attempt.";
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise([feedbackEl]).catch((err) => console.log(err));
+    }
+  }
+
+  return { evaluate, reset, show, check, numericMatch, incomplete };
 })();
 
 // ==========================================

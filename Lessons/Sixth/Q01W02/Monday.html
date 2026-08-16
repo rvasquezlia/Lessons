@@ -1188,6 +1188,12 @@
 
       const decPlaces = document.getElementById('wb-dec-places').value;
 
+      const allFilled = [p1_0, p1_1, p1_2, p1_3, p2_0, p2_1, p2_2, p2_3, u0, u1, u2, u3, decPlaces].every(v => v.trim() !== '');
+      if (!allFilled) {
+        LessonCheck.incomplete(fb, "Fill in every box (both partial products, the final answer, and the decimal places) before checking - this won't count as an attempt yet.");
+        return;
+      }
+
       const p1Valid = isDigitMatch(p1_0, prob.p1[0]) && isDigitMatch(p1_1, prob.p1[1]) && isDigitMatch(p1_2, prob.p1[2]) && isDigitMatch(p1_3, prob.p1[3]);
       const p2Valid = isDigitMatch(p2_0, prob.p2[0]) && isDigitMatch(p2_1, prob.p2[1]) && isDigitMatch(p2_2, prob.p2[2]) && isDigitMatch(p2_3, prob.p2[3]);
       const finalValid = isDigitMatch(u0, prob.ans[0]) && isDigitMatch(u1, prob.ans[1]) && isDigitMatch(u2, prob.ans[2]) && isDigitMatch(u3, prob.ans[3]);
@@ -1203,6 +1209,11 @@
       const u1 = document.getElementById('wb-i1').value;
       const u2 = document.getElementById('wb-i2').value;
       const u3 = document.getElementById('wb-i3').value;
+
+      if (![u0, u1, u2, u3].every(v => v.trim() !== '')) {
+        LessonCheck.incomplete(fb, "Fill in all four digit boxes before checking - this won't count as an attempt yet.");
+        return;
+      }
 
       LessonCheck.check(`wb-${currentWBProb}`, isDigitMatch(u0, prob.ans[0]) && isDigitMatch(u1, prob.ans[1]) && isDigitMatch(u2, prob.ans[2]) && isDigitMatch(u3, prob.ans[3]), fb, {
         correct: "Whiteboard solution verified! Place value columns correctly calculated.",
@@ -1222,6 +1233,12 @@
     const x = document.getElementById('add-challenge-x').value;
     const explain = document.getElementById('add-challenge-explain').value.trim();
     const fb = document.getElementById('add-challenge-feedback');
+
+    if (!x.trim() || explain.length <= 5) {
+      LessonCheck.incomplete(fb, "Fill in the missing digit and write your explanation before checking - this won't count as an attempt yet.");
+      return;
+    }
+
     const correct = LessonCheck.numericMatch(x, 4, 0.001) && explain.length > 5;
 
     LessonCheck.check('mon-add-challenge', correct, fb, {
@@ -1235,6 +1252,12 @@
     const cost = document.getElementById('mult-challenge-cost').value;
     const explain = document.getElementById('mult-challenge-explain').value.trim();
     const fb = document.getElementById('mult-challenge-feedback');
+
+    if (!cost.trim() || explain.length <= 5) {
+      LessonCheck.incomplete(fb, "Fill in the total cost and write your explanation before checking - this won't count as an attempt yet.");
+      return;
+    }
+
     const correct = LessonCheck.numericMatch(cost, 26.40, 0.02) && explain.length > 5;
 
     LessonCheck.check('mon-mult-challenge', correct, fb, {
@@ -1295,6 +1318,12 @@
     const b = document.getElementById('ps-fin-b').value;
     const c = document.getElementById('ps-fin-c').value;
     const fb = document.getElementById('ps-fin-feedback');
+
+    if (!a.trim() || !b.trim() || !c.trim()) {
+      LessonCheck.incomplete(fb, "Fill in the subtotal, total, and change before checking - this won't count as an attempt yet.");
+      return;
+    }
+
     const correct = LessonCheck.numericMatch(a, 24.09, 0.02) && LessonCheck.numericMatch(b, 25.77, 0.02) && LessonCheck.numericMatch(c, 24.23, 0.02);
 
     LessonCheck.check('ps-financial', correct, fb, {
@@ -1315,6 +1344,11 @@
     const exp = document.getElementById('exit-pv-explain').value.trim();
     const ref = document.getElementById('exit-reflect').value.trim();
     const fb = document.getElementById('exit-feedback');
+
+    if (!a1.trim() || !a2.trim() || exp.length <= 5 || ref.length <= 5) {
+      LessonCheck.incomplete(fb, "Fill in the sum, the product, and both explanation boxes before submitting - this won't count as an attempt yet.");
+      return;
+    }
 
     const correct = LessonCheck.numericMatch(a1, 4.75, 0.01) && LessonCheck.numericMatch(a2, 4.375, 0.005) && exp.length > 5 && ref.length > 5;
 
