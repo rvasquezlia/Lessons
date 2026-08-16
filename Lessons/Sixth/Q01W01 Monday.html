@@ -1458,7 +1458,7 @@
       p1: ["0","4","9","0"],
       p2: ["7","3","5","0"],
       ans: ["7","8","4","0"],
-      decimalDigitsBefore: 1
+      decimalPlaces: 3
     },
     4: { type: "add", title: "Sports Relay Timing: \\(12.35\\text{s} + 2.40\\text{s}\\)", row1: ["1","2","3","5"], row2: ["0","2","4","0"], ans: ["1","4","7","5"] }
   };
@@ -1510,14 +1510,14 @@
           <input type="text" id="wb-i3" class="digit-box input" maxlength="1">
         </div>
         <div style="margin-top:18px; font-weight:800; text-align:center;">
-          Count the total decimal places in both factors above. Where does the decimal point belong in your integer answer?<br>
-          <select id="wb-dec-pos" class="form-control-lg" style="width:260px; text-align:center; margin-top:8px;">
-            <option value="">Select a position...</option>
-            <option value="0">Before all 4 digits (.XXXX)</option>
-            <option value="1">After the 1st digit (X.XXX)</option>
-            <option value="2">After the 2nd digit (XX.XX)</option>
-            <option value="3">After the 3rd digit (XXX.X)</option>
-            <option value="4">After all 4 digits - no shift (XXXX)</option>
+          Count the total decimal places in both factors above. How many decimal places should your final answer have?<br>
+          <select id="wb-dec-places" class="form-control-lg" style="width:260px; text-align:center; margin-top:8px;">
+            <option value="">Select a number...</option>
+            <option value="0">0 decimal places</option>
+            <option value="1">1 decimal place</option>
+            <option value="2">2 decimal places</option>
+            <option value="3">3 decimal places</option>
+            <option value="4">4 decimal places</option>
           </select>
         </div>
       `;
@@ -1584,19 +1584,19 @@
       const u2 = document.getElementById('wb-i2').value;
       const u3 = document.getElementById('wb-i3').value;
 
-      const decPos = document.getElementById('wb-dec-pos').value;
+      const decPlaces = document.getElementById('wb-dec-places').value;
 
       const p1Valid = isDigitMatch(p1_0, prob.p1[0]) && isDigitMatch(p1_1, prob.p1[1]) && isDigitMatch(p1_2, prob.p1[2]) && isDigitMatch(p1_3, prob.p1[3]);
       const p2Valid = isDigitMatch(p2_0, prob.p2[0]) && isDigitMatch(p2_1, prob.p2[1]) && isDigitMatch(p2_2, prob.p2[2]) && isDigitMatch(p2_3, prob.p2[3]);
       const finalValid = isDigitMatch(u0, prob.ans[0]) && isDigitMatch(u1, prob.ans[1]) && isDigitMatch(u2, prob.ans[2]) && isDigitMatch(u3, prob.ans[3]);
-      const decValid = (parseInt(decPos, 10) === prob.decimalDigitsBefore);
+      const decValid = (parseInt(decPlaces, 10) === prob.decimalPlaces);
 
       if (p1Valid && p2Valid && finalValid && decValid) {
         fb.className = "feedback-msg success";
-        fb.innerText = "Whiteboard multiplication solution verified! Integer partial products (490, 7350), sum (7840), and the decimal point placed after the 1st digit (7.840) are all correct.";
+        fb.innerText = "Whiteboard multiplication solution verified! Integer partial products (490, 7350), sum (7840), and 3 total decimal places placed correctly (7.840) are all correct.";
       } else {
         fb.className = "feedback-msg error";
-        fb.innerText = `Check calculations! Expected partial products: 0490 and 7350, Integer Sum: 7840. Then count total decimal places in the two factors to find where the point goes.`;
+        fb.innerText = `Check calculations! Expected partial products: 0490 and 7350, Integer Sum: 7840. Then count the total decimal places in the two factors.`;
       }
     } else {
       const u0 = document.getElementById('wb-i0').value;
