@@ -122,6 +122,12 @@
       <button class="btn-lg" onclick="checkDetective()">Submit My Work</button>
       <div id="det-feedback" class="feedback-msg"></div>
     </div>
+
+    <div class="notebook-box" style="margin-top:20px;">
+      <div class="notebook-header">More Practice: Spot the Mistake</div>
+      <p style="margin:0 0 10px 0;">Solve each equation correctly - watch for the same kinds of slips as the card above (distributing to only one term, sign errors, arithmetic mistakes).</p>
+      <div id="ed-more-list"></div>
+    </div>
   </div>
 
   <!-- TAB 4: BUDGET SCENARIO -->
@@ -147,6 +153,12 @@
       </div>
       <button class="btn-lg" onclick="checkBudget()">Submit My Work</button>
       <div id="budget-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:20px;">
+      <div class="notebook-header">More Practice: Break-Even Scenarios</div>
+      <p style="margin:0 0 10px 0;">For each pair of plans, find the number of months, \(x\), where both cost the same total amount.</p>
+      <div id="budget-more-list"></div>
     </div>
   </div>
 
@@ -212,6 +224,11 @@
     const val = document.getElementById(`wu-${idx}-input`).value;
     const fb = document.getElementById(`wu-${idx}-feedback`);
 
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before submitting - it won't save until you fill it in.");
+      return;
+    }
+
     LessonCheck.submit(fb, { key: `wu-${idx}`, label: `Warm-Up: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '1. Warm-Up' });
   }
 
@@ -246,6 +263,12 @@
     const p = practiceProblems[idx];
     const val = document.getElementById(`prac-${idx}-input`).value;
     const fb = document.getElementById(`prac-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+
     const correct = LessonCheck.numericMatch(val, p.a, p.tol);
 
     LessonCheck.check(`prac-${idx}`, correct, fb, {
@@ -270,6 +293,44 @@
     LessonCheck.submit(fb, { key: 'tue-detective', label: 'Error Detective: 3(x-4)=2x+5', answer: `Step ${step}, x=${answer}`, section: '3. Error Detective' });
   }
 
+  // Error Detective - More Practice
+  const errorDetectiveMore = [
+    { q: "\\(4(x-2)+5=3x-1\\)", a: 2 },
+    { q: "\\(2(x+3)-7=x-4\\)", a: -3 },
+    { q: "\\(3(2x-1)=4x+15\\)", a: 9 },
+    { q: "\\(6(x+1)-4=2(x+7)\\)", a: 3 },
+    { q: "\\(5(x-3)+2x=3x+9\\)", a: 6 },
+    { q: "\\(2(3x+4)-5=4x+13\\)", a: 5 },
+    { q: "\\(6x-2(x-4)=5x-3\\)", a: 11 }
+  ];
+
+  function renderErrorDetectiveMore() {
+    const html = errorDetectiveMore.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 2}.</strong> ${p.q}
+        <input type="text" id="edm-${i}-input" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="x =">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkErrorDetectiveMore(${i})">Submit</button>
+        <div id="edm-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('ed-more-list').innerHTML = html;
+    errorDetectiveMore.forEach((p, i) => LessonProgress.preRegister(`edm-${i}`, `Spot the Mistake #${i + 2}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '3. Error Detective'));
+    triggerMathJax();
+  }
+
+  function checkErrorDetectiveMore(idx) {
+    const p = errorDetectiveMore[idx];
+    const val = document.getElementById(`edm-${idx}-input`).value;
+    const fb = document.getElementById(`edm-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: `edm-${idx}`, label: `Spot the Mistake #${idx + 2}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '3. Error Detective' });
+  }
+
   // Budget Scenario
   function checkBudget() {
     const x = document.getElementById('budget-x').value;
@@ -282,6 +343,46 @@
     }
 
     LessonCheck.submit(fb, { key: 'tue-budget', label: 'Budget Scenario: Gym A vs Gym B', answer: `x=${x} months`, section: '4. Budget Scenario' });
+  }
+
+  // Budget Scenario - More Practice
+  const budgetMore = [
+    { plan1: "\\$50 sign-up + \\$20/month", plan2: "\\$30 sign-up + \\$25/month", a: 4 },
+    { plan1: "\\$60 sign-up + \\$15/month", plan2: "no sign-up fee + \\$25/month", a: 6 },
+    { plan1: "\\$61 sign-up + \\$10/month", plan2: "\\$25 sign-up + \\$22/month", a: 3 },
+    { plan1: "\\$5 sign-up + \\$25/month", plan2: "\\$95 sign-up + \\$15/month", a: 9 },
+    { plan1: "\\$116 sign-up + \\$8/month", plan2: "\\$20 sign-up + \\$20/month", a: 8 },
+    { plan1: "\\$30 sign-up + \\$30/month", plan2: "\\$150 sign-up + \\$18/month", a: 10 },
+    { plan1: "\\$24 sign-up + \\$22/month", plan2: "\\$40 sign-up + \\$14/month", a: 2 }
+  ];
+
+  function renderBudgetMore() {
+    const html = budgetMore.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 2}.</strong> Plan A: ${p.plan1}. Plan B: ${p.plan2}.
+        <div style="margin-top:8px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+          <input type="text" id="bm-${i}-input" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="months">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkBudgetMore(${i})">Submit</button>
+        </div>
+        <div id="bm-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('budget-more-list').innerHTML = html;
+    budgetMore.forEach((p, i) => LessonProgress.preRegister(`bm-${i}`, `Break-Even Scenario #${i + 2}`, '4. Budget Scenario'));
+    triggerMathJax();
+  }
+
+  function checkBudgetMore(idx) {
+    const p = budgetMore[idx];
+    const val = document.getElementById(`bm-${idx}-input`).value;
+    const fb = document.getElementById(`bm-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter the number of months before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: `bm-${idx}`, label: `Break-Even Scenario #${idx + 2}`, answer: `x=${val} months`, section: '4. Budget Scenario' });
   }
 
   // IXL confirmation
@@ -310,6 +411,8 @@
 
   // Initial render
   renderPractice();
+  renderErrorDetectiveMore();
+  renderBudgetMore();
   warmupProblems.forEach((p, i) => LessonProgress.preRegister(`wu-${i}`, `Warm-Up: ${p.q.replace(/\\\(|\\\)/g, '')}`, '1. Warm-Up'));
   LessonProgress.preRegister('tue-detective', 'Error Detective: 3(x-4)=2x+5', '3. Error Detective');
   LessonProgress.preRegister('tue-budget', 'Budget Scenario: Gym A vs Gym B', '4. Budget Scenario');

@@ -391,6 +391,12 @@
     const p = eaGuidedPractice[idx];
     const val = document.getElementById(`eagp-${idx}-input`).value;
     const fb = document.getElementById(`eagp-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+
     const correct = LessonCheck.numericMatch(val, p.a, p.tol);
 
     LessonCheck.check(`eagp-${idx}`, correct, fb, {

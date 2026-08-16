@@ -105,7 +105,7 @@
   <div id="strategy" class="panel">
     <div class="section-title">Concrete Scenario: Strategy Challenge</div>
     <div class="explainer-box">
-      Different equations reward different first moves. Your group's card has one equation - decide the most efficient strategy, solve it, and be ready to defend your choice to the class.
+      Different equations reward different first moves. Your group's card has a flagship equation - decide the most efficient strategy, solve it, and be ready to defend your choice to the class - then work through 7 more equations that reward the same strategy.
     </div>
 
     <div id="strategy-picker-box" class="station-card">
@@ -135,6 +135,12 @@
         <button class="btn-lg" onclick="checkStrategy()">Submit My Work</button>
         <div id="strategy-feedback" class="feedback-msg"></div>
       </div>
+
+      <div class="notebook-box" style="margin-top:20px;">
+        <div class="notebook-header">More Practice: Your Group's Strategy Set</div>
+        <p style="margin:0 0 10px 0;">Seven more equations that reward the same strategy as your group's card above.</p>
+        <div id="strategy-more-list"></div>
+      </div>
     </div>
   </div>
 
@@ -161,6 +167,12 @@
       </div>
       <button class="btn-lg" onclick="checkDecision()">Submit My Work</button>
       <div id="decision-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:20px;">
+      <div class="notebook-header">More Practice: Break-Even Scenarios</div>
+      <p style="margin:0 0 10px 0;">For each pair of providers, find the number of months, \(x\), where both cost the same total amount.</p>
+      <div id="decision-more-list"></div>
     </div>
   </div>
 
@@ -226,6 +238,11 @@
     const val = document.getElementById(`wu-${idx}-input`).value;
     const fb = document.getElementById(`wu-${idx}-feedback`);
 
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before submitting - it won't save until you fill it in.");
+      return;
+    }
+
     LessonCheck.submit(fb, { key: `wu-${idx}`, label: `Warm-Up: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '1. Warm-Up' });
   }
 
@@ -259,6 +276,12 @@
     const p = mixedProblems[idx];
     const raw = document.getElementById(`mix-${idx}-input`).value;
     const fb = document.getElementById(`mix-${idx}-feedback`);
+
+    if (!raw.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+
     let correct;
     if (p.type === "number") {
       correct = LessonCheck.numericMatch(raw, p.a, 0.001);
@@ -277,10 +300,54 @@
 
   // Strategy Challenge (choose-confirm-lock group picker, same pattern as Tuesday's batches)
   const strategyGroups = {
-    A: { title: "Group A: Variables on Both Sides", eq: "\\(5x - 3 = 2x + 12\\)", type: "number", a: 5 },
-    B: { title: "Group B: Distribute First", eq: "\\(3(2x - 1) = 4x + 9\\)", type: "number", a: 6 },
-    C: { title: "Group C: Watch the Variable", eq: "\\(7x + 2 = 7x - 5\\)", type: "special", a: "no solution" },
-    D: { title: "Group D: Watch the Variable", eq: "\\(2(x + 3) = 2x + 6\\)", type: "special", a: "infinite" }
+    A: {
+      title: "Group A: Variables on Both Sides", eq: "\\(5x - 3 = 2x + 12\\)", type: "number", a: 5,
+      more: [
+        { q: "\\(6x + 4 = 2x + 16\\)", type: "number", a: 3 },
+        { q: "\\(3x - 7 = x + 9\\)", type: "number", a: 8 },
+        { q: "\\(8x - 10 = 3x + 35\\)", type: "number", a: 9 },
+        { q: "\\(4x + 6 = x - 3\\)", type: "number", a: -3 },
+        { q: "\\(9x - 2 = 5x + 14\\)", type: "number", a: 4 },
+        { q: "\\(2x + 30 = 7x - 5\\)", type: "number", a: 7 },
+        { q: "\\(10x - 4 = 6x + 20\\)", type: "number", a: 6 }
+      ]
+    },
+    B: {
+      title: "Group B: Distribute First", eq: "\\(3(2x - 1) = 4x + 9\\)", type: "number", a: 6,
+      more: [
+        { q: "\\(2(x + 5) = x - 2\\)", type: "number", a: -12 },
+        { q: "\\(4(x - 3) = 2x + 2\\)", type: "number", a: 7 },
+        { q: "\\(5(2x + 1) = 3x - 2\\)", type: "number", a: -1 },
+        { q: "\\(2(3x - 4) = x + 37\\)", type: "number", a: 9 },
+        { q: "\\(6(x + 2) = 3x - 3\\)", type: "number", a: -5 },
+        { q: "\\(3(x - 4) + 2x = x + 28\\)", type: "number", a: 10 },
+        { q: "\\(4(2x + 3) - 5 = 5x + 16\\)", type: "number", a: 3 }
+      ]
+    },
+    C: {
+      title: "Group C: Watch the Variable", eq: "\\(7x + 2 = 7x - 5\\)", type: "special", a: "no solution",
+      more: [
+        { q: "\\(5x - 3 = 2x + 9\\)", type: "number", a: 4 },
+        { q: "\\(6x + 8 = 6x - 1\\)", type: "special", a: "no solution" },
+        { q: "\\(4x - 7 = x + 14\\)", type: "number", a: 7 },
+        { q: "\\(3x + 10 = 3x - 4\\)", type: "special", a: "no solution" },
+        { q: "\\(9x - 6 = 5x + 18\\)", type: "number", a: 6 },
+        { q: "\\(2x + 15 = 2x - 3\\)", type: "special", a: "no solution" },
+        { q: "\\(8x - 11 = 3x + 29\\)", type: "number", a: 8 }
+      ]
+    },
+    D: {
+      title: "Group D: Watch the Variable", eq: "\\(2(x + 3) = 2x + 6\\)", type: "special", a: "infinite",
+      more: [
+        { q: "\\(5(x - 1) = 5x - 5\\)", type: "special", a: "infinite" },
+        { q: "\\(3x + 7 = 8x - 8\\)", type: "number", a: 3 },
+        { q: "\\(4(x + 2) - 3 = 4x + 5\\)", type: "special", a: "infinite" },
+        { q: "\\(6x - 9 = x + 16\\)", type: "number", a: 5 },
+        { q: "\\(3(2x - 4) = 6x - 12\\)", type: "special", a: "infinite" },
+        { q: "\\(7x + 3 = 2x + 33\\)", type: "number", a: 6 },
+        { q: "\\(3(3x - 2) - 2x = 5x + 2\\)", type: "number", a: 4 }
+      ]
+    }
   };
 
   let chosenStrategyGroup = null;
@@ -325,6 +392,7 @@
     document.getElementById('strategy-equation').innerHTML = g.eq;
     document.getElementById('strategy-content').style.display = 'block';
     LessonProgress.preRegister(`strategy-${key}`, `Strategy Challenge (Group ${key}): ${g.eq.replace(/\\\(|\\\)/g, '')}`, '3. Strategy Challenge');
+    renderStrategyMore();
     triggerMathJax();
   }
 
@@ -342,6 +410,35 @@
     LessonCheck.submit(fb, { key: `strategy-${chosenStrategyGroup}`, label: `Strategy Challenge (Group ${chosenStrategyGroup}): ${g.eq.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '3. Strategy Challenge' });
   }
 
+  // Strategy Challenge - More Practice (group-specific, rendered once the group is confirmed)
+  function renderStrategyMore() {
+    const g = strategyGroups[chosenStrategyGroup];
+    const html = g.more.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 2}.</strong> ${p.q}
+        <input type="text" id="stm-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="x = or classify">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkStrategyMore(${i})">Submit</button>
+        <div id="stm-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('strategy-more-list').innerHTML = html;
+    g.more.forEach((p, i) => LessonProgress.preRegister(`stm-${i}`, `Strategy Set #${i + 2} (Group ${chosenStrategyGroup}): ${p.q.replace(/\\\(|\\\)/g, '')}`, '3. Strategy Challenge'));
+  }
+
+  function checkStrategyMore(idx) {
+    const g = strategyGroups[chosenStrategyGroup];
+    const p = g.more[idx];
+    const raw = document.getElementById(`stm-${idx}-input`).value;
+    const fb = document.getElementById(`stm-${idx}-feedback`);
+
+    if (!raw.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: `stm-${idx}`, label: `Strategy Set #${idx + 2} (Group ${chosenStrategyGroup}): ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '3. Strategy Challenge' });
+  }
+
   // Decision-Making Scenario
   function checkDecision() {
     const x = document.getElementById('decision-x').value;
@@ -354,6 +451,46 @@
     }
 
     LessonCheck.submit(fb, { key: 'thu-decision', label: 'Decision-Making: internet providers', answer: `x=${x} months`, section: '4. Decision-Making' });
+  }
+
+  // Decision-Making - More Practice
+  const decisionMore = [
+    { plan1: "\\$43 setup + \\$18/month", plan2: "\\$25 setup + \\$24/month", a: 3 },
+    { plan1: "\\$94 setup + \\$12/month", plan2: "\\$10 setup + \\$24/month", a: 7 },
+    { plan1: "\\$10 setup + \\$25/month", plan2: "\\$90 setup + \\$15/month", a: 8 },
+    { plan1: "\\$64 setup + \\$9/month", plan2: "\\$40 setup + \\$21/month", a: 2 },
+    { plan1: "\\$110 setup + \\$18/month", plan2: "\\$20 setup + \\$28/month", a: 9 },
+    { plan1: "\\$60 setup + \\$14/month", plan2: "\\$130 setup + \\$7/month", a: 10 },
+    { plan1: "\\$39 setup + \\$16/month", plan2: "\\$15 setup + \\$20/month", a: 6 }
+  ];
+
+  function renderDecisionMore() {
+    const html = decisionMore.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 2}.</strong> Provider A: ${p.plan1}. Provider B: ${p.plan2}.
+        <div style="margin-top:8px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+          <input type="text" id="dm-${i}-input" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="months">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkDecisionMore(${i})">Submit</button>
+        </div>
+        <div id="dm-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('decision-more-list').innerHTML = html;
+    decisionMore.forEach((p, i) => LessonProgress.preRegister(`dm-${i}`, `Break-Even Scenario #${i + 2}`, '4. Decision-Making'));
+    triggerMathJax();
+  }
+
+  function checkDecisionMore(idx) {
+    const p = decisionMore[idx];
+    const val = document.getElementById(`dm-${idx}-input`).value;
+    const fb = document.getElementById(`dm-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter the number of months before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: `dm-${idx}`, label: `Break-Even Scenario #${idx + 2}`, answer: `x=${val} months`, section: '4. Decision-Making' });
   }
 
   // IXL confirmation
@@ -382,6 +519,7 @@
 
   // Initial render
   renderMixed();
+  renderDecisionMore();
   warmupProblems.forEach((p, i) => LessonProgress.preRegister(`wu-${i}`, `Warm-Up: ${p.q.replace(/\\\(|\\\)/g, '')}`, '1. Warm-Up'));
   LessonProgress.preRegister('thu-decision', 'Decision-Making: internet providers', '4. Decision-Making');
   LessonProgress.preRegister('thu-confirm-ixl', 'Confirmed: completed IXL skill H9G', '5. IXL Practice');

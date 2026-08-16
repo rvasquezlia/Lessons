@@ -144,6 +144,12 @@
       <button class="btn-lg" onclick="checkComparison2()">Submit My Work</button>
       <div id="comp2-feedback" class="feedback-msg"></div>
     </div>
+
+    <div class="notebook-box" style="margin-top:20px;">
+      <div class="notebook-header">More Practice: Quick Classify</div>
+      <p style="margin:0 0 10px 0;">Classify each equation as one solution (give x), no solution, or infinitely many solutions.</p>
+      <div id="comp-more-list"></div>
+    </div>
   </div>
 
   <!-- TAB 4: IXL PRACTICE -->
@@ -207,6 +213,11 @@
     const p = warmupProblems[idx];
     const val = document.getElementById(`wu-${idx}-input`).value;
     const fb = document.getElementById(`wu-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before submitting - it won't save until you fill it in.");
+      return;
+    }
 
     LessonCheck.submit(fb, { key: `wu-${idx}`, label: `Warm-Up: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '1. Warm-Up' });
   }
@@ -304,6 +315,50 @@
     LessonCheck.submit(fb, { key: 'wed-comp2', label: 'Comparison: two billing expressions', answer: `${verdict}`, section: '3. Comparison Scenario' });
   }
 
+  // Comparison Scenario - More Practice (quick classify)
+  const comparisonMore = [
+    { q: "\\(20+8x=5+11x\\)", verdict: "one", a: 5 },
+    { q: "\\(30+12x=45+12x\\)", verdict: "none" },
+    { q: "\\(4(x+3)=4x+12\\)", verdict: "infinite" },
+    { q: "\\(9+6x=3+9x\\)", verdict: "one", a: 2 },
+    { q: "\\(5(x+2)=5x+8\\)", verdict: "none" },
+    { q: "\\(7x-4=4x+17\\)", verdict: "one", a: 7 }
+  ];
+
+  function renderComparisonMore() {
+    const html = comparisonMore.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 3}.</strong> ${p.q}
+        <select id="cm-${i}-verdict" class="form-control-lg" style="max-width:230px; display:inline-block;">
+          <option value="">Classify...</option>
+          <option value="one">One solution</option>
+          <option value="none">No solution</option>
+          <option value="infinite">Infinitely many solutions</option>
+        </select>
+        <input type="text" id="cm-${i}-x" class="form-control-lg" style="max-width:120px; display:inline-block;" placeholder="x = (if one)">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkComparisonMore(${i})">Submit</button>
+        <div id="cm-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('comp-more-list').innerHTML = html;
+    comparisonMore.forEach((p, i) => LessonProgress.preRegister(`cm-${i}`, `Quick Classify #${i + 3}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '3. Comparison Scenario'));
+    triggerMathJax();
+  }
+
+  function checkComparisonMore(idx) {
+    const p = comparisonMore[idx];
+    const verdict = document.getElementById(`cm-${idx}-verdict`).value;
+    const xVal = document.getElementById(`cm-${idx}-x`).value;
+    const fb = document.getElementById(`cm-${idx}-feedback`);
+
+    if (!verdict || (p.verdict === "one" && !xVal.trim())) {
+      LessonCheck.incomplete(fb, "Choose a classification (and enter x, if it has one solution) before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: `cm-${idx}`, label: `Quick Classify #${idx + 3}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: `${verdict}${xVal ? ', x=' + xVal : ''}`, section: '3. Comparison Scenario' });
+  }
+
   // IXL confirmation
   function confirmIXL(cb) {
     if (cb.checked) {
@@ -330,6 +385,7 @@
 
   // Initial render
   renderClassify();
+  renderComparisonMore();
   warmupProblems.forEach((p, i) => LessonProgress.preRegister(`wu-${i}`, `Warm-Up: ${p.q.replace(/\\\(|\\\)/g, '')}`, '1. Warm-Up'));
   LessonProgress.preRegister('wed-comp1', 'Comparison: two savings plans', '3. Comparison Scenario');
   LessonProgress.preRegister('wed-comp2', 'Comparison: two billing expressions', '3. Comparison Scenario');

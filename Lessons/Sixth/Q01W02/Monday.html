@@ -1246,6 +1246,12 @@
     const p = addsubPractice[idx];
     const val = document.getElementById(`addsub-${idx}-input`).value;
     const fb = document.getElementById(`addsub-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+
     const correct = LessonCheck.numericMatch(val, p.a, p.tol);
 
     LessonCheck.check(`addsub-${idx}`, correct, fb, {
@@ -1283,6 +1289,12 @@
     const p = multPractice[idx];
     const val = document.getElementById(`mult-${idx}-input`).value;
     const fb = document.getElementById(`mult-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+
     const correct = LessonCheck.numericMatch(val, p.a, p.tol);
 
     LessonCheck.check(`mult-${idx}`, correct, fb, {

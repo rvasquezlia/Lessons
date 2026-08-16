@@ -156,12 +156,15 @@ const LessonCheck = (() => {
   // For "submit-only" items (anything that isn't a formally labeled
   // Guided Practice section): records the answer for the printed report
   // without grading it on screen. No right/wrong verdict, no attempt
-  // counter, no lock - correctness is checked later from the printout,
-  // not on the page. `record` is required: {key, label, answer, section}.
+  // counter - correctness is checked later from the printout, not on the
+  // page. The submission itself is final, though: once a non-blank answer
+  // goes through, the fields lock (same as a revealed Guided Practice
+  // problem) so the printed answer can't be quietly edited afterward.
+  // `record` is required: {key, label, answer, section}.
   function submit(feedbackEl, record, message) {
     if (feedbackEl) {
       feedbackEl.style.display = 'block';
-      feedbackEl.className = 'feedback-msg success';
+      feedbackEl.className = 'feedback-msg success locked';
       feedbackEl.innerHTML = message || 'Submitted! This will be reviewed from your printed progress report.';
       if (window.MathJax && window.MathJax.typesetPromise) {
         MathJax.typesetPromise([feedbackEl]).catch((err) => console.log(err));
@@ -170,6 +173,7 @@ const LessonCheck = (() => {
     if (record) {
       LessonProgress.record(record.key, record.label, record.answer, 'reflection', record.section);
     }
+    lockControls(feedbackEl);
   }
 
   return { evaluate, reset, show, check, numericMatch, incomplete, submit };
@@ -197,15 +201,25 @@ function printProgressReport(lessonTitle) {
   if (items.length === 0) {
     rows = '<tr><td colspan="3" style="text-align:center; padding:16px;">No activities on this page yet - work through the tabs, then come back and print.</td></tr>';
   } else {
-    // Group by section, preserving the order sections were first seen
-    // (which matches tab/page order, since items are pre-registered at
-    // render time in that same order).
+    // Group by section, then order sections by their leading "N." number
+    // (matching tab/page order) rather than insertion order - insertion
+    // order depends on each page's init-script call sequence, which is
+    // easy to get wrong and shouldn't be load-bearing for report order.
     const sectionOrder = [];
     const bySection = {};
     items.forEach((item) => {
       const sec = item.section || 'This Page';
       if (!bySection[sec]) { bySection[sec] = []; sectionOrder.push(sec); }
       bySection[sec].push(item);
+    });
+    sectionOrder.sort((a, b) => {
+      const na = parseInt(a, 10);
+      const nb = parseInt(b, 10);
+      const aHas = !isNaN(na), bHas = !isNaN(nb);
+      if (aHas && bHas) return na - nb;
+      if (aHas) return -1;
+      if (bHas) return 1;
+      return 0;
     });
 
     let n = 0;

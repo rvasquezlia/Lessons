@@ -265,6 +265,12 @@
     const p = wpGuidedPractice[idx];
     const val = document.getElementById(`wpgp-${idx}-input`).value;
     const fb = document.getElementById(`wpgp-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+
     const correct = LessonCheck.numericMatch(val, p.a, p.tol);
 
     LessonCheck.check(`wpgp-${idx}`, correct, fb, {
