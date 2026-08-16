@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Math 6: Lesson 1.2 Day 4 - Pre-Assessment Review Stations</title>
+  <title>Math 6: Lesson 1.2 Day 4 - Real-World Decimal Jigsaw</title>
 
   <!-- Montserrat Font Import -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,149 +32,98 @@
 <div class="app-container">
   <header>
     <span class="badge">Q01W02 - Pre-Assessment Review</span>
-    <h1>Pre-Assessment Review Stations</h1>
+    <h1>Real-World Decimal Jigsaw</h1>
   </header>
 
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Math 6 - Thursday, Aug 20 - Pre-Assessment Review Stations')">🖨️ Print My Progress</button>
+    <button class="btn-print" onclick="printProgressReport('Math 6 - Thursday, Aug 20 - Real-World Decimal Jigsaw')">🖨️ Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Rotate through Stations 1-4 with your group, but type and check your own answers on your own device. Wrap-Up has your Gallery Walk activity, strategy checklist, and reflection. Finish by typing your name above and clicking <strong>Print My Progress</strong> for your Google Classroom submission.
+    Your teacher gave your table a physical set of 8 problem cards in one real-world topic. Go to Tab 1, pick that same group, then type and check each of your 8 answers. When your table finishes, go to Tab 2 to rotate and share with another group. Finish on Tab 3 with the strategy checklist and reflection, then type your name above and click <strong>Print My Progress</strong>.
   </div>
 
   <nav class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('station3')">1. Speed Sprint</button>
-    <button class="tab-btn" onclick="switchTab('station1')">2. Race Splits</button>
-    <button class="tab-btn" onclick="switchTab('station2')">3. River Gauges</button>
-    <button class="tab-btn" onclick="switchTab('station4')">4. Peer Review</button>
-    <button class="tab-btn" onclick="switchTab('wrapup')">5. Wrap-Up</button>
+    <button class="tab-btn active" onclick="switchTab('mystation')">1. My Group</button>
+    <button class="tab-btn" onclick="switchTab('share')">2. Share What You Learned</button>
+    <button class="tab-btn" onclick="switchTab('wrapup')">3. Wrap-Up</button>
   </nav>
 
-  <!-- STATION 1 (was "station3" id): SPEED & PRECISION SPRINT - opening warm-up, matching the written plan -->
-  <div id="station3" class="panel active">
-    <div class="section-title">Review Stations</div>
+  <!-- TAB 1: MY GROUP -->
+  <div id="mystation" class="panel active">
+    <div class="section-title">Decimal Jigsaw: Real-World Precision</div>
     <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Thursday, August 20, 2026 &middot; 45 min &middot; CCSS.Math.Content.6.NS.B.3 &amp; MP1: Make Sense of Problems and Persevere in Solving Them</p>
 
     <div class="explainer-box">
-      Today you'll rotate through all four stations <strong>in your assigned group</strong> to sharpen your decimal skills before tomorrow's Graded Classwork. Work through each station together, but every group member enters and checks their own answers below. Use rounding at every station to make sure your answers are reasonable.
+      Every group is solving the <strong>same kind of decimal problems</strong> - but set in a different real job. Medicine, market/business, engineering, and the arts all depend on getting decimals right. Solve your group's 8 problems together on your physical cards, then type and check each answer below so it saves to your progress.
     </div>
 
-    <div class="station-card">
-      <span class="station-label">Station 1</span>
-      <h3 style="margin-top:8px; color:var(--primary);">Speed &amp; Precision Sprint</h3>
-      <div class="howto-box">
-        <strong class="howto-label">What to do at this station</strong>
-        Solve all 10 problems as fast and accurately as you can. Type your answer in each box and click Check right after solving it - don't wait until the end. When your group is ready, move to Station 2's tab.
+    <div id="group-picker-box" class="station-card">
+      <span class="station-label">Step 1</span>
+      <h3 style="margin-top:8px; color:var(--primary);">Which group are you in today?</h3>
+      <p>Pick the <strong>same</strong> group your teacher assigned to your table. Once you confirm, it locks in for the rest of the lesson.</p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:12px;">
+        <button class="btn-lg" onclick="chooseGroup('medicine')">🩺 Medicine</button>
+        <button class="btn-lg" onclick="chooseGroup('market')">💰 Market</button>
+        <button class="btn-lg" onclick="chooseGroup('engineering')">⚙️ Engineering</button>
+        <button class="btn-lg" onclick="chooseGroup('arts')">🎨 Arts</button>
       </div>
-      <p>Solve each problem, then click to check your answer.</p>
-      <div id="s3-list"></div>
+    </div>
+
+    <div id="group-content" style="display:none;">
+      <div id="group-context" class="notebook-box"></div>
+      <div class="howto-box">
+        <strong class="howto-label">What to do here</strong>
+        Solve each problem on your physical card with your group first, then type your own answer in each box below and click Check right after solving it.
+      </div>
+      <div id="group-problems"></div>
     </div>
   </div>
 
-  <!-- STATION 2 (was "station1" id): SPORTS ANALYTICS -->
-  <div id="station1" class="panel">
-    <div class="section-title">Review Stations</div>
-
+  <!-- TAB 2: SHARE WHAT YOU LEARNED -->
+  <div id="share" class="panel">
+    <div class="section-title">Share What You Learned</div>
     <div class="howto-box">
-      <strong class="howto-label">What to do at this station</strong>
-      Read the race-split data, calculate the total and the difference on paper with your group, then each type your own answers below and click Check My Work. When your group is ready, move to Station 3's tab.
+      <strong class="howto-label">What to do on this tab</strong>
+      Once your table finishes all 8 problems, rotate around the room and visit a table from a <strong>different</strong> group. Ask them what their problems were about and why decimal precision matters in their field. Then come back here, pick which group you visited, and write 2-3 sentences about what you learned.
     </div>
 
-    <div class="station-card">
-      <span class="station-label">Station 2</span>
-      <h3 style="margin-top:8px; color:var(--primary);">Sports Analytics: Race Splits</h3>
-      <p>In a 400-meter relay, four runners recorded the following split times in seconds:</p>
-      <ul>
-        <li><strong>Runner 1:</strong> 12.45 seconds</li>
-        <li><strong>Runner 2:</strong> 11.82 seconds</li>
-        <li><strong>Runner 3:</strong> 12.09 seconds</li>
-        <li><strong>Runner 4:</strong> 11.54 seconds</li>
-      </ul>
-      <p><strong>Task:</strong> Calculate the total relay time. Then find the difference between the fastest and slowest split times.</p>
-
-      <div class="form-group">
-        <label>Total relay time (seconds):</label>
-        <input type="text" id="s1-total" class="form-control-lg" placeholder="Enter total time">
-      </div>
-      <div class="form-group">
-        <label>Difference between fastest and slowest (seconds):</label>
-        <input type="text" id="s1-diff" class="form-control-lg" placeholder="Enter difference">
-      </div>
-      <button class="btn-lg" onclick="checkStation1()">Check My Work</button>
-      <div id="s1-feedback" class="feedback-msg"></div>
+    <div id="share-locked-notice" class="explainer-box">
+      Pick your group on Tab 1 first - once you do, this tab will remind you which other groups you can visit.
     </div>
-  </div>
 
-  <!-- STATION 3 (was "station2" id): ENVIRONMENTAL SCIENCE -->
-  <div id="station2" class="panel">
-    <div class="section-title">Review Stations</div>
-
-    <div class="station-card">
-      <span class="station-label">Station 3</span>
-      <h3 style="margin-top:8px; color:var(--primary);">Environmental Science: River Gauges</h3>
-      <div class="howto-box">
-        <strong class="howto-label">What to do at this station</strong>
-        Find the Day 2 height first (Day 1 plus the rise), then subtract the Day 3 drop from that. Type the final reading and click Check My Work.
+    <div id="share-content" style="display:none;">
+      <div class="notebook-box">
+        <div class="notebook-header">Group Sharing Rotation</div>
+        <p style="margin:0;">You are in the <strong id="share-own-group"></strong> group. Visit a table from a different group and ask them to explain one of their problems and why precision matters in their field.</p>
       </div>
-      <p>A scientist is monitoring the height of a river gauge over three days.</p>
-      <ul>
-        <li><strong>Day 1:</strong> the gauge reads 4.56 meters.</li>
-        <li><strong>Day 2:</strong> the water level rises by 0.875 meters.</li>
-        <li><strong>Day 3:</strong> the water level drops by 1.2 meters from the Day 2 height.</li>
-      </ul>
-      <p><strong>Task:</strong> what is the final gauge reading on Day 3? Show your alignment of decimal points.</p>
 
-      <div class="form-group">
-        <label>Final gauge reading on Day 3 (meters):</label>
-        <input type="text" id="s2-final" class="form-control-lg" placeholder="Enter final reading">
-      </div>
-      <button class="btn-lg" onclick="checkStation2()">Check My Work</button>
-      <div id="s2-feedback" class="feedback-msg"></div>
+      <form id="share-form" onsubmit="submitShare(event)">
+        <div class="form-group">
+          <label>Which group's table did you visit?</label>
+          <select id="share-visited" class="form-control-lg">
+            <option value="">Choose the group you visited...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>What did you learn about how decimals matter in that real-world job? (2-3 sentences)</label>
+          <textarea id="share-notes" class="form-control-lg" rows="3" placeholder="In their field, decimals matter because..."></textarea>
+        </div>
+        <button type="submit" class="btn-lg">Save What I Learned</button>
+      </form>
+      <div id="share-feedback" class="feedback-msg"></div>
     </div>
   </div>
 
-  <!-- STATION 4: PEER REVIEW & DEFENSE -->
-  <div id="station4" class="panel">
-    <div class="section-title">Review Stations</div>
-
-    <div class="station-card">
-      <span class="station-label">Station 4</span>
-      <h3 style="margin-top:8px; color:var(--primary);">Peer Review &amp; Defense</h3>
-      <div class="howto-box">
-        <strong class="howto-label">What to do at this station</strong>
-        Discuss with your group why \(3.78\) looks wrong before doing any exact math - write that reasoning in the first box. Then calculate the real answer, type it in the second box, and click Check My Work.
-      </div>
-      <p><strong>Problem:</strong> a student calculated \(15.75 \times 2.4\) and got \(\mathbf{3.78}\).</p>
-      <p><strong>Task:</strong> without doing the exact math first, use rounding to explain why this answer is not reasonable. Then solve for the correct exact answer.</p>
-
-      <div class="form-group">
-        <label>Explain why \(3.78\) is not reasonable (use rounding):</label>
-        <textarea id="s4-explain" class="form-control-lg" rows="3" placeholder="Round each factor and estimate..."></textarea>
-      </div>
-      <div class="form-group">
-        <label>Correct exact answer:</label>
-        <input type="text" id="s4-answer" class="form-control-lg" placeholder="Enter the correct answer">
-      </div>
-      <button class="btn-lg" onclick="checkStation4()">Check My Work</button>
-      <div id="s4-feedback" class="feedback-msg"></div>
-    </div>
-  </div>
-
-  <!-- WRAP-UP: STRATEGY CHECKLIST + REFLECTION -->
+  <!-- TAB 3: WRAP-UP -->
   <div id="wrapup" class="panel">
     <div class="section-title">Wrap-Up: Strategy Checklist for Friday's Test</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Do the Gallery Walk with your group first. Then check off each strategy box, write your reflection, and click Submit Reflection. Finish by typing your name in the blue bar at the top of the page and clicking Print My Progress.
-    </div>
-
-    <div class="notebook-box">
-      <div class="notebook-header">Gallery Walk</div>
-      <p style="margin:0;">With your group, pick <strong>one</strong> station problem and write your rounding check and exact answer on chart paper. Post it, then walk the room to see how other groups solved the same or different stations. Be ready to defend your group's rounding check and exact answer if another group asks about it.</p>
+      Check off each strategy box, write your reflection, and click Submit Reflection. Finish by typing your name in the blue bar at the top of the page and clicking Print My Progress.
     </div>
 
     <div class="notebook-box">
@@ -215,97 +164,197 @@
     triggerMathJax();
   }
 
-  function isNumericMatch(userVal, expectedVal, tolerance) {
-    const u = parseFloat((userVal || "").replace(/[^0-9.\-]/g, ""));
-    if (isNaN(u)) return false;
-    return Math.abs(u - expectedVal) <= tolerance;
-  }
+  // Group data: each group has the same kind of decimal work, set in a different real-world job.
+  const groups = {
+    medicine: {
+      icon: '🩺', name: 'Medicine',
+      context: "Nurses and doctors calculate medicine doses, patient measurements, and lab results every day. A misplaced decimal point can be dangerous, so precision matters.",
+      problems: [
+        { type: 'word', q: "A nurse gives a patient three doses of medicine: 12.5 mL, 8.75 mL, and 6.4 mL over one day. What is the total amount of medicine given?", a: 27.65, tol: 0.02, unit: ' mL' },
+        { type: 'word', q: "A patient's temperature was 100.45°F this morning and 98.6°F this afternoon. How many degrees did it drop?", a: 1.85, tol: 0.02, unit: '°F' },
+        { type: 'quick', q: "\\(0.25 \\times 40\\)", a: 10.0, tol: 0.05 },
+        { type: 'quick', q: "\\(0.5 \\times 36.4\\)", a: 18.2, tol: 0.05 },
+        { type: 'quick', q: "\\(1.5 \\times 8\\)", a: 12.0, tol: 0.05 },
+        { type: 'quick', q: "\\(0.75 \\times 6\\)", a: 4.5, tol: 0.05 },
+        { type: 'quick', q: "\\(2.2 \\times 3.5\\)", a: 7.7, tol: 0.05 },
+        { type: 'quick', q: "\\(3.2 \\times 2.5\\)", a: 8.0, tol: 0.05 }
+      ]
+    },
+    market: {
+      icon: '💰', name: 'Market',
+      context: "Store owners, cashiers, and vendors calculate prices, discounts, and change every day. Being off by even a few cents adds up fast across many customers.",
+      problems: [
+        { type: 'word', q: "A vendor sells apples for $2.35 per kilogram. A customer buys 3.4 kilograms. How much does the customer pay?", a: 7.99, tol: 0.02, unit: '' },
+        { type: 'word', q: "A cash register has $112.75 in it at the start of the day. After paying $45.60 in supplier bills, how much is left?", a: 67.15, tol: 0.02, unit: '' },
+        { type: 'quick', q: "\\(1.25 \\times 8\\)", a: 10.0, tol: 0.05 },
+        { type: 'quick', q: "\\(3.40 \\times 2.5\\)", a: 8.5, tol: 0.05 },
+        { type: 'quick', q: "\\(0.75 \\times 12\\)", a: 9.0, tol: 0.05 },
+        { type: 'quick', q: "\\(4.20 \\times 3\\)", a: 12.6, tol: 0.05 },
+        { type: 'quick', q: "\\(2.60 \\times 5.5\\)", a: 14.3, tol: 0.05 },
+        { type: 'quick', q: "\\(6.5 \\times 1.4\\)", a: 9.1, tol: 0.05 }
+      ]
+    },
+    engineering: {
+      icon: '⚙️', name: 'Engineering',
+      context: "Engineers measure and build parts that must fit together exactly. A part that is off by even a few hundredths of a centimeter can make a whole machine fail.",
+      problems: [
+        { type: 'word', q: "An engineer joins three metal beams: 245.6 cm, 89.75 cm, and then removes a 34.2 cm section. What is the final length?", a: 301.15, tol: 0.02, unit: ' cm' },
+        { type: 'word', q: "A part must measure exactly 12.50 cm. The measured part is 12.53 cm. By how many cm does it differ from the target?", a: 0.03, tol: 0.01, unit: ' cm' },
+        { type: 'quick', q: "\\(4.5 \\times 3\\)", a: 13.5, tol: 0.05 },
+        { type: 'quick', q: "\\(2.25 + 1.8\\)", a: 4.05, tol: 0.05 },
+        { type: 'quick', q: "\\(0.6 \\times 12\\)", a: 7.2, tol: 0.05 },
+        { type: 'quick', q: "\\(15.4 - 3.75\\)", a: 11.65, tol: 0.05 },
+        { type: 'quick', q: "\\(8.2 \\times 0.5\\)", a: 4.1, tol: 0.05 },
+        { type: 'quick', q: "\\(3.6 \\times 2.5\\)", a: 9.0, tol: 0.05 }
+      ]
+    },
+    arts: {
+      icon: '🎨', name: 'Arts',
+      context: "Artists and designers measure canvases, mix paint ratios, and time performances. Precise measurements keep proportions and timing looking and sounding right.",
+      problems: [
+        { type: 'word', q: "A painter mixes 2.5 liters of blue paint, 1.75 liters of white paint, and 0.6 liters of yellow paint. How many liters of paint does she have in total?", a: 4.85, tol: 0.02, unit: ' liters' },
+        { type: 'word', q: "A song is 24.5 seconds long. A musician repeats a 1.25-second riff 2 extra times at the end. How long is the song now?", a: 27.0, tol: 0.02, unit: ' seconds' },
+        { type: 'quick', q: "\\(3.5 \\times 4\\)", a: 14.0, tol: 0.05 },
+        { type: 'quick', q: "\\(0.75 \\times 8\\)", a: 6.0, tol: 0.05 },
+        { type: 'quick', q: "\\(12.25 - 4.6\\)", a: 7.65, tol: 0.05 },
+        { type: 'quick', q: "\\(2.4 \\times 6.5\\)", a: 15.6, tol: 0.05 },
+        { type: 'quick', q: "\\(5.5 \\times 2.2\\)", a: 12.1, tol: 0.05 },
+        { type: 'quick', q: "\\(1.8 \\times 0.5\\)", a: 0.9, tol: 0.05 }
+      ]
+    }
+  };
 
-  // Station 1
-  function checkStation1() {
-    const total = document.getElementById('s1-total').value;
-    const diff = document.getElementById('s1-diff').value;
-    const fb = document.getElementById('s1-feedback');
-    const totalOk = isNumericMatch(total, 47.90, 0.02);
-    const diffOk = isNumericMatch(diff, 0.91, 0.02);
+  let pendingGroup = null;
+  let chosenGroup = null;
 
-    LessonCheck.check('thu-station1', totalOk && diffOk, fb, {
-      correct: "Correct! Total relay time: 47.90 seconds. Difference between fastest and slowest: 0.91 seconds.",
-      retry: "Not quite yet. Add all four split times for the total, then subtract the smallest split from the largest for the difference. Try again.",
-      reveal: "Here's the correct procedure: Total \\(= 12.45 + 11.82 + 12.09 + 11.54 = \\mathbf{47.90}\\) seconds. Fastest is 11.54s, slowest is 12.45s, so the difference \\(= 12.45 - 11.54 = \\mathbf{0.91}\\) seconds."
-    }, { label: 'Station 1: relay total & difference', answer: `Total=${total}s, Diff=${diff}s` });
-  }
-
-  // Station 2
-  function checkStation2() {
-    const final = document.getElementById('s2-final').value;
-    const fb = document.getElementById('s2-feedback');
-
-    LessonCheck.check('thu-station2', isNumericMatch(final, 4.235, 0.01), fb, {
-      correct: "Correct! Day 2: 4.56 + 0.875 = 5.435 m. Day 3: 5.435 - 1.2 = 4.235 m.",
-      retry: "Not quite yet. First find the Day 2 height (Day 1 + the rise), then subtract the Day 3 drop from that Day 2 height. Try again.",
-      reveal: "Here's the correct procedure: Day 2 height \\(= 4.56 + 0.875 = \\mathbf{5.435}\\) m. Day 3 height \\(= 5.435 - 1.2 = \\mathbf{4.235}\\) m."
-    }, { label: 'Station 2: final river gauge reading', answer: `${final} m` });
-  }
-
-  // Station 3: Speed & Precision Sprint
-  const sprintProblems = [
-    { q: "\\(4.5 \\times 0.3\\)", a: 1.35, tol: 0.01 },
-    { q: "\\(0.12 \\times 0.6\\)", a: 0.072, tol: 0.002 },
-    { q: "\\(1.5 \\times 1.5\\)", a: 2.25, tol: 0.01 },
-    { q: "\\(0.08 \\times 0.9\\)", a: 0.072, tol: 0.002 },
-    { q: "\\(7.3 \\times 1.1\\)", a: 8.03, tol: 0.01 },
-    { q: "\\(12.2 \\times 0.04\\)", a: 0.488, tol: 0.005 },
-    { q: "\\(0.5 \\times 0.5\\)", a: 0.25, tol: 0.005 },
-    { q: "\\(9.1 \\times 0.2\\)", a: 1.82, tol: 0.01 },
-    { q: "\\(2.5 \\times 4.2\\)", a: 10.5, tol: 0.02 },
-    { q: "\\(0.006 \\times 0.7\\)", a: 0.0042, tol: 0.0002 }
-  ];
-
-  function renderSprint() {
-    const html = sprintProblems.map((p, i) => `
-      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
-        <strong>${i + 1}.</strong> ${p.q} =
-        <input type="text" id="sprint-${i}-input" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="Answer">
-        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkSprint(${i})">Check</button>
-        <div id="sprint-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+  function chooseGroup(key) {
+    pendingGroup = key;
+    const g = groups[key];
+    document.getElementById('group-picker-box').innerHTML = `
+      <span class="station-label">Confirm</span>
+      <h3 style="margin-top:8px; color:var(--primary);">You selected ${g.icon} ${g.name}</h3>
+      <p>Is that the group your teacher assigned to your table? Once you confirm, you can't switch groups.</p>
+      <div style="display:flex; gap:12px; margin-top:12px;">
+        <button class="btn-lg" onclick="confirmGroup()">Yes, that's my group</button>
+        <button class="btn-lg" style="background:var(--secondary, #64748b);" onclick="cancelGroupChoice()">No, let me pick again</button>
       </div>
-    `).join('');
-    document.getElementById('s3-list').innerHTML = html;
+    `;
+  }
+
+  function cancelGroupChoice() {
+    pendingGroup = null;
+    document.getElementById('group-picker-box').innerHTML = `
+      <span class="station-label">Step 1</span>
+      <h3 style="margin-top:8px; color:var(--primary);">Which group are you in today?</h3>
+      <p>Pick the <strong>same</strong> group your teacher assigned to your table. Once you confirm, it locks in for the rest of the lesson.</p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:12px;">
+        <button class="btn-lg" onclick="chooseGroup('medicine')">🩺 Medicine</button>
+        <button class="btn-lg" onclick="chooseGroup('market')">💰 Market</button>
+        <button class="btn-lg" onclick="chooseGroup('engineering')">⚙️ Engineering</button>
+        <button class="btn-lg" onclick="chooseGroup('arts')">🎨 Arts</button>
+      </div>
+    `;
+  }
+
+  function confirmGroup() {
+    chosenGroup = pendingGroup;
+    const g = groups[chosenGroup];
+
+    document.getElementById('group-picker-box').innerHTML = `
+      <span class="station-label">Locked In</span>
+      <h3 style="margin-top:8px; color:var(--primary);">🔒 Your group: ${g.icon} ${g.name}</h3>
+      <p>Your group is locked in for today. Scroll down to solve your 8 problems.</p>
+    `;
+
+    document.getElementById('group-context').innerHTML = `<div class="notebook-header">${g.icon} ${g.name}</div><p style="margin:0;">${g.context}</p>`;
+    renderGroupProblems();
+    document.getElementById('group-content').style.display = 'block';
+
+    setupShareTab();
+
     triggerMathJax();
   }
 
-  function checkSprint(idx) {
-    const p = sprintProblems[idx];
-    const val = document.getElementById(`sprint-${idx}-input`).value;
-    const fb = document.getElementById(`sprint-${idx}-feedback`);
+  function renderGroupProblems() {
+    const g = groups[chosenGroup];
+    const html = g.problems.map((p, i) => {
+      const prompt = p.type === 'word'
+        ? `<p style="margin:0 0 10px 0;">${p.q}</p>`
+        : `<p style="margin:0 0 10px 0;">${p.q} =</p>`;
+      return `
+        <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px;">
+          <strong>${i + 1}.</strong>
+          ${prompt}
+          <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+            <input type="text" id="grp-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+            <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkGroupItem(${i})">Check</button>
+          </div>
+          <div id="grp-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+        </div>
+      `;
+    }).join('');
+    document.getElementById('group-problems').innerHTML = html;
+  }
+
+  function checkGroupItem(idx) {
+    const g = groups[chosenGroup];
+    const p = g.problems[idx];
+    const val = document.getElementById(`grp-${idx}-input`).value;
+    const fb = document.getElementById(`grp-${idx}-feedback`);
     const correct = LessonCheck.numericMatch(val, p.a, p.tol);
 
-    LessonCheck.check(`sprint-${idx}`, correct, fb, {
-      correct: `Correct! ${p.q} \\(= \\mathbf{${p.a}}\\)`,
-      retry: "Not quite yet. Recount your total decimal places and try again.",
-      reveal: `Here's the correct procedure: multiply as whole numbers, then count the total decimal places in both factors and shift. ${p.q} \\(= \\mathbf{${p.a}}\\)`
-    }, { label: `Speed Sprint #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val });
+    const answerText = p.type === 'word'
+      ? `\\(\\mathbf{${p.a}${p.unit || ''}}\\)`
+      : `${p.q} \\(= \\mathbf{${p.a}}\\)`;
+
+    LessonCheck.check(`thu-grp-${idx}`, correct, fb, {
+      correct: `Correct! ${answerText}`,
+      retry: "Not quite yet. Recheck your decimal alignment or your decimal-place count, then try again.",
+      reveal: `Here's the correct procedure: line up decimal points for addition/subtraction, or count total decimal places for multiplication. ${answerText}`
+    }, { label: `${g.name} Group #${idx + 1}`, answer: val });
   }
 
-  // Station 4
-  function checkStation4() {
-    const explain = document.getElementById('s4-explain').value.trim();
-    const answer = document.getElementById('s4-answer').value;
-    const fb = document.getElementById('s4-feedback');
-    const answerOk = isNumericMatch(answer, 37.8, 0.05);
-    const correct = explain.length > 10 && answerOk;
+  // Share tab: populate the "which group did you visit" dropdown with every group except your own
+  function setupShareTab() {
+    const g = groups[chosenGroup];
+    document.getElementById('share-locked-notice').style.display = 'none';
+    document.getElementById('share-content').style.display = 'block';
+    document.getElementById('share-own-group').innerText = `${g.icon} ${g.name}`;
 
-    LessonCheck.check('thu-station4', correct, fb, {
-      correct: "Correct! Estimate: 16 x 2 = 32, so 3.78 is nowhere close and not reasonable. Exact answer: 15.75 x 2.4 = 37.8.",
-      retry: !answerOk
-        ? "Not quite yet. Check your exact calculation: multiply 1575 x 24 as whole numbers, then count the total decimal places (2 + 1 = 3) to place the point."
-        : "Write a full explanation of your rounding estimate before checking, then try again.",
-      reveal: "Here's the correct procedure: estimate \\(16 \\times 2 = 32\\), so \\(3.78\\) is nowhere close and not reasonable. Exact: \\(1575 \\times 24 = 37800\\), shift 3 decimal places: \\(15.75 \\times 2.4 = \\mathbf{37.8}\\)."
-    }, { label: 'Station 4: Peer Review & Defense (15.75 x 2.4)', answer: answer });
+    const select = document.getElementById('share-visited');
+    select.innerHTML = '<option value="">Choose the group you visited...</option>';
+    Object.keys(groups).forEach((key) => {
+      if (key === chosenGroup) return;
+      const opt = document.createElement('option');
+      opt.value = key;
+      opt.innerText = `${groups[key].icon} ${groups[key].name}`;
+      select.appendChild(opt);
+    });
   }
 
-  // Reflection Submission
+  function submitShare(e) {
+    e.preventDefault();
+    const visitedKey = document.getElementById('share-visited').value;
+    const notes = document.getElementById('share-notes').value.trim();
+    const fb = document.getElementById('share-feedback');
+
+    if (!visitedKey || notes.length < 10) {
+      fb.className = "feedback-msg error";
+      fb.innerText = "Please choose which group you visited and write a full sentence or two about what you learned.";
+      fb.style.display = "block";
+      return;
+    }
+
+    const visitedName = `${groups[visitedKey].icon} ${groups[visitedKey].name}`;
+    LessonProgress.record('thu-share-visited', 'Group Sharing: visited group', visitedName, 'reflection');
+    LessonProgress.recordText('Group Sharing: what I learned', notes);
+
+    fb.className = "feedback-msg success";
+    fb.innerText = `Saved! Logged that you visited the ${visitedName} group.`;
+    fb.style.display = "block";
+  }
+
+  // Wrap-Up reflection
   function submitExitTicket(e) {
     e.preventDefault();
     const a1 = document.getElementById('exit-1').value.trim();
@@ -321,9 +370,6 @@
     }
     fb.style.display = "block";
   }
-
-  // Initial render
-  renderSprint();
 </script>
 <div id="print-report"></div>
 </body>
