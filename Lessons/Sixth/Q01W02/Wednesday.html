@@ -108,6 +108,14 @@
       </ul>
       <p style="margin:14px 0 0 0; font-weight:700;">📋 Your teacher will call a few names for a small-group table check-in on decimal alignment while you work - if you're called, bring your notebook.</p>
     </div>
+
+    <div class="notebook-box" style="margin-top:20px;">
+      <div class="notebook-header">Confirm Completion</div>
+      <label style="font-weight:700; cursor:pointer;">
+        <input type="checkbox" id="confirm-ixl" onchange="confirmIXL(this)" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;">
+        I completed all 9 IXL skills listed above.
+      </label>
+    </div>
   </div>
 
   <!-- PANEL 3: HEALTH SCIENCE APPLICATION -->
@@ -164,7 +172,7 @@
       </div>
 
       <div class="form-group">
-        <label>2. Metacognition Reflection: How did catching a mistake using rounding or estimation change the way you approached your next problem today?</label>
+        <label>2. How did catching a mistake using rounding or estimation change the way you approached your next problem today?</label>
         <textarea id="exit-2" class="form-control-lg" rows="3" placeholder="Reflect on your process..."></textarea>
       </div>
 
@@ -322,6 +330,12 @@
       retry: "Not quite yet. Recheck whether the decimal points/places were handled correctly, then try again.",
       reveal: ex.reveal
     }, { label: `Error Analysis: ${ex.problem.replace(/<[^>]+>/g, '').replace(/\\\(|\\\)/g, '')}`, answer: `Verdict: ${verdict || '(none)'}, Answer: ${val}` });
+  }
+
+  function confirmIXL(cb) {
+    if (cb.checked) {
+      LessonProgress.record('wed-confirm-ixl', 'Confirmed: completed all 9 IXL skills', 'Yes', 'reflection');
+    }
   }
 
   // ==========================================
