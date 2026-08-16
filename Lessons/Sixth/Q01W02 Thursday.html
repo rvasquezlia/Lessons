@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Lesson 1.2 Day 4 - Pre-Assessment Review Stations</title>
+
+  <!-- Montserrat Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="lesson-shared.css">
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <span class="badge">Q01W01 - Pre-Assessment Review</span>
+    <h1>Pre-Assessment Review Stations</h1>
+  </header>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('station1')">1. Race Splits</button>
+    <button class="tab-btn" onclick="switchTab('station2')">2. River Gauges</button>
+    <button class="tab-btn" onclick="switchTab('station3')">3. Speed Sprint</button>
+    <button class="tab-btn" onclick="switchTab('station4')">4. Peer Review</button>
+    <button class="tab-btn" onclick="switchTab('wrapup')">5. Wrap-Up</button>
+  </nav>
+
+  <!-- STATION 1: SPORTS ANALYTICS -->
+  <div id="station1" class="panel active">
+    <div class="section-title">Review Stations</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Thursday, August 20, 2026 &middot; CCSS.Math.Content.6.NS.B.3 &amp; MP1: Make Sense of Problems and Persevere in Solving Them</p>
+
+    <div class="explainer-box">
+      Today is <strong>self-led</strong>: rotate through all four stations at your own pace to sharpen your decimal skills before tomorrow's Graded Classwork. Use rounding at every station to make sure your answers are reasonable.
+    </div>
+
+    <div class="station-card">
+      <span class="station-label">Station 1</span>
+      <h3 style="margin-top:8px; color:var(--primary);">Sports Analytics: Race Splits</h3>
+      <p>In a 400-meter relay, four runners recorded the following split times in seconds:</p>
+      <ul>
+        <li><strong>Runner 1:</strong> 12.45 seconds</li>
+        <li><strong>Runner 2:</strong> 11.82 seconds</li>
+        <li><strong>Runner 3:</strong> 12.09 seconds</li>
+        <li><strong>Runner 4:</strong> 11.54 seconds</li>
+      </ul>
+      <p><strong>Task:</strong> Calculate the total relay time. Then find the difference between the fastest and slowest split times.</p>
+
+      <div class="form-group">
+        <label>Total relay time (seconds):</label>
+        <input type="text" id="s1-total" class="form-control-lg" placeholder="Enter total time">
+      </div>
+      <div class="form-group">
+        <label>Difference between fastest and slowest (seconds):</label>
+        <input type="text" id="s1-diff" class="form-control-lg" placeholder="Enter difference">
+      </div>
+      <button class="btn-lg" onclick="checkStation1()">Check My Work</button>
+      <div id="s1-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- STATION 2: ENVIRONMENTAL SCIENCE -->
+  <div id="station2" class="panel">
+    <div class="section-title">Review Stations</div>
+
+    <div class="station-card">
+      <span class="station-label">Station 2</span>
+      <h3 style="margin-top:8px; color:var(--primary);">Environmental Science: River Gauges</h3>
+      <p>A scientist is monitoring the height of a river gauge over three days.</p>
+      <ul>
+        <li><strong>Day 1:</strong> the gauge reads 4.56 meters.</li>
+        <li><strong>Day 2:</strong> the water level rises by 0.875 meters.</li>
+        <li><strong>Day 3:</strong> the water level drops by 1.2 meters from the Day 2 height.</li>
+      </ul>
+      <p><strong>Task:</strong> what is the final gauge reading on Day 3? Show your alignment of decimal points.</p>
+
+      <div class="form-group">
+        <label>Final gauge reading on Day 3 (meters):</label>
+        <input type="text" id="s2-final" class="form-control-lg" placeholder="Enter final reading">
+      </div>
+      <button class="btn-lg" onclick="checkStation2()">Check My Work</button>
+      <div id="s2-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- STATION 3: SPEED & PRECISION SPRINT -->
+  <div id="station3" class="panel">
+    <div class="section-title">Review Stations</div>
+
+    <div class="station-card">
+      <span class="station-label">Station 3</span>
+      <h3 style="margin-top:8px; color:var(--primary);">Speed &amp; Precision Sprint</h3>
+      <p>Solve each problem, then click to check your answer.</p>
+      <div id="s3-list"></div>
+    </div>
+  </div>
+
+  <!-- STATION 4: PEER REVIEW & DEFENSE -->
+  <div id="station4" class="panel">
+    <div class="section-title">Review Stations</div>
+
+    <div class="station-card">
+      <span class="station-label">Station 4</span>
+      <h3 style="margin-top:8px; color:var(--primary);">Peer Review &amp; Defense</h3>
+      <p><strong>Problem:</strong> a student calculated \(15.75 \times 2.4\) and got \(\mathbf{3.78}\).</p>
+      <p><strong>Task:</strong> without doing the exact math first, use rounding to explain why this answer is not reasonable. Then solve for the correct exact answer.</p>
+
+      <div class="form-group">
+        <label>Explain why \(3.78\) is not reasonable (use rounding):</label>
+        <textarea id="s4-explain" class="form-control-lg" rows="3" placeholder="Round each factor and estimate..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Correct exact answer:</label>
+        <input type="text" id="s4-answer" class="form-control-lg" placeholder="Enter the correct answer">
+      </div>
+      <button class="btn-lg" onclick="checkStation4()">Check My Work</button>
+      <div id="s4-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- WRAP-UP: STRATEGY CHECKLIST + REFLECTION -->
+  <div id="wrapup" class="panel">
+    <div class="section-title">Wrap-Up: Strategy Checklist for Friday's Test</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Strategy Checklist</div>
+      <ul style="list-style:none; padding-left:0;">
+        <li style="margin-bottom:10px;"><input type="checkbox" id="cb1" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;"> <label for="cb1"><strong>Addition/Subtraction:</strong> did I line up the decimal points vertically?</label></li>
+        <li style="margin-bottom:10px;"><input type="checkbox" id="cb2" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;"> <label for="cb2"><strong>Multiplication:</strong> did I count the total decimal places in the factors to place the point in the product?</label></li>
+        <li style="margin-bottom:10px;"><input type="checkbox" id="cb3" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;"> <label for="cb3"><strong>Estimation:</strong> did I round to the nearest whole number to check if my answer makes sense?</label></li>
+        <li style="margin-bottom:0;"><input type="checkbox" id="cb4" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;"> <label for="cb4"><strong>Precision:</strong> did I double-check my basic facts (like \(7 \times 8\)) to avoid small errors?</label></li>
+      </ul>
+    </div>
+
+    <form id="exit-form" onsubmit="submitExitTicket(event)">
+      <div class="form-group">
+        <label>Metacognition Reflection: What personal strategy will you rely on tomorrow to ensure you do not make decimal alignment or estimation errors on your Graded Classwork?</label>
+        <textarea id="exit-1" class="form-control-lg" rows="3" placeholder="Reflect on your strategy..."></textarea>
+      </div>
+      <button type="submit" class="btn-lg">Submit Reflection</button>
+    </form>
+    <div id="exit-feedback" class="feedback-msg"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+
+    triggerMathJax();
+  }
+
+  function isNumericMatch(userVal, expectedVal, tolerance) {
+    const u = parseFloat((userVal || "").replace(/[^0-9.\-]/g, ""));
+    if (isNaN(u)) return false;
+    return Math.abs(u - expectedVal) <= tolerance;
+  }
+
+  // Station 1
+  function checkStation1() {
+    const total = document.getElementById('s1-total').value;
+    const diff = document.getElementById('s1-diff').value;
+    const fb = document.getElementById('s1-feedback');
+    const totalOk = isNumericMatch(total, 47.90, 0.02);
+    const diffOk = isNumericMatch(diff, 0.91, 0.02);
+    if (totalOk && diffOk) {
+      fb.className = "feedback-msg success";
+      fb.innerText = "Correct! Total relay time: 47.90 seconds. Difference between fastest and slowest: 0.91 seconds.";
+    } else {
+      fb.className = "feedback-msg error";
+      fb.innerText = "Not quite. Add all four split times for the total, then subtract the smallest split from the largest for the difference.";
+    }
+    fb.style.display = "block";
+  }
+
+  // Station 2
+  function checkStation2() {
+    const final = document.getElementById('s2-final').value;
+    const fb = document.getElementById('s2-feedback');
+    if (isNumericMatch(final, 4.235, 0.01)) {
+      fb.className = "feedback-msg success";
+      fb.innerText = "Correct! Day 2: 4.56 + 0.875 = 5.435 m. Day 3: 5.435 - 1.2 = 4.235 m.";
+    } else {
+      fb.className = "feedback-msg error";
+      fb.innerText = "Not quite. First find the Day 2 height (Day 1 + the rise), then subtract the Day 3 drop from that Day 2 height.";
+    }
+    fb.style.display = "block";
+  }
+
+  // Station 3: Speed & Precision Sprint
+  const sprintProblems = [
+    { q: "\\(4.5 \\times 0.3\\)", a: 1.35 },
+    { q: "\\(0.12 \\times 0.6\\)", a: 0.072 },
+    { q: "\\(1.5 \\times 1.5\\)", a: 2.25 },
+    { q: "\\(0.08 \\times 0.9\\)", a: 0.072 },
+    { q: "\\(7.3 \\times 1.1\\)", a: 8.03 },
+    { q: "\\(12.2 \\times 0.04\\)", a: 0.488 },
+    { q: "\\(0.5 \\times 0.5\\)", a: 0.25 },
+    { q: "\\(9.1 \\times 0.2\\)", a: 1.82 },
+    { q: "\\(2.5 \\times 4.2\\)", a: 10.5 },
+    { q: "\\(0.006 \\times 0.7\\)", a: 0.0042 }
+  ];
+
+  function renderSprint() {
+    const html = sprintProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q} =
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="toggleReveal('sprint-${i}')">Check</button>
+        <span id="sprint-${i}" style="display:none; font-weight:700; color:var(--success);">\\(${p.a}\\)</span>
+      </div>
+    `).join('');
+    document.getElementById('s3-list').innerHTML = html;
+    triggerMathJax();
+  }
+
+  function toggleReveal(id) {
+    const el = document.getElementById(id);
+    el.style.display = (el.style.display === 'inline' || el.style.display === 'block') ? 'none' : 'inline';
+    triggerMathJax();
+  }
+
+  // Station 4
+  function checkStation4() {
+    const explain = document.getElementById('s4-explain').value.trim();
+    const answer = document.getElementById('s4-answer').value;
+    const fb = document.getElementById('s4-feedback');
+    const answerOk = isNumericMatch(answer, 37.8, 0.05);
+    if (explain.length > 10 && answerOk) {
+      fb.className = "feedback-msg success";
+      fb.innerText = "Correct! Estimate: 16 x 2 = 32, so 3.78 is nowhere close and not reasonable. Exact answer: 15.75 x 2.4 = 37.8.";
+    } else if (!answerOk) {
+      fb.className = "feedback-msg error";
+      fb.innerText = "Check your exact calculation: multiply 1575 x 24 as whole numbers, then count the total decimal places (2 + 1 = 3) to place the point.";
+    } else {
+      fb.className = "feedback-msg error";
+      fb.innerText = "Write a full explanation of your rounding estimate before checking.";
+    }
+    fb.style.display = "block";
+  }
+
+  // Reflection Submission
+  function submitExitTicket(e) {
+    e.preventDefault();
+    const a1 = document.getElementById('exit-1').value.trim();
+    const fb = document.getElementById('exit-feedback');
+
+    if (a1.length > 5) {
+      fb.className = "feedback-msg success";
+      fb.innerText = "Reflection submitted and logged successfully! See you tomorrow for Graded Classwork.";
+    } else {
+      fb.className = "feedback-msg error";
+      fb.innerText = "Please write a complete reflection before submitting.";
+    }
+    fb.style.display = "block";
+  }
+
+  // Initial render
+  renderSprint();
+</script>
+</body>
+</html>
