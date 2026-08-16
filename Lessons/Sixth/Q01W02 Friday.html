@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Lesson 1.2 Day 5 - Graded Classwork Review</title>
+
+  <!-- Montserrat Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="lesson-shared.css">
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <span class="badge">Q01W01 - Graded Classwork Day</span>
+    <h1>Graded Classwork: Decimal Operations</h1>
+  </header>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('info')">1. Today's Assessment</button>
+    <button class="tab-btn" onclick="switchTab('fluency')">2. Warm-Up: Fluency</button>
+    <button class="tab-btn" onclick="switchTab('wordproblems')">3. Warm-Up: Word Problems</button>
+    <button class="tab-btn" onclick="switchTab('reasonable')">4. Reasonableness Check</button>
+    <button class="tab-btn" onclick="switchTab('reflection')">5. Reflection</button>
+  </nav>
+
+  <!-- PANEL 1: TODAY'S ASSESSMENT -->
+  <div id="info" class="panel active">
+    <div class="section-title">Today's Graded Classwork</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Friday, August 21, 2026 &middot; CCSS.Math.Content.6.NS.B.3 &amp; MP6: Attend to Precision</p>
+
+    <div class="explainer-box">
+      Today's Graded Classwork is a <strong>paper-based assessment</strong>, completed and collected in class. This page is not the test - it's extra review and practice you can use to warm up beforehand or study afterward.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Objectives for Today</div>
+      <ul>
+        <li>Execute the standard algorithms independently to add, subtract, and multiply multi-digit decimals with precision.</li>
+        <li>Write complete solutions for multi-step, real-world decimal word problems.</li>
+        <li>Confirm the reasonableness of your answers by finding approximate values through rounding.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Strategy Checklist</div>
+      <ul style="list-style:none; padding-left:0;">
+        <li style="margin-bottom:10px;"><input type="checkbox" id="cb1" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;"> <label for="cb1">I aligned decimal points for addition and subtraction.</label></li>
+        <li style="margin-bottom:10px;"><input type="checkbox" id="cb2" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;"> <label for="cb2">I counted total decimal places for multiplication.</label></li>
+        <li style="margin-bottom:10px;"><input type="checkbox" id="cb3" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;"> <label for="cb3">I used rounding to estimate my answer first.</label></li>
+        <li style="margin-bottom:0;"><input type="checkbox" id="cb4" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;"> <label for="cb4">I checked if my exact answer is reasonable compared to my estimate.</label></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PANEL 2: FLUENCY WARM-UP -->
+  <div id="fluency" class="panel">
+    <div class="section-title">Warm-Up: Fluency &amp; Standard Algorithms</div>
+    <p>These are new practice problems (not the actual assessment) to warm up your skills. Solve each on paper, then check your answer.</p>
+    <div id="fluency-list"></div>
+  </div>
+
+  <!-- PANEL 3: WORD PROBLEM WARM-UP -->
+  <div id="wordproblems" class="panel">
+    <div class="section-title">Warm-Up: Multi-Step Word Problems</div>
+    <p>Work through each problem using the estimate-then-exact routine.</p>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="wp-prev-btn" onclick="changeWordProblem(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="wp-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Problem 1 of 3</span>
+          <div class="carousel-indicators" id="wp-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="wp-next-btn" onclick="changeWordProblem(1)">Next &rarr;</button>
+      </div>
+
+      <div id="wp-content" style="min-height: 280px;"></div>
+
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextWordProblemStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetWordProblemStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 4: REASONABLENESS CHECK PRACTICE -->
+  <div id="reasonable" class="panel">
+    <div class="section-title">Reasonableness Check Practice</div>
+
+    <div class="step-box">
+      <h3 style="margin-top:0; color:var(--primary);">Is This Answer Reasonable?</h3>
+      <p><strong>Problem:</strong> a student calculated \(8.4 \times 3.05\) and got \(\mathbf{25.62}\).</p>
+      <p><strong>Task:</strong> without doing the exact math first, use rounding to decide whether this is reasonable. Then find the actual answer.</p>
+
+      <div class="form-group">
+        <label>Your estimate (round each factor to the nearest whole number):</label>
+        <input type="text" id="rc-estimate" class="form-control-lg" placeholder="Enter your estimate">
+      </div>
+      <div class="form-group">
+        <label>Is \(25.62\) reasonable? Explain.</label>
+        <textarea id="rc-explain" class="form-control-lg" rows="2" placeholder="Explain your reasoning..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkReasonable()">Check My Work</button>
+      <div id="rc-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 5: POST-ASSESSMENT REFLECTION -->
+  <div id="reflection" class="panel">
+    <div class="section-title">Post-Assessment Reflection</div>
+
+    <form id="exit-form" onsubmit="submitExitTicket(event)">
+      <div class="form-group">
+        <label>1. Which problem on today's Graded Classwork required the most concentration or effort? Why?</label>
+        <textarea id="exit-1" class="form-control-lg" rows="3" placeholder="Describe the problem and why it was challenging..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>2. How did rounding help you feel more confident about your final solutions today?</label>
+        <textarea id="exit-2" class="form-control-lg" rows="3" placeholder="Reflect on your process..."></textarea>
+      </div>
+
+      <button type="submit" class="btn-lg">Submit Reflection</button>
+    </form>
+    <div id="exit-feedback" class="feedback-msg"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+
+    triggerMathJax();
+  }
+
+  function isNumericMatch(userVal, expectedVal, tolerance) {
+    const u = parseFloat((userVal || "").replace(/[^0-9.\-]/g, ""));
+    if (isNaN(u)) return false;
+    return Math.abs(u - expectedVal) <= tolerance;
+  }
+
+  function toggleReveal(id) {
+    const el = document.getElementById(id);
+    el.style.display = (el.style.display === 'inline' || el.style.display === 'block') ? 'none' : 'inline';
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // FLUENCY WARM-UP
+  // ==========================================
+  const fluencyProblems = [
+    { q: "\\(36.4 + 18.75\\)", a: "\\(55.15\\)" },
+    { q: "\\(92.6 + 7.38\\)", a: "\\(99.98\\)" },
+    { q: "\\(75.3 - 29.46\\)", a: "\\(45.84\\)" },
+    { q: "\\(150 - 32.85\\)", a: "\\(117.15\\)" },
+    { q: "\\(5.6 \\times 2.3\\)", a: "\\(12.88\\)" },
+    { q: "\\(0.45 \\times 3.2\\)", a: "\\(1.44\\)" },
+    { q: "\\(8.2 \\times 0.15\\)", a: "\\(1.23\\)" },
+    { q: "\\(4.75 \\times 6\\)", a: "\\(28.5\\)" }
+  ];
+
+  function renderFluency() {
+    const html = fluencyProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q} =
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="toggleReveal('fluency-${i}')">Check</button>
+        <span id="fluency-${i}" style="display:none; font-weight:700; color:var(--success);">${p.a}</span>
+      </div>
+    `).join('');
+    document.getElementById('fluency-list').innerHTML = html;
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // WORD PROBLEM CAROUSEL
+  // ==========================================
+  let currentWP = 0;
+  let currentWPStep = 1;
+
+  const wordProblems = [
+    {
+      category: "Career Focus: The Nurse",
+      title: "1. Preparing an IV Solution",
+      scenario: "A nurse is preparing an IV solution. They combine \\(125.5\\) mL of saline, \\(42.25\\) mL of medication, and \\(8.5\\) mL of a vitamin additive.<br><strong>A.</strong> What is the total volume of the mixture?<br><strong>B.</strong> If the nurse needs to prepare \\(3\\) identical IV bags, what is the total volume needed for all bags?",
+      maxSteps: 2,
+      steps: [
+        "<strong>Part A: Total volume of one mixture.</strong><br>Line up the decimals and add: \\(125.50 + 42.25 + 8.50 = \\mathbf{176.25}\\) mL.",
+        "<strong>Part B: Total volume for 3 bags.</strong><br>Multiply the mixture total by 3: \\(176.25 \\times 3 = \\mathbf{528.75}\\) mL."
+      ]
+    },
+    {
+      category: "Environmental Geography",
+      title: "2. Tracking Rainfall",
+      scenario: "A desert region recorded \\(2.15\\) inches of rain in one year. A nearby rainforest recorded \\(68.4\\) inches more than the desert.<br><strong>A.</strong> How much rain fell in the rainforest?<br><strong>B.</strong> If the rainforest's total was \\(3.5\\) inches below the historical average, what is the historical average?",
+      maxSteps: 2,
+      steps: [
+        "<strong>Part A: Rainforest total.</strong><br>\\(2.15 + 68.40 = \\mathbf{70.55}\\) inches.",
+        "<strong>Part B: Historical average.</strong><br>Since the rainforest total was 3.5 inches below average, add it back: \\(70.55 + 3.50 = \\mathbf{74.05}\\) inches."
+      ]
+    },
+    {
+      category: "Economics &amp; Budgeting",
+      title: "3. Diego's School Supplies",
+      scenario: "Diego has a budget of \\(\\$85.00\\) for school supplies. He buys \\(4\\) notebooks for \\(\\$3.25\\) each and a calculator for \\(\\$24.99\\).<br><strong>A.</strong> What is the total cost of his supplies?<br><strong>B.</strong> How much money does Diego have left in his budget?",
+      maxSteps: 2,
+      steps: [
+        "<strong>Part A: Total cost.</strong><br>Notebooks: \\(4 \\times 3.25 = \\$13.00\\). Plus calculator: \\(13.00 + 24.99 = \\mathbf{\\$37.99}\\).",
+        "<strong>Part B: Money left.</strong><br>\\(85.00 - 37.99 = \\mathbf{\\$47.01}\\)."
+      ]
+    }
+  ];
+
+  function renderWordProblemCarousel() {
+    const wp = wordProblems[currentWP];
+    document.getElementById('wp-title').innerText = `Problem ${currentWP + 1} of ${wordProblems.length}`;
+
+    const dotsContainer = document.getElementById('wp-dots');
+    dotsContainer.innerHTML = wordProblems.map((_, i) =>
+      `<div class="dot ${i === currentWP ? 'active' : ''}" onclick="jumpToWordProblem(${i})"></div>`
+    ).join('');
+
+    let stepsHtml = '';
+    for (let i = 0; i < currentWPStep; i++) {
+      stepsHtml += `<div class="step-item visible">${wp.steps[i]}</div>`;
+    }
+
+    document.getElementById('wp-content').innerHTML = `
+      <span class="category-badge" style="background:rgba(37,99,235,0.12); color:var(--primary-light); padding:6px 14px; border-radius:20px; font-size:0.85rem; font-weight:800; text-transform:uppercase;">${wp.category}</span>
+      <h3 style="color:var(--primary); margin:12px 0;">${wp.title}</h3>
+      <p>${wp.scenario}</p>
+      ${stepsHtml}
+    `;
+
+    document.getElementById('wp-prev-btn').disabled = currentWP === 0;
+    document.getElementById('wp-next-btn').disabled = currentWP === wordProblems.length - 1;
+
+    triggerMathJax();
+  }
+
+  function changeWordProblem(dir) {
+    currentWP = Math.max(0, Math.min(wordProblems.length - 1, currentWP + dir));
+    currentWPStep = 1;
+    renderWordProblemCarousel();
+  }
+
+  function jumpToWordProblem(idx) {
+    currentWP = idx;
+    currentWPStep = 1;
+    renderWordProblemCarousel();
+  }
+
+  function nextWordProblemStep() {
+    if (currentWPStep < wordProblems[currentWP].maxSteps) {
+      currentWPStep++;
+      renderWordProblemCarousel();
+    }
+  }
+
+  function resetWordProblemStep() {
+    currentWPStep = 1;
+    renderWordProblemCarousel();
+  }
+
+  // ==========================================
+  // REASONABLENESS CHECK
+  // ==========================================
+  function checkReasonable() {
+    const estimate = document.getElementById('rc-estimate').value;
+    const explain = document.getElementById('rc-explain').value.trim();
+    const fb = document.getElementById('rc-feedback');
+    const estimateOk = isNumericMatch(estimate, 24, 4);
+
+    if (estimateOk && explain.length > 5) {
+      fb.className = "feedback-msg success";
+      fb.innerText = "Nicely done! Estimate: 8 x 3 = 24, which is close to 25.62 - this time the answer IS reasonable. Exact check: 84 x 305 = 25,620, shift 3 decimal places: 8.4 x 3.05 = 25.62.";
+    } else {
+      fb.className = "feedback-msg error";
+      fb.innerText = "Round each factor to the nearest whole number (8.4 -> 8 and 3.05 -> 3), multiply, and compare that estimate to 25.62.";
+    }
+    fb.style.display = "block";
+  }
+
+  // Reflection Submission
+  function submitExitTicket(e) {
+    e.preventDefault();
+    const a1 = document.getElementById('exit-1').value.trim();
+    const a2 = document.getElementById('exit-2').value.trim();
+    const fb = document.getElementById('exit-feedback');
+
+    if (a1.length > 5 && a2.length > 5) {
+      fb.className = "feedback-msg success";
+      fb.innerText = "Reflection submitted and logged successfully! Great work this week.";
+    } else {
+      fb.className = "feedback-msg error";
+      fb.innerText = "Please write a complete answer for both questions.";
+    }
+    fb.style.display = "block";
+  }
+
+  // Initial render
+  renderFluency();
+  renderWordProblemCarousel();
+</script>
+</body>
+</html>
