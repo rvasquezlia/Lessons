@@ -35,6 +35,17 @@
     <h1>Add, Subtract, and Multiply Decimals</h1>
   </header>
 
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Math 6 - Monday, Aug 17 - Add, Subtract, and Multiply Decimals')">🖨️ Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Work through the tabs below <strong>in order, left to right</strong>. Each tab has activities where you type your own answer first and click "Check My Work" - you'll be told if you're right, and if you're wrong twice on the same problem the correct method will be shown. When you finish the Exit Ticket, type your name above and click <strong>Print My Progress</strong> to create your proof-of-completion page to submit to Google Classroom.
+  </div>
+
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('pv-foundations')">1. Place Value & Rounding</button>
     <button class="tab-btn" onclick="switchTab('addition-proof')">2. Addition & Subtraction</button>
@@ -48,6 +59,11 @@
   <div id="pv-foundations" class="panel active">
     <div class="section-title">Foundational Concept: Place Value & Rounding Strategy</div>
     <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Monday, August 17, 2026 &middot; 45 min &middot; CCSS.Math.Content.6.NS.B.3 &amp; MP6: Attend to Precision</p>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read the notebook box and copy it into your math notebook. Then click each column in the chart below to learn what it means - there's nothing to submit here, this is background you'll use for the rest of the week.
+    </div>
 
     <div class="explainer-box">
       The <strong>decimal point (\(\cdot\))</strong> separates <strong>whole quantities</strong> (on the left) from <strong>fractional parts</strong> (on the right). Every move to the left makes a digit \(10\times\) larger; every move to the right drops it to \(\frac{1}{10}\text{th}\) of its value.
@@ -129,6 +145,11 @@
   <!-- PANEL 2: ADDITION & SUBTRACTION -->
   <div id="addition-proof" class="panel">
     <div class="section-title">Addition & Subtraction: Visual Alignment & Regrouping</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Copy the notebook box into your notebook. Click through the carousel's <strong>Next Step</strong> button to watch two worked examples, then click <strong>Click to Reveal Next Step</strong> on Marcus's word problem to see it solved step by step. At the bottom, solve the Challenge Problem yourself, type your answer and explanation, and click Check My Work.
+    </div>
 
     <!-- NOTEBOOK BOX 2 -->
     <div class="notebook-box">
@@ -215,6 +236,11 @@
   <!-- PANEL 3: MULTIPLICATION MECHANICS & CAROUSEL -->
   <div id="multiplication-proof" class="panel">
     <div class="section-title">Multiplication Mechanics: Standard Algorithm & Place Alignment</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read the rule, then copy the notebook box into your notebook. Work through the multiplication carousel and the carpet-area word problem the same way as the last tab. Try the decimal shift slider to see how the total decimal-place count moves the point. Finish with the Challenge Problem: type your total cost and explanation, then Check My Work.
+    </div>
 
     <div class="explainer-box">
       <strong>Standard Algorithm Rule:</strong> Multiply the factors as whole integers, ignoring the decimal points. The first partial product aligns with the ones column. The second partial product shifts one position left into its own dedicated grid column, aligning with the tens column (\(245 \times 30 = 7350\)). Add the partial products as whole integers, then place the decimal point in the final product based on the combined total of decimal places.
@@ -321,6 +347,10 @@
   <!-- PANEL 4: WHITEBOARD PRACTICE SUITE -->
   <div id="whiteboard" class="panel">
     <div class="section-title">Interactive Whiteboard Practice (Student Volunteers)</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Pick a problem button above. Fill in every digit box (leave a box blank only if that place value is truly empty), pick the decimal places for the multiplication problem, then click Check Whiteboard Solution.
+    </div>
     <p>Select a problem for student volunteers to solve at the board!</p>
 
     <div class="problem-selector">
@@ -343,6 +373,10 @@
   <!-- PANEL 5: WEEKLY PRACTICE SET (from the printed Monday worksheet) -->
   <div id="practiceset" class="panel">
     <div class="section-title">Monday Practice Set: Alignment &amp; Estimation Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      These are the same problems from your printed Monday worksheet. For each one: estimate first by rounding (on paper or in your head), then type your exact answer in the box and click Check. Do all three parts in order.
+    </div>
     <p>These are the same problems from your printed Monday worksheet. Estimate first by rounding, then solve using the standard algorithm.</p>
 
     <div class="notebook-box">
@@ -380,6 +414,10 @@
   <!-- PANEL 6: EXIT TICKET -->
   <div id="exitticket" class="panel">
     <div class="section-title">Lesson 1.2 Exit Ticket & Metacognitive Log</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Answer all four questions, then click Submit Exit Ticket. This is the last step before you print your progress - go back to the Student Name box in the blue bar at the top of the page, type your name, and click Print My Progress.
+    </div>
 
     <form id="exit-form" onsubmit="submitExitTicket(event)">
       <div class="form-group">
@@ -1159,7 +1197,7 @@
         correct: "Whiteboard multiplication solution verified! Integer partial products (490, 7350), sum (7840), and 3 total decimal places placed correctly (7.840) are all correct.",
         retry: "Not quite yet. Recheck your two partial products and their sum before worrying about the decimal point.",
         reveal: `Here's the correct procedure: partial products are 0490 and 7350, integer sum 7840. Both factors together have 3 decimal places, so the final answer is 7.840.`
-      });
+      }, { label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${p1_0}${p1_1}${p1_2}${p1_3} / ${p2_0}${p2_1}${p2_2}${p2_3} / ${u0}${u1}${u2}${u3}, ${decPlaces} decimal places` });
     } else {
       const u0 = document.getElementById('wb-i0').value;
       const u1 = document.getElementById('wb-i1').value;
@@ -1170,7 +1208,7 @@
         correct: "Whiteboard solution verified! Place value columns correctly calculated.",
         retry: "Not quite yet. Recheck each column, starting from the right - did you regroup/borrow correctly?",
         reveal: `Here's the correct procedure: work right to left, column by column. The correct digits are ${prob.ans.join('')}.`
-      });
+      }, { label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${u0}${u1}${u2}${u3}` });
     }
   }
 
@@ -1190,7 +1228,7 @@
       correct: "Correct! In the tenths column, \\(X + 2 = 6\\), so \\(X = 4\\). Full equation: \\(14.45 + 3.20 = 17.65\\).",
       retry: "Not quite yet. Look only at the tenths column: what digit, plus 2, makes 6? Write your reasoning and try again.",
       reveal: "Here's the correct procedure: in the tenths column, \\(X + 2 = 6\\), so \\(X = \\mathbf{4}\\). Full equation: \\(14.45 + 3.20 = 17.65\\)."
-    });
+    }, { label: 'Addition Challenge: find X in 14.X5 + 3.20 = 17.65', answer: `X = ${x}` });
   }
 
   function checkMultChallenge() {
@@ -1203,7 +1241,7 @@
       correct: "Correct! Area \\(= 5.5 \\times 3.2 = 17.6\\text{ m}^2\\). Total cost \\(= 17.6 \\times \\$1.50 = \\mathbf{\\$26.40}\\).",
       retry: "Not quite yet. This is two steps: find the garden's area first, then multiply the area by the cost per square meter.",
       reveal: "Here's the correct procedure: Area \\(= 5.5 \\times 3.2 = 17.6\\text{ m}^2\\). Total cost \\(= 17.6 \\times \\$1.50 = \\mathbf{\\$26.40}\\)."
-    });
+    }, { label: 'Multiplication Challenge: garden seed cost', answer: `$${cost}` });
   }
 
   // ==========================================
@@ -1249,7 +1287,7 @@
       correct: `Correct! \\(\\mathbf{${p.a}}\\)`,
       retry: "Not quite yet. Estimate first by rounding, then recheck your alignment and try again.",
       reveal: `Here's the correct procedure: ${p.work}`
-    });
+    }, { label: `Practice Set: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val });
   }
 
   function checkFinancialLiteracy() {
@@ -1263,7 +1301,7 @@
       correct: "Correct! Subtotal: \\(2.89 + 12.45 + 8.75 = \\$24.09\\). Total with tax: \\(24.09 + 1.68 = \\$25.77\\). Change from \\$50: \\(50.00 - 25.77 = \\$24.23\\).",
       retry: "Not quite yet. Work top to bottom: subtotal first, then add tax for the total, then subtract that total from \\$50.00 for the change.",
       reveal: "Here's the correct procedure: Subtotal \\(= 2.89 + 12.45 + 8.75 = \\mathbf{\\$24.09}\\). Total \\(= 24.09 + 1.68 = \\mathbf{\\$25.77}\\). Change \\(= 50.00 - 25.77 = \\mathbf{\\$24.23}\\)."
-    });
+    }, { label: 'Financial Literacy: subtotal / total / change', answer: `A=$${a}, B=$${b}, C=$${c}` });
   }
 
   renderPracticeSetList('ps-part1-list', practiceSetPart1, 'ps1');
@@ -1284,8 +1322,14 @@
       correct: "Correct and complete - Exit Ticket submitted and logged successfully!",
       retry: "Not quite yet. Double-check your sum and product, and make sure both explanation boxes are filled in, then resubmit.",
       reveal: "Here's the correct procedure: Sum \\(= 3.5 + 1.25 = \\mathbf{4.75}\\). Product \\(= 3.5 \\times 1.25 = \\mathbf{4.375}\\) (multiply as whole numbers \\(35 \\times 125 = 4375\\), then shift 3 decimal places). Make sure both explanation boxes are filled in before resubmitting."
-    });
+    }, { label: 'Exit Ticket: sum and product', answer: `Sum=${a1}, Product=${a2}` });
+
+    if (correct) {
+      LessonProgress.recordText('Exit Ticket: procedural difference explanation', exp);
+      LessonProgress.recordText('Exit Ticket: metacognition reflection', ref);
+    }
   }
 </script>
+<div id="print-report"></div>
 </body>
 </html>

@@ -35,6 +35,17 @@
     <h1>Error Analysis &amp; Health Science</h1>
   </header>
 
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Math 6 - Wednesday, Aug 19 - Error Analysis & Health Science')">🖨️ Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Do the four tabs in order: diagnose 5 errors, then go log into IXL for the middle tab, then the Health Science table, then your Exit Ticket. Every math item asks you to type an answer before it tells you if you're right. Finish by typing your name above and clicking <strong>Print My Progress</strong> for your Google Classroom submission.
+  </div>
+
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('erroranalysis')">1. Error Analysis</button>
     <button class="tab-btn" onclick="switchTab('ixl')">2. IXL Practice</button>
@@ -46,6 +57,11 @@
   <div id="erroranalysis" class="panel active">
     <div class="section-title">Error Analysis Warm-Up</div>
     <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Wednesday, August 19, 2026 &middot; 90 min (Double Period) &middot; CCSS.Math.Content.6.NS.B.3 &amp; MP6: Attend to Precision</p>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      For each of the 5 problems: read the work shown, pick "Correct" or "There's a mistake" from the dropdown, type what the correct answer should be, and click Check My Work. Use the arrows or dots to move to the next problem.
+    </div>
 
     <div class="explainer-box">
       Today is <strong>self-led</strong>. For each problem below, you'll act as the teacher: look at another student's work, decide whether it's correct, and if it isn't, explain the mistake and fix it. Not every problem below actually has an error - read carefully!
@@ -71,6 +87,11 @@
   <div id="ixl" class="panel">
     <div class="section-title">Digital Station Practice: IXL</div>
 
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Leave this page open, open IXL in another tab, and log in there instead. Work through every skill listed below in order. There's nothing to check or print on this tab - your teacher sees your IXL progress directly.
+    </div>
+
     <div class="ixl-box">
       <h3 style="margin-top:0; color:#15803d;">Today's practice happens in IXL, not on this page.</h3>
       <p style="margin-bottom:0;">Log in to IXL and work through the skills below. Your teacher is monitoring progress live through the IXL Analytics dashboard, and will pull a small group for a targeted check-in on decimal alignment.</p>
@@ -92,6 +113,10 @@
   <!-- PANEL 3: HEALTH SCIENCE APPLICATION -->
   <div id="health" class="panel">
     <div class="section-title">Health Science Application</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Multiply each nutrient amount in the first table by 2.5 bars, type all four results in the second table, then click Check My Work once - it checks all four at the same time.
+    </div>
     <p>Nutritionists use decimals to track exact nutrient intake. Below is a nutrition label for a "Super-Grain Energy Bar." Use the data to calculate the totals for a student who eats <strong>2.5 bars</strong> throughout the day.</p>
 
     <table class="data-table">
@@ -127,6 +152,10 @@
   <!-- PANEL 4: EXIT TICKET -->
   <div id="exitticket" class="panel">
     <div class="section-title">Exit Ticket &amp; Metacognitive Log</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Answer both questions, click Submit Exit Ticket, then type your name in the blue bar at the top of the page and click Print My Progress.
+    </div>
 
     <form id="exit-form" onsubmit="submitExitTicket(event)">
       <div class="form-group">
@@ -292,7 +321,7 @@
       correct: ex.reveal,
       retry: "Not quite yet. Recheck whether the decimal points/places were handled correctly, then try again.",
       reveal: ex.reveal
-    });
+    }, { label: `Error Analysis: ${ex.problem.replace(/<[^>]+>/g, '').replace(/\\\(|\\\)/g, '')}`, answer: `Verdict: ${verdict || '(none)'}, Answer: ${val}` });
   }
 
   // ==========================================
@@ -315,7 +344,7 @@
       correct: "All four nutrient totals are correct! Total Fat: 10.625 g, Protein: 22.875 g, Carbohydrates: 71.0 g, Fiber: 9.5 g.",
       retry: "Check your multiplication. Each nutrient amount is multiplied by 2.5 bars - for example, Total Fat: 4.25 x 2.5. Try again.",
       reveal: "Here's the correct procedure: multiply each nutrient by 2.5 bars. Total Fat: \\(4.25 \\times 2.5 = \\mathbf{10.625}\\) g. Protein: \\(9.15 \\times 2.5 = \\mathbf{22.875}\\) g. Carbohydrates: \\(28.4 \\times 2.5 = \\mathbf{71.0}\\) g. Fiber: \\(3.8 \\times 2.5 = \\mathbf{9.5}\\) g."
-    });
+    }, { label: 'Health Science: nutrient totals for 2.5 bars', answer: `Fat=${fat}, Protein=${protein}, Carbs=${carbs}, Fiber=${fiber}` });
   }
 
   // Exit Ticket Submission
@@ -328,6 +357,8 @@
     if (a1.length > 5 && a2.length > 5) {
       fb.className = "feedback-msg success";
       fb.innerText = "Exit Ticket submitted and logged successfully!";
+      LessonProgress.recordText('Exit Ticket: most helpful error analysis problem', a1);
+      LessonProgress.recordText('Exit Ticket: metacognition reflection', a2);
     } else {
       fb.className = "feedback-msg error";
       fb.innerText = "Please write a complete answer for both questions.";
@@ -338,5 +369,6 @@
   // Initial render
   renderErrorCarousel();
 </script>
+<div id="print-report"></div>
 </body>
 </html>
