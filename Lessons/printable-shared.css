@@ -45,6 +45,23 @@ header {
   text-align: center;
 }
 
+.brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.brand-logo { height: 40px; width: auto; display: block; }
+.brand-name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.92;
+}
+
 .badge {
   display: inline-block;
   background: #f59e0b;
@@ -222,6 +239,22 @@ h1 { margin: 8px 0; font-size: 2rem; font-weight: 800; }
 .btn-print:hover { background: #b45309; color: white; }
 
 .no-print { }
+
+.print-tip {
+  font-size: 0.85rem;
+  color: #475569;
+  margin: -10px 0 20px 0;
+}
+
+/* Letter-size page with a real margin on every printed page (not just the
+   first/last) - without this, the browser falls back to whatever margin
+   setting it last remembered, which can be "None" and leaves content
+   flush against the paper edge with the browser's auto header/footer
+   (URL + date + page number) crowding the page top/bottom instead. */
+@page {
+  size: letter;
+  margin: 0.65in 0.6in;
+}
 
 @media print {
   body { background: white; padding: 0; }
