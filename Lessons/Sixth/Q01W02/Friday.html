@@ -43,13 +43,12 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Tab 1 tells you what today's class is - your paper test. Complete the test with your teacher, then come back and check the completion box. Tab 2 is a short summary of what you learned this whole week. Tab 3 is your final reflection - answer it, then type your name above and click <strong>Print My Progress</strong>.
+    Tab 1 tells you what today's class is - your paper test. Complete the test with your teacher, then come back and check the completion box. Tab 2 is your final reflection - answer it, then type your name above and click <strong>Print My Progress</strong>.
   </div>
 
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('info')">1. Today's Assessment</button>
-    <button class="tab-btn" onclick="switchTab('summary')">2. What We Learned This Week</button>
-    <button class="tab-btn" onclick="switchTab('reflection')">3. Acknowledgment &amp; Final Questions</button>
+    <button class="tab-btn" onclick="switchTab('reflection')">2. Reflection</button>
   </nav>
 
   <!-- PANEL 1: TODAY'S ASSESSMENT -->
@@ -80,43 +79,12 @@
     </div>
   </div>
 
-  <!-- PANEL 2: WEEK SUMMARY -->
-  <div id="summary" class="panel">
-    <div class="section-title">What We Learned This Week</div>
-    <div class="howto-box">
-      <strong class="howto-label">What to do on this tab</strong>
-      Think back over the whole week (Monday through Thursday), answer the questions below, then click Save Summary.
-    </div>
-
-    <form id="summary-form" onsubmit="submitSummary(event)">
-      <div class="form-group">
-        <label>1. Which decimal skill - adding, subtracting, or multiplying - do you feel most confident about now?</label>
-        <textarea id="sum-1" class="form-control-lg" rows="2" placeholder="I feel most confident with..."></textarea>
-      </div>
-      <div class="form-group">
-        <label>2. This week you saw decimals used in real jobs (grocery shopping, medicine, sports, market, engineering, the arts). Pick one and explain why precision mattered there.</label>
-        <textarea id="sum-2" class="form-control-lg" rows="2" placeholder="In [job/field], precision matters because..."></textarea>
-      </div>
-      <div class="form-group">
-        <label>3. What was still tricky for you this week, and what will you do about it?</label>
-        <textarea id="sum-3" class="form-control-lg" rows="2" placeholder="I still need to work on..."></textarea>
-      </div>
-      <button type="submit" class="btn-lg">Save Summary</button>
-    </form>
-    <div id="summary-feedback" class="feedback-msg"></div>
-  </div>
-
-  <!-- PANEL 3: ACKNOWLEDGMENT & FINAL QUESTIONS -->
+  <!-- PANEL 2: REFLECTION -->
   <div id="reflection" class="panel">
-    <div class="section-title">Acknowledgment &amp; Final Questions</div>
+    <div class="section-title">Post-Assessment Reflection</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Check the acknowledgment box, answer both questions about today's paper test, click Submit Reflection, then type your name in the blue bar at the top of the page and click Print My Progress.
-    </div>
-
-    <div class="form-group">
-      <input type="checkbox" id="ack-honesty" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;" onchange="acknowledgeWork(this)">
-      <label for="ack-honesty" style="display:inline; font-weight:700;">I acknowledge this reflection is my own honest work.</label>
+      Answer both questions about today's paper test, click Submit Reflection, then type your name in the blue bar at the top of the page and click Print My Progress.
     </div>
 
     <form id="exit-form" onsubmit="submitExitTicket(event)">
@@ -153,42 +121,14 @@
     triggerMathJax();
   }
 
-  // Tab 1: confirm the paper test was completed and turned in
+  // Confirm the paper test was completed and turned in
   function confirmClasswork(cb) {
     if (cb.checked) {
       LessonProgress.record('fri-confirm-classwork', 'Confirmed: completed and turned in paper Graded Classwork', 'Yes', 'reflection');
     }
   }
 
-  // Tab 2: week summary
-  function submitSummary(e) {
-    e.preventDefault();
-    const a1 = document.getElementById('sum-1').value.trim();
-    const a2 = document.getElementById('sum-2').value.trim();
-    const a3 = document.getElementById('sum-3').value.trim();
-    const fb = document.getElementById('summary-feedback');
-
-    if (a1.length > 5 && a2.length > 5 && a3.length > 5) {
-      fb.className = "feedback-msg success";
-      fb.innerText = "Summary saved!";
-      LessonProgress.recordText('Week Summary: most confident skill', a1);
-      LessonProgress.recordText('Week Summary: real-world precision example', a2);
-      LessonProgress.recordText('Week Summary: still tricky / next step', a3);
-    } else {
-      fb.className = "feedback-msg error";
-      fb.innerText = "Please write a complete answer for all three questions.";
-    }
-    fb.style.display = "block";
-  }
-
-  // Tab 3: acknowledgment checkbox
-  function acknowledgeWork(cb) {
-    if (cb.checked) {
-      LessonProgress.record('fri-ack-honesty', 'Acknowledged: reflection is own honest work', 'Yes', 'reflection');
-    }
-  }
-
-  // Tab 3: final reflection
+  // Final reflection
   function submitExitTicket(e) {
     e.preventDefault();
     const a1 = document.getElementById('exit-1').value.trim();

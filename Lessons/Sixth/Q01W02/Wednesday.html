@@ -323,6 +323,12 @@
     const verdict = document.getElementById(`ea-verdict-${idx}`).value;
     const val = document.getElementById(`ea-answer-${idx}`).value;
     const fb = document.getElementById(`ea-feedback-${idx}`);
+
+    if (!verdict || !val.trim()) {
+      LessonCheck.incomplete(fb, "Choose a verdict and enter the correct answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+
     const correct = verdict === ex.verdict && LessonCheck.numericMatch(val, ex.correctValue, ex.tol);
 
     LessonCheck.check(`ea-${idx}`, correct, fb, {
@@ -347,6 +353,11 @@
     const carbs = document.getElementById('hs-carbs').value;
     const fiber = document.getElementById('hs-fiber').value;
     const fb = document.getElementById('hs-feedback');
+
+    if (!fat.trim() || !protein.trim() || !carbs.trim() || !fiber.trim()) {
+      LessonCheck.incomplete(fb, "Fill in all four nutrient totals before checking - this won't count as an attempt yet.");
+      return;
+    }
 
     const fatOk = isNumericMatch(fat, 10.625, 0.05);
     const proteinOk = isNumericMatch(protein, 22.875, 0.05);
