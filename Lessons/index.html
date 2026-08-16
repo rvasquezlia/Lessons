@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson Plans Index</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #2563eb;
+      --accent: #d97706;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --border: #94a3b8;
+      --success: #15803d;
+      --success-bg: #dcfce7;
+      --guide: #7c2d12;
+      --guide-bg: #fff7ed;
+    }
+    * { box-sizing: border-box; }
+    body, input, button {
+      font-family: 'Montserrat', sans-serif;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+      border: 4px solid var(--primary);
+      overflow: hidden;
+    }
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 28px 32px;
+      text-align: center;
+    }
+    .badge {
+      display: inline-block;
+      background: #f59e0b;
+      color: #000;
+      padding: 6px 18px;
+      border-radius: 30px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    h1 { margin: 8px 0; font-size: 2.2rem; font-weight: 800; }
+    p.subtitle { margin: 4px 0 0 0; font-size: 1.05rem; opacity: 0.95; }
+
+    .content { padding: 28px 32px 36px 32px; }
+
+    .grade-section {
+      margin-bottom: 36px;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .grade-header {
+      background: var(--primary-light);
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .grade-header h2 { margin: 0; font-size: 1.5rem; font-weight: 800; }
+    .grade-header span.subject-tag {
+      background: rgba(255,255,255,0.18);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .week-block { padding: 20px 24px; }
+    .week-heading {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    .week-heading .week-code {
+      background: var(--accent);
+      color: #000;
+      padding: 3px 12px;
+      border-radius: 16px;
+      font-weight: 800;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+    }
+    .week-heading h3 { margin: 0; font-size: 1.25rem; font-weight: 800; color: var(--primary); }
+    .week-block p.week-sub { margin: 4px 0 16px 0; color: #475569; font-size: 0.95rem; }
+
+    .day-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .day-btn {
+      display: block;
+      text-decoration: none;
+      background: var(--success-bg);
+      border: 2px solid var(--success);
+      border-radius: 12px;
+      padding: 14px 14px;
+      color: var(--text);
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .day-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.12); }
+    .day-btn .day-name {
+      display: block;
+      font-weight: 800;
+      color: var(--success);
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .day-btn .day-topic {
+      display: block;
+      font-size: 0.92rem;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .guide-row { margin-top: 4px; }
+    .guide-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      background: var(--guide-bg);
+      border: 2px solid var(--guide);
+      border-radius: 12px;
+      padding: 12px 18px;
+      color: var(--guide);
+      font-weight: 800;
+      max-width: 100%;
+    }
+    .guide-btn:hover { background: #fef1e6; }
+    .guide-btn .guide-icon { font-size: 1.3rem; }
+    .guide-btn .guide-text { display: flex; flex-direction: column; }
+    .guide-btn .guide-text small {
+      font-weight: 600;
+      color: #9a3412;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 0.78rem;
+    }
+
+    .coming-soon {
+      opacity: 0.65;
+      padding: 20px 24px;
+      font-size: 0.95rem;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    footer {
+      text-align: center;
+      padding: 18px;
+      color: #94a3b8;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <span class="badge">Lincoln International Academy</span>
+    <h1>Lesson Plans</h1>
+    <p class="subtitle">Digital lessons, guided practice, and teacher guides - organized by grade and week</p>
+  </header>
+
+  <div class="content">
+
+    <!-- ============ SIXTH GRADE ============ -->
+    <div class="grade-section">
+      <div class="grade-header">
+        <h2>Sixth Grade</h2>
+        <span class="subject-tag">Math 6</span>
+      </div>
+      <div class="week-block">
+        <div class="week-heading">
+          <span class="week-code">Q01W02</span>
+          <h3>Decimal Operations</h3>
+        </div>
+        <p class="week-sub">Add, subtract, and multiply decimals; multi-step word problems; error analysis; real-world jigsaw; graded classwork.</p>
+
+        <div class="day-row">
+          <a class="day-btn" href="Sixth/Q01W02/Monday.html">
+            <span class="day-name">Monday</span>
+            <span class="day-topic">Add, Subtract &amp; Multiply Decimals</span>
+          </a>
+          <a class="day-btn" href="Sixth/Q01W02/Tuesday.html">
+            <span class="day-name">Tuesday</span>
+            <span class="day-topic">Multi-Step Word Problems</span>
+          </a>
+          <a class="day-btn" href="Sixth/Q01W02/Wednesday.html">
+            <span class="day-name">Wednesday</span>
+            <span class="day-topic">Error Analysis &amp; Health Science</span>
+          </a>
+          <a class="day-btn" href="Sixth/Q01W02/Thursday.html">
+            <span class="day-name">Thursday</span>
+            <span class="day-topic">Real-World Decimal Jigsaw</span>
+          </a>
+          <a class="day-btn" href="Sixth/Q01W02/Friday.html">
+            <span class="day-name">Friday</span>
+            <span class="day-topic">Graded Classwork</span>
+          </a>
+        </div>
+
+        <div class="guide-row">
+          <a class="guide-btn" href="Sixth/Q01W02/Teacher-Guide.html">
+            <span class="guide-icon">📘</span>
+            <span class="guide-text">
+              Teacher Guide
+              <small>Daily breakdown, digital &amp; paper answer keys, Challenge Bank - keep confidential from students</small>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ EIGHTH GRADE ============ -->
+    <div class="grade-section">
+      <div class="grade-header">
+        <h2>Eighth Grade</h2>
+        <span class="subject-tag">Algebra I</span>
+      </div>
+      <div class="week-block">
+        <div class="week-heading">
+          <span class="week-code">Q01W02</span>
+          <h3>Solving Linear Equations</h3>
+        </div>
+        <p class="week-sub">Lessons 1-2 &amp; 1-3: variables on one and both sides, classifying solutions, real-world applications, graded classwork.</p>
+
+        <div class="day-row">
+          <a class="day-btn" href="Eighth/Q01W02/Monday.html">
+            <span class="day-name">Monday</span>
+            <span class="day-topic">Solving Linear Equations</span>
+          </a>
+          <a class="day-btn" href="Eighth/Q01W02/Tuesday.html">
+            <span class="day-name">Tuesday</span>
+            <span class="day-topic">Practice: Solving Linear Equations</span>
+          </a>
+          <a class="day-btn" href="Eighth/Q01W02/Wednesday.html">
+            <span class="day-name">Wednesday</span>
+            <span class="day-topic">One, None, or Infinitely Many Solutions?</span>
+          </a>
+          <a class="day-btn" href="Eighth/Q01W02/Thursday.html">
+            <span class="day-name">Thursday</span>
+            <span class="day-topic">Review: Solving Linear Equations</span>
+          </a>
+          <a class="day-btn" href="Eighth/Q01W02/Friday.html">
+            <span class="day-name">Friday</span>
+            <span class="day-topic">Graded Classwork</span>
+          </a>
+        </div>
+
+        <div class="guide-row">
+          <a class="guide-btn" href="Eighth/Q01W02/Teacher-Guide.html">
+            <span class="guide-icon">📘</span>
+            <span class="guide-text">
+              Teacher Guide
+              <small>Daily breakdown, digital &amp; paper answer keys, Challenge Bank - keep confidential from students</small>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SEVENTH GRADE (placeholder) ============ -->
+    <div class="grade-section">
+      <div class="grade-header">
+        <h2>Seventh Grade</h2>
+        <span class="subject-tag">Coming Soon</span>
+      </div>
+      <p class="coming-soon">No published weeks yet.</p>
+    </div>
+
+  </div>
+
+  <footer>Lincoln International Academy &middot; Lesson Plans Index</footer>
+</div>
+
+</body>
+</html>
