@@ -199,6 +199,12 @@
     const p = thuGuidedPractice[idx];
     const val = document.getElementById(`thugp-${idx}-input`).value;
     const fb = document.getElementById(`thugp-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+
     const correct = LessonCheck.numericMatch(val, p.a, p.tol);
 
     LessonCheck.check(`thugp-${idx}`, correct, fb, {

@@ -418,6 +418,12 @@
     const p = l12Practice[idx];
     const val = document.getElementById(`l12p-${idx}-input`).value;
     const fb = document.getElementById(`l12p-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+
     const correct = LessonCheck.numericMatch(val, p.a, p.tol);
 
     LessonCheck.check(`l12p-${idx}`, correct, fb, {
@@ -531,6 +537,12 @@
     const p = l13Practice[idx];
     const raw = document.getElementById(`l13p-${idx}-input`).value;
     const fb = document.getElementById(`l13p-${idx}-feedback`);
+
+    if (!raw.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+
     let correct;
     if (p.type === "number") {
       correct = LessonCheck.numericMatch(raw, p.a, p.tol);
