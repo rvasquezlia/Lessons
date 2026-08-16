@@ -67,9 +67,10 @@ h1 { margin: 8px 0; font-size: 2rem; font-weight: 800; }
   border: 2px solid #6ee7b7;
   border-left: 8px solid var(--success);
   border-radius: 10px;
-  padding: 16px 20px;
+  padding: 16px 20px 16px 24px;
   margin-bottom: 22px;
   font-size: 1rem;
+  overflow: visible;
 }
 
 .howto-box strong.howto-label {
@@ -143,9 +144,10 @@ h1 { margin: 8px 0; font-size: 2rem; font-weight: 800; }
   border: 2px solid #93c5fd;
   border-left: 8px solid var(--primary-light);
   border-radius: 10px;
-  padding: 16px 20px;
+  padding: 16px 22px 16px 26px;
   margin-bottom: 22px;
   font-size: 0.98rem;
+  overflow: visible;
 }
 .instructions-box .instructions-label {
   display: block;
