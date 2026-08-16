@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Lesson 1.2 Day 2 - Multi-Step Decimal Word Problems</title>
+
+  <!-- Montserrat Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="lesson-shared.css">
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <span class="badge">Q01W01 - Multi-Step Word Problems (Double Period)</span>
+    <h1>Multi-Step Decimal Word Problems</h1>
+  </header>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('warmup')">1. Warm-Up &amp; Keyword Clues</button>
+    <button class="tab-btn" onclick="switchTab('problems')">2. Word Problem Practice</button>
+    <button class="tab-btn" onclick="switchTab('independent')">3. Independent Practice</button>
+    <button class="tab-btn" onclick="switchTab('exitticket')">4. Exit Ticket</button>
+  </nav>
+
+  <!-- PANEL 1: WARM-UP & KEYWORD CLUES -->
+  <div id="warmup" class="panel active">
+    <div class="section-title">Warm-Up: Reading Word Problems</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Tuesday, August 18, 2026 &middot; CCSS.Math.Content.6.NS.B.3 &amp; MP1: Make Sense of Problems and Persevere in Solving Them</p>
+
+    <div class="explainer-box">
+      Today's lesson is <strong>self-led</strong>: work through each section at your own pace. Every word problem below follows the same two-step routine: <strong>estimate first</strong> by rounding, then <strong>calculate the exact answer</strong> and compare it to your estimate. If your exact answer isn't close to your estimate, go back and check your work.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Copy Into Math Notebook</div>
+      <p style="margin:0 0 10px 0;"><strong>Keyword Analysis:</strong> these clue words help you decide which operation a word problem needs.</p>
+      <ul>
+        <li><strong>Addition (+):</strong> total, sum, combined, altogether, increased by.</li>
+        <li><strong>Subtraction (-):</strong> difference, how much more, change, remaining, decreased by.</li>
+        <li><strong>Multiplication (&times;):</strong> product, total of equal groups, area, "times as many."</li>
+      </ul>
+    </div>
+
+    <div class="step-box">
+      <h3 style="margin-top:0; color:var(--primary);">Try It: Spot the Keyword</h3>
+      <p><strong>Problem:</strong> A recipe needs \(2.5\) cups of flour for one batch. How much flour is needed for \(4\) batches?</p>
+      <button class="btn-lg" onclick="revealWarmup()">Check Your Thinking</button>
+      <div id="warmup-solution" class="solution-content" style="display:none; margin-top:14px; padding-top:14px; border-top:2px solid var(--border);">
+        <strong>Keyword:</strong> "batches" of the same amount means equal groups, so this is <strong>multiplication</strong>.<br>
+        \(2.5 \times 4 = \mathbf{10}\) cups of flour.
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: WORD PROBLEM PRACTICE CAROUSEL -->
+  <div id="problems" class="panel">
+    <div class="section-title">Word Problem Practice</div>
+    <p>Work through each problem on your own. Click <strong>Next Step</strong> to reveal the estimate, then the exact calculation, then the final answer with a reasonableness check.</p>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="wp-prev-btn" onclick="changeWordProblem(-1)">&larr; Previous Problem</button>
+        <div style="text-align:center;">
+          <span id="wp-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Problem 1 of 6</span>
+          <div class="carousel-indicators" id="wp-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="wp-next-btn" onclick="changeWordProblem(1)">Next Problem &rarr;</button>
+      </div>
+
+      <div id="wp-content" style="min-height: 320px;">
+        <!-- Dynamic content injected via JS -->
+      </div>
+
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextWordProblemStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetWordProblemStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: INDEPENDENT PRACTICE -->
+  <div id="independent" class="panel">
+    <div class="section-title">Independent Practice</div>
+    <p>Since today is a double period, here is extra practice. Solve each problem on paper, then click to check your answer.</p>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Quick Practice: Computation</h3>
+      <div id="ip-quick-list"></div>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Quick Practice: Word Problems</h3>
+      <div id="ip-word-list"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 4: EXIT TICKET -->
+  <div id="exitticket" class="panel">
+    <div class="section-title">Exit Ticket &amp; Metacognitive Log</div>
+
+    <form id="exit-form" onsubmit="submitExitTicket(event)">
+      <div class="form-group">
+        <label>1. Which word problem from today did you find most challenging? Briefly explain why.</label>
+        <textarea id="exit-1" class="form-control-lg" rows="3" placeholder="Name the problem and explain..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>2. Pick one problem and explain how your estimate confirmed your exact answer (or helped you catch a mistake).</label>
+        <textarea id="exit-2" class="form-control-lg" rows="3" placeholder="Explain your estimate-vs-exact comparison..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>3. Metacognition Reflection: When solving a complex word problem, how does finding an approximate answer through rounding give you confidence in your final calculation?</label>
+        <textarea id="exit-3" class="form-control-lg" rows="3" placeholder="Reflect on your process..."></textarea>
+      </div>
+
+      <button type="submit" class="btn-lg">Submit Exit Ticket</button>
+    </form>
+    <div id="exit-feedback" class="feedback-msg"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+
+    triggerMathJax();
+  }
+
+  function revealWarmup() {
+    const el = document.getElementById('warmup-solution');
+    el.style.display = 'block';
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // WORD PROBLEM CAROUSEL DATA & LOGIC
+  // ==========================================
+  let currentWP = 0;
+  let currentWPStep = 1;
+
+  const wordProblems = [
+    {
+      category: "Travel &amp; Economics",
+      title: "1. The Road Trip",
+      scenario: "The Miller family is planning a \\(450.5\\)-mile trip. Their car travels \\(25.5\\) miles per gallon of fuel. If gasoline costs \\(\\$3.82\\) per gallon, how much will they spend on fuel for the entire trip?",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1: Estimate.</strong><br>Round the distance and the mileage: \\(450.5 \\rightarrow 450\\) miles, \\(25.5 \\rightarrow 25\\) miles per gallon.<br>Gallons needed \\(\\approx 450 \\div 25 = 18\\) gallons. Price \\(\\approx \\$4\\) per gallon.<br>Estimated cost \\(\\approx 18 \\times 4 = \\mathbf{\\$72}\\).",
+        "<strong>Step 2: Calculate the exact cost.</strong><br>Gallons needed: \\(450.5 \\div 25.5 \\approx 17.67\\) gallons.<br>Cost: \\(17.67 \\times 3.82 = \\mathbf{\\$67.50}\\).",
+        "<strong>Step 3: Final answer and reasonableness check.</strong><br>The Millers will spend about \\(\\mathbf{\\$67.50}\\) on fuel.<br>Reasonable check: our estimate was \\(\\$72\\), which is close to \\(\\$67.50\\)."
+      ]
+    },
+    {
+      category: "Geography",
+      title: "2. Precipitation Analysis",
+      scenario: "In the Amazon Rainforest, a weather station recorded \\(12.45\\) inches of rain in January, \\(15.8\\) inches in February, and \\(9.32\\) inches in March. The historical average for these three months combined is \\(42.5\\) inches. How much more rain is needed to reach the historical average?",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1: Estimate.</strong><br>Round each month: \\(12.45 \\rightarrow 12\\), \\(15.8 \\rightarrow 16\\), \\(9.32 \\rightarrow 9\\). Sum \\(\\approx 37\\) inches.<br>Target \\(\\approx 43\\) inches, so more rain needed \\(\\approx 43 - 37 = \\mathbf{6}\\) inches.",
+        "<strong>Step 2: Calculate the exact total.</strong><br>\\(12.45 + 15.8 + 9.32 = 37.57\\) inches recorded.<br>More rain needed: \\(42.5 - 37.57 = \\mathbf{4.93}\\) inches.",
+        "<strong>Step 3: Final answer and reasonableness check.</strong><br>The region needs about \\(\\mathbf{4.93}\\) more inches of rain to reach the historical average.<br>Reasonable check: our estimate was \\(6\\) inches, in the same range as \\(4.93\\) inches."
+      ]
+    },
+    {
+      category: "Economics",
+      title: "3. School Supplies Budget",
+      scenario: "An elementary school teacher has a budget of \\(\\$150.00\\). She buys \\(25\\) packs of markers for \\(\\$4.75\\) each and \\(30\\) boxes of crayons for \\(\\$1.25\\) each. After these purchases, how much money is left in her budget?",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1: Estimate.</strong><br>Markers \\(\\approx 25 \\times 5 = \\$125\\). Crayons \\(\\approx 30 \\times 1 = \\$30\\). Total spent \\(\\approx \\$155\\).<br>Money left \\(\\approx \\$150 - \\$155 = \\mathbf{-\\$5}\\) (she may be over budget!).",
+        "<strong>Step 2: Calculate the exact totals.</strong><br>Markers: \\(25 \\times 4.75 = \\$118.75\\). Crayons: \\(30 \\times 1.25 = \\$37.50\\).<br>Total spent: \\(118.75 + 37.50 = \\$156.25\\).<br>Money left: \\(150.00 - 156.25 = \\mathbf{-\\$6.25}\\).",
+        "<strong>Step 3: Final answer and reasonableness check.</strong><br>The teacher is \\(\\mathbf{\\$6.25}\\) <em>over</em> her budget, not under it. A negative answer here is a real result, not a mistake!<br>Reasonable check: our estimate also predicted going over budget by about \\(\\$5\\), which matches."
+      ]
+    },
+    {
+      category: "Economics",
+      title: "4. Farmer's Market Profit",
+      scenario: "A farmer sells \\(12.5\\) pounds of organic tomatoes for \\(\\$3.20\\) per pound and \\(8.75\\) pounds of peppers for \\(\\$2.40\\) per pound. If the farmer had to pay a \\(\\$15.50\\) fee to rent the stall, what was the farmer's total profit for the day?",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1: Estimate.</strong><br>Tomatoes \\(\\approx 13 \\times 3 = \\$39\\). Peppers \\(\\approx 9 \\times 2 = \\$18\\). Revenue \\(\\approx \\$57\\).<br>Profit \\(\\approx 57 - 16 = \\mathbf{\\$41}\\).",
+        "<strong>Step 2: Calculate the exact profit.</strong><br>Tomatoes: \\(12.5 \\times 3.20 = \\$40.00\\). Peppers: \\(8.75 \\times 2.40 = \\$21.00\\).<br>Revenue: \\(40.00 + 21.00 = \\$61.00\\).<br>Profit: \\(61.00 - 15.50 = \\mathbf{\\$45.50}\\).",
+        "<strong>Step 3: Final answer and reasonableness check.</strong><br>The farmer's total profit was \\(\\mathbf{\\$45.50}\\).<br>Reasonable check: our estimate was \\(\\$41\\), close to \\(\\$45.50\\)."
+      ]
+    },
+    {
+      category: "Economics",
+      title: "5. Sports Equipment Sale",
+      scenario: "A sporting goods store has soccer balls on sale. Each ball normally costs \\(\\$24.99\\) but is discounted by \\(\\$6.50\\). If Maria buys \\(3\\) soccer balls at the sale price, plus a \\(\\$12.25\\) pump, what is her total cost?",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1: Estimate.</strong><br>Sale price \\(\\approx 25 - 7 = \\$18\\). Three balls \\(\\approx 3 \\times 18 = \\$54\\). Plus the pump \\(\\approx \\$12\\).<br>Total \\(\\approx 54 + 12 = \\mathbf{\\$66}\\).",
+        "<strong>Step 2: Calculate the exact cost.</strong><br>Sale price: \\(24.99 - 6.50 = \\$18.49\\).<br>Three balls: \\(3 \\times 18.49 = \\$55.47\\).<br>Total with pump: \\(55.47 + 12.25 = \\mathbf{\\$67.72}\\).",
+        "<strong>Step 3: Final answer and reasonableness check.</strong><br>Maria's total cost is \\(\\mathbf{\\$67.72}\\).<br>Reasonable check: our estimate was \\(\\$66\\), close to \\(\\$67.72\\)."
+      ]
+    },
+    {
+      category: "Geography",
+      title: "6. Mountain Elevation Change",
+      scenario: "A hiking trail starts at an elevation of \\(1{,}245.6\\) meters. Over the first leg, hikers climb \\(389.75\\) meters. On the second leg, they descend \\(156.4\\) meters to reach a lookout point. What is the elevation of the lookout point?",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1: Estimate.</strong><br>Round each value: \\(1245.6 \\rightarrow 1246\\), \\(389.75 \\rightarrow 390\\), \\(156.4 \\rightarrow 156\\).<br>\\(1246 + 390 - 156 \\approx \\mathbf{1480}\\) meters.",
+        "<strong>Step 2: Calculate the exact elevation.</strong><br>After climbing: \\(1245.6 + 389.75 = 1635.35\\) meters.<br>After descending: \\(1635.35 - 156.4 = \\mathbf{1478.95}\\) meters.",
+        "<strong>Step 3: Final answer and reasonableness check.</strong><br>The lookout point is at \\(\\mathbf{1478.95}\\) meters.<br>Reasonable check: our estimate was \\(1480\\) meters, very close to \\(1478.95\\)."
+      ]
+    }
+  ];
+
+  function renderWordProblemCarousel() {
+    const wp = wordProblems[currentWP];
+    document.getElementById('wp-title').innerText = `Problem ${currentWP + 1} of ${wordProblems.length}`;
+
+    const dotsContainer = document.getElementById('wp-dots');
+    dotsContainer.innerHTML = wordProblems.map((_, i) =>
+      `<div class="dot ${i === currentWP ? 'active' : ''}" onclick="jumpToWordProblem(${i})"></div>`
+    ).join('');
+
+    let stepsHtml = '';
+    for (let i = 0; i < currentWPStep; i++) {
+      stepsHtml += `<div class="step-item visible">${wp.steps[i]}</div>`;
+    }
+
+    document.getElementById('wp-content').innerHTML = `
+      <span class="category-badge" style="background:rgba(37,99,235,0.12); color:var(--primary-light); padding:6px 14px; border-radius:20px; font-size:0.85rem; font-weight:800; text-transform:uppercase;">${wp.category}</span>
+      <h3 style="color:var(--primary); margin:12px 0;">${wp.title}</h3>
+      <p>${wp.scenario}</p>
+      ${stepsHtml}
+    `;
+
+    document.getElementById('wp-prev-btn').disabled = currentWP === 0;
+    document.getElementById('wp-next-btn').disabled = currentWP === wordProblems.length - 1;
+
+    triggerMathJax();
+  }
+
+  function changeWordProblem(dir) {
+    currentWP = Math.max(0, Math.min(wordProblems.length - 1, currentWP + dir));
+    currentWPStep = 1;
+    renderWordProblemCarousel();
+  }
+
+  function jumpToWordProblem(idx) {
+    currentWP = idx;
+    currentWPStep = 1;
+    renderWordProblemCarousel();
+  }
+
+  function nextWordProblemStep() {
+    if (currentWPStep < wordProblems[currentWP].maxSteps) {
+      currentWPStep++;
+      renderWordProblemCarousel();
+    }
+  }
+
+  function resetWordProblemStep() {
+    currentWPStep = 1;
+    renderWordProblemCarousel();
+  }
+
+  // ==========================================
+  // INDEPENDENT PRACTICE (extra, double period)
+  // ==========================================
+  const quickProblems = [
+    { q: "\\(18.6 + 9.75\\)", a: "\\(28.35\\)" },
+    { q: "\\(62.4 - 18.79\\)", a: "\\(43.61\\)" },
+    { q: "\\(7.5 \\times 3.2\\)", a: "\\(24\\)" },
+    { q: "\\(0.6 \\times 4.25\\)", a: "\\(2.55\\)" }
+  ];
+
+  const wordPracticeProblems = [
+    { q: "A book costs \\(\\$12.99\\). If you buy \\(3\\) books, what is the total cost before tax?", a: "\\(12.99 \\times 3 = \\mathbf{\\$38.97}\\)" },
+    { q: "You have \\(\\$25.00\\). You spend \\(\\$8.45\\) on lunch. How much do you have left?", a: "\\(25.00 - 8.45 = \\mathbf{\\$16.55}\\)" }
+  ];
+
+  function renderIndependentPractice() {
+    const quickHtml = quickProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <button class="btn-lg" style="margin-left:12px; padding:8px 18px; font-size:1rem;" onclick="toggleReveal('quick-${i}')">Check Answer</button>
+        <div id="quick-${i}" style="display:none; margin-top:10px; font-weight:700; color:var(--success);">${p.a}</div>
+      </div>
+    `).join('');
+    document.getElementById('ip-quick-list').innerHTML = quickHtml;
+
+    const wordHtml = wordPracticeProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 5}.</strong> ${p.q}
+        <br><button class="btn-lg" style="margin-top:8px; padding:8px 18px; font-size:1rem;" onclick="toggleReveal('word-${i}')">Check Answer</button>
+        <div id="word-${i}" style="display:none; margin-top:10px; font-weight:700; color:var(--success);">${p.a}</div>
+      </div>
+    `).join('');
+    document.getElementById('ip-word-list').innerHTML = wordHtml;
+
+    triggerMathJax();
+  }
+
+  function toggleReveal(id) {
+    const el = document.getElementById(id);
+    el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+    triggerMathJax();
+  }
+
+  // Exit Ticket Submission
+  function submitExitTicket(e) {
+    e.preventDefault();
+    const a1 = document.getElementById('exit-1').value.trim();
+    const a2 = document.getElementById('exit-2').value.trim();
+    const a3 = document.getElementById('exit-3').value.trim();
+    const fb = document.getElementById('exit-feedback');
+
+    if (a1.length > 5 && a2.length > 5 && a3.length > 5) {
+      fb.className = "feedback-msg success";
+      fb.innerText = "Exit Ticket submitted and logged successfully!";
+    } else {
+      fb.className = "feedback-msg error";
+      fb.innerText = "Please write a complete answer for all three questions.";
+    }
+    fb.style.display = "block";
+  }
+
+  // Initial render
+  renderWordProblemCarousel();
+  renderIndependentPractice();
+</script>
+</body>
+</html>
