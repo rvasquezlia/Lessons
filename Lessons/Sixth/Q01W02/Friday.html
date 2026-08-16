@@ -25,6 +25,7 @@
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
   <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
 </head>
 <body>
 
@@ -168,36 +169,44 @@
     return Math.abs(u - expectedVal) <= tolerance;
   }
 
-  function toggleReveal(id) {
-    const el = document.getElementById(id);
-    el.style.display = (el.style.display === 'inline' || el.style.display === 'block') ? 'none' : 'inline';
-    triggerMathJax();
-  }
-
   // ==========================================
   // FLUENCY WARM-UP
   // ==========================================
   const fluencyProblems = [
-    { q: "\\(36.4 + 18.75\\)", a: "\\(55.15\\)" },
-    { q: "\\(92.6 + 7.38\\)", a: "\\(99.98\\)" },
-    { q: "\\(75.3 - 29.46\\)", a: "\\(45.84\\)" },
-    { q: "\\(150 - 32.85\\)", a: "\\(117.15\\)" },
-    { q: "\\(5.6 \\times 2.3\\)", a: "\\(12.88\\)" },
-    { q: "\\(0.45 \\times 3.2\\)", a: "\\(1.44\\)" },
-    { q: "\\(8.2 \\times 0.15\\)", a: "\\(1.23\\)" },
-    { q: "\\(4.75 \\times 6\\)", a: "\\(28.5\\)" }
+    { q: "\\(36.4 + 18.75\\)", a: 55.15, tol: 0.01 },
+    { q: "\\(92.6 + 7.38\\)", a: 99.98, tol: 0.01 },
+    { q: "\\(75.3 - 29.46\\)", a: 45.84, tol: 0.01 },
+    { q: "\\(150 - 32.85\\)", a: 117.15, tol: 0.01 },
+    { q: "\\(5.6 \\times 2.3\\)", a: 12.88, tol: 0.02 },
+    { q: "\\(0.45 \\times 3.2\\)", a: 1.44, tol: 0.01 },
+    { q: "\\(8.2 \\times 0.15\\)", a: 1.23, tol: 0.01 },
+    { q: "\\(4.75 \\times 6\\)", a: 28.5, tol: 0.02 }
   ];
 
   function renderFluency() {
     const html = fluencyProblems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q} =
-        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="toggleReveal('fluency-${i}')">Check</button>
-        <span id="fluency-${i}" style="display:none; font-weight:700; color:var(--success);">${p.a}</span>
+        <input type="text" id="fluency-${i}-input" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkFluency(${i})">Check</button>
+        <div id="fluency-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
     `).join('');
     document.getElementById('fluency-list').innerHTML = html;
     triggerMathJax();
+  }
+
+  function checkFluency(idx) {
+    const p = fluencyProblems[idx];
+    const val = document.getElementById(`fluency-${idx}-input`).value;
+    const fb = document.getElementById(`fluency-${idx}-feedback`);
+    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
+
+    LessonCheck.check(`fluency-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(= \\mathbf{${p.a}}\\)`,
+      retry: "Not quite yet. Review your alignment/decimal placement and try again.",
+      reveal: `Here's the correct procedure: ${p.q} \\(= \\mathbf{${p.a}}\\)`
+    });
   }
 
   // ==========================================
@@ -298,15 +307,13 @@
     const explain = document.getElementById('rc-explain').value.trim();
     const fb = document.getElementById('rc-feedback');
     const estimateOk = isNumericMatch(estimate, 24, 4);
+    const correct = estimateOk && explain.length > 5;
 
-    if (estimateOk && explain.length > 5) {
-      fb.className = "feedback-msg success";
-      fb.innerText = "Nicely done! Estimate: 8 x 3 = 24, which is close to 25.62 - this time the answer IS reasonable. Exact check: 84 x 305 = 25,620, shift 3 decimal places: 8.4 x 3.05 = 25.62.";
-    } else {
-      fb.className = "feedback-msg error";
-      fb.innerText = "Round each factor to the nearest whole number (8.4 -> 8 and 3.05 -> 3), multiply, and compare that estimate to 25.62.";
-    }
-    fb.style.display = "block";
+    LessonCheck.check('fri-reasonable', correct, fb, {
+      correct: "Nicely done! Estimate: 8 x 3 = 24, which is close to 25.62 - this time the answer IS reasonable. Exact check: 84 x 305 = 25,620, shift 3 decimal places: 8.4 x 3.05 = 25.62.",
+      retry: "Not quite yet. Round each factor to the nearest whole number (8.4 -> 8 and 3.05 -> 3), multiply, and compare that estimate to 25.62. Write your explanation and try again.",
+      reveal: "Here's the correct procedure: round each factor (\\(8.4 \\rightarrow 8\\), \\(3.05 \\rightarrow 3\\)), estimate \\(8 \\times 3 = \\mathbf{24}\\), which is close to \\(25.62\\) - so the answer IS reasonable. Exact check: \\(84 \\times 305 = 25{,}620\\), shift 3 decimal places: \\(8.4 \\times 3.05 = \\mathbf{25.62}\\)."
+    });
   }
 
   // Reflection Submission
