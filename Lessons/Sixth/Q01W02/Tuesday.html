@@ -43,7 +43,7 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Go through the four tabs below in order. Type your own answer before clicking Check - you get a hint if you're wrong, and the full method if you're wrong twice. Tab 3 ends with a partner discussion, and Tab 4 is your Exit Ticket. Finish by typing your name above and clicking <strong>Print My Progress</strong> for your Google Classroom submission.
+    Go through the four tabs below in order. Tabs 1 and 2 check your answers on screen. Tab 3 is done on paper - pick your practice batch, copy the problems into your notebook, solve them, then do a Peer Review with a partner who had the other batch. Tab 4 is your Exit Ticket. Finish by typing your name above and clicking <strong>Print My Progress</strong> for your Google Classroom submission.
   </div>
 
   <nav class="nav-tabs">
@@ -124,24 +124,49 @@
     <div class="section-title">Independent Practice</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Since today is a double period, this is extra practice. Solve each problem on paper first, then type your answer in the box and click Check for each of the 6 items below. When you're done, do the Peer Review box with a partner.
-    </div>
-    <p>Since today is a double period, here is extra practice. Solve each problem on paper, then click to check your answer.</p>
-
-    <div class="challenge-box">
-      <h3 style="margin-top:0; color:#b45309;">Quick Practice: Computation</h3>
-      <div id="ip-quick-list"></div>
+      Since today is a double period, here is extra practice - done on paper, not on this page. Your teacher will tell you your batch number, 1 or 2. Pick carefully below - once you confirm your number, it locks in and you can't switch, so you and your partner end up with genuinely different work. Copy your 6 computation problems and 4 word problems into your notebook and solve them. When you're done, find a partner who had the <strong>other</strong> batch: you'll each have the answer key to check the other's work. Finish by checking the completion box.
     </div>
 
-    <div class="challenge-box">
-      <h3 style="margin-top:0; color:#b45309;">Quick Practice: Word Problems</h3>
-      <div id="ip-word-list"></div>
+    <div class="step-box" id="batch-picker-box">
+      <h3 style="margin-top:0; color:var(--primary);">Which practice batch are you?</h3>
+      <p style="margin-bottom:14px;">Pick the number your teacher gave you. You'll be asked to confirm before it locks in.</p>
+      <div id="batch-picker-buttons" style="display:flex; gap:12px; justify-content:center;">
+        <button class="btn-lg" onclick="chooseBatch(1)">Batch 1</button>
+        <button class="btn-lg" onclick="chooseBatch(2)">Batch 2</button>
+      </div>
+      <div id="batch-confirm-area" style="display:none; margin-top:16px; text-align:center;"></div>
     </div>
+
+    <div id="batch-display"></div>
 
     <div class="notebook-box" style="margin-top:28px;">
       <div class="notebook-header">Closing: Peer Review</div>
-      <p style="margin:0 0 10px 0;">Turn to a partner. Pick <strong>one</strong> word problem from today (from Panel 2 or the Independent Practice above) and explain to each other: what was your estimate, what was your exact answer, and how did rounding to the nearest whole number confirm your exact answer was reasonable?</p>
-      <p style="margin:0; font-style:italic; color:#78350f;">Listen to your partner's explanation too - be ready to share one thing they caught or confirmed using rounding.</p>
+      <p style="margin:0 0 10px 0;">Find a partner who had the <strong>other</strong> batch number and finish your own practice set first. When you're both ready to review, unlock the key below - it matches your partner's batch, not yours. For any answer that doesn't match, talk through where the estimate or the exact calculation went differently.</p>
+      <div id="peer-key-locked">
+        <p style="margin:10px 0; font-style:italic; color:#78350f;">Pick your batch above first - the unlock button appears here once it's locked in.</p>
+      </div>
+      <div id="peer-review-key" style="display:none;"></div>
+
+      <div id="peer-review-form" style="display:none; margin-top:18px; border-top:2px solid #fbc02d; padding-top:16px;">
+        <div class="form-group">
+          <label>My peer for this review was:</label>
+          <input type="text" id="peer-name" class="form-control-lg" style="max-width:280px;" placeholder="Partner's name">
+        </div>
+        <div class="form-group">
+          <label>How many of my partner's answers did I confirm were correct? (out of 10)</label>
+          <input type="number" id="peer-correct-count" class="form-control-lg" style="max-width:150px;" min="0" max="10" placeholder="0-10">
+        </div>
+        <button class="btn-lg" onclick="submitPeerReview()">Save Peer Review</button>
+        <div id="peer-review-feedback" class="feedback-msg"></div>
+      </div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:20px;">
+      <div class="notebook-header">Confirm Completion</div>
+      <label style="font-weight:700; cursor:pointer;">
+        <input type="checkbox" id="confirm-practice" onchange="confirmPractice(this)" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;">
+        I completed my own practice set on paper.
+      </label>
     </div>
   </div>
 
@@ -165,7 +190,7 @@
       </div>
 
       <div class="form-group">
-        <label>3. Metacognition Reflection: When solving a complex word problem, how does finding an approximate answer through rounding give you confidence in your final calculation?</label>
+        <label>3. When solving a complex word problem, how does finding an approximate answer through rounding give you confidence in your final calculation?</label>
         <textarea id="exit-3" class="form-control-lg" rows="3" placeholder="Reflect on your process..."></textarea>
       </div>
 
@@ -331,52 +356,141 @@
   }
 
   // ==========================================
-  // INDEPENDENT PRACTICE (extra, double period)
+  // INDEPENDENT PRACTICE (paper-based, two batches for peer review)
   // ==========================================
-  const quickProblems = [
-    { q: "\\(18.6 + 9.75\\)", a: 28.35, tol: 0.01, work: "\\(18.6 + 9.75 = \\mathbf{28.35}\\)" },
-    { q: "\\(62.4 - 18.79\\)", a: 43.61, tol: 0.01, work: "\\(62.4 - 18.79 = \\mathbf{43.61}\\)" },
-    { q: "\\(7.5 \\times 3.2\\)", a: 24, tol: 0.05, work: "\\(7.5 \\times 3.2 = \\mathbf{24}\\)" },
-    { q: "\\(0.6 \\times 4.25\\)", a: 2.55, tol: 0.01, work: "\\(0.6 \\times 4.25 = \\mathbf{2.55}\\)" }
-  ];
+  const batches = {
+    1: {
+      quick: [
+        { q: "\\(18.6 + 9.75\\)", a: "28.35" },
+        { q: "\\(62.4 - 18.79\\)", a: "43.61" },
+        { q: "\\(7.5 \\times 3.2\\)", a: "24" },
+        { q: "\\(0.6 \\times 4.25\\)", a: "2.55" },
+        { q: "\\(25.08 + 6.7\\)", a: "31.78" },
+        { q: "\\(9.4 \\times 0.5\\)", a: "4.7" }
+      ],
+      word: [
+        { q: "A book costs \\(\\$12.99\\). If you buy \\(3\\) books, what is the total cost before tax?", a: "\\(12.99 \\times 3 = \\mathbf{\\$38.97}\\)" },
+        { q: "You have \\(\\$25.00\\). You spend \\(\\$8.45\\) on lunch. How much do you have left?", a: "\\(25.00 - 8.45 = \\mathbf{\\$16.55}\\)" },
+        { q: "A school club buys \\(8\\) notebooks at \\(\\$1.75\\) each for a fundraiser. What is the total cost?", a: "\\(8 \\times 1.75 = \\mathbf{\\$14.00}\\)" },
+        { q: "A jug contains \\(2.5\\) liters of juice. If \\(0.6\\) liters is poured out, how much juice remains?", a: "\\(2.5 - 0.6 = \\mathbf{1.9}\\) liters" }
+      ]
+    },
+    2: {
+      quick: [
+        { q: "\\(14.3 + 8.65\\)", a: "22.95" },
+        { q: "\\(50.2 - 27.36\\)", a: "22.84" },
+        { q: "\\(6.5 \\times 1.4\\)", a: "9.1" },
+        { q: "\\(0.8 \\times 3.75\\)", a: "3.0" },
+        { q: "\\(33.09 + 7.2\\)", a: "40.29" },
+        { q: "\\(12.5 \\times 0.06\\)", a: "0.75" }
+      ],
+      word: [
+        { q: "A pack of pencils costs \\(\\$2.49\\). If you buy \\(5\\) packs, what is the total cost before tax?", a: "\\(2.49 \\times 5 = \\mathbf{\\$12.45}\\)" },
+        { q: "You have \\(\\$30.00\\). You spend \\(\\$11.40\\) on a movie ticket and \\(\\$5.25\\) on snacks. How much do you have left?", a: "\\(30.00 - 11.40 - 5.25 = \\mathbf{\\$13.35}\\)" },
+        { q: "A runner's split times for 3 legs of a relay are \\(14.25\\)s, \\(13.8\\)s, and \\(14.02\\)s. What is the total time?", a: "\\(14.25 + 13.8 + 14.02 = \\mathbf{42.07}\\)s" },
+        { q: "A recipe needs \\(0.75\\) cups of sugar per batch. How much sugar is needed for \\(6\\) batches?", a: "\\(0.75 \\times 6 = \\mathbf{4.5}\\) cups" }
+      ]
+    }
+  };
 
-  const wordPracticeProblems = [
-    { q: "A book costs \\(\\$12.99\\). If you buy \\(3\\) books, what is the total cost before tax?", a: 38.97, tol: 0.02, work: "\\(12.99 \\times 3 = \\mathbf{\\$38.97}\\)" },
-    { q: "You have \\(\\$25.00\\). You spend \\(\\$8.45\\) on lunch. How much do you have left?", a: 16.55, tol: 0.02, work: "\\(25.00 - 8.45 = \\mathbf{\\$16.55}\\)" }
-  ];
+  let pendingBatch = null;
+  let chosenBatch = null;
 
-  function renderPracticeItems(containerId, problems, keyPrefix, startNum) {
-    const html = problems.map((p, i) => `
-      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
-        <strong>${startNum + i}.</strong> ${p.q}
-        <div style="margin-top:10px;">
-          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Your answer">
-          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkIndependentItem('${keyPrefix}', ${i})">Check</button>
-        </div>
-        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
-      </div>
-    `).join('');
-    document.getElementById(containerId).innerHTML = html;
+  // Step 1: pick a number, but don't reveal anything yet - just ask to confirm.
+  function chooseBatch(n) {
+    pendingBatch = n;
+    document.getElementById('batch-picker-buttons').style.display = 'none';
+    const confirmArea = document.getElementById('batch-confirm-area');
+    confirmArea.style.display = 'block';
+    confirmArea.innerHTML = `
+      <p style="font-weight:800; margin-bottom:12px;">You selected <strong>Batch ${n}</strong>. Is that the number your teacher gave you?</p>
+      <button class="btn-lg" onclick="confirmBatch()">✅ Yes, lock it in</button>
+      <button class="btn-secondary" onclick="cancelBatchChoice()">↩️ No, let me pick again</button>
+    `;
   }
 
-  function renderIndependentPractice() {
-    renderPracticeItems('ip-quick-list', quickProblems, 'quick', 1);
-    renderPracticeItems('ip-word-list', wordPracticeProblems, 'word', 5);
+  function cancelBatchChoice() {
+    pendingBatch = null;
+    const confirmArea = document.getElementById('batch-confirm-area');
+    confirmArea.style.display = 'none';
+    confirmArea.innerHTML = '';
+    document.getElementById('batch-picker-buttons').style.display = 'flex';
+  }
+
+  // Step 2: locks the choice permanently for this page load - the picker
+  // is removed so a student can't reopen it and see the other batch's
+  // actual problems (only its answer key, in the Peer Review box below).
+  function confirmBatch() {
+    chosenBatch = pendingBatch;
+    const mine = batches[chosenBatch];
+    const otherNum = chosenBatch === 1 ? 2 : 1;
+    const theirs = batches[otherNum];
+
+    document.getElementById('batch-picker-box').innerHTML = `
+      <h3 style="margin-top:0; color:var(--primary);">Your Practice Batch</h3>
+      <p style="margin:0; font-weight:800; color:var(--success);">🔒 Batch ${chosenBatch} - locked in for today.</p>
+    `;
+
+    const displayHtml = `
+      <div class="challenge-box">
+        <h3 style="margin-top:0; color:#b45309;">Your Practice Set: Batch ${chosenBatch}</h3>
+        <p>Copy these into your notebook and solve on paper - nothing to type here.</p>
+        <p style="margin-bottom:6px;"><strong>Computation:</strong></p>
+        <ol>${mine.quick.map((p) => `<li>${p.q}</li>`).join('')}</ol>
+        <p style="margin-bottom:6px;"><strong>Word Problems:</strong></p>
+        <ol>${mine.word.map((p) => `<li>${p.q}</li>`).join('')}</ol>
+      </div>
+    `;
+    document.getElementById('batch-display').innerHTML = displayHtml;
+
+    const keyHtml = `
+      <p style="margin:10px 0 6px 0;"><strong>🔑 Answer Key for Batch ${otherNum}</strong> (use this to check your partner's work - not your own):</p>
+      <p style="margin-bottom:4px;"><strong>Computation:</strong></p>
+      <ol>${theirs.quick.map((p) => `<li>${p.q} \\(= \\mathbf{${p.a}}\\)</li>`).join('')}</ol>
+      <p style="margin-bottom:4px;"><strong>Word Problems:</strong></p>
+      <ol>${theirs.word.map((p) => `<li>${p.a}</li>`).join('')}</ol>
+    `;
+    document.getElementById('peer-review-key').innerHTML = keyHtml;
+
+    document.getElementById('peer-key-locked').innerHTML = `
+      <button class="btn-lg" onclick="unlockPeerKey()">🔓 Unlock Peer Review Key</button>
+      <p style="margin:8px 0 0 0; font-size:0.9rem; color:#78350f;">Only unlock this when it's actually time to peer review, so you check your partner's answers with it - not your own.</p>
+    `;
+
+    LessonProgress.record('tue-batch-choice', 'Independent Practice: batch assigned', `Batch ${chosenBatch}`, 'reflection');
     triggerMathJax();
   }
 
-  function checkIndependentItem(keyPrefix, idx) {
-    const problems = keyPrefix === 'quick' ? quickProblems : wordPracticeProblems;
-    const p = problems[idx];
-    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
-    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
-    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
+  function unlockPeerKey() {
+    document.getElementById('peer-key-locked').style.display = 'none';
+    document.getElementById('peer-review-key').style.display = 'block';
+    document.getElementById('peer-review-form').style.display = 'block';
+    triggerMathJax();
+  }
 
-    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
-      correct: `Correct! ${p.work}`,
-      retry: "Not quite yet. Review your work and try again.",
-      reveal: `Here's the correct procedure: ${p.work}`
-    }, { label: `Independent Practice: ${p.q.replace(/<[^>]+>/g, '').replace(/\\\(|\\\)/g, '')}`, answer: val });
+  function submitPeerReview() {
+    const name = document.getElementById('peer-name').value.trim();
+    const count = document.getElementById('peer-correct-count').value;
+    const fb = document.getElementById('peer-review-feedback');
+    const countNum = parseInt(count, 10);
+    const validCount = !isNaN(countNum) && countNum >= 0 && countNum <= 10;
+
+    if (name.length > 0 && validCount) {
+      fb.className = "feedback-msg success";
+      fb.innerText = `Peer Review saved: reviewed with ${name}, ${countNum} of 10 answers confirmed correct.`;
+      LessonProgress.record('tue-peer-review', 'Peer Review: partner', name, 'reflection');
+      LessonProgress.record('tue-peer-review-score', 'Peer Review: answers confirmed correct', `${countNum} of 10`, 'reflection');
+    } else {
+      fb.className = "feedback-msg error";
+      fb.innerText = "Enter your partner's name and how many answers you confirmed correct (0-10).";
+    }
+    fb.style.display = "block";
+  }
+
+  function confirmPractice(cb) {
+    if (cb.checked) {
+      LessonProgress.record('tue-confirm-practice', 'Confirmed: completed my practice set on paper', 'Yes', 'reflection');
+    }
   }
 
   // Exit Ticket Submission
@@ -402,7 +516,6 @@
 
   // Initial render
   renderWordProblemCarousel();
-  renderIndependentPractice();
 </script>
 <div id="print-report"></div>
 </body>
