@@ -37,19 +37,30 @@ const LessonProgress = (() => {
 
 const LessonCheck = (() => {
   const attempts = {};
+  const locked = {};
 
-  // Returns 'correct', 'retry' (1st wrong attempt), or 'reveal' (2nd+ wrong attempt).
+  // Returns 'correct', 'retry' (1st wrong attempt), 'reveal' (2nd wrong
+  // attempt - the correct procedure is shown and the problem locks), or
+  // 'locked' (any attempt after that). Once locked, a problem can never
+  // flip back to 'correct' - this stops a student from copying the
+  // just-revealed answer back into the box to fake a correct result.
   function evaluate(key, isCorrect) {
+    if (locked[key]) return 'locked';
     if (isCorrect) {
       attempts[key] = 0;
       return 'correct';
     }
     attempts[key] = (attempts[key] || 0) + 1;
-    return attempts[key] >= 2 ? 'reveal' : 'retry';
+    if (attempts[key] >= 2) {
+      locked[key] = true;
+      return 'reveal';
+    }
+    return 'retry';
   }
 
   function reset(key) {
     attempts[key] = 0;
+    locked[key] = false;
   }
 
   function show(feedbackEl, outcome, messages) {
@@ -57,7 +68,7 @@ const LessonCheck = (() => {
     if (outcome === 'correct') {
       feedbackEl.className = 'feedback-msg success';
       feedbackEl.innerHTML = messages.correct;
-    } else if (outcome === 'reveal') {
+    } else if (outcome === 'reveal' || outcome === 'locked') {
       feedbackEl.className = 'feedback-msg error';
       feedbackEl.innerHTML = messages.reveal;
     } else {
@@ -69,13 +80,34 @@ const LessonCheck = (() => {
     }
   }
 
+  // Disables the button that was just clicked (and any input/textarea
+  // sharing its immediate container) so a locked problem can't be
+  // resubmitted after the answer has been shown.
+  function lockControls(feedbackEl) {
+    const btn = window.event && window.event.target;
+    if (btn && typeof btn.disabled !== 'undefined') {
+      btn.disabled = true;
+      btn.style.cursor = 'not-allowed';
+      const container = btn.closest('.form-group, .challenge-box, .step-box, .station-card, .guided-practice, td, .carousel-card') || btn.parentElement;
+      if (container) {
+        container.querySelectorAll('input, textarea, select').forEach((el) => { el.disabled = true; });
+      }
+    }
+    if (feedbackEl) feedbackEl.classList.add('locked');
+  }
+
   // One call that evaluates + renders together, for the common case.
   // Pass `record` as {label, answer} to log this item for the printable
   // progress report; omit it for items that shouldn't appear there.
   function check(key, isCorrect, feedbackEl, messages, record) {
     const outcome = evaluate(key, isCorrect);
     show(feedbackEl, outcome, messages);
-    if (record) {
+    if (outcome === 'reveal') {
+      lockControls(feedbackEl);
+    }
+    // 'locked' means this was already recorded when it first revealed -
+    // never overwrite that with a later (possibly copied-in) answer.
+    if (record && outcome !== 'locked') {
       LessonProgress.record(key, record.label, record.answer, outcome === 'correct' ? 'correct' : 'incomplete');
     }
     return outcome;

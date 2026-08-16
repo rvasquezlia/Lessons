@@ -405,6 +405,24 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
   font-weight: 600;
 }
 
+.form-control-lg:disabled, input:disabled, textarea:disabled, select:disabled {
+  background: #e2e8f0;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+button:disabled {
+  background: #94a3b8 !important;
+  color: #f1f5f9 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+.feedback-msg.locked::before {
+  content: "🔒 Locked - ";
+  font-weight: 900;
+}
+
 .wb-grid {
   display: flex;
   flex-direction: column;
