@@ -25,6 +25,7 @@
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
   <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
 </head>
 <body>
 
@@ -63,11 +64,12 @@
     <div class="step-box">
       <h3 style="margin-top:0; color:var(--primary);">Try It: Spot the Keyword</h3>
       <p><strong>Problem:</strong> A recipe needs \(2.5\) cups of flour for one batch. How much flour is needed for \(4\) batches?</p>
-      <button class="btn-lg" onclick="revealWarmup()">Check Your Thinking</button>
-      <div id="warmup-solution" class="solution-content" style="display:none; margin-top:14px; padding-top:14px; border-top:2px solid var(--border);">
-        <strong>Keyword:</strong> "batches" of the same amount means equal groups, so this is <strong>multiplication</strong>.<br>
-        \(2.5 \times 4 = \mathbf{10}\) cups of flour.
+      <div class="form-group">
+        <label>How much flour is needed? (which operation did the keyword "batches" tell you to use?)</label>
+        <input type="text" id="warmup-answer" class="form-control-lg" style="max-width:220px;" placeholder="Cups of flour">
       </div>
+      <button class="btn-lg" onclick="checkWarmup()">Check Your Thinking</button>
+      <div id="warmup-solution" class="feedback-msg" style="margin-top:14px;"></div>
     </div>
   </div>
 
@@ -110,6 +112,12 @@
     <div class="challenge-box">
       <h3 style="margin-top:0; color:#b45309;">Quick Practice: Word Problems</h3>
       <div id="ip-word-list"></div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:28px;">
+      <div class="notebook-header">Closing: Peer Review</div>
+      <p style="margin:0 0 10px 0;">Turn to a partner. Pick <strong>one</strong> word problem from today (from Panel 2 or the Independent Practice above) and explain to each other: what was your estimate, what was your exact answer, and how did rounding to the nearest whole number confirm your exact answer was reasonable?</p>
+      <p style="margin:0; font-style:italic; color:#78350f;">Listen to your partner's explanation too - be ready to share one thing they caught or confirmed using rounding.</p>
     </div>
   </div>
 
@@ -156,10 +164,16 @@
     triggerMathJax();
   }
 
-  function revealWarmup() {
-    const el = document.getElementById('warmup-solution');
-    el.style.display = 'block';
-    triggerMathJax();
+  function checkWarmup() {
+    const val = document.getElementById('warmup-answer').value;
+    const fb = document.getElementById('warmup-solution');
+    const correct = LessonCheck.numericMatch(val, 10, 0.01);
+
+    LessonCheck.check('tue-warmup', correct, fb, {
+      correct: "Correct! \"Batches\" of the same amount means equal groups, so this is multiplication: \\(2.5 \\times 4 = \\mathbf{10}\\) cups of flour.",
+      retry: "Not quite yet. Look at the keyword \"batches\" - does that mean equal groups (multiplication), a total (addition), or a difference (subtraction)?",
+      reveal: "Here's the correct procedure: \"batches\" of the same amount means equal groups, so this is multiplication: \\(2.5 \\times 4 = \\mathbf{10}\\) cups of flour."
+    });
   }
 
   // ==========================================
@@ -292,43 +306,49 @@
   // INDEPENDENT PRACTICE (extra, double period)
   // ==========================================
   const quickProblems = [
-    { q: "\\(18.6 + 9.75\\)", a: "\\(28.35\\)" },
-    { q: "\\(62.4 - 18.79\\)", a: "\\(43.61\\)" },
-    { q: "\\(7.5 \\times 3.2\\)", a: "\\(24\\)" },
-    { q: "\\(0.6 \\times 4.25\\)", a: "\\(2.55\\)" }
+    { q: "\\(18.6 + 9.75\\)", a: 28.35, tol: 0.01, work: "\\(18.6 + 9.75 = \\mathbf{28.35}\\)" },
+    { q: "\\(62.4 - 18.79\\)", a: 43.61, tol: 0.01, work: "\\(62.4 - 18.79 = \\mathbf{43.61}\\)" },
+    { q: "\\(7.5 \\times 3.2\\)", a: 24, tol: 0.05, work: "\\(7.5 \\times 3.2 = \\mathbf{24}\\)" },
+    { q: "\\(0.6 \\times 4.25\\)", a: 2.55, tol: 0.01, work: "\\(0.6 \\times 4.25 = \\mathbf{2.55}\\)" }
   ];
 
   const wordPracticeProblems = [
-    { q: "A book costs \\(\\$12.99\\). If you buy \\(3\\) books, what is the total cost before tax?", a: "\\(12.99 \\times 3 = \\mathbf{\\$38.97}\\)" },
-    { q: "You have \\(\\$25.00\\). You spend \\(\\$8.45\\) on lunch. How much do you have left?", a: "\\(25.00 - 8.45 = \\mathbf{\\$16.55}\\)" }
+    { q: "A book costs \\(\\$12.99\\). If you buy \\(3\\) books, what is the total cost before tax?", a: 38.97, tol: 0.02, work: "\\(12.99 \\times 3 = \\mathbf{\\$38.97}\\)" },
+    { q: "You have \\(\\$25.00\\). You spend \\(\\$8.45\\) on lunch. How much do you have left?", a: 16.55, tol: 0.02, work: "\\(25.00 - 8.45 = \\mathbf{\\$16.55}\\)" }
   ];
 
+  function renderPracticeItems(containerId, problems, keyPrefix, startNum) {
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${startNum + i}.</strong> ${p.q}
+        <div style="margin-top:10px;">
+          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Your answer">
+          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkIndependentItem('${keyPrefix}', ${i})">Check</button>
+        </div>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+  }
+
   function renderIndependentPractice() {
-    const quickHtml = quickProblems.map((p, i) => `
-      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
-        <strong>${i + 1}.</strong> ${p.q}
-        <button class="btn-lg" style="margin-left:12px; padding:8px 18px; font-size:1rem;" onclick="toggleReveal('quick-${i}')">Check Answer</button>
-        <div id="quick-${i}" style="display:none; margin-top:10px; font-weight:700; color:var(--success);">${p.a}</div>
-      </div>
-    `).join('');
-    document.getElementById('ip-quick-list').innerHTML = quickHtml;
-
-    const wordHtml = wordPracticeProblems.map((p, i) => `
-      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
-        <strong>${i + 5}.</strong> ${p.q}
-        <br><button class="btn-lg" style="margin-top:8px; padding:8px 18px; font-size:1rem;" onclick="toggleReveal('word-${i}')">Check Answer</button>
-        <div id="word-${i}" style="display:none; margin-top:10px; font-weight:700; color:var(--success);">${p.a}</div>
-      </div>
-    `).join('');
-    document.getElementById('ip-word-list').innerHTML = wordHtml;
-
+    renderPracticeItems('ip-quick-list', quickProblems, 'quick', 1);
+    renderPracticeItems('ip-word-list', wordPracticeProblems, 'word', 5);
     triggerMathJax();
   }
 
-  function toggleReveal(id) {
-    const el = document.getElementById(id);
-    el.style.display = (el.style.display === 'block') ? 'none' : 'block';
-    triggerMathJax();
+  function checkIndependentItem(keyPrefix, idx) {
+    const problems = keyPrefix === 'quick' ? quickProblems : wordPracticeProblems;
+    const p = problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
+
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! ${p.work}`,
+      retry: "Not quite yet. Review your work and try again.",
+      reveal: `Here's the correct procedure: ${p.work}`
+    });
   }
 
   // Exit Ticket Submission

@@ -25,6 +25,7 @@
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
   <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
 </head>
 <body>
 
@@ -39,7 +40,8 @@
     <button class="tab-btn" onclick="switchTab('addition-proof')">2. Addition & Subtraction</button>
     <button class="tab-btn" onclick="switchTab('multiplication-proof')">3. Multiplication Algorithm</button>
     <button class="tab-btn" onclick="switchTab('whiteboard')">4. Whiteboard Suite</button>
-    <button class="tab-btn" onclick="switchTab('exitticket')">5. Exit Ticket</button>
+    <button class="tab-btn" onclick="switchTab('practiceset')">5. Weekly Practice Set</button>
+    <button class="tab-btn" onclick="switchTab('exitticket')">6. Exit Ticket</button>
   </nav>
 
   <!-- PANEL 1: PLACE VALUE & ROUNDING FOUNDATIONS -->
@@ -200,11 +202,13 @@
       <h3 style="margin-top:0; color:#b45309;">Addition & Subtraction Challenge Problem</h3>
       <p><strong>Find the missing digit \(X\):</strong></p>
       \[14.X5 + 3.20 = 17.65\]
-      <p>Explain your reasoning using place value columns!</p>
-      <details>
-        <summary style="font-weight:bold; cursor:pointer; color:var(--primary);">Reveal Challenge Solution</summary>
-        <p style="margin-top:10px;">Looking at the Tenths column: \(X + 2 = 6\). Therefore, \(X = 4\). Exact equation: \(14.45 + 3.20 = 17.65\).</p>
-      </details>
+      <div class="form-group">
+        <label>What is \(X\)? Explain your reasoning using place value columns.</label>
+        <input type="text" id="add-challenge-x" class="form-control-lg" style="max-width:160px;" placeholder="X = ?">
+        <textarea id="add-challenge-explain" class="form-control-lg" rows="2" style="margin-top:10px;" placeholder="Explain your reasoning..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkAddChallenge()">Check My Work</button>
+      <div id="add-challenge-feedback" class="feedback-msg"></div>
     </div>
   </div>
 
@@ -304,13 +308,13 @@
     <div class="challenge-box">
       <h3 style="margin-top:0; color:#b45309;">Multiplication Challenge Problem</h3>
       <p><strong>Multi-Step Real World Application:</strong> A garden is \(5.5\text{ meters}\) long and \(3.2\text{ meters}\) wide. Grass seed costs $1.50 per square meter. How much will it cost to seed the entire garden?</p>
-      <details>
-        <summary style="font-weight:bold; cursor:pointer; color:var(--primary);">Reveal Challenge Solution</summary>
-        <p style="margin-top:10px;">
-          1. Area \(= 5.5 \times 3.2 = 17.6\text{ m}^2\).<br>
-          2. Total Cost \(= 17.6 \times \$1.50 = \mathbf{\$26.40}\).
-        </p>
-      </details>
+      <div class="form-group">
+        <label>Total cost to seed the garden:</label>
+        <input type="text" id="mult-challenge-cost" class="form-control-lg" style="max-width:220px;" placeholder="$ total cost">
+        <textarea id="mult-challenge-explain" class="form-control-lg" rows="2" style="margin-top:10px;" placeholder="Show your steps: area, then total cost..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkMultChallenge()">Check My Work</button>
+      <div id="mult-challenge-feedback" class="feedback-msg"></div>
     </div>
   </div>
 
@@ -336,7 +340,44 @@
     <div id="wb-feedback" class="feedback-msg"></div>
   </div>
 
-  <!-- PANEL 5: EXIT TICKET -->
+  <!-- PANEL 5: WEEKLY PRACTICE SET (from the printed Monday worksheet) -->
+  <div id="practiceset" class="panel">
+    <div class="section-title">Monday Practice Set: Alignment &amp; Estimation Practice</div>
+    <p>These are the same problems from your printed Monday worksheet. Estimate first by rounding, then solve using the standard algorithm.</p>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Part 1: Place-Value Alignment</div>
+      <p style="margin:0;">Rewrite each problem vertically and solve.</p>
+    </div>
+    <div id="ps-part1-list"></div>
+
+    <div class="notebook-box" style="margin-top:28px;">
+      <div class="notebook-header">Part 2: Computation &amp; Estimation</div>
+      <p style="margin:0;">Round to the nearest whole number for a quick estimate, then calculate the exact answer.</p>
+    </div>
+    <div id="ps-part2-list"></div>
+
+    <div class="challenge-box" style="margin-top:28px;">
+      <h3 style="margin-top:0; color:#b45309;">Part 3: Financial Literacy Application</h3>
+      <p>You are shopping for ingredients for a science experiment. You buy a gallon of distilled water for \(\$2.89\), a pack of pH strips for \(\$12.45\), and a glass beaker for \(\$8.75\).</p>
+      <div class="form-group">
+        <label>A. Subtotal for these three items:</label>
+        <input type="text" id="ps-fin-a" class="form-control-lg" style="max-width:220px;" placeholder="$ subtotal">
+      </div>
+      <div class="form-group">
+        <label>B. If sales tax is \(\$1.68\), what is your final total?</label>
+        <input type="text" id="ps-fin-b" class="form-control-lg" style="max-width:220px;" placeholder="$ total">
+      </div>
+      <div class="form-group">
+        <label>C. If you pay with a \(\$50.00\) bill, how much change should you receive?</label>
+        <input type="text" id="ps-fin-c" class="form-control-lg" style="max-width:220px;" placeholder="$ change">
+      </div>
+      <button class="btn-lg" onclick="checkFinancialLiteracy()">Check My Work</button>
+      <div id="ps-fin-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 6: EXIT TICKET -->
   <div id="exitticket" class="panel">
     <div class="section-title">Lesson 1.2 Exit Ticket & Metacognitive Log</div>
 
@@ -1114,50 +1155,136 @@
       const finalValid = isDigitMatch(u0, prob.ans[0]) && isDigitMatch(u1, prob.ans[1]) && isDigitMatch(u2, prob.ans[2]) && isDigitMatch(u3, prob.ans[3]);
       const decValid = (parseInt(decPlaces, 10) === prob.decimalPlaces);
 
-      if (p1Valid && p2Valid && finalValid && decValid) {
-        fb.className = "feedback-msg success";
-        fb.innerText = "Whiteboard multiplication solution verified! Integer partial products (490, 7350), sum (7840), and 3 total decimal places placed correctly (7.840) are all correct.";
-      } else {
-        fb.className = "feedback-msg error";
-        fb.innerText = `Check calculations! Expected partial products: 0490 and 7350, Integer Sum: 7840. Then count the total decimal places in the two factors.`;
-      }
+      LessonCheck.check(`wb-${currentWBProb}`, p1Valid && p2Valid && finalValid && decValid, fb, {
+        correct: "Whiteboard multiplication solution verified! Integer partial products (490, 7350), sum (7840), and 3 total decimal places placed correctly (7.840) are all correct.",
+        retry: "Not quite yet. Recheck your two partial products and their sum before worrying about the decimal point.",
+        reveal: `Here's the correct procedure: partial products are 0490 and 7350, integer sum 7840. Both factors together have 3 decimal places, so the final answer is 7.840.`
+      });
     } else {
       const u0 = document.getElementById('wb-i0').value;
       const u1 = document.getElementById('wb-i1').value;
       const u2 = document.getElementById('wb-i2').value;
       const u3 = document.getElementById('wb-i3').value;
 
-      if (isDigitMatch(u0, prob.ans[0]) && isDigitMatch(u1, prob.ans[1]) && isDigitMatch(u2, prob.ans[2]) && isDigitMatch(u3, prob.ans[3])) {
-        fb.className = "feedback-msg success";
-        fb.innerText = "Whiteboard solution verified! Place value columns correctly calculated.";
-      } else {
-        fb.className = "feedback-msg error";
-        fb.innerText = `Check your column calculations. Expected digits: ${prob.ans.join('')}`;
-      }
+      LessonCheck.check(`wb-${currentWBProb}`, isDigitMatch(u0, prob.ans[0]) && isDigitMatch(u1, prob.ans[1]) && isDigitMatch(u2, prob.ans[2]) && isDigitMatch(u3, prob.ans[3]), fb, {
+        correct: "Whiteboard solution verified! Place value columns correctly calculated.",
+        retry: "Not quite yet. Recheck each column, starting from the right - did you regroup/borrow correctly?",
+        reveal: `Here's the correct procedure: work right to left, column by column. The correct digits are ${prob.ans.join('')}.`
+      });
     }
-    fb.style.display = "block";
   }
 
   // Initial load for whiteboard
   loadWBProblem(1);
 
+  // ==========================================
+  // CHALLENGE PROBLEMS (Panels 2 & 3)
+  // ==========================================
+  function checkAddChallenge() {
+    const x = document.getElementById('add-challenge-x').value;
+    const explain = document.getElementById('add-challenge-explain').value.trim();
+    const fb = document.getElementById('add-challenge-feedback');
+    const correct = LessonCheck.numericMatch(x, 4, 0.001) && explain.length > 5;
+
+    LessonCheck.check('mon-add-challenge', correct, fb, {
+      correct: "Correct! In the tenths column, \\(X + 2 = 6\\), so \\(X = 4\\). Full equation: \\(14.45 + 3.20 = 17.65\\).",
+      retry: "Not quite yet. Look only at the tenths column: what digit, plus 2, makes 6? Write your reasoning and try again.",
+      reveal: "Here's the correct procedure: in the tenths column, \\(X + 2 = 6\\), so \\(X = \\mathbf{4}\\). Full equation: \\(14.45 + 3.20 = 17.65\\)."
+    });
+  }
+
+  function checkMultChallenge() {
+    const cost = document.getElementById('mult-challenge-cost').value;
+    const explain = document.getElementById('mult-challenge-explain').value.trim();
+    const fb = document.getElementById('mult-challenge-feedback');
+    const correct = LessonCheck.numericMatch(cost, 26.40, 0.02) && explain.length > 5;
+
+    LessonCheck.check('mon-mult-challenge', correct, fb, {
+      correct: "Correct! Area \\(= 5.5 \\times 3.2 = 17.6\\text{ m}^2\\). Total cost \\(= 17.6 \\times \\$1.50 = \\mathbf{\\$26.40}\\).",
+      retry: "Not quite yet. This is two steps: find the garden's area first, then multiply the area by the cost per square meter.",
+      reveal: "Here's the correct procedure: Area \\(= 5.5 \\times 3.2 = 17.6\\text{ m}^2\\). Total cost \\(= 17.6 \\times \\$1.50 = \\mathbf{\\$26.40}\\)."
+    });
+  }
+
+  // ==========================================
+  // PANEL 5: WEEKLY PRACTICE SET (from the printed Monday worksheet)
+  // ==========================================
+  const practiceSetPart1 = [
+    { q: "Rewrite vertically and solve: \\(14.52 + 3.8\\)", a: 18.32, tol: 0.01, work: "Pad \\(3.8\\) as \\(3.80\\), align the decimals, and add: \\(14.52 + 3.80 = \\mathbf{18.32}\\)." },
+    { q: "Rewrite vertically and solve: \\(25.9 - 7.43\\)", a: 18.47, tol: 0.01, work: "Pad \\(25.9\\) as \\(25.90\\), align the decimals, and subtract: \\(25.90 - 7.43 = \\mathbf{18.47}\\)." },
+    { q: "Rewrite vertically and solve: \\(4.2 \\times 0.15\\). Alignment isn't required here - why not?", a: 0.63, tol: 0.005, work: "Multiply as whole numbers: \\(42 \\times 15 = 630\\). Count total decimal places (\\(1 + 2 = 3\\)) and shift left: \\(4.2 \\times 0.15 = \\mathbf{0.630}\\). Alignment isn't needed because multiplication counts total decimal places in the factors, not matching place values." }
+  ];
+
+  const practiceSetPart2 = [
+    { q: "\\(12.75 + 8.6\\)", a: 21.35, tol: 0.01, work: "Pad \\(8.6\\) as \\(8.60\\) and add: \\(12.75 + 8.60 = \\mathbf{21.35}\\)." },
+    { q: "\\(40.2 - 15.84\\)", a: 24.36, tol: 0.01, work: "Pad \\(40.2\\) as \\(40.20\\) and subtract: \\(40.20 - 15.84 = \\mathbf{24.36}\\)." },
+    { q: "\\(3.5 \\times 2.4\\)", a: 8.4, tol: 0.02, work: "Multiply as whole numbers: \\(35 \\times 24 = 840\\). Shift 2 decimal places: \\(3.5 \\times 2.4 = \\mathbf{8.40}\\)." },
+    { q: "\\(105.3 + 22.91\\)", a: 128.21, tol: 0.01, work: "Pad \\(105.3\\) as \\(105.30\\) and add: \\(105.30 + 22.91 = \\mathbf{128.21}\\)." },
+    { q: "\\(9.8 \\times 0.07\\)", a: 0.686, tol: 0.002, work: "Multiply as whole numbers: \\(98 \\times 7 = 686\\). Shift 3 decimal places: \\(9.8 \\times 0.07 = \\mathbf{0.686}\\)." },
+    { q: "\\(50.0 - 12.35\\)", a: 37.65, tol: 0.01, work: "Align the decimals and subtract: \\(50.00 - 12.35 = \\mathbf{37.65}\\)." }
+  ];
+
+  function renderPracticeSetList(containerId, problems, keyPrefix) {
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px;">
+          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Your answer">
+          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkPracticeSetItem('${keyPrefix}', ${i})">Check</button>
+        </div>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+  }
+
+  function checkPracticeSetItem(keyPrefix, idx) {
+    const problems = keyPrefix === 'ps1' ? practiceSetPart1 : practiceSetPart2;
+    const p = problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
+
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! \\(\\mathbf{${p.a}}\\)`,
+      retry: "Not quite yet. Estimate first by rounding, then recheck your alignment and try again.",
+      reveal: `Here's the correct procedure: ${p.work}`
+    });
+  }
+
+  function checkFinancialLiteracy() {
+    const a = document.getElementById('ps-fin-a').value;
+    const b = document.getElementById('ps-fin-b').value;
+    const c = document.getElementById('ps-fin-c').value;
+    const fb = document.getElementById('ps-fin-feedback');
+    const correct = LessonCheck.numericMatch(a, 24.09, 0.02) && LessonCheck.numericMatch(b, 25.77, 0.02) && LessonCheck.numericMatch(c, 24.23, 0.02);
+
+    LessonCheck.check('ps-financial', correct, fb, {
+      correct: "Correct! Subtotal: \\(2.89 + 12.45 + 8.75 = \\$24.09\\). Total with tax: \\(24.09 + 1.68 = \\$25.77\\). Change from \\$50: \\(50.00 - 25.77 = \\$24.23\\).",
+      retry: "Not quite yet. Work top to bottom: subtotal first, then add tax for the total, then subtract that total from \\$50.00 for the change.",
+      reveal: "Here's the correct procedure: Subtotal \\(= 2.89 + 12.45 + 8.75 = \\mathbf{\\$24.09}\\). Total \\(= 24.09 + 1.68 = \\mathbf{\\$25.77}\\). Change \\(= 50.00 - 25.77 = \\mathbf{\\$24.23}\\)."
+    });
+  }
+
+  renderPracticeSetList('ps-part1-list', practiceSetPart1, 'ps1');
+  renderPracticeSetList('ps-part2-list', practiceSetPart2, 'ps2');
+
   // Exit Ticket Submission
   function submitExitTicket(e) {
     e.preventDefault();
-    const a1 = document.getElementById('exit-1').value.trim();
-    const a2 = document.getElementById('exit-2').value.trim();
+    const a1 = document.getElementById('exit-1').value;
+    const a2 = document.getElementById('exit-2').value;
     const exp = document.getElementById('exit-pv-explain').value.trim();
     const ref = document.getElementById('exit-reflect').value.trim();
     const fb = document.getElementById('exit-feedback');
 
-    if (a1 === '4.75' && a2 === '4.375' && exp.length > 5 && ref.length > 5) {
-      fb.className = "feedback-msg success";
-      fb.innerText = "Exit Ticket submitted and logged successfully!";
-    } else {
-      fb.className = "feedback-msg error";
-      fb.innerText = "Please complete all fields (Sum: 4.75, Product: 4.375) and write complete explanations.";
-    }
-    fb.style.display = "block";
+    const correct = LessonCheck.numericMatch(a1, 4.75, 0.01) && LessonCheck.numericMatch(a2, 4.375, 0.005) && exp.length > 5 && ref.length > 5;
+
+    LessonCheck.check('mon-exit-ticket', correct, fb, {
+      correct: "Correct and complete - Exit Ticket submitted and logged successfully!",
+      retry: "Not quite yet. Double-check your sum and product, and make sure both explanation boxes are filled in, then resubmit.",
+      reveal: "Here's the correct procedure: Sum \\(= 3.5 + 1.25 = \\mathbf{4.75}\\). Product \\(= 3.5 \\times 1.25 = \\mathbf{4.375}\\) (multiply as whole numbers \\(35 \\times 125 = 4375\\), then shift 3 decimal places). Make sure both explanation boxes are filled in before resubmitting."
+    });
   }
 </script>
 </body>

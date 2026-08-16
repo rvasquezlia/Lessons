@@ -25,6 +25,7 @@
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
   <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
 </head>
 <body>
 
@@ -84,6 +85,7 @@
         <li>Add and subtract decimals: word problems <span class="ixl-code">97T</span></li>
         <li>Add and subtract money amounts: word problems <span class="ixl-code">DR9</span></li>
       </ul>
+      <p style="margin:14px 0 0 0; font-weight:700;">📋 Your teacher will call a few names for a small-group table check-in on decimal alignment while you work - if you're called, bring your notebook.</p>
     </div>
   </div>
 
@@ -182,12 +184,18 @@
           <tr><td class="grid-cell" style="width:90px;">12.75</td></tr>
         </table>
       `,
+      verdict: "correct",
+      correctValue: 12.75,
+      tol: 0.01,
       reveal: "There's actually no mistake here! \\(15.40 - 2.65 = 12.75\\) is correct. It's easy to assume every problem has an error - always check the math for yourself instead of guessing."
     },
     {
       title: "2. Check the Work",
       problem: "\\(4.2 \\times 0.3\\), and the student wrote \\(4.2 \\times 0.3 = 12.6\\)",
       studentWork: "",
+      verdict: "error",
+      correctValue: 1.26,
+      tol: 0.01,
       reveal: "<strong>The mistake:</strong> the student only shifted the decimal 1 place instead of 2. \\(4.2\\) has 1 decimal place and \\(0.3\\) has 1 decimal place, so the product needs \\(1 + 1 = 2\\) decimal places.<br><strong>Correct calculation:</strong> \\(42 \\times 3 = 126\\), then shift 2 places left: \\(4.2 \\times 0.3 = \\mathbf{1.26}\\)."
     },
     {
@@ -200,18 +208,27 @@
           <tr><td class="grid-cell" style="width:90px;">8.17</td></tr>
         </table>
       `,
+      verdict: "error",
+      correctValue: 20.15,
+      tol: 0.01,
       reveal: "<strong>The mistake:</strong> the decimal points weren't lined up before adding, so the \"1 ten\" in \\(12.1\\) never got added in.<br><strong>Correct calculation:</strong> pad \\(12.1\\) as \\(12.10\\), line up the decimals, and add: \\(8.05 + 12.10 = \\mathbf{20.15}\\)."
     },
     {
       title: "4. Check the Work",
       problem: "\\(6.25 + 3.4\\), and the student wrote \\(6.25 + 3.4 = 6.59\\)",
       studentWork: "",
+      verdict: "error",
+      correctValue: 9.65,
+      tol: 0.01,
       reveal: "<strong>The mistake:</strong> the student lined up \\(3.4\\) as if it were \\(0.34\\), putting the 4 in the hundredths column instead of the tenths column.<br><strong>Correct calculation:</strong> pad \\(3.4\\) as \\(3.40\\), line up the decimals, and add: \\(6.25 + 3.40 = \\mathbf{9.65}\\)."
     },
     {
       title: "5. Check the Work",
       problem: "\\(5.1 \\times 2.03\\), and the student wrote \\(5.1 \\times 2.03 = 103.53\\)",
       studentWork: "",
+      verdict: "error",
+      correctValue: 10.353,
+      tol: 0.005,
       reveal: "<strong>The mistake:</strong> the student only shifted the decimal 2 places instead of 3. \\(5.1\\) has 1 decimal place and \\(2.03\\) has 2 decimal places, so the product needs \\(1 + 2 = 3\\) decimal places.<br><strong>Correct calculation:</strong> \\(51 \\times 203 = 10{,}353\\), then shift 3 places left: \\(5.1 \\times 2.03 = \\mathbf{10.353}\\)."
     }
   ];
@@ -230,9 +247,21 @@
       <p><strong>The Problem:</strong> ${ex.problem}</p>
       ${ex.studentWork ? `<p><strong>Student Work:</strong></p>${ex.studentWork}` : ''}
       <div class="step-box" style="margin-top:16px;">
-        <p style="margin:0 0 10px 0;"><strong>Before you look:</strong> is this correct? If not, what is the mistake, and what is the correct answer?</p>
-        <button class="btn-lg" onclick="toggleReveal('ea-reveal-${currentEA}')">Reveal the Analysis</button>
-        <div id="ea-reveal-${currentEA}" style="display:none; margin-top:14px; padding-top:14px; border-top:2px solid var(--border);">${ex.reveal}</div>
+        <p style="margin:0 0 10px 0;"><strong>Act as the teacher:</strong> is this correct? What is the correct answer?</p>
+        <div class="form-group">
+          <label>Is the student's work correct?</label>
+          <select id="ea-verdict-${currentEA}" class="form-control-lg" style="max-width:240px;">
+            <option value="">Select...</option>
+            <option value="correct">Correct, no mistake</option>
+            <option value="error">There's a mistake</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>What is the correct answer?</label>
+          <input type="text" id="ea-answer-${currentEA}" class="form-control-lg" style="max-width:200px;" placeholder="Correct answer">
+        </div>
+        <button class="btn-lg" onclick="checkErrorAnalysis(${currentEA})">Check My Work</button>
+        <div id="ea-feedback-${currentEA}" class="feedback-msg" style="margin-top:14px;"></div>
       </div>
     `;
 
@@ -252,10 +281,18 @@
     renderErrorCarousel();
   }
 
-  function toggleReveal(id) {
-    const el = document.getElementById(id);
-    el.style.display = (el.style.display === 'block') ? 'none' : 'block';
-    triggerMathJax();
+  function checkErrorAnalysis(idx) {
+    const ex = errorExamples[idx];
+    const verdict = document.getElementById(`ea-verdict-${idx}`).value;
+    const val = document.getElementById(`ea-answer-${idx}`).value;
+    const fb = document.getElementById(`ea-feedback-${idx}`);
+    const correct = verdict === ex.verdict && LessonCheck.numericMatch(val, ex.correctValue, ex.tol);
+
+    LessonCheck.check(`ea-${idx}`, correct, fb, {
+      correct: ex.reveal,
+      retry: "Not quite yet. Recheck whether the decimal points/places were handled correctly, then try again.",
+      reveal: ex.reveal
+    });
   }
 
   // ==========================================
@@ -272,15 +309,13 @@
     const proteinOk = isNumericMatch(protein, 22.875, 0.05);
     const carbsOk = isNumericMatch(carbs, 71.0, 0.05);
     const fiberOk = isNumericMatch(fiber, 9.5, 0.05);
+    const correct = fatOk && proteinOk && carbsOk && fiberOk;
 
-    if (fatOk && proteinOk && carbsOk && fiberOk) {
-      fb.className = "feedback-msg success";
-      fb.innerText = "All four nutrient totals are correct! Total Fat: 10.625 g, Protein: 22.875 g, Carbohydrates: 71.0 g, Fiber: 9.5 g.";
-    } else {
-      fb.className = "feedback-msg error";
-      fb.innerText = "Check your multiplication. Each nutrient amount is multiplied by 2.5 bars - for example, Total Fat: 4.25 x 2.5.";
-    }
-    fb.style.display = "block";
+    LessonCheck.check('wed-health-science', correct, fb, {
+      correct: "All four nutrient totals are correct! Total Fat: 10.625 g, Protein: 22.875 g, Carbohydrates: 71.0 g, Fiber: 9.5 g.",
+      retry: "Check your multiplication. Each nutrient amount is multiplied by 2.5 bars - for example, Total Fat: 4.25 x 2.5. Try again.",
+      reveal: "Here's the correct procedure: multiply each nutrient by 2.5 bars. Total Fat: \\(4.25 \\times 2.5 = \\mathbf{10.625}\\) g. Protein: \\(9.15 \\times 2.5 = \\mathbf{22.875}\\) g. Carbohydrates: \\(28.4 \\times 2.5 = \\mathbf{71.0}\\) g. Fiber: \\(3.8 \\times 2.5 = \\mathbf{9.5}\\) g."
+    });
   }
 
   // Exit Ticket Submission

@@ -25,6 +25,7 @@
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
   <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
 </head>
 <body>
 
@@ -48,7 +49,7 @@
     <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Thursday, August 20, 2026 &middot; 45 min &middot; CCSS.Math.Content.6.NS.B.3 &amp; MP1: Make Sense of Problems and Persevere in Solving Them</p>
 
     <div class="explainer-box">
-      Today is <strong>self-led</strong>: rotate through all four stations at your own pace to sharpen your decimal skills before tomorrow's Graded Classwork. Use rounding at every station to make sure your answers are reasonable.
+      Today you'll rotate through all four stations <strong>in your assigned group</strong> to sharpen your decimal skills before tomorrow's Graded Classwork. Work through each station together, but every group member enters and checks their own answers below. Use rounding at every station to make sure your answers are reasonable.
     </div>
 
     <div class="station-card">
@@ -140,6 +141,11 @@
     <div class="section-title">Wrap-Up: Strategy Checklist for Friday's Test</div>
 
     <div class="notebook-box">
+      <div class="notebook-header">Gallery Walk</div>
+      <p style="margin:0;">With your group, pick <strong>one</strong> station problem and write your rounding check and exact answer on chart paper. Post it, then walk the room to see how other groups solved the same or different stations. Be ready to defend your group's rounding check and exact answer if another group asks about it.</p>
+    </div>
+
+    <div class="notebook-box">
       <div class="notebook-header">Strategy Checklist</div>
       <ul style="list-style:none; padding-left:0;">
         <li style="margin-bottom:10px;"><input type="checkbox" id="cb1" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;"> <label for="cb1"><strong>Addition/Subtraction:</strong> did I line up the decimal points vertically?</label></li>
@@ -190,60 +196,64 @@
     const fb = document.getElementById('s1-feedback');
     const totalOk = isNumericMatch(total, 47.90, 0.02);
     const diffOk = isNumericMatch(diff, 0.91, 0.02);
-    if (totalOk && diffOk) {
-      fb.className = "feedback-msg success";
-      fb.innerText = "Correct! Total relay time: 47.90 seconds. Difference between fastest and slowest: 0.91 seconds.";
-    } else {
-      fb.className = "feedback-msg error";
-      fb.innerText = "Not quite. Add all four split times for the total, then subtract the smallest split from the largest for the difference.";
-    }
-    fb.style.display = "block";
+
+    LessonCheck.check('thu-station1', totalOk && diffOk, fb, {
+      correct: "Correct! Total relay time: 47.90 seconds. Difference between fastest and slowest: 0.91 seconds.",
+      retry: "Not quite yet. Add all four split times for the total, then subtract the smallest split from the largest for the difference. Try again.",
+      reveal: "Here's the correct procedure: Total \\(= 12.45 + 11.82 + 12.09 + 11.54 = \\mathbf{47.90}\\) seconds. Fastest is 11.54s, slowest is 12.45s, so the difference \\(= 12.45 - 11.54 = \\mathbf{0.91}\\) seconds."
+    });
   }
 
   // Station 2
   function checkStation2() {
     const final = document.getElementById('s2-final').value;
     const fb = document.getElementById('s2-feedback');
-    if (isNumericMatch(final, 4.235, 0.01)) {
-      fb.className = "feedback-msg success";
-      fb.innerText = "Correct! Day 2: 4.56 + 0.875 = 5.435 m. Day 3: 5.435 - 1.2 = 4.235 m.";
-    } else {
-      fb.className = "feedback-msg error";
-      fb.innerText = "Not quite. First find the Day 2 height (Day 1 + the rise), then subtract the Day 3 drop from that Day 2 height.";
-    }
-    fb.style.display = "block";
+
+    LessonCheck.check('thu-station2', isNumericMatch(final, 4.235, 0.01), fb, {
+      correct: "Correct! Day 2: 4.56 + 0.875 = 5.435 m. Day 3: 5.435 - 1.2 = 4.235 m.",
+      retry: "Not quite yet. First find the Day 2 height (Day 1 + the rise), then subtract the Day 3 drop from that Day 2 height. Try again.",
+      reveal: "Here's the correct procedure: Day 2 height \\(= 4.56 + 0.875 = \\mathbf{5.435}\\) m. Day 3 height \\(= 5.435 - 1.2 = \\mathbf{4.235}\\) m."
+    });
   }
 
   // Station 3: Speed & Precision Sprint
   const sprintProblems = [
-    { q: "\\(4.5 \\times 0.3\\)", a: 1.35 },
-    { q: "\\(0.12 \\times 0.6\\)", a: 0.072 },
-    { q: "\\(1.5 \\times 1.5\\)", a: 2.25 },
-    { q: "\\(0.08 \\times 0.9\\)", a: 0.072 },
-    { q: "\\(7.3 \\times 1.1\\)", a: 8.03 },
-    { q: "\\(12.2 \\times 0.04\\)", a: 0.488 },
-    { q: "\\(0.5 \\times 0.5\\)", a: 0.25 },
-    { q: "\\(9.1 \\times 0.2\\)", a: 1.82 },
-    { q: "\\(2.5 \\times 4.2\\)", a: 10.5 },
-    { q: "\\(0.006 \\times 0.7\\)", a: 0.0042 }
+    { q: "\\(4.5 \\times 0.3\\)", a: 1.35, tol: 0.01 },
+    { q: "\\(0.12 \\times 0.6\\)", a: 0.072, tol: 0.002 },
+    { q: "\\(1.5 \\times 1.5\\)", a: 2.25, tol: 0.01 },
+    { q: "\\(0.08 \\times 0.9\\)", a: 0.072, tol: 0.002 },
+    { q: "\\(7.3 \\times 1.1\\)", a: 8.03, tol: 0.01 },
+    { q: "\\(12.2 \\times 0.04\\)", a: 0.488, tol: 0.005 },
+    { q: "\\(0.5 \\times 0.5\\)", a: 0.25, tol: 0.005 },
+    { q: "\\(9.1 \\times 0.2\\)", a: 1.82, tol: 0.01 },
+    { q: "\\(2.5 \\times 4.2\\)", a: 10.5, tol: 0.02 },
+    { q: "\\(0.006 \\times 0.7\\)", a: 0.0042, tol: 0.0002 }
   ];
 
   function renderSprint() {
     const html = sprintProblems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q} =
-        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="toggleReveal('sprint-${i}')">Check</button>
-        <span id="sprint-${i}" style="display:none; font-weight:700; color:var(--success);">\\(${p.a}\\)</span>
+        <input type="text" id="sprint-${i}-input" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkSprint(${i})">Check</button>
+        <div id="sprint-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
     `).join('');
     document.getElementById('s3-list').innerHTML = html;
     triggerMathJax();
   }
 
-  function toggleReveal(id) {
-    const el = document.getElementById(id);
-    el.style.display = (el.style.display === 'inline' || el.style.display === 'block') ? 'none' : 'inline';
-    triggerMathJax();
+  function checkSprint(idx) {
+    const p = sprintProblems[idx];
+    const val = document.getElementById(`sprint-${idx}-input`).value;
+    const fb = document.getElementById(`sprint-${idx}-feedback`);
+    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
+
+    LessonCheck.check(`sprint-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(= \\mathbf{${p.a}}\\)`,
+      retry: "Not quite yet. Recount your total decimal places and try again.",
+      reveal: `Here's the correct procedure: multiply as whole numbers, then count the total decimal places in both factors and shift. ${p.q} \\(= \\mathbf{${p.a}}\\)`
+    });
   }
 
   // Station 4
@@ -252,17 +262,15 @@
     const answer = document.getElementById('s4-answer').value;
     const fb = document.getElementById('s4-feedback');
     const answerOk = isNumericMatch(answer, 37.8, 0.05);
-    if (explain.length > 10 && answerOk) {
-      fb.className = "feedback-msg success";
-      fb.innerText = "Correct! Estimate: 16 x 2 = 32, so 3.78 is nowhere close and not reasonable. Exact answer: 15.75 x 2.4 = 37.8.";
-    } else if (!answerOk) {
-      fb.className = "feedback-msg error";
-      fb.innerText = "Check your exact calculation: multiply 1575 x 24 as whole numbers, then count the total decimal places (2 + 1 = 3) to place the point.";
-    } else {
-      fb.className = "feedback-msg error";
-      fb.innerText = "Write a full explanation of your rounding estimate before checking.";
-    }
-    fb.style.display = "block";
+    const correct = explain.length > 10 && answerOk;
+
+    LessonCheck.check('thu-station4', correct, fb, {
+      correct: "Correct! Estimate: 16 x 2 = 32, so 3.78 is nowhere close and not reasonable. Exact answer: 15.75 x 2.4 = 37.8.",
+      retry: !answerOk
+        ? "Not quite yet. Check your exact calculation: multiply 1575 x 24 as whole numbers, then count the total decimal places (2 + 1 = 3) to place the point."
+        : "Write a full explanation of your rounding estimate before checking, then try again.",
+      reveal: "Here's the correct procedure: estimate \\(16 \\times 2 = 32\\), so \\(3.78\\) is nowhere close and not reasonable. Exact: \\(1575 \\times 24 = 37800\\), shift 3 decimal places: \\(15.75 \\times 2.4 = \\mathbf{37.8}\\)."
+    });
   }
 
   // Reflection Submission
