@@ -38,7 +38,7 @@
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Math 6 - Thursday, Aug 20 - Real-World Decimal Jigsaw')">🖨️ Print My Progress</button>
+    <button class="btn-print" onclick="printProgressReport('Math 6 - Thursday, Aug 20 - Real-World Decimal Jigsaw')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -72,10 +72,10 @@
       <h3 style="margin-top:8px; color:var(--primary);">Which group are you in today?</h3>
       <p>Pick the <strong>same</strong> group your teacher assigned to your table. Once you confirm, it locks in for the rest of the lesson.</p>
       <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:12px;">
-        <button class="btn-lg" onclick="chooseGroup('medicine')">🩺 Medicine</button>
-        <button class="btn-lg" onclick="chooseGroup('market')">💰 Market</button>
-        <button class="btn-lg" onclick="chooseGroup('engineering')">⚙️ Engineering</button>
-        <button class="btn-lg" onclick="chooseGroup('arts')">🎨 Arts</button>
+        <button class="btn-lg" onclick="chooseGroup('medicine')">Medicine</button>
+        <button class="btn-lg" onclick="chooseGroup('market')">Market</button>
+        <button class="btn-lg" onclick="chooseGroup('engineering')">Engineering</button>
+        <button class="btn-lg" onclick="chooseGroup('arts')">Arts</button>
       </div>
     </div>
 
@@ -217,7 +217,7 @@
   // Group data: each group has the same kind of decimal work, set in a different real-world job.
   const groups = {
     medicine: {
-      icon: '🩺', name: 'Medicine',
+      name: 'Medicine',
       context: "Nurses and doctors calculate medicine doses, patient measurements, and lab results every day. A misplaced decimal point can be dangerous, so precision matters.",
       problems: [
         { type: 'word', q: "A nurse gives a patient three doses of medicine: 12.5 mL, 8.75 mL, and 6.4 mL over one day. What is the total amount of medicine given?", a: 27.65, tol: 0.02, unit: ' mL' },
@@ -233,7 +233,7 @@
       ]
     },
     market: {
-      icon: '💰', name: 'Market',
+      name: 'Market',
       context: "Store owners, cashiers, and vendors calculate prices, discounts, and change every day. Being off by even a few cents adds up fast across many customers.",
       problems: [
         { type: 'word', q: "A vendor sells apples for $2.35 per kilogram. A customer buys 3.4 kilograms. How much does the customer pay?", a: 7.99, tol: 0.02, unit: '' },
@@ -249,7 +249,7 @@
       ]
     },
     engineering: {
-      icon: '⚙️', name: 'Engineering',
+      name: 'Engineering',
       context: "Engineers measure and build parts that must fit together exactly. A part that is off by even a few hundredths of a centimeter can make a whole machine fail.",
       problems: [
         { type: 'word', q: "An engineer joins three metal beams: 245.6 cm, 89.75 cm, and then removes a 34.2 cm section. What is the final length?", a: 301.15, tol: 0.02, unit: ' cm' },
@@ -265,7 +265,7 @@
       ]
     },
     arts: {
-      icon: '🎨', name: 'Arts',
+      name: 'Arts',
       context: "Artists and designers measure canvases, mix paint ratios, and time performances. Precise measurements keep proportions and timing looking and sounding right.",
       problems: [
         { type: 'word', q: "A painter mixes 2.5 liters of blue paint, 1.75 liters of white paint, and 0.6 liters of yellow paint. How many liters of paint does she have in total?", a: 4.85, tol: 0.02, unit: ' liters' },
@@ -290,7 +290,7 @@
     const g = groups[key];
     document.getElementById('group-picker-box').innerHTML = `
       <span class="station-label">Confirm</span>
-      <h3 style="margin-top:8px; color:var(--primary);">You selected ${g.icon} ${g.name}</h3>
+      <h3 style="margin-top:8px; color:var(--primary);">You selected ${g.name}</h3>
       <p>Is that the group your teacher assigned to your table? Once you confirm, you can't switch groups.</p>
       <div style="display:flex; gap:12px; margin-top:12px;">
         <button class="btn-lg" onclick="confirmGroup()">Yes, that's my group</button>
@@ -306,10 +306,10 @@
       <h3 style="margin-top:8px; color:var(--primary);">Which group are you in today?</h3>
       <p>Pick the <strong>same</strong> group your teacher assigned to your table. Once you confirm, it locks in for the rest of the lesson.</p>
       <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:12px;">
-        <button class="btn-lg" onclick="chooseGroup('medicine')">🩺 Medicine</button>
-        <button class="btn-lg" onclick="chooseGroup('market')">💰 Market</button>
-        <button class="btn-lg" onclick="chooseGroup('engineering')">⚙️ Engineering</button>
-        <button class="btn-lg" onclick="chooseGroup('arts')">🎨 Arts</button>
+        <button class="btn-lg" onclick="chooseGroup('medicine')">Medicine</button>
+        <button class="btn-lg" onclick="chooseGroup('market')">Market</button>
+        <button class="btn-lg" onclick="chooseGroup('engineering')">Engineering</button>
+        <button class="btn-lg" onclick="chooseGroup('arts')">Arts</button>
       </div>
     `;
   }
@@ -320,11 +320,11 @@
 
     document.getElementById('group-picker-box').innerHTML = `
       <span class="station-label">Locked In</span>
-      <h3 style="margin-top:8px; color:var(--primary);">🔒 Your group: ${g.icon} ${g.name}</h3>
+      <h3 style="margin-top:8px; color:var(--primary);">Your group: ${g.name}</h3>
       <p>Your group is locked in for today. Scroll down to solve your 10 problems.</p>
     `;
 
-    document.getElementById('group-context').innerHTML = `<div class="notebook-header">${g.icon} ${g.name}</div><p style="margin:0;">${g.context}</p>`;
+    document.getElementById('group-context').innerHTML = `<div class="notebook-header">${g.name}</div><p style="margin:0;">${g.context}</p>`;
     renderGroupProblems();
     document.getElementById('group-content').style.display = 'block';
 
@@ -358,6 +358,7 @@
 
   function checkGroupItem(idx) {
     const g = groups[chosenGroup];
+    const p = g.problems[idx];
     const val = document.getElementById(`grp-${idx}-input`).value;
     const fb = document.getElementById(`grp-${idx}-feedback`);
 
@@ -366,7 +367,7 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: `thu-grp-${idx}`, label: `${g.name} Group #${idx + 1}`, answer: val, section: '1. My Group' });
+    LessonCheck.submit(fb, { key: `thu-grp-${idx}`, label: `${g.name} Group #${idx + 1}`, answer: val, section: '1. My Group', correct: LessonCheck.numericMatch(val, p.a, p.tol) });
   }
 
   // Share tab: populate the "which group did you visit" dropdown with every group except your own
@@ -374,7 +375,7 @@
     const g = groups[chosenGroup];
     document.getElementById('share-locked-notice').style.display = 'none';
     document.getElementById('share-content').style.display = 'block';
-    document.getElementById('share-own-group').innerText = `${g.icon} ${g.name}`;
+    document.getElementById('share-own-group').innerText = g.name;
 
     const select = document.getElementById('share-visited');
     select.innerHTML = '<option value="">Choose the group you visited...</option>';
@@ -382,7 +383,7 @@
       if (key === chosenGroup) return;
       const opt = document.createElement('option');
       opt.value = key;
-      opt.innerText = `${groups[key].icon} ${groups[key].name}`;
+      opt.innerText = groups[key].name;
       select.appendChild(opt);
     });
   }
@@ -400,7 +401,7 @@
       return;
     }
 
-    const visitedName = `${groups[visitedKey].icon} ${groups[visitedKey].name}`;
+    const visitedName = groups[visitedKey].name;
     LessonProgress.record('thu-share-visited', 'Group Sharing: visited group', visitedName, 'reflection', '2. Share What You Learned');
     LessonProgress.recordText('Group Sharing: what I learned', notes, '2. Share What You Learned');
 

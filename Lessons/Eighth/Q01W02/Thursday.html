@@ -34,7 +34,7 @@
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Algebra I - Thursday, Aug 20 - Review')">🖨️ Print My Progress</button>
+    <button class="btn-print" onclick="printProgressReport('Algebra I - Thursday, Aug 20 - Review')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -243,7 +243,7 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: `wu-${idx}`, label: `Warm-Up: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '1. Warm-Up' });
+    LessonCheck.submit(fb, { key: `wu-${idx}`, label: `Warm-Up: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '1. Warm-Up', correct: LessonCheck.numericMatch(val, p.a, p.tol) });
   }
 
   // Mixed Review (Guided Practice - checked on screen)
@@ -384,7 +384,7 @@
 
     document.getElementById('strategy-picker-box').innerHTML = `
       <span class="station-label">Locked In</span>
-      <h3 style="margin-top:8px; color:var(--primary);">🔒 Your group: Group ${key}</h3>
+      <h3 style="margin-top:8px; color:var(--primary);">Your group: Group ${key}</h3>
       <p>Your group is locked in for today. Scroll down to solve and defend your equation.</p>
     `;
 
@@ -407,7 +407,15 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: `strategy-${chosenStrategyGroup}`, label: `Strategy Challenge (Group ${chosenStrategyGroup}): ${g.eq.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '3. Strategy Challenge' });
+    let correct;
+    if (g.type === "number") {
+      correct = LessonCheck.numericMatch(raw, g.a, 0.001);
+    } else {
+      const norm = raw.trim().toLowerCase();
+      correct = g.a === "no solution" ? (norm.includes("no solution") || norm === "none") : norm.includes("infinite");
+    }
+
+    LessonCheck.submit(fb, { key: `strategy-${chosenStrategyGroup}`, label: `Strategy Challenge (Group ${chosenStrategyGroup}): ${g.eq.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '3. Strategy Challenge', correct });
   }
 
   // Strategy Challenge - More Practice (group-specific, rendered once the group is confirmed)
@@ -436,7 +444,15 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: `stm-${idx}`, label: `Strategy Set #${idx + 2} (Group ${chosenStrategyGroup}): ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '3. Strategy Challenge' });
+    let correct;
+    if (p.type === "number") {
+      correct = LessonCheck.numericMatch(raw, p.a, 0.001);
+    } else {
+      const norm = raw.trim().toLowerCase();
+      correct = p.a === "no solution" ? (norm.includes("no solution") || norm === "none") : norm.includes("infinite");
+    }
+
+    LessonCheck.submit(fb, { key: `stm-${idx}`, label: `Strategy Set #${idx + 2} (Group ${chosenStrategyGroup}): ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '3. Strategy Challenge', correct });
   }
 
   // Decision-Making Scenario
@@ -450,7 +466,7 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: 'thu-decision', label: 'Decision-Making: internet providers', answer: `x=${x} months`, section: '4. Decision-Making' });
+    LessonCheck.submit(fb, { key: 'thu-decision', label: 'Decision-Making: internet providers', answer: `x=${x} months`, section: '4. Decision-Making', correct: LessonCheck.numericMatch(x, 4, 0.001) });
   }
 
   // Decision-Making - More Practice
@@ -490,7 +506,7 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: `dm-${idx}`, label: `Break-Even Scenario #${idx + 2}`, answer: `x=${val} months`, section: '4. Decision-Making' });
+    LessonCheck.submit(fb, { key: `dm-${idx}`, label: `Break-Even Scenario #${idx + 2}`, answer: `x=${val} months`, section: '4. Decision-Making', correct: LessonCheck.numericMatch(val, p.a, 0.01) });
   }
 
   // IXL confirmation

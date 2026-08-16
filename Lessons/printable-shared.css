@@ -228,4 +228,13 @@ h1 { margin: 8px 0; font-size: 2rem; font-weight: 800; }
   .app-container { box-shadow: none; border: none; border-radius: 0; max-width: 100%; }
   .no-print { display: none !important; }
   .page-break { page-break-before: always; }
+  /* Printers/PDF exports often drop background colors, which would leave
+     the header's white text invisible on white paper. Switch to dark text
+     on no background instead of relying on background color surviving
+     print - reliable regardless of the "print backgrounds" setting. */
+  header { background: none; color: var(--primary); padding: 10px 0 14px 0; border-bottom: 3px solid var(--primary); }
+  .badge { background: none; color: var(--primary); border: 2px solid var(--primary); }
+  .group-heading { background: none; color: var(--primary); border: 2px solid var(--primary-light); }
+  .points-tag { background: none; color: var(--primary); border: 1px solid var(--primary-light); }
+  .extra-credit-box .ec-heading { background: none; color: var(--accent); border: 1px solid var(--accent); }
 }

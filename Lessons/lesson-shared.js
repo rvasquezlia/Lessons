@@ -155,12 +155,21 @@ const LessonCheck = (() => {
 
   // For "submit-only" items (anything that isn't a formally labeled
   // Guided Practice section): records the answer for the printed report
-  // without grading it on screen. No right/wrong verdict, no attempt
-  // counter - correctness is checked later from the printout, not on the
-  // page. The submission itself is final, though: once a non-blank answer
-  // goes through, the fields lock (same as a revealed Guided Practice
-  // problem) so the printed answer can't be quietly edited afterward.
-  // `record` is required: {key, label, answer, section}.
+  // without grading it on screen - the on-screen message is always the
+  // same neutral "Submitted!" success box, whether or not the answer is
+  // right, so nothing is revealed to the student here. No attempt
+  // counter either. The submission itself is final: once a non-blank
+  // answer goes through, the fields lock (same as a revealed Guided
+  // Practice problem) so the printed answer can't be quietly edited
+  // afterward.
+  //
+  // `record` is required: {key, label, answer, section, correct}.
+  // `correct` is optional - pass true/false when this item has a single
+  // checkable right answer (an equation, a classification, ...) so the
+  // printed audit shows a real Correct/Needs review verdict instead of
+  // just "Submitted". Omit it for genuinely open-ended items (written
+  // explanations, recommendations) that have no one right answer - those
+  // stay "Submitted" and are judged by the teacher from the printout.
   function submit(feedbackEl, record, message) {
     if (feedbackEl) {
       feedbackEl.style.display = 'block';
@@ -171,7 +180,8 @@ const LessonCheck = (() => {
       }
     }
     if (record) {
-      LessonProgress.record(record.key, record.label, record.answer, 'reflection', record.section);
+      const verdict = record.correct === true ? 'correct' : record.correct === false ? 'incomplete' : 'reflection';
+      LessonProgress.record(record.key, record.label, record.answer, verdict, record.section);
     }
     lockControls(feedbackEl);
   }

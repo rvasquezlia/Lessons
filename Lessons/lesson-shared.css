@@ -421,7 +421,7 @@ button:disabled {
 }
 
 .feedback-msg.locked::before {
-  content: "🔒 Locked - ";
+  content: "Locked - ";
   font-weight: 900;
 }
 
