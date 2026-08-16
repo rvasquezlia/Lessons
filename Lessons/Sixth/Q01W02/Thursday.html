@@ -35,6 +35,17 @@
     <h1>Pre-Assessment Review Stations</h1>
   </header>
 
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Math 6 - Thursday, Aug 20 - Pre-Assessment Review Stations')">🖨️ Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Rotate through Stations 1-4 with your group, but type and check your own answers on your own device. Wrap-Up has your Gallery Walk activity, strategy checklist, and reflection. Finish by typing your name above and clicking <strong>Print My Progress</strong> for your Google Classroom submission.
+  </div>
+
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('station1')">1. Race Splits</button>
     <button class="tab-btn" onclick="switchTab('station2')">2. River Gauges</button>
@@ -47,6 +58,11 @@
   <div id="station1" class="panel active">
     <div class="section-title">Review Stations</div>
     <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Thursday, August 20, 2026 &middot; 45 min &middot; CCSS.Math.Content.6.NS.B.3 &amp; MP1: Make Sense of Problems and Persevere in Solving Them</p>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read the race-split data, calculate the total and the difference on paper with your group, then each type your own answers below and click Check My Work. When your group is ready, move to Station 2's tab.
+    </div>
 
     <div class="explainer-box">
       Today you'll rotate through all four stations <strong>in your assigned group</strong> to sharpen your decimal skills before tomorrow's Graded Classwork. Work through each station together, but every group member enters and checks their own answers below. Use rounding at every station to make sure your answers are reasonable.
@@ -84,6 +100,10 @@
     <div class="station-card">
       <span class="station-label">Station 2</span>
       <h3 style="margin-top:8px; color:var(--primary);">Environmental Science: River Gauges</h3>
+      <div class="howto-box">
+        <strong class="howto-label">What to do at this station</strong>
+        Find the Day 2 height first (Day 1 plus the rise), then subtract the Day 3 drop from that. Type the final reading and click Check My Work.
+      </div>
       <p>A scientist is monitoring the height of a river gauge over three days.</p>
       <ul>
         <li><strong>Day 1:</strong> the gauge reads 4.56 meters.</li>
@@ -108,6 +128,10 @@
     <div class="station-card">
       <span class="station-label">Station 3</span>
       <h3 style="margin-top:8px; color:var(--primary);">Speed &amp; Precision Sprint</h3>
+      <div class="howto-box">
+        <strong class="howto-label">What to do at this station</strong>
+        Solve all 10 problems as fast and accurately as you can. Type your answer in each box and click Check right after solving it - don't wait until the end.
+      </div>
       <p>Solve each problem, then click to check your answer.</p>
       <div id="s3-list"></div>
     </div>
@@ -120,6 +144,10 @@
     <div class="station-card">
       <span class="station-label">Station 4</span>
       <h3 style="margin-top:8px; color:var(--primary);">Peer Review &amp; Defense</h3>
+      <div class="howto-box">
+        <strong class="howto-label">What to do at this station</strong>
+        Discuss with your group why \(3.78\) looks wrong before doing any exact math - write that reasoning in the first box. Then calculate the real answer, type it in the second box, and click Check My Work.
+      </div>
       <p><strong>Problem:</strong> a student calculated \(15.75 \times 2.4\) and got \(\mathbf{3.78}\).</p>
       <p><strong>Task:</strong> without doing the exact math first, use rounding to explain why this answer is not reasonable. Then solve for the correct exact answer.</p>
 
@@ -139,6 +167,10 @@
   <!-- WRAP-UP: STRATEGY CHECKLIST + REFLECTION -->
   <div id="wrapup" class="panel">
     <div class="section-title">Wrap-Up: Strategy Checklist for Friday's Test</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Do the Gallery Walk with your group first. Then check off each strategy box, write your reflection, and click Submit Reflection. Finish by typing your name in the blue bar at the top of the page and clicking Print My Progress.
+    </div>
 
     <div class="notebook-box">
       <div class="notebook-header">Gallery Walk</div>
@@ -201,7 +233,7 @@
       correct: "Correct! Total relay time: 47.90 seconds. Difference between fastest and slowest: 0.91 seconds.",
       retry: "Not quite yet. Add all four split times for the total, then subtract the smallest split from the largest for the difference. Try again.",
       reveal: "Here's the correct procedure: Total \\(= 12.45 + 11.82 + 12.09 + 11.54 = \\mathbf{47.90}\\) seconds. Fastest is 11.54s, slowest is 12.45s, so the difference \\(= 12.45 - 11.54 = \\mathbf{0.91}\\) seconds."
-    });
+    }, { label: 'Station 1: relay total & difference', answer: `Total=${total}s, Diff=${diff}s` });
   }
 
   // Station 2
@@ -213,7 +245,7 @@
       correct: "Correct! Day 2: 4.56 + 0.875 = 5.435 m. Day 3: 5.435 - 1.2 = 4.235 m.",
       retry: "Not quite yet. First find the Day 2 height (Day 1 + the rise), then subtract the Day 3 drop from that Day 2 height. Try again.",
       reveal: "Here's the correct procedure: Day 2 height \\(= 4.56 + 0.875 = \\mathbf{5.435}\\) m. Day 3 height \\(= 5.435 - 1.2 = \\mathbf{4.235}\\) m."
-    });
+    }, { label: 'Station 2: final river gauge reading', answer: `${final} m` });
   }
 
   // Station 3: Speed & Precision Sprint
@@ -253,7 +285,7 @@
       correct: `Correct! ${p.q} \\(= \\mathbf{${p.a}}\\)`,
       retry: "Not quite yet. Recount your total decimal places and try again.",
       reveal: `Here's the correct procedure: multiply as whole numbers, then count the total decimal places in both factors and shift. ${p.q} \\(= \\mathbf{${p.a}}\\)`
-    });
+    }, { label: `Speed Sprint #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val });
   }
 
   // Station 4
@@ -270,7 +302,7 @@
         ? "Not quite yet. Check your exact calculation: multiply 1575 x 24 as whole numbers, then count the total decimal places (2 + 1 = 3) to place the point."
         : "Write a full explanation of your rounding estimate before checking, then try again.",
       reveal: "Here's the correct procedure: estimate \\(16 \\times 2 = 32\\), so \\(3.78\\) is nowhere close and not reasonable. Exact: \\(1575 \\times 24 = 37800\\), shift 3 decimal places: \\(15.75 \\times 2.4 = \\mathbf{37.8}\\)."
-    });
+    }, { label: 'Station 4: Peer Review & Defense (15.75 x 2.4)', answer: answer });
   }
 
   // Reflection Submission
@@ -282,6 +314,7 @@
     if (a1.length > 5) {
       fb.className = "feedback-msg success";
       fb.innerText = "Reflection submitted and logged successfully! See you tomorrow for Graded Classwork.";
+      LessonProgress.recordText('Reflection: strategy for tomorrow', a1);
     } else {
       fb.className = "feedback-msg error";
       fb.innerText = "Please write a complete reflection before submitting.";
@@ -292,5 +325,6 @@
   // Initial render
   renderSprint();
 </script>
+<div id="print-report"></div>
 </body>
 </html>

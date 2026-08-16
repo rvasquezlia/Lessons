@@ -35,6 +35,17 @@
     <h1>Multi-Step Decimal Word Problems</h1>
   </header>
 
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Math 6 - Tuesday, Aug 18 - Multi-Step Decimal Word Problems')">🖨️ Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Go through the four tabs below in order. Type your own answer before clicking Check - you get a hint if you're wrong, and the full method if you're wrong twice. Tab 3 ends with a partner discussion, and Tab 4 is your Exit Ticket. Finish by typing your name above and clicking <strong>Print My Progress</strong> for your Google Classroom submission.
+  </div>
+
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('warmup')">1. Warm-Up &amp; Keyword Clues</button>
     <button class="tab-btn" onclick="switchTab('problems')">2. Word Problem Practice</button>
@@ -46,6 +57,11 @@
   <div id="warmup" class="panel active">
     <div class="section-title">Warm-Up: Reading Word Problems</div>
     <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Tuesday, August 18, 2026 &middot; 90 min (Double Period) &middot; CCSS.Math.Content.6.NS.B.3 &amp; MP1: Make Sense of Problems and Persevere in Solving Them</p>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Copy the keyword list into your notebook - you'll use it all class. Then read the flour problem, type how much flour is needed, and click Check Your Thinking.
+    </div>
 
     <div class="explainer-box">
       Today's lesson is <strong>self-led</strong>: work through each section at your own pace. Every word problem below follows the same two-step routine: <strong>estimate first</strong> by rounding, then <strong>calculate the exact answer</strong> and compare it to your estimate. If your exact answer isn't close to your estimate, go back and check your work.
@@ -76,6 +92,10 @@
   <!-- PANEL 2: WORD PROBLEM PRACTICE CAROUSEL -->
   <div id="problems" class="panel">
     <div class="section-title">Word Problem Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      This is a worked-example carousel, not a check-your-own-work activity: for each of the 6 problems, try to solve it on paper first, then click <strong>Next Step</strong> to reveal the estimate, then the exact calculation, then the final answer - and compare it to what you got. Use the dots or the arrows to move between problems.
+    </div>
     <p>Work through each problem on your own. Click <strong>Next Step</strong> to reveal the estimate, then the exact calculation, then the final answer with a reasonableness check.</p>
 
     <div class="carousel-card">
@@ -102,6 +122,10 @@
   <!-- PANEL 3: INDEPENDENT PRACTICE -->
   <div id="independent" class="panel">
     <div class="section-title">Independent Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Since today is a double period, this is extra practice. Solve each problem on paper first, then type your answer in the box and click Check for each of the 6 items below. When you're done, do the Peer Review box with a partner.
+    </div>
     <p>Since today is a double period, here is extra practice. Solve each problem on paper, then click to check your answer.</p>
 
     <div class="challenge-box">
@@ -124,6 +148,10 @@
   <!-- PANEL 4: EXIT TICKET -->
   <div id="exitticket" class="panel">
     <div class="section-title">Exit Ticket &amp; Metacognitive Log</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Answer all three reflection questions in full sentences, then click Submit Exit Ticket. Last step: type your name in the blue bar at the top of the page and click Print My Progress.
+    </div>
 
     <form id="exit-form" onsubmit="submitExitTicket(event)">
       <div class="form-group">
@@ -173,7 +201,7 @@
       correct: "Correct! \"Batches\" of the same amount means equal groups, so this is multiplication: \\(2.5 \\times 4 = \\mathbf{10}\\) cups of flour.",
       retry: "Not quite yet. Look at the keyword \"batches\" - does that mean equal groups (multiplication), a total (addition), or a difference (subtraction)?",
       reveal: "Here's the correct procedure: \"batches\" of the same amount means equal groups, so this is multiplication: \\(2.5 \\times 4 = \\mathbf{10}\\) cups of flour."
-    });
+    }, { label: 'Warm-Up: recipe flour (keyword spotting)', answer: `${val} cups` });
   }
 
   // ==========================================
@@ -348,7 +376,7 @@
       correct: `Correct! ${p.work}`,
       retry: "Not quite yet. Review your work and try again.",
       reveal: `Here's the correct procedure: ${p.work}`
-    });
+    }, { label: `Independent Practice: ${p.q.replace(/<[^>]+>/g, '').replace(/\\\(|\\\)/g, '')}`, answer: val });
   }
 
   // Exit Ticket Submission
@@ -362,6 +390,9 @@
     if (a1.length > 5 && a2.length > 5 && a3.length > 5) {
       fb.className = "feedback-msg success";
       fb.innerText = "Exit Ticket submitted and logged successfully!";
+      LessonProgress.recordText('Exit Ticket: most challenging problem', a1);
+      LessonProgress.recordText('Exit Ticket: estimate vs exact', a2);
+      LessonProgress.recordText('Exit Ticket: metacognition reflection', a3);
     } else {
       fb.className = "feedback-msg error";
       fb.innerText = "Please write a complete answer for all three questions.";
@@ -373,5 +404,6 @@
   renderWordProblemCarousel();
   renderIndependentPractice();
 </script>
+<div id="print-report"></div>
 </body>
 </html>

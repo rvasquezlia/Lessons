@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Q01W02 Teacher Guide - Pacing, Answer Key &amp; Challenge Bank</title>
+
+  <!-- Montserrat Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <style>
+    .pacing-table td:nth-child(2), .pacing-table th:nth-child(2) { text-align: center; white-space: nowrap; }
+    .flag-box {
+      background: #fff1f2;
+      border: 3px solid #fb7185;
+      border-left: 10px solid #e11d48;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .flag-box h4 { margin-top: 0; color: #be123c; }
+    .answer-day-heading {
+      background: var(--primary);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 28px 0 12px 0;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .challenge-day-heading {
+      background: #b45309;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 28px 0 12px 0;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .solution-toggle > summary {
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--primary);
+      padding: 4px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <span class="badge">Q01W02 - Teacher Guide</span>
+    <h1>Teacher Guide: Add, Subtract, and Multiply Decimals</h1>
+    <p class="subtitle">Pacing, Answer Key, and Challenge Bank for Monday-Friday</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">This page is for you, not students</strong>
+    It is not linked from the student pages and has no student-facing print button. Use the tabs below for the week-at-a-glance, a minute-by-minute pacing table for every day, a full answer key for every practice item across all five student pages, a bank of harder enrichment problems for early finishers, and a short list of places where the built lesson pages and the written weekly plan don't quite line up.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('overview')">1. Week Overview</button>
+    <button class="tab-btn" onclick="switchTab('pacing')">2. Daily Pacing</button>
+    <button class="tab-btn" onclick="switchTab('answerkey')">3. Answer Key</button>
+    <button class="tab-btn" onclick="switchTab('challenge')">4. Challenge Bank</button>
+    <button class="tab-btn" onclick="switchTab('flags')">5. Plan Alignment Notes</button>
+  </nav>
+
+  <!-- PANEL 1: WEEK OVERVIEW -->
+  <div id="overview" class="panel active">
+    <div class="section-title">Week Overview: Q01W02, August 17-21, 2026</div>
+
+    <div class="explainer-box">
+      <strong>Lesson 1.2 - Add, Subtract, and Multiply Decimals.</strong> This is the first content week after Welcome Week (Q01W01). Every day reuses the same standard-algorithm foundation: line up decimal points for addition/subtraction, count total decimal places for multiplication, and always estimate by rounding before calculating exactly.
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Day</th><th>Format</th><th>Focus</th><th>Standards</th></tr></thead>
+      <tbody>
+        <tr><td>Monday</td><td>45 min</td><td>Place value, addition/subtraction, and multiplication algorithms (direct instruction)</td><td>6.NS.B.3, MP6</td></tr>
+        <tr><td>Tuesday</td><td>90 min (double)</td><td>Multi-step decimal word problems, keyword analysis</td><td>6.NS.B.3, MP1</td></tr>
+        <tr><td>Wednesday</td><td>90 min (double)</td><td>Error analysis, IXL digital practice, health science application</td><td>6.NS.B.3, MP6</td></tr>
+        <tr><td>Thursday</td><td>45 min</td><td>Pre-assessment review stations, group work, gallery walk</td><td>6.NS.B.3, MP1</td></tr>
+        <tr><td>Friday</td><td>45 min</td><td>Graded Classwork (paper assessment) + digital warm-up/reflection</td><td>6.NS.B.3, MP6</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Weekly Objectives (from the Math 6 Lesson Plan)</div>
+      <ul>
+        <li>Explain the place-value reasoning behind aligning decimal points for addition/subtraction versus counting total decimal digits for multiplication.</li>
+        <li>Calculate multi-digit decimal sums, differences, and products using standard algorithms.</li>
+        <li>Use rounding strategies to estimate answers and confirm calculated results.</li>
+        <li>Interpret contextual word problems to determine which operation is required.</li>
+        <li>Evaluate solutions by rounding to find approximate values and confirm problem resolutions.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Materials Needed</div>
+      <ul>
+        <li><strong>Monday:</strong> whiteboard/projector for the whole-class Whiteboard Suite tab; one device per student (or pairs) for the rest.</li>
+        <li><strong>Tuesday &amp; Wednesday (double periods):</strong> one device per student; IXL login for Wednesday's Tab 2.</li>
+        <li><strong>Thursday:</strong> student groups pre-assigned; chart paper and markers for the Gallery Walk.</li>
+        <li><strong>Friday:</strong> printed paper assessment + answer key (see the Practice Set PDF's Friday section), plus devices for the optional warm-up/reflection tabs.</li>
+        <li><strong>Every day:</strong> printer or "print to PDF" access so students can submit their Print My Progress page to Google Classroom.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PANEL 2: DAILY PACING -->
+  <div id="pacing" class="panel">
+    <div class="section-title">Daily Pacing (Minute-by-Minute)</div>
+    <p>These tables add up to exactly 45 or 90 minutes. Adjust freely for your class - they're a starting script, not a rule.</p>
+
+    <div class="answer-day-heading">Monday - 45 minutes</div>
+    <table class="data-table pacing-table">
+      <thead><tr><th>Activity (student page tab)</th><th>Min</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td>Warm-Up: Place Value &amp; Rounding (Tab 1)</td><td>8</td><td>Students copy the notebook box and click through the place-value chart. Cold-call 2-3 students on what a column means.</td></tr>
+        <tr><td>Direct Instruction: Addition &amp; Subtraction (Tab 2)</td><td>12</td><td>Model the carousel's 4 worked examples on the projector, then release students to the Marcus word problem and the Challenge Problem.</td></tr>
+        <tr><td>Guided Practice: Multiplication Algorithm (Tab 3)</td><td>12</td><td>Model 1-2 carousel examples, then let students work the shift simulator, the carpet word problem, and the Challenge Problem.</td></tr>
+        <tr><td>Teacher Verification: Whiteboard Suite (Tab 4)</td><td>8</td><td>Call volunteers to solve at the board (or have all students do it at their seats) using the 4 preset problems.</td></tr>
+        <tr><td>Closing: Exit Ticket (Tab 6)</td><td>5</td><td>Students complete and submit the exit ticket, then print their progress page.</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.9rem; color:#64748b;"><em>Tab 5 (Weekly Practice Set) doesn't fit in the 45-minute period above - assign it as homework or independent/early-finisher work. See Plan Alignment Notes.</em></p>
+
+    <div class="answer-day-heading">Tuesday - 90 minutes (Double Period)</div>
+    <table class="data-table pacing-table">
+      <thead><tr><th>Activity (student page tab)</th><th>Min</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td>Warm-Up &amp; Keyword Clues (Tab 1)</td><td>15</td><td>Copy the keyword table into notebooks, then try the flour "batches" problem independently.</td></tr>
+        <tr><td>Word Problem Practice carousel (Tab 2)</td><td>30</td><td>Model 2-3 of the 6 problems together, then let students work through the rest at their own pace, revealing steps to self-check.</td></tr>
+        <tr><td>Independent Practice + Peer Review (Tab 3)</td><td>30</td><td>Students solve all 6 quick-practice items on their own, then pair up for the Peer Review closing box.</td></tr>
+        <tr><td>Closing: Exit Ticket (Tab 4)</td><td>15</td><td>Students complete the 3-question exit ticket and print their progress page.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Wednesday - 90 minutes (Double Period)</div>
+    <table class="data-table pacing-table">
+      <thead><tr><th>Activity (student page tab)</th><th>Min</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td>Error Analysis Warm-Up (Tab 1)</td><td>20</td><td>Students act as the teacher on all 5 problems, verdict + corrected answer.</td></tr>
+        <tr><td>IXL Practice (Tab 2)</td><td>40</td><td>Students log into IXL and complete the 9 listed skills. Pull small groups for table check-ins as noted on the tab.</td></tr>
+        <tr><td>Health Science Application (Tab 3)</td><td>20</td><td>Students compute the 4 nutrient totals for 2.5 bars and check their work.</td></tr>
+        <tr><td>Closing: Exit Ticket (Tab 4)</td><td>10</td><td>Students complete the 2-question exit ticket and print their progress page.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Thursday - 45 minutes</div>
+    <table class="data-table pacing-table">
+      <thead><tr><th>Activity (student page tab)</th><th>Min</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td>Station 1: Race Splits</td><td>10</td><td>Groups rotate in; explain the rotation and group roles here.</td></tr>
+        <tr><td>Station 2: River Gauges</td><td>8</td><td>Groups rotate.</td></tr>
+        <tr><td>Station 3: Speed Sprint</td><td>8</td><td>Groups rotate through all 10 quick problems.</td></tr>
+        <tr><td>Station 4: Peer Review &amp; Defense</td><td>9</td><td>Groups rotate; this is the last station.</td></tr>
+        <tr><td>Wrap-Up: Gallery Walk + Checklist + Reflection</td><td>10</td><td>Groups post one problem on chart paper, walk the room, then complete the checklist/reflection and print their progress page.</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.9rem; color:#64748b;"><em>The written Plan calls the Speed &amp; Precision Sprint the day's "Warm-Up," but it's Station 3 on the built page, not the first station. See Plan Alignment Notes before deciding whether to reorder the rotation.</em></p>
+
+    <div class="answer-day-heading">Friday - 45 minutes</div>
+    <table class="data-table pacing-table">
+      <thead><tr><th>Activity</th><th>Min</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td>Strategy Checklist warm-up (Tab 1)</td><td>5</td><td>Students review the checklist, then put devices away.</td></tr>
+        <tr><td>Graded Classwork (paper test)</td><td>30</td><td>Administer the printed Friday assessment from the Practice Set PDF (pages 13-15). This is not a tab on the student page.</td></tr>
+        <tr><td>Closing: Post-Assessment Reflection (Tab 5)</td><td>10</td><td>Students turn in the paper test, then complete the digital reflection and print their progress page.</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.9rem; color:#64748b;"><em>Tabs 2-4 (Fluency, Word Problems, Reasonableness Check) are not part of the 45-minute class period - assign them as a study tool the night before, or as early-finisher work after the test is collected.</em></p>
+  </div>
+
+  <!-- PANEL 3: ANSWER KEY -->
+  <div id="answerkey" class="panel">
+    <div class="section-title">Answer Key: Every Practice Item, All Five Days</div>
+    <p>Matches the answers already built into each page's Check My Work logic, plus the printed worksheet problems reproduced on Monday's Weekly Practice Set tab.</p>
+
+    <div class="answer-day-heading">Monday</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Addition Challenge (find X)</td><td>\(X = 4\); \(14.45 + 3.20 = 17.65\)</td></tr>
+        <tr><td>Multiplication Challenge (garden seed cost)</td><td>Area \(=17.6\text{ m}^2\); total cost \(= \mathbf{\$26.40}\)</td></tr>
+        <tr><td>Whiteboard Prob 1: \(\$15.75+\$4.80\)</td><td>\(\mathbf{\$20.55}\)</td></tr>
+        <tr><td>Whiteboard Prob 2: \(\$20.00-\$13.45\)</td><td>\(\mathbf{\$6.55}\)</td></tr>
+        <tr><td>Whiteboard Prob 3: \(2.45\text{ g}\times3.2\text{ mL}\)</td><td>partials 0490 + 7350 = 7840; 3 decimal places \(\to \mathbf{7.840}\)</td></tr>
+        <tr><td>Whiteboard Prob 4: \(12.35\text{s}+2.40\text{s}\)</td><td>\(\mathbf{14.75\text{s}}\)</td></tr>
+        <tr><td>Practice Set Part 1 #1: \(14.52+3.8\)</td><td>\(\mathbf{18.32}\)</td></tr>
+        <tr><td>Practice Set Part 1 #2: \(25.9-7.43\)</td><td>\(\mathbf{18.47}\)</td></tr>
+        <tr><td>Practice Set Part 1 #3: \(4.2\times0.15\)</td><td>\(\mathbf{0.63}\) (alignment not needed - multiplication counts total decimal places, not matching place values)</td></tr>
+        <tr><td>Practice Set Part 2 #1: \(12.75+8.6\)</td><td>\(\mathbf{21.35}\)</td></tr>
+        <tr><td>Practice Set Part 2 #2: \(40.2-15.84\)</td><td>\(\mathbf{24.36}\)</td></tr>
+        <tr><td>Practice Set Part 2 #3: \(3.5\times2.4\)</td><td>\(\mathbf{8.4}\)</td></tr>
+        <tr><td>Practice Set Part 2 #4: \(105.3+22.91\)</td><td>\(\mathbf{128.21}\)</td></tr>
+        <tr><td>Practice Set Part 2 #5: \(9.8\times0.07\)</td><td>\(\mathbf{0.686}\)</td></tr>
+        <tr><td>Practice Set Part 2 #6: \(50.0-12.35\)</td><td>\(\mathbf{37.65}\)</td></tr>
+        <tr><td>Practice Set Part 3: Financial Literacy</td><td>Subtotal \(=\mathbf{\$24.09}\); Total \(=\mathbf{\$25.77}\); Change \(=\mathbf{\$24.23}\)</td></tr>
+        <tr><td>Exit Ticket: \(3.5+1.25\)</td><td>\(\mathbf{4.75}\)</td></tr>
+        <tr><td>Exit Ticket: \(3.5\times1.25\)</td><td>\(\mathbf{4.375}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tuesday</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Warm-Up: recipe flour (\(2.5\times4\))</td><td>\(\mathbf{10}\) cups</td></tr>
+        <tr><td>Word Problem 1: Road Trip</td><td>\(\mathbf{\$67.50}\)</td></tr>
+        <tr><td>Word Problem 2: Precipitation</td><td>\(\mathbf{4.93}\) inches</td></tr>
+        <tr><td>Word Problem 3: School Supplies Budget</td><td>\(\mathbf{-\$6.25}\) (over budget)</td></tr>
+        <tr><td>Word Problem 4: Farmer's Market Profit</td><td>\(\mathbf{\$45.50}\)</td></tr>
+        <tr><td>Word Problem 5: Sports Equipment Sale</td><td>\(\mathbf{\$67.72}\)</td></tr>
+        <tr><td>Word Problem 6: Mountain Elevation</td><td>\(\mathbf{1478.95}\) meters</td></tr>
+        <tr><td>Quick Practice 1: \(18.6+9.75\)</td><td>\(\mathbf{28.35}\)</td></tr>
+        <tr><td>Quick Practice 2: \(62.4-18.79\)</td><td>\(\mathbf{43.61}\)</td></tr>
+        <tr><td>Quick Practice 3: \(7.5\times3.2\)</td><td>\(\mathbf{24}\)</td></tr>
+        <tr><td>Quick Practice 4: \(0.6\times4.25\)</td><td>\(\mathbf{2.55}\)</td></tr>
+        <tr><td>Word Practice 5: \(3\) books at \(\$12.99\)</td><td>\(\mathbf{\$38.97}\)</td></tr>
+        <tr><td>Word Practice 6: \(\$25.00-\$8.45\)</td><td>\(\mathbf{\$16.55}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Wednesday</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Error Analysis 1: \(15.4-2.65\)</td><td>Correct, no mistake: \(\mathbf{12.75}\)</td></tr>
+        <tr><td>Error Analysis 2: \(4.2\times0.3\)</td><td>Mistake (shifted 1 place, not 2); correct \(=\mathbf{1.26}\)</td></tr>
+        <tr><td>Error Analysis 3: \(8.05+12.1\)</td><td>Mistake (decimals not aligned); correct \(=\mathbf{20.15}\)</td></tr>
+        <tr><td>Error Analysis 4: \(6.25+3.4\)</td><td>Mistake (misaligned 3.4 as 0.34); correct \(=\mathbf{9.65}\)</td></tr>
+        <tr><td>Error Analysis 5: \(5.1\times2.03\)</td><td>Mistake (shifted 2 places, not 3); correct \(=\mathbf{10.353}\)</td></tr>
+        <tr><td>Health Science: Total Fat (2.5 bars)</td><td>\(\mathbf{10.625}\) g</td></tr>
+        <tr><td>Health Science: Protein (2.5 bars)</td><td>\(\mathbf{22.875}\) g</td></tr>
+        <tr><td>Health Science: Carbohydrates (2.5 bars)</td><td>\(\mathbf{71.0}\) g</td></tr>
+        <tr><td>Health Science: Fiber (2.5 bars)</td><td>\(\mathbf{9.5}\) g</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Thursday</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Station 1: total relay time</td><td>\(\mathbf{47.90}\) seconds</td></tr>
+        <tr><td>Station 1: fastest/slowest difference</td><td>\(\mathbf{0.91}\) seconds</td></tr>
+        <tr><td>Station 2: final gauge reading</td><td>\(\mathbf{4.235}\) meters</td></tr>
+        <tr><td>Station 3 #1: \(4.5\times0.3\)</td><td>\(\mathbf{1.35}\)</td></tr>
+        <tr><td>Station 3 #2: \(0.12\times0.6\)</td><td>\(\mathbf{0.072}\)</td></tr>
+        <tr><td>Station 3 #3: \(1.5\times1.5\)</td><td>\(\mathbf{2.25}\)</td></tr>
+        <tr><td>Station 3 #4: \(0.08\times0.9\)</td><td>\(\mathbf{0.072}\)</td></tr>
+        <tr><td>Station 3 #5: \(7.3\times1.1\)</td><td>\(\mathbf{8.03}\)</td></tr>
+        <tr><td>Station 3 #6: \(12.2\times0.04\)</td><td>\(\mathbf{0.488}\)</td></tr>
+        <tr><td>Station 3 #7: \(0.5\times0.5\)</td><td>\(\mathbf{0.25}\)</td></tr>
+        <tr><td>Station 3 #8: \(9.1\times0.2\)</td><td>\(\mathbf{1.82}\)</td></tr>
+        <tr><td>Station 3 #9: \(2.5\times4.2\)</td><td>\(\mathbf{10.5}\)</td></tr>
+        <tr><td>Station 3 #10: \(0.006\times0.7\)</td><td>\(\mathbf{0.0042}\)</td></tr>
+        <tr><td>Station 4: \(15.75\times2.4\) (correcting the "3.78" error)</td><td>\(\mathbf{37.8}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Friday</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Fluency 1: \(36.4+18.75\)</td><td>\(\mathbf{55.15}\)</td></tr>
+        <tr><td>Fluency 2: \(92.6+7.38\)</td><td>\(\mathbf{99.98}\)</td></tr>
+        <tr><td>Fluency 3: \(75.3-29.46\)</td><td>\(\mathbf{45.84}\)</td></tr>
+        <tr><td>Fluency 4: \(150-32.85\)</td><td>\(\mathbf{117.15}\)</td></tr>
+        <tr><td>Fluency 5: \(5.6\times2.3\)</td><td>\(\mathbf{12.88}\)</td></tr>
+        <tr><td>Fluency 6: \(0.45\times3.2\)</td><td>\(\mathbf{1.44}\)</td></tr>
+        <tr><td>Fluency 7: \(8.2\times0.15\)</td><td>\(\mathbf{1.23}\)</td></tr>
+        <tr><td>Fluency 8: \(4.75\times6\)</td><td>\(\mathbf{28.5}\)</td></tr>
+        <tr><td>Word Problem 1: IV Solution (A / B)</td><td>\(\mathbf{176.25}\) mL / \(\mathbf{528.75}\) mL</td></tr>
+        <tr><td>Word Problem 2: Rainfall (A / B)</td><td>\(\mathbf{70.55}\) in / \(\mathbf{74.05}\) in</td></tr>
+        <tr><td>Word Problem 3: Diego's Supplies (A / B)</td><td>\(\mathbf{\$37.99}\) / \(\mathbf{\$47.01}\)</td></tr>
+        <tr><td>Reasonableness Check: \(8.4\times3.05\)</td><td>Estimate \(\approx24\); exact \(=\mathbf{25.62}\) - IS reasonable</td></tr>
+      </tbody>
+    </table>
+
+    <div class="flag-box">
+      <h4>Friday's actual graded test</h4>
+      <p style="margin:0;">The paper assessment answer key (Section 1-3, 10 problems) is in the uploaded Practice Set PDF, pages 16-19. It is intentionally <strong>not</strong> reproduced on the student-facing pages or here, so students can't look it up before or during the test.</p>
+    </div>
+  </div>
+
+  <!-- PANEL 4: CHALLENGE BANK -->
+  <div id="challenge" class="panel">
+    <div class="section-title">Challenge Bank: One Level Harder</div>
+    <p>Extra problems for early finishers or homework extension. Each is a step above that day's practice - more decimal places, chained multi-step reasoning, or (where CCSS.6.NS.B.3 also calls for it) a first light touch of decimal division. Click a problem to reveal its full solution.</p>
+
+    <div class="challenge-day-heading">Monday - Decimal Operations, Harder Tier</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Compute \(124.5 \times 0.036\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Multiply as whole numbers: \(1245 \times 36 = 44{,}820\). Total decimal places: \(1 + 3 = 4\). Shift 4 places left: \(44820 \rightarrow \mathbf{4.482}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> A lab tech mixes three solutions: \(12.075\) L, \(8.4\) L, and \(0.925\) L. She splits the total evenly into 4 containers. How many liters go in each container?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Total \(= 12.075 + 8.4 + 0.925 = 21.4\) L. Divide evenly: \(21.4 \div 4 = \mathbf{5.35}\) L per container.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> Find the missing digits \(A\) and \(B\): \(A7.B \times 4 = 110.8\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(A7.B = 110.8 \div 4 = 27.7\). So \(A = \mathbf{2}\) and \(B = \mathbf{7}\).</p>
+      </details>
+    </div>
+
+    <div class="challenge-day-heading">Tuesday - Multi-Step Word Problems, Harder Tier</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> A caterer buys \(15.5\) lbs of chicken at \(\$3.40\)/lb and \(8.25\) lbs of beef at \(\$5.60\)/lb, then pays a \(\$12.50\) delivery fee. She splits the total cost evenly across 4 event budgets. How much does each budget pay?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Chicken \(= 15.5 \times 3.40 = \$52.70\). Beef \(= 8.25 \times 5.60 = \$46.20\). Subtotal \(= 52.70+46.20=\$98.90\). Plus delivery: \(98.90+12.50=\$111.40\). Split 4 ways: \(111.40 \div 4 = \mathbf{\$27.85}\) per budget.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> A runner's 4 lap times are \(68.45\)s, \(71.2\)s, \(69.85\)s, and \(70.5\)s. What was her average lap time?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Total \(= 68.45+71.2+69.85+70.5=280.0\)s. Average \(= 280.0 \div 4 = \mathbf{70.0}\)s per lap.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> A store buys 24 phone cases at \(\$4.25\) each and sells them at \(\$9.99\) each. What is the total profit?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Cost \(= 24 \times 4.25 = \$102.00\). Revenue \(= 24 \times 9.99 = \$239.76\). Profit \(= 239.76-102.00 = \mathbf{\$137.76}\).</p>
+      </details>
+    </div>
+
+    <div class="challenge-day-heading">Wednesday - Error Analysis &amp; Health Science, Harder Tier</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> A student computed \(23.4 - 5.68 + 1.2\) and got \(30.28\). Find the mistake and the correct answer.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p><strong>Mistake:</strong> the student added \(5.68\) instead of subtracting it. <strong>Correct:</strong> \(23.4-5.68=17.72\); \(17.72+1.2=\mathbf{18.92}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> A student eats \(1.5\) bars of Snack A (\(5.2\) g fat/bar) and \(2\) bars of Snack B (\(3.75\) g fat/bar). What is the total fat?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Snack A: \(1.5 \times 5.2 = 7.8\) g. Snack B: \(2 \times 3.75 = 7.5\) g. Total \(= 7.8+7.5 = \mathbf{15.3}\) g.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> A student computed \(0.25 \times 0.4\) and got \(1.0\). Find the mistake and the correct answer.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p><strong>Mistake:</strong> \(0.25\) has 2 decimal places and \(0.4\) has 1, so the product needs 3 decimal places - the student only shifted 1. <strong>Correct:</strong> \(25 \times 4 = 100\), shift 3 places: \(\mathbf{0.100 = 0.1}\).</p>
+      </details>
+    </div>
+
+    <div class="challenge-day-heading">Thursday - Speed &amp; Estimation, Harder Tier</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Compute \(0.045 \times 3.2\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(45 \times 32 = 1440\). Total decimal places: \(3+1=4\). Shift: \(\mathbf{0.144}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> A cyclist rides \(42.5\) km in \(1.25\) hours. What is her average speed in km/h?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(42.5 \div 1.25 = \mathbf{34}\) km/h.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> Compute \(0.008 \times 1.5\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(8 \times 15 = 120\). Total decimal places: \(3+1=4\). Shift: \(\mathbf{0.012}\).</p>
+      </details>
+    </div>
+
+    <div class="challenge-day-heading">Friday - Enrichment for Early Finishers</div>
+    <p style="font-size:0.9rem; color:#64748b;"><em>These are original problems, unrelated to the graded assessment, safe to hand out to students who finish the paper test early.</em></p>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> A biologist records 3 measurements: \(45.125\) mm, \(38.75\) mm, and \(52.6\) mm. Find the range (largest minus smallest).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(52.6 - 45.125 = \mathbf{7.475}\) mm.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> Compute \(212.5 \times 0.048\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(2125 \times 48 = 102{,}000\). Total decimal places: \(1+3=4\). Shift: \(\mathbf{10.2}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> A charity raised \(\$145.60\) on day 1, then \(1.5\) times that amount on day 2. What was the two-day total?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Day 2 \(= 145.60 \times 1.5 = \$218.40\). Total \(= 145.60+218.40 = \mathbf{\$364.00}\).</p>
+      </details>
+    </div>
+  </div>
+
+  <!-- PANEL 5: PLAN ALIGNMENT NOTES -->
+  <div id="flags" class="panel">
+    <div class="section-title">Plan Alignment Notes</div>
+    <p>Three places where the built student pages and the written weekly plan don't perfectly line up. None of these are broken - they're judgment calls I made that you may want to confirm or override.</p>
+
+    <div class="flag-box">
+      <h4>1. Monday's Weekly Practice Set doesn't fit in 45 minutes</h4>
+      <p>The printed worksheet (now digitized as Monday Tab 5) adds up to roughly 10-15 more minutes than the 45-minute period has room for once Tabs 1-4 and 6 are taught. I've treated Tab 5 as homework or independent/early-finisher work in the pacing table. If you'd rather it happen in class, something else on Monday needs to be trimmed or moved to a different day.</p>
+    </div>
+
+    <div class="flag-box">
+      <h4>2. Thursday's Speed Sprint is Station 3, not the opening warm-up</h4>
+      <p>The written plan calls the "Speed &amp; Precision Sprint" the day's warm-up (i.e., first activity), but the built page has Race Splits as Station 1 and Speed Sprint as Station 3. If you want the page to match the plan's stated order, the two station tabs can be swapped - let me know and I'll make that change.</p>
+    </div>
+
+    <div class="flag-box">
+      <h4>3. Wednesday's Health Science tab isn't named in the plan's activity list</h4>
+      <p>The plan's Real-life Application section for Wednesday references a health/nutrition scenario, but the plan's step-by-step Activities list only mentions Error Analysis, IXL, and the small-group teacher table - it doesn't explicitly schedule time for a separate Health Science activity. I gave it 20 minutes in the pacing table since the content is already built and directly supports the stated real-life application, but confirm that's the intended use of time versus, say, more IXL time.</p>
+    </div>
+
+    <div class="flag-box">
+      <h4>Also worth knowing: the source Plan PDF's own header is inconsistent</h4>
+      <p>The uploaded weekly plan document labels this week "Q01W01 - Welcome Week, August 17-21, <strong>2025</strong>" inside its own text, even though the folder, the lesson content, and the actual calendar (Aug 17, 2026 is a Monday) all point to this being <strong>Q01W02</strong> in the <strong>2026-2027</strong> school year, and the content is clearly Lesson 1.2 rather than a welcome/orientation week. I trusted the calendar and content over that header label when I fixed the "Q01W01" badges on the student pages earlier - if your master planning document still has that "Q01W01 / Welcome week / 2025" header, it's worth correcting at the source too.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+</script>
+</body>
+</html>

@@ -63,6 +63,84 @@ header {
 h1 { margin: 8px 0; font-size: 2.3rem; font-weight: 800; }
 p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
 
+/* Print-progress utility bar (name field + print button), shown under the header */
+.progress-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #1e293b;
+  color: white;
+  padding: 12px 24px;
+}
+
+.progress-bar label {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.progress-bar input {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 2px solid #475569;
+  font-size: 0.95rem;
+  font-family: 'Montserrat', sans-serif;
+  min-width: 220px;
+}
+
+.progress-bar .btn-print {
+  background: var(--accent);
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.progress-bar .btn-print:hover { background: #b45309; color: white; }
+
+/* Human-readable "what to do" callout at the top of each panel */
+.howto-box {
+  background: #ecfdf5;
+  border: 2px solid #6ee7b7;
+  border-left: 8px solid var(--success);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 22px;
+  font-size: 1.02rem;
+}
+
+.howto-box strong.howto-label {
+  display: block;
+  color: var(--success);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+}
+
+/* Printable progress report - hidden on screen, shown only when printing */
+#print-report { display: none; }
+
+@media print {
+  body > *:not(#print-report) { display: none !important; }
+  #print-report {
+    display: block !important;
+    font-family: 'Montserrat', sans-serif;
+    color: #000;
+    padding: 20px;
+  }
+  #print-report h1 { font-size: 1.6rem; margin-bottom: 4px; }
+  #print-report .print-meta { font-size: 1rem; margin: 4px 0; }
+  .print-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+  .print-table th, .print-table td { border: 1px solid #000; padding: 8px 10px; text-align: left; font-size: 0.9rem; }
+  .print-table th { background: #e2e8f0; }
+  .print-footer { margin-top: 20px; font-size: 0.85rem; font-style: italic; color: #444; }
+}
+
 /* Navigation Tabs */
 .nav-tabs {
   display: flex;

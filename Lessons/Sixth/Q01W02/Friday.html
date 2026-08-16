@@ -35,6 +35,17 @@
     <h1>Graded Classwork: Decimal Operations</h1>
   </header>
 
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Math 6 - Friday, Aug 21 - Graded Classwork Warm-Up & Review')">🖨️ Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    This page is warm-up and review, not the test itself - your teacher hands you a paper test separately. Use Tabs 2-4 to warm up before or study after the assessment, then do your Reflection in Tab 5. This page's Print My Progress button captures your warm-up work, not your graded test.
+  </div>
+
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('info')">1. Today's Assessment</button>
     <button class="tab-btn" onclick="switchTab('fluency')">2. Warm-Up: Fluency</button>
@@ -75,6 +86,10 @@
   <!-- PANEL 2: FLUENCY WARM-UP -->
   <div id="fluency" class="panel">
     <div class="section-title">Warm-Up: Fluency &amp; Standard Algorithms</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Solve each of the 8 problems on paper first, then type your answer and click Check for each one.
+    </div>
     <p>These are new practice problems (not the actual assessment) to warm up your skills. Solve each on paper, then check your answer.</p>
     <div id="fluency-list"></div>
   </div>
@@ -82,6 +97,10 @@
   <!-- PANEL 3: WORD PROBLEM WARM-UP -->
   <div id="wordproblems" class="panel">
     <div class="section-title">Warm-Up: Multi-Step Word Problems</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      This is a worked-example carousel: try each problem on paper, then click <strong>Next Step</strong> to check your work against the solution. Use the dots or arrows to move through all 3 problems.
+    </div>
     <p>Work through each problem using the estimate-then-exact routine.</p>
 
     <div class="carousel-card">
@@ -106,6 +125,10 @@
   <!-- PANEL 4: REASONABLENESS CHECK PRACTICE -->
   <div id="reasonable" class="panel">
     <div class="section-title">Reasonableness Check Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Round each factor and estimate before you calculate anything exact. Type your estimate, explain whether \(25.62\) seems reasonable, and click Check My Work.
+    </div>
 
     <div class="step-box">
       <h3 style="margin-top:0; color:var(--primary);">Is This Answer Reasonable?</h3>
@@ -128,6 +151,10 @@
   <!-- PANEL 5: POST-ASSESSMENT REFLECTION -->
   <div id="reflection" class="panel">
     <div class="section-title">Post-Assessment Reflection</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Answer both questions about today's paper test, click Submit Reflection, then type your name in the blue bar at the top of the page and click Print My Progress to submit proof of this warm-up/review work.
+    </div>
 
     <form id="exit-form" onsubmit="submitExitTicket(event)">
       <div class="form-group">
@@ -206,7 +233,7 @@
       correct: `Correct! ${p.q} \\(= \\mathbf{${p.a}}\\)`,
       retry: "Not quite yet. Review your alignment/decimal placement and try again.",
       reveal: `Here's the correct procedure: ${p.q} \\(= \\mathbf{${p.a}}\\)`
-    });
+    }, { label: `Fluency #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val });
   }
 
   // ==========================================
@@ -313,7 +340,7 @@
       correct: "Nicely done! Estimate: 8 x 3 = 24, which is close to 25.62 - this time the answer IS reasonable. Exact check: 84 x 305 = 25,620, shift 3 decimal places: 8.4 x 3.05 = 25.62.",
       retry: "Not quite yet. Round each factor to the nearest whole number (8.4 -> 8 and 3.05 -> 3), multiply, and compare that estimate to 25.62. Write your explanation and try again.",
       reveal: "Here's the correct procedure: round each factor (\\(8.4 \\rightarrow 8\\), \\(3.05 \\rightarrow 3\\)), estimate \\(8 \\times 3 = \\mathbf{24}\\), which is close to \\(25.62\\) - so the answer IS reasonable. Exact check: \\(84 \\times 305 = 25{,}620\\), shift 3 decimal places: \\(8.4 \\times 3.05 = \\mathbf{25.62}\\)."
-    });
+    }, { label: 'Reasonableness Check: 8.4 x 3.05', answer: `Estimate=${estimate}, Explanation=${explain}` });
   }
 
   // Reflection Submission
@@ -326,6 +353,8 @@
     if (a1.length > 5 && a2.length > 5) {
       fb.className = "feedback-msg success";
       fb.innerText = "Reflection submitted and logged successfully! Great work this week.";
+      LessonProgress.recordText('Reflection: most challenging problem', a1);
+      LessonProgress.recordText('Reflection: how rounding helped', a2);
     } else {
       fb.className = "feedback-msg error";
       fb.innerText = "Please write a complete answer for both questions.";
@@ -337,5 +366,6 @@
   renderFluency();
   renderWordProblemCarousel();
 </script>
+<div id="print-report"></div>
 </body>
 </html>
