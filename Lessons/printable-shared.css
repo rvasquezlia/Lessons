@@ -124,6 +124,80 @@ h1 { margin: 8px 0; font-size: 2rem; font-weight: 800; }
 
 .answer-space.tall { min-height: 90px; }
 
+/* Formal graded-assessment elements (Graded Classwork printables) */
+.test-header-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 32px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+.test-header-fields span { border-bottom: 2px solid var(--border); padding: 2px 6px 4px 0; min-width: 200px; }
+.test-header-fields .score-field { min-width: 130px; margin-left: auto; }
+
+.instructions-box {
+  background: #eff6ff;
+  border: 2px solid #93c5fd;
+  border-left: 8px solid var(--primary-light);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 22px;
+  font-size: 0.98rem;
+}
+.instructions-box .instructions-label {
+  display: block;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.82rem;
+  margin-bottom: 8px;
+  font-weight: 800;
+}
+.instructions-box ul { margin: 8px 0 0 0; padding-left: 20px; }
+.instructions-box li { margin-bottom: 4px; }
+
+.section-points {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 0.95rem;
+  margin: -8px 0 14px 0;
+}
+
+.points-tag {
+  display: inline-block;
+  background: var(--primary-light);
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 20px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.extra-credit-box {
+  border: 3px solid var(--accent);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-top: 30px;
+  background: #fffbeb;
+}
+.extra-credit-box .ec-heading {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.85rem;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
 .btn-print {
   background: var(--accent);
   color: #000;
