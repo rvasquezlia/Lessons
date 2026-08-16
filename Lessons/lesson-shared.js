@@ -69,7 +69,7 @@ const LessonCheck = (() => {
       feedbackEl.className = 'feedback-msg success';
       feedbackEl.innerHTML = messages.correct;
     } else if (outcome === 'reveal' || outcome === 'locked') {
-      feedbackEl.className = 'feedback-msg error';
+      feedbackEl.className = 'feedback-msg error' + (outcome === 'locked' ? ' locked' : '');
       feedbackEl.innerHTML = messages.reveal;
     } else {
       feedbackEl.className = 'feedback-msg error';
