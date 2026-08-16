@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Lessons 1-2 & 1-3 - Equation Classification</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <span class="badge">Q01W02 - Practice</span>
+    <h1>One Solution, No Solution, or Infinitely Many?</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Algebra I - Wednesday, Aug 19 - Equation Classification')">🖨️ Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Tab 1 is a quick warm-up. Tab 2 is your small-group Classification Challenge - your teacher will hand out physical cards; predict each equation's outcome, then verify and type your answer here. Tab 3 connects classification to a real comparison. Tab 4 is IXL. Finish on Tab 5, then print your progress.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('warmup')">1. Warm-Up</button>
+    <button class="tab-btn" onclick="switchTab('classify')">2. Classification Challenge</button>
+    <button class="tab-btn" onclick="switchTab('comparison')">3. Comparison Scenario</button>
+    <button class="tab-btn" onclick="switchTab('ixl')">4. IXL Practice</button>
+    <button class="tab-btn" onclick="switchTab('exitticket')">5. Exit Ticket</button>
+  </nav>
+
+  <!-- TAB 1: WARM-UP -->
+  <div id="warmup" class="panel active">
+    <div class="section-title">Mixed-Equation Warm-Up</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Wednesday, August 19, 2026 &middot; 45 min &middot; HSA.REI.B.3 &amp; MP.7: Look for and Make Use of Structure</p>
+
+    <div class="explainer-box">
+      Today you'll analyze the <em>structure</em> of an equation rather than just computing an answer. Warm up first with two standard equations.
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>1.</strong> \(5x - 8 = 22\)
+      <div style="margin-top:10px;">
+        <input type="text" id="wu-0-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="x =">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkWarmup(0)">Check</button>
+      </div>
+      <div id="wu-0-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>2.</strong> \(3x + 4 = -2x + 24\)
+      <div style="margin-top:10px;">
+        <input type="text" id="wu-1-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="x =">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkWarmup(1)">Check</button>
+      </div>
+      <div id="wu-1-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: CLASSIFICATION CHALLENGE -->
+  <div id="classify" class="panel">
+    <div class="section-title">Concrete Scenario: Equation Classification Challenge</div>
+    <div class="explainer-box">
+      A false statement like \(6 = 7\) means <strong>no solution</strong>. A true statement like \(4 = 4\) means <strong>infinitely many solutions</strong>. Anything else simplifies to exactly <strong>one solution</strong>.
+    </div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      With your group, predict each equation's classification first, then solve to verify. Select a classification, and if it has one solution, also enter the value of x.
+    </div>
+    <div id="classify-list"></div>
+  </div>
+
+  <!-- TAB 3: COMPARISON SCENARIO -->
+  <div id="comparison" class="panel">
+    <div class="section-title">Real-Life Application: Comparison Scenario</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Set up an equation for each situation, classify it, and explain what the classification means in context.
+    </div>
+
+    <div class="step-box">
+      <h3 style="margin-top:0; color:var(--primary);">Two Savings Plans</h3>
+      <p>Friend 1 starts with \(\$50\) and saves \(\$10\) per week: total after \(x\) weeks is \(50 + 10x\). Friend 2 starts with \(\$80\) and also saves \(\$10\) per week: total after \(x\) weeks is \(80 + 10x\).</p>
+      <p><strong>Task:</strong> set \(50 + 10x = 80 + 10x\) and classify it. What does that classification mean for these two friends' savings?</p>
+
+      <div class="form-group">
+        <label>Classification:</label>
+        <select id="comp1-verdict" class="form-control-lg" style="max-width:280px;">
+          <option value="">Select...</option>
+          <option value="one">One solution</option>
+          <option value="none">No solution</option>
+          <option value="infinite">Infinitely many solutions</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>What does that mean for these two friends' savings?</label>
+        <textarea id="comp1-explain" class="form-control-lg" rows="2" placeholder="It means..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkComparison1()">Check My Work</button>
+      <div id="comp1-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="step-box" style="margin-top:24px;">
+      <h3 style="margin-top:0; color:var(--primary);">Two Ways to Write the Same Plan</h3>
+      <p>A phone plan's monthly cost is written two different ways by two different billing systems: \(2(3x + 5)\) and \(6x + 10\), where \(x\) is gigabytes of extra data used.</p>
+      <p><strong>Task:</strong> set \(2(3x+5) = 6x+10\) and classify it. What does that classification mean about the two billing systems?</p>
+
+      <div class="form-group">
+        <label>Classification:</label>
+        <select id="comp2-verdict" class="form-control-lg" style="max-width:280px;">
+          <option value="">Select...</option>
+          <option value="one">One solution</option>
+          <option value="none">No solution</option>
+          <option value="infinite">Infinitely many solutions</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>What does that mean about the two billing systems?</label>
+        <textarea id="comp2-explain" class="form-control-lg" rows="2" placeholder="It means..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkComparison2()">Check My Work</button>
+      <div id="comp2-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: IXL PRACTICE -->
+  <div id="ixl" class="panel">
+    <div class="section-title">IXL Targeted Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Log into IXL and complete the skill listed below. When you're finished, check the box to confirm.
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">Today's IXL Skill</div>
+      <p style="margin:0;"><strong>KBP</strong> - Find the number of solutions to a linear equation</p>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" id="confirm-ixl" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;" onchange="confirmIXL(this)">
+      <label for="confirm-ixl" style="display:inline; font-weight:700;">I completed IXL skill KBP.</label>
+    </div>
+  </div>
+
+  <!-- TAB 5: EXIT TICKET -->
+  <div id="exitticket" class="panel">
+    <div class="section-title">Exit Ticket</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Answer the reflection question, click Submit Reflection, then type your name in the blue bar at the top of the page and click Print My Progress.
+    </div>
+
+    <form id="exit-form" onsubmit="submitExitTicket(event)">
+      <div class="form-group">
+        <label>How can you recognize whether an equation has one solution, no solution, or infinitely many solutions?</label>
+        <textarea id="exit-1" class="form-control-lg" rows="3" placeholder="Explain how you'd tell..."></textarea>
+      </div>
+      <button type="submit" class="btn-lg">Submit Reflection</button>
+    </form>
+    <div id="exit-feedback" class="feedback-msg"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // Warm-Up
+  const warmupProblems = [
+    { q: "\\(5x - 8 = 22\\)", a: 6, tol: 0.001 },
+    { q: "\\(3x + 4 = -2x + 24\\)", a: 4, tol: 0.001 }
+  ];
+
+  function checkWarmup(idx) {
+    const p = warmupProblems[idx];
+    const val = document.getElementById(`wu-${idx}-input`).value;
+    const fb = document.getElementById(`wu-${idx}-feedback`);
+    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
+
+    LessonCheck.check(`wu-${idx}`, correct, fb, {
+      correct: `Correct! \\(x = \\mathbf{${p.a}}\\)`,
+      retry: "Not quite yet. Simplify and isolate x, then try again.",
+      reveal: `Here's the correct procedure for ${p.q}: \\(x = \\mathbf{${p.a}}\\)`
+    }, { label: `Warm-Up: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val });
+  }
+
+  // Classification Challenge
+  const classifyItems = [
+    { q: "\\(2x + 5 = 3x - 1\\)", verdict: "one", a: 6 },
+    { q: "\\(2(x + 3) = 2x + 7\\)", verdict: "none" },
+    { q: "\\(4(x + 1) = 4x + 4\\)", verdict: "infinite" },
+    { q: "\\(6x - 2 = 3(2x + 1)\\)", verdict: "none" },
+    { q: "\\(5(x - 2) = 5x - 10\\)", verdict: "infinite" },
+    { q: "\\(7x + 3 = 4x + 18\\)", verdict: "one", a: 5 }
+  ];
+
+  const verdictLabel = { one: "One solution", none: "No solution", infinite: "Infinitely many solutions" };
+
+  function renderClassify() {
+    const html = classifyItems.map((item, i) => `
+      <div class="step-box" style="margin-top:14px;">
+        <p style="margin:0 0 10px 0;"><strong>${i + 1}.</strong> ${item.q}</p>
+        <div class="form-group">
+          <label>Classification:</label>
+          <select id="cl-${i}-verdict" class="form-control-lg" style="max-width:280px;">
+            <option value="">Select...</option>
+            <option value="one">One solution</option>
+            <option value="none">No solution</option>
+            <option value="infinite">Infinitely many solutions</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>If one solution, enter x (otherwise leave blank):</label>
+          <input type="text" id="cl-${i}-x" class="form-control-lg" style="max-width:160px;" placeholder="x = (if applicable)">
+        </div>
+        <button class="btn-lg" style="padding:8px 18px; font-size:0.95rem;" onclick="checkClassify(${i})">Check</button>
+        <div id="cl-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('classify-list').innerHTML = html;
+    triggerMathJax();
+  }
+
+  function checkClassify(idx) {
+    const item = classifyItems[idx];
+    const verdict = document.getElementById(`cl-${idx}-verdict`).value;
+    const xVal = document.getElementById(`cl-${idx}-x`).value;
+    const fb = document.getElementById(`cl-${idx}-feedback`);
+
+    if (!verdict || (item.verdict === "one" && !xVal.trim())) {
+      LessonCheck.incomplete(fb, "Choose a classification (and enter x, if it has one solution) before checking - this won't count as an attempt yet.");
+      return;
+    }
+
+    const verdictOk = verdict === item.verdict;
+    const xOk = item.verdict !== "one" || LessonCheck.numericMatch(xVal, item.a, 0.001);
+    const correct = verdictOk && xOk;
+
+    const answerText = item.verdict === "one"
+      ? `<strong>${verdictLabel[item.verdict]}</strong>, \\(x = \\mathbf{${item.a}}\\)`
+      : `<strong>${verdictLabel[item.verdict]}</strong>`;
+
+    LessonCheck.check(`cl-${idx}`, correct, fb, {
+      correct: `Correct! ${item.q} is ${answerText}`,
+      retry: "Not quite yet. Simplify both sides fully - if the variable cancels, look at what's left. Try again.",
+      reveal: `Here's the correct classification: ${item.q} is ${answerText}`
+    }, { label: `Classification #${idx + 1}: ${item.q.replace(/\\\(|\\\)/g, '')}`, answer: `${verdict || '(none)'}${xVal ? ', x=' + xVal : ''}` });
+  }
+
+  // Comparison Scenario
+  function checkComparison1() {
+    const verdict = document.getElementById('comp1-verdict').value;
+    const explain = document.getElementById('comp1-explain').value.trim();
+    const fb = document.getElementById('comp1-feedback');
+
+    if (!verdict || explain.length <= 5) {
+      LessonCheck.incomplete(fb, "Choose a classification and explain what it means before checking - this won't count as an attempt yet.");
+      return;
+    }
+
+    const correct = verdict === "none";
+    LessonCheck.check('wed-comp1', correct, fb, {
+      correct: "Correct! \\(50+10x=80+10x \\rightarrow 50=80\\), a false statement, so there's <strong>no solution</strong>. Because both friends save at the same rate, the \\$30 gap between them never closes.",
+      retry: "Not quite yet. Subtract 10x from both sides and see what's left. Try again.",
+      reveal: "Here's the correct classification: \\(50+10x=80+10x \\rightarrow 50=80\\), false, so there is <strong>no solution</strong> - the \\$30 gap between the two friends never closes, since they save at the same rate."
+    }, { label: 'Comparison: two savings plans', answer: `${verdict}` });
+  }
+
+  function checkComparison2() {
+    const verdict = document.getElementById('comp2-verdict').value;
+    const explain = document.getElementById('comp2-explain').value.trim();
+    const fb = document.getElementById('comp2-feedback');
+
+    if (!verdict || explain.length <= 5) {
+      LessonCheck.incomplete(fb, "Choose a classification and explain what it means before checking - this won't count as an attempt yet.");
+      return;
+    }
+
+    const correct = verdict === "infinite";
+    LessonCheck.check('wed-comp2', correct, fb, {
+      correct: "Correct! \\(2(3x+5)=6x+10 \\rightarrow 6x+10=6x+10\\), always true, so there are <strong>infinitely many solutions</strong>. The two billing systems are just different ways of writing the exact same plan.",
+      retry: "Not quite yet. Distribute the left side and compare both sides. Try again.",
+      reveal: "Here's the correct classification: \\(2(3x+5)=6x+10 \\rightarrow 6x+10=6x+10\\), always true, so there are <strong>infinitely many solutions</strong> - the two systems describe the identical plan."
+    }, { label: 'Comparison: two billing expressions', answer: `${verdict}` });
+  }
+
+  // IXL confirmation
+  function confirmIXL(cb) {
+    if (cb.checked) {
+      LessonProgress.record('wed-confirm-ixl', 'Confirmed: completed IXL skill KBP', 'Yes', 'reflection');
+    }
+  }
+
+  // Exit Ticket
+  function submitExitTicket(e) {
+    e.preventDefault();
+    const a1 = document.getElementById('exit-1').value.trim();
+    const fb = document.getElementById('exit-feedback');
+
+    if (a1.length > 5) {
+      fb.className = "feedback-msg success";
+      fb.innerText = "Reflection submitted and logged successfully!";
+      LessonProgress.recordText('Exit Ticket: recognizing solution types', a1);
+    } else {
+      fb.className = "feedback-msg error";
+      fb.innerText = "Please write a complete reflection before submitting.";
+    }
+    fb.style.display = "block";
+  }
+
+  // Initial render
+  renderClassify();
+</script>
+<div id="print-report"></div>
+</body>
+</html>
