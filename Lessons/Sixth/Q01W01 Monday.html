@@ -290,6 +290,20 @@
       color: #94a3b8;
     }
 
+    /* Decimal point overlay for multiplication grids: floats in the gap
+       between two digit cells instead of reserving its own grid column,
+       so it only appears once the integer multiplication is complete. */
+    .decimal-mark {
+      position: absolute;
+      left: -7px;
+      bottom: 8px;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--primary);
+      pointer-events: none;
+      line-height: 1;
+    }
+
     /* Interactive Step Box */
     .step-box {
       background: #f1f5f9;
@@ -883,11 +897,11 @@
 
   const addExamples = [
     {
-      title: "Exercise 1: Whole Number + Decimal (\(12 + 4.85\))",
+      title: "Exercise 1: Whole Number + Decimal (\\(12 + 4.85\\))",
       desc: "Pad 12 with trailing zeros to make 12.00 and align decimal places vertically.",
       maxSteps: 3,
       render: (step) => `
-        <p style="text-align:center;"><strong>Estimate Check:</strong> \(12 + 5 = 17\)</p>
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(12 + 5 = 17\\)</p>
         <table class="algo-table">
           <tr class="carry-row">
             <td></td>
@@ -925,17 +939,17 @@
         </table>
         <p style="text-align:center; font-weight:bold;">
           ${step === 1 ? 'Step 1: Set up grid and pad trailing zeros.' : ''}
-          ${step === 2 ? 'Step 2: Add hundredths (\(0+5=5\)), tenths (\(0+8=8\)), and carry 1 in ones (\(2+4=6\)).' : ''}
+          ${step === 2 ? 'Step 2: Add hundredths (\\(0+5=5\\)), tenths (\\(0+8=8\\)), and carry 1 in ones (\\(2+4=6\\)).' : ''}
           ${step === 3 ? 'Step 3: Complete calculation! Exact Sum = \\(\\mathbf{16.85}\\)' : ''}
         </p>
       `
     },
     {
-      title: "Exercise 2: Regrouping Across Zeros (\(20.00 - 13.45\))",
+      title: "Exercise 2: Regrouping Across Zeros (\\(20.00 - 13.45\\))",
       desc: "Visual borrowing across zeros from tens to hundredths.",
       maxSteps: 3,
       render: (step) => `
-        <p style="text-align:center;"><strong>Estimate Check:</strong> \(20 - 13 = 7\)</p>
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(20 - 13 = 7\\)</p>
         <table class="algo-table">
           <tr class="carry-row">
             <td></td>
@@ -973,17 +987,17 @@
         </table>
         <p style="text-align:center; font-weight:bold;">
           ${step === 1 ? 'Step 1: Align decimal points and set up problem.' : ''}
-          ${step === 2 ? 'Step 2: Borrow across zeros (\(20.00 \\rightarrow 1\\text{ ten}, 9\\text{ ones}, 9\\text{ tenths}, 10\\text{ hundredths}\)).' : ''}
+          ${step === 2 ? 'Step 2: Borrow across zeros (\\(20.00 \\rightarrow 1\\text{ ten}, 9\\text{ ones}, 9\\text{ tenths}, 10\\text{ hundredths}\\)).' : ''}
           ${step === 3 ? 'Step 3: Subtract each column! Exact Difference = \\(\\mathbf{6.55}\\)' : ''}
         </p>
       `
     },
     {
-      title: "Exercise 3: Mixed Place Values (\(0.45 + 12.3 + 1.008\))",
+      title: "Exercise 3: Mixed Place Values (\\(0.45 + 12.3 + 1.008\\))",
       desc: "Pad empty places with zeros to match 3 decimal places.",
       maxSteps: 3,
       render: (step) => `
-        <p style="text-align:center;"><strong>Estimate Check:</strong> \(0 + 12 + 1 = 13\)</p>
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(0 + 12 + 1 = 13\\)</p>
         <table class="algo-table">
           <tr class="carry-row">
             <td></td><td></td><td></td><td class="decimal-cell"></td><td></td><td></td><td></td>
@@ -1038,7 +1052,7 @@
       desc: "Regrouping dollars and dimes with continuous lines and clear currency alignment.",
       maxSteps: 3,
       render: (step) => `
-        <p style="text-align:center;"><strong>Estimate Check:</strong> \(\$46 - \$19 = \$27\)</p>
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(\$46 - \$19 = \$27\\)</p>
         <table class="algo-table">
           <tr class="carry-row">
             <td class="currency-cell"></td>
@@ -1097,7 +1111,7 @@
     ).join('');
 
     document.getElementById('add-carousel-content').innerHTML = `
-      <p style="font-size:1.05rem; text-align:center; color:#475569;">${ex.desc}</p>
+      <p style="text-align:center; color:#475569;">${ex.desc}</p>
       ${ex.render(currentAddExStep)}
     `;
 
@@ -1140,30 +1154,27 @@
 
   const multExamples = [
     {
-      title: "Exercise 1: Single Digit Multiplier (\(2.45 \\times 6\))",
-      desc: "Multiply top factor by ones digit (\(245 \\times 6\)), calculate integer sum, then shift decimal 2 places left.",
+      title: "Exercise 1: Single Digit Multiplier (\\(2.45 \\times 6\\))",
+      desc: "Multiply top factor by ones digit (\\(245 \\times 6\\)), calculate integer sum, then shift decimal 2 places left.",
       maxSteps: 4,
       render: (step) => `
-        <p style="text-align:center;"><strong>Estimate Check:</strong> \(2 \\times 6 = 12\)</p>
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(2 \\times 6 = 12\\)</p>
         <table class="algo-table">
           <tr class="carry-row">
             <td></td>
             <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">2</span>' : ''}</td>
-            <td class="decimal-cell"></td>
             <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">3</span>' : ''}</td>
             <td></td>
           </tr>
           <tr>
             <td></td>
             <td class="grid-cell">2</td>
-            <td class="decimal-cell"></td>
             <td class="grid-cell">4</td>
             <td class="grid-cell">5</td>
           </tr>
           <tr>
             <td class="grid-cell line-under">&times;</td>
             <td class="grid-cell line-under"></td>
-            <td class="decimal-cell line-under"></td>
             <td class="grid-cell line-under"></td>
             <td class="grid-cell line-under">6</td>
           </tr>
@@ -1171,30 +1182,28 @@
           <tr style="color:var(--primary); font-weight:900;">
             <td class="grid-cell">1</td>
             <td class="grid-cell">4</td>
-            <td class="decimal-cell">${step >= 4 ? '.' : ''}</td>
-            <td class="grid-cell">7</td>
+            <td class="grid-cell">${step >= 4 ? '<span class="decimal-mark">.</span>' : ''}7</td>
             <td class="grid-cell">0</td>
           </tr>` : ''}
         </table>
         <p style="text-align:center; font-weight:bold;">
-          ${step === 1 ? 'Step 1: Set up factors as standard multi-digit integers (\(245 \\times 6\)).' : ''}
-          ${step === 2 ? 'Step 2: Multiply \(245 \\times 6 = 1470\) (write carry values 3 and 2 above in RED).' : ''}
-          ${step === 3 ? 'Step 3: Complete whole-number integer product (\(1470\)). No decimal point in the grid yet — multiplication first!' : ''}
+          ${step === 1 ? 'Step 1: Set up factors as standard multi-digit integers (\\(245 \\times 6\\)).' : ''}
+          ${step === 2 ? 'Step 2: Multiply \\(245 \\times 6 = 1470\\) (write carry values 3 and 2 above in RED).' : ''}
+          ${step === 3 ? 'Step 3: Complete whole-number integer product (\\(1470\\)). No decimal point in the grid yet — multiplication first!' : ''}
           ${step === 4 ? 'Step 4: Multiplication complete — NOW shift the decimal 2 places LEFT. Placed Product = \\(\\mathbf{14.70}\\)' : ''}
         </p>
       `
     },
     {
-      title: "Exercise 2: Multi-Digit Multiplication (\(2.45 \\times 3.2\))",
-      desc: "Multiply as integers (\(245 \\times 32\)). Tens partial product '+' sign sits in its own cell, shifting digits under tens column.",
+      title: "Exercise 2: Multi-Digit Multiplication (\\(2.45 \\times 3.2\\))",
+      desc: "Multiply as integers (\\(245 \\times 32\\)). Tens partial product '+' sign sits in its own cell, shifting digits under tens column.",
       maxSteps: 5,
       render: (step) => `
-        <p style="text-align:center;"><strong>Estimate Check:</strong> \(2 \\times 3 = 6\)</p>
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(2 \\times 3 = 6\\)</p>
         <table class="algo-table">
           <tr class="carry-row">
             <td></td>
             <td></td>
-            <td class="decimal-cell"></td>
             <td></td>
             <td>${step === 2 ? '<span style="color:var(--highlight-carry);">1</span>' : ''}</td>
             <td></td>
@@ -1202,7 +1211,6 @@
           <tr>
             <td></td>
             <td></td>
-            <td class="decimal-cell"></td>
             <td class="grid-cell">2</td>
             <td class="grid-cell">4</td>
             <td class="grid-cell">5</td>
@@ -1210,7 +1218,6 @@
           <tr>
             <td class="grid-cell line-under">&times;</td>
             <td class="grid-cell line-under"></td>
-            <td class="decimal-cell line-under"></td>
             <td class="grid-cell line-under"></td>
             <td class="grid-cell line-under">3</td>
             <td class="grid-cell line-under">2</td>
@@ -1219,7 +1226,6 @@
           <tr>
             <td></td>
             <td></td>
-            <td class="decimal-cell"></td>
             <td class="grid-cell">4</td>
             <td class="grid-cell">9</td>
             <td class="grid-cell">0</td>
@@ -1228,7 +1234,6 @@
           <tr>
             <td class="grid-cell line-under">+</td>
             <td class="grid-cell line-under">7</td>
-            <td class="decimal-cell line-under"></td>
             <td class="grid-cell line-under">3</td>
             <td class="grid-cell line-under">5</td>
             <td class="grid-cell line-under">0</td>
@@ -1237,27 +1242,26 @@
           <tr style="color:var(--primary); font-weight:900;">
             <td></td>
             <td class="grid-cell">7</td>
-            <td class="decimal-cell">${step >= 5 ? '.' : ''}</td>
-            <td class="grid-cell">8</td>
+            <td class="grid-cell">${step >= 5 ? '<span class="decimal-mark">.</span>' : ''}8</td>
             <td class="grid-cell">4</td>
             <td class="grid-cell">0</td>
           </tr>` : ''}
         </table>
         <p style="text-align:center; font-weight:bold;">
-          ${step === 1 ? 'Step 1: Set up factors as standard integers (\(245 \\times 32\)).' : ''}
-          ${step === 2 ? 'Step 2: Multiply by ones digit (\(245 \\times 2 = 490\)), lined up to the right in the ones column.' : ''}
-          ${step === 3 ? 'Step 3: Multiply by tens digit (\(245 \\times 30 = 7350\)). Place a placeholder zero in the ones column, then write 735 starting in the tens column — the "+" sign gets its own grid cell, never mixed with a digit!' : ''}
-          ${step === 4 ? 'Step 4: Sum integer partial products (\(490 + 7350 = 7840\)). Still no decimal point in the grid — multiplication isn\'t done yet.' : ''}
-          ${step === 5 ? 'Step 5: Multiplication complete — NOW shift the decimal \(2+1=3\) places LEFT! Placed Product = \\(\\mathbf{7.840}\\)' : ''}
+          ${step === 1 ? 'Step 1: Set up factors as standard integers (\\(245 \\times 32\\)).' : ''}
+          ${step === 2 ? 'Step 2: Multiply by ones digit (\\(245 \\times 2 = 490\\)), lined up to the right in the ones column.' : ''}
+          ${step === 3 ? 'Step 3: Multiply by tens digit (\\(245 \\times 30 = 7350\\)). Place a placeholder zero in the ones column, then write 735 starting in the tens column — the "+" sign gets its own grid cell, never mixed with a digit!' : ''}
+          ${step === 4 ? 'Step 4: Sum integer partial products (\\(490 + 7350 = 7840\\)). Still no decimal point in the grid — multiplication isn\'t done yet.' : ''}
+          ${step === 5 ? 'Step 5: Multiplication complete — NOW shift the decimal \\(2+1=3\\) places LEFT! Placed Product = \\(\\mathbf{7.840}\\)' : ''}
         </p>
       `
     },
     {
-      title: "Exercise 3: Small Decimals (\(0.03 \\times 0.004\))",
+      title: "Exercise 3: Small Decimals (\\(0.03 \\times 0.004\\))",
       desc: "Multiply non-zero digits and shift decimal point left.",
       maxSteps: 3,
       render: (step) => `
-        <p style="text-align:center;"><strong>Decimal Count:</strong> \(0.03\) (2 places) \(+\) \(0.004\) (3 places) \(= 5\) total places</p>
+        <p style="text-align:center;"><strong>Decimal Count:</strong> \\(0.03\\) (2 places) \\(+\\) \\(0.004\\) (3 places) \\(= 5\\) total places</p>
         <div style="text-align:center; padding:20px; background:#eff6ff; border-radius:12px; margin:20px 0;">
           <div style="font-size:2rem; font-weight:800; color:var(--primary);">
             ${step === 1 ? '\\[3 \\times 4 = 12\\]' : ''}
@@ -1266,24 +1270,23 @@
           </div>
         </div>
         <p style="text-align:center; font-weight:bold;">
-          ${step === 1 ? 'Step 1: Multiply non-zero integers (\(3 \\times 4 = 12\)).' : ''}
-          ${step === 2 ? 'Step 2: Count \(2 + 3 = 5\) total decimal places.' : ''}
+          ${step === 1 ? 'Step 1: Multiply non-zero integers (\\(3 \\times 4 = 12\\)).' : ''}
+          ${step === 2 ? 'Step 2: Count \\(2 + 3 = 5\\) total decimal places.' : ''}
           ${step === 3 ? 'Step 3: Shift 12. five places left inserting leading zeros! Exact = \\(\\mathbf{0.00012}\\)' : ''}
         </p>
       `
     },
     {
-      title: "Exercise 4: Unit Rate (\(3.5\\text{ lbs} \\times \\$2.40/\\text{lb}\))",
+      title: "Exercise 4: Unit Rate (\\(3.5\\text{ lbs} \\times \\$2.40/\\text{lb}\\))",
       desc: "Multiply as whole integers ($240 \\times 35$). Separated '+' operational cell for tens partial product.",
       maxSteps: 5,
       render: (step) => `
-        <p style="text-align:center;"><strong>Estimate Check:</strong> \(4 \\times \\$2 = \\$8\)</p>
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(4 \\times \\$2 = \\$8\\)</p>
         <table class="algo-table">
           <tr class="carry-row">
             <td class="currency-cell"></td>
             <td></td>
             <td>${step === 2 ? '<span style="color:var(--highlight-carry);">1</span>' : ''}</td>
-            <td class="decimal-cell"></td>
             <td>${step === 2 ? '<span style="color:var(--highlight-carry);">2</span>' : ''}</td>
             <td></td>
             <td></td>
@@ -1292,7 +1295,6 @@
             <td class="currency-cell">$</td>
             <td></td>
             <td></td>
-            <td class="decimal-cell"></td>
             <td class="grid-cell">2</td>
             <td class="grid-cell">4</td>
             <td class="grid-cell">0</td>
@@ -1301,7 +1303,6 @@
             <td class="currency-cell line-under"></td>
             <td class="grid-cell line-under">&times;</td>
             <td class="grid-cell line-under"></td>
-            <td class="decimal-cell line-under"></td>
             <td class="grid-cell line-under"></td>
             <td class="grid-cell line-under">3</td>
             <td class="grid-cell line-under">5</td>
@@ -1311,7 +1312,6 @@
             <td class="currency-cell"></td>
             <td></td>
             <td class="grid-cell">1</td>
-            <td class="decimal-cell"></td>
             <td class="grid-cell">2</td>
             <td class="grid-cell">0</td>
             <td class="grid-cell">0</td>
@@ -1321,7 +1321,6 @@
             <td class="currency-cell line-under"></td>
             <td class="grid-cell line-under">+</td>
             <td class="grid-cell line-under">7</td>
-            <td class="decimal-cell line-under"></td>
             <td class="grid-cell line-under">2</td>
             <td class="grid-cell line-under">0</td>
             <td class="grid-cell line-under">0</td>
@@ -1331,18 +1330,17 @@
             <td class="currency-cell">$</td>
             <td></td>
             <td class="grid-cell">8</td>
-            <td class="decimal-cell">${step >= 5 ? '.' : ''}</td>
-            <td class="grid-cell">4</td>
+            <td class="grid-cell">${step >= 5 ? '<span class="decimal-mark">.</span>' : ''}4</td>
             <td class="grid-cell">0</td>
             <td class="grid-cell">0</td>
           </tr>` : ''}
         </table>
         <p style="text-align:center; font-weight:bold;">
-          ${step === 1 ? 'Step 1: Set up factors \(240 \\times 35\) as whole numbers.' : ''}
-          ${step === 2 ? 'Step 2: Multiply by ones (\(240 \\times 5 = 1200\)), lined up to the right in the ones column.' : ''}
-          ${step === 3 ? 'Step 3: Multiply by tens (\(240 \\times 30 = 7200\)). Place a placeholder zero in the ones column, then write 72 starting in the tens column — the "+" sign gets its own grid cell!' : ''}
-          ${step === 4 ? 'Step 4: Sum partial products as an integer (\(8400\)). Still no decimal in the grid.' : ''}
-          ${step === 5 ? 'Step 5: Multiplication complete — NOW shift the decimal \(2+1=3\) places left! Final Placed Product = \\(\\mathbf{\\$8.400}\\)' : ''}
+          ${step === 1 ? 'Step 1: Set up factors \\(240 \\times 35\\) as whole numbers.' : ''}
+          ${step === 2 ? 'Step 2: Multiply by ones (\\(240 \\times 5 = 1200\\)), lined up to the right in the ones column.' : ''}
+          ${step === 3 ? 'Step 3: Multiply by tens (\\(240 \\times 30 = 7200\\)). Place a placeholder zero in the ones column, then write 72 starting in the tens column — the "+" sign gets its own grid cell!' : ''}
+          ${step === 4 ? 'Step 4: Sum partial products as an integer (\\(8400\\)). Still no decimal in the grid.' : ''}
+          ${step === 5 ? 'Step 5: Multiplication complete — NOW shift the decimal \\(2+1=3\\) places left! Final Placed Product = \\(\\mathbf{\\$8.400}\\)' : ''}
         </p>
       `
     }
@@ -1358,7 +1356,7 @@
     ).join('');
 
     document.getElementById('mult-carousel-content').innerHTML = `
-      <p style="font-size:1.05rem; text-align:center; color:#475569;">${ex.desc}</p>
+      <p style="text-align:center; color:#475569;">${ex.desc}</p>
       ${ex.render(currentMultExStep)}
     `;
 
@@ -1455,10 +1453,10 @@
       title: "Science Metric Calculation: 2.45 g × 3.2 mL", 
       row1: ["2","4","5"], 
       row2: ["3","2"], 
-      p1: ["0","4","9","0"], 
-      p2: ["7","3","5","0"], 
+      p1: ["0","4","9","0"],
+      p2: ["7","3","5","0"],
       ans: ["7","8","4","0"],
-      finalDecimal: "7.84"
+      decimalDigitsBefore: 1
     },
     4: { type: "add", title: "Sports Relay Timing: 12.35s + 2.40s", row1: ["1","2","3","5"], row2: ["0","2","4","0"], ans: ["1","4","7","5"] }
   };
@@ -1510,8 +1508,15 @@
           <input type="text" id="wb-i3" class="digit-box input" maxlength="1">
         </div>
         <div style="margin-top:18px; font-weight:800; text-align:center;">
-          Final Product (with decimal point placed):<br>
-          <input type="text" id="wb-dec-ans" class="form-control-lg" style="width:200px; text-align:center; margin-top:8px;" placeholder="e.g. 7.84">
+          Count the total decimal places in both factors above. Where does the decimal point belong in your integer answer?<br>
+          <select id="wb-dec-pos" class="form-control-lg" style="width:260px; text-align:center; margin-top:8px;">
+            <option value="">Select a position...</option>
+            <option value="0">Before all 4 digits (.XXXX)</option>
+            <option value="1">After the 1st digit (X.XXX)</option>
+            <option value="2">After the 2nd digit (XX.XX)</option>
+            <option value="3">After the 3rd digit (XXX.X)</option>
+            <option value="4">After all 4 digits — no shift (XXXX)</option>
+          </select>
         </div>
       `;
     } else {
@@ -1577,19 +1582,19 @@
       const u2 = document.getElementById('wb-i2').value;
       const u3 = document.getElementById('wb-i3').value;
 
-      const decAns = (document.getElementById('wb-dec-ans').value || "").trim();
+      const decPos = document.getElementById('wb-dec-pos').value;
 
       const p1Valid = isDigitMatch(p1_0, prob.p1[0]) && isDigitMatch(p1_1, prob.p1[1]) && isDigitMatch(p1_2, prob.p1[2]) && isDigitMatch(p1_3, prob.p1[3]);
       const p2Valid = isDigitMatch(p2_0, prob.p2[0]) && isDigitMatch(p2_1, prob.p2[1]) && isDigitMatch(p2_2, prob.p2[2]) && isDigitMatch(p2_3, prob.p2[3]);
       const finalValid = isDigitMatch(u0, prob.ans[0]) && isDigitMatch(u1, prob.ans[1]) && isDigitMatch(u2, prob.ans[2]) && isDigitMatch(u3, prob.ans[3]);
-      const decValid = (decAns === "7.84" || decAns === "7.840");
+      const decValid = (parseInt(decPos, 10) === prob.decimalDigitsBefore);
 
       if (p1Valid && p2Valid && finalValid && decValid) {
         fb.className = "feedback-msg success";
-        fb.innerText = "Whiteboard multiplication solution verified! Integer partial products (490, 7350), sum (7840), and final decimal placement (7.84) are all correct.";
+        fb.innerText = "Whiteboard multiplication solution verified! Integer partial products (490, 7350), sum (7840), and the decimal point placed after the 1st digit (7.840) are all correct.";
       } else {
         fb.className = "feedback-msg error";
-        fb.innerText = `Check calculations! Expected partial products: 0490 and 7350, Integer Sum: 7840, Final Decimal Product: 7.84`;
+        fb.innerText = `Check calculations! Expected partial products: 0490 and 7350, Integer Sum: 7840. Then count total decimal places in the two factors to find where the point goes.`;
       }
     } else {
       const u0 = document.getElementById('wb-i0').value;
