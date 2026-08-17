@@ -85,7 +85,7 @@
       </ul>
     </div>
 
-    <p style="text-align:center;"><strong>Click any column to inspect its mathematical value and cash equivalent:</strong></p>
+    <p class="no-print" style="text-align:center;"><strong>Click any column to inspect its mathematical value and cash equivalent:</strong></p>
 
     <!-- Place Value Chart -->
     <div class="pv-chart">
@@ -126,7 +126,7 @@
       </div>
     </div>
 
-    <div id="pv-inspector" style="background:#f1f5f9; padding:20px; border-radius:12px; border:2px solid var(--border); margin-top:16px;">
+    <div id="pv-inspector" class="no-print" style="background:#f1f5f9; padding:20px; border-radius:12px; border:2px solid var(--border); margin-top:16px;">
       <h3 style="margin-top:0; color:var(--primary);" id="inspector-title">Click a column above!</h3>
       <p id="inspector-body" style="margin:0;">Explore how digits relate to whole quantities and fractional parts.</p>
     </div>
@@ -1428,6 +1428,13 @@
 
   renderPracticeSetList('ps-part1-list', practiceSetPart1, 'ps1');
   renderPracticeSetList('ps-part2-list', practiceSetPart2, 'ps2');
+  TeacherPrint.registerAnswerList('ps-part1-list', practiceSetPart1.map((p, i) => ({ inputId: `ps1-${i}-input`, answerText: String(p.a) })));
+  TeacherPrint.registerAnswerList('ps-part2-list', practiceSetPart2.map((p, i) => ({ inputId: `ps2-${i}-input`, answerText: String(p.a) })));
+  TeacherPrint.registerAnswerList('practiceset', [
+    { inputId: 'ps-fin-a', answerText: '24.09' },
+    { inputId: 'ps-fin-b', answerText: '25.77' },
+    { inputId: 'ps-fin-c', answerText: '24.23' }
+  ]);
   renderAddsubPractice();
   renderMultPractice();
 
