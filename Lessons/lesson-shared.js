@@ -11,7 +11,6 @@
 // summary - see printProgressReport() below.
 const LessonProgress = (() => {
   const items = []; // ordered list of {key, label, section, answer, verdict}
-  let openEndedCounter = 0;
 
   // Records/updates one practice item. verdict is 'correct', 'incomplete'
   // (never got it right), 'reflection' (open-ended or submit-only, no
@@ -32,9 +31,12 @@ const LessonProgress = (() => {
   }
 
   // For open-ended reflection fields that don't go through LessonCheck.
+  // Key is derived from the label, not a call counter - a counter-based
+  // key made every re-submission of the same field (clicking Submit
+  // twice, or re-visiting a tab) create a brand-new report row instead
+  // of updating the existing one, duplicating it on the printed report.
   function recordText(label, text, section) {
-    openEndedCounter++;
-    record(`text-${openEndedCounter}-${label}`, label, text, 'reflection', section);
+    record(`text-${label}`, label, text, 'reflection', section);
   }
 
   // Pre-registers a question as "not attempted" so it always shows up on
@@ -257,7 +259,13 @@ function renderNumberLine(containerId, opts) {
 // "Save as PDF" to submit as proof of completion to Google Classroom.
 function printProgressReport(lessonTitle) {
   const nameField = document.getElementById('student-name');
-  const name = (nameField && nameField.value.trim()) || '_________________________';
+  const name = (nameField && nameField.value.trim()) || '';
+
+  if (!name) {
+    if (nameField) nameField.focus();
+    alert('Type your name before printing your progress report.');
+    return;
+  }
   const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   const items = LessonProgress.all();
 
