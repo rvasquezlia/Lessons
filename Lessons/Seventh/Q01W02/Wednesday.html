@@ -400,7 +400,11 @@
     if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
     const expected = qc11Answers[idx];
     const correct = typeof expected === "number" ? LessonCheck.numericMatch(raw, expected, 0.01) : raw.trim().toUpperCase() === expected;
-    LessonCheck.submit(fb, { key: `qc11-${idx}`, label: `Quick Check 1.1 #${idx + 1}`, answer: raw, section: '2. Quick Check 1.1', correct });
+    LessonCheck.check(`qc11-${idx}`, correct, fb, {
+      correct: "Correct!",
+      retry: "Not quite yet. Review the problem and try again.",
+      reveal: `The correct answer is \\(\\mathbf{${expected}}\\).`
+    }, { label: `Quick Check 1.1 #${idx + 1}`, answer: raw, section: '2. Quick Check 1.1' });
   }
   function checkQC11Multi() {
     const fb = document.getElementById('qc11-1-feedback');
@@ -409,7 +413,11 @@
     const correctSet = [0,3,4]; // gains 4 in Round 1, loses 4 in Round 2, ends at 0
     const correct = [0,1,2,3,4,5].every(i => checked[i] === correctSet.includes(i));
     const answer = checked.map((c, i) => c ? i + 1 : null).filter(x => x).join(', ') || '(none selected)';
-    LessonCheck.submit(fb, { key: 'qc11-1', label: "Quick Check 1.1 #2 (Allie's rounds)", answer, section: '2. Quick Check 1.1', correct });
+    LessonCheck.check('qc11-1', correct, fb, {
+      correct: "Correct!",
+      retry: "Not quite yet. Review the number line and try again.",
+      reveal: "She gains 4 points in Round 1, loses 4 points in Round 2, and has 0 points at the end of two rounds."
+    }, { label: "Quick Check 1.1 #2 (Allie's rounds)", answer, section: '2. Quick Check 1.1' });
   }
 
   // ==========================================
@@ -422,7 +430,11 @@
     if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
     const expected = qc12Answers[idx];
     const correct = typeof expected === "number" ? LessonCheck.numericMatch(raw, expected, 0.01) : raw.trim().toUpperCase() === expected;
-    LessonCheck.submit(fb, { key: `qc12-${idx}`, label: `Quick Check 1.2 #${idx + 1}`, answer: raw, section: '3. Quick Check 1.2', correct });
+    LessonCheck.check(`qc12-${idx}`, correct, fb, {
+      correct: "Correct!",
+      retry: "Not quite yet. Review the problem and try again.",
+      reveal: `The correct answer is \\(\\mathbf{${expected}}\\).`
+    }, { label: `Quick Check 1.2 #${idx + 1}`, answer: raw, section: '3. Quick Check 1.2' });
   }
   function checkQC12Text(idx) {
     const raw = document.getElementById(`qc12-${idx}-input`).value.trim();
@@ -437,7 +449,11 @@
     const correctSet = [1,2,4]; // 5+(-2), -3+4, -2-(-4)
     const correct = [0,1,2,3,4].every(i => checked[i] === correctSet.includes(i));
     const answer = checked.map((c, i) => c ? i + 1 : null).filter(x => x).join(', ') || '(none selected)';
-    LessonCheck.submit(fb, { key: 'qc12-0', label: 'Quick Check 1.2 #1 (select all positive sums)', answer, section: '3. Quick Check 1.2', correct });
+    LessonCheck.check('qc12-0', correct, fb, {
+      correct: "Correct!",
+      retry: "Not quite yet. Review each sum's sign and try again.",
+      reveal: "The positive sums are \\(5+(-2)\\), \\(-3+4\\), and \\(-2-(-4)\\)."
+    }, { label: 'Quick Check 1.2 #1 (select all positive sums)', answer, section: '3. Quick Check 1.2' });
   }
 
   // ==========================================
@@ -450,7 +466,11 @@
     if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
     const expected = qc13Answers[idx];
     const correct = typeof expected === "number" ? LessonCheck.numericMatch(raw, expected, 0.01) : raw.trim().toUpperCase() === expected;
-    LessonCheck.submit(fb, { key: `qc13-${idx}`, label: `Quick Check 1.3 #${idx + 1}`, answer: raw, section: '4. Quick Check 1.3', correct });
+    LessonCheck.check(`qc13-${idx}`, correct, fb, {
+      correct: "Correct!",
+      retry: "Not quite yet. Review the problem and try again.",
+      reveal: `The correct answer is \\(\\mathbf{${expected}}\\).`
+    }, { label: `Quick Check 1.3 #${idx + 1}`, answer: raw, section: '4. Quick Check 1.3' });
   }
   function checkQC13Debt() {
     const eqn = document.getElementById('qc13-3a-input').value;
@@ -458,7 +478,11 @@
     const fb = document.getElementById('qc13-3-feedback');
     if (!eqn.trim() || !amt.trim()) { LessonCheck.incomplete(fb, "Enter both the equation and the amount owed before submitting."); return; }
     const correct = LessonCheck.numericMatch(amt, 18, 0.01);
-    LessonCheck.submit(fb, { key: 'qc13-3', label: 'Quick Check 1.3 #4 (Rob\'s debt)', answer: `${eqn} | owes $${amt}`, section: '4. Quick Check 1.3', correct });
+    LessonCheck.check('qc13-3', correct, fb, {
+      correct: "Correct!",
+      retry: "Not quite yet. Review the equation and try again.",
+      reveal: "Rob owes \\(\\mathbf{\\$18}\\): \\(-15 + (-3) = -18\\)."
+    }, { label: 'Quick Check 1.3 #4 (Rob\'s debt)', answer: `${eqn} | owes $${amt}`, section: '4. Quick Check 1.3' });
   }
 
   // ==========================================
@@ -471,7 +495,11 @@
     if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
     const expected = qc14Answers[idx];
     const correct = typeof expected === "number" ? LessonCheck.numericMatch(raw, expected, 0.01) : raw.trim().toUpperCase() === expected;
-    LessonCheck.submit(fb, { key: `qc14-${idx}`, label: `Quick Check 1.4 #${idx + 1}`, answer: raw, section: '5. Quick Check 1.4', correct });
+    LessonCheck.check(`qc14-${idx}`, correct, fb, {
+      correct: "Correct!",
+      retry: "Not quite yet. Review the problem and try again.",
+      reveal: `The correct answer is \\(\\mathbf{${expected}}\\).`
+    }, { label: `Quick Check 1.4 #${idx + 1}`, answer: raw, section: '5. Quick Check 1.4' });
   }
   function checkQC14Signs() {
     const a = document.getElementById('qc14-0a').value, b = document.getElementById('qc14-0b').value,
@@ -479,7 +507,11 @@
     const fb = document.getElementById('qc14-0-feedback');
     if (!a || !b || !c || !d) { LessonCheck.incomplete(fb, "Choose Positive or Negative for all four before submitting."); return; }
     const correct = a === "positive" && b === "negative" && c === "negative" && d === "negative";
-    LessonCheck.submit(fb, { key: 'qc14-0', label: 'Quick Check 1.4 #1 (sign of each product)', answer: `${a}, ${b}, ${c}, ${d}`, section: '5. Quick Check 1.4', correct });
+    LessonCheck.check('qc14-0', correct, fb, {
+      correct: "Correct!",
+      retry: "Not quite yet. Review the sign rules and try again.",
+      reveal: "The correct signs are Positive, Negative, Negative, Negative."
+    }, { label: 'Quick Check 1.4 #1 (sign of each product)', answer: `${a}, ${b}, ${c}, ${d}`, section: '5. Quick Check 1.4' });
   }
   function checkQC14Multi() {
     const fb = document.getElementById('qc14-4-feedback');
@@ -488,7 +520,11 @@
     const correctSet = [1,2]; // -800/100, 80÷(-10)
     const correct = [0,1,2,3,4].every(i => checked[i] === correctSet.includes(i));
     const answer = checked.map((c, i) => c ? i + 1 : null).filter(x => x).join(', ') || '(none selected)';
-    LessonCheck.submit(fb, { key: 'qc14-4', label: 'Quick Check 1.4 #5 (select all equal to -8)', answer, section: '5. Quick Check 1.4', correct });
+    LessonCheck.check('qc14-4', correct, fb, {
+      correct: "Correct!",
+      retry: "Not quite yet. Review the problem and try again.",
+      reveal: "The correct choices are #2 and #3 (\\(-800 \\div 100\\) and \\(80 \\div (-10)\\))."
+    }, { label: 'Quick Check 1.4 #5 (select all equal to -8)', answer, section: '5. Quick Check 1.4' });
   }
 
   // ==========================================
