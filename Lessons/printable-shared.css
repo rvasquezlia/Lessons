@@ -1,4 +1,4 @@
-/* Shared styling for teacher-facing printable handouts (Lessons/*/Q0*W0*/printables/).
+/* Shared styling for teacher-facing printable handouts (Lessons/[Grade]/Q0#W0#/printables/).
    Deliberately separate from lesson-shared.css, whose @media print rule hides
    everything except #print-report - that rule would blank out these pages. */
 
@@ -76,6 +76,13 @@ header {
 }
 
 h1 { margin: 8px 0; font-size: 2rem; font-weight: 800; }
+
+.adapted-from {
+  margin: 6px 0 0 0;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.85);
+}
 
 .content { padding: 24px 32px 36px 32px; }
 
@@ -260,14 +267,32 @@ h1 { margin: 8px 0; font-size: 2rem; font-weight: 800; }
   body { background: white; padding: 0; }
   .app-container { box-shadow: none; border: none; border-radius: 0; max-width: 100%; }
   .no-print { display: none !important; }
-  .page-break { page-break-before: always; }
+  .page-break { page-break-before: always; break-before: page; }
   /* Printers/PDF exports often drop background colors, which would leave
      the header's white text invisible on white paper. Switch to dark text
      on no background instead of relying on background color surviving
      print - reliable regardless of the "print backgrounds" setting. */
-  header { background: none; color: var(--primary); padding: 10px 0 14px 0; border-bottom: 3px solid var(--primary); }
+  header { background: none; color: var(--primary); padding: 6px 0 10px 0; border-bottom: 3px solid var(--primary); }
   .badge { background: none; color: var(--primary); border: 2px solid var(--primary); }
   .group-heading { background: none; color: var(--primary); border: 2px solid var(--primary-light); }
   .points-tag { background: none; color: var(--primary); border: 1px solid var(--primary-light); }
   .extra-credit-box .ec-heading { background: none; color: var(--accent); border: 1px solid var(--accent); }
+
+  /* Condense the branded header on paper - the full-size on-screen lockup
+     (logo + badge + h1 with generous spacing) eats up to an inch of every
+     printed page before any actual content starts. */
+  .brand-logo { height: 34px; }
+  .brand-row { margin-bottom: 4px; gap: 8px; }
+  .brand-name { font-size: 0.65rem; }
+  .badge { padding: 3px 12px; font-size: 0.8rem; margin-bottom: 4px; }
+  h1 { font-size: 1.4rem; margin: 2px 0; }
+  .adapted-from { color: var(--primary); opacity: 0.8; }
+  .content { padding: 10px 32px 20px 32px; }
+  .section-title { margin-top: 12px; }
+
+  /* Let long tables break across pages, but never mid-row, and repeat the
+     header row on the new page so a split table stays readable. */
+  thead { display: table-header-group; }
+  tr { page-break-inside: avoid; break-inside: avoid; }
+  .explainer-box, .group-context { page-break-inside: avoid; break-inside: avoid; }
 }

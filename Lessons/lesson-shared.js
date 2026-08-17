@@ -327,3 +327,93 @@ function printProgressReport(lessonTitle) {
 
   window.print();
 }
+
+// ============================================================
+// TEACHER PRINT MODE - "Print Class Progress"
+//
+// A teacher who didn't finish a lesson can check off which tabs were
+// actually covered today, then print those tabs as a clean handout -
+// carousels expanded to every worked example (not just whichever one
+// was on screen), everything else as-is. Activated by loading a lesson
+// page with ?teacherPrint=1; entry-point links live in the Teacher Guide.
+//
+// A page with carousels should call TeacherPrint.registerCarousel() once
+// per carousel, right after that carousel's data array and render
+// function are defined, so the full-expansion printout can reuse the
+// page's own existing render logic instead of duplicating it here.
+// ============================================================
+const TeacherPrint = (function () {
+  const carousels = []; // {containerId, count, showAtFn}
+
+  function registerCarousel(containerId, count, showAtFn) {
+    carousels.push({ containerId, count, showAtFn });
+  }
+
+  function buildBar() {
+    const tabs = [...document.querySelectorAll('.tab-btn')];
+    if (!tabs.length) return;
+
+    const checklistHtml = tabs.map((t) => {
+      const m = (t.getAttribute('onclick') || '').match(/switchTab\('([^']+)'\)/);
+      if (!m) return '';
+      return `<label><input type="checkbox" class="tp-cb" value="${m[1]}" checked> ${t.textContent.trim()}</label>`;
+    }).join('');
+
+    const bar = document.createElement('div');
+    bar.className = 'tp-control-bar no-print';
+    bar.innerHTML = `
+      <div class="tp-title">Print Class Progress - check what you covered today, then generate</div>
+      <div class="tp-checklist">${checklistHtml}</div>
+      <button type="button">Generate Printable</button>
+    `;
+    document.body.insertBefore(bar, document.body.firstChild);
+    bar.querySelector('button').addEventListener('click', generate);
+  }
+
+  function generate() {
+    const checked = [...document.querySelectorAll('.tp-cb:checked')].map((cb) => cb.value);
+
+    document.querySelectorAll('.panel').forEach((panel) => {
+      panel.classList.toggle('active', checked.includes(panel.id));
+    });
+
+    carousels.forEach((c) => {
+      const container = document.getElementById(c.containerId);
+      if (!container) return;
+      const panel = container.closest('.panel');
+      if (!panel || !checked.includes(panel.id)) return;
+
+      let printDiv = document.getElementById(c.containerId + '-tp-all');
+      if (!printDiv) {
+        printDiv = document.createElement('div');
+        printDiv.id = c.containerId + '-tp-all';
+        printDiv.className = 'tp-print-all';
+        container.parentNode.insertBefore(printDiv, container.nextSibling);
+      }
+      let html = '';
+      for (let i = 0; i < c.count; i++) {
+        c.showAtFn(i);
+        html += `<div class="tp-example">${container.innerHTML}</div>`;
+      }
+      printDiv.innerHTML = html;
+      container.classList.add('no-print');
+    });
+
+    document.body.classList.add('teacher-print-mode');
+
+    const finish = () => window.print();
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().then(finish).catch(finish);
+    } else {
+      finish();
+    }
+  }
+
+  function init() {
+    if (new URLSearchParams(window.location.search).get('teacherPrint') !== '1') return;
+    document.addEventListener('DOMContentLoaded', buildBar);
+  }
+
+  init();
+  return { registerCarousel };
+})();

@@ -410,6 +410,13 @@
     renderWordProblemCarousel();
   }
 
+  function showWordProblemFullyWorked(i) {
+    currentWP = i;
+    currentWPStep = wordProblems[i].maxSteps;
+    renderWordProblemCarousel();
+  }
+  TeacherPrint.registerCarousel('wp-content', wordProblems.length, showWordProblemFullyWorked);
+
   // ==========================================
   // INDEPENDENT PRACTICE (paper-based, two batches for peer review)
   // ==========================================
