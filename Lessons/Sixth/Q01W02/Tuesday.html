@@ -264,6 +264,8 @@
     wpGuidedPractice.forEach((p, i) => LessonProgress.preRegister(`wpgp-${i}`, `Word Problem Guided Practice #${i + 1}`, '2. Word Problem Practice'));
     triggerMathJax();
   }
+  TeacherPrint.registerAnswerList('wp-guided-practice-list', wpGuidedPractice.map((p, i) => ({ inputId: `wpgp-${i}-input`, answerText: `${p.a}${p.unit}` })));
+  TeacherPrint.registerAnswerList('warmup', [{ inputId: 'warmup-answer', answerText: '10 cups' }]);
 
   function checkWPGuidedPractice(idx) {
     const p = wpGuidedPractice[idx];

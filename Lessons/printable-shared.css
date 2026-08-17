@@ -167,6 +167,11 @@ h1 { margin: 8px 0; font-size: 2rem; font-weight: 800; }
 
 .answer-space.tall { min-height: 90px; }
 
+/* Multiple-choice items only need room for a single letter, not a full
+   answer box - the standard .answer-space next to an A/B/C/D options
+   list was wasting the same paper as an open-ended computation box. */
+.answer-space.short { min-height: 30px; max-width: 90px; }
+
 /* Formal graded-assessment elements (Graded Classwork printables) */
 .test-header-fields {
   display: flex;
@@ -315,5 +320,6 @@ h1 { margin: 8px 0; font-size: 2rem; font-weight: 800; }
   .problem-grid { gap: 10px 16px; }
   .answer-space { min-height: 34px; }
   .answer-space.tall { min-height: 60px; }
+  .answer-space.short { min-height: 24px; }
   .section-points { margin: -6px 0 10px 0; }
 }

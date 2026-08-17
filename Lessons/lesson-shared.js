@@ -419,6 +419,10 @@ const TeacherPrint = (function () {
       printDiv.innerHTML = html;
     });
 
+    // Remove any answer tags from a previous click before possibly adding
+    // fresh ones, so toggling the checkbox and re-generating never stacks
+    // duplicate tags next to the same input.
+    document.querySelectorAll('.tp-answer-tag').forEach((el) => el.remove());
     if (includeAnswers) {
       answerLists.forEach((a) => {
         const list = document.getElementById(a.listContainerId);
