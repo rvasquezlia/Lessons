@@ -47,7 +47,7 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Your teacher gave your table a physical set of 10 problem cards in one real-world topic. Go to Tab 1, do the Guided Practice warm-up, pick that same group, then type and submit each of your 10 answers. When your table finishes, go to Tab 2 to rotate and share with another group. Finish on Tab 3 with the strategy checklist and reflection, then type your name above and click <strong>Print My Progress</strong>.
+    Your teacher gave your table a physical set of 6 problem cards in one real-world topic. Go to Tab 1, do the Guided Practice warm-up, pick that same group, then type and submit each of your 6 answers. Once your table finishes, go to Tab 2 for about 15 minutes of mixing - find someone from a different group and learn how their field uses decimals. Finish on Tab 3 with the strategy checklist and reflection. Your exit ticket is two parts: print or scan your completed physical cards to a PDF and upload it to Google Classroom, <strong>and</strong> type your name above and click <strong>Print My Progress</strong> for your digital record.
   </div>
 
   <nav class="nav-tabs">
@@ -62,7 +62,7 @@
     <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Thursday, August 20, 2026 &middot; 45 min &middot; CCSS.Math.Content.6.NS.B.3 &amp; MP1: Make Sense of Problems and Persevere in Solving Them</p>
 
     <div class="explainer-box">
-      Every group is solving the <strong>same kind of decimal problems</strong> - but set in a different real job. Medicine, market/business, engineering, and the arts all depend on getting decimals right. Solve your group's 10 problems together on your physical cards, then type and submit each answer below so it saves to your progress.
+      Every group is solving the <strong>same kind of decimal problems</strong> - but set in a different real job. Medicine, market/business, engineering, and the arts all depend on getting decimals right. Solve your group's 6 problems together on your physical cards, then type and submit each answer below so it saves to your progress.
     </div>
 
     <div class="notebook-box">
@@ -87,7 +87,7 @@
       <div id="group-context" class="notebook-box"></div>
       <div class="howto-box">
         <strong class="howto-label">For this problem</strong>
-        Solve each problem on your physical card with your group first, then type your own answer in each box below and click Submit right after solving it.
+        Solve each problem on your physical card with your group first, then type your own answer in each box below and click Submit right after solving it. All 6 are real scenarios from your group's field - no bare computation drills.
       </div>
       <div id="group-problems"></div>
     </div>
@@ -95,10 +95,10 @@
 
   <!-- TAB 2: SHARE WHAT YOU LEARNED -->
   <div id="share" class="panel">
-    <div class="section-title">Share What You Learned</div>
+    <div class="section-title">Mixing Time: Share What You Learned</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Once your table finishes all 10 problems, rotate around the room and visit a table from a <strong>different</strong> group. Ask them what their problems were about and why decimal precision matters in their field. Then come back here, pick which group you visited, and write 2-3 sentences about what you learned.
+      Once your table finishes all 6 problems, you'll have about <strong>15 minutes to mix</strong>: get up, move around the room, and find someone from a <strong>different</strong> group. Ask them what their problems were about and why decimal precision matters in their field. Then come back here, pick which group you visited, and write 2-3 sentences about what you learned.
     </div>
 
     <div id="share-locked-notice" class="explainer-box">
@@ -133,7 +133,7 @@
     <div class="section-title">Wrap-Up: Strategy Checklist for Friday's Test</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Check off each strategy box, write your reflection, and click Submit Reflection. Finish by typing your name in the blue bar at the top of the page and clicking Print My Progress.
+      Check off each strategy box, write your reflection, and click Submit Reflection. Then complete your exit ticket in two parts: (1) print or scan your table's completed physical problem cards to a PDF and upload it to Google Classroom, and (2) type your name in the blue bar at the top of the page and click Print My Progress for your digital record.
     </div>
 
     <div class="notebook-box">
@@ -218,70 +218,55 @@
     }, { label: `Guided Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '1. My Group' });
   }
 
-  // Group data: each group has the same kind of decimal work, set in a different real-world job.
+  // Group data: each group has 6 real-world decimal problems, set in a different job.
+  // All 6 are contextualized scenarios (no bare computation drills).
   const groups = {
     medicine: {
       name: 'Medicine',
       context: "Nurses and doctors calculate medicine doses, patient measurements, and lab results every day. A misplaced decimal point can be dangerous, so precision matters.",
       problems: [
-        { type: 'word', q: "A nurse gives a patient three doses of medicine: 12.5 mL, 8.75 mL, and 6.4 mL over one day. What is the total amount of medicine given?", a: 27.65, tol: 0.02, unit: ' mL' },
-        { type: 'word', q: "A patient's temperature was 100.45°F this morning and 98.6°F this afternoon. How many degrees did it drop?", a: 1.85, tol: 0.02, unit: '°F' },
-        { type: 'quick', q: "\\(0.25 \\times 40\\)", a: 10.0, tol: 0.05 },
-        { type: 'quick', q: "\\(0.5 \\times 36.4\\)", a: 18.2, tol: 0.05 },
-        { type: 'quick', q: "\\(1.5 \\times 8\\)", a: 12.0, tol: 0.05 },
-        { type: 'quick', q: "\\(0.75 \\times 6\\)", a: 4.5, tol: 0.05 },
-        { type: 'quick', q: "\\(2.2 \\times 3.5\\)", a: 7.7, tol: 0.05 },
-        { type: 'quick', q: "\\(3.2 \\times 2.5\\)", a: 8.0, tol: 0.05 },
-        { type: 'quick', q: "\\(0.4 \\times 15\\)", a: 6.0, tol: 0.05 },
-        { type: 'quick', q: "\\(1.25 \\times 4.4\\)", a: 5.5, tol: 0.05 }
+        { q: "A nurse gives a patient three doses of medicine: 12.5 mL, 8.75 mL, and 6.4 mL over one day. What is the total amount of medicine given?", a: 27.65, tol: 0.02 },
+        { q: "A patient's temperature was 100.45°F this morning and 98.6°F this afternoon. How many degrees did it drop?", a: 1.85, tol: 0.02 },
+        { q: "A pharmacy technician has a bottle with 50 mL of solution. She dispenses three prescriptions of 12.5 mL, 9.75 mL, and 14.25 mL. How much solution remains in the bottle?", a: 13.5, tol: 0.02 },
+        { q: "A patient must take 2.5 mL of medicine every 6 hours, 4 times a day. How much medicine total does the patient take in one day?", a: 10.0, tol: 0.05 },
+        { q: "A hospital orders 3 boxes of syringes at $18.75 each, plus a box of bandages for $9.40. What is the total cost of the order?", a: 65.65, tol: 0.02 },
+        { q: "A lab technician needs 0.75 mL of a solution for each of 12 test tubes. How much solution does she need in total?", a: 9.0, tol: 0.05 }
       ]
     },
     market: {
       name: 'Market',
       context: "Store owners, cashiers, and vendors calculate prices, discounts, and change every day. Being off by even a few cents adds up fast across many customers.",
       problems: [
-        { type: 'word', q: "A vendor sells apples for $2.35 per kilogram. A customer buys 3.4 kilograms. How much does the customer pay?", a: 7.99, tol: 0.02, unit: '' },
-        { type: 'word', q: "A cash register has $112.75 in it at the start of the day. After paying $45.60 in supplier bills, how much is left?", a: 67.15, tol: 0.02, unit: '' },
-        { type: 'quick', q: "\\(1.25 \\times 8\\)", a: 10.0, tol: 0.05 },
-        { type: 'quick', q: "\\(3.40 \\times 2.5\\)", a: 8.5, tol: 0.05 },
-        { type: 'quick', q: "\\(0.75 \\times 12\\)", a: 9.0, tol: 0.05 },
-        { type: 'quick', q: "\\(4.20 \\times 3\\)", a: 12.6, tol: 0.05 },
-        { type: 'quick', q: "\\(2.60 \\times 5.5\\)", a: 14.3, tol: 0.05 },
-        { type: 'quick', q: "\\(6.5 \\times 1.4\\)", a: 9.1, tol: 0.05 },
-        { type: 'quick', q: "\\(3.75 \\times 2.2\\)", a: 8.25, tol: 0.05 },
-        { type: 'quick', q: "\\(0.9 \\times 15\\)", a: 13.5, tol: 0.05 }
+        { q: "A vendor sells apples for $2.35 per kilogram. A customer buys 3.4 kilograms. How much does the customer pay?", a: 7.99, tol: 0.02 },
+        { q: "A cash register has $112.75 in it at the start of the day. After paying $45.60 in supplier bills, how much is left?", a: 67.15, tol: 0.02 },
+        { q: "A vendor buys 6 crates of oranges at $8.25 each, then sells all of them for a total of $72.90. What is her profit?", a: 23.40, tol: 0.02 },
+        { q: "A cashier gives change from a $20 bill for a purchase of $13.45. How much change is given?", a: 6.55, tol: 0.02 },
+        { q: "A store marks down a $45.80 jacket by $12.25. What is the new price?", a: 33.55, tol: 0.02 },
+        { q: "A shopper buys 2.5 kg of coffee beans at $9.60 per kg. How much does she pay?", a: 24.00, tol: 0.02 }
       ]
     },
     engineering: {
       name: 'Engineering',
       context: "Engineers measure and build parts that must fit together exactly. A part that is off by even a few hundredths of a centimeter can make a whole machine fail.",
       problems: [
-        { type: 'word', q: "An engineer joins three metal beams: 245.6 cm, 89.75 cm, and then removes a 34.2 cm section. What is the final length?", a: 301.15, tol: 0.02, unit: ' cm' },
-        { type: 'word', q: "A part must measure exactly 12.50 cm. The measured part is 12.53 cm. By how many cm does it differ from the target?", a: 0.03, tol: 0.01, unit: ' cm' },
-        { type: 'quick', q: "\\(4.5 \\times 3\\)", a: 13.5, tol: 0.05 },
-        { type: 'quick', q: "\\(2.25 + 1.8\\)", a: 4.05, tol: 0.05 },
-        { type: 'quick', q: "\\(0.6 \\times 12\\)", a: 7.2, tol: 0.05 },
-        { type: 'quick', q: "\\(15.4 - 3.75\\)", a: 11.65, tol: 0.05 },
-        { type: 'quick', q: "\\(8.2 \\times 0.5\\)", a: 4.1, tol: 0.05 },
-        { type: 'quick', q: "\\(3.6 \\times 2.5\\)", a: 9.0, tol: 0.05 },
-        { type: 'quick', q: "\\(6.4 - 2.75\\)", a: 3.65, tol: 0.05 },
-        { type: 'quick', q: "\\(4.5 \\times 1.5\\)", a: 6.75, tol: 0.05 }
+        { q: "An engineer joins three metal beams: 245.6 cm, 89.75 cm, and then removes a 34.2 cm section. What is the final length?", a: 301.15, tol: 0.02 },
+        { q: "A part must measure exactly 12.50 cm. The measured part is 12.53 cm. By how many cm does it differ from the target?", a: 0.03, tol: 0.01 },
+        { q: "A machinist welds two metal sheets measuring 3.75 mm and 2.6 mm thick together, then grinds off 0.85 mm from the total. What is the final thickness?", a: 5.5, tol: 0.05 },
+        { q: "An engineer needs 8 bolts that each weigh 0.45 kg. What is the total weight of the bolts?", a: 3.6, tol: 0.05 },
+        { q: "A support beam measuring 4.2 m is extended by welding on a 1.85 m section. What is the new total length?", a: 6.05, tol: 0.02 },
+        { q: "A gear part must be 6.75 cm in diameter. The manufactured part measures 6.82 cm. By how many cm is it oversized?", a: 0.07, tol: 0.01 }
       ]
     },
     arts: {
       name: 'Arts',
       context: "Artists and designers measure canvases, mix paint ratios, and time performances. Precise measurements keep proportions and timing looking and sounding right.",
       problems: [
-        { type: 'word', q: "A painter mixes 2.5 liters of blue paint, 1.75 liters of white paint, and 0.6 liters of yellow paint. How many liters of paint does she have in total?", a: 4.85, tol: 0.02, unit: ' liters' },
-        { type: 'word', q: "A song is 24.5 seconds long. A musician repeats a 1.25-second riff 2 extra times at the end. How long is the song now?", a: 27.0, tol: 0.02, unit: ' seconds' },
-        { type: 'quick', q: "\\(3.5 \\times 4\\)", a: 14.0, tol: 0.05 },
-        { type: 'quick', q: "\\(0.75 \\times 8\\)", a: 6.0, tol: 0.05 },
-        { type: 'quick', q: "\\(12.25 - 4.6\\)", a: 7.65, tol: 0.05 },
-        { type: 'quick', q: "\\(2.4 \\times 6.5\\)", a: 15.6, tol: 0.05 },
-        { type: 'quick', q: "\\(5.5 \\times 2.2\\)", a: 12.1, tol: 0.05 },
-        { type: 'quick', q: "\\(1.8 \\times 0.5\\)", a: 0.9, tol: 0.05 },
-        { type: 'quick', q: "\\(2.6 \\times 3.5\\)", a: 9.1, tol: 0.05 },
-        { type: 'quick', q: "\\(9.4 - 3.65\\)", a: 5.75, tol: 0.05 }
+        { q: "A painter mixes 2.5 liters of blue paint, 1.75 liters of white paint, and 0.6 liters of yellow paint. How many liters of paint does she have in total?", a: 4.85, tol: 0.02 },
+        { q: "A song is 24.5 seconds long. A musician repeats a 1.25-second riff 2 extra times at the end. How long is the song now?", a: 27.0, tol: 0.02 },
+        { q: "A sculptor mixes 1.5 kg of clay with 0.75 kg of a second clay and 0.35 kg of a hardening additive. What is the total weight of the mixture?", a: 2.6, tol: 0.02 },
+        { q: "A dance routine has 4 sections that each last 2.25 minutes. How long is the whole routine?", a: 9.0, tol: 0.05 },
+        { q: "An art teacher buys 6 canvases at $4.85 each. What is the total cost?", a: 29.10, tol: 0.05 },
+        { q: "A photographer's video clip is 45.6 seconds long. She trims 8.75 seconds off the start and 6.4 seconds off the end. How long is the clip now?", a: 30.45, tol: 0.02 }
       ]
     }
   };
@@ -325,7 +310,7 @@
     document.getElementById('group-picker-box').innerHTML = `
       <span class="station-label">Locked In</span>
       <h3 style="margin-top:8px; color:var(--primary);">Your group: ${g.name}</h3>
-      <p>Your group is locked in for today. Scroll down to solve your 10 problems.</p>
+      <p>Your group is locked in for today. Scroll down to solve your 6 problems.</p>
     `;
 
     document.getElementById('group-context').innerHTML = `<div class="notebook-header">${g.name}</div><p style="margin:0;">${g.context}</p>`;
@@ -341,9 +326,7 @@
   function renderGroupProblems() {
     const g = groups[chosenGroup];
     const html = g.problems.map((p, i) => {
-      const prompt = p.type === 'word'
-        ? `<p style="margin:0 0 10px 0;">${p.q}</p>`
-        : `<p style="margin:0 0 10px 0;">${p.q} =</p>`;
+      const prompt = `<p style="margin:0 0 10px 0;">${p.q}</p>`;
       return `
         <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px;">
           <strong>${i + 1}.</strong>
