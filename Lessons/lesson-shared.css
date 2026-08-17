@@ -228,7 +228,22 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
   body.teacher-print-mode .progress-bar,
   body.teacher-print-mode button,
   body.teacher-print-mode .carousel-nav,
-  body.teacher-print-mode .tp-control-bar { display: none !important; }
+  body.teacher-print-mode .tp-control-bar,
+  body.teacher-print-mode .howto-box { display: none !important; }
+  /* .howto-box only ever explains how to use the interactive page (click
+     this, type that, check your work) - irrelevant once printed on paper.
+     .notebook-box/.explainer-box hold actual lesson content, so they stay,
+     but need the same page-break-inside protection as .tp-example so a
+     content block never gets sliced across a page boundary. */
+  body.teacher-print-mode .notebook-box,
+  body.teacher-print-mode .explainer-box,
+  body.teacher-print-mode .step-box { page-break-inside: avoid; break-inside: avoid; }
+  /* The on-screen sizing (used for a live interactive page) wastes paper
+     when printed as a flat document - shrink it down for print only. */
+  body.teacher-print-mode .panel { padding: 14px 4px; }
+  body.teacher-print-mode .notebook-box,
+  body.teacher-print-mode .explainer-box { padding: 10px 16px; margin-bottom: 14px; font-size: 0.92rem; }
+  body.teacher-print-mode .section-title { font-size: 1.2rem; margin: 10px 0 8px 0; }
   /* Printers/PDF exports often drop background colors, which would leave
      the header's white text invisible on white paper. */
   body.teacher-print-mode header { background: none; color: var(--primary, #1e3a8a); padding: 10px 0 14px 0; border-bottom: 3px solid var(--primary, #1e3a8a); }
