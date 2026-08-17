@@ -110,7 +110,7 @@
 
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Step through both worked examples using the arrows and Next Step button. Then solve the four guided practice problems and check each one. Finish with the Challenge Problem.
+      Step through all four worked examples using the arrows and Next Step button. Then solve the guided practice problems and check each one. Finish with the Challenge Problem.
     </div>
 
     <div class="carousel-card">
@@ -160,7 +160,7 @@
 
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Step through both worked examples. Read the special-cases box carefully - it previews what you'll dig into on Wednesday. Then solve the guided practice and the Challenge Problem.
+      Step through all four worked examples. Read the special-cases box carefully - it previews what you'll dig into on Wednesday. Then solve the guided practice and the Challenge Problem.
     </div>
 
     <div class="carousel-card">
@@ -363,6 +363,16 @@
         "<strong>Step 2 - Combine like terms, then add 7 to both sides:</strong> \\(5x - 7 = 23 \\;\\rightarrow\\; 5x = 30\\)",
         "<strong>Step 3 - Divide both sides by 5:</strong> \\(x = \\mathbf{6}\\)"
       ]
+    },
+    {
+      title: "Example 4: \\(8x - 4(x - 6) + 8 = 44\\)",
+      maxSteps: 4,
+      steps: [
+        "<strong>Step 1 - Distribute the \\(-4\\):</strong> \\(8x - 4x + 24 + 8 = 44\\) <em>(Distributive Property)</em>",
+        "<strong>Step 2 - Combine like terms:</strong> \\(4x + 32 = 44\\) <em>(Simplify)</em>",
+        "<strong>Step 3 - Subtract 32 from both sides:</strong> \\(4x = 12\\) <em>(Subtraction Property of Equality)</em>",
+        "<strong>Step 4 - Divide both sides by 4:</strong> \\(x = \\mathbf{3}\\) <em>(Division Property of Equality)</em>"
+      ]
     }
   ];
 
@@ -402,7 +412,9 @@
     { q: "\\(-3x + 8 = 2\\)", a: 2, tol: 0.001 },
     { q: "\\(5(x - 3) = 20\\)", a: 7, tol: 0.001 },
     { q: "\\(7x - 9 = 19\\)", a: 4, tol: 0.001 },
-    { q: "\\(-4x + 6 = -14\\)", a: 5, tol: 0.001 }
+    { q: "\\(-4x + 6 = -14\\)", a: 5, tol: 0.001 },
+    { q: "\\(5h - 13 = 12\\)", a: 5, tol: 0.001 },
+    { q: "\\(8(n + 2) = 24\\)", a: 1, tol: 0.001 }
   ];
 
   function renderL12Practice() {
@@ -483,6 +495,15 @@
         "<strong>Step 2 - Add 2 to both sides:</strong> \\(5x = 25\\)",
         "<strong>Step 3 - Divide both sides by 5:</strong> \\(x = \\mathbf{5}\\)"
       ]
+    },
+    {
+      title: "Example 4: \\(4y - 7 + 2y = -3(y-1) - 1\\)",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1 - Combine like terms on the left; distribute on the right:</strong> \\(6y - 7 = -3y + 3 - 1 \\;\\rightarrow\\; 6y - 7 = -3y + 2\\)",
+        "<strong>Step 2 - Add \\(3y\\) to both sides, then add 7 to both sides:</strong> \\(9y - 7 = 2 \\;\\rightarrow\\; 9y = 9\\)",
+        "<strong>Step 3 - Divide both sides by 9:</strong> \\(y = \\mathbf{1}\\)"
+      ]
     }
   ];
 
@@ -521,7 +542,9 @@
     { q: "\\(3(x + 4) = x + 18\\)", type: "number", a: 3, tol: 0.001 },
     { q: "\\(5x - 2 = 5x + 9\\)", type: "special", a: "no solution" },
     { q: "\\(8x - 1 = 3x + 24\\)", type: "number", a: 5, tol: 0.001 },
-    { q: "\\(2(x - 3) = x + 1\\)", type: "number", a: 7, tol: 0.001 }
+    { q: "\\(2(x - 3) = x + 1\\)", type: "number", a: 7, tol: 0.001 },
+    { q: "\\(-8x - (3x + 6) = 4 - x\\)", type: "number", a: -1, tol: 0.001 },
+    { q: "\\(14 + 3n = 8n - 3(n - 4)\\)", type: "number", a: 1, tol: 0.001 }
   ];
 
   function renderL13Practice() {
