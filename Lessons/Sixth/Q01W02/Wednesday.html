@@ -391,6 +391,13 @@
     eaGuidedPractice.forEach((p, i) => LessonProgress.preRegister(`eagp-${i}`, `Guided Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '1. Error Analysis'));
     triggerMathJax();
   }
+  TeacherPrint.registerAnswerList('ea-guided-practice-list', eaGuidedPractice.map((p, i) => ({ inputId: `eagp-${i}-input`, answerText: String(p.a) })));
+  TeacherPrint.registerAnswerList('health', [
+    { inputId: 'hs-fat', answerText: '10.625 g' },
+    { inputId: 'hs-protein', answerText: '22.875 g' },
+    { inputId: 'hs-carbs', answerText: '71.0 g' },
+    { inputId: 'hs-fiber', answerText: '9.5 g' }
+  ]);
 
   function checkEAGuidedPractice(idx) {
     const p = eaGuidedPractice[idx];
