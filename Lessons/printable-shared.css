@@ -193,6 +193,14 @@ h1 { margin: 8px 0; font-size: 2rem; font-weight: 800; }
 .practice-print .problem-grid { display: block; }
 .practice-print .group-context { margin-bottom: 10px; }
 
+/* Graded tests pack in the most content of any printable (17+ scored
+   items plus options/answer space), so they read best a couple points
+   below the site's standard base - add class="test-print" to <body> to
+   opt a printable into this. Keeps consistency with the rest of the site
+   sharing one base (type-scale.css) while still being visibly smaller
+   for the format that needs it most. */
+body.test-print { font-size: 9pt; }
+
 /* Formal graded-assessment elements (Graded Classwork printables) */
 .test-header-fields {
   display: flex;

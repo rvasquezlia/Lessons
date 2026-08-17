@@ -299,6 +299,26 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
     border-bottom: 2px dashed #cbd5e1;
   }
   body.teacher-print-mode .tp-example:last-child { border-bottom: none; }
+  /* Reference charts/grids (e.g. the place-value chart) carry heavy
+     on-screen chrome - thick borders, drop shadow, generous padding -
+     meant to look tappable. Without page-break protection, a chart that
+     lands near a page boundary can split mid-card: the browser closes
+     off the border/background at the break and reopens a fresh-looking
+     box below it for whatever's left, so one card visually becomes two.
+     Flatten to a plain, thin-bordered reference table for print. */
+  body.teacher-print-mode .pv-chart {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    background: none;
+    border: 1px solid var(--border, #94a3b8);
+    padding: 6px;
+    box-shadow: none;
+  }
+  body.teacher-print-mode .pv-column {
+    border-width: 1px;
+    padding: 6px 3px;
+    box-shadow: none;
+  }
   /* CSS animations (e.g. .step-item's fade-in) can freeze at their opacity:0
      starting keyframe in Chromium's print/PDF render pass instead of settling
      at the end state - force the settled, fully-visible state for print. */
