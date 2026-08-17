@@ -31,6 +31,10 @@
 
 <div class="app-container">
   <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
     <span class="badge">Q01W02 - Add, Subtract, and Multiply Decimals</span>
     <h1>Add, Subtract, and Multiply Decimals</h1>
   </header>
@@ -38,7 +42,7 @@
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Math 6 - Monday, Aug 17 - Add, Subtract, and Multiply Decimals')">🖨️ Print My Progress</button>
+    <button class="btn-print" onclick="printProgressReport('Math 6 - Monday, Aug 17 - Add, Subtract, and Multiply Decimals')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -221,7 +225,7 @@
     <!-- ADDITION & SUBTRACTION GUIDED PRACTICE -->
     <div class="notebook-box" style="margin-top:24px;">
       <div class="notebook-header">Guided Practice</div>
-      <p style="margin:0;">Solve each problem, then type your answer and check it.</p>
+      <p style="margin:0;">Copy each problem into your notebook and solve it there first, then type just your final answer below and check it. You get up to <strong>2 tries</strong> per problem - after a second miss, the correct method is shown and it locks.</p>
     </div>
     <div id="addsub-practice-list"></div>
 
@@ -340,7 +344,7 @@
     <!-- MULTIPLICATION GUIDED PRACTICE -->
     <div class="notebook-box" style="margin-top:24px;">
       <div class="notebook-header">Guided Practice</div>
-      <p style="margin:0;">Solve each problem, then type your answer and check it.</p>
+      <p style="margin:0;">Copy each problem into your notebook and solve it there first, then type just your final answer below and check it. You get up to <strong>2 tries</strong> per problem - after a second miss, the correct method is shown and it locks.</p>
     </div>
     <div id="mult-practice-list"></div>
 
@@ -1199,7 +1203,12 @@
         return;
       }
 
-      LessonCheck.submit(fb, { key: `wb-${currentWBProb}`, label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${p1_0}${p1_1}${p1_2}${p1_3} / ${p2_0}${p2_1}${p2_2}${p2_3} / ${u0}${u1}${u2}${u3}, ${decPlaces} decimal places`, section: '4. Whiteboard Suite' });
+      const correct = p1_0 === prob.p1[0] && p1_1 === prob.p1[1] && p1_2 === prob.p1[2] && p1_3 === prob.p1[3]
+        && p2_0 === prob.p2[0] && p2_1 === prob.p2[1] && p2_2 === prob.p2[2] && p2_3 === prob.p2[3]
+        && u0 === prob.ans[0] && u1 === prob.ans[1] && u2 === prob.ans[2] && u3 === prob.ans[3]
+        && Number(decPlaces) === prob.decimalPlaces;
+
+      LessonCheck.submit(fb, { key: `wb-${currentWBProb}`, label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${p1_0}${p1_1}${p1_2}${p1_3} / ${p2_0}${p2_1}${p2_2}${p2_3} / ${u0}${u1}${u2}${u3}, ${decPlaces} decimal places`, section: '4. Whiteboard Suite', correct });
     } else {
       const u0 = document.getElementById('wb-i0').value;
       const u1 = document.getElementById('wb-i1').value;
@@ -1211,7 +1220,9 @@
         return;
       }
 
-      LessonCheck.submit(fb, { key: `wb-${currentWBProb}`, label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${u0}${u1}${u2}${u3}`, section: '4. Whiteboard Suite' });
+      const correct = u0 === prob.ans[0] && u1 === prob.ans[1] && u2 === prob.ans[2] && u3 === prob.ans[3];
+
+      LessonCheck.submit(fb, { key: `wb-${currentWBProb}`, label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${u0}${u1}${u2}${u3}`, section: '4. Whiteboard Suite', correct });
     }
   }
 
@@ -1317,7 +1328,7 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: 'mon-add-challenge', label: 'Addition Challenge: find X in 14.X5 + 3.20 = 17.65', answer: `X = ${x}`, section: '2. Addition & Subtraction' });
+    LessonCheck.submit(fb, { key: 'mon-add-challenge', label: 'Addition Challenge: find X in 14.X5 + 3.20 = 17.65', answer: `X = ${x}`, section: '2. Addition & Subtraction', correct: x.trim() === '4' });
   }
 
   function checkMultChallenge() {
@@ -1330,7 +1341,7 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: 'mon-mult-challenge', label: 'Multiplication Challenge: garden seed cost', answer: `$${cost}`, section: '3. Multiplication Algorithm' });
+    LessonCheck.submit(fb, { key: 'mon-mult-challenge', label: 'Multiplication Challenge: garden seed cost', answer: `$${cost}`, section: '3. Multiplication Algorithm', correct: LessonCheck.numericMatch(cost, 26.40, 0.02) });
   }
 
   // ==========================================
@@ -1377,7 +1388,7 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: `${keyPrefix}-${idx}`, label: `Practice Set: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '5. Weekly Practice Set' });
+    LessonCheck.submit(fb, { key: `${keyPrefix}-${idx}`, label: `Practice Set: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '5. Weekly Practice Set', correct: LessonCheck.numericMatch(val, p.a, p.tol) });
   }
 
   function checkFinancialLiteracy() {
@@ -1391,7 +1402,7 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: 'ps-financial', label: 'Financial Literacy: subtotal / total / change', answer: `A=$${a}, B=$${b}, C=$${c}`, section: '5. Weekly Practice Set' });
+    LessonCheck.submit(fb, { key: 'ps-financial', label: 'Financial Literacy: subtotal / total / change', answer: `A=$${a}, B=$${b}, C=$${c}`, section: '5. Weekly Practice Set', correct: LessonCheck.numericMatch(a, 24.09, 0.02) && LessonCheck.numericMatch(b, 25.77, 0.02) && LessonCheck.numericMatch(c, 24.23, 0.02) });
   }
 
   renderPracticeSetList('ps-part1-list', practiceSetPart1, 'ps1');
@@ -1421,7 +1432,7 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: 'mon-exit-ticket', label: 'Exit Ticket: sum and product', answer: `Sum=${a1}, Product=${a2}`, section: '6. Exit Ticket' }, "Exit Ticket submitted and logged successfully!");
+    LessonCheck.submit(fb, { key: 'mon-exit-ticket', label: 'Exit Ticket: sum and product', answer: `Sum=${a1}, Product=${a2}`, section: '6. Exit Ticket', correct: LessonCheck.numericMatch(a1, 4.75, 0.01) && LessonCheck.numericMatch(a2, 4.375, 0.01) }, "Exit Ticket submitted and logged successfully!");
     LessonProgress.recordText('Exit Ticket: procedural difference explanation', exp, '6. Exit Ticket');
     LessonProgress.recordText('Exit Ticket: metacognition reflection', ref, '6. Exit Ticket');
   }

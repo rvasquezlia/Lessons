@@ -31,6 +31,10 @@
 
 <div class="app-container">
   <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
     <span class="badge">Q01W02 - Skill Reinforcement (Double Period)</span>
     <h1>Error Analysis &amp; Health Science</h1>
   </header>
@@ -38,7 +42,7 @@
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Math 6 - Wednesday, Aug 19 - Error Analysis & Health Science')">🖨️ Print My Progress</button>
+    <button class="btn-print" onclick="printProgressReport('Math 6 - Wednesday, Aug 19 - Error Analysis & Health Science')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -84,7 +88,7 @@
 
     <div class="notebook-box" style="margin-top:24px;">
       <div class="notebook-header">Guided Practice</div>
-      <p style="margin:0;">Solve each problem, then type your answer and check it.</p>
+      <p style="margin:0;">Copy each problem into your notebook and solve it there first, then type just your final answer below and check it. You get up to <strong>2 tries</strong> per problem - after a second miss, the correct method is shown and it locks.</p>
     </div>
     <div id="ea-guided-practice-list"></div>
   </div>
@@ -112,7 +116,7 @@
         <li>Add and subtract decimals: word problems <span class="ixl-code">97T</span></li>
         <li>Add and subtract money amounts: word problems <span class="ixl-code">DR9</span></li>
       </ul>
-      <p style="margin:14px 0 0 0; font-weight:700;">📋 Your teacher will call a few names for a small-group table check-in on decimal alignment while you work - if you're called, bring your notebook.</p>
+      <p style="margin:14px 0 0 0; font-weight:700;">Your teacher will call a few names for a small-group table check-in on decimal alignment while you work - if you're called, bring your notebook.</p>
     </div>
 
     <div class="notebook-box" style="margin-top:20px;">
@@ -353,7 +357,7 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: `ea-${idx}`, label: `Error Analysis: ${ex.problem.replace(/<[^>]+>/g, '').replace(/\\\(|\\\)/g, '')}`, answer: `Verdict: ${verdict}, Answer: ${val}`, section: '1. Error Analysis' });
+    LessonCheck.submit(fb, { key: `ea-${idx}`, label: `Error Analysis: ${ex.problem.replace(/<[^>]+>/g, '').replace(/\\\(|\\\)/g, '')}`, answer: `Verdict: ${verdict}, Answer: ${val}`, section: '1. Error Analysis', correct: verdict === ex.verdict && LessonCheck.numericMatch(val, ex.correctValue, 0.01) });
   }
 
   function confirmIXL(cb) {
@@ -421,7 +425,7 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: 'wed-health-science', label: 'Health Science: nutrient totals for 2.5 bars', answer: `Fat=${fat}, Protein=${protein}, Carbs=${carbs}, Fiber=${fiber}`, section: '3. Health Science' });
+    LessonCheck.submit(fb, { key: 'wed-health-science', label: 'Health Science: nutrient totals for 2.5 bars', answer: `Fat=${fat}, Protein=${protein}, Carbs=${carbs}, Fiber=${fiber}`, section: '3. Health Science', correct: LessonCheck.numericMatch(fat, 10.625, 0.02) && LessonCheck.numericMatch(protein, 22.875, 0.02) && LessonCheck.numericMatch(carbs, 71.0, 0.05) && LessonCheck.numericMatch(fiber, 9.5, 0.02) });
   }
 
   // Exit Ticket Submission

@@ -27,6 +27,10 @@
 
 <div class="app-container">
   <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
     <span class="badge">Q01W02 - Practice</span>
     <h1>One Solution, No Solution, or Infinitely Many?</h1>
   </header>
@@ -34,7 +38,7 @@
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Algebra I - Wednesday, Aug 19 - Equation Classification')">🖨️ Print My Progress</button>
+    <button class="btn-print" onclick="printProgressReport('Algebra I - Wednesday, Aug 19 - Equation Classification')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -89,6 +93,7 @@
     </div>
     <div class="notebook-box">
       <div class="notebook-header">Guided Practice</div>
+      <p style="margin:0 0 10px 0;">Copy each equation into your notebook (or your handout), predict its classification, then solve there to verify. You get up to <strong>2 tries</strong> per problem - after a second miss, the correct method is shown and it locks.</p>
       <div id="classify-list"></div>
     </div>
   </div>
@@ -219,7 +224,7 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: `wu-${idx}`, label: `Warm-Up: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '1. Warm-Up' });
+    LessonCheck.submit(fb, { key: `wu-${idx}`, label: `Warm-Up: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '1. Warm-Up', correct: LessonCheck.numericMatch(val, p.a, p.tol) });
   }
 
   // Classification Challenge (Guided Practice - checked on screen)
@@ -299,7 +304,7 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: 'wed-comp1', label: 'Comparison: two savings plans', answer: `${verdict}`, section: '3. Comparison Scenario' });
+    LessonCheck.submit(fb, { key: 'wed-comp1', label: 'Comparison: two savings plans', answer: `${verdict}`, section: '3. Comparison Scenario', correct: verdict === 'none' });
   }
 
   function checkComparison2() {
@@ -312,7 +317,7 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: 'wed-comp2', label: 'Comparison: two billing expressions', answer: `${verdict}`, section: '3. Comparison Scenario' });
+    LessonCheck.submit(fb, { key: 'wed-comp2', label: 'Comparison: two billing expressions', answer: `${verdict}`, section: '3. Comparison Scenario', correct: verdict === 'infinite' });
   }
 
   // Comparison Scenario - More Practice (quick classify)
@@ -356,7 +361,8 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: `cm-${idx}`, label: `Quick Classify #${idx + 3}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: `${verdict}${xVal ? ', x=' + xVal : ''}`, section: '3. Comparison Scenario' });
+    const correct = verdict === p.verdict && (p.verdict !== 'one' || LessonCheck.numericMatch(xVal, p.a, 0.01));
+    LessonCheck.submit(fb, { key: `cm-${idx}`, label: `Quick Classify #${idx + 3}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: `${verdict}${xVal ? ', x=' + xVal : ''}`, section: '3. Comparison Scenario', correct });
   }
 
   // IXL confirmation

@@ -45,6 +45,23 @@ header {
   text-align: center;
 }
 
+.brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.brand-logo { height: 40px; width: auto; display: block; }
+.brand-name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.92;
+}
+
 .badge {
   display: inline-block;
   background: #f59e0b;
@@ -223,9 +240,34 @@ h1 { margin: 8px 0; font-size: 2rem; font-weight: 800; }
 
 .no-print { }
 
+.print-tip {
+  font-size: 0.85rem;
+  color: #475569;
+  margin: -10px 0 20px 0;
+}
+
+/* Letter-size page with a real margin on every printed page (not just the
+   first/last) - without this, the browser falls back to whatever margin
+   setting it last remembered, which can be "None" and leaves content
+   flush against the paper edge with the browser's auto header/footer
+   (URL + date + page number) crowding the page top/bottom instead. */
+@page {
+  size: letter;
+  margin: 0.65in 0.6in;
+}
+
 @media print {
   body { background: white; padding: 0; }
   .app-container { box-shadow: none; border: none; border-radius: 0; max-width: 100%; }
   .no-print { display: none !important; }
   .page-break { page-break-before: always; }
+  /* Printers/PDF exports often drop background colors, which would leave
+     the header's white text invisible on white paper. Switch to dark text
+     on no background instead of relying on background color surviving
+     print - reliable regardless of the "print backgrounds" setting. */
+  header { background: none; color: var(--primary); padding: 10px 0 14px 0; border-bottom: 3px solid var(--primary); }
+  .badge { background: none; color: var(--primary); border: 2px solid var(--primary); }
+  .group-heading { background: none; color: var(--primary); border: 2px solid var(--primary-light); }
+  .points-tag { background: none; color: var(--primary); border: 1px solid var(--primary-light); }
+  .extra-credit-box .ec-heading { background: none; color: var(--accent); border: 1px solid var(--accent); }
 }

@@ -52,6 +52,22 @@
       padding: 28px 32px;
       text-align: center;
     }
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .brand-logo { height: 48px; width: auto; display: block; }
+    .brand-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: inherit;
+      opacity: 0.92;
+    }
     .badge {
       display: inline-block;
       background: #f59e0b;
@@ -245,7 +261,11 @@
 
 <div class="app-container">
   <header>
-    <span class="badge">Lincoln International Academy</span>
+    <div class="brand-row">
+      <img src="assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">2026-2027 Academic Year</span>
     <h1>Lesson Plans</h1>
     <p class="subtitle">Digital lessons, guided practice, and teacher guides - organized by grade, quarter, and week</p>
   </header>
