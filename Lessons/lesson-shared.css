@@ -1,3 +1,9 @@
+/* See type-scale.css: sets html/body font-size for this page, shared
+   with printable-shared.css and index.html so rem-based sizing (headers,
+   badges, section titles, ...) stays consistent with inherited text
+   across the whole site, on screen and on paper. */
+@import url("type-scale.css");
+
 :root {
   --primary: #1e3a8a;
   --primary-light: #2563eb;
@@ -17,15 +23,6 @@
 
 * { box-sizing: border-box; }
 
-/* Every rem-sized rule on this page is relative to <html>'s font-size,
-   not body's - without setting this, rem units silently anchor to the
-   browser's 16px default while plain inherited text follows body's 19px
-   below, so anything sized in rem (howto-box, explainer-box, section
-   titles, ...) renders visibly smaller than everything else even though
-   the CSS never intended that gap. Keep this equal to body's font-size
-   so rem-based and inherited sizing finally agree. */
-html { font-size: 19px; }
-
 body, input, button, textarea, select {
   font-family: 'Montserrat', sans-serif;
 }
@@ -35,7 +32,6 @@ body {
   color: var(--text);
   margin: 0;
   padding: 20px;
-  font-size: 19px;
   line-height: 1.6;
 }
 

@@ -1,0 +1,15 @@
+/* Single source of truth for the site's base font-size. lesson-shared.css
+   and printable-shared.css @import this, and index.html links it directly,
+   so every surface (interactive lessons, printables, and the index) reads
+   at the same standard size instead of each file hand-copying its own
+   number and drifting out of sync, which is what caused the previous
+   inconsistency.
+
+   12pt is the standard body-text size for a printed page. Using pt here
+   (an absolute unit, 1pt = 1/72in) rather than px means it resolves to
+   the same physical size on screen and on paper - screen sizing already
+   matches print sizing, so no separate @media print override is needed
+   just to keep the base font-size in sync between the two. Headers and
+   other emphasized text stay sized in rem against this base, so they
+   scale up proportionally instead of needing separate print rules. */
+html, body { font-size: 12pt; }
