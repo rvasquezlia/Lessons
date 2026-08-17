@@ -15,6 +15,12 @@
 
 * { box-sizing: border-box; }
 
+/* See lesson-shared.css for why this matters: rem units resolve against
+   <html>, not body - without this, everything sized in rem quietly
+   anchors to the browser's 16px default instead of this page's actual
+   18px base, creating an unintended size gap against inherited text. */
+html { font-size: 18px; }
+
 body, input, button, textarea, select {
   font-family: 'Montserrat', sans-serif;
 }
@@ -172,14 +178,28 @@ h1 { margin: 8px 0; font-size: 2rem; font-weight: 800; }
    list was wasting the same paper as an open-ended computation box. */
 .answer-space.short { min-height: 30px; max-width: 90px; }
 
+/* Non-graded practice sheets (Challenge Bank, Additional Practice, day
+   worksheets) - students work these digitally and submit to Classroom,
+   so the printed copy is a compact reference list of questions/options,
+   not a fill-in worksheet. No card chrome, no answer boxes, no page
+   trying to leave room to write - just dense, numbered text. Add
+   class="practice-print" to <body> to opt a printable into this. */
+.practice-print .problem-item {
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin-bottom: 8px;
+}
+.practice-print .problem-item p { margin: 0 0 3px 0; }
+.practice-print .answer-space { display: none; }
+.practice-print .problem-grid { display: block; }
+.practice-print .group-context { margin-bottom: 10px; }
+
 /* Formal graded-assessment elements (Graded Classwork printables) */
 .test-header-fields {
   display: flex;
   flex-wrap: wrap;
   gap: 14px 32px;
-  border: 2px solid var(--border);
-  border-radius: 10px;
-  padding: 14px 20px;
   margin-bottom: 20px;
   font-weight: 700;
 }
@@ -315,6 +335,7 @@ h1 { margin: 8px 0; font-size: 2rem; font-weight: 800; }
 
   /* The on-screen sizing is comfortable for reading in a browser tab but
      wastes paper once printed - tighten it up for the physical page. */
+  html { font-size: 14px; }
   body { font-size: 14px; }
   .problem-item { padding: 10px 14px; margin-bottom: 10px; }
   .problem-grid { gap: 10px 16px; }
