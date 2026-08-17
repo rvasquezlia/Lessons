@@ -151,7 +151,11 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
 }
 
 @media print {
-  body > *:not(#print-report) { display: none !important; }
+  /* Default print behavior: only the student's progress report prints.
+     Teacher Print Mode (below) overrides this to print the actual lesson
+     content instead, when the teacher is generating a "what we covered"
+     handout via TeacherPrint in lesson-shared.js. */
+  body:not(.teacher-print-mode) > *:not(#print-report) { display: none !important; }
   #print-report {
     display: block !important;
     font-family: 'Montserrat', sans-serif;
@@ -167,6 +171,81 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
   .print-table .print-section-row td { background: #cbd5e1; font-weight: 800; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.03em; }
   .print-blank { color: #888; }
   .print-footer { margin-top: 20px; font-size: 0.85rem; font-style: italic; color: #444; }
+
+  .no-print { display: none !important; }
+}
+
+/* ================================================================
+   TEACHER PRINT MODE - "Print Class Progress" (see TeacherPrint in
+   lesson-shared.js). Lets a teacher check off which of today's tabs
+   were actually covered, then prints those tabs' full content -
+   carousels expanded to every worked example instead of just
+   whichever slide was on screen - as a handout/record.
+   ================================================================ */
+.tp-control-bar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: var(--primary, #1e3a8a);
+  color: #fff;
+  padding: 16px 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+.tp-control-bar .tp-title { font-weight: 800; margin-bottom: 10px; }
+.tp-control-bar .tp-checklist { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.tp-control-bar label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.15);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.tp-control-bar button {
+  background: #f59e0b;
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.tp-print-all { display: none; }
+
+@media print {
+  body.teacher-print-mode > .app-container {
+    display: block !important;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    max-width: 100%;
+  }
+  body.teacher-print-mode .nav-tabs,
+  body.teacher-print-mode .progress-bar,
+  body.teacher-print-mode button,
+  body.teacher-print-mode .carousel-nav,
+  body.teacher-print-mode .tp-control-bar { display: none !important; }
+  /* Printers/PDF exports often drop background colors, which would leave
+     the header's white text invisible on white paper. */
+  body.teacher-print-mode header { background: none; color: var(--primary, #1e3a8a); padding: 10px 0 14px 0; border-bottom: 3px solid var(--primary, #1e3a8a); }
+  body.teacher-print-mode .badge { background: none; color: var(--primary, #1e3a8a); border: 2px solid var(--primary, #1e3a8a); }
+  body.teacher-print-mode .tp-print-all { display: block; }
+  body.teacher-print-mode .tp-example {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-bottom: 22px;
+    padding-bottom: 16px;
+    border-bottom: 2px dashed #cbd5e1;
+  }
+  body.teacher-print-mode .tp-example:last-child { border-bottom: none; }
+  /* CSS animations (e.g. .step-item's fade-in) can freeze at their opacity:0
+     starting keyframe in Chromium's print/PDF render pass instead of settling
+     at the end state - force the settled, fully-visible state for print. */
+  body.teacher-print-mode .step-item.visible { animation: none !important; opacity: 1 !important; transform: none !important; }
 }
 
 /* Navigation Tabs */

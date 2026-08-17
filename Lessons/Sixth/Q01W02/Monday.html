@@ -1003,6 +1003,21 @@
     renderMultCarousel();
   }
 
+  // Jump a carousel to example i, fully worked (all steps revealed) -
+  // used only by TeacherPrint to build the "print everything" view.
+  function showAddExFullyWorked(i) {
+    currentAddEx = i;
+    currentAddExStep = addExamples[i].maxSteps;
+    renderAddCarousel();
+  }
+  function showMultExFullyWorked(i) {
+    currentMultEx = i;
+    currentMultExStep = multExamples[i].maxSteps;
+    renderMultCarousel();
+  }
+  TeacherPrint.registerCarousel('add-carousel-content', addExamples.length, showAddExFullyWorked);
+  TeacherPrint.registerCarousel('mult-carousel-content', multExamples.length, showMultExFullyWorked);
+
   // Initialize carousels on page load
   renderAddCarousel();
   renderMultCarousel();
