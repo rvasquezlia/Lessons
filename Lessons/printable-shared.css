@@ -153,6 +153,18 @@ h1 { margin: 8px 0; font-size: 2rem; font-weight: 800; }
   background: #fff;
 }
 
+/* Two-column layout for short, single-answer problems (a bare computation,
+   a short "Find ___") - stacking these full-width one per row is most of
+   where printables were wasting paper. Save .problem-item's default
+   full-width stacking for problems with real reading length (word
+   problems, multi-part items). */
+.problem-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 20px;
+}
+.problem-grid .problem-item { margin-bottom: 0; }
+
 .answer-space.tall { min-height: 90px; }
 
 /* Formal graded-assessment elements (Graded Classwork printables) */
@@ -295,4 +307,13 @@ h1 { margin: 8px 0; font-size: 2rem; font-weight: 800; }
   thead { display: table-header-group; }
   tr { page-break-inside: avoid; break-inside: avoid; }
   .explainer-box, .group-context { page-break-inside: avoid; break-inside: avoid; }
+
+  /* The on-screen sizing is comfortable for reading in a browser tab but
+     wastes paper once printed - tighten it up for the physical page. */
+  body { font-size: 14px; }
+  .problem-item { padding: 10px 14px; margin-bottom: 10px; }
+  .problem-grid { gap: 10px 16px; }
+  .answer-space { min-height: 34px; }
+  .answer-space.tall { min-height: 60px; }
+  .section-points { margin: -6px 0 10px 0; }
 }
