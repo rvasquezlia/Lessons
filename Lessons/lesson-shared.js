@@ -344,9 +344,18 @@ function printProgressReport(lessonTitle) {
 // ============================================================
 const TeacherPrint = (function () {
   const carousels = []; // {containerId, count, showAtFn}
+  const answerLists = []; // {listContainerId, items: [{inputId, answerText}]}
 
   function registerCarousel(containerId, count, showAtFn) {
     carousels.push({ containerId, count, showAtFn });
+  }
+
+  // items: array of {inputId, answerText} - inputId is the <input>/<select>
+  // id already used by the page's own Check button for that item, so the
+  // answer key can be printed right next to the field a student would
+  // have filled in. answerText is a plain string, e.g. "16.85".
+  function registerAnswerList(listContainerId, items) {
+    answerLists.push({ listContainerId, items });
   }
 
   function buildBar() {
@@ -364,6 +373,7 @@ const TeacherPrint = (function () {
     bar.innerHTML = `
       <div class="tp-title">Print Class Progress - check what you covered today, then generate</div>
       <div class="tp-checklist">${checklistHtml}</div>
+      <label style="display:flex; align-items:center; gap:6px; margin-bottom:12px; width:fit-content;"><input type="checkbox" id="tp-include-answers"> Include answer key (for your copy, not the students')</label>
       <button type="button">Generate Printable</button>
     `;
     document.body.insertBefore(bar, document.body.firstChild);
@@ -372,6 +382,7 @@ const TeacherPrint = (function () {
 
   function generate() {
     const checked = [...document.querySelectorAll('.tp-cb:checked')].map((cb) => cb.value);
+    const includeAnswers = document.getElementById('tp-include-answers')?.checked;
 
     document.querySelectorAll('.panel').forEach((panel) => {
       panel.classList.toggle('active', checked.includes(panel.id));
@@ -383,12 +394,22 @@ const TeacherPrint = (function () {
       const panel = container.closest('.panel');
       if (!panel || !checked.includes(panel.id)) return;
 
+      // The interactive shell around a carousel (its nav bar, and the
+      // heading introducing it as "interactive") doesn't apply once
+      // expanded to a flat list of worked examples - hide the whole shell
+      // and its heading rather than just the content div, so an empty
+      // bordered card isn't left behind wasting most of a page.
+      const card = container.closest('.carousel-card') || container;
+      const heading = card.previousElementSibling;
+      if (heading && heading.tagName === 'H3') heading.classList.add('no-print');
+      card.classList.add('no-print');
+
       let printDiv = document.getElementById(c.containerId + '-tp-all');
       if (!printDiv) {
         printDiv = document.createElement('div');
         printDiv.id = c.containerId + '-tp-all';
         printDiv.className = 'tp-print-all';
-        container.parentNode.insertBefore(printDiv, container.nextSibling);
+        card.parentNode.insertBefore(printDiv, card.nextSibling);
       }
       let html = '';
       for (let i = 0; i < c.count; i++) {
@@ -396,8 +417,24 @@ const TeacherPrint = (function () {
         html += `<div class="tp-example">${container.innerHTML}</div>`;
       }
       printDiv.innerHTML = html;
-      container.classList.add('no-print');
     });
+
+    if (includeAnswers) {
+      answerLists.forEach((a) => {
+        const list = document.getElementById(a.listContainerId);
+        if (!list) return;
+        const panel = list.closest('.panel');
+        if (!panel || !checked.includes(panel.id)) return;
+        a.items.forEach((item) => {
+          const input = document.getElementById(item.inputId);
+          if (!input) return;
+          const tag = document.createElement('span');
+          tag.className = 'tp-answer-tag';
+          tag.textContent = `Answer: ${item.answerText}`;
+          input.insertAdjacentElement('afterend', tag);
+        });
+      });
+    }
 
     document.body.classList.add('teacher-print-mode');
 
@@ -415,5 +452,5 @@ const TeacherPrint = (function () {
   }
 
   init();
-  return { registerCarousel };
+  return { registerCarousel, registerAnswerList };
 })();
