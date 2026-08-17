@@ -216,6 +216,19 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
 
 .tp-print-all { display: none; }
 
+.tp-answer-tag {
+  display: none;
+  margin-left: 10px;
+  padding: 2px 10px;
+  border-radius: 6px;
+  background: #fef3c7;
+  border: 1px solid #d97706;
+  color: #78350f;
+  font-weight: 700;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
 @media print {
   body.teacher-print-mode > .app-container {
     display: block !important;
@@ -249,6 +262,7 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
   body.teacher-print-mode header { background: none; color: var(--primary, #1e3a8a); padding: 10px 0 14px 0; border-bottom: 3px solid var(--primary, #1e3a8a); }
   body.teacher-print-mode .badge { background: none; color: var(--primary, #1e3a8a); border: 2px solid var(--primary, #1e3a8a); }
   body.teacher-print-mode .tp-print-all { display: block; }
+  body.teacher-print-mode .tp-answer-tag { display: inline-block; }
   body.teacher-print-mode .tp-example {
     page-break-inside: avoid;
     break-inside: avoid;

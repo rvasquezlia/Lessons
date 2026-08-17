@@ -1269,6 +1269,7 @@
     document.getElementById('addsub-practice-list').innerHTML = html;
     addsubPractice.forEach((p, i) => LessonProgress.preRegister(`addsub-${i}`, `Addition/Subtraction Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '2. Addition & Subtraction'));
   }
+  TeacherPrint.registerAnswerList('addsub-practice-list', addsubPractice.map((p, i) => ({ inputId: `addsub-${i}-input`, answerText: String(p.a) })));
 
   function checkAddsubPractice(idx) {
     const p = addsubPractice[idx];
@@ -1314,6 +1315,7 @@
     document.getElementById('mult-practice-list').innerHTML = html;
     multPractice.forEach((p, i) => LessonProgress.preRegister(`mult-${i}`, `Multiplication Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '3. Multiplication Algorithm'));
   }
+  TeacherPrint.registerAnswerList('mult-practice-list', multPractice.map((p, i) => ({ inputId: `mult-${i}-input`, answerText: String(p.a) })));
 
   function checkMultPractice(idx) {
     const p = multPractice[idx];
