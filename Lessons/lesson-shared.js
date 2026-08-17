@@ -190,6 +190,65 @@ const LessonCheck = (() => {
 })();
 
 // ==========================================
+// NUMBER LINE DIAGRAM (reusable, no external library)
+// ==========================================
+// Renders a horizontal number line into the element with id `containerId`.
+// opts: { min, max, step (tick spacing, default 1),
+//         points: [{value, label, color}],
+//         arrows: [{from, to, label, color, row}] } - `row` (0, 1, 2...)
+//         stacks an arrow's arc higher so it doesn't overlap arrows on row 0.
+// Pure inline SVG - prints correctly (no CSS background-image reliance) and
+// needs no external charting library or CDN script.
+function renderNumberLine(containerId, opts) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const min = opts.min, max = opts.max, step = opts.step || 1;
+  const arrows = opts.arrows || [];
+  const points = opts.points || [];
+  const maxRow = arrows.reduce((m, a) => Math.max(m, a.row || 0), 0);
+  const width = 600;
+  const height = 90 + maxRow * 30;
+  const marginX = 26;
+  const lineY = height - 32;
+  const usableWidth = width - marginX * 2;
+  const xFor = (v) => marginX + ((v - min) / (max - min)) * usableWidth;
+
+  let defs = '';
+  let body = `<line x1="${marginX}" y1="${lineY}" x2="${width - marginX}" y2="${lineY}" stroke="#1e3a8a" stroke-width="2"/>`;
+
+  for (let v = min; v <= max; v += step) {
+    const x = xFor(v);
+    body += `<line x1="${x}" y1="${lineY - 6}" x2="${x}" y2="${lineY + 6}" stroke="#1e3a8a" stroke-width="2"/>`;
+    body += `<text x="${x}" y="${lineY + 22}" text-anchor="middle" font-size="13" fill="#334155" font-family="Montserrat, sans-serif">${v}</text>`;
+  }
+
+  arrows.forEach((a, i) => {
+    const x1 = xFor(a.from), x2 = xFor(a.to);
+    const arcHeight = 26 + (a.row || 0) * 30;
+    const midX = (x1 + x2) / 2;
+    const topY = lineY - arcHeight;
+    const color = a.color || '#d97706';
+    const markerId = `nl-arrow-${containerId}-${i}`;
+    defs += `<marker id="${markerId}" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="${color}"/></marker>`;
+    body += `<path d="M ${x1} ${lineY - 4} Q ${midX} ${topY} ${x2} ${lineY - 4}" fill="none" stroke="${color}" stroke-width="2.5" marker-end="url(#${markerId})"/>`;
+    if (a.label) {
+      body += `<text x="${midX}" y="${topY - 6}" text-anchor="middle" font-size="12" fill="${color}" font-weight="700" font-family="Montserrat, sans-serif">${a.label}</text>`;
+    }
+  });
+
+  points.forEach((p) => {
+    const x = xFor(p.value);
+    const color = p.color || '#1e3a8a';
+    body += `<circle cx="${x}" cy="${lineY}" r="5" fill="${color}"/>`;
+    if (p.label) {
+      body += `<text x="${x}" y="${lineY - 12}" text-anchor="middle" font-size="12" fill="${color}" font-weight="700" font-family="Montserrat, sans-serif">${p.label}</text>`;
+    }
+  });
+
+  el.innerHTML = `<svg viewBox="0 0 ${width} ${height}" style="width:100%; max-width:600px; display:block; margin:12px auto;" role="img" aria-label="Number line diagram from ${min} to ${max}"><defs>${defs}</defs>${body}</svg>`;
+}
+
+// ==========================================
 // PRINTABLE PROGRESS / PROOF OF COMPLETION
 // ==========================================
 // Builds a print-only report (name, date, lesson title, every logged

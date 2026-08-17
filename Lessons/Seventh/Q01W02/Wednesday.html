@@ -105,7 +105,7 @@
     <div class="section-title">Quick Check 1.1 (Savvas)</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Solve each problem in your notebook with your group, then type your own answer and submit. Question 2 has no single right answer to check here - discuss it with your group and submit your group's reasoning.
+      Solve each problem in your notebook with your group, then type your own answer and submit.
     </div>
 
     <div class="step-box">
@@ -120,9 +120,15 @@
     </div>
 
     <div class="step-box" style="margin-top:16px;">
-      <p><strong>2.</strong> The number line shows Allie's scores in two rounds of a card game: an arrow from \(0\) to \(4\) for Round 1, then an arrow from \(4\) back to \(0\) for Round 2. Explain her gains and losses in each round, and her total after both rounds.</p>
-      <textarea id="qc11-1-input" class="form-control-lg" rows="2" placeholder="Explain your group's reasoning..."></textarea>
-      <button class="btn-lg" style="margin-top:8px;" onclick="checkQC11Text(1)">Submit</button>
+      <p><strong>2.</strong> The number line shows Allie's scores in two rounds of a card game. Select all statements that explain her gains and losses.</p>
+      <div id="qc11-1-numberline"></div>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc11-1-cb0"> She gains 4 points in Round 1.</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc11-1-cb1"> She gains 4 points in Round 2.</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc11-1-cb2"> She loses 4 points in Round 1.</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc11-1-cb3"> She loses 4 points in Round 2.</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc11-1-cb4"> She has 0 points at the end of two rounds.</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc11-1-cb5"> She has 4 points at the end of two rounds.</label>
+      <button class="btn-lg" style="margin-top:6px;" onclick="checkQC11Multi()">Submit</button>
       <div id="qc11-1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
     </div>
 
@@ -205,15 +211,18 @@
     <div class="section-title">Quick Check 1.3 (Savvas)</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Solve each problem in your notebook with your group, then submit your own answer. Question 1 is a group discussion question about a number-line diagram - there's no single answer to check here.
+      Solve each problem in your notebook with your group, then submit your own answer.
     </div>
 
     <div class="step-box">
-      <p><strong>1.</strong> A number line shows an arrow starting at \(-4\) and ending at \(-13\). Which subtraction expression does it show?<br>
-      A. \(-13 + 4\)&nbsp;&nbsp; B. \(-4 - 13\)&nbsp;&nbsp; C. \(-4 - 9\)&nbsp;&nbsp; D. \(-4 + 9\)<br>
-      With your group, discuss which expression matches and why.</p>
-      <textarea id="qc13-0-input" class="form-control-lg" rows="2" placeholder="Explain your group's reasoning..."></textarea>
-      <button class="btn-lg" style="margin-top:8px;" onclick="checkQC13Text(0)">Submit</button>
+      <p><strong>1.</strong> The number line shows an arrow starting at \(-4\) and ending at \(-13\). Which subtraction expression does it show?</p>
+      <div id="qc13-0-numberline"></div>
+      <p style="margin:0;">A. \(-13 + 4\)&nbsp;&nbsp; B. \(-4 - 13\)&nbsp;&nbsp; C. \(-4 - 9\)&nbsp;&nbsp; D. \(-4 + 9\)</p>
+      <select id="qc13-0-input" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC13(0)">Submit</button>
       <div id="qc13-0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
     </div>
 
@@ -393,11 +402,14 @@
     const correct = typeof expected === "number" ? LessonCheck.numericMatch(raw, expected, 0.01) : raw.trim().toUpperCase() === expected;
     LessonCheck.submit(fb, { key: `qc11-${idx}`, label: `Quick Check 1.1 #${idx + 1}`, answer: raw, section: '2. Quick Check 1.1', correct });
   }
-  function checkQC11Text(idx) {
-    const raw = document.getElementById(`qc11-${idx}-input`).value.trim();
-    const fb = document.getElementById(`qc11-${idx}-feedback`);
-    if (raw.length <= 5) { LessonCheck.incomplete(fb, "Write your group's explanation before submitting."); return; }
-    LessonCheck.submit(fb, { key: `qc11-${idx}`, label: `Quick Check 1.1 #${idx + 1} (discussion)`, answer: raw, section: '2. Quick Check 1.1' });
+  function checkQC11Multi() {
+    const fb = document.getElementById('qc11-1-feedback');
+    const checked = [0,1,2,3,4,5].map(i => document.getElementById(`qc11-1-cb${i}`).checked);
+    if (!checked.some(c => c)) { LessonCheck.incomplete(fb, "Check at least one box before submitting."); return; }
+    const correctSet = [0,3,4]; // gains 4 in Round 1, loses 4 in Round 2, ends at 0
+    const correct = [0,1,2,3,4,5].every(i => checked[i] === correctSet.includes(i));
+    const answer = checked.map((c, i) => c ? i + 1 : null).filter(x => x).join(', ') || '(none selected)';
+    LessonCheck.submit(fb, { key: 'qc11-1', label: "Quick Check 1.1 #2 (Allie's rounds)", answer, section: '2. Quick Check 1.1', correct });
   }
 
   // ==========================================
@@ -431,7 +443,7 @@
   // ==========================================
   // QUICK CHECK 1.3
   // ==========================================
-  const qc13Answers = { 1: "B", 2: -9, 4: "A" };
+  const qc13Answers = { 0: "C", 1: "B", 2: -9, 4: "A" };
   function checkQC13(idx) {
     const raw = document.getElementById(`qc13-${idx}-input`).value;
     const fb = document.getElementById(`qc13-${idx}-feedback`);
@@ -439,12 +451,6 @@
     const expected = qc13Answers[idx];
     const correct = typeof expected === "number" ? LessonCheck.numericMatch(raw, expected, 0.01) : raw.trim().toUpperCase() === expected;
     LessonCheck.submit(fb, { key: `qc13-${idx}`, label: `Quick Check 1.3 #${idx + 1}`, answer: raw, section: '4. Quick Check 1.3', correct });
-  }
-  function checkQC13Text(idx) {
-    const raw = document.getElementById(`qc13-${idx}-input`).value.trim();
-    const fb = document.getElementById(`qc13-${idx}-feedback`);
-    if (raw.length <= 5) { LessonCheck.incomplete(fb, "Write your group's explanation before submitting."); return; }
-    LessonCheck.submit(fb, { key: `qc13-${idx}`, label: `Quick Check 1.3 #${idx + 1} (discussion)`, answer: raw, section: '4. Quick Check 1.3' });
   }
   function checkQC13Debt() {
     const eqn = document.getElementById('qc13-3a-input').value;
@@ -518,7 +524,7 @@
   warmupProblems.forEach((p, i) => LessonProgress.preRegister(`wu-${i}`, `Warm-Up: ${p.q}`, '1. Warm-Up'));
   [0,1,2,3,4].forEach(i => LessonProgress.preRegister(`qc11-${i}`, `Quick Check 1.1 #${i + 1}`, '2. Quick Check 1.1'));
   [0,1,2,3,4].forEach(i => LessonProgress.preRegister(`qc12-${i}`, `Quick Check 1.2 #${i + 1}`, '3. Quick Check 1.2'));
-  LessonProgress.preRegister('qc13-0', 'Quick Check 1.3 #1 (discussion)', '4. Quick Check 1.3');
+  LessonProgress.preRegister('qc13-0', 'Quick Check 1.3 #1', '4. Quick Check 1.3');
   LessonProgress.preRegister('qc13-1', 'Quick Check 1.3 #2', '4. Quick Check 1.3');
   LessonProgress.preRegister('qc13-2', 'Quick Check 1.3 #3', '4. Quick Check 1.3');
   LessonProgress.preRegister('qc13-3', "Quick Check 1.3 #4 (Rob's debt)", '4. Quick Check 1.3');
@@ -529,6 +535,21 @@
   LessonProgress.preRegister('qc14-3', 'Quick Check 1.4 #4', '5. Quick Check 1.4');
   LessonProgress.preRegister('qc14-4', 'Quick Check 1.4 #5 (select all equal to -8)', '5. Quick Check 1.4');
   LessonProgress.preRegister('wed-signature', 'Confirmed: notebook signed by teacher', '6. Exit Ticket');
+
+  // Number line diagrams for Quick Check 1.1 #2 and Quick Check 1.3 #1
+  renderNumberLine('qc11-1-numberline', {
+    min: -10, max: 10, step: 2,
+    arrows: [
+      { from: 0, to: 4, label: 'Round 1', color: '#15803d', row: 0 },
+      { from: 4, to: 0, label: 'Round 2', color: '#b45309', row: 1 }
+    ]
+  });
+  renderNumberLine('qc13-0-numberline', {
+    min: -15, max: -1, step: 2,
+    arrows: [
+      { from: -4, to: -13, color: '#d97706', row: 0 }
+    ]
+  });
 </script>
 <div id="print-report"></div>
 </body>
