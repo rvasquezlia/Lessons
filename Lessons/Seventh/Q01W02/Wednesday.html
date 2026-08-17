@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Practice Lessons 1.1-1.4 - Skill Reinforcement</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Q01W02 - Wednesday</span>
+    <h1>Practice: Lessons 1.1 to 1.4 Skill Reinforcement</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Pre-Algebra 7 - Wednesday, Aug 19 - Quick Check 1.1-1.4')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Work in your group of 3 on the official Savvas Quick Check questions (Tabs 2-5) - talk through each one together, but <strong>each of you solves in your own notebook</strong> first, then types and submits your own answer here. This isn't graded on screen; your teacher reviews it from your printed progress report. <strong>Calculators are not allowed this quarter.</strong> Finish with the Exit Ticket, get your notebook signed by your teacher, then type your name above and click Print My Progress.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('warmup')">1. Warm-Up</button>
+    <button class="tab-btn" onclick="switchTab('qc11')">2. Quick Check 1.1</button>
+    <button class="tab-btn" onclick="switchTab('qc12')">3. Quick Check 1.2</button>
+    <button class="tab-btn" onclick="switchTab('qc13')">4. Quick Check 1.3</button>
+    <button class="tab-btn" onclick="switchTab('qc14')">5. Quick Check 1.4</button>
+    <button class="tab-btn" onclick="switchTab('exitticket')">6. Exit Ticket</button>
+  </nav>
+
+  <!-- TAB 1: WARM-UP & MISCONCEPTIONS -->
+  <div id="warmup" class="panel active">
+    <div class="section-title">Retrieval Warm-Up &amp; Misconceptions Review</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Wednesday, August 19, 2026 &middot; 45 min &middot; CCSS.Math.Content.7.NS.A.1a-d, 7.NS.A.2b-c &amp; MP.1: Make Sense of Problems and Persevere</p>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Common Misconceptions to Watch For</div>
+      <ul style="margin-bottom:0;">
+        <li>Forgetting to flip the sign when subtracting a negative number (\(a - (-b) = a + b\), not \(a - b\)).</li>
+        <li>Assuming a sum of two integers is always positive or always negative - it depends on the signs <strong>and</strong> the absolute values.</li>
+        <li>Multiplying/dividing three or more negative integers: track the sign one pair at a time, don't guess from the total count.</li>
+      </ul>
+    </div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Answer the 3 retrieval questions below (one addition, one subtraction, one multiplication) and submit each one.
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>1.</strong> \(-7 + 12\)
+      <div style="margin-top:10px;">
+        <input type="text" id="wu-0-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkWarmup(0)">Check</button>
+      </div>
+      <div id="wu-0-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>2.</strong> \(-9 - (-4)\)
+      <div style="margin-top:10px;">
+        <input type="text" id="wu-1-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkWarmup(1)">Check</button>
+      </div>
+      <div id="wu-1-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>3.</strong> \(-6 \times 5\)
+      <div style="margin-top:10px;">
+        <input type="text" id="wu-2-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkWarmup(2)">Check</button>
+      </div>
+      <div id="wu-2-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: QUICK CHECK 1.1 -->
+  <div id="qc11" class="panel">
+    <div class="section-title">Quick Check 1.1 (Savvas)</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Solve each problem in your notebook with your group, then type your own answer and submit. Question 2 has no single right answer to check here - discuss it with your group and submit your group's reasoning.
+    </div>
+
+    <div class="problem-selector">
+      <p><strong>1.</strong> Which of these situations can be represented by the opposite of \(-25\)?<br>
+      A. A scuba diver is 25 feet below sea level.&nbsp;&nbsp; B. Leon gets paid $25.&nbsp;&nbsp; C. An airplane descends 25 feet.&nbsp;&nbsp; D. Sara has a $25 debt.</p>
+      <select id="qc11-0-input" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC11(0)">Submit</button>
+      <div id="qc11-0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="problem-selector" style="margin-top:16px;">
+      <p><strong>2.</strong> The number line shows Allie's scores in two rounds of a card game: an arrow from \(0\) to \(4\) for Round 1, then an arrow from \(4\) back to \(0\) for Round 2. Explain her gains and losses in each round, and her total after both rounds.</p>
+      <textarea id="qc11-1-input" class="form-control-lg" rows="2" placeholder="Explain your group's reasoning..."></textarea>
+      <button class="btn-lg" style="margin-top:8px;" onclick="checkQC11Text(1)">Submit</button>
+      <div id="qc11-1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="problem-selector" style="margin-top:16px;">
+      <p><strong>3.</strong> Kristen and her family climb down 8 meters below ground level on a cave tour. To return to ground level, they climb the opposite of \(-8\) meters. What is the total distance they climbed, counting both directions?</p>
+      <input type="text" id="qc11-2-input" class="form-control-lg" style="max-width:200px;" placeholder="meters">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC11(2)">Submit</button>
+      <div id="qc11-2-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="problem-selector" style="margin-top:16px;">
+      <p><strong>4.</strong> A train travels east 50 km, then north 22 km, then west 50 km, then south a certain distance, ending back at its original location. How many kilometers did it travel south?</p>
+      <input type="text" id="qc11-3-input" class="form-control-lg" style="max-width:200px;" placeholder="km">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC11(3)">Submit</button>
+      <div id="qc11-3-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="problem-selector" style="margin-top:16px;">
+      <p><strong>5.</strong> On Friday, the temperature was \(82^\circ\text{F}\). It changed by \(-2^\circ\text{F}\) on Saturday, then by \(2^\circ\text{F}\) on Sunday. What was the temperature on Sunday?</p>
+      <input type="text" id="qc11-4-input" class="form-control-lg" style="max-width:200px;" placeholder="&deg;F">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC11(4)">Submit</button>
+      <div id="qc11-4-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: QUICK CHECK 1.2 -->
+  <div id="qc12" class="panel">
+    <div class="section-title">Quick Check 1.2 (Savvas)</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Solve each problem in your notebook with your group, then submit your own answer. Question 2 is a group discussion question - there's no single answer to check here.
+    </div>
+
+    <div class="problem-selector">
+      <p><strong>1.</strong> Select all the sums that are positive: check every box that applies, then submit.</p>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc12-0-cb0"> \(-5 + (-2)\)</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc12-0-cb1"> \(5 + (-2)\)</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc12-0-cb2"> \(-3 + 4\)</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc12-0-cb3"> \(0 + (-3)\)</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc12-0-cb4"> \(-2 - (-4)\)</label>
+      <button class="btn-lg" style="margin-top:6px;" onclick="checkQC12Multi()">Submit</button>
+      <div id="qc12-0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="problem-selector" style="margin-top:16px;">
+      <p><strong>2.</strong> David says that when he adds two numbers \(x\) and \(y\), the sum is negative. With your group, discuss and write which combinations of signs and absolute values could make this true.</p>
+      <textarea id="qc12-1-input" class="form-control-lg" rows="2" placeholder="Explain your group's reasoning..."></textarea>
+      <button class="btn-lg" style="margin-top:8px;" onclick="checkQC12Text(1)">Submit</button>
+      <div id="qc12-1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="problem-selector" style="margin-top:16px;">
+      <p><strong>3.</strong> Sandra played a matching game. She scored 18 points for correct matches and \(-6\) points for incorrect matches. How many points did Sandra make?</p>
+      <input type="text" id="qc12-2-input" class="form-control-lg" style="max-width:200px;" placeholder="points">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC12(2)">Submit</button>
+      <div id="qc12-2-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="problem-selector" style="margin-top:16px;">
+      <p><strong>4.</strong> When you add a positive number and a negative number, how can you tell whether the sum will be positive or negative?<br>
+      A. The sum will always be negative.&nbsp;&nbsp; B. The sum will always be positive.&nbsp;&nbsp; C. The sum will have the sign of the addend with the lesser absolute value.&nbsp;&nbsp; D. The sum will have the sign of the addend with the greater absolute value.</p>
+      <select id="qc12-3-input" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC12(3)">Submit</button>
+      <div id="qc12-3-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="problem-selector" style="margin-top:16px;">
+      <p><strong>5.</strong> Ashley's math average decreased 12 points to 78. Then an extra credit assignment raised her final average by 5 points. How did Ashley's average change from her starting average to her final average?</p>
+      <input type="text" id="qc12-4-input" class="form-control-lg" style="max-width:200px;" placeholder="points">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC12(4)">Submit</button>
+      <div id="qc12-4-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: QUICK CHECK 1.3 -->
+  <div id="qc13" class="panel">
+    <div class="section-title">Quick Check 1.3 (Savvas)</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Solve each problem in your notebook with your group, then submit your own answer. Question 1 is a group discussion question about a number-line diagram - there's no single answer to check here.
+    </div>
+
+    <div class="problem-selector">
+      <p><strong>1.</strong> A number line shows an arrow starting at \(-4\) and ending at \(-13\). Which subtraction expression does it show?<br>
+      A. \(-13 + 4\)&nbsp;&nbsp; B. \(-4 - 13\)&nbsp;&nbsp; C. \(-4 - 9\)&nbsp;&nbsp; D. \(-4 + 9\)<br>
+      With your group, discuss which expression matches and why.</p>
+      <textarea id="qc13-0-input" class="form-control-lg" rows="2" placeholder="Explain your group's reasoning..."></textarea>
+      <button class="btn-lg" style="margin-top:8px;" onclick="checkQC13Text(0)">Submit</button>
+      <div id="qc13-0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="problem-selector" style="margin-top:16px;">
+      <p><strong>2.</strong> Suppose \(y\) is a positive integer. If \(x - (-y) = z\), will \(z\) be greater than or less than \(x\)?<br>
+      A. \(z\) is greater than \(x\), since \(-(-y)\) is the same as subtracting \(y\).&nbsp;&nbsp;
+      B. \(z\) is greater than \(x\), since subtracting \(-y\) is the same as adding its additive inverse, \(y\).&nbsp;&nbsp;
+      C. \(z\) is less than \(x\), since subtracting \(-y\) is the same as subtracting its additive inverse, \(y\).&nbsp;&nbsp;
+      D. \(z\) is less than \(x\), since \(-(-y)\) is the same as adding \(-y\).</p>
+      <select id="qc13-1-input" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC13(1)">Submit</button>
+      <div id="qc13-1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="problem-selector" style="margin-top:16px;">
+      <p><strong>3.</strong> The temperature in Anchorage, Alaska, was \(-3^\circ\text{C}\) in the afternoon. After the sun went down, the temperature dropped 6 degrees. What was the temperature after the sun went down?</p>
+      <input type="text" id="qc13-2-input" class="form-control-lg" style="max-width:200px;" placeholder="&deg;C">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC13(2)">Submit</button>
+      <div id="qc13-2-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="problem-selector" style="margin-top:16px;">
+      <p><strong>4.</strong> Rob borrows $15.00 from his father, then borrows $3.00 more. Write an equation using negative integers, and find how much Rob owes his father in total.</p>
+      <input type="text" id="qc13-3a-input" class="form-control-lg" style="max-width:400px;" placeholder="Equation, e.g. -15 + -3 = -18">
+      <div style="margin-top:8px;">
+        <label>Rob owes his father $ <input type="text" id="qc13-3b-input" class="form-control-lg" style="max-width:120px; display:inline-block;" placeholder="amount"></label>
+      </div>
+      <button class="btn-lg" style="margin-top:8px;" onclick="checkQC13Debt()">Submit</button>
+      <div id="qc13-3-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="problem-selector" style="margin-top:16px;">
+      <p><strong>5.</strong> Adrienne and Suki simplified \(-8 - (-6)\). Adrienne got \(-14\); Suki got \(-2\). Whose answer is correct, and what was the other's error?<br>
+      A. Suki's; Adrienne subtracted 6 instead of subtracting \(-6\).&nbsp;&nbsp;
+      B. Suki's; Adrienne subtracted 8 instead of subtracting \(-8\).&nbsp;&nbsp;
+      C. Adrienne's; Suki added 6 instead of subtracting \(-6\).&nbsp;&nbsp;
+      D. Adrienne's; Suki added 8 instead of subtracting 8.</p>
+      <select id="qc13-4-input" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC13(4)">Submit</button>
+      <div id="qc13-4-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 5: QUICK CHECK 1.4 -->
+  <div id="qc14" class="panel">
+    <div class="section-title">Quick Check 1.4 (Savvas)</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Solve each problem in your notebook with your group, then submit your own answer.
+    </div>
+
+    <div class="problem-selector">
+      <p><strong>1.</strong> For each product, choose whether it is positive or negative.</p>
+      <div style="margin:6px 0;">\(-3 \cdot (-15)\): <select id="qc14-0a" class="form-control-lg" style="max-width:150px; display:inline-block;"><option value="">Choose...</option><option value="positive">Positive</option><option value="negative">Negative</option></select></div>
+      <div style="margin:6px 0;">\(x(-x)\), for \(x \neq 0\): <select id="qc14-0b" class="form-control-lg" style="max-width:150px; display:inline-block;"><option value="">Choose...</option><option value="positive">Positive</option><option value="negative">Negative</option></select></div>
+      <div style="margin:6px 0;">\(-5 \cdot (-2) \cdot (-1)\): <select id="qc14-0c" class="form-control-lg" style="max-width:150px; display:inline-block;"><option value="">Choose...</option><option value="positive">Positive</option><option value="negative">Negative</option></select></div>
+      <div style="margin:6px 0;">A negative number times two positive numbers: <select id="qc14-0d" class="form-control-lg" style="max-width:150px; display:inline-block;"><option value="">Choose...</option><option value="positive">Positive</option><option value="negative">Negative</option></select></div>
+      <button class="btn-lg" style="margin-top:6px;" onclick="checkQC14Signs()">Submit</button>
+      <div id="qc14-0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="problem-selector" style="margin-top:16px;">
+      <p><strong>2.</strong> Which expression is equivalent to both \(\frac{-x}{y}\) and \(\frac{x}{-y}\)?<br>
+      A. \(\frac{x}{y}\)&nbsp;&nbsp; B. \(-\left(\frac{-x}{y}\right)\)&nbsp;&nbsp; C. \(-1\left(\frac{x}{y}\right)\)&nbsp;&nbsp; D. \(\frac{-x}{-y}\)</p>
+      <select id="qc14-1-input" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC14(1)">Submit</button>
+      <div id="qc14-1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="problem-selector" style="margin-top:16px;">
+      <p><strong>3.</strong> Chase simplified \(-2 \times (5 - 3)\) and got \(4\). Chase is incorrect. What is the correct value?</p>
+      <input type="text" id="qc14-2-input" class="form-control-lg" style="max-width:200px;" placeholder="Answer">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC14(2)">Submit</button>
+      <div id="qc14-2-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="problem-selector" style="margin-top:16px;">
+      <p><strong>4.</strong> Rashawn and Jessie lose points for each incorrect answer, and neither has answered correctly. Rashawn misses two 3-point questions; Jessie misses four 2-point questions. Who is ahead?<br>
+      A. Jessie is ahead with \(-8\) points.&nbsp;&nbsp; B. Jessie is ahead with \(-4\) points.&nbsp;&nbsp; C. Rashawn is ahead with \(-6\) points.&nbsp;&nbsp; D. Rashawn is ahead with 6 points.</p>
+      <select id="qc14-3-input" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC14(3)">Submit</button>
+      <div id="qc14-3-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="problem-selector" style="margin-top:16px;">
+      <p><strong>5.</strong> Select all the expressions that are equal to \(-8\): check every box that applies, then submit.</p>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc14-4-cb0"> \(\frac{80}{100}\)</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc14-4-cb1"> \(\frac{-800}{100}\)</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc14-4-cb2"> \(80 \div (-10)\)</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc14-4-cb3"> \(-80 \div (-10)\)</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc14-4-cb4"> \(\frac{-80}{100}\)</label>
+      <button class="btn-lg" style="margin-top:6px;" onclick="checkQC14Multi()">Submit</button>
+      <div id="qc14-4-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 6: EXIT TICKET -->
+  <div id="exitticket" class="panel">
+    <div class="section-title">Exit Ticket</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Answer the reflection question, click Submit Reflection, then ask your teacher to sign your notebook to confirm you completed today's Quick Check. Finish by typing your name in the blue bar at the top of the page and clicking Print My Progress.
+    </div>
+
+    <form id="exit-form" onsubmit="submitExitTicket(event)">
+      <div class="form-group">
+        <label>When working with your group today, what specific mistake did a teammate point out that changed how you approached an integer operation?</label>
+        <textarea id="exit-1" class="form-control-lg" rows="3" placeholder="Explain your reasoning..."></textarea>
+      </div>
+      <button type="submit" class="btn-lg">Submit Reflection</button>
+    </form>
+    <div id="exit-feedback" class="feedback-msg"></div>
+
+    <div class="notebook-box" style="margin-top:20px;">
+      <div class="notebook-header">Teacher Signature</div>
+      <label style="font-weight:700; cursor:pointer;">
+        <input type="checkbox" id="confirm-signature" onchange="confirmSignature(this)" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;">
+        My notebook has been signed by my teacher to confirm today's Quick Check is complete.
+      </label>
+    </div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // WARM-UP
+  // ==========================================
+  const warmupProblems = [
+    { q: "-7 + 12", a: 5, tol: 0.001 },
+    { q: "-9 - (-4)", a: -5, tol: 0.001 },
+    { q: "-6 × 5", a: -30, tol: 0.001 }
+  ];
+
+  function checkWarmup(idx) {
+    const p = warmupProblems[idx];
+    const val = document.getElementById(`wu-${idx}-input`).value;
+    const fb = document.getElementById(`wu-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before submitting."); return; }
+    LessonCheck.submit(fb, { key: `wu-${idx}`, label: `Warm-Up: ${p.q}`, answer: val, section: '1. Warm-Up', correct: LessonCheck.numericMatch(val, p.a, p.tol) });
+  }
+
+  // ==========================================
+  // QUICK CHECK 1.1
+  // ==========================================
+  const qc11Answers = { 0: "B", 2: 16, 3: 22, 4: 82 };
+  function checkQC11(idx) {
+    const raw = document.getElementById(`qc11-${idx}-input`).value;
+    const fb = document.getElementById(`qc11-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
+    const expected = qc11Answers[idx];
+    const correct = typeof expected === "number" ? LessonCheck.numericMatch(raw, expected, 0.01) : raw.trim().toUpperCase() === expected;
+    LessonCheck.submit(fb, { key: `qc11-${idx}`, label: `Quick Check 1.1 #${idx + 1}`, answer: raw, section: '2. Quick Check 1.1', correct });
+  }
+  function checkQC11Text(idx) {
+    const raw = document.getElementById(`qc11-${idx}-input`).value.trim();
+    const fb = document.getElementById(`qc11-${idx}-feedback`);
+    if (raw.length <= 5) { LessonCheck.incomplete(fb, "Write your group's explanation before submitting."); return; }
+    LessonCheck.submit(fb, { key: `qc11-${idx}`, label: `Quick Check 1.1 #${idx + 1} (discussion)`, answer: raw, section: '2. Quick Check 1.1' });
+  }
+
+  // ==========================================
+  // QUICK CHECK 1.2
+  // ==========================================
+  const qc12Answers = { 2: 12, 3: "D", 4: -7 };
+  function checkQC12(idx) {
+    const raw = document.getElementById(`qc12-${idx}-input`).value;
+    const fb = document.getElementById(`qc12-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
+    const expected = qc12Answers[idx];
+    const correct = typeof expected === "number" ? LessonCheck.numericMatch(raw, expected, 0.01) : raw.trim().toUpperCase() === expected;
+    LessonCheck.submit(fb, { key: `qc12-${idx}`, label: `Quick Check 1.2 #${idx + 1}`, answer: raw, section: '3. Quick Check 1.2', correct });
+  }
+  function checkQC12Text(idx) {
+    const raw = document.getElementById(`qc12-${idx}-input`).value.trim();
+    const fb = document.getElementById(`qc12-${idx}-feedback`);
+    if (raw.length <= 5) { LessonCheck.incomplete(fb, "Write your group's explanation before submitting."); return; }
+    LessonCheck.submit(fb, { key: `qc12-${idx}`, label: `Quick Check 1.2 #${idx + 1} (discussion)`, answer: raw, section: '3. Quick Check 1.2' });
+  }
+  function checkQC12Multi() {
+    const fb = document.getElementById('qc12-0-feedback');
+    const checked = [0,1,2,3,4].map(i => document.getElementById(`qc12-0-cb${i}`).checked);
+    if (!checked.some(c => c)) { LessonCheck.incomplete(fb, "Check at least one box before submitting."); return; }
+    const correctSet = [1,2,4]; // 5+(-2), -3+4, -2-(-4)
+    const correct = [0,1,2,3,4].every(i => checked[i] === correctSet.includes(i));
+    const answer = checked.map((c, i) => c ? i + 1 : null).filter(x => x).join(', ') || '(none selected)';
+    LessonCheck.submit(fb, { key: 'qc12-0', label: 'Quick Check 1.2 #1 (select all positive sums)', answer, section: '3. Quick Check 1.2', correct });
+  }
+
+  // ==========================================
+  // QUICK CHECK 1.3
+  // ==========================================
+  const qc13Answers = { 1: "B", 2: -9, 4: "A" };
+  function checkQC13(idx) {
+    const raw = document.getElementById(`qc13-${idx}-input`).value;
+    const fb = document.getElementById(`qc13-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
+    const expected = qc13Answers[idx];
+    const correct = typeof expected === "number" ? LessonCheck.numericMatch(raw, expected, 0.01) : raw.trim().toUpperCase() === expected;
+    LessonCheck.submit(fb, { key: `qc13-${idx}`, label: `Quick Check 1.3 #${idx + 1}`, answer: raw, section: '4. Quick Check 1.3', correct });
+  }
+  function checkQC13Text(idx) {
+    const raw = document.getElementById(`qc13-${idx}-input`).value.trim();
+    const fb = document.getElementById(`qc13-${idx}-feedback`);
+    if (raw.length <= 5) { LessonCheck.incomplete(fb, "Write your group's explanation before submitting."); return; }
+    LessonCheck.submit(fb, { key: `qc13-${idx}`, label: `Quick Check 1.3 #${idx + 1} (discussion)`, answer: raw, section: '4. Quick Check 1.3' });
+  }
+  function checkQC13Debt() {
+    const eqn = document.getElementById('qc13-3a-input').value;
+    const amt = document.getElementById('qc13-3b-input').value;
+    const fb = document.getElementById('qc13-3-feedback');
+    if (!eqn.trim() || !amt.trim()) { LessonCheck.incomplete(fb, "Enter both the equation and the amount owed before submitting."); return; }
+    const correct = LessonCheck.numericMatch(amt, 18, 0.01);
+    LessonCheck.submit(fb, { key: 'qc13-3', label: 'Quick Check 1.3 #4 (Rob\'s debt)', answer: `${eqn} | owes $${amt}`, section: '4. Quick Check 1.3', correct });
+  }
+
+  // ==========================================
+  // QUICK CHECK 1.4
+  // ==========================================
+  const qc14Answers = { 1: "C", 2: -4, 3: "C" };
+  function checkQC14(idx) {
+    const raw = document.getElementById(`qc14-${idx}-input`).value;
+    const fb = document.getElementById(`qc14-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
+    const expected = qc14Answers[idx];
+    const correct = typeof expected === "number" ? LessonCheck.numericMatch(raw, expected, 0.01) : raw.trim().toUpperCase() === expected;
+    LessonCheck.submit(fb, { key: `qc14-${idx}`, label: `Quick Check 1.4 #${idx + 1}`, answer: raw, section: '5. Quick Check 1.4', correct });
+  }
+  function checkQC14Signs() {
+    const a = document.getElementById('qc14-0a').value, b = document.getElementById('qc14-0b').value,
+          c = document.getElementById('qc14-0c').value, d = document.getElementById('qc14-0d').value;
+    const fb = document.getElementById('qc14-0-feedback');
+    if (!a || !b || !c || !d) { LessonCheck.incomplete(fb, "Choose Positive or Negative for all four before submitting."); return; }
+    const correct = a === "positive" && b === "negative" && c === "negative" && d === "negative";
+    LessonCheck.submit(fb, { key: 'qc14-0', label: 'Quick Check 1.4 #1 (sign of each product)', answer: `${a}, ${b}, ${c}, ${d}`, section: '5. Quick Check 1.4', correct });
+  }
+  function checkQC14Multi() {
+    const fb = document.getElementById('qc14-4-feedback');
+    const checked = [0,1,2,3,4].map(i => document.getElementById(`qc14-4-cb${i}`).checked);
+    if (!checked.some(c => c)) { LessonCheck.incomplete(fb, "Check at least one box before submitting."); return; }
+    const correctSet = [1,2]; // -800/100, 80÷(-10)
+    const correct = [0,1,2,3,4].every(i => checked[i] === correctSet.includes(i));
+    const answer = checked.map((c, i) => c ? i + 1 : null).filter(x => x).join(', ') || '(none selected)';
+    LessonCheck.submit(fb, { key: 'qc14-4', label: 'Quick Check 1.4 #5 (select all equal to -8)', answer, section: '5. Quick Check 1.4', correct });
+  }
+
+  // ==========================================
+  // TEACHER SIGNATURE
+  // ==========================================
+  function confirmSignature(cb) {
+    if (cb.checked) {
+      LessonProgress.record('wed-signature', 'Confirmed: notebook signed by teacher', 'Yes', 'reflection', '6. Exit Ticket');
+    }
+  }
+
+  // ==========================================
+  // EXIT TICKET
+  // ==========================================
+  function submitExitTicket(e) {
+    e.preventDefault();
+    const a1 = document.getElementById('exit-1').value.trim();
+    const fb = document.getElementById('exit-feedback');
+    if (a1.length <= 5) {
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg error';
+      fb.innerText = "Please write a complete reflection before submitting.";
+      return;
+    }
+    fb.className = "feedback-msg success";
+    fb.innerText = "Reflection submitted and logged successfully!";
+    fb.style.display = "block";
+    LessonProgress.recordText('Exit Ticket: mistake a teammate pointed out', a1, '6. Exit Ticket');
+  }
+
+  // Pre-register every question so the printed report always shows the
+  // full page, blank for anything never attempted.
+  warmupProblems.forEach((p, i) => LessonProgress.preRegister(`wu-${i}`, `Warm-Up: ${p.q}`, '1. Warm-Up'));
+  [0,1,2,3,4].forEach(i => LessonProgress.preRegister(`qc11-${i}`, `Quick Check 1.1 #${i + 1}`, '2. Quick Check 1.1'));
+  [0,1,2,3,4].forEach(i => LessonProgress.preRegister(`qc12-${i}`, `Quick Check 1.2 #${i + 1}`, '3. Quick Check 1.2'));
+  LessonProgress.preRegister('qc13-0', 'Quick Check 1.3 #1 (discussion)', '4. Quick Check 1.3');
+  LessonProgress.preRegister('qc13-1', 'Quick Check 1.3 #2', '4. Quick Check 1.3');
+  LessonProgress.preRegister('qc13-2', 'Quick Check 1.3 #3', '4. Quick Check 1.3');
+  LessonProgress.preRegister('qc13-3', "Quick Check 1.3 #4 (Rob's debt)", '4. Quick Check 1.3');
+  LessonProgress.preRegister('qc13-4', 'Quick Check 1.3 #5', '4. Quick Check 1.3');
+  LessonProgress.preRegister('qc14-0', 'Quick Check 1.4 #1 (sign of each product)', '5. Quick Check 1.4');
+  LessonProgress.preRegister('qc14-1', 'Quick Check 1.4 #2', '5. Quick Check 1.4');
+  LessonProgress.preRegister('qc14-2', 'Quick Check 1.4 #3', '5. Quick Check 1.4');
+  LessonProgress.preRegister('qc14-3', 'Quick Check 1.4 #4', '5. Quick Check 1.4');
+  LessonProgress.preRegister('qc14-4', 'Quick Check 1.4 #5 (select all equal to -8)', '5. Quick Check 1.4');
+  LessonProgress.preRegister('wed-signature', 'Confirmed: notebook signed by teacher', '6. Exit Ticket');
+</script>
+<div id="print-report"></div>
+</body>
+</html>
