@@ -263,6 +263,29 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
   body.teacher-print-mode .badge { background: none; color: var(--primary, #1e3a8a); border: 2px solid var(--primary, #1e3a8a); }
   body.teacher-print-mode .tp-print-all { display: block; }
   body.teacher-print-mode .tp-answer-tag { display: inline-block; }
+  /* Guided-practice items (a question + an input) are styled as colored,
+     dashed-border cards on screen - on paper that's a lot of decoration
+     around one line of text. Flatten to plain text with a rule between
+     items, and turn the answer box into a fill-in-the-blank line instead
+     of a bordered input, matching a normal worksheet. */
+  body.teacher-print-mode .guided-practice {
+    background: none !important;
+    border: none !important;
+    border-bottom: 1px solid #cbd5e1 !important;
+    border-radius: 0 !important;
+    padding: 8px 0 !important;
+    margin-top: 0 !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  body.teacher-print-mode input[type="text"],
+  body.teacher-print-mode select {
+    border: none !important;
+    border-bottom: 1px solid #000 !important;
+    border-radius: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+  }
   body.teacher-print-mode .tp-example {
     page-break-inside: avoid;
     break-inside: avoid;
