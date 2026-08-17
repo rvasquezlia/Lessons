@@ -52,7 +52,7 @@ header {
   gap: 10px;
   margin-bottom: 10px;
 }
-.brand-logo { height: 40px; width: auto; display: block; }
+.brand-logo { height: 64px; width: auto; display: block; }
 .brand-name {
   font-size: 0.75rem;
   font-weight: 700;
