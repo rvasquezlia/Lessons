@@ -9,6 +9,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 
+  <!-- Shared base font-size (see type-scale.css) - keeps this page's rem-
+       based sizing (h1, badges, section headers, ...) consistent with the
+       lesson and printable pages it links to, instead of hand-copying its
+       own number. -->
+  <link rel="stylesheet" href="type-scale.css">
+
   <style>
     :root {
       --primary: #1e3a8a;
@@ -34,7 +40,6 @@
       color: var(--text);
       margin: 0;
       padding: 20px;
-      font-size: 18px;
       line-height: 1.6;
     }
     .app-container {

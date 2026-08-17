@@ -2,6 +2,11 @@
    Deliberately separate from lesson-shared.css, whose @media print rule hides
    everything except #print-report - that rule would blank out these pages. */
 
+/* See type-scale.css: sets html/body font-size for this page, shared
+   with lesson-shared.css and index.html so screen and print both read
+   at the same standard size instead of each file drifting on its own. */
+@import url("type-scale.css");
+
 :root {
   --primary: #1e3a8a;
   --primary-light: #2563eb;
@@ -15,12 +20,6 @@
 
 * { box-sizing: border-box; }
 
-/* See lesson-shared.css for why this matters: rem units resolve against
-   <html>, not body - without this, everything sized in rem quietly
-   anchors to the browser's 16px default instead of this page's actual
-   18px base, creating an unintended size gap against inherited text. */
-html { font-size: 18px; }
-
 body, input, button, textarea, select {
   font-family: 'Montserrat', sans-serif;
 }
@@ -30,7 +29,6 @@ body {
   color: var(--text);
   margin: 0;
   padding: 20px;
-  font-size: 18px;
   line-height: 1.55;
 }
 
@@ -333,10 +331,9 @@ h1 { margin: 8px 0; font-size: 2rem; font-weight: 800; }
   tr { page-break-inside: avoid; break-inside: avoid; }
   .explainer-box, .group-context { page-break-inside: avoid; break-inside: avoid; }
 
-  /* The on-screen sizing is comfortable for reading in a browser tab but
-     wastes paper once printed - tighten it up for the physical page. */
-  html { font-size: 14px; }
-  body { font-size: 14px; }
+  /* Base font-size is already standardized at 12pt on-screen and on
+     paper via type-scale.css - only tighten spacing/padding for print
+     here, not text size, so it stays at the same standard size. */
   .problem-item { padding: 10px 14px; margin-bottom: 10px; }
   .problem-grid { gap: 10px 16px; }
   .answer-space { min-height: 34px; }
