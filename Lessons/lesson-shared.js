@@ -349,6 +349,11 @@ function printProgressReport(lessonTitle) {
 // per carousel, right after that carousel's data array and render
 // function are defined, so the full-expansion printout can reuse the
 // page's own existing render logic instead of duplicating it here.
+// showAtFn(i, includeAnswers) receives the "Include answer key" checkbox
+// state as its second argument, so a component with its own blank answer
+// fields (e.g. a whiteboard-style digit grid, not a single input
+// registerAnswerList can tag) can fill in the correct values itself
+// before its innerHTML is captured for print.
 // ============================================================
 const TeacherPrint = (function () {
   const carousels = []; // {containerId, count, showAtFn}
@@ -421,7 +426,7 @@ const TeacherPrint = (function () {
       }
       let html = '';
       for (let i = 0; i < c.count; i++) {
-        c.showAtFn(i);
+        c.showAtFn(i, includeAnswers);
         html += `<div class="tp-example">${container.innerHTML}</div>`;
       }
       printDiv.innerHTML = html;

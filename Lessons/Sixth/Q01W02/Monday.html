@@ -1244,6 +1244,33 @@
   // Initial load for whiteboard
   loadWBProblem(1);
 
+  // Sets the "value" HTML attribute (not just the .value property, which
+  // a print snapshot of innerHTML never reflects) so the correct digits
+  // actually show up when Teacher Print Mode captures this container with
+  // "Include answer key" checked - these boxes are blank by design for
+  // live student use, so without this the printed handout shows empty
+  // input boxes and no way to see what the correct answer was.
+  function fillWBAnswers(prob) {
+    const setDigit = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.setAttribute('value', val);
+    };
+    if (prob.type === "mult") {
+      prob.p1.forEach((d, i) => setDigit(`wb-p1-${i}`, d));
+      prob.p2.forEach((d, i) => setDigit(`wb-p2-${i}`, d));
+      prob.ans.forEach((d, i) => setDigit(`wb-i${i}`, d));
+      const decEl = document.getElementById('wb-dec-places');
+      const opt = decEl && decEl.querySelector(`option[value="${prob.decimalPlaces}"]`);
+      if (opt) opt.setAttribute('selected', 'selected');
+    } else {
+      prob.ans.forEach((d, i) => setDigit(`wb-i${i}`, d));
+    }
+  }
+  TeacherPrint.registerCarousel('wb-container', Object.keys(wbProblems).length, (i, includeAnswers) => {
+    loadWBProblem(i + 1);
+    if (includeAnswers) fillWBAnswers(wbProblems[i + 1]);
+  });
+
   // ==========================================
   // ADDITION & SUBTRACTION GUIDED PRACTICE
   // ==========================================
