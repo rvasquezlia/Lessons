@@ -155,6 +155,16 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
   margin: 0.65in 0.6in;
 }
 
+/* Teacher Print Mode's "what we covered" handout runs multiple lesson
+   sections back to back and benefits from the extra vertical room - a
+   named page (assigned to body.teacher-print-mode below) lets it use
+   Legal size while every other printed surface on the site stays on
+   Letter. */
+@page teacher-print {
+  size: legal;
+  margin: 0.65in 0.6in;
+}
+
 @media print {
   /* Default print behavior: only the student's progress report prints.
      Teacher Print Mode (below) overrides this to print the actual lesson
@@ -235,6 +245,9 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
 }
 
 @media print {
+  /* Assigns this document to the @page teacher-print rule above (Legal
+     size) instead of the site's default Letter page. */
+  body.teacher-print-mode { page: teacher-print; }
   body.teacher-print-mode > .app-container {
     display: block !important;
     box-shadow: none;
@@ -247,6 +260,7 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
   body.teacher-print-mode button,
   body.teacher-print-mode .carousel-nav,
   body.teacher-print-mode .tp-control-bar,
+  body.teacher-print-mode .problem-selector,
   body.teacher-print-mode .howto-box { display: none !important; }
   /* .howto-box only ever explains how to use the interactive page (click
      this, type that, check your work) - irrelevant once printed on paper.
@@ -256,16 +270,30 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
   body.teacher-print-mode .notebook-box,
   body.teacher-print-mode .explainer-box,
   body.teacher-print-mode .step-box { page-break-inside: avoid; break-inside: avoid; }
+  /* Each covered tab is its own topic - start every tab after the first
+     on a fresh page instead of letting them run together, so the handout
+     reads as one section per page. All .panel elements are always
+     siblings in DOM order (only their "active" class toggles per
+     checked tab), so this matches every active panel that has an
+     earlier active panel before it - i.e. every one but the first. */
+  body.teacher-print-mode .panel.active ~ .panel.active {
+    page-break-before: always;
+    break-before: page;
+  }
   /* The on-screen sizing (used for a live interactive page) wastes paper
      when printed as a flat document - shrink it down for print only. */
-  body.teacher-print-mode .panel { padding: 14px 4px; }
+  body.teacher-print-mode .panel { padding: 8px 4px; }
   body.teacher-print-mode .notebook-box,
-  body.teacher-print-mode .explainer-box { padding: 10px 16px; margin-bottom: 14px; font-size: 0.92rem; }
-  body.teacher-print-mode .section-title { font-size: 1.2rem; margin: 10px 0 8px 0; }
+  body.teacher-print-mode .explainer-box { padding: 8px 14px; margin: 12px 0; font-size: 0.85rem; }
+  body.teacher-print-mode .section-title { font-size: 1.05rem; margin: 6px 0 6px 0; padding-bottom: 4px; }
+  body.teacher-print-mode h1 { font-size: 1.25rem; margin: 2px 0; }
+  body.teacher-print-mode .notebook-header { font-size: 1rem; }
   /* Printers/PDF exports often drop background colors, which would leave
      the header's white text invisible on white paper. */
-  body.teacher-print-mode header { background: none; color: var(--primary, #1e3a8a); padding: 10px 0 14px 0; border-bottom: 3px solid var(--primary, #1e3a8a); }
-  body.teacher-print-mode .badge { background: none; color: var(--primary, #1e3a8a); border: 2px solid var(--primary, #1e3a8a); }
+  body.teacher-print-mode header { background: none; color: var(--primary, #1e3a8a); padding: 6px 0 8px 0; border-bottom: 3px solid var(--primary, #1e3a8a); }
+  body.teacher-print-mode .badge { background: none; color: var(--primary, #1e3a8a); border: 2px solid var(--primary, #1e3a8a); padding: 2px 10px; font-size: 0.7rem; }
+  body.teacher-print-mode .brand-logo { height: 34px; }
+  body.teacher-print-mode .brand-row { margin-bottom: 4px; gap: 6px; }
   body.teacher-print-mode .tp-print-all { display: block; }
   body.teacher-print-mode .tp-answer-tag { display: inline-block; }
   /* Guided-practice items (a question + an input) are styled as colored,
@@ -294,11 +322,18 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
   body.teacher-print-mode .tp-example {
     page-break-inside: avoid;
     break-inside: avoid;
-    margin-bottom: 22px;
-    padding-bottom: 16px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
     border-bottom: 2px dashed #cbd5e1;
   }
   body.teacher-print-mode .tp-example:last-child { border-bottom: none; }
+  body.teacher-print-mode .step-box,
+  body.teacher-print-mode .challenge-box,
+  body.teacher-print-mode .station-card,
+  body.teacher-print-mode .carousel-card { padding: 10px 12px; margin: 10px 0; }
+  body.teacher-print-mode .step-item { padding: 8px 12px; margin-top: 8px; }
+  body.teacher-print-mode .form-group { margin-bottom: 10px; }
+  body.teacher-print-mode .wb-grid { padding: 10px; margin: 10px 0; gap: 6px; }
   /* Reference charts/grids (e.g. the place-value chart) carry heavy
      on-screen chrome - thick borders, drop shadow, generous padding -
      meant to look tappable. Without page-break protection, a chart that
