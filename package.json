@@ -1,0 +1,27 @@
+{
+  "name": "lessons",
+  "version": "1.0.0",
+  "description": "Next.js static export foundation for the Lessons repository.",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://localhost:26831/rvasquezlia/Lessons"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "next": "^15.5.2",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "dependencies": {
+    "next": "^16.3.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  }
+}
