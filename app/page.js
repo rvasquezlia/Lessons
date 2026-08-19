@@ -25,8 +25,7 @@ export default function HomePage() {
         <span className="eyebrow">Curriculum Index</span>
         <h1>LIA Math Curriculum</h1>
         <p>
-          Select a grade and topic below to begin. Sign in with your school Google account
-          to access the full curriculum.
+          Sign in with your school GitHub account to access the full curriculum.
         </p>
       </section>
 

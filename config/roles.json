@@ -1,10 +1,10 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "roles": {
-  "allowedDomains": ["lincoln.edu.ni"],
-  "admins": ["rvasquez@lincoln.edu.ni"],
-  "editors": ["teacher1@linconl.edu.ni"]
-}
+    "admins": ["rvasquez@lincoln.edu.ni"],
+    "editors": ["teacher1@lincoln.edu.ni"],
+    "allowedDomains": ["lincoln.edu.ni", "lia.edu.ni"]
+  }
 }
 
 
