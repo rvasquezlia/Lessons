@@ -60,7 +60,7 @@
   <!-- ========== TAB 1: DEFINITIONS ========== -->
   <div id="definitions" class="panel active">
     <div class="section-title">Key Vocabulary: Place Value &amp; Decimal Operations</div>
-    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Lesson 1.2 &middot; CCSS.Math.Content.6.NS.B.3 &amp; MP6: Attend to Precision</p>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Lesson 1.2 &middot; CCSS.Math.Content.6.NS.B.2, 6.NS.B.3 &amp; MP6: Attend to Precision</p>
 
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
@@ -175,6 +175,22 @@
     <div style="background:#f1f5f9; border-left:8px solid var(--accent); padding:24px; border-radius:12px; margin-top:20px;">
       <h3 style="margin-top:0; color:var(--accent);">Watch Out: "Per" and "Each" Can Go Either Way</h3>
       <p style="margin-bottom:0;">"Per" and "each" usually signal <strong>division</strong> when you're <em>finding</em> a rate (total \(\div\) count = rate). But once you already <em>have</em> a rate, the same words signal <strong>multiplication</strong> when you're finding a total (rate \(\times\) count = total). Example: "Gas costs \(\$3.82\) <em>per</em> gallon; how much for 17.67 gallons?" is multiplication, not division - always ask whether the problem gives you a rate or asks you to find one.</p>
+    </div>
+
+    <div class="notebook-box" style="margin-top:20px;">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK - Academic Vocabulary You'll See All Week</div>
+      <p style="margin:0 0 10px 0; color:#78350f;">These words show up in the instructions on every tab this week - they're not decimal-specific, but you need to know exactly what each one is asking you to do.</p>
+      <table class="data-table" style="margin-top:6px;">
+        <thead><tr><th>Word</th><th>What it's asking you to do</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Estimate</strong></td><td>round the numbers first and calculate an approximate answer, before finding the exact one</td></tr>
+          <tr><td><strong>Reasonable</strong></td><td>close to your estimate - a way to check whether your exact answer is likely correct</td></tr>
+          <tr><td><strong>Precision</strong></td><td>getting every digit and every decimal place exactly right, not just "close enough"</td></tr>
+          <tr><td><strong>Justify / explain your reasoning</strong></td><td>write down <em>why</em> your answer is correct, in words, not just the answer itself</td></tr>
+          <tr><td><strong>Verify</strong></td><td>check your work a second way (like using your estimate) to confirm the answer</td></tr>
+          <tr><td><strong>Context</strong></td><td>the real-world situation a word problem is set in - what the numbers actually represent</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
@@ -342,7 +358,7 @@
   ];
 
   vpProblems.forEach((p, i) =>
-    LessonProgress.preRegister(`vp-${i}`, `Vocabulary Practice #${i + 1}: ${p.q}`, '2. Practice')
+    LessonProgress.preRegister(`vp-${i}`, `Vocabulary Practice #${i + 1}: ${p.q}`, '3. Practice')
   );
 
   function checkVP(idx) {
@@ -363,7 +379,7 @@
       key: `vp-${idx}`,
       label: `Vocabulary Practice #${idx + 1}: ${p.q}`,
       answer: val,
-      section: '2. Practice',
+      section: '3. Practice',
       correct
     });
   }
