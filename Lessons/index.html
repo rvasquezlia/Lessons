@@ -119,6 +119,28 @@
     }
     .grade-body { padding: 16px 20px; }
 
+    /* ===== Reference links row (syllabus / refresher) ===== */
+    .ref-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .ref-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      background: #eef2ff;
+      border: 2px solid #6366f1;
+      color: #3730a3;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .ref-link:hover { background: #e0e7ff; }
+
     /* ===== Topic card: outer wrapper for the 6-button page grid ===== */
     .topic-card {
       border: 2px solid var(--border);
@@ -259,6 +281,8 @@
     Sixth: {
       label: "Sixth Grade",
       subject: "Math 6",
+      syllabus: "../syllabus/Syllabus%206.html",
+      refresher: "../refreshers/Refresher%206.html",
       topics: [
         {
           id: "decimal-operations",
@@ -280,6 +304,8 @@
     Seventh: {
       label: "Seventh Grade",
       subject: "Pre-Algebra",
+      syllabus: "../syllabus/Syllabus%207.html",
+      refresher: "../refreshers/Refresher%207.html",
       topics: [
         {
           id: "integers-and-operations",
@@ -301,6 +327,8 @@
     Eighth: {
       label: "Eighth Grade",
       subject: "Algebra I",
+      syllabus: "../syllabus/Syllabus%208.html",
+      refresher: "../refreshers/Refresher%208.html",
       topics: [
         {
           id: "solving-linear-equations",
@@ -358,6 +386,13 @@
       </div>`;
   }
 
+  function renderRefRow(grade) {
+    const links = [];
+    if (grade.syllabus)  links.push(`<a class="ref-link" href="${grade.syllabus}">Course Syllabus</a>`);
+    if (grade.refresher) links.push(`<a class="ref-link" href="${grade.refresher}">Diagnostic Refresher</a>`);
+    return links.length ? `<div class="ref-row">${links.join("")}</div>` : "";
+  }
+
   function renderGrade(gradeKey) {
     const grade = CURRICULUM[gradeKey];
     const topicsHtml = (grade.topics || []).map(renderTopic).join("") ||
@@ -368,7 +403,7 @@
           <h2>${grade.label}</h2>
           <span class="subject-tag">${grade.subject}</span>
         </div>
-        <div class="grade-body">${topicsHtml}</div>
+        <div class="grade-body">${renderRefRow(grade)}${topicsHtml}</div>
       </div>`;
   }
 

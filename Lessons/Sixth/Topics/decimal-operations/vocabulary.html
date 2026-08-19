@@ -48,12 +48,13 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Start on the <strong>Definitions</strong> tab: read each term, copy the notebook box into your math notebook, then click the interactive place-value chart to explore each column. Move to the <strong>Practice</strong> tab to check your understanding.
+    Start on the <strong>Definitions</strong> tab: read each term, copy the notebook box into your math notebook, then click the interactive place-value chart to explore each column. Move to the <strong>Word Problem Clues</strong> tab to learn which words in a word problem tell you to add, subtract, multiply, or divide. Finish on the <strong>Practice</strong> tab to check your understanding.
   </div>
 
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('definitions')">1. Definitions</button>
-    <button class="tab-btn" onclick="switchTab('practice')">2. Practice</button>
+    <button class="tab-btn" onclick="switchTab('keywords')">2. Word Problem Clues</button>
+    <button class="tab-btn" onclick="switchTab('practice')">3. Practice</button>
   </nav>
 
   <!-- ========== TAB 1: DEFINITIONS ========== -->
@@ -144,7 +145,36 @@
     </div>
   </div>
 
-  <!-- ========== TAB 2: PRACTICE ========== -->
+  <!-- ========== TAB 2: WORD PROBLEM CLUES ========== -->
+  <div id="keywords" class="panel">
+    <div class="section-title">Word Problem Clues: Turning Words Into Operations</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Every word problem is hiding an operation. These are the words that give it away.</p>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read the clue-word table, then copy it into your notebook next to your other vocabulary. Before you solve any word problem on the Guided Practice or Exercises pages, underline the clue word first and name the operation - <em>then</em> compute.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK - Decimal Word Problem Clue Words</div>
+      <table class="data-table" style="margin-top:6px;">
+        <thead><tr><th>Operation</th><th>Clue Words</th><th>Example Phrase</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Addition (+)</strong></td><td>total, sum, combined, altogether, in all, increased by, plus</td><td>"the <em>combined</em> cost of two items"</td></tr>
+          <tr><td><strong>Subtraction (&minus;)</strong></td><td>difference, how much more/less, change (money back), remaining, left over, decreased by, fewer than</td><td>"how much <em>change</em> she got back"</td></tr>
+          <tr><td><strong>Multiplication (&times;)</strong></td><td>product, times, of (with a rate or fraction/percent), total for equal groups, area, twice/triple as many</td><td>"\(3.82 \textbf{ per gallon}\) for 17.67 gallons"</td></tr>
+          <tr><td><strong>Division (&divide;)</strong></td><td>quotient, per, each, split evenly, shared equally, average, unit price, how many groups of&hellip;</td><td>"cost <em>per</em> gallon" or "split <em>evenly</em> among 4 friends"</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background:#f1f5f9; border-left:8px solid var(--accent); padding:24px; border-radius:12px; margin-top:20px;">
+      <h3 style="margin-top:0; color:var(--accent);">Watch Out: "Per" and "Each" Can Go Either Way</h3>
+      <p style="margin-bottom:0;">"Per" and "each" usually signal <strong>division</strong> when you're <em>finding</em> a rate (total \(\div\) count = rate). But once you already <em>have</em> a rate, the same words signal <strong>multiplication</strong> when you're finding a total (rate \(\times\) count = total). Example: "Gas costs \(\$3.82\) <em>per</em> gallon; how much for 17.67 gallons?" is multiplication, not division - always ask whether the problem gives you a rate or asks you to find one.</p>
+    </div>
+  </div>
+
+  <!-- ========== TAB 3: PRACTICE ========== -->
   <div id="practice" class="panel">
     <div class="section-title">Vocabulary Practice: Check Your Understanding</div>
 
@@ -187,6 +217,33 @@
         <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(3)">Check</button>
       </div>
       <div id="vp-3-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>5.</strong> "Find the <em>total</em> cost of a $4.25 sandwich and a $2.10 drink." Which operation does the clue word point to? (add / subtract / multiply / divide)
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-4-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(4)">Check</button>
+      </div>
+      <div id="vp-4-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>6.</strong> "A $63.60 bill is <em>split evenly</em> among 4 friends." Which operation does the clue word point to? (add / subtract / multiply / divide)
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-5-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(5)">Check</button>
+      </div>
+      <div id="vp-5-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>7.</strong> "How much <em>more</em> did the $18.90 jacket cost than the $12.45 shirt?" Which operation does the clue word point to? (add / subtract / multiply / divide)
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-6-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(6)">Check</button>
+      </div>
+      <div id="vp-6-feedback" class="feedback-msg" style="margin-top:10px;"></div>
     </div>
   </div>
 
@@ -234,7 +291,10 @@
     { q: "In 4.853, place of digit 5",   type: "text",   a: "hundredths" },
     { q: "Round 7.346 to nearest hundredth", type: "number", a: 7.35, tol: 0.001 },
     { q: "Value of 9 in 12.09",          type: "number", a: 0.09, tol: 0.001 },
-    { q: "Round 23.7482 to nearest tenth", type: "number", a: 23.7, tol: 0.001 }
+    { q: "Round 23.7482 to nearest tenth", type: "number", a: 23.7, tol: 0.001 },
+    { q: "Clue word 'total' -> operation",        type: "text", a: "add" },
+    { q: "Clue words 'split evenly' -> operation", type: "text", a: "divide" },
+    { q: "Clue word 'more' (comparison) -> operation", type: "text", a: "subtract" }
   ];
 
   vpProblems.forEach((p, i) =>

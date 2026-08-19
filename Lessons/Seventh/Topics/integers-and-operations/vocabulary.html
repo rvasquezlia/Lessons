@@ -48,12 +48,13 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Start on the <strong>Definitions</strong> tab: read each term and copy the notebook box into your math notebook. Move to the <strong>Practice</strong> tab to check your understanding with three quick problems.
+    Start on the <strong>Definitions</strong> tab: read each term and copy the notebook box into your math notebook. Move to the <strong>Word Problem Clues</strong> tab to learn the words that tell you whether a quantity is positive or negative, and which operation to use. Finish on the <strong>Practice</strong> tab to check your understanding.
   </div>
 
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('definitions')">1. Definitions</button>
-    <button class="tab-btn" onclick="switchTab('practice')">2. Practice</button>
+    <button class="tab-btn" onclick="switchTab('keywords')">2. Word Problem Clues</button>
+    <button class="tab-btn" onclick="switchTab('practice')">3. Practice</button>
   </nav>
 
   <!-- ========== TAB 1: DEFINITIONS ========== -->
@@ -93,7 +94,47 @@
     </div>
   </div>
 
-  <!-- ========== TAB 2: PRACTICE ========== -->
+  <!-- ========== TAB 2: WORD PROBLEM CLUES ========== -->
+  <div id="keywords" class="panel">
+    <div class="section-title">Word Problem Clues: Sign Words and Operation Words</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Integer word problems hide two kinds of clues: which <strong>sign</strong> a number should have, and which <strong>operation</strong> to use.</p>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Copy both tables into your notebook. Before solving a word problem, underline every sign word first and write \(+\) or \(-\) above it, <em>then</em> decide the operation.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK - Sign Clue Words</div>
+      <table class="data-table" style="margin-top:6px;">
+        <thead><tr><th>Sign</th><th>Clue Words</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Positive (+)</strong></td><td>gained, rose, increased, above, up, climbed, deposit, income, profit, forward</td></tr>
+          <tr><td><strong>Negative (&minus;)</strong></td><td>lost, dropped, decreased, below, down, descended, withdrawal, owe, debt, expense, backward, below sea level, below zero</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK - Operation Clue Words</div>
+      <table class="data-table" style="margin-top:6px;">
+        <thead><tr><th>Operation</th><th>Clue Words</th><th>Example Phrase</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Addition (+)</strong></td><td>combined, total change, net result, altogether (successive changes)</td><td>"a deposit of $40, then a withdrawal of $25"</td></tr>
+          <tr><td><strong>Subtraction (&minus;)</strong></td><td>difference between, how much higher/colder/farther, compare two values</td><td>"the <em>difference</em> between the peak and the valley elevation"</td></tr>
+          <tr><td><strong>Multiplication (&times;)</strong></td><td>same change repeated, "each day for __ days", "loses __ every __"</td><td>"drops $3 <em>each</em> day for 4 days"</td></tr>
+          <tr><td><strong>Division (&divide;)</strong></td><td>average change per unit, spread evenly over time</td><td>"total change <em>per</em> day" (total \(\div\) number of days)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background:#f1f5f9; border-left:8px solid var(--accent); padding:24px; border-radius:12px; margin-top:20px;">
+      <h3 style="margin-top:0; color:var(--accent);">Watch Out: Sign Words Don't Replace Operation Words</h3>
+      <p style="margin-bottom:0;">A sign word only tells you whether a number is positive or negative <em>before</em> you compute - it doesn't tell you what to do with it. "The temperature <em>dropped</em> 6&deg;, then <em>rose</em> 4&deg;" means the changes are \(-6\) and \(+4\); you still have to <strong>add</strong> them together to find the total change: \(-6 + 4 = -2\).</p>
+    </div>
+  </div>
+
+  <!-- ========== TAB 3: PRACTICE ========== -->
   <div id="practice" class="panel">
     <div class="section-title">Vocabulary Practice: Check Your Understanding</div>
 
@@ -128,6 +169,24 @@
       </div>
       <div id="vp-2-feedback" class="feedback-msg" style="margin-top:10px;"></div>
     </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>4.</strong> "The diver <em>descended</em> 12 meters." As a signed number, that change is what integer?
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-3-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(3)">Check</button>
+      </div>
+      <div id="vp-3-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>5.</strong> "Find the <em>difference between</em> a mountain peak at 2,400 m and a valley at &minus;150 m." Which operation does the clue phrase point to? (add / subtract / multiply / divide)
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-4-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(4)">Check</button>
+      </div>
+      <div id="vp-4-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
   </div>
 
 </div><!-- /.app-container -->
@@ -153,7 +212,9 @@
   const vpProblems = [
     { q: "Opposite of -8",      type: "number", a: 8,    tol: 0.001 },
     { q: "|-12|",               type: "number", a: 12,   tol: 0.001 },
-    { q: "Greater: -3 or -7",   type: "text",   a: "-3" }
+    { q: "Greater: -3 or -7",   type: "text",   a: "-3" },
+    { q: "'Descended' 12 meters as a signed number", type: "number", a: -12, tol: 0.001 },
+    { q: "Clue phrase 'difference between' -> operation", type: "text", a: "subtract" }
   ];
 
   vpProblems.forEach((p, i) =>
@@ -172,7 +233,7 @@
 
     const correct = p.type === "number"
       ? LessonCheck.numericMatch(val, p.a, p.tol)
-      : val.trim() === p.a;
+      : val.trim().toLowerCase() === p.a.toLowerCase();
 
     LessonCheck.submit(fb, {
       key: `vp-${idx}`,

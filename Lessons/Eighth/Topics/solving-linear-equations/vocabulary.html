@@ -48,12 +48,13 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Start on the <strong>Definitions</strong> tab: read each term and copy the notebook box into your math notebook. Move to the <strong>Practice</strong> tab to check your understanding with two quick problems.
+    Start on the <strong>Definitions</strong> tab: read each term and copy the notebook box into your math notebook. Move to the <strong>Word Problem Clues</strong> tab to learn how to translate English phrases into algebraic expressions and equations. Finish on the <strong>Practice</strong> tab to check your understanding.
   </div>
 
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('definitions')">1. Definitions</button>
-    <button class="tab-btn" onclick="switchTab('practice')">2. Practice</button>
+    <button class="tab-btn" onclick="switchTab('keywords')">2. Word Problem Clues</button>
+    <button class="tab-btn" onclick="switchTab('practice')">3. Practice</button>
   </nav>
 
   <!-- ========== TAB 1: DEFINITIONS ========== -->
@@ -102,7 +103,53 @@
     </div>
   </div>
 
-  <!-- ========== TAB 2: PRACTICE ========== -->
+  <!-- ========== TAB 2: WORD PROBLEM CLUES ========== -->
+  <div id="keywords" class="panel">
+    <div class="section-title">Word Problem Clues: Translating English Into Algebra</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Setting up the equation is usually harder than solving it. These are the phrases that tell you what to write.</p>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Copy both tables into your notebook. When a word problem asks you to "write and solve an equation," translate one phrase at a time - don't try to write the whole equation in your head at once.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK - Translation Clue Words</div>
+      <table class="data-table" style="margin-top:6px;">
+        <thead><tr><th>Symbol</th><th>Clue Words</th><th>Example Phrase</th></tr></thead>
+        <tbody>
+          <tr><td><strong>\(=\)</strong></td><td>is, was, equals, results in, gives</td><td>"the total <em>is</em> 92"</td></tr>
+          <tr><td><strong>\(+\)</strong></td><td>sum of, more than, increased by, plus, total, added to</td><td>"5 <em>more than</em> a number" \(\rightarrow x + 5\)</td></tr>
+          <tr><td><strong>\(-\)</strong></td><td>difference, decreased by, minus, fewer than, less than, subtracted from</td><td>see the warning box below</td></tr>
+          <tr><td><strong>\(\times\)</strong></td><td>product of, times, twice, triple, of (with a fraction/percent)</td><td>"<em>twice</em> a number" \(\rightarrow 2x\)</td></tr>
+          <tr><td><strong>\(\div\)</strong></td><td>quotient of, per, divided equally, split into equal parts</td><td>"split <em>equally</em> among 3 people" \(\rightarrow x \div 3\)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background:#fef2f2; border-left:8px solid #dc2626; padding:24px; border-radius:12px; margin-top:20px;">
+      <h3 style="margin-top:0; color:#dc2626;">Warning: "Less Than" Reverses the Order</h3>
+      <p>Most subtraction phrases keep the same word order as the equation, but <strong>"less than" and "subtracted from" flip it</strong>. Read the numbers in the order they're written, then write the expression backwards:</p>
+      <ul style="margin-bottom:0;">
+        <li>"5 <strong>less than</strong> a number" &rarr; \(x - 5\) (<strong>not</strong> \(5 - x\))</li>
+        <li>"a number <strong>subtracted from</strong> 5" &rarr; \(5 - x\)</li>
+        <li>"5 <strong>decreased by</strong> a number" &rarr; \(5 - x\) (this one does <em>not</em> flip)</li>
+      </ul>
+      <p style="margin-bottom:0; margin-top:10px;"><strong>Test it:</strong> if a number is 5 less than 20, is it 15 or &minus;15? It's 15, so "5 less than \(x\)" must mean \(x - 5\), confirming the flip.</p>
+    </div>
+
+    <div class="notebook-box" style="margin-top:20px;">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK - Setting Up Word Problems</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Consecutive integers:</strong> \(x,\ x+1,\ x+2, \ldots\) (e.g. three consecutive integers: \(x, x+1, x+2\)).</li>
+        <li><strong>Consecutive even or odd integers:</strong> \(x,\ x+2,\ x+4, \ldots\) (skip by 2, even or odd).</li>
+        <li><strong>"In \(n\) years" (age, future):</strong> add \(n\) &mdash; current age \(x\) becomes \(x + n\).</li>
+        <li><strong>"\(n\) years ago" (age, past):</strong> subtract \(n\) &mdash; current age \(x\) becomes \(x - n\).</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ========== TAB 3: PRACTICE ========== -->
   <div id="practice" class="panel">
     <div class="section-title">Vocabulary Practice: Check Your Understanding</div>
 
@@ -128,6 +175,24 @@
       </div>
       <div id="vp-1-feedback" class="feedback-msg" style="margin-top:10px;"></div>
     </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>3.</strong> "5 <em>less than</em> a number is 12." Write the equation, then solve for the number.
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-2-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(2)">Check</button>
+      </div>
+      <div id="vp-2-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>4.</strong> "A number <em>subtracted from</em> 20 is 8." Write the equation, then solve for the number. (Compare this to #3 - same words, different order!)
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-3-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(3)">Check</button>
+      </div>
+      <div id="vp-3-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
   </div>
 
 </div><!-- /.app-container -->
@@ -152,7 +217,9 @@
   // ==========================================
   const vpProblems = [
     { q: "x + 9 = 15", a: 6, tol: 0.001 },
-    { q: "4x = 28",    a: 7, tol: 0.001 }
+    { q: "4x = 28",    a: 7, tol: 0.001 },
+    { q: "5 less than a number is 12 (x - 5 = 12)", a: 17, tol: 0.001 },
+    { q: "A number subtracted from 20 is 8 (20 - x = 8)", a: 12, tol: 0.001 }
   ];
 
   vpProblems.forEach((p, i) =>
