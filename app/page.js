@@ -1,116 +1,83 @@
-import roles from "../config/roles.json";
+"use client";
+
+import Link from "next/link";
 import taxonomy from "../content/taxonomy.json";
+import { useAuth } from "./contexts/AuthContext";
 
-const gradeCount = taxonomy.grades.length;
-const subjectCount = taxonomy.grades.reduce(
-  (total, grade) => total + grade.subjects.length,
-  0,
-);
-const topicCount = taxonomy.grades.reduce(
-  (total, grade) =>
-    total + grade.subjects.reduce((sum, subject) => sum + subject.topics.length, 0),
-  0,
-);
-const pageCount = taxonomy.grades.reduce(
-  (total, grade) =>
-    total +
-    grade.subjects.reduce(
-      (subjectTotal, subject) =>
-        subjectTotal +
-        subject.topics.reduce((topicTotal, topic) => topicTotal + topic.pages.length, 0),
-      0,
-    ),
-  0,
-);
-
-const appDirectories = [
-  "app/",
-  "content/",
-  "config/",
-  ".github/workflows/",
-  "Lessons/",
-  "_archive/",
+const PAGE_ORDER = [
+  "vocabulary",
+  "explanation",
+  "guided",
+  "exercises",
+  "enrichment",
+  "assessment",
+  "teacher-guide",
 ];
 
 export default function HomePage() {
+  const { user } = useAuth();
+  const role = user?.role ?? "student";
+  const canSeeTeacherGuide = role === "admin" || role === "editor";
+
   return (
-    <main className="page-shell">
+    <div className="page-shell">
       <section className="hero-card">
-        <span className="eyebrow">Phase 1 complete</span>
-        <h1>Lessons is now scaffolded as a Next.js static export app.</h1>
+        <span className="eyebrow">Curriculum Index</span>
+        <h1>LIA Math Curriculum</h1>
         <p>
-          This foundation keeps the repository self-contained, Git-backed, and ready for
-          GitHub Pages deployment without adding a backend server or external database.
+          Select a grade and topic below to begin. Sign in with your school Google account
+          to access the full curriculum.
         </p>
       </section>
 
-      <section className="grid">
-        <article className="panel">
-          <h2>Foundation summary</h2>
-          <dl className="stats">
-            <div>
-              <dt>Grades</dt>
-              <dd>{gradeCount}</dd>
-            </div>
-            <div>
-              <dt>Subjects</dt>
-              <dd>{subjectCount}</dd>
-            </div>
-            <div>
-              <dt>Topics</dt>
-              <dd>{topicCount}</dd>
-            </div>
-            <div>
-              <dt>Pages</dt>
-              <dd>{pageCount}</dd>
-            </div>
-            <div>
-              <dt>Admins</dt>
-              <dd>{roles.roles.admin.length}</dd>
-            </div>
-            <div>
-              <dt>Editors</dt>
-              <dd>{roles.roles.editor.length}</dd>
-            </div>
-          </dl>
-        </article>
+      {taxonomy.grades.map((grade) => (
+        <section key={grade.id} className="panel">
+          <h2 className="grade-heading">{grade.title}</h2>
 
-        <article className="panel">
-          <h2>Repository structure</h2>
-          <ul className="stack">
-            {appDirectories.map((directory) => (
-              <li key={directory}>
-                <code>{directory}</code>
-              </li>
-            ))}
-          </ul>
-        </article>
-      </section>
+          {grade.subjects.map((subject) => (
+            <div key={subject.id} className="subject-section">
+              <h3 className="subject-heading">{subject.title}</h3>
 
-      <section className="panel">
-        <h2>Current taxonomy seed</h2>
-        <div className="taxonomy-list">
-          {taxonomy.grades.map((grade) => (
-            <article key={grade.id} className="taxonomy-card">
-              <h3>{grade.title}</h3>
-              {grade.subjects.map((subject) => (
-                <div key={subject.id} className="subject-block">
-                  <p className="subject-title">{subject.title}</p>
-                  <ul className="stack">
-                    {subject.topics.map((topic) => (
-                      <li key={topic.id}>
-                        <strong>{topic.title}</strong>
-                        <span>{topic.standard}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </article>
+              <div className="topic-grid">
+                {subject.topics.map((topic) => {
+                  const pages = PAGE_ORDER.map((slug) =>
+                    topic.pages.find((p) => p.slug === slug),
+                  ).filter(
+                    (p) => p && (canSeeTeacherGuide || p.id !== "teacher-guide"),
+                  );
+
+                  return (
+                    <article key={topic.id} className="topic-card">
+                      <header className="topic-card__header">
+                        <h4 className="topic-card__title">{topic.title}</h4>
+                        <span className="topic-card__standard">{topic.standard}</span>
+                      </header>
+
+                      {topic.summary && (
+                        <p className="topic-card__summary">{topic.summary}</p>
+                      )}
+
+                      <div className="page-buttons">
+                        {pages.map((page) => (
+                          <Link
+                            key={page.id}
+                            href={`/curriculum/${grade.slug}/${subject.slug}/${topic.slug}/${page.slug}/`}
+                            className={`page-btn page-btn--${page.id}`}
+                          >
+                            {page.label ?? page.title}
+                          </Link>
+                        ))}
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </div>
           ))}
-        </div>
-      </section>
-    </main>
+        </section>
+      ))}
+    </div>
   );
 }
+
 
