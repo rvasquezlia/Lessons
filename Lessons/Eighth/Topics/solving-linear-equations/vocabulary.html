@@ -86,6 +86,10 @@
         <li><strong>Inverse operation:</strong> the operation that "undoes" another (addition ↔ subtraction; multiplication ↔ division).</li>
         <li><strong>Distributive Property:</strong> \(a(b + c) = ab + ac\) — multiply the factor outside the parentheses by each term inside.</li>
         <li><strong>Like terms:</strong> terms with the same variable raised to the same power; they can be combined.</li>
+        <li><strong>Coefficient:</strong> the numerical factor multiplied by the variable in a term (e.g. in \(3x\), the coefficient is 3; in \(-x\), the coefficient is \(-1\)).</li>
+        <li><strong>Constant:</strong> a term that has no variable; its value never changes (e.g. in \(2x + 7\), the constant is 7).</li>
+        <li><strong>Two-step equation:</strong> an equation that requires exactly two inverse operations to isolate the variable (e.g. \(2x + 3 = 11\): subtract 3, then divide by 2).</li>
+        <li><strong>Multi-step equation:</strong> an equation that requires three or more steps to solve, often involving the Distributive Property or combining like terms before isolating the variable.</li>
         <li><strong>One solution:</strong> exactly one value of \(x\) satisfies the equation.</li>
         <li><strong>No solution:</strong> the equation simplifies to a false statement (e.g. \(0 = 5\)).</li>
         <li><strong>Infinitely many solutions:</strong> the equation simplifies to a true statement (e.g. \(0 = 0\)).</li>
@@ -193,6 +197,24 @@
       </div>
       <div id="vp-3-feedback" class="feedback-msg" style="margin-top:10px;"></div>
     </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>5.</strong> In the expression \(5x - 8\), what is the coefficient?
+      <div style="margin-top:10px;">
+        <input type="number" id="vp-4-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(4)">Check</button>
+      </div>
+      <div id="vp-4-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>6.</strong> In the expression \(5x - 8\), what is the constant?
+      <div style="margin-top:10px;">
+        <input type="number" id="vp-5-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(5)">Check</button>
+      </div>
+      <div id="vp-5-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
   </div>
 
 </div><!-- /.app-container -->
@@ -219,7 +241,9 @@
     { q: "x + 9 = 15", a: 6, tol: 0.001 },
     { q: "4x = 28",    a: 7, tol: 0.001 },
     { q: "5 less than a number is 12 (x - 5 = 12)", a: 17, tol: 0.001 },
-    { q: "A number subtracted from 20 is 8 (20 - x = 8)", a: 12, tol: 0.001 }
+    { q: "A number subtracted from 20 is 8 (20 - x = 8)", a: 12, tol: 0.001 },
+    { q: "In the expression 5x - 8, what is the coefficient?", a: 5, tol: 0.001 },
+    { q: "In the expression 5x - 8, what is the constant?", a: -8, tol: 0.001 }
   ];
 
   vpProblems.forEach((p, i) =>

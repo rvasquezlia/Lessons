@@ -81,6 +81,10 @@
         <li><strong>Hundredths (\(0.01\)):</strong> \(\frac{1}{100}\text{th}\) of a whole (1 penny = $0.01).</li>
         <li><strong>Thousandths (\(0.001\)):</strong> \(\frac{1}{1000}\text{th}\) of a whole (Metric lab scales &amp; sports split-times).</li>
         <li><strong>Standard Algorithm:</strong> A reliable, step-by-step procedure for computing sums, differences, or products.</li>
+        <li><strong>Sum:</strong> the result of addition; the total when two or more quantities are combined. Example: the sum of 3.4 and 1.25 is 4.65.</li>
+        <li><strong>Difference:</strong> the result of subtraction; how much greater one quantity is than another. Example: the difference between 8.0 and 3.45 is 4.55.</li>
+        <li><strong>Product:</strong> the result of multiplication; the total when equal groups are combined. Example: the product of 2.5 and 4 is 10.</li>
+        <li><strong>Quotient:</strong> the result of division; the amount each group receives when sharing equally. Example: the quotient of 9.6 ÷ 3 is 3.2.</li>
         <li><strong>Estimation / Rounding:</strong> Replacing exact values with nearby round numbers to check reasonableness.</li>
       </ul>
     </div>
@@ -245,6 +249,42 @@
       </div>
       <div id="vp-6-feedback" class="feedback-msg" style="margin-top:10px;"></div>
     </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>8.</strong> Which operation gives you a <strong>sum</strong>?
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-7-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(7)">Check</button>
+      </div>
+      <div id="vp-7-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>9.</strong> Which operation gives you a <strong>difference</strong>?
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-8-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(8)">Check</button>
+      </div>
+      <div id="vp-8-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>10.</strong> Which operation gives you a <strong>product</strong>?
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-9-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(9)">Check</button>
+      </div>
+      <div id="vp-9-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>11.</strong> Which operation gives you a <strong>quotient</strong>?
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-10-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(10)">Check</button>
+      </div>
+      <div id="vp-10-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
   </div>
 
 </div><!-- /.app-container -->
@@ -294,7 +334,11 @@
     { q: "Round 23.7482 to nearest tenth", type: "number", a: 23.7, tol: 0.001 },
     { q: "Clue word 'total' -> operation",        type: "text", a: "add" },
     { q: "Clue words 'split evenly' -> operation", type: "text", a: "divide" },
-    { q: "Clue word 'more' (comparison) -> operation", type: "text", a: "subtract" }
+    { q: "Clue word 'more' (comparison) -> operation", type: "text", a: "subtract" },
+    { q: "Operation that gives a sum", type: "text", a: "add" },
+    { q: "Operation that gives a difference", type: "text", a: "subtract" },
+    { q: "Operation that gives a product", type: "text", a: "multiply" },
+    { q: "Operation that gives a quotient", type: "text", a: "divide" }
   ];
 
   vpProblems.forEach((p, i) =>

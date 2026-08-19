@@ -73,6 +73,9 @@
       <ul style="margin-bottom:0;">
         <li><strong>Whole numbers:</strong> \(0, 1, 2, 3, \ldots\) (no negatives, no fractions).</li>
         <li><strong>Integers:</strong> \(\ldots, -3, -2, -1, 0, 1, 2, 3, \ldots\) — whole numbers and their opposites.</li>
+        <li><strong>Rational number:</strong> any number that can be written as a fraction \(\frac{a}{b}\) where \(a\) and \(b\) are integers and \(b \neq 0\); includes all integers, fractions, and terminating or repeating decimals.</li>
+        <li><strong>Additive inverse:</strong> the number that, when added to a given number, results in 0. The additive inverse of \(a\) is \(-a\), and vice versa (e.g. the additive inverse of \(7\) is \(-7\)).</li>
+        <li><strong>Zero pair:</strong> a pair of numbers whose sum is 0 (e.g. \(5\) and \(-5\)); used with integer tiles to model addition and subtraction.</li>
         <li><strong>Positive numbers:</strong> greater than 0. &nbsp; <strong>Negative numbers:</strong> less than 0.</li>
         <li><strong>Opposite integers:</strong> two integers the same distance from 0 on opposite sides (e.g. \(5\) and \(-5\)).</li>
         <li><strong>Absolute value \(|a|\):</strong> the distance a number is from 0 on the number line — always \(0\) or positive.</li>
@@ -187,6 +190,33 @@
       </div>
       <div id="vp-4-feedback" class="feedback-msg" style="margin-top:10px;"></div>
     </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>6.</strong> A rational number is any number that can be written as a fraction. Is \(-4\) a rational number? (yes / no)
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-5-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(5)">Check</button>
+      </div>
+      <div id="vp-5-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>7.</strong> What is the additive inverse of \(-9\)?
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-6-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(6)">Check</button>
+      </div>
+      <div id="vp-6-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>8.</strong> Which two integers form a zero pair with each other: \(-6\) and __?
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-7-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(7)">Check</button>
+      </div>
+      <div id="vp-7-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
   </div>
 
 </div><!-- /.app-container -->
@@ -214,7 +244,10 @@
     { q: "|-12|",               type: "number", a: 12,   tol: 0.001 },
     { q: "Greater: -3 or -7",   type: "text",   a: "-3" },
     { q: "'Descended' 12 meters as a signed number", type: "number", a: -12, tol: 0.001 },
-    { q: "Clue phrase 'difference between' -> operation", type: "text", a: "subtract" }
+    { q: "Clue phrase 'difference between' -> operation", type: "text", a: "subtract" },
+    { q: "-4 is a rational number? yes / no", type: "text", a: "yes" },
+    { q: "Additive inverse of -9", type: "number", a: 9, tol: 0.001 },
+    { q: "Zero pair with -6", type: "number", a: 6, tol: 0.001 }
   ];
 
   vpProblems.forEach((p, i) =>

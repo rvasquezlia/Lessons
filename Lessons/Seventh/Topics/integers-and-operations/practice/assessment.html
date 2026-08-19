@@ -32,7 +32,7 @@
       <span class="brand-name">Lincoln International Academy</span>
     </div>
     <span class="badge">Integers &amp; Operations – Assessment</span>
-    <h1>Graded Classwork: Lessons 1.1 to 1.4</h1>
+    <h1>Graded Classwork: Integers &amp; Operations</h1>
   </header>
 
   <div class="progress-bar">
@@ -41,46 +41,143 @@
     <button class="btn-print" onclick="printProgressReport('Pre-Algebra 7 - Integers & Operations - Assessment')">Print My Progress</button>
   </div>
 
-  <div class="howto-box" style="margin:20px 24px 0 24px;">
-    <strong class="howto-label">How this page works</strong>
-    Tab 1 tells you what today's class is - your paper test. Complete the test with your teacher, then come back and check the completion box. Tab 2 is your final reflection - answer it, then type your name above and click <strong>Print My Progress</strong>. <strong>Calculators are not allowed this quarter.</strong>
-  </div>
-
   <nav class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('info')">1. Today's Assessment</button>
-    <button class="tab-btn" onclick="switchTab('reflection')">2. Reflection</button>
+    <button class="tab-btn active" onclick="switchTab('problems')">1. Assessment Problems</button>
+    <button class="tab-btn" onclick="switchTab('selfcheck')">2. Self-Check</button>
+    <button class="tab-btn" onclick="switchTab('reflection')">3. Reflection</button>
   </nav>
 
-  <!-- PANEL 1: TODAY'S ASSESSMENT -->
-  <div id="info" class="panel active">
-    <div class="section-title">Today's Graded Classwork</div>
-    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">45 min Friday, August 21, 2026 &middot; 45 min &middot;middot; CCSS.Math.Content.7.NS.A.1a-d, 7.NS.A.2b-c &amp; MP.1: Make Sense of Problems and Persevere</p>
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Calculators are not allowed. Work through all 10 problems. Type your answer and click Check.
+  </div>
 
-    <div class="explainer-box">
-      Today's class time is for your <strong>paper Graded Classwork</strong> covering Lessons 1.1 to 1.4 - a printed test your teacher hands out and collects in class. This page is not the test. Once you finish and turn in your paper test, come back here and check the box below.
+  <div id="problems" class="panel active">
+    <div class="section-title">Graded Classwork: Integers &amp; Operations</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">45 min &middot; CCSS.Math.Content.7.NS.A.1a–d, 7.NS.A.2b–c &middot; MP.1</p>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <label for="ap-1-input"><strong>1.</strong> What is the opposite of \(-15\)?</label>
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px;">
+        <input type="text" id="ap-1-input" class="form-control-lg" style="max-width:180px;" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(1)">Check</button>
+      </div>
+      <div id="ap-1-feedback" class="feedback-msg"></div>
     </div>
 
-    <div class="notebook-box">
-      <div class="notebook-header">Objectives for Today</div>
-      <ul style="margin-bottom:0;">
-        <li>Relate integers to their opposites and find absolute value.</li>
-        <li>Add and subtract integers accurately.</li>
-        <li>Multiply and divide integers accurately.</li>
-        <li>Identify concepts requiring additional reinforcement before the unit test.</li>
-      </ul>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <label for="ap-2-input"><strong>2.</strong> Find \(|-23|\).</label>
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px;">
+        <input type="text" id="ap-2-input" class="form-control-lg" style="max-width:180px;" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(2)">Check</button>
+      </div>
+      <div id="ap-2-feedback" class="feedback-msg"></div>
     </div>
 
-    <div class="howto-box">
-      <strong class="howto-label">What to do on this tab</strong>
-      Complete your paper test and turn it in to your teacher. You may ask clarification questions during the Graded Classwork. Then check the box below to confirm you're done.
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <label for="ap-3-input"><strong>3.</strong> Which is greater: \(-8\) or \(-3\)? Type just the number.</label>
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px;">
+        <input type="text" id="ap-3-input" class="form-control-lg" style="max-width:180px;" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(3)">Check</button>
+      </div>
+      <div id="ap-3-feedback" class="feedback-msg"></div>
     </div>
-    <div class="form-group">
-      <input type="checkbox" id="confirm-classwork" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;" onchange="confirmClasswork(this)">
-      <label for="confirm-classwork" style="display:inline; font-weight:700;">I completed and turned in my paper Graded Classwork.</label>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <label for="ap-4-input"><strong>4.</strong> \(-9 + 4\)</label>
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px;">
+        <input type="text" id="ap-4-input" class="form-control-lg" style="max-width:180px;" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(4)">Check</button>
+      </div>
+      <div id="ap-4-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <label for="ap-5-input"><strong>5.</strong> \(7 + (-12)\)</label>
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px;">
+        <input type="text" id="ap-5-input" class="form-control-lg" style="max-width:180px;" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(5)">Check</button>
+      </div>
+      <div id="ap-5-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <label for="ap-6-input"><strong>6.</strong> \(-6 - (-10)\)</label>
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px;">
+        <input type="text" id="ap-6-input" class="form-control-lg" style="max-width:180px;" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(6)">Check</button>
+      </div>
+      <div id="ap-6-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <label for="ap-7-input"><strong>7.</strong> \(-3 \times 8\)</label>
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px;">
+        <input type="text" id="ap-7-input" class="form-control-lg" style="max-width:180px;" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(7)">Check</button>
+      </div>
+      <div id="ap-7-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <label for="ap-8-input"><strong>8.</strong> \((-5) \times (-6)\)</label>
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px;">
+        <input type="text" id="ap-8-input" class="form-control-lg" style="max-width:180px;" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(8)">Check</button>
+      </div>
+      <div id="ap-8-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <label for="ap-9-input"><strong>9.</strong> \(-36 \div 4\)</label>
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px;">
+        <input type="text" id="ap-9-input" class="form-control-lg" style="max-width:180px;" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(9)">Check</button>
+      </div>
+      <div id="ap-9-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <label for="ap-10-input"><strong>10.</strong> Word problem: The temperature was \(-2^\circ\text{C}\). It dropped another \(7^\circ\text{C}\). What is the new temperature?</label>
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px;">
+        <input type="text" id="ap-10-input" class="form-control-lg" style="max-width:180px;" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(10)">Check</button>
+      </div>
+      <div id="ap-10-feedback" class="feedback-msg"></div>
     </div>
   </div>
 
-  <!-- PANEL 2: REFLECTION -->
+  <div id="selfcheck" class="panel">
+    <div class="section-title">Self-Check: How Did I Do?</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Rate your confidence for each skill below: 3 = I've got it, 2 = I need a little review, 1 = I need more help. Click Submit Self-Check when done.
+    </div>
+
+    <div class="form-group">
+      <label for="conf-a">Objective A: I can find the opposite and absolute value of an integer. <span id="conf-a-value">2</span></label>
+      <input type="range" id="conf-a" min="1" max="3" value="2" oninput="updateConfidence('a')">
+    </div>
+
+    <div class="form-group">
+      <label for="conf-b">Objective B: I can add and subtract integers. <span id="conf-b-value">2</span></label>
+      <input type="range" id="conf-b" min="1" max="3" value="2" oninput="updateConfidence('b')">
+    </div>
+
+    <div class="form-group">
+      <label for="conf-c">Objective C: I can multiply and divide integers. <span id="conf-c-value">2</span></label>
+      <input type="range" id="conf-c" min="1" max="3" value="2" oninput="updateConfidence('c')">
+    </div>
+
+    <div class="form-group">
+      <label for="conf-d">Objective D: I can apply integer operations to real-world situations. <span id="conf-d-value">2</span></label>
+      <input type="range" id="conf-d" min="1" max="3" value="2" oninput="updateConfidence('d')">
+    </div>
+
+    <button type="button" class="btn-lg" onclick="submitSelfCheck()">Submit Self-Check</button>
+    <div id="selfcheck-feedback" class="feedback-msg"></div>
+  </div>
+
   <div id="reflection" class="panel">
     <div class="section-title">Post-Assessment Reflection</div>
     <div class="howto-box">
@@ -120,10 +217,76 @@
     triggerMathJax();
   }
 
-  function confirmClasswork(cb) {
-    if (cb.checked) {
-      LessonProgress.record('fri-confirm-classwork', 'Confirmed: completed and turned in paper Graded Classwork', 'Yes', 'reflection', "1. Today's Assessment");
+  const apProblems = [
+    { type: "number", a: 15, tol: 0.01 },
+    { type: "number", a: 23, tol: 0.01 },
+    { type: "text", a: "-3" },
+    { type: "number", a: -5, tol: 0.01 },
+    { type: "number", a: -5, tol: 0.01 },
+    { type: "number", a: 4, tol: 0.01 },
+    { type: "number", a: -24, tol: 0.01 },
+    { type: "number", a: 30, tol: 0.01 },
+    { type: "number", a: -9, tol: 0.01 },
+    { type: "number", a: -9, tol: 0.01 }
+  ];
+
+  const apLabels = [
+    'Opposite of -15',
+    'Absolute value of -23',
+    'Greater integer between -8 and -3',
+    '-9 + 4',
+    '7 + (-12)',
+    '-6 - (-10)',
+    '-3 × 8',
+    '(-5) × (-6)',
+    '-36 ÷ 4',
+    'Temperature drop word problem'
+  ];
+
+  function checkAP(idx) {
+    const p = apProblems[idx - 1];
+    const raw = document.getElementById(`ap-${idx}-input`).value;
+    const fb = document.getElementById(`ap-${idx}-feedback`);
+
+    if (!raw.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking.");
+      return;
     }
+
+    const correct = p.type === "number"
+      ? LessonCheck.numericMatch(raw, p.a, p.tol)
+      : raw.trim().toLowerCase() === p.a;
+
+    LessonCheck.submit(fb, {
+      key: `ap-${idx}`,
+      label: `Assessment Problem ${idx}: ${apLabels[idx - 1]}`,
+      answer: raw,
+      section: '1. Assessment Problems',
+      correct
+    });
+  }
+
+  function updateConfidence(letter) {
+    const slider = document.getElementById(`conf-${letter}`);
+    document.getElementById(`conf-${letter}-value`).innerText = slider.value;
+  }
+
+  function submitSelfCheck() {
+    const entries = [
+      ['Objective A confidence', document.getElementById('conf-a').value],
+      ['Objective B confidence', document.getElementById('conf-b').value],
+      ['Objective C confidence', document.getElementById('conf-c').value],
+      ['Objective D confidence', document.getElementById('conf-d').value]
+    ];
+    const fb = document.getElementById('selfcheck-feedback');
+
+    entries.forEach(([label, value]) => {
+      LessonProgress.recordText(label, value, '2. Self-Check');
+    });
+
+    fb.className = 'feedback-msg success';
+    fb.innerText = 'Self-check submitted successfully!';
+    fb.style.display = 'block';
   }
 
   function submitExitTicket(e) {
@@ -144,8 +307,9 @@
     fb.style.display = "block";
   }
 
-  // Initial render
-  LessonProgress.preRegister('fri-confirm-classwork', 'Confirmed: completed and turned in paper Graded Classwork', "1. Today's Assessment");
+  apLabels.forEach((label, idx) => LessonProgress.preRegister(`ap-${idx + 1}`, `Assessment Problem ${idx + 1}: ${label}`, '1. Assessment Problems'));
+  ['a', 'b', 'c', 'd'].forEach(updateConfidence);
+  triggerMathJax();
 </script>
 <div id="print-report"></div>
 </body>
