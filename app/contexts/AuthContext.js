@@ -3,93 +3,144 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import roles from "../../config/roles.json";
 
-const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "";
+const GITHUB_CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID ?? "";
+const OAUTH_PROXY_URL = process.env.NEXT_PUBLIC_OAUTH_PROXY_URL ?? "";
+
+// GitHub OAuth redirect URL — must match the one registered in your GitHub App
+const REDIRECT_URI =
+  typeof window !== "undefined"
+    ? `${window.location.origin}${window.location.pathname}`
+    : "";
 
 const AuthContext = createContext(null);
 
 /**
  * Derive role from email by cross-referencing /config/roles.json.
- * Returns "admin" | "editor" | "student".
+ *
+ * Hierarchy:
+ *  1. email in admins[]        → "admin"
+ *  2. email in editors[]       → "editor"
+ *  3. domain in allowedDomains → "student"
+ *  4. else                     → null (access denied)
  */
-function deriveRole(email) {
-  if (!email) return "student";
+export function deriveRole(email) {
+  if (!email) return null;
   const lower = email.toLowerCase();
-  if (roles.roles.admin.map((e) => e.toLowerCase()).includes(lower)) return "admin";
-  if (roles.roles.editor.map((e) => e.toLowerCase()).includes(lower)) return "editor";
-  return "student";
+  const { admins = [], editors = [], allowedDomains = [] } = roles.roles;
+
+  if (admins.map((e) => e.toLowerCase()).includes(lower)) return "admin";
+  if (editors.map((e) => e.toLowerCase()).includes(lower)) return "editor";
+
+  const domain = lower.split("@")[1] ?? "";
+  if (allowedDomains.map((d) => d.toLowerCase()).includes(domain)) return "student";
+
+  return null; // access denied
 }
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null); // { name, email, picture, role }
+  const [user, setUser] = useState(null); // { name, email, login, avatarUrl, role } | null
   const [loading, setLoading] = useState(true);
+  const [accessDenied, setAccessDenied] = useState(false);
 
-  const handleCredentialResponse = useCallback((response) => {
+  /** Exchange a GitHub OAuth code for a user profile via the OAuth proxy. */
+  const handleCode = useCallback(async (code) => {
+    if (!OAUTH_PROXY_URL) {
+      console.warn(
+        "NEXT_PUBLIC_OAUTH_PROXY_URL is not set. " +
+        "Deploy an OAuth proxy (see docs/oauth-proxy-example.js) and set this variable.",
+      );
+      setLoading(false);
+      return;
+    }
     try {
-      // Decode the JWT payload (no crypto verification needed for client-side role display)
-      const payload = JSON.parse(atob(response.credential.split(".")[1]));
-      const email = payload.email ?? "";
+      const res = await fetch(`${OAUTH_PROXY_URL}?code=${encodeURIComponent(code)}`);
+      if (!res.ok) throw new Error("token exchange failed");
+      const data = await res.json();
+
+      const email = data.email ?? "";
       const role = deriveRole(email);
+
+      if (!role) {
+        setAccessDenied(true);
+        setLoading(false);
+        return;
+      }
+
       const profile = {
-        name: payload.name ?? email,
+        name: data.name ?? data.login,
         email,
-        picture: payload.picture ?? "",
+        login: data.login,
+        avatarUrl: data.avatar_url ?? "",
         role,
       };
       setUser(profile);
       sessionStorage.setItem("auth_user", JSON.stringify(profile));
     } catch {
-      // malformed token — stay signed out
+      // network / API failure — stay signed out
+    } finally {
+      setLoading(false);
     }
+  }, []);
+
+  const signIn = useCallback(() => {
+    if (!GITHUB_CLIENT_ID) return;
+    const state = crypto.randomUUID();
+    sessionStorage.setItem("oauth_state", state);
+    const url = new URL("https://github.com/login/oauth/authorize");
+    url.searchParams.set("client_id", GITHUB_CLIENT_ID);
+    url.searchParams.set("redirect_uri", REDIRECT_URI);
+    url.searchParams.set("scope", "read:user user:email");
+    url.searchParams.set("state", state);
+    window.location.href = url.toString();
   }, []);
 
   const signOut = useCallback(() => {
     setUser(null);
+    setAccessDenied(false);
     sessionStorage.removeItem("auth_user");
-    if (typeof window !== "undefined" && window.google) {
-      window.google.accounts.id.disableAutoSelect();
-    }
+    sessionStorage.removeItem("oauth_state");
   }, []);
 
-  // Restore session on mount
+  // Restore session from sessionStorage on mount
   useEffect(() => {
     try {
       const stored = sessionStorage.getItem("auth_user");
-      if (stored) setUser(JSON.parse(stored));
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        // Re-derive role in case roles.json changed
+        const role = deriveRole(parsed.email);
+        if (role) {
+          setUser({ ...parsed, role });
+        } else {
+          sessionStorage.removeItem("auth_user");
+          setAccessDenied(true);
+        }
+      }
     } catch {
       // ignore
     }
     setLoading(false);
   }, []);
 
-  // Initialize Google Identity Services SDK
+  // Handle OAuth callback code in URL
   useEffect(() => {
-    if (!GOOGLE_CLIENT_ID) return;
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    const state = params.get("state");
+    const storedState = sessionStorage.getItem("oauth_state");
 
-    const scriptId = "google-gsi-sdk";
-    if (document.getElementById(scriptId)) {
-      initGSI();
-      return;
+    if (code && state && state === storedState) {
+      sessionStorage.removeItem("oauth_state");
+      // Clean URL
+      window.history.replaceState({}, "", window.location.pathname);
+      setLoading(true);
+      handleCode(code);
     }
-
-    const script = document.createElement("script");
-    script.id = scriptId;
-    script.src = "https://accounts.google.com/gsi/client";
-    script.async = true;
-    script.defer = true;
-    script.onload = initGSI;
-    document.head.appendChild(script);
-
-    function initGSI() {
-      window.google?.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleCredentialResponse,
-        auto_select: false,
-      });
-    }
-  }, [handleCredentialResponse]);
+  }, [handleCode]);
 
   return (
-    <AuthContext.Provider value={{ user, loading, signOut }}>
+    <AuthContext.Provider value={{ user, loading, accessDenied, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
@@ -100,3 +151,4 @@ export function useAuth() {
   if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
   return ctx;
 }
+

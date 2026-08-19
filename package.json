@@ -5,7 +5,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build"
+    "build": "next build",
+    "migrate": "node scripts/migrate-legacy.js",
+    "migrate:dry": "node scripts/migrate-legacy.js --dry-run"
   },
   "repository": {
     "type": "git",
@@ -15,13 +17,20 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "next": "^15.5.2",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
-  },
-  "dependencies": {
+    "@octokit/rest": "^22.0.1",
+    "@tiptap/extension-code-block-lowlight": "^3.30.2",
+    "@tiptap/extension-image": "^3.30.2",
+    "@tiptap/extension-link": "^3.30.2",
+    "@tiptap/extension-placeholder": "^3.30.2",
+    "@tiptap/pm": "^3.30.2",
+    "@tiptap/react": "^3.30.2",
+    "@tiptap/starter-kit": "^3.30.2",
+    "katex": "^0.18.4",
+    "lowlight": "^3.3.0",
     "next": "^16.3.1",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0"
   }
 }
