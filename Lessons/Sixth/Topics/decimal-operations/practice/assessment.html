@@ -47,43 +47,136 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Tab 1 tells you what today's class is - your paper test. Complete the test with your teacher, then come back and check the completion box. Tab 2 is your final reflection - answer it, then type your name above and click <strong>Print My Progress</strong>.
+    Tab 1 is your graded decimal-operations practice. Tab 2 is your self-check. Tab 3 is your final reflection. Complete each tab, then type your name above and click <strong>Print My Progress</strong>.
   </div>
 
   <nav class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('info')">1. Today's Assessment</button>
-    <button class="tab-btn" onclick="switchTab('reflection')">2. Reflection</button>
+    <button class="tab-btn active" onclick="switchTab('problems')">1. Assessment Problems</button>
+    <button class="tab-btn" onclick="switchTab('selfcheck')">2. Self-Check</button>
+    <button class="tab-btn" onclick="switchTab('reflection')">3. Reflection</button>
   </nav>
 
-  <!-- PANEL 1: TODAY'S ASSESSMENT -->
-  <div id="info" class="panel active">
-    <div class="section-title">Today's Graded Classwork</div>
-    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">45 min Friday, August 21, 2026 &middot; 45 min &middot;middot; CCSS.Math.Content.6.NS.B.3 &amp; MP6: Attend to Precision</p>
-
-    <div class="explainer-box">
-      Today's class time is for your <strong>paper Graded Classwork</strong> - a printed test your teacher hands out and collects in class. This page is not the test. Once you finish and turn in your paper test, come back here and check the box below.
-    </div>
-
-    <div class="notebook-box">
-      <div class="notebook-header">Objectives for Today</div>
-      <ul style="margin-bottom:0;">
-        <li>Execute the standard algorithms independently to add, subtract, and multiply multi-digit decimals with precision.</li>
-        <li>Write complete solutions for multi-step, real-world decimal word problems.</li>
-        <li>Confirm the reasonableness of your answers by finding approximate values through rounding.</li>
-      </ul>
-    </div>
+  <div id="problems" class="panel active">
+    <div class="section-title">Graded Classwork: Decimal Operations</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">45 min &middot; CCSS.Math.Content.6.NS.B.3 &amp; MP6: Attend to Precision</p>
 
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Complete your paper test and turn it in to your teacher. Then check the box below to confirm you're done.
+      Work through all 9 problems. Type your answer and click Check. Every answer you check is recorded for your progress report.
     </div>
-    <div class="form-group">
-      <input type="checkbox" id="confirm-classwork" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;" onchange="confirmClasswork(this)">
-      <label for="confirm-classwork" style="display:inline; font-weight:700;">I completed and turned in my paper Graded Classwork.</label>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>1.</strong> Solve \(14.7 + 8.35\).
+      <div class="form-group">
+        <input type="text" id="ap-1-input" class="form-control-lg" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(1)">Check</button>
+      </div>
+      <div id="ap-1-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>2.</strong> Solve \(100 - 37.84\).
+      <div class="form-group">
+        <input type="text" id="ap-2-input" class="form-control-lg" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(2)">Check</button>
+      </div>
+      <div id="ap-2-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>3.</strong> Solve \(6.25 \times 4\).
+      <div class="form-group">
+        <input type="text" id="ap-3-input" class="form-control-lg" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(3)">Check</button>
+      </div>
+      <div id="ap-3-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>4.</strong> Solve \(3.8 \times 2.5\).
+      <div class="form-group">
+        <input type="text" id="ap-4-input" class="form-control-lg" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(4)">Check</button>
+      </div>
+      <div id="ap-4-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>5.</strong> Round \(47.382\) to the nearest hundredth.
+      <div class="form-group">
+        <input type="text" id="ap-5-input" class="form-control-lg" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(5)">Check</button>
+      </div>
+      <div id="ap-5-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>6.</strong> Round \(9.75\) to the nearest tenth.
+      <div class="form-group">
+        <input type="text" id="ap-6-input" class="form-control-lg" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(6)">Check</button>
+      </div>
+      <div id="ap-6-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>7.</strong> A bag of apples costs $3.49 and a carton of milk costs $2.75. What is the total cost?
+      <div class="form-group">
+        <input type="text" id="ap-7-input" class="form-control-lg" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(7)">Check</button>
+      </div>
+      <div id="ap-7-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>8.</strong> Maria earns $12.50 per hour and works 3.5 hours. How much does she earn?
+      <div class="form-group">
+        <input type="text" id="ap-8-input" class="form-control-lg" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(8)">Check</button>
+      </div>
+      <div id="ap-8-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>9.</strong> A pizza costs $18.60 and is split equally among 4 friends. How much does each person pay? Round to the nearest cent.
+      <div class="form-group">
+        <input type="text" id="ap-9-input" class="form-control-lg" placeholder="Answer">
+        <button class="btn-lg" onclick="checkAP(9)">Check</button>
+      </div>
+      <div id="ap-9-feedback" class="feedback-msg"></div>
     </div>
   </div>
 
-  <!-- PANEL 2: REFLECTION -->
+  <div id="selfcheck" class="panel">
+    <div class="section-title">Self-Check: How Did I Do?</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Look at your Tab 1 results. For each learning objective below, rate your confidence: 3 = I've got it, 2 = I need a little review, 1 = I need more help. Click Submit Self-Check when done.
+    </div>
+
+    <div class="form-group">
+      <label for="conf-a">Objective A: I can add and subtract multi-digit decimals using the standard algorithm.</label>
+      <input type="range" id="conf-a" min="1" max="3" value="2">
+      <span id="conf-a-value">2</span>
+    </div>
+
+    <div class="form-group">
+      <label for="conf-b">Objective B: I can multiply multi-digit decimals using the standard algorithm.</label>
+      <input type="range" id="conf-b" min="1" max="3" value="2">
+      <span id="conf-b-value">2</span>
+    </div>
+
+    <div class="form-group">
+      <label for="conf-c">Objective C: I can round decimals and use estimates to check my answers.</label>
+      <input type="range" id="conf-c" min="1" max="3" value="2">
+      <span id="conf-c-value">2</span>
+    </div>
+
+    <button class="btn-lg" onclick="submitSelfCheck()">Submit Self-Check</button>
+    <div id="selfcheck-feedback" class="feedback-msg"></div>
+  </div>
+
   <div id="reflection" class="panel">
     <div class="section-title">Post-Assessment Reflection</div>
     <div class="howto-box">
@@ -125,14 +218,61 @@
     triggerMathJax();
   }
 
-  // Confirm the paper test was completed and turned in
-  function confirmClasswork(cb) {
-    if (cb.checked) {
-      LessonProgress.record('fri-confirm-classwork', 'Confirmed: completed and turned in paper Graded Classwork', 'Yes', 'reflection', "1. Today's Assessment");
+  const apProblems = [
+    { q: '14.7 + 8.35', a: 23.05, tol: 0.005 },
+    { q: '100 - 37.84', a: 62.16, tol: 0.005 },
+    { q: '6.25 × 4', a: 25, tol: 0.005 },
+    { q: '3.8 × 2.5', a: 9.5, tol: 0.005 },
+    { q: 'Round 47.382 to the nearest hundredth', a: 47.38, tol: 0.005 },
+    { q: 'Round 9.75 to the nearest tenth', a: 9.8, tol: 0.005 },
+    { q: 'A bag of apples costs $3.49 and a carton of milk costs $2.75. What is the total cost?', a: 6.24, tol: 0.005 },
+    { q: 'Maria earns $12.50 per hour and works 3.5 hours. How much does she earn?', a: 43.75, tol: 0.005 },
+    { q: 'A pizza costs $18.60 and is split equally among 4 friends. How much does each person pay? Round to the nearest cent.', a: 4.65, tol: 0.005 }
+  ];
+
+  function checkAP(idx) {
+    const p = apProblems[idx - 1];
+    const val = document.getElementById(`ap-${idx}-input`).value;
+    const fb = document.getElementById(`ap-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, 'Enter an answer before checking.');
+      return;
     }
+
+    LessonCheck.submit(fb, {
+      key: `ap-${idx}`,
+      label: `Assessment Problem #${idx}: ${p.q}`,
+      answer: val,
+      section: '1. Assessment Problems',
+      correct: LessonCheck.numericMatch(val, p.a, p.tol)
+    }, 'Submitted! This answer has been recorded for your progress report.');
   }
 
-  // Final reflection
+  function submitSelfCheck() {
+    const a = document.getElementById('conf-a').value;
+    const b = document.getElementById('conf-b').value;
+    const c = document.getElementById('conf-c').value;
+    const fb = document.getElementById('selfcheck-feedback');
+
+    LessonProgress.recordText('Self-Check Objective A', a, '2. Self-Check');
+    LessonProgress.recordText('Self-Check Objective B', b, '2. Self-Check');
+    LessonProgress.recordText('Self-Check Objective C', c, '2. Self-Check');
+
+    fb.className = 'feedback-msg success';
+    fb.innerText = 'Self-check submitted and recorded successfully!';
+    fb.style.display = 'block';
+  }
+
+  document.querySelectorAll('input[type="range"]').forEach((slider) => {
+    const output = document.getElementById(`${slider.id}-value`);
+    const updateValue = () => {
+      output.textContent = slider.value;
+    };
+    slider.oninput = updateValue;
+    updateValue();
+  });
+
   function submitExitTicket(e) {
     e.preventDefault();
     const a1 = document.getElementById('exit-1').value.trim();
@@ -151,8 +291,7 @@
     fb.style.display = "block";
   }
 
-  // Initial render
-  LessonProgress.preRegister('fri-confirm-classwork', 'Confirmed: completed and turned in paper Graded Classwork', "1. Today's Assessment");
+  apProblems.forEach((p, i) => LessonProgress.preRegister(`ap-${i + 1}`, `Assessment Problem #${i + 1}: ${p.q}`, '1. Assessment Problems'));
 </script>
 <div id="print-report"></div>
 </body>
