@@ -57,7 +57,7 @@
   <!-- TAB 1: WARM-UP -->
   <div id="warmup" class="panel active">
     <div class="section-title">Mixed-Equation Warm-Up</div>
-    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">45 min Wednesday, August 19, 2026 &middot; 45 min &middot;middot; HSA.REI.B.3 &amp; MP.7: Look for and Make Use of Structure</p>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Wednesday &middot; 45 min &middot; HSA.REI.A.1, HSA.REI.B.3 &amp; MP.7: Look for and Make Use of Structure</p>
 
     <div class="explainer-box">
       Today you'll analyze the <em>structure</em> of an equation rather than just computing an answer. Warm up first with two standard equations.
@@ -166,11 +166,11 @@
     </div>
     <div class="notebook-box">
       <div class="notebook-header">Today's IXL Skill</div>
-      <p style="margin:0;"><strong>KBP</strong> - Find the number of solutions to a linear equation</p>
+      <p style="margin:0;"><strong>K9S</strong> - Find the number of solutions to a linear equation</p>
     </div>
     <div class="form-group">
       <input type="checkbox" id="confirm-ixl" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;" onchange="confirmIXL(this)">
-      <label for="confirm-ixl" style="display:inline; font-weight:700;">I completed IXL skill KBP.</label>
+      <label for="confirm-ixl" style="display:inline; font-weight:700;">I completed IXL skill K9S.</label>
     </div>
   </div>
 
@@ -368,7 +368,7 @@
   // IXL confirmation
   function confirmIXL(cb) {
     if (cb.checked) {
-      LessonProgress.record('wed-confirm-ixl', 'Confirmed: completed IXL skill KBP', 'Yes', 'reflection', '4. IXL Practice');
+      LessonProgress.record('wed-confirm-ixl', 'Confirmed: completed IXL skill K9S', 'Yes', 'reflection', '4. IXL Practice');
     }
   }
 
@@ -395,7 +395,7 @@
   warmupProblems.forEach((p, i) => LessonProgress.preRegister(`wu-${i}`, `Warm-Up: ${p.q.replace(/\\\(|\\\)/g, '')}`, '1. Warm-Up'));
   LessonProgress.preRegister('wed-comp1', 'Comparison: two savings plans', '3. Comparison Scenario');
   LessonProgress.preRegister('wed-comp2', 'Comparison: two billing expressions', '3. Comparison Scenario');
-  LessonProgress.preRegister('wed-confirm-ixl', 'Confirmed: completed IXL skill KBP', '4. IXL Practice');
+  LessonProgress.preRegister('wed-confirm-ixl', 'Confirmed: completed IXL skill K9S', '4. IXL Practice');
 </script>
 <div id="print-report"></div>
 </body>

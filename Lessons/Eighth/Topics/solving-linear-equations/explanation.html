@@ -62,7 +62,7 @@
   <!-- TAB 1: WARM-UP -->
   <div id="warmup" class="panel active">
     <div class="section-title">Warm-Up: Properties of Equality &amp; Inverse Operations</div>
-    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">90 min (Double Period) Monday, August 17, 2026 &middot; 90 min (Double Period) &middot;middot; HSA.REI.A.1, HSA.REI.B.3 &amp; MP.7: Look for and Make Use of Structure</p>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Monday &middot; 90 min (Double Period) &middot; HSA.CED.A.1, HSA.REI.A.1, HSA.REI.B.3 &amp; MP.7: Look for and Make Use of Structure</p>
 
     <div class="explainer-box">
       Every equation you solve today rests on one idea: whatever you do to one side of an equation, you must do to the other side, or the equation stops being true. Before we work with multi-step equations, confirm you can name the property behind each move.
@@ -287,6 +287,10 @@
       <div class="form-group">
         <label>2. Which step in solving a linear equation is most important for keeping both sides equal, and why?</label>
         <textarea id="exit-2" class="form-control-lg" rows="3" placeholder="Explain your reasoning..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>3. Think back to the Mixture Investigation and Work &amp; Time problems on this page. What clues in a word problem help you decide how to set up your equation?</label>
+        <textarea id="exit-3" class="form-control-lg" rows="3" placeholder="Explain your reasoning..."></textarea>
       </div>
       <button type="submit" class="btn-lg">Submit Exit Ticket</button>
     </form>
@@ -642,12 +646,13 @@
     e.preventDefault();
     const a1 = document.getElementById('exit-1').value;
     const a2 = document.getElementById('exit-2').value.trim();
+    const a3 = document.getElementById('exit-3').value.trim();
     const fb = document.getElementById('exit-feedback');
 
-    if (!a1.trim() || a2.length <= 5) {
+    if (!a1.trim() || a2.length <= 5 || a3.length <= 5) {
       fb.style.display = 'block';
       fb.className = 'feedback-msg error';
-      fb.innerText = "Please solve the equation and write a complete reflection before submitting.";
+      fb.innerText = "Please solve the equation and write complete reflections before submitting.";
       return;
     }
 
@@ -656,6 +661,7 @@
     fb.style.display = "block";
     LessonProgress.record('mon-exit-1', 'Exit Ticket: solve 6x-7=29', a1, 'reflection', '6. Exit Ticket');
     LessonProgress.recordText('Exit Ticket: which step keeps both sides equal', a2, '6. Exit Ticket');
+    LessonProgress.recordText('Exit Ticket: word problem clues', a3, '6. Exit Ticket');
   }
 
   // Initial render
