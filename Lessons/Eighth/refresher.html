@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eighth Grade Algebra I - Readiness Review</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../lesson-shared.css">
+  <script src="../lesson-shared.js"></script>
+
+  <style>
+    .review-card { background: #f1f5f9; border: 2px solid var(--border); border-radius: 12px; padding: 20px 22px; margin: 18px 0; }
+    .review-card h4 { margin: 0 0 8px 0; color: var(--primary); font-size: 1.05rem; }
+    .reveal-answer-box {
+      display: none; margin-top: 14px; padding: 14px 16px; background: var(--success-bg);
+      border-left: 6px solid var(--success); border-radius: 8px; font-size: 0.95rem;
+    }
+    .btn-reveal {
+      background: var(--accent); color: #000; border: none; padding: 9px 18px;
+      border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 0.9rem; margin-top: 10px;
+    }
+    .btn-reveal:hover { background: #b45309; color: #fff; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Algebra I Readiness Review</span>
+    <h1>Eighth Grade: Algebra I Warm-Up</h1>
+    <p class="subtitle">A review of Pre-Algebra foundations that lead directly into our Solving Linear Equations topic</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Work through each tab in order. Read the concept box, try the practice problems in your head or on paper, then click <strong>Show Answer</strong> to check yourself. This is a warm-up review, not a graded assignment &mdash; be honest with yourself about what still feels shaky so you know what to ask about before we start Solving Linear Equations.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('translate')">1. Algebra Translation</button>
+    <button class="tab-btn" onclick="switchTab('pemdas')">2. Order of Operations</button>
+    <button class="tab-btn" onclick="switchTab('integers')">3. Integer Operations</button>
+    <button class="tab-btn" onclick="switchTab('evaluate')">4. Evaluating Expressions</button>
+    <button class="tab-btn" onclick="switchTab('distribute')">5. Distributive Property</button>
+    <button class="tab-btn" onclick="switchTab('equations')">6. Solving Equations</button>
+    <button class="tab-btn" onclick="switchTab('coordplane')">7. Coordinate Plane</button>
+    <button class="tab-btn" onclick="switchTab('preview')">8. What's Next</button>
+  </nav>
+
+  <!-- ========== TAB 1: ALGEBRA TRANSLATION ========== -->
+  <div id="translate" class="panel active">
+    <div class="section-title">Translating Words Into Algebra</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Setting up an equation is usually the hardest part &mdash; these clue words tell you exactly what symbol to write.</p>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Copy Into Math Notebook</div>
+      <table class="data-table" style="margin-top:6px;">
+        <thead><tr><th>Symbol</th><th>Clue Words</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><strong>= (equals)</strong></td><td>is, was, equals, results in, gives</td><td>&ldquo;the total is 92&rdquo; &rarr; = 92</td></tr>
+          <tr><td><strong>+ (add)</strong></td><td>sum, more than, increased by, plus, added to</td><td>&ldquo;5 more than x&rdquo; &rarr; x + 5</td></tr>
+          <tr><td><strong>&minus; (subtract)</strong></td><td>difference, decreased by, minus, less than, fewer than</td><td>&ldquo;5 less than x&rdquo; &rarr; x &minus; 5 (NOT 5 &minus; x)</td></tr>
+          <tr><td><strong>&times; (multiply)</strong></td><td>product, times, twice, triple, of (with %)</td><td>&ldquo;twice a number&rdquo; &rarr; 2x</td></tr>
+          <tr><td><strong>&divide; (divide)</strong></td><td>quotient, per, divided equally, split into equal parts</td><td>&ldquo;split equally among 3&rdquo; &rarr; x &divide; 3</td></tr>
+        </tbody>
+      </table>
+      <p style="margin:12px 0 0 0; background:#fef2f2; border-left:4px solid #dc2626; padding:10px; border-radius:6px;"><strong>Warning: &ldquo;less than&rdquo; reverses order!</strong> &ldquo;5 less than a number&rdquo; &rarr; \(x - 5\) (NOT \(5 - x\)). Test it: if a number is 5 less than 20, the answer is 15, so it must be \(x - 5\).</p>
+    </div>
+
+    <div class="review-card">
+      <h4>Try It</h4>
+      <p>1. &ldquo;7 more than a number&rdquo;</p>
+      <p>2. &ldquo;A number decreased by 12 is 5&rdquo;</p>
+      <p>3. &ldquo;The product of 4 and a number is 36&rdquo;</p>
+      <p>4. &ldquo;8 less than a number&rdquo; (watch the word order!)</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Show Answer</button>
+      <div class="reveal-answer-box">
+        1. \(x + 7\)<br>
+        2. \(x - 12 = 5 \rightarrow x = 17\)<br>
+        3. \(4x = 36 \rightarrow x = 9\)<br>
+        4. \(x - 8\) (not \(8 - x\); &ldquo;less than&rdquo; flips the order)
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 2: ORDER OF OPERATIONS ========== -->
+  <div id="pemdas" class="panel">
+    <div class="section-title">PEMDAS: Order of Operations</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Copy Into Math Notebook</div>
+      <p style="margin:0;">Parentheses &rarr; Exponents &rarr; Multiplication &amp; Division (left to right) &rarr; Addition &amp; Subtraction (left to right).</p>
+    </div>
+    <div class="review-card">
+      <h4>Try It</h4>
+      <p>1. Evaluate \(5 + 2 \times (8 - 3)^2\)</p>
+      <p>2. Evaluate \((12 - 4) \div 2 + 3^2\)</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Show Answer</button>
+      <div class="reveal-answer-box">
+        1. <strong>55</strong> (\(5 + 2 \times 25 = 5 + 50\))<br>
+        2. <strong>13</strong> (\(8 \div 2 + 9 = 4 + 9\))
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 3: INTEGER OPERATIONS ========== -->
+  <div id="integers" class="panel">
+    <div class="section-title">Integer Operations</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Copy Into Math Notebook</div>
+      <p style="margin:0 0 8px 0;"><strong>Add/subtract:</strong> same signs &rarr; add the absolute values and keep the sign; different signs &rarr; subtract the smaller absolute value from the larger and keep the sign of the number with the larger absolute value. Subtracting a number is the same as adding its opposite.</p>
+      <p style="margin:0;"><strong>Multiply/divide:</strong> same signs &rarr; positive result; different signs &rarr; negative result.</p>
+    </div>
+    <div class="review-card">
+      <h4>Try It</h4>
+      <p>1. Evaluate \(-14 + 9\)</p>
+      <p>2. Evaluate \(7 - (-12)\)</p>
+      <p>3. Evaluate \((-7) \times 8\)</p>
+      <p>4. Evaluate \((-45) \div (-5)\)</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Show Answer</button>
+      <div class="reveal-answer-box">
+        1. <strong>&minus;5</strong> (\(14 - 9 = 5\), keep the negative sign)<br>
+        2. <strong>19</strong> (\(7 + 12\))<br>
+        3. <strong>&minus;56</strong><br>
+        4. <strong>9</strong> (same signs, positive result)
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 4: EVALUATING EXPRESSIONS ========== -->
+  <div id="evaluate" class="panel">
+    <div class="section-title">Evaluating Algebraic Expressions</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Copy Into Math Notebook</div>
+      <p style="margin:0;">Substitute the given value(s) for the variable(s), then apply the order of operations.</p>
+    </div>
+    <div class="review-card">
+      <h4>Try It</h4>
+      <p>1. Evaluate \(2a + 7\) when \(a = -3\).</p>
+      <p>2. Evaluate \(x^2 - 4x + 1\) when \(x = 5\).</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Show Answer</button>
+      <div class="reveal-answer-box">
+        1. <strong>1</strong> (\(2(-3) + 7 = -6 + 7\))<br>
+        2. <strong>6</strong> (\(25 - 20 + 1\))
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 5: DISTRIBUTIVE PROPERTY ========== -->
+  <div id="distribute" class="panel">
+    <div class="section-title">Distributive Property &amp; Combining Like Terms</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Copy Into Math Notebook</div>
+      <p style="margin:0;">Distribute first: \(a(b + c) = ab + ac\). Then combine like terms (same variable and exponent) by adding or subtracting their coefficients.</p>
+    </div>
+    <div class="review-card">
+      <h4>Try It</h4>
+      <p>1. Simplify \(4(x - 3) + 2x\)</p>
+      <p>2. Simplify \(-2(3y + 1) + 5y\)</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Show Answer</button>
+      <div class="reveal-answer-box">
+        1. <strong>\(6x - 12\)</strong> (\(4x - 12 + 2x\))<br>
+        2. <strong>\(-y - 2\)</strong> (\(-6y - 2 + 5y\))
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 6: SOLVING EQUATIONS ========== -->
+  <div id="equations" class="panel">
+    <div class="section-title">One-Step &amp; Two-Step Equations</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Copy Into Math Notebook</div>
+      <p style="margin:0;">Use the inverse operation to isolate the variable. Whatever you do to one side of the equation, you must do to the other. For two-step equations: undo addition/subtraction first, then undo multiplication/division.</p>
+    </div>
+    <div class="review-card">
+      <h4>Try It: One-Step</h4>
+      <p>1. Solve \(x - 8 = 13\)</p>
+      <p>2. Solve \(\dfrac{x}{4} = -9\)</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Show Answer</button>
+      <div class="reveal-answer-box">
+        1. <strong>\(x = 21\)</strong><br>
+        2. <strong>\(x = -36\)</strong>
+      </div>
+    </div>
+    <div class="review-card">
+      <h4>Try It: Two-Step</h4>
+      <p>1. Solve \(2x - 5 = 11\)</p>
+      <p>2. Solve \(-4x + 7 = -9\)</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Show Answer</button>
+      <div class="reveal-answer-box">
+        1. <strong>\(x = 8\)</strong> (\(2x = 16\))<br>
+        2. <strong>\(x = 4\)</strong> (\(-4x = -16\))
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 7: COORDINATE PLANE ========== -->
+  <div id="coordplane" class="panel">
+    <div class="section-title">Coordinate Plane Review</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Copy Into Math Notebook</div>
+      <p style="margin:0;">Points are written as ordered pairs \((x, y)\). Quadrant signs: I \((+,+)\), II \((-,+)\), III \((-,-)\), IV \((+,-)\).</p>
+    </div>
+    <div class="review-card">
+      <h4>Try It</h4>
+      <p>1. Which quadrant is the point \((4, -6)\) in?</p>
+      <p>2. State the directions to plot \((-3, -5)\) starting from the origin.</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Show Answer</button>
+      <div class="reveal-answer-box">
+        1. <strong>Quadrant IV</strong> (x positive, y negative)<br>
+        2. <strong>Move 3 units left, then 5 units down.</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 8: WHAT'S NEXT ========== -->
+  <div id="preview" class="panel">
+    <div class="section-title">What's Next: Solving Linear Equations</div>
+    <div class="challenge-box">
+      <h3 style="margin-top:0;">Coming Up: Solving Linear Equations</h3>
+      <p>Every skill you just reviewed &mdash; inverse operations, the distributive property, combining like terms &mdash; comes together in our next topic. We'll extend one- and two-step equations to <strong>multi-step equations</strong> and equations with a <strong>variable on both sides</strong>, and learn to classify whether an equation has one solution, no solution, or infinitely many solutions.</p>
+    </div>
+
+    <div class="review-card">
+      <h4>Preview Challenge</h4>
+      <p>Solve for \(x\): \(3x + 5 = x + 13\)</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Show Answer</button>
+      <div class="reveal-answer-box">
+        <strong>Step 1 (variable on both sides):</strong> subtract \(x\) from both sides: \(2x + 5 = 13\)<br>
+        <strong>Step 2:</strong> subtract 5: \(2x = 8\)<br>
+        <strong>Step 3:</strong> divide by 2: \(\mathbf{x = 4}\)<br>
+        <em>This &ldquo;variable on both sides&rdquo; move is exactly what we'll master in Solving Linear Equations!</em>
+      </div>
+    </div>
+
+    <p style="text-align:center; margin-top:24px;">
+      <a class="btn-lg" style="text-decoration:none; display:inline-block;" href="Topics/solving-linear-equations/vocabulary.html">Start the Solving Linear Equations Topic &rarr;</a>
+    </p>
+  </div>
+
+</div><!-- /.app-container -->
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+</script>
+</body>
+</html>
