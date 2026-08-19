@@ -1,14 +1,25 @@
 import "./globals.css";
+import { AuthProvider } from "./contexts/AuthContext";
+import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
 
 export const metadata = {
-  title: "Lessons",
-  description: "Next.js static export foundation for the Lessons repository.",
+  title: "LIA Curriculum",
+  description: "Git-backed static curriculum site with Google Identity sign-in.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AuthProvider>
+          <Header />
+          <div className="app-shell">
+            <Sidebar />
+            <main className="app-main">{children}</main>
+          </div>
+        </AuthProvider>
+      </body>
     </html>
   );
 }
