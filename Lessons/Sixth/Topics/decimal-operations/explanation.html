@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Math 6: Lesson 1.2 - Decimal Operations & Standard Multiplication Algorithm</title>
+  <title>Math 6: Decimal Operations - Standard Algorithm</title>
   
   <!-- Montserrat Font Import -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,7 +36,7 @@
       <span class="brand-name">Lincoln International Academy</span>
     </div>
     <span class="badge">Decimal Operations – Explanation</span>
-    <h1>Add, Subtract, and Multiply Decimals</h1>
+    <h1>Add, Subtract, Multiply, and Divide Decimals</h1>
   </header>
 
   <div class="progress-bar">
@@ -54,15 +54,16 @@
     <button class="tab-btn active" onclick="switchTab('pv-foundations')">1. Place Value & Rounding</button>
     <button class="tab-btn" onclick="switchTab('addition-proof')">2. Addition & Subtraction</button>
     <button class="tab-btn" onclick="switchTab('multiplication-proof')">3. Multiplication Algorithm</button>
-    <button class="tab-btn" onclick="switchTab('whiteboard')">4. Whiteboard Suite</button>
-    <button class="tab-btn" onclick="switchTab('practiceset')">5. Weekly Practice Set</button>
-    <button class="tab-btn" onclick="switchTab('exitticket')">6. Exit Ticket</button>
+    <button class="tab-btn" onclick="switchTab('division-proof')">4. Division Algorithm</button>
+    <button class="tab-btn" onclick="switchTab('whiteboard')">5. Whiteboard Suite</button>
+    <button class="tab-btn" onclick="switchTab('practiceset')">6. Weekly Practice Set</button>
+    <button class="tab-btn" onclick="switchTab('exitticket')">7. Exit Ticket</button>
   </nav>
 
   <!-- PANEL 1: PLACE VALUE & ROUNDING FOUNDATIONS -->
   <div id="pv-foundations" class="panel active">
     <div class="section-title">Foundational Concept: Place Value & Rounding Strategy</div>
-    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">45 min Monday, August 17, 2026 &middot; 45 min &middot;middot; CCSS.Math.Content.6.NS.B.3 &amp; MP6: Attend to Precision</p>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Monday &middot; 45 min &middot; CCSS.Math.Content.6.NS.B.2, 6.NS.B.3 &amp; MP6: Attend to Precision</p>
 
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
@@ -362,7 +363,114 @@
     </div>
   </div>
 
-  <!-- PANEL 4: WHITEBOARD PRACTICE SUITE -->
+  <!-- PANEL 4: DIVISION ALGORITHM -->
+  <div id="division-proof" class="panel">
+    <div class="section-title">Division Mechanics: Standard Algorithm &amp; Moving the Decimal</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read the rule, then copy the notebook box into your notebook. Work through the division carousel the same way as the last tab - click <strong>Next Step</strong> to see each example worked one step at a time. Finish with the guided practice and the Challenge Problem.
+    </div>
+
+    <div class="explainer-box">
+      <strong>Standard Algorithm Rule:</strong> Divide using long division just like whole numbers. If the divisor is a whole number, bring the decimal point straight up into the quotient. If the divisor is a decimal, first multiply <em>both</em> the divisor and the dividend by the same power of 10 so the divisor becomes a whole number - dividing two numbers by the same factor doesn't change the answer, so this never changes the result.
+    </div>
+
+    <!-- NOTEBOOK BOX -->
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
+      <p style="margin:0 0 10px 0;"><strong>Rule #3 for Division:</strong> Make the divisor a whole number first, then divide.</p>
+      <ol>
+        <li><strong>Whole-number divisor:</strong> set up the long division as usual. As soon as you reach the decimal point in the dividend, place a decimal point directly above it in the quotient, then keep dividing.</li>
+        <li><strong>Decimal divisor:</strong> count how many places you need to move the divisor's decimal point to make it a whole number.</li>
+        <li><strong>Move both decimal points</strong> that same number of places - divisor and dividend together (this is the same as multiplying both by 10, 100, or 1000).</li>
+        <li><strong>Add a zero placeholder</strong> in the dividend if you run out of digits while shifting.</li>
+        <li><strong>Divide as whole numbers</strong>, bringing the decimal point straight up into the quotient. Add trailing zeros to the dividend and keep dividing if there's a remainder.</li>
+      </ol>
+      <p style="margin:12px 0 0 0; font-size:0.95rem; color:#78350f;"><em>Tip:</em> always estimate first by rounding, so you can catch a misplaced decimal point in your final answer.</p>
+    </div>
+
+    <div style="background:#f1f5f9; padding:24px; border-radius:12px; margin-bottom:20px;">
+      <h3>Why Shifting Both Decimal Points Works: \(9.6 \div 0.8\)</h3>
+      \[9.6 \div 0.8 = \frac{9.6}{0.8}\]
+      \[\frac{9.6 \times 10}{0.8 \times 10} = \frac{96}{8} \quad (\text{multiplying top and bottom by the same number doesn't change the value of the fraction})\]
+      \[96 \div 8 = \mathbf{12}\]
+    </div>
+
+    <!-- INTERACTIVE CAROUSEL FOR DIVISION EXERCISES -->
+    <h3>Interactive Classroom Practice: Step-by-Step Division Carousel</h3>
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="div-prev-btn" onclick="changeDivEx(-1)">&larr; Previous Example</button>
+        <div style="text-align:center;">
+          <span id="div-ex-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Exercise 1 of 3</span>
+          <div class="carousel-indicators" id="div-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="div-next-btn" onclick="changeDivEx(1)">Next Example &rarr;</button>
+      </div>
+
+      <div id="div-carousel-content" style="min-height: 300px;">
+        <!-- Dynamic content injected via JS -->
+      </div>
+
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextDivExStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetDivExStep()">Reset Steps</button>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE STEP-BY-STEP WORD PROBLEM (DIVISION) -->
+    <div class="step-box">
+      <h3 style="margin-top:0; color:var(--primary);">Interactive Step-by-Step Word Problem</h3>
+      <p><strong>Scenario:</strong> A relay team runs \(15.6\) kilometers total, split into 4 equal legs. How long is each leg?</p>
+
+      <button class="btn-lg" onclick="revealDivStep()">Click to Reveal Next Step</button>
+      <button class="btn-secondary" onclick="resetDivSteps()">Reset</button>
+
+      <div id="div-step-1" class="step-item">
+        <strong>Step 1: Estimate each leg's length.</strong><br>
+        Round \(15.6 \rightarrow 16\). \(16 \div 4 = 4\), so we expect an answer close to \(4\text{ km}\).
+      </div>
+
+      <div id="div-step-2" class="step-item">
+        <strong>Step 2: Set up the division. The divisor (4) is already a whole number.</strong><br>
+        \(15.6 \div 4\) - no need to shift any decimal points.
+      </div>
+
+      <div id="div-step-3" class="step-item">
+        <strong>Step 3: Divide as whole numbers, bringing the decimal point straight up.</strong><br>
+        \(15 \div 4 = 3\) remainder \(3\). Bring down the \(6\): \(36 \div 4 = 9\).
+      </div>
+
+      <div id="div-step-4" class="step-item">
+        <strong>Step 4: Place the decimal point and verify.</strong><br>
+        \(15.6 \div 4 = \mathbf{3.9\text{ km per leg}}\).<br>
+        Reasonable check: \(3.9\text{ km}\) is close to our estimate of \(4\text{ km}\).
+      </div>
+    </div>
+
+    <!-- DIVISION GUIDED PRACTICE -->
+    <div class="notebook-box" style="margin-top:24px;">
+      <div class="notebook-header">Guided Practice</div>
+      <p style="margin:0;">Copy each problem into your notebook and solve it there first, then type just your final answer below and check it. You get up to <strong>2 tries</strong> per problem - after a second miss, the correct method is shown and it locks.</p>
+    </div>
+    <div id="div-practice-list"></div>
+
+    <!-- DIVISION CHALLENGE -->
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Division Challenge Problem</h3>
+      <p><strong>Multi-Step Real World Application:</strong> A caterer has \(18.75\) kilograms of rice to pack into bags that each hold \(1.25\) kilograms. How many full bags can the caterer pack?</p>
+      <div class="form-group">
+        <label>Number of full bags:</label>
+        <input type="text" id="div-challenge-bags" class="form-control-lg" style="max-width:220px;" placeholder="Number of bags">
+        <textarea id="div-challenge-explain" class="form-control-lg" rows="2" style="margin-top:10px;" placeholder="Show your steps: shift the decimals, then divide..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkDivChallenge()">Submit My Work</button>
+      <div id="div-challenge-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 5: WHITEBOARD PRACTICE SUITE -->
   <div id="whiteboard" class="panel">
     <div class="section-title">Interactive Whiteboard Practice (Student Volunteers)</div>
     <div class="howto-box">
@@ -388,7 +496,7 @@
     <div id="wb-feedback" class="feedback-msg"></div>
   </div>
 
-  <!-- PANEL 5: WEEKLY PRACTICE SET (from the printed Monday worksheet) -->
+  <!-- PANEL 6: WEEKLY PRACTICE SET (from the printed Monday worksheet) -->
   <div id="practiceset" class="panel">
     <div class="section-title">Monday Practice Set: Alignment &amp; Estimation Practice</div>
     <div class="howto-box">
@@ -429,9 +537,9 @@
     </div>
   </div>
 
-  <!-- PANEL 6: EXIT TICKET -->
+  <!-- PANEL 7: EXIT TICKET -->
   <div id="exitticket" class="panel">
-    <div class="section-title">Lesson 1.2 Exit Ticket & Metacognitive Log</div>
+    <div class="section-title">Exit Ticket &amp; Reflection</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
       Answer all four questions, then click Submit Exit Ticket. This is the last step before you print your progress - go back to the Student Name box in the blue bar at the top of the page, type your name, and click Print My Progress.
@@ -467,6 +575,7 @@
 <script>
   let addStepCount = 0;
   let multStepCount = 0;
+  let divStepCount = 0;
 
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
@@ -1072,6 +1181,209 @@
     else if (val == 4) { disp.innerText = "0.4375"; status.innerText = "4 Places Shifted = 0.4375"; }
   }
 
+  // ==========================================
+  // DIVISION CAROUSEL DATA & LOGIC
+  // ==========================================
+  let currentDivEx = 0;
+  let currentDivExStep = 1;
+
+  const divExamples = [
+    {
+      title: "Exercise 1: Whole-Number Divisor (\\(14.4 \\div 6\\))",
+      desc: "The divisor (6) is already a whole number - divide as usual and bring the decimal point straight up.",
+      maxSteps: 3,
+      render: (step) => `
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(14.4 \\div 6 \\approx 15 \\div 6 \\approx 2.5\\)</p>
+        <div style="text-align:center; padding:20px; background:#eff6ff; border-radius:12px; margin:20px 0; font-size:1.5rem; font-weight:800; color:var(--primary);">
+          ${step === 1 ? '\\[6 \\overline{)\\ 14.4}\\]' : ''}
+          ${step === 2 ? '\\[6 \\overline{)\\ 14.4} \\quad 14 \\div 6 = 2\\text{ r }2\\]' : ''}
+          ${step === 3 ? '\\[14.4 \\div 6 = \\mathbf{2.4}\\]' : ''}
+        </div>
+        <p style="text-align:center; font-weight:bold;">
+          ${step === 1 ? 'Step 1: The divisor is a whole number, so set up the long division as usual - no decimal shifting needed.' : ''}
+          ${step === 2 ? 'Step 2: Divide as whole numbers. \\(14 \\div 6 = 2\\) remainder \\(2\\); bring down the \\(4\\) to make \\(24\\); \\(24 \\div 6 = 4\\).' : ''}
+          ${step === 3 ? 'Step 3: Place the decimal point in the quotient directly above the one in the dividend: \\(\\mathbf{2.4}\\).' : ''}
+        </p>
+      `
+    },
+    {
+      title: "Exercise 2: Zero Placeholder (\\(3.6 \\div 8\\))",
+      desc: "When the dividend runs out of digits before the division is finished, add a zero placeholder and keep dividing.",
+      maxSteps: 3,
+      render: (step) => `
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(3.6 \\div 8\\) is less than 1, since 8 doesn't go into 3.6 even once whole.</p>
+        <div style="text-align:center; padding:20px; background:#eff6ff; border-radius:12px; margin:20px 0; font-size:1.5rem; font-weight:800; color:var(--primary);">
+          ${step === 1 ? '\\[8 \\overline{)\\ 3.6} \\quad 36 \\div 8 = 4\\text{ r }4\\]' : ''}
+          ${step === 2 ? '\\[8 \\overline{)\\ 3.60} \\quad \\text{bring down a zero: } 40 \\div 8 = 5\\]' : ''}
+          ${step === 3 ? '\\[3.6 \\div 8 = \\mathbf{0.45}\\]' : ''}
+        </div>
+        <p style="text-align:center; font-weight:bold;">
+          ${step === 1 ? 'Step 1: \\(3\\) doesn\'t divide by \\(8\\), so start at \\(36 \\div 8 = 4\\) remainder \\(4\\) (using the tenths digit).' : ''}
+          ${step === 2 ? 'Step 2: The remainder isn\'t zero yet, so add a zero placeholder to the dividend (\\(3.60\\)) and keep dividing: \\(40 \\div 8 = 5\\).' : ''}
+          ${step === 3 ? 'Step 3: Place the decimal point directly above the one in the dividend: \\(\\mathbf{0.45}\\).' : ''}
+        </p>
+      `
+    },
+    {
+      title: "Exercise 3: Decimal Divisor (\\(9.6 \\div 0.8\\))",
+      desc: "The divisor (0.8) is a decimal - shift both decimal points the same number of places to make the divisor a whole number first.",
+      maxSteps: 4,
+      render: (step) => `
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(9.6 \\div 0.8 \\approx 10 \\div 1 = 10\\)</p>
+        <div style="text-align:center; padding:20px; background:#eff6ff; border-radius:12px; margin:20px 0; font-size:1.5rem; font-weight:800; color:var(--primary);">
+          ${step === 1 ? '\\[0.8 \\overline{)\\ 9.6}\\]' : ''}
+          ${step === 2 ? '\\[0.8 \\rightarrow 8 \\quad (\\times 10) \\qquad 9.6 \\rightarrow 96 \\quad (\\times 10)\\]' : ''}
+          ${step === 3 ? '\\[8 \\overline{)\\ 96} \\quad 96 \\div 8 = 12\\]' : ''}
+          ${step === 4 ? '\\[9.6 \\div 0.8 = \\mathbf{12}\\]' : ''}
+        </div>
+        <p style="text-align:center; font-weight:bold;">
+          ${step === 1 ? 'Step 1: The divisor \\(0.8\\) is a decimal, so we can\'t bring the decimal point straight up yet.' : ''}
+          ${step === 2 ? 'Step 2: Multiply both the divisor and dividend by \\(10\\) so the divisor becomes the whole number \\(8\\): \\(0.8 \\times 10 = 8\\) and \\(9.6 \\times 10 = 96\\).' : ''}
+          ${step === 3 ? 'Step 3: Divide the new whole numbers: \\(96 \\div 8 = 12\\).' : ''}
+          ${step === 4 ? 'Step 4: Because we multiplied both numbers by the same amount, the quotient didn\'t change: \\(9.6 \\div 0.8 = \\mathbf{12}\\).' : ''}
+        </p>
+      `
+    }
+  ];
+
+  function renderDivCarousel() {
+    const ex = divExamples[currentDivEx];
+    document.getElementById('div-ex-title').innerText = ex.title;
+
+    const dotsContainer = document.getElementById('div-dots');
+    dotsContainer.innerHTML = divExamples.map((_, i) =>
+      `<div class="dot ${i === currentDivEx ? 'active' : ''}" onclick="jumpToDivEx(${i})"></div>`
+    ).join('');
+
+    document.getElementById('div-carousel-content').innerHTML = `
+      <p style="text-align:center; color:#475569;">${ex.desc}</p>
+      ${ex.render(currentDivExStep)}
+    `;
+
+    document.getElementById('div-prev-btn').disabled = currentDivEx === 0;
+    document.getElementById('div-next-btn').disabled = currentDivEx === divExamples.length - 1;
+
+    triggerMathJax();
+  }
+
+  function changeDivEx(dir) {
+    currentDivEx = Math.max(0, Math.min(divExamples.length - 1, currentDivEx + dir));
+    currentDivExStep = 1;
+    renderDivCarousel();
+  }
+
+  function jumpToDivEx(idx) {
+    currentDivEx = idx;
+    currentDivExStep = 1;
+    renderDivCarousel();
+  }
+
+  function nextDivExStep() {
+    if (currentDivExStep < divExamples[currentDivEx].maxSteps) {
+      currentDivExStep++;
+      renderDivCarousel();
+    }
+  }
+
+  function resetDivExStep() {
+    currentDivExStep = 1;
+    renderDivCarousel();
+  }
+
+  function showDivExFullyWorked(i) {
+    currentDivEx = i;
+    currentDivExStep = divExamples[i].maxSteps;
+    renderDivCarousel();
+  }
+
+  TeacherPrint.registerCarousel('div-carousel-content', divExamples.length, showDivExFullyWorked);
+
+  renderDivCarousel();
+
+  function revealDivStep() {
+    if (divStepCount < 4) {
+      divStepCount++;
+      const el = document.getElementById(`div-step-${divStepCount}`);
+      if (el) el.classList.add('visible');
+      triggerMathJax();
+    }
+  }
+
+  function resetDivSteps() {
+    divStepCount = 0;
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById(`div-step-${i}`);
+      if (el) el.classList.remove('visible');
+    }
+  }
+
+  // ==========================================
+  // DIVISION GUIDED PRACTICE
+  // ==========================================
+  const divPractice = [
+    { q: "\\(8.4 \\div 4\\)", a: 2.1, tol: 0.02 },
+    { q: "\\(6.3 \\div 9\\)", a: 0.7, tol: 0.01 },
+    { q: "\\(5.4 \\div 5\\)", a: 1.08, tol: 0.005 },
+    { q: "\\(4.2 \\div 0.6\\)", a: 7, tol: 0.02 },
+    { q: "\\(3.75 \\div 0.25\\)", a: 15, tol: 0.02 },
+    { q: "\\(0.144 \\div 1.2\\)", a: 0.12, tol: 0.002 }
+  ];
+
+  function renderDivPractice() {
+    const html = divPractice.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="div-${i}-input" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkDivPractice(${i})">Check</button>
+        <div id="div-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('div-practice-list').innerHTML = html;
+    divPractice.forEach((p, i) => LessonProgress.preRegister(`div-${i}`, `Division Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '4. Division Algorithm'));
+  }
+  TeacherPrint.registerAnswerList('div-practice-list', divPractice.map((p, i) => ({ inputId: `div-${i}-input`, answerText: String(p.a) })));
+
+  function checkDivPractice(idx) {
+    const p = divPractice[idx];
+    const val = document.getElementById(`div-${idx}-input`).value;
+    const fb = document.getElementById(`div-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+
+    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
+
+    LessonCheck.check(`div-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(= \\mathbf{${p.a}}\\)`,
+      retry: "Not quite yet. If the divisor is a decimal, shift both decimal points to make it a whole number first, then try again.",
+      reveal: `Here's the correct procedure: shift the decimal point in the divisor (and the dividend, the same number of places) until the divisor is a whole number, then divide. ${p.q} \\(= \\mathbf{${p.a}}\\)`
+    }, { label: `Division Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '4. Division Algorithm' });
+  }
+
+  function checkDivChallenge() {
+    const bags = document.getElementById('div-challenge-bags').value;
+    const explain = document.getElementById('div-challenge-explain').value.trim();
+    const fb = document.getElementById('div-challenge-feedback');
+
+    if (!bags.trim() || explain.length <= 5) {
+      LessonCheck.incomplete(fb, "Enter the number of bags and a complete explanation before submitting.");
+      return;
+    }
+
+    const correct = LessonCheck.numericMatch(bags, 15, 0.01);
+    LessonCheck.submit(fb, {
+      key: 'div-challenge',
+      label: 'Division Challenge: rice bags',
+      answer: `Bags=${bags}; ${explain}`,
+      section: '4. Division Algorithm',
+      correct
+    }, correct
+      ? "Submitted! Correct - shifting both decimal points 2 places gives \\(1875 \\div 125 = \\mathbf{15}\\) full bags."
+      : "Submitted! This will be reviewed from your printed progress report. (Hint for your own check: shift both decimal points 2 places, then divide \\(1875 \\div 125\\).)");
+  }
+
   // Whiteboard Data & Mechanics
   const wbProblems = {
     1: { type: "add", title: "Financial Grocery Sum: \\(\\$15.75 + \\$4.80\\)", row1: ["1","5","7","5"], row2: ["0","4","8","0"], ans: ["2","0","5","5"] },
@@ -1223,7 +1535,7 @@
         && u0 === prob.ans[0] && u1 === prob.ans[1] && u2 === prob.ans[2] && u3 === prob.ans[3]
         && Number(decPlaces) === prob.decimalPlaces;
 
-      LessonCheck.submit(fb, { key: `wb-${currentWBProb}`, label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${p1_0}${p1_1}${p1_2}${p1_3} / ${p2_0}${p2_1}${p2_2}${p2_3} / ${u0}${u1}${u2}${u3}, ${decPlaces} decimal places`, section: '4. Whiteboard Suite', correct });
+      LessonCheck.submit(fb, { key: `wb-${currentWBProb}`, label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${p1_0}${p1_1}${p1_2}${p1_3} / ${p2_0}${p2_1}${p2_2}${p2_3} / ${u0}${u1}${u2}${u3}, ${decPlaces} decimal places`, section: '5. Whiteboard Suite', correct });
     } else {
       const u0 = document.getElementById('wb-i0').value;
       const u1 = document.getElementById('wb-i1').value;
@@ -1237,7 +1549,7 @@
 
       const correct = u0 === prob.ans[0] && u1 === prob.ans[1] && u2 === prob.ans[2] && u3 === prob.ans[3];
 
-      LessonCheck.submit(fb, { key: `wb-${currentWBProb}`, label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${u0}${u1}${u2}${u3}`, section: '4. Whiteboard Suite', correct });
+      LessonCheck.submit(fb, { key: `wb-${currentWBProb}`, label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${u0}${u1}${u2}${u3}`, section: '5. Whiteboard Suite', correct });
     }
   }
 
@@ -1393,7 +1705,7 @@
   }
 
   // ==========================================
-  // PANEL 5: WEEKLY PRACTICE SET (from the printed Monday worksheet)
+  // PANEL 6: WEEKLY PRACTICE SET (from the printed Monday worksheet)
   // ==========================================
   const practiceSetPart1 = [
     { q: "Rewrite vertically and solve: \\(14.52 + 3.8\\)", a: 18.32, tol: 0.01, work: "Pad \\(3.8\\) as \\(3.80\\), align the decimals, and add: \\(14.52 + 3.80 = \\mathbf{18.32}\\)." },
@@ -1416,13 +1728,13 @@
         <strong>${i + 1}.</strong> ${p.q}
         <div style="margin-top:10px;">
           <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Your answer">
-          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkPracticeSetItem('${keyPrefix}', ${i})">Submit</button>
+          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkPracticeSetItem('${keyPrefix}', ${i})">Check</button>
         </div>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
       </div>
     `).join('');
     document.getElementById(containerId).innerHTML = html;
-    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, `Practice Set: ${p.q.replace(/\\\(|\\\)/g, '')}`, '5. Weekly Practice Set'));
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, `Practice Set: ${p.q.replace(/\\\(|\\\)/g, '')}`, '6. Weekly Practice Set'));
   }
 
   function checkPracticeSetItem(keyPrefix, idx) {
@@ -1436,7 +1748,12 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: `${keyPrefix}-${idx}`, label: `Practice Set: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '5. Weekly Practice Set', correct: LessonCheck.numericMatch(val, p.a, p.tol) });
+    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! \\(\\mathbf{${p.a}}\\)`,
+      retry: "Not quite yet. Re-check your alignment or decimal-place count, then try again.",
+      reveal: `Here's the correct procedure: ${p.work}`
+    }, { label: `Practice Set: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '6. Weekly Practice Set' });
   }
 
   function checkFinancialLiteracy() {
@@ -1450,7 +1767,7 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: 'ps-financial', label: 'Financial Literacy: subtotal / total / change', answer: `A=$${a}, B=$${b}, C=$${c}`, section: '5. Weekly Practice Set', correct: LessonCheck.numericMatch(a, 24.09, 0.02) && LessonCheck.numericMatch(b, 25.77, 0.02) && LessonCheck.numericMatch(c, 24.23, 0.02) });
+    LessonCheck.submit(fb, { key: 'ps-financial', label: 'Financial Literacy: subtotal / total / change', answer: `A=$${a}, B=$${b}, C=$${c}`, section: '6. Weekly Practice Set', correct: LessonCheck.numericMatch(a, 24.09, 0.02) && LessonCheck.numericMatch(b, 25.77, 0.02) && LessonCheck.numericMatch(c, 24.23, 0.02) });
   }
 
   renderPracticeSetList('ps-part1-list', practiceSetPart1, 'ps1');
@@ -1464,14 +1781,15 @@
   ]);
   renderAddsubPractice();
   renderMultPractice();
+  renderDivPractice();
 
   // Pre-register every question so the printed report always shows the
   // full page, blank for anything never attempted.
-  Object.keys(wbProblems).forEach((id) => LessonProgress.preRegister(`wb-${id}`, `Whiteboard: ${wbProblems[id].title.replace(/\\\(|\\\)/g, '')}`, '4. Whiteboard Suite'));
+  Object.keys(wbProblems).forEach((id) => LessonProgress.preRegister(`wb-${id}`, `Whiteboard: ${wbProblems[id].title.replace(/\\\(|\\\)/g, '')}`, '5. Whiteboard Suite'));
   LessonProgress.preRegister('mon-add-challenge', 'Addition Challenge: find X in 14.X5 + 3.20 = 17.65', '2. Addition & Subtraction');
   LessonProgress.preRegister('mon-mult-challenge', 'Multiplication Challenge: garden seed cost', '3. Multiplication Algorithm');
-  LessonProgress.preRegister('ps-financial', 'Financial Literacy: subtotal / total / change', '5. Weekly Practice Set');
-  LessonProgress.preRegister('mon-exit-ticket', 'Exit Ticket: sum and product', '6. Exit Ticket');
+  LessonProgress.preRegister('ps-financial', 'Financial Literacy: subtotal / total / change', '6. Weekly Practice Set');
+  LessonProgress.preRegister('mon-exit-ticket', 'Exit Ticket: sum and product', '7. Exit Ticket');
 
   // Exit Ticket Submission
   function submitExitTicket(e) {
@@ -1487,9 +1805,9 @@
       return;
     }
 
-    LessonCheck.submit(fb, { key: 'mon-exit-ticket', label: 'Exit Ticket: sum and product', answer: `Sum=${a1}, Product=${a2}`, section: '6. Exit Ticket', correct: LessonCheck.numericMatch(a1, 4.75, 0.01) && LessonCheck.numericMatch(a2, 4.375, 0.01) }, "Exit Ticket submitted and logged successfully!");
-    LessonProgress.recordText('Exit Ticket: procedural difference explanation', exp, '6. Exit Ticket');
-    LessonProgress.recordText('Exit Ticket: metacognition reflection', ref, '6. Exit Ticket');
+    LessonCheck.submit(fb, { key: 'mon-exit-ticket', label: 'Exit Ticket: sum and product', answer: `Sum=${a1}, Product=${a2}`, section: '7. Exit Ticket', correct: LessonCheck.numericMatch(a1, 4.75, 0.01) && LessonCheck.numericMatch(a2, 4.375, 0.01) }, "Exit Ticket submitted and logged successfully!");
+    LessonProgress.recordText('Exit Ticket: procedural difference explanation', exp, '7. Exit Ticket');
+    LessonProgress.recordText('Exit Ticket: strategy reflection', ref, '7. Exit Ticket');
   }
 </script>
 <div id="print-report"></div>

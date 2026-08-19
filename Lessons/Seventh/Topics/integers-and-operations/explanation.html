@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pre-Algebra 7: Lessons 1.1-1.3 - Relate Integers, Add and Subtract Integers</title>
+  <title>Pre-Algebra 7: Lessons 1.1, 1.3 &amp; 1.4 - Relate Integers, Add and Subtract Integers</title>
 
   <!-- Montserrat Font Import -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,8 +53,8 @@
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('warmup')">1. Warm-Up</button>
     <button class="tab-btn" onclick="switchTab('lesson11')">2. Lesson 1.1</button>
-    <button class="tab-btn" onclick="switchTab('lesson12')">3. Lesson 1.2</button>
-    <button class="tab-btn" onclick="switchTab('lesson13')">4. Lesson 1.3</button>
+    <button class="tab-btn" onclick="switchTab('lesson12')">3. Lesson 1.3</button>
+    <button class="tab-btn" onclick="switchTab('lesson13')">4. Lesson 1.4</button>
     <button class="tab-btn" onclick="switchTab('applications')">5. Applications</button>
     <button class="tab-btn" onclick="switchTab('ixl')">6. IXL Practice</button>
     <button class="tab-btn" onclick="switchTab('exitticket')">7. Exit Ticket</button>
@@ -63,7 +63,7 @@
   <!-- TAB 1: WARM-UP -->
   <div id="warmup" class="panel active">
     <div class="section-title">Warm-Up: Integer Vocabulary</div>
-    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">45 min Monday, August 17, 2026 &middot; 45 min &middot;middot; CCSS.Math.Content.7.NS.A.1a-d &amp; MP.7: Look for and Make Use of Structure</p>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Monday &middot; 45 min &middot; CCSS.Math.Content.7.NS.A.1a-d &amp; MP.7: Look for and Make Use of Structure</p>
 
     <div class="explainer-box">
       Today we extend whole numbers to <strong>integers</strong> so we can describe quantities below zero - debts, elevations below sea level, temperatures below freezing - and learn how to add and subtract them.
@@ -160,7 +160,7 @@
 
   <!-- TAB 3: LESSON 1.2 -->
   <div id="lesson12" class="panel">
-    <div class="section-title">Lesson 1.2: Add Integers</div>
+    <div class="section-title">Lesson 1.3: Add Integers</div>
     <div class="explainer-box">
       <strong>Same signs:</strong> add the absolute values, keep the common sign. <strong>Different signs:</strong> subtract the smaller absolute value from the larger, and keep the sign of the number with the larger absolute value.
     </div>
@@ -195,9 +195,9 @@
 
   <!-- TAB 4: LESSON 1.3 -->
   <div id="lesson13" class="panel">
-    <div class="section-title">Lesson 1.3: Subtract Integers</div>
+    <div class="section-title">Lesson 1.4: Subtract Integers</div>
     <div class="explainer-box">
-      <strong>Subtracting is adding the opposite:</strong> \(a - b = a + (-b)\). Rewrite the subtraction as addition of the opposite, then use the addition rules from Lesson 1.2.
+      <strong>Subtracting is adding the opposite:</strong> \(a - b = a + (-b)\). Rewrite the subtraction as addition of the opposite, then use the addition rules from Lesson 1.3.
     </div>
 
     <div class="howto-box">
@@ -483,7 +483,7 @@
       </div>
     `).join('');
     document.getElementById('l12-practice-list').innerHTML = html;
-    l12Practice.forEach((p, i) => LessonProgress.preRegister(`l12p-${i}`, `Lesson 1.2 Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '3. Lesson 1.2'));
+    l12Practice.forEach((p, i) => LessonProgress.preRegister(`l12p-${i}`, `Lesson 1.3 Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '3. Lesson 1.3'));
   }
 
   function checkL12Practice(idx) {
@@ -502,7 +502,7 @@
       correct: `Correct! Answer: \\(\\mathbf{${p.a}}\\)`,
       retry: "Not quite yet. Check the signs: same signs add and keep the sign, different signs subtract and keep the larger's sign. Try again.",
       reveal: `Here's the correct answer: \\(\\mathbf{${p.a}}\\)`
-    }, { label: `Lesson 1.2 Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '3. Lesson 1.2' });
+    }, { label: `Lesson 1.3 Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '3. Lesson 1.3' });
   }
 
   // ==========================================
@@ -586,7 +586,7 @@
       </div>
     `).join('');
     document.getElementById('l13-practice-list').innerHTML = html;
-    l13Practice.forEach((p, i) => LessonProgress.preRegister(`l13p-${i}`, `Lesson 1.3 Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '4. Lesson 1.3'));
+    l13Practice.forEach((p, i) => LessonProgress.preRegister(`l13p-${i}`, `Lesson 1.4 Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '4. Lesson 1.4'));
   }
 
   function checkL13Practice(idx) {
@@ -605,7 +605,7 @@
       correct: `Correct! Answer: \\(\\mathbf{${p.a}}\\)`,
       retry: "Not quite yet. Rewrite the subtraction as adding the opposite, then apply the addition rules. Try again.",
       reveal: `Here's the correct answer: \\(\\mathbf{${p.a}}\\)`
-    }, { label: `Lesson 1.3 Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '4. Lesson 1.3' });
+    }, { label: `Lesson 1.4 Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '4. Lesson 1.4' });
   }
 
   // ==========================================

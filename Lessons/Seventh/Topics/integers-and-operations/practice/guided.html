@@ -48,7 +48,7 @@
 
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('warmup')">1. Warm-Up</button>
-    <button class="tab-btn" onclick="switchTab('lesson14')">2. Lesson 1.4</button>
+    <button class="tab-btn" onclick="switchTab('lesson14')">2. Lessons 1.6 &amp; 1.8</button>
     <button class="tab-btn" onclick="switchTab('more')">3. More Practice</button>
     <button class="tab-btn" onclick="switchTab('applications')">4. Applications</button>
     <button class="tab-btn" onclick="switchTab('ixl')">5. IXL Practice</button>
@@ -58,7 +58,7 @@
   <!-- TAB 1: WARM-UP -->
   <div id="warmup" class="panel active">
     <div class="section-title">Warm-Up: Key Concept Review</div>
-    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">45 min Tuesday, August 18, 2026 &middot; 45 min &middot;middot; CCSS.Math.Content.7.NS.A.2b-c &amp; MP.8: Look for and Express Regularity in Repeated Reasoning</p>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Tuesday &middot; 45 min &middot; CCSS.Math.Content.7.NS.A.2a-c &amp; MP.8: Look for and Express Regularity in Repeated Reasoning</p>
 
     <div class="explainer-box">
       Yesterday you added and subtracted integers. Today's rule is simpler: for both <strong>multiplication</strong> and <strong>division</strong> of integers, <strong>same signs give a positive result; different signs give a negative result.</strong>
@@ -97,7 +97,7 @@
 
   <!-- TAB 2: LESSON 1.4 -->
   <div id="lesson14" class="panel">
-    <div class="section-title">Lesson 1.4: Multiply and Divide Integers</div>
+    <div class="section-title">Lessons 1.6 &amp; 1.8: Multiply and Divide Integers</div>
     <div class="explainer-box">
       <strong>Same signs &rarr; positive.</strong> <strong>Different signs &rarr; negative.</strong> This rule holds for both multiplication and division - and for division, remember that division "undoes" multiplication, so the sign rule is identical.
     </div>
@@ -345,7 +345,7 @@
       </div>
     `).join('');
     document.getElementById('l14-practice-list').innerHTML = html;
-    l14Practice.forEach((p, i) => LessonProgress.preRegister(`l14p-${i}`, `Lesson 1.4 Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '2. Lesson 1.4'));
+    l14Practice.forEach((p, i) => LessonProgress.preRegister(`l14p-${i}`, `Lessons 1.6 &amp; 1.8 Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '2. Lessons 1.6 &amp; 1.8'));
   }
 
   function checkL14Practice(idx) {
@@ -364,7 +364,7 @@
       correct: `Correct! Answer: \\(\\mathbf{${p.a}}\\)`,
       retry: "Not quite yet. Same signs give a positive result; different signs give a negative result. Try again.",
       reveal: `Here's the correct answer: \\(\\mathbf{${p.a}}\\)`
-    }, { label: `Lesson 1.4 Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '2. Lesson 1.4' });
+    }, { label: `Lessons 1.6 &amp; 1.8 Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '2. Lessons 1.6 &amp; 1.8' });
   }
 
   // ==========================================

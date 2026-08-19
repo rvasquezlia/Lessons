@@ -58,7 +58,7 @@
   <!-- TAB 1: WARM-UP -->
   <div id="warmup" class="panel active">
     <div class="section-title">Retrieval Warm-Up</div>
-    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">45 min Tuesday, August 18, 2026 &middot; 45 min &middot;middot; HSA.REI.B.3 &amp; MP.7: Look for and Make Use of Structure</p>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Tuesday &middot; 45 min &middot; HSA.CED.A.1, HSA.REI.B.3 &amp; MP.7: Look for and Make Use of Structure</p>
 
     <div class="explainer-box">
       Today builds analytical thinking: you'll examine solved equations, detect errors, and evaluate whether each transformation kept both sides equal. Start by retrieving yesterday's procedures with two quick equations.
@@ -175,12 +175,13 @@
       Log into IXL and complete the skill listed below. When you're finished, check the box to confirm.
     </div>
     <div class="notebook-box">
-      <div class="notebook-header">Today's IXL Skill</div>
-      <p style="margin:0;"><strong>7S7</strong> - Solve linear equations with variables on both sides</p>
+      <div class="notebook-header">Today's IXL Skills</div>
+      <p style="margin:0 0 6px 0;"><strong>7S7</strong> - Solve linear equations with variables on both sides</p>
+      <p style="margin:0;"><strong>QR2</strong> - Solve linear equations with variables on both sides: fractional coefficients</p>
     </div>
     <div class="form-group">
       <input type="checkbox" id="confirm-ixl" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;" onchange="confirmIXL(this)">
-      <label for="confirm-ixl" style="display:inline; font-weight:700;">I completed IXL skill 7S7.</label>
+      <label for="confirm-ixl" style="display:inline; font-weight:700;">I completed IXL skills 7S7 and QR2.</label>
     </div>
   </div>
 
@@ -410,7 +411,7 @@
   // IXL confirmation
   function confirmIXL(cb) {
     if (cb.checked) {
-      LessonProgress.record('tue-confirm-ixl', 'Confirmed: completed IXL skill 7S7', 'Yes', 'reflection', '5. IXL Practice');
+      LessonProgress.record('tue-confirm-ixl', 'Confirmed: completed IXL skills 7S7 and QR2', 'Yes', 'reflection', '5. IXL Practice');
     }
   }
 
@@ -438,7 +439,7 @@
   warmupProblems.forEach((p, i) => LessonProgress.preRegister(`wu-${i}`, `Warm-Up: ${p.q.replace(/\\\(|\\\)/g, '')}`, '1. Warm-Up'));
   LessonProgress.preRegister('tue-detective', 'Error Detective: 3(x-4)=2x+5', '3. Error Detective');
   LessonProgress.preRegister('tue-budget', 'Budget Scenario: Gym A vs Gym B', '4. Budget Scenario');
-  LessonProgress.preRegister('tue-confirm-ixl', 'Confirmed: completed IXL skill 7S7', '5. IXL Practice');
+  LessonProgress.preRegister('tue-confirm-ixl', 'Confirmed: completed IXL skills 7S7 and QR2', '5. IXL Practice');
 </script>
 <div id="print-report"></div>
 </body>

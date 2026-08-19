@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seventh Grade Pre-Algebra - Course Syllabus</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../lesson-shared.css">
+  <script src="../lesson-shared.js"></script>
+
+  <style>
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .module-grid .station-card { margin: 0; }
+    .module-grid .chip-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .module-grid .chip {
+      background: #f8fafc; border: 2px solid var(--border); color: #334155;
+      padding: 4px 12px; border-radius: 8px; font-weight: 700; font-size: 0.82rem;
+    }
+    .grading-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .grading-grid .station-card { text-align: center; margin: 0; }
+    .grading-grid .grade-perc { font-size: 2.4rem; font-weight: 900; color: var(--primary); line-height: 1; margin: 6px 0; }
+    .expect-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+    .expect-grid .station-card { display: flex; gap: 14px; align-items: flex-start; margin: 0; padding: 18px; }
+    .expect-grid .rule-icon { font-size: 1.6rem; flex-shrink: 0; }
+    .expect-grid h5 { margin: 0 0 4px 0; font-size: 1.02rem; color: var(--primary); }
+    .expect-grid p { margin: 0; font-size: 0.92rem; color: #475569; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Course Syllabus</span>
+    <h1>Seventh Grade Pre-Algebra</h1>
+    <p class="subtitle">Mr. Rodrigo V&aacute;squez Morales &middot; rvasquez@lincoln.edu.ni &middot; 2026-2027 Academic Year</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Use the tabs below to review the course overview, what you'll learn this year, how grades are calculated, class expectations, and required technology. Come back any time you need a reminder of how the class runs.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('overview')">1. Overview</button>
+    <button class="tab-btn" onclick="switchTab('learn')">2. What You'll Learn</button>
+    <button class="tab-btn" onclick="switchTab('grading')">3. Grading &amp; Expectations</button>
+    <button class="tab-btn" onclick="switchTab('tech')">4. Technology &amp; Support</button>
+  </nav>
+
+  <!-- ========== TAB 1: OVERVIEW ========== -->
+  <div id="overview" class="panel active">
+    <div class="section-title">Course Overview</div>
+    <div class="explainer-box">
+      In Grade 7 Pre-Algebra, instructional time focuses on four critical areas: developing understanding of and applying proportional relationships; operations with rational numbers and linear equations; scale drawings and geometric analysis; and drawing statistical inferences. We will work through abstract reasoning, models, and problem-solving strategies to build algebra readiness.
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">Notebook Requirement</div>
+      <p style="margin:0;">A highly organized math notebook is required for this course. You will copy key vocabulary, worked examples, and reference charts from the lesson pages into your notebook every week &mdash; it is your most important study tool for tests and the quarter exam.</p>
+    </div>
+  </div>
+
+  <!-- ========== TAB 2: WHAT YOU'LL LEARN ========== -->
+  <div id="learn" class="panel">
+    <div class="section-title">What You'll Learn This Year</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Seventh Grade Pre-Algebra covers five major strands, taught across the year in the order below.</p>
+    <div class="module-grid">
+      <div class="station-card">
+        <span class="station-label">The Number System</span>
+        <div class="chip-list">
+          <span class="chip">Rational Numbers</span>
+          <span class="chip">Integer Operations</span>
+          <span class="chip">Factors &amp; Fractions</span>
+        </div>
+      </div>
+      <div class="station-card">
+        <span class="station-label">Expressions &amp; Equations</span>
+        <div class="chip-list">
+          <span class="chip">Variables</span>
+          <span class="chip">Multi-Step Equations</span>
+          <span class="chip">Inequalities</span>
+        </div>
+      </div>
+      <div class="station-card">
+        <span class="station-label">Ratios &amp; Proportions</span>
+        <div class="chip-list">
+          <span class="chip">Ratio &amp; Proportion</span>
+          <span class="chip">Percent Applications</span>
+          <span class="chip">Rates</span>
+        </div>
+      </div>
+      <div class="station-card">
+        <span class="station-label">Geometry</span>
+        <div class="chip-list">
+          <span class="chip">Scale Drawings</span>
+          <span class="chip">Right Triangles</span>
+          <span class="chip">Measurement &amp; Area</span>
+          <span class="chip">Volume</span>
+        </div>
+      </div>
+      <div class="station-card">
+        <span class="station-label">Statistics &amp; Probability</span>
+        <div class="chip-list">
+          <span class="chip">Statistical Inferences</span>
+          <span class="chip">Probability Theory</span>
+          <span class="chip">Data Analysis</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 3: GRADING & EXPECTATIONS ========== -->
+  <div id="grading" class="panel">
+    <div class="section-title">How You're Graded</div>
+    <div class="grading-grid">
+      <div class="station-card"><div class="grade-perc">30%</div><div class="station-label" style="background:#d97706;">Classwork</div></div>
+      <div class="station-card"><div class="grade-perc">45%</div><div class="station-label" style="background:#b91c1c;">Tests &amp; Quizzes</div></div>
+      <div class="station-card"><div class="grade-perc">25%</div><div class="station-label" style="background:#7c3aed;">Quarter Exam</div></div>
+    </div>
+
+    <div class="section-title" style="margin-top:32px;">Class Expectations</div>
+    <div class="expect-grid">
+      <div class="station-card"><span class="rule-icon">&#9200;</span><div><h5>Be On Time</h5><p>Be in your seat when the bell rings to avoid tardy marks.</p></div></div>
+      <div class="station-card"><span class="rule-icon">&#127890;</span><div><h5>Be Prepared</h5><p>Bring your notebook, pencil, ruler, and charged laptop every day.</p></div></div>
+      <div class="station-card"><span class="rule-icon">&#128167;</span><div><h5>Be Ready to Learn</h5><p>Use the restroom and grab water before class begins.</p></div></div>
+      <div class="station-card"><span class="rule-icon">&#129309;</span><div><h5>Be Respectful</h5><p>Treat your teacher, classmates, and classroom with kindness.</p></div></div>
+      <div class="station-card"><span class="rule-icon">&#128587;</span><div><h5>Be Proactive</h5><p>Ask questions when stuck and stay engaged in class discussions.</p></div></div>
+      <div class="station-card"><span class="rule-icon">&#128683;</span><div><h5>Water Only</h5><p>Food and drinks (except plain water) are not permitted.</p></div></div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 4: TECHNOLOGY & SUPPORT ========== -->
+  <div id="tech" class="panel">
+    <div class="section-title">Required Technology &amp; Textbook</div>
+    <div class="explainer-box">
+      We will use laptops daily. Our official textbook is <strong>enVision Plus Common Core Mathematics 2027 Accelerated Grade 7</strong>, accessed online via <a href="https://www.savvasrealize.com/" target="_blank" rel="noopener">Savvas Realize</a>.
+    </div>
+
+    <div class="section-title" style="margin-top:28px;">Need Extra Help or Missed Class?</div>
+    <div class="module-grid">
+      <div class="station-card">
+        <span class="station-label">Tutoring</span>
+        <p style="margin:10px 0 0 0; font-size:0.95rem;">Although we have plenty of class time for questions, Mr. V&aacute;squez is available for extra help before <strong>7:00 AM</strong> or during <strong>recess/lunch</strong> (with prior notice).</p>
+      </div>
+      <div class="station-card">
+        <span class="station-label">Returning From an Absence</span>
+        <p style="margin:10px 0 0 0; font-size:0.95rem;">Check <strong>Google Classroom</strong> for missed work. You have <strong>3 days</strong> to turn in missing assignments and schedule makeup tests before or after school.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /.app-container -->
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+</script>
+</body>
+</html>

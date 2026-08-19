@@ -58,7 +58,7 @@
 
   <div id="problems" class="panel active">
     <div class="section-title">Graded Classwork: Decimal Operations</div>
-    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">45 min &middot; CCSS.Math.Content.6.NS.B.3 &amp; MP6: Attend to Precision</p>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Friday &middot; 45 min &middot; CCSS.Math.Content.6.NS.B.2, 6.NS.B.3 &amp; MP6: Attend to Precision</p>
 
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
@@ -173,6 +173,12 @@
       <span id="conf-c-value">2</span>
     </div>
 
+    <div class="form-group">
+      <label for="conf-d">Objective D: I can divide multi-digit decimals using the standard algorithm.</label>
+      <input type="range" id="conf-d" min="1" max="3" value="2">
+      <span id="conf-d-value">2</span>
+    </div>
+
     <button class="btn-lg" onclick="submitSelfCheck()">Submit Self-Check</button>
     <div id="selfcheck-feedback" class="feedback-msg"></div>
   </div>
@@ -181,7 +187,7 @@
     <div class="section-title">Post-Assessment Reflection</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Answer both questions about today's paper test, click Submit Reflection, then type your name in the blue bar at the top of the page and click Print My Progress.
+      Answer both questions about today's graded classwork, click Submit Reflection, then type your name in the blue bar at the top of the page and click Print My Progress.
     </div>
 
     <form id="exit-form" onsubmit="submitExitTicket(event)">
@@ -253,11 +259,13 @@
     const a = document.getElementById('conf-a').value;
     const b = document.getElementById('conf-b').value;
     const c = document.getElementById('conf-c').value;
+    const d = document.getElementById('conf-d').value;
     const fb = document.getElementById('selfcheck-feedback');
 
     LessonProgress.recordText('Self-Check Objective A', a, '2. Self-Check');
     LessonProgress.recordText('Self-Check Objective B', b, '2. Self-Check');
     LessonProgress.recordText('Self-Check Objective C', c, '2. Self-Check');
+    LessonProgress.recordText('Self-Check Objective D', d, '2. Self-Check');
 
     fb.className = 'feedback-msg success';
     fb.innerText = 'Self-check submitted and recorded successfully!';

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seventh Grade Pre-Algebra - Readiness Review</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../lesson-shared.css">
+  <script src="../lesson-shared.js"></script>
+
+  <style>
+    .review-card { background: #f1f5f9; border: 2px solid var(--border); border-radius: 12px; padding: 20px 22px; margin: 18px 0; }
+    .review-card h4 { margin: 0 0 8px 0; color: var(--primary); font-size: 1.05rem; }
+    .reveal-answer-box {
+      display: none; margin-top: 14px; padding: 14px 16px; background: var(--success-bg);
+      border-left: 6px solid var(--success); border-radius: 8px; font-size: 0.95rem;
+    }
+    .btn-reveal {
+      background: var(--accent); color: #000; border: none; padding: 9px 18px;
+      border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 0.9rem; margin-top: 10px;
+    }
+    .btn-reveal:hover { background: #b45309; color: #fff; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Pre-Algebra Readiness Review</span>
+    <h1>Seventh Grade: Math Foundations Review</h1>
+    <p class="subtitle">A review of 6th-grade foundational skills that lead directly into our Integers &amp; Operations topic</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Work through each tab in order. Read the concept box, try the practice problems in your head or on paper, then click <strong>Show Answer</strong> to check yourself. This is a warm-up review, not a graded assignment &mdash; be honest with yourself about what still feels shaky so you know what to ask about before we start Integers &amp; Operations.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('keywords')">1. Operation Keywords</button>
+    <button class="tab-btn" onclick="switchTab('numberline')">2. Number Line &amp; Abs. Value</button>
+    <button class="tab-btn" onclick="switchTab('coordplane')">3. Coordinate Plane</button>
+    <button class="tab-btn" onclick="switchTab('decfrac')">4. Decimals &amp; Fractions</button>
+    <button class="tab-btn" onclick="switchTab('expr')">5. Exponents &amp; Expressions</button>
+    <button class="tab-btn" onclick="switchTab('ratios')">6. Ratios &amp; Percentages</button>
+    <button class="tab-btn" onclick="switchTab('geo')">7. Geometry Foundations</button>
+    <button class="tab-btn" onclick="switchTab('preview')">8. What's Next</button>
+  </nav>
+
+  <!-- ========== TAB 1: OPERATION KEYWORDS ========== -->
+  <div id="keywords" class="panel active">
+    <div class="section-title">Integer Word Problem Keywords</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Integer word problems hide two kinds of clues: which <strong>sign</strong> a number should have, and which <strong>operation</strong> to use.</p>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Copy Into Math Notebook - Sign Clue Words</div>
+      <table class="data-table" style="margin-top:6px;">
+        <thead><tr><th>Sign</th><th>Clue Words</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Positive (+)</strong></td><td>gained, rose, increased, above, up, climbed, deposit, income, profit, forward</td></tr>
+          <tr><td><strong>Negative (&minus;)</strong></td><td>lost, dropped, decreased, below, down, withdrawal, owe, debt, expense, below zero</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Copy Into Math Notebook - Operation Clue Words</div>
+      <table class="data-table" style="margin-top:6px;">
+        <thead><tr><th>Operation</th><th>Clue Words</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Addition</strong></td><td>combined, total change, net result, altogether</td><td>deposit $40, then withdrawal $25</td></tr>
+          <tr><td><strong>Subtraction</strong></td><td>difference between, how much higher/colder/farther</td><td>difference between the peak and valley elevation</td></tr>
+          <tr><td><strong>Multiplication</strong></td><td>same change repeated, each day for __ days, loses __ every __</td><td>drops $3 each day for 4 days</td></tr>
+          <tr><td><strong>Division</strong></td><td>average change per unit, spread evenly over time</td><td>total change per day</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="review-card">
+      <h4>Try It</h4>
+      <p>1. &ldquo;The temperature dropped 6&deg; then rose 4&deg;.&rdquo; What are the two signed numbers? What operation combines them?</p>
+      <p>2. &ldquo;A stock loses $3 every day for 5 days.&rdquo; Is the daily change positive or negative? What operation models the total?</p>
+      <p>3. &ldquo;Find the difference between a cliff at 180 m and a lake bed at &minus;40 m.&rdquo; Which operation does &ldquo;difference between&rdquo; signal?</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Show Answer</button>
+      <div class="reveal-answer-box">
+        1. <strong>&minus;6 and +4</strong> &rarr; <strong>add</strong> them: \((-6) + 4 = -2^\circ\) total change.<br>
+        2. Daily change is <strong>negative (&minus;$3)</strong> &rarr; <strong>multiply</strong>: \((-3) \times 5 = -\$15\) total loss.<br>
+        3. &ldquo;Difference between&rdquo; &rarr; <strong>subtract</strong>: \(180 - (-40) = 220\) m apart.
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 2: NUMBER LINE & ABSOLUTE VALUE ========== -->
+  <div id="numberline" class="panel">
+    <div class="section-title">The Number Line &amp; Absolute Value</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Copy Into Math Notebook</div>
+      <ul style="margin:0 0 10px 0;">
+        <li>Positive values sit to the <strong>right</strong> of zero; negative values sit to the <strong>left</strong> of zero.</li>
+        <li>Moving right increases value; moving left decreases value.</li>
+        <li><strong>Absolute value \(|a|\)</strong> is the distance a number is from zero &mdash; always 0 or positive.</li>
+        <li>On a number line, whichever number sits further right has the greater value.</li>
+      </ul>
+    </div>
+
+    <div class="review-card">
+      <h4>Try It: Number Line Moves</h4>
+      <p>1. You start at 9 on the number line and move 6 units to the left. What number do you land on?</p>
+      <p>2. You start at 2 and move 5 units right, then 3 units left. Where do you end up?</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Show Answer</button>
+      <div class="reveal-answer-box">
+        1. <strong>Land on 3</strong> (\(9 - 6 = 3\))<br>
+        2. <strong>Land on 4</strong> (\(2 + 5 = 7\), then \(7 - 3 = 4\))
+      </div>
+    </div>
+
+    <div class="review-card">
+      <h4>Try It: Absolute Value &amp; Comparing</h4>
+      <p>1. Evaluate \(|-18|\).</p>
+      <p>2. Evaluate \(|-12.5| + |4|\).</p>
+      <p>3. Insert \(>\), \(<\), or \(=\): \(\frac{1}{2}\) ___ \(0.55\)</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Show Answer</button>
+      <div class="reveal-answer-box">
+        1. <strong>18</strong><br>
+        2. <strong>16.5</strong> (\(12.5 + 4 = 16.5\))<br>
+        3. <strong>\(<\)</strong> (because \(\frac{1}{2} = 0.50\), and \(0.50 < 0.55\))
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 3: COORDINATE PLANE ========== -->
+  <div id="coordplane" class="panel">
+    <div class="section-title">The Coordinate Plane</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Copy Into Math Notebook</div>
+      <p style="margin:0 0 8px 0;">A coordinate plane is formed by two perpendicular number lines meeting at the <strong>origin \((0,0)\)</strong>: the <strong>x-axis</strong> (horizontal) and <strong>y-axis</strong> (vertical). It is divided into 4 quadrants.</p>
+      <p style="margin:0;">Quadrant I: \((+,+)\) &middot; Quadrant II: \((-,+)\) &middot; Quadrant III: \((-,-)\) &middot; Quadrant IV: \((+,-)\)</p>
+    </div>
+
+    <div class="review-card">
+      <h4>Try It</h4>
+      <p>1. Which quadrant is the point \((-4, 5)\) in?</p>
+      <p>2. Which quadrant is the point \((6, -2)\) in?</p>
+      <p>3. State the directions to plot \((-5, -2)\) starting from the origin.</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Show Answer</button>
+      <div class="reveal-answer-box">
+        1. <strong>Quadrant II</strong> (x negative, y positive)<br>
+        2. <strong>Quadrant IV</strong> (x positive, y negative)<br>
+        3. <strong>Move 5 units left, then 2 units down.</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 4: DECIMALS & FRACTIONS ========== -->
+  <div id="decfrac" class="panel">
+    <div class="section-title">Decimals &amp; Fraction Division</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Copy Into Math Notebook</div>
+      <p style="margin:0;"><strong>Fraction division (&ldquo;keep, change, flip&rdquo;):</strong> \(\dfrac{a}{b} \div \dfrac{c}{d} = \dfrac{a}{b} \times \dfrac{d}{c}\)</p>
+    </div>
+
+    <div class="review-card">
+      <h4>Try It</h4>
+      <p>1. Solve \(\frac{2}{5} \div \frac{1}{3}\)</p>
+      <p>2. Solve \(14.50 - 6.25\)</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Show Answer</button>
+      <div class="reveal-answer-box">
+        1. <strong>\(\frac{6}{5}\) or \(1\frac{1}{5}\)</strong> (\(\frac{2}{5} \times \frac{3}{1} = \frac{6}{5}\))<br>
+        2. <strong>8.25</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 5: EXPONENTS & EXPRESSIONS ========== -->
+  <div id="expr" class="panel">
+    <div class="section-title">Exponents &amp; Algebraic Expressions</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Copy Into Math Notebook</div>
+      <p style="margin:0 0 8px 0;">An exponent shows repeated multiplication: \(a^n = \underbrace{a \times a \times \cdots \times a}_{n \text{ times}}\). Note: \(3^2 = 3 \times 3 = 9\) (not \(3 \times 2 = 6\)).</p>
+      <p style="margin:0;">Terms with the same variable and exponent can be combined by adding or subtracting their coefficients.</p>
+    </div>
+
+    <div class="review-card">
+      <h4>Try It</h4>
+      <p>1. Evaluate \(5^3\).</p>
+      <p>2. Evaluate \(3y - 4\) when \(y = 6\).</p>
+      <p>3. Simplify \(8m + 3m - 2m\).</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Show Answer</button>
+      <div class="reveal-answer-box">
+        1. <strong>125</strong> (\(5 \times 5 \times 5\))<br>
+        2. <strong>14</strong> (\(3(6) - 4 = 18 - 4\))<br>
+        3. <strong>\(9m\)</strong> (\(8 + 3 - 2 = 9\))
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 6: RATIOS & PERCENTAGES ========== -->
+  <div id="ratios" class="panel">
+    <div class="section-title">Unit Rates &amp; Percentages</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Copy Into Math Notebook</div>
+      <p style="margin:0 0 8px 0;"><strong>Unit rate:</strong> a ratio comparing a quantity to 1 single unit.</p>
+      <p style="margin:0;"><strong>Percent of a number:</strong> convert the percent to a decimal, then multiply (\(P\% \times \text{total}\)).</p>
+    </div>
+
+    <div class="review-card">
+      <h4>Try It</h4>
+      <p>1. A pack of 4 notebooks costs $12.00. What is the cost per notebook?</p>
+      <p>2. What is 15% of 60?</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Show Answer</button>
+      <div class="reveal-answer-box">
+        1. <strong>$3.00 per notebook</strong> (\(12 \div 4\))<br>
+        2. <strong>9</strong> (\(0.15 \times 60\))
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 7: GEOMETRY FOUNDATIONS ========== -->
+  <div id="geo" class="panel">
+    <div class="section-title">Perimeter, Area &amp; Volume Foundations</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Copy Into Math Notebook</div>
+      <p style="margin:0 0 6px 0;">Rectangle area: \(A = l \times w\) &middot; Triangle area: \(A = \frac{1}{2} \times b \times h\)</p>
+      <p style="margin:0;">Volume of a rectangular prism: \(V = l \times w \times h\)</p>
+    </div>
+
+    <div class="review-card">
+      <h4>Try It</h4>
+      <p>1. Calculate the area of a rectangle with length 8 cm and width 5 cm.</p>
+      <p>2. A storage box measures 6 ft long, 3 ft wide, and 4 ft high. What is its volume?</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Show Answer</button>
+      <div class="reveal-answer-box">
+        1. <strong>40 cm&sup2;</strong> (\(8 \times 5\))<br>
+        2. <strong>72 ft&sup3;</strong> (\(6 \times 3 \times 4\))
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 8: WHAT'S NEXT ========== -->
+  <div id="preview" class="panel">
+    <div class="section-title">What's Next: Integers &amp; Operations</div>
+    <div class="challenge-box">
+      <h3 style="margin-top:0;">Coming Up: Integers &amp; Operations</h3>
+      <p>Real-world quantities extend below zero: temperature (5&deg;C below zero &rarr; \(-5^\circ\text{C}\)), a $20 debt (\(-\$20\)), or 50 meters below sea level (\(-50\text{ m}\)). Our next topic unlocks the full operational rules for adding, subtracting, multiplying, and dividing integers.</p>
+    </div>
+
+    <div class="review-card">
+      <h4>Preview Challenge: Opposite Numbers</h4>
+      <p><strong>Opposite numbers</strong> sit the same distance from zero on a number line, but on opposite sides. The opposite of \(+7\) is \(-7\); the opposite of \(-12\) is \(+12\).</p>
+      <p>What result do you always get when you add any number to its exact opposite? Example: \(8 + (-8) = {?}\)</p>
+      <button class="btn-reveal" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Reveal Mystery</button>
+      <div class="reveal-answer-box">
+        <strong>Always zero (0)!</strong> This is called the <em>Additive Inverse Property</em>, and it's the foundation for integer arithmetic in our next topic.
+      </div>
+    </div>
+
+    <p style="text-align:center; margin-top:24px;">
+      <a class="btn-lg" style="text-decoration:none; display:inline-block;" href="Topics/integers-and-operations/vocabulary.html">Start the Integers &amp; Operations Topic &rarr;</a>
+    </p>
+  </div>
+
+</div><!-- /.app-container -->
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+</script>
+</body>
+</html>
