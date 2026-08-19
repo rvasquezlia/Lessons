@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Practice (Skill Reinforcement) Lessons 1.1-1.4</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../../../lesson-shared.css">
+  <script src="../../../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Q01W02 - Double Period</span>
+    <h1>Practice: Skill Reinforcement Lessons 1.1 to 1.4</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Pre-Algebra 7 - Thursday, Aug 20 - Skill Reinforcement')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Tab 2's Guided Practice checks your answers on screen as you go, with up to 2 tries per problem. Everything else on this page (Warm-Up, IXL Quiz, Closing, Exit Ticket) just submits and saves your work - your teacher reviews it from your printed progress report. <strong>Calculators are not allowed this quarter.</strong> Finish every tab, then type your name in the blue bar and click Print My Progress for tomorrow's Graded Classwork readiness check.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('warmup')">1. Warm-Up</button>
+    <button class="tab-btn" onclick="switchTab('mixed')">2. Mixed Review</button>
+    <button class="tab-btn" onclick="switchTab('ixl')">3. IXL Quiz</button>
+    <button class="tab-btn" onclick="switchTab('closing')">4. Closing</button>
+    <button class="tab-btn" onclick="switchTab('exitticket')">5. Exit Ticket</button>
+  </nav>
+
+  <!-- TAB 1: WARM-UP & BOARD EXPLANATIONS -->
+  <div id="warmup" class="panel active">
+    <div class="section-title">Warm-Up: Board Explanations</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Thursday, August 20, 2026 &middot; 90 min (Double Period) &middot; CCSS.Math.Content.7.NS.A.1a-d, 7.NS.A.2b-c &amp; MP.3: Construct Viable Arguments</p>
+
+    <div class="explainer-box">
+      Two volunteers will explain an integer rule at the board today. Even if you're not called up, writing out your own explanation is one of the best ways to find gaps in your understanding.
+    </div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Pick one rule from this week (adding, subtracting, multiplying, or dividing integers) and explain it in your own words, as if you were the volunteer at the board. Then solve the two quick warm-up problems.
+    </div>
+
+    <div class="form-group">
+      <label>Explain one integer rule in your own words:</label>
+      <textarea id="board-explain" class="form-control-lg" rows="3" placeholder="I would explain..."></textarea>
+      <button class="btn-lg" style="margin-top:8px;" onclick="checkBoardExplain()">Submit</button>
+      <div id="board-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 16px;">
+      <strong>1.</strong> \(-11 + (-6)\)
+      <div style="margin-top:10px;">
+        <input type="text" id="wu-0-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkWarmup(0)">Check</button>
+      </div>
+      <div id="wu-0-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>2.</strong> \(4 \times (-8)\)
+      <div style="margin-top:10px;">
+        <input type="text" id="wu-1-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkWarmup(1)">Check</button>
+      </div>
+      <div id="wu-1-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: MIXED REVIEW GUIDED PRACTICE -->
+  <div id="mixed" class="panel">
+    <div class="section-title">Mixed Review: All Four Operations</div>
+    <div class="explainer-box">
+      These problems mix every skill from this week - adding, subtracting, multiplying, and dividing integers. Identify which operation you're doing before you apply a sign rule.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Guided Practice</div>
+      <p style="margin:0;">Copy each problem into your notebook and solve it there first, then type just your final answer below and check it. You get up to <strong>2 tries</strong> per problem - after a second miss, the correct method is shown and it locks.</p>
+    </div>
+    <div id="mixed-practice-list"></div>
+  </div>
+
+  <!-- TAB 3: IXL QUIZ -->
+  <div id="ixl" class="panel">
+    <div class="section-title">IXL Practice Quiz</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Complete the 30-exercise combined quiz in IXL (leaderboard mode). For every question you get wrong, copy it into your notebook and correct it there. When you're done, list two of your corrections below and check the box.
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">Today's IXL Skills</div>
+      <p style="margin:0;"><strong>K94</strong> - Add, subtract, multiply, and divide integers (fill in the blanks) &nbsp;&middot;&nbsp; <strong>P6A</strong> - Add, subtract, multiply, and divide integers: word problems</p>
+    </div>
+
+    <div class="form-group">
+      <label>Describe one question you got wrong on IXL and how you corrected it in your notebook:</label>
+      <textarea id="ixl-correction" class="form-control-lg" rows="3" placeholder="I got this question wrong... I fixed it by..."></textarea>
+      <button class="btn-lg" style="margin-top:8px;" onclick="checkIXLCorrection()">Submit</button>
+      <div id="ixl-correction-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="form-group" style="margin-top:12px;">
+      <input type="checkbox" id="confirm-ixl" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;" onchange="confirmIXL(this)">
+      <label for="confirm-ixl" style="display:inline; font-weight:700;">I completed the 30-exercise IXL quiz (K94, P6A).</label>
+    </div>
+  </div>
+
+  <!-- TAB 4: CLOSING -->
+  <div id="closing" class="panel">
+    <div class="section-title">Closing: Peer Mistake-Sharing</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Turn to a partner and share one mistake you made this week and how you fixed it. Then write it below and submit.
+    </div>
+    <div class="form-group">
+      <label>What mistake did you share with your partner, and how did you fix it?</label>
+      <textarea id="peer-share" class="form-control-lg" rows="3" placeholder="My mistake was..."></textarea>
+      <button class="btn-lg" style="margin-top:8px;" onclick="checkPeerShare()">Submit</button>
+      <div id="peer-share-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 5: EXIT TICKET -->
+  <div id="exitticket" class="panel">
+    <div class="section-title">Exit Ticket</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Answer the reflection question, click Submit Reflection, then type your name in the blue bar at the top of the page and click Print My Progress.
+    </div>
+
+    <form id="exit-form" onsubmit="submitExitTicket(event)">
+      <div class="form-group">
+        <label>When you got an IXL question wrong today, what step in your scratchpad work helped you find and fix the operational error?</label>
+        <textarea id="exit-1" class="form-control-lg" rows="3" placeholder="Explain your reasoning..."></textarea>
+      </div>
+      <button type="submit" class="btn-lg">Submit Reflection</button>
+    </form>
+    <div id="exit-feedback" class="feedback-msg"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // WARM-UP & BOARD EXPLANATION
+  // ==========================================
+  function checkBoardExplain() {
+    const raw = document.getElementById('board-explain').value.trim();
+    const fb = document.getElementById('board-feedback');
+    if (raw.length <= 10) { LessonCheck.incomplete(fb, "Write a complete explanation before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'thu-board', label: 'Board Explanation: chosen integer rule', answer: raw, section: '1. Warm-Up' });
+  }
+
+  const warmupProblems = [
+    { q: "-11 + (-6)", a: -17, tol: 0.001 },
+    { q: "4 × (-8)", a: -32, tol: 0.001 }
+  ];
+  function checkWarmup(idx) {
+    const p = warmupProblems[idx];
+    const val = document.getElementById(`wu-${idx}-input`).value;
+    const fb = document.getElementById(`wu-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before submitting."); return; }
+    LessonCheck.submit(fb, { key: `wu-${idx}`, label: `Warm-Up: ${p.q}`, answer: val, section: '1. Warm-Up', correct: LessonCheck.numericMatch(val, p.a, p.tol) });
+  }
+
+  // ==========================================
+  // MIXED REVIEW GUIDED PRACTICE
+  // ==========================================
+  const mixedPractice = [
+    { q: "\\(-14 + 9\\)", a: -5, tol: 0.001 },
+    { q: "\\(22 - (-8)\\)", a: 30, tol: 0.001 },
+    { q: "\\(-6 \\times (-7)\\)", a: 42, tol: 0.001 },
+    { q: "\\(-36 \\div 4\\)", a: -9, tol: 0.001 },
+    { q: "\\(-13 - 5\\)", a: -18, tol: 0.001 },
+    { q: "\\(-8 + (-15)\\)", a: -23, tol: 0.001 },
+    { q: "\\(5 \\times (-9)\\)", a: -45, tol: 0.001 },
+    { q: "A hiker's elevation changes by \\(-120\\) m, then \\(45\\) m, then \\(-10\\) m. Net change?", a: -85, tol: 0.001 }
+  ];
+
+  function renderMixedPractice() {
+    const html = mixedPractice.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="mixed-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkMixed(${i})">Check</button>
+        <div id="mixed-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('mixed-practice-list').innerHTML = html;
+    mixedPractice.forEach((p, i) => LessonProgress.preRegister(`mixed-${i}`, `Mixed Review #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '2. Mixed Review'));
+  }
+
+  function checkMixed(idx) {
+    const p = mixedPractice[idx];
+    const raw = document.getElementById(`mixed-${idx}-input`).value;
+    const fb = document.getElementById(`mixed-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet."); return; }
+    const correct = LessonCheck.numericMatch(raw, p.a, p.tol);
+    LessonCheck.check(`mixed-${idx}`, correct, fb, {
+      correct: `Correct! Answer: \\(\\mathbf{${p.a}}\\)`,
+      retry: "Not quite yet. First identify the operation, then apply the correct sign rule. Try again.",
+      reveal: `Here's the correct answer: \\(\\mathbf{${p.a}}\\)`
+    }, { label: `Mixed Review #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '2. Mixed Review' });
+  }
+
+  // ==========================================
+  // IXL QUIZ
+  // ==========================================
+  function checkIXLCorrection() {
+    const raw = document.getElementById('ixl-correction').value.trim();
+    const fb = document.getElementById('ixl-correction-feedback');
+    if (raw.length <= 10) { LessonCheck.incomplete(fb, "Describe your correction before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'thu-ixl-correction', label: 'IXL Quiz: notebook correction example', answer: raw, section: '3. IXL Quiz' });
+  }
+  function confirmIXL(cb) {
+    if (cb.checked) {
+      LessonProgress.record('thu-confirm-ixl', 'Confirmed: completed 30-exercise IXL quiz (K94, P6A)', 'Yes', 'reflection', '3. IXL Quiz');
+    }
+  }
+
+  // ==========================================
+  // CLOSING
+  // ==========================================
+  function checkPeerShare() {
+    const raw = document.getElementById('peer-share').value.trim();
+    const fb = document.getElementById('peer-share-feedback');
+    if (raw.length <= 10) { LessonCheck.incomplete(fb, "Write a complete answer before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'thu-peer-share', label: 'Closing: peer mistake-sharing', answer: raw, section: '4. Closing' });
+  }
+
+  // ==========================================
+  // EXIT TICKET
+  // ==========================================
+  function submitExitTicket(e) {
+    e.preventDefault();
+    const a1 = document.getElementById('exit-1').value.trim();
+    const fb = document.getElementById('exit-feedback');
+    if (a1.length <= 5) {
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg error';
+      fb.innerText = "Please write a complete reflection before submitting.";
+      return;
+    }
+    fb.className = "feedback-msg success";
+    fb.innerText = "Reflection submitted and logged successfully!";
+    fb.style.display = "block";
+    LessonProgress.recordText('Exit Ticket: scratchpad step that helped fix an IXL error', a1, '5. Exit Ticket');
+  }
+
+  // Initial render
+  renderMixedPractice();
+
+  // Pre-register every question so the printed report always shows the
+  // full page, blank for anything never attempted.
+  LessonProgress.preRegister('thu-board', 'Board Explanation: chosen integer rule', '1. Warm-Up');
+  warmupProblems.forEach((p, i) => LessonProgress.preRegister(`wu-${i}`, `Warm-Up: ${p.q}`, '1. Warm-Up'));
+  LessonProgress.preRegister('thu-ixl-correction', 'IXL Quiz: notebook correction example', '3. IXL Quiz');
+  LessonProgress.preRegister('thu-confirm-ixl', 'Confirmed: completed 30-exercise IXL quiz (K94, P6A)', '3. IXL Quiz');
+  LessonProgress.preRegister('thu-peer-share', 'Closing: peer mistake-sharing', '4. Closing');
+</script>
+<div id="print-report"></div>
+</body>
+</html>

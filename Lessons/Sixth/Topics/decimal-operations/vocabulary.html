@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Decimal Operations - Vocabulary</title>
+
+  <!-- Montserrat Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../../lesson-shared.css">
+  <script src="../../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Decimal Operations - Vocabulary</span>
+    <h1>Decimal Operations: Key Terms &amp; Definitions</h1>
+    <p class="subtitle">CCSS.Math.Content.6.NS.B.3 &middot; MP6: Attend to Precision</p>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Math 6 - Decimal Operations Vocabulary')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Start on the <strong>Definitions</strong> tab: read each term, copy the notebook box into your math notebook, then click the interactive place-value chart to explore each column. Move to the <strong>Practice</strong> tab to check your understanding.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('definitions')">1. Definitions</button>
+    <button class="tab-btn" onclick="switchTab('practice')">2. Practice</button>
+  </nav>
+
+  <!-- ========== TAB 1: DEFINITIONS ========== -->
+  <div id="definitions" class="panel active">
+    <div class="section-title">Key Vocabulary: Place Value &amp; Decimal Operations</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Lesson 1.2 &middot; CCSS.Math.Content.6.NS.B.3 &amp; MP6: Attend to Precision</p>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read the notebook box and copy it into your math notebook. Then click each column in the chart below to learn what it means — there's nothing to submit here, this is background you'll use throughout the topic.
+    </div>
+
+    <div class="explainer-box">
+      The <strong>decimal point (\(\cdot\))</strong> separates <strong>whole quantities</strong> (on the left) from <strong>fractional parts</strong> (on the right). Every move to the left makes a digit \(10\times\) larger; every move to the right drops it to \(\frac{1}{10}\text{th}\) of its value.
+    </div>
+
+    <!-- NOTEBOOK BOX -->
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
+      <p style="margin:0 0 10px 0;"><strong>Topic:</strong> Decimal Operations &amp; Place Value Alignment</p>
+      <ul>
+        <li><strong>Decimal Point (\(\cdot\)):</strong> Separates Whole Numbers from Parts of a Whole.</li>
+        <li><strong>Tenths (\(0.1\)):</strong> \(\frac{1}{10}\text{th}\) of a whole (1 dime = $0.10).</li>
+        <li><strong>Hundredths (\(0.01\)):</strong> \(\frac{1}{100}\text{th}\) of a whole (1 penny = $0.01).</li>
+        <li><strong>Thousandths (\(0.001\)):</strong> \(\frac{1}{1000}\text{th}\) of a whole (Metric lab scales &amp; sports split-times).</li>
+        <li><strong>Standard Algorithm:</strong> A reliable, step-by-step procedure for computing sums, differences, or products.</li>
+        <li><strong>Estimation / Rounding:</strong> Replacing exact values with nearby round numbers to check reasonableness.</li>
+      </ul>
+    </div>
+
+    <p class="no-print" style="text-align:center;"><strong>Click any column to inspect its mathematical value and cash equivalent:</strong></p>
+
+    <!-- Place Value Chart -->
+    <div class="pv-chart">
+      <div class="pv-column" onclick="inspectPV('hundreds')">
+        <div class="pv-title">Hundreds</div>
+        <div class="pv-val">100</div>
+        <div class="pv-money">$100 Bill</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('tens')">
+        <div class="pv-title">Tens</div>
+        <div class="pv-val">10</div>
+        <div class="pv-money">$10 Bill</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('ones')">
+        <div class="pv-title">Ones</div>
+        <div class="pv-val">1</div>
+        <div class="pv-money">$1 Dollar</div>
+      </div>
+      <div class="pv-column" style="background:#fee2e2; border-color:#ef4444;" onclick="inspectPV('decimal')">
+        <div class="pv-title">Decimal</div>
+        <div class="pv-val">\(\cdot\)</div>
+        <div class="pv-money">ANCHOR</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('tenths')">
+        <div class="pv-title">Tenths</div>
+        <div class="pv-val">0.1</div>
+        <div class="pv-money">1 Dime</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('hundredths')">
+        <div class="pv-title">Hundredths</div>
+        <div class="pv-val">0.01</div>
+        <div class="pv-money">1 Penny</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('thousandths')">
+        <div class="pv-title">Thousandths</div>
+        <div class="pv-val">0.001</div>
+        <div class="pv-money">Metric/Sports</div>
+      </div>
+    </div>
+
+    <div id="pv-inspector" class="no-print" style="background:#f1f5f9; padding:20px; border-radius:12px; border:2px solid var(--border); margin-top:16px;">
+      <h3 style="margin-top:0; color:var(--primary);" id="inspector-title">Click a column above!</h3>
+      <p id="inspector-body" style="margin:0;">Explore how digits relate to whole quantities and fractional parts.</p>
+    </div>
+
+    <!-- ROUNDING EXPLANATION -->
+    <div style="background:#f1f5f9; border-left:8px solid var(--accent); padding:24px; border-radius:12px; margin-top:28px;">
+      <h3 style="margin-top:0; color:var(--accent);">Estimation Strategy: How and Why We Round</h3>
+      <p>Before calculating exact answers, we <strong>round</strong> numbers to estimate the result. Estimation acts as a safety check against place-value errors!</p>
+      <strong>The Rounding Rule:</strong>
+      <ol>
+        <li>Identify your target place value position.</li>
+        <li>Look at the digit directly to its right.</li>
+        <li>If that digit is <strong>5 or greater</strong>, round up. If it's <strong>4 or less</strong>, keep the target digit the same.</li>
+      </ol>
+      <p><em>Real example:</em> Round 14.86 to the nearest tenth. The hundredths digit is 6. Since \(6 \ge 5\), \(14.86 \rightarrow 14.9\).</p>
+    </div>
+  </div>
+
+  <!-- ========== TAB 2: PRACTICE ========== -->
+  <div id="practice" class="panel">
+    <div class="section-title">Vocabulary Practice: Check Your Understanding</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Answer each question below. Type your answer and click <strong>Check</strong>. If you're wrong twice the correct answer will be revealed.
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>1.</strong> In the number 4.853, what place value is the digit 5 in?
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-0-input" class="form-control-lg" style="max-width:240px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(0)">Check</button>
+      </div>
+      <div id="vp-0-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>2.</strong> Round 7.346 to the nearest hundredth.
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-1-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(1)">Check</button>
+      </div>
+      <div id="vp-1-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>3.</strong> What is the value of the digit 9 in 12.09?
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-2-input" class="form-control-lg" style="max-width:240px; display:inline-block;" placeholder="Answer (e.g. 0.09)">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(2)">Check</button>
+      </div>
+      <div id="vp-2-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>4.</strong> Round 23.7482 to the nearest tenth.
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-3-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(3)">Check</button>
+      </div>
+      <div id="vp-3-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+</div><!-- /.app-container -->
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // PLACE VALUE INSPECTOR
+  // ==========================================
+  const pvDetails = {
+    hundreds:    { title: "Hundreds Column (100)",            body: "100 times 1 Whole. Money: $100 bill. Example: In 354.2, 3 represents 300." },
+    tens:        { title: "Tens Column (10)",                 body: "10 times 1 Whole. Money: $10 bill. Example: In 54.2, 5 represents 50." },
+    ones:        { title: "Ones Column (1)",                  body: "The base whole unit. Money: $1 dollar. Example: In 4.25, 4 represents 4 whole dollars." },
+    decimal:     { title: "The Decimal Point (\\(\\cdot\\))", body: "The critical anchor separating whole numbers from fractional parts." },
+    tenths:      { title: "Tenths Column (0.1 = \\(\\frac{1}{10}\\))",      body: "1 Whole cut into 10 equal parts. Money: 1 Dime ($0.10). 10 Tenths make 1 Whole." },
+    hundredths:  { title: "Hundredths Column (0.01 = \\(\\frac{1}{100}\\))", body: "1 Whole cut into 100 equal parts. Money: 1 Penny ($0.01). 100 Hundredths make 1 Whole." },
+    thousandths: { title: "Thousandths Column (0.001 = \\(\\frac{1}{1000}\\))", body: "1 Whole cut into 1,000 equal parts. Used in metric science measurements and sports timing!" }
+  };
+
+  function inspectPV(col) {
+    const detail = pvDetails[col];
+    document.getElementById('inspector-title').innerText = detail.title;
+    document.getElementById('inspector-body').innerText = detail.body;
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // VOCABULARY PRACTICE
+  // ==========================================
+  const vpProblems = [
+    { q: "In 4.853, place of digit 5",   type: "text",   a: "hundredths" },
+    { q: "Round 7.346 to nearest hundredth", type: "number", a: 7.35, tol: 0.001 },
+    { q: "Value of 9 in 12.09",          type: "number", a: 0.09, tol: 0.001 },
+    { q: "Round 23.7482 to nearest tenth", type: "number", a: 23.7, tol: 0.001 }
+  ];
+
+  vpProblems.forEach((p, i) =>
+    LessonProgress.preRegister(`vp-${i}`, `Vocabulary Practice #${i + 1}: ${p.q}`, '2. Practice')
+  );
+
+  function checkVP(idx) {
+    const p = vpProblems[idx];
+    const val = document.getElementById(`vp-${idx}-input`).value;
+    const fb  = document.getElementById(`vp-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter your answer before submitting.");
+      return;
+    }
+
+    const correct = p.type === "number"
+      ? LessonCheck.numericMatch(val, p.a, p.tol)
+      : val.trim().toLowerCase() === p.a.toLowerCase();
+
+    LessonCheck.submit(fb, {
+      key: `vp-${idx}`,
+      label: `Vocabulary Practice #${idx + 1}: ${p.q}`,
+      answer: val,
+      section: '2. Practice',
+      correct
+    });
+  }
+</script>
+</body>
+</html>

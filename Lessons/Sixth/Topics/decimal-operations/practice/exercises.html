@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Lesson 1.2 Day 3 - Error Analysis &amp; IXL Practice</title>
+
+  <!-- Montserrat Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../../../lesson-shared.css">
+  <script src="../../../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Q01W02 - Skill Reinforcement (Double Period)</span>
+    <h1>Error Analysis &amp; Health Science</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Math 6 - Wednesday, Aug 19 - Error Analysis & Health Science')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Do the four tabs in order: diagnose 7 errors and complete the Guided Practice, then go log into IXL for the middle tab, then the Health Science table, then your Exit Ticket. Guided Practice items check your answer on screen; everything else submits to your progress report for your teacher to review. Finish by typing your name above and clicking <strong>Print My Progress</strong> for your Google Classroom submission.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('erroranalysis')">1. Error Analysis</button>
+    <button class="tab-btn" onclick="switchTab('ixl')">2. IXL Practice</button>
+    <button class="tab-btn" onclick="switchTab('health')">3. Health Science</button>
+    <button class="tab-btn" onclick="switchTab('exitticket')">4. Exit Ticket</button>
+  </nav>
+
+  <!-- PANEL 1: ERROR ANALYSIS -->
+  <div id="erroranalysis" class="panel active">
+    <div class="section-title">Error Analysis Warm-Up</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Wednesday, August 19, 2026 &middot; 90 min (Double Period) &middot; CCSS.Math.Content.6.NS.B.3 &amp; MP6: Attend to Precision</p>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      For each of the 7 problems: read the work shown, pick "Correct" or "There's a mistake" from the dropdown, type what the correct answer should be, and click Submit My Work. Use the arrows or dots to move to the next problem.
+    </div>
+
+    <div class="explainer-box">
+      Today is <strong>self-led</strong>. For each problem below, you'll act as the teacher: look at another student's work, decide whether it's correct, and if it isn't, explain the mistake and fix it. Not every problem below actually has an error - read carefully!
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="ea-prev-btn" onclick="changeErrorEx(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="ea-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Problem 1 of 7</span>
+          <div class="carousel-indicators" id="ea-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="ea-next-btn" onclick="changeErrorEx(1)">Next &rarr;</button>
+      </div>
+
+      <div id="ea-content" style="min-height: 260px;">
+        <!-- Dynamic content injected via JS -->
+      </div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:24px;">
+      <div class="notebook-header">Guided Practice</div>
+      <p style="margin:0;">Copy each problem into your notebook and solve it there first, then type just your final answer below and check it. You get up to <strong>2 tries</strong> per problem - after a second miss, the correct method is shown and it locks.</p>
+    </div>
+    <div id="ea-guided-practice-list"></div>
+  </div>
+
+  <!-- PANEL 2: IXL PRACTICE -->
+  <div id="ixl" class="panel">
+    <div class="section-title">Digital Station Practice: IXL</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Leave this page open, open IXL in another tab, and log in there instead. Work through every skill listed below in order. There's nothing to check or print on this tab - your teacher sees your IXL progress directly.
+    </div>
+
+    <div class="ixl-box">
+      <h3 style="margin-top:0; color:#15803d;">Today's practice happens in IXL, not on this page.</h3>
+      <p style="margin-bottom:0;">Log in to IXL and work through the skills below. Your teacher is monitoring progress live through the IXL Analytics dashboard, and will pull a small group for a targeted check-in on decimal alignment.</p>
+      <ul>
+        <li>Add and subtract decimal numbers <span class="ixl-code">79J</span></li>
+        <li>Complete the decimal addition or subtraction sentence <span class="ixl-code">QRH</span></li>
+        <li>Estimate sums and differences of decimals <span class="ixl-code">SJ6</span></li>
+        <li>Multiply two decimals: where does the decimal point go?</li>
+        <li>Estimate products of decimal numbers <span class="ixl-code">EPL</span></li>
+        <li>Multiply decimals <span class="ixl-code">2WT</span></li>
+        <li>Add, subtract, and multiply decimals: word problems <span class="ixl-code">Z77</span></li>
+        <li>Add and subtract decimals: word problems <span class="ixl-code">97T</span></li>
+        <li>Add and subtract money amounts: word problems <span class="ixl-code">DR9</span></li>
+      </ul>
+      <p style="margin:14px 0 0 0; font-weight:700;">Your teacher will call a few names for a small-group table check-in on decimal alignment while you work - if you're called, bring your notebook.</p>
+    </div>
+
+    <div class="notebook-box" style="margin-top:20px;">
+      <div class="notebook-header">Confirm Completion</div>
+      <label style="font-weight:700; cursor:pointer;">
+        <input type="checkbox" id="confirm-ixl" onchange="confirmIXL(this)" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;">
+        I completed all 9 IXL skills listed above.
+      </label>
+    </div>
+  </div>
+
+  <!-- PANEL 3: HEALTH SCIENCE APPLICATION -->
+  <div id="health" class="panel">
+    <div class="section-title">Health Science Application</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Multiply each nutrient amount in the first table by 2.5 bars, type all four results in the second table, then click Submit My Work once - it submits all four at the same time.
+    </div>
+    <p>Nutritionists use decimals to track exact nutrient intake. Below is a nutrition label for a "Super-Grain Energy Bar." Use the data to calculate the totals for a student who eats <strong>2.5 bars</strong> throughout the day.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Nutrient (per 1 bar)</th><th>Amount</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Total Fat</td><td>4.25 g</td></tr>
+        <tr><td>Protein</td><td>9.15 g</td></tr>
+        <tr><td>Carbohydrates</td><td>28.4 g</td></tr>
+        <tr><td>Fiber</td><td>3.8 g</td></tr>
+      </tbody>
+    </table>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Nutrient</th><th>Your Exact Calculation (2.5 bars)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Total Fat</td><td><input type="text" id="hs-fat" class="form-control-lg" placeholder="grams"></td></tr>
+        <tr><td>Protein</td><td><input type="text" id="hs-protein" class="form-control-lg" placeholder="grams"></td></tr>
+        <tr><td>Carbohydrates</td><td><input type="text" id="hs-carbs" class="form-control-lg" placeholder="grams"></td></tr>
+        <tr><td>Fiber</td><td><input type="text" id="hs-fiber" class="form-control-lg" placeholder="grams"></td></tr>
+      </tbody>
+    </table>
+
+    <div style="text-align:center; margin-top:16px;">
+      <button class="btn-lg" onclick="checkHealthScience()">Submit My Work</button>
+    </div>
+    <div id="hs-feedback" class="feedback-msg"></div>
+  </div>
+
+  <!-- PANEL 4: EXIT TICKET -->
+  <div id="exitticket" class="panel">
+    <div class="section-title">Exit Ticket &amp; Metacognitive Log</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Answer both questions, click Submit Exit Ticket, then type your name in the blue bar at the top of the page and click Print My Progress.
+    </div>
+
+    <form id="exit-form" onsubmit="submitExitTicket(event)">
+      <div class="form-group">
+        <label>1. Which error analysis problem taught you the most, and why?</label>
+        <textarea id="exit-1" class="form-control-lg" rows="3" placeholder="Name the problem and explain..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>2. How did catching a mistake using rounding or estimation change the way you approached your next problem today?</label>
+        <textarea id="exit-2" class="form-control-lg" rows="3" placeholder="Reflect on your process..."></textarea>
+      </div>
+
+      <button type="submit" class="btn-lg">Submit Exit Ticket</button>
+    </form>
+    <div id="exit-feedback" class="feedback-msg"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // ERROR ANALYSIS CAROUSEL
+  // ==========================================
+  let currentEA = 0;
+
+  const errorExamples = [
+    {
+      title: "1. Check the Work",
+      problem: "\\(15.4 - 2.65\\)",
+      studentWork: `
+        <table class="algo-table">
+          <tr><td class="grid-cell" style="width:90px;">15.4</td></tr>
+          <tr><td class="grid-cell line-under" style="width:90px;">-2.65</td></tr>
+          <tr><td class="grid-cell" style="width:90px;">12.75</td></tr>
+        </table>
+      `,
+      verdict: "correct",
+      correctValue: 12.75,
+      tol: 0.01,
+      reveal: "There's actually no mistake here! \\(15.40 - 2.65 = 12.75\\) is correct. It's easy to assume every problem has an error - always check the math for yourself instead of guessing."
+    },
+    {
+      title: "2. Check the Work",
+      problem: "\\(4.2 \\times 0.3\\), and the student wrote \\(4.2 \\times 0.3 = 12.6\\)",
+      studentWork: "",
+      verdict: "error",
+      correctValue: 1.26,
+      tol: 0.01,
+      reveal: "<strong>The mistake:</strong> the student only shifted the decimal 1 place instead of 2. \\(4.2\\) has 1 decimal place and \\(0.3\\) has 1 decimal place, so the product needs \\(1 + 1 = 2\\) decimal places.<br><strong>Correct calculation:</strong> \\(42 \\times 3 = 126\\), then shift 2 places left: \\(4.2 \\times 0.3 = \\mathbf{1.26}\\)."
+    },
+    {
+      title: "3. Check the Work",
+      problem: "\\(8.05 + 12.1\\), and the student wrote:",
+      studentWork: `
+        <table class="algo-table">
+          <tr><td class="grid-cell" style="width:90px;">8.05</td></tr>
+          <tr><td class="grid-cell line-under" style="width:90px;">+12.1</td></tr>
+          <tr><td class="grid-cell" style="width:90px;">8.17</td></tr>
+        </table>
+      `,
+      verdict: "error",
+      correctValue: 20.15,
+      tol: 0.01,
+      reveal: "<strong>The mistake:</strong> the decimal points weren't lined up before adding, so the \"1 ten\" in \\(12.1\\) never got added in.<br><strong>Correct calculation:</strong> pad \\(12.1\\) as \\(12.10\\), line up the decimals, and add: \\(8.05 + 12.10 = \\mathbf{20.15}\\)."
+    },
+    {
+      title: "4. Check the Work",
+      problem: "\\(6.25 + 3.4\\), and the student wrote \\(6.25 + 3.4 = 6.59\\)",
+      studentWork: "",
+      verdict: "error",
+      correctValue: 9.65,
+      tol: 0.01,
+      reveal: "<strong>The mistake:</strong> the student lined up \\(3.4\\) as if it were \\(0.34\\), putting the 4 in the hundredths column instead of the tenths column.<br><strong>Correct calculation:</strong> pad \\(3.4\\) as \\(3.40\\), line up the decimals, and add: \\(6.25 + 3.40 = \\mathbf{9.65}\\)."
+    },
+    {
+      title: "5. Check the Work",
+      problem: "\\(5.1 \\times 2.03\\), and the student wrote \\(5.1 \\times 2.03 = 103.53\\)",
+      studentWork: "",
+      verdict: "error",
+      correctValue: 10.353,
+      tol: 0.005,
+      reveal: "<strong>The mistake:</strong> the student only shifted the decimal 2 places instead of 3. \\(5.1\\) has 1 decimal place and \\(2.03\\) has 2 decimal places, so the product needs \\(1 + 2 = 3\\) decimal places.<br><strong>Correct calculation:</strong> \\(51 \\times 203 = 10{,}353\\), then shift 3 places left: \\(5.1 \\times 2.03 = \\mathbf{10.353}\\)."
+    },
+    {
+      title: "6. Check the Work",
+      problem: "\\(30.5 - 12.75\\), and the student wrote:",
+      studentWork: `
+        <table class="algo-table">
+          <tr><td class="grid-cell" style="width:90px;">30.50</td></tr>
+          <tr><td class="grid-cell line-under" style="width:90px;">-12.75</td></tr>
+          <tr><td class="grid-cell" style="width:90px;">17.75</td></tr>
+        </table>
+      `,
+      verdict: "correct",
+      correctValue: 17.75,
+      tol: 0.01,
+      reveal: "There's actually no mistake here! Padding \\(30.5\\) as \\(30.50\\) and subtracting with regrouping gives \\(30.50 - 12.75 = 17.75\\), which is correct."
+    },
+    {
+      title: "7. Check the Work",
+      problem: "\\(3.4 \\times 0.25\\), and the student wrote \\(3.4 \\times 0.25 = 8.50\\)",
+      studentWork: "",
+      verdict: "error",
+      correctValue: 0.85,
+      tol: 0.01,
+      reveal: "<strong>The mistake:</strong> the student only shifted the decimal 2 places instead of 3. \\(3.4\\) has 1 decimal place and \\(0.25\\) has 2 decimal places, so the product needs \\(1 + 2 = 3\\) decimal places.<br><strong>Correct calculation:</strong> \\(34 \\times 25 = 850\\), then shift 3 places left: \\(3.4 \\times 0.25 = \\mathbf{0.850}\\)."
+    }
+  ];
+
+  function renderErrorCarousel() {
+    const ex = errorExamples[currentEA];
+    document.getElementById('ea-title').innerText = `Problem ${currentEA + 1} of ${errorExamples.length}`;
+
+    const dotsContainer = document.getElementById('ea-dots');
+    dotsContainer.innerHTML = errorExamples.map((_, i) =>
+      `<div class="dot ${i === currentEA ? 'active' : ''}" onclick="jumpToErrorEx(${i})"></div>`
+    ).join('');
+
+    document.getElementById('ea-content').innerHTML = `
+      <h3 style="color:var(--primary); margin-top:0;">${ex.title}</h3>
+      <p><strong>The Problem:</strong> ${ex.problem}</p>
+      ${ex.studentWork ? `<p><strong>Student Work:</strong></p>${ex.studentWork}` : ''}
+      <div class="step-box" style="margin-top:16px;">
+        <p style="margin:0 0 10px 0;"><strong>Act as the teacher:</strong> is this correct? What is the correct answer?</p>
+        <div class="form-group">
+          <label>Is the student's work correct?</label>
+          <select id="ea-verdict-${currentEA}" class="form-control-lg" style="max-width:240px;">
+            <option value="">Select...</option>
+            <option value="correct">Correct, no mistake</option>
+            <option value="error">There's a mistake</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>What is the correct answer?</label>
+          <input type="text" id="ea-answer-${currentEA}" class="form-control-lg" style="max-width:200px;" placeholder="Correct answer">
+        </div>
+        <button class="btn-lg" onclick="checkErrorAnalysis(${currentEA})">Submit My Work</button>
+        <div id="ea-feedback-${currentEA}" class="feedback-msg" style="margin-top:14px;"></div>
+      </div>
+    `;
+
+    document.getElementById('ea-prev-btn').disabled = currentEA === 0;
+    document.getElementById('ea-next-btn').disabled = currentEA === errorExamples.length - 1;
+
+    triggerMathJax();
+  }
+
+  function changeErrorEx(dir) {
+    currentEA = Math.max(0, Math.min(errorExamples.length - 1, currentEA + dir));
+    renderErrorCarousel();
+  }
+
+  function jumpToErrorEx(idx) {
+    currentEA = idx;
+    renderErrorCarousel();
+  }
+  TeacherPrint.registerCarousel('ea-content', errorExamples.length, jumpToErrorEx);
+
+  function checkErrorAnalysis(idx) {
+    const ex = errorExamples[idx];
+    const verdict = document.getElementById(`ea-verdict-${idx}`).value;
+    const val = document.getElementById(`ea-answer-${idx}`).value;
+    const fb = document.getElementById(`ea-feedback-${idx}`);
+
+    if (!verdict || !val.trim()) {
+      LessonCheck.incomplete(fb, "Choose a verdict and enter the correct answer before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: `ea-${idx}`, label: `Error Analysis: ${ex.problem.replace(/<[^>]+>/g, '').replace(/\\\(|\\\)/g, '')}`, answer: `Verdict: ${verdict}, Answer: ${val}`, section: '1. Error Analysis', correct: verdict === ex.verdict && LessonCheck.numericMatch(val, ex.correctValue, 0.01) });
+  }
+
+  function confirmIXL(cb) {
+    if (cb.checked) {
+      LessonProgress.record('wed-confirm-ixl', 'Confirmed: completed all 9 IXL skills', 'Yes', 'reflection', '2. IXL Practice');
+    }
+  }
+
+  // ==========================================
+  // ERROR ANALYSIS GUIDED PRACTICE
+  // ==========================================
+  const eaGuidedPractice = [
+    { q: "\\(27.4 + 15.85\\)", a: 43.25, tol: 0.01 },
+    { q: "\\(60.3 - 24.6\\)", a: 35.7, tol: 0.01 },
+    { q: "\\(4.4 \\times 3.5\\)", a: 15.4, tol: 0.02 },
+    { q: "\\(0.9 \\times 6.25\\)", a: 5.625, tol: 0.01 },
+    { q: "\\(88.05 - 39.7\\)", a: 48.35, tol: 0.01 }
+  ];
+
+  function renderEAGuidedPractice() {
+    const html = eaGuidedPractice.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="eagp-${i}-input" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkEAGuidedPractice(${i})">Check</button>
+        <div id="eagp-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('ea-guided-practice-list').innerHTML = html;
+    eaGuidedPractice.forEach((p, i) => LessonProgress.preRegister(`eagp-${i}`, `Guided Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '1. Error Analysis'));
+    triggerMathJax();
+  }
+  TeacherPrint.registerAnswerList('ea-guided-practice-list', eaGuidedPractice.map((p, i) => ({ inputId: `eagp-${i}-input`, answerText: String(p.a) })));
+  TeacherPrint.registerAnswerList('health', [
+    { inputId: 'hs-fat', answerText: '10.625 g' },
+    { inputId: 'hs-protein', answerText: '22.875 g' },
+    { inputId: 'hs-carbs', answerText: '71.0 g' },
+    { inputId: 'hs-fiber', answerText: '9.5 g' }
+  ]);
+
+  function checkEAGuidedPractice(idx) {
+    const p = eaGuidedPractice[idx];
+    const val = document.getElementById(`eagp-${idx}-input`).value;
+    const fb = document.getElementById(`eagp-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+
+    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
+
+    LessonCheck.check(`eagp-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(= \\mathbf{${p.a}}\\)`,
+      retry: "Not quite yet. Line up decimals for add/subtract, or count total decimal places for multiplication. Try again.",
+      reveal: `Here's the correct procedure: ${p.q} \\(= \\mathbf{${p.a}}\\)`
+    }, { label: `Guided Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '1. Error Analysis' });
+  }
+
+  // ==========================================
+  // HEALTH SCIENCE
+  // ==========================================
+  function checkHealthScience() {
+    const fat = document.getElementById('hs-fat').value;
+    const protein = document.getElementById('hs-protein').value;
+    const carbs = document.getElementById('hs-carbs').value;
+    const fiber = document.getElementById('hs-fiber').value;
+    const fb = document.getElementById('hs-feedback');
+
+    if (!fat.trim() || !protein.trim() || !carbs.trim() || !fiber.trim()) {
+      LessonCheck.incomplete(fb, "Fill in all four nutrient totals before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: 'wed-health-science', label: 'Health Science: nutrient totals for 2.5 bars', answer: `Fat=${fat}, Protein=${protein}, Carbs=${carbs}, Fiber=${fiber}`, section: '3. Health Science', correct: LessonCheck.numericMatch(fat, 10.625, 0.02) && LessonCheck.numericMatch(protein, 22.875, 0.02) && LessonCheck.numericMatch(carbs, 71.0, 0.05) && LessonCheck.numericMatch(fiber, 9.5, 0.02) });
+  }
+
+  // Exit Ticket Submission
+  function submitExitTicket(e) {
+    e.preventDefault();
+    const a1 = document.getElementById('exit-1').value.trim();
+    const a2 = document.getElementById('exit-2').value.trim();
+    const fb = document.getElementById('exit-feedback');
+
+    if (a1.length > 5 && a2.length > 5) {
+      fb.className = "feedback-msg success";
+      fb.innerText = "Exit Ticket submitted and logged successfully!";
+      LessonProgress.recordText('Exit Ticket: most helpful error analysis problem', a1, '4. Exit Ticket');
+      LessonProgress.recordText('Exit Ticket: metacognition reflection', a2, '4. Exit Ticket');
+    } else {
+      fb.className = "feedback-msg error";
+      fb.innerText = "Please write a complete answer for both questions.";
+    }
+    fb.style.display = "block";
+  }
+
+  // Initial render
+  renderErrorCarousel();
+  renderEAGuidedPractice();
+  errorExamples.forEach((ex, i) => LessonProgress.preRegister(`ea-${i}`, `Error Analysis: ${ex.problem.replace(/<[^>]+>/g, '').replace(/\\\(|\\\)/g, '')}`, '1. Error Analysis'));
+  LessonProgress.preRegister('wed-confirm-ixl', 'Confirmed: completed all 9 IXL skills', '2. IXL Practice');
+  LessonProgress.preRegister('wed-health-science', 'Health Science: nutrient totals for 2.5 bars', '3. Health Science');
+</script>
+<div id="print-report"></div>
+</body>
+</html>

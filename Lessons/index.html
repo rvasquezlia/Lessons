@@ -119,35 +119,30 @@
     }
     .grade-body { padding: 16px 20px; }
 
-    /* ===== Quarter accordion ===== */
-    details.quarter-block {
-      border: 2px solid var(--primary-light);
+    /* ===== Topic card: outer wrapper for the 6-button page grid ===== */
+    .topic-card {
+      border: 2px solid var(--border);
       border-radius: 12px;
-      margin-bottom: 14px;
+      margin-bottom: 18px;
       overflow: hidden;
+      background: var(--bg);
     }
-    details.quarter-block:last-child { margin-bottom: 0; }
-    summary.quarter-summary {
-      list-style: none;
-      cursor: pointer;
+    .topic-card:last-child { margin-bottom: 0; }
+    .topic-card-header {
       background: #dbeafe;
       color: var(--primary);
       padding: 12px 18px;
-      font-weight: 800;
-      font-size: 1.05rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
+      flex-wrap: wrap;
     }
-    summary.quarter-summary::-webkit-details-marker { display: none; }
-    summary.quarter-summary::marker { content: ""; }
-    summary.quarter-summary .chevron {
-      transition: transform 0.15s ease;
-      font-size: 0.85rem;
+    .topic-card-header .topic-title {
+      font-weight: 800;
+      font-size: 1.05rem;
     }
-    details[open] > summary.quarter-summary .chevron { transform: rotate(90deg); }
-    summary.quarter-summary .week-count {
+    .topic-card-header .topic-standard {
       font-weight: 700;
       font-size: 0.82rem;
       text-transform: uppercase;
@@ -155,55 +150,12 @@
       color: #1d4ed8;
       opacity: 0.8;
     }
-    .quarter-body { padding: 14px 16px 16px 16px; }
-    .quarter-empty {
-      color: var(--empty);
-      font-style: italic;
-      font-size: 0.95rem;
-      padding: 4px 4px 8px 4px;
+    .topic-card-body {
+      padding: 14px 16px 16px 16px;
     }
+    p.topic-sub { margin: 0 0 14px 0; color: #475569; font-size: 0.92rem; }
 
-    /* ===== Week accordion ===== */
-    details.week-block {
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      margin-bottom: 12px;
-      background: var(--bg);
-      overflow: hidden;
-    }
-    details.week-block:last-child { margin-bottom: 0; }
-    summary.week-summary {
-      list-style: none;
-      cursor: pointer;
-      padding: 10px 16px;
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      flex-wrap: wrap;
-      background: var(--card);
-    }
-    summary.week-summary::-webkit-details-marker { display: none; }
-    summary.week-summary::marker { content: ""; }
-    summary.week-summary .chevron {
-      transition: transform 0.15s ease;
-      font-size: 0.8rem;
-      color: var(--primary);
-    }
-    details[open] > summary.week-summary .chevron { transform: rotate(90deg); }
-    summary.week-summary .week-code {
-      background: var(--accent);
-      color: #000;
-      padding: 3px 12px;
-      border-radius: 16px;
-      font-weight: 800;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-    }
-    summary.week-summary .week-title { font-weight: 800; color: var(--primary); font-size: 1.05rem; }
-    .week-body { padding: 14px 16px 16px 16px; }
-    p.week-sub { margin: 0 0 14px 0; color: #475569; font-size: 0.92rem; }
-
-    /* ===== Day / guide button grid (6 buttons: Mon-Fri + Guide) ===== */
+    /* ===== Page-link button grid (6 buttons per topic) ===== */
     .item-row {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -237,7 +189,7 @@
       line-height: 1.3;
     }
 
-    /* Tag shown for a day/guide slot with no content yet */
+    /* Tag shown for a page slot with no content yet */
     .empty-tag {
       background: var(--empty-bg);
       border: 2px dashed var(--border);
@@ -246,13 +198,6 @@
     }
     .empty-tag .item-label { color: var(--empty); }
     .empty-tag .item-topic { font-style: italic; }
-
-    .coming-soon {
-      color: var(--empty);
-      font-style: italic;
-      font-size: 0.95rem;
-      padding: 16px 20px;
-    }
 
     footer {
       text-align: center;
@@ -272,7 +217,7 @@
     </div>
     <span class="badge">2026-2027 Academic Year</span>
     <h1>Lesson Plans</h1>
-    <p class="subtitle">Digital lessons, guided practice, and teacher guides - organized by grade, quarter, and week</p>
+    <p class="subtitle">Digital lessons, guided practice, and teacher guides &mdash; organized by grade and topic</p>
   </header>
 
   <div class="content" id="content"></div>
@@ -283,91 +228,103 @@
 <script>
   /*
    * CURRICULUM is the single source of truth for this index.
-   * To publish a new week: add one entry under the right grade/quarter's
-   * `weeks` object. To add a day within a week that isn't built yet,
-   * either omit it from `days` (it will show as a "No content yet" tag)
-   * or leave the whole `guide` key out to tag the Teacher Guide as empty.
-   * Quarters 1-4 always render for every grade, even with zero weeks,
-   * so the full-year structure is visible as soon as classes are created.
+   *
+   * Structure: Grade → topics[] → pages{}
+   *
+   * Each topic exposes up to six named pages:
+   *   vocabulary   – key terms, definitions, and real examples
+   *   explanation  – direct instruction (concepts + worked examples)
+   *   guided       – guided practice with word problems
+   *   exercises    – error analysis, IXL, cross-disciplinary exercises
+   *   enrichment   – real-world jigsaw / extension activity
+   *   assessment   – graded classwork
+   *   guide        – teacher guide (answer keys, printables, challenge bank)
+   *
+   * To publish a new topic: add one entry to the grade's `topics` array.
+   * Omit a page key (or leave its href blank) to render a "No content yet"
+   * placeholder instead of a broken link.
    */
-  const QUARTERS = [1, 2, 3, 4];
-  const DAY_ORDER = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
+  const PAGE_ORDER = [
+    { key: "vocabulary",  label: "Vocabulary",  kind: "day" },
+    { key: "explanation", label: "Explanation", kind: "day" },
+    { key: "guided",      label: "Guided",      kind: "day" },
+    { key: "exercises",   label: "Exercises",   kind: "day" },
+    { key: "enrichment",  label: "Enrichment",  kind: "day" },
+    { key: "assessment",  label: "Assessment",  kind: "day" },
+    { key: "guide",       label: "Teacher Guide", kind: "guide" }
+  ];
 
   const CURRICULUM = {
     Sixth: {
       label: "Sixth Grade",
       subject: "Math 6",
-      quarters: {
-        1: {
-          weeks: {
-            "Q01W02": {
-              title: "Decimal Operations",
-              summary: "Add, subtract, and multiply decimals; multi-step word problems; error analysis; real-world jigsaw; graded classwork.",
-              days: {
-                Monday:    { topic: "Add, Subtract &amp; Multiply Decimals", href: "Sixth/Q01W02/Monday.html" },
-                Tuesday:   { topic: "Multi-Step Word Problems", href: "Sixth/Q01W02/Tuesday.html" },
-                Wednesday: { topic: "Error Analysis &amp; Health Science", href: "Sixth/Q01W02/Wednesday.html" },
-                Thursday:  { topic: "Real-World Decimal Jigsaw", href: "Sixth/Q01W02/Thursday.html" },
-                Friday:    { topic: "Graded Classwork", href: "Sixth/Q01W02/Friday.html" }
-              },
-              guide: { href: "Sixth/Q01W02/Teacher-Guide.html" }
-            }
+      topics: [
+        {
+          id: "decimal-operations",
+          title: "Decimal Operations",
+          standard: "6.NS.B.3",
+          summary: "Add, subtract, and multiply decimals; multi-step word problems; error analysis; real-world jigsaw; graded classwork.",
+          pages: {
+            vocabulary:  { href: "Sixth/Topics/decimal-operations/vocabulary.html",           topic: "Key Terms &amp; Place Value" },
+            explanation: { href: "Sixth/Topics/decimal-operations/explanation.html",          topic: "Add, Subtract &amp; Multiply Decimals" },
+            guided:      { href: "Sixth/Topics/decimal-operations/practice/guided.html",      topic: "Multi-Step Word Problems" },
+            exercises:   { href: "Sixth/Topics/decimal-operations/practice/exercises.html",   topic: "Error Analysis &amp; Health Science" },
+            enrichment:  { href: "Sixth/Topics/decimal-operations/practice/enrichment.html",  topic: "Real-World Decimal Jigsaw" },
+            assessment:  { href: "Sixth/Topics/decimal-operations/practice/assessment.html",  topic: "Graded Classwork" },
+            guide:       { href: "Sixth/Topics/decimal-operations/teacher-guide.html" }
           }
         }
-      }
+      ]
     },
     Seventh: {
       label: "Seventh Grade",
       subject: "Pre-Algebra",
-      quarters: {
-        1: {
-          weeks: {
-            "Q01W02": {
-              title: "Relate Integers and Opposites; Operations With Integers",
-              summary: "Lessons 1.1-1.4: opposites &amp; absolute value, add/subtract/multiply/divide integers, official Savvas Quick Check, graded classwork.",
-              days: {
-                Monday:    { topic: "Relate Integers and Opposites; Add &amp; Subtract Integers", href: "Seventh/Q01W02/Monday.html" },
-                Tuesday:   { topic: "Multiply and Divide Integers", href: "Seventh/Q01W02/Tuesday.html" },
-                Wednesday: { topic: "Practice: Quick Check 1.1-1.4", href: "Seventh/Q01W02/Wednesday.html" },
-                Thursday:  { topic: "Practice: Skill Reinforcement", href: "Seventh/Q01W02/Thursday.html" },
-                Friday:    { topic: "Graded Classwork", href: "Seventh/Q01W02/Friday.html" }
-              },
-              guide: { href: "Seventh/Q01W02/Teacher-Guide.html" }
-            }
+      topics: [
+        {
+          id: "integers-and-operations",
+          title: "Integers &amp; Operations",
+          standard: "7.NS.A.1–3",
+          summary: "Lessons 1.1–1.4: opposites &amp; absolute value, add/subtract/multiply/divide integers, official Savvas Quick Check, graded classwork.",
+          pages: {
+            vocabulary:  { href: "Seventh/Topics/integers-and-operations/vocabulary.html",           topic: "Key Terms &amp; Integer Properties" },
+            explanation: { href: "Seventh/Topics/integers-and-operations/explanation.html",          topic: "Integers, Opposites &amp; Operations" },
+            guided:      { href: "Seventh/Topics/integers-and-operations/practice/guided.html",      topic: "Multiply &amp; Divide Integers" },
+            exercises:   { href: "Seventh/Topics/integers-and-operations/practice/exercises.html",   topic: "Quick Check 1.1–1.4" },
+            enrichment:  { href: "Seventh/Topics/integers-and-operations/practice/enrichment.html",  topic: "Skill Reinforcement" },
+            assessment:  { href: "Seventh/Topics/integers-and-operations/practice/assessment.html",  topic: "Graded Classwork" },
+            guide:       { href: "Seventh/Topics/integers-and-operations/teacher-guide.html" }
           }
         }
-      }
+      ]
     },
     Eighth: {
       label: "Eighth Grade",
       subject: "Algebra I",
-      quarters: {
-        1: {
-          weeks: {
-            "Q01W02": {
-              title: "Solving Linear Equations",
-              summary: "Lessons 1-2 &amp; 1-3: variables on one and both sides, classifying solutions, real-world applications, graded classwork.",
-              days: {
-                Monday:    { topic: "Solving Linear Equations", href: "Eighth/Q01W02/Monday.html" },
-                Tuesday:   { topic: "Practice: Solving Linear Equations", href: "Eighth/Q01W02/Tuesday.html" },
-                Wednesday: { topic: "One, None, or Infinitely Many Solutions?", href: "Eighth/Q01W02/Wednesday.html" },
-                Thursday:  { topic: "Review: Solving Linear Equations", href: "Eighth/Q01W02/Thursday.html" },
-                Friday:    { topic: "Graded Classwork", href: "Eighth/Q01W02/Friday.html" }
-              },
-              guide: { href: "Eighth/Q01W02/Teacher-Guide.html" }
-            }
+      topics: [
+        {
+          id: "solving-linear-equations",
+          title: "Solving Linear Equations",
+          standard: "HSA.REI.B.3",
+          summary: "Lessons 1-2 &amp; 1-3: variables on one and both sides, classifying solutions, real-world applications, graded classwork.",
+          pages: {
+            vocabulary:  { href: "Eighth/Topics/solving-linear-equations/vocabulary.html",           topic: "Key Terms &amp; Properties of Equality" },
+            explanation: { href: "Eighth/Topics/solving-linear-equations/explanation.html",          topic: "Solving Linear Equations" },
+            guided:      { href: "Eighth/Topics/solving-linear-equations/practice/guided.html",      topic: "Practice: Solving Linear Equations" },
+            exercises:   { href: "Eighth/Topics/solving-linear-equations/practice/exercises.html",   topic: "One, None, or Infinitely Many Solutions?" },
+            enrichment:  { href: "Eighth/Topics/solving-linear-equations/practice/enrichment.html",  topic: "Review: Solving Linear Equations" },
+            assessment:  { href: "Eighth/Topics/solving-linear-equations/practice/assessment.html",  topic: "Graded Classwork" },
+            guide:       { href: "Eighth/Topics/solving-linear-equations/teacher-guide.html" }
           }
         }
-      }
+      ]
     }
   };
 
   const GRADE_ORDER = ["Sixth", "Seventh", "Eighth"];
 
-  function pad2(n) { return String(n).padStart(2, "0"); }
-
-  function renderDayOrGuide(kind, label, entry) {
-    if (!entry) {
+  function renderPageBtn(pageEntry, label, kind) {
+    if (!pageEntry || !pageEntry.href) {
       return `
         <span class="empty-tag">
           <span class="item-label">${label}</span>
@@ -376,62 +333,42 @@
     }
     const cls = kind === "guide" ? "guide-btn" : "day-btn";
     return `
-      <a class="${cls}" href="${entry.href}">
+      <a class="${cls}" href="${pageEntry.href}">
         <span class="item-label">${label}</span>
-        <span class="item-topic">${entry.topic || "Teacher Guide"}</span>
+        <span class="item-topic">${pageEntry.topic || "Teacher Guide"}</span>
       </a>`;
   }
 
-  function renderWeek(weekCode, week) {
-    const dayButtons = DAY_ORDER.map((day) => renderDayOrGuide("day", day, week.days[day])).join("");
-    const guideButton = renderDayOrGuide("guide", "Teacher Guide", week.guide);
+  function renderTopic(topic) {
+    const buttons = PAGE_ORDER.map(({ key, label, kind }) =>
+      renderPageBtn(topic.pages[key], label, kind)
+    ).join("");
     return `
-      <details class="week-block" open>
-        <summary class="week-summary">
-          <span class="chevron">&#9656;</span>
-          <span class="week-code">${weekCode}</span>
-          <span class="week-title">${week.title}</span>
-        </summary>
-        <div class="week-body">
-          <p class="week-sub">${week.summary || ""}</p>
+      <div class="topic-card">
+        <div class="topic-card-header">
+          <span class="topic-title">${topic.title}</span>
+          <span class="topic-standard">${topic.standard}</span>
+        </div>
+        <div class="topic-card-body">
+          <p class="topic-sub">${topic.summary || ""}</p>
           <div class="item-row">
-            ${dayButtons}
-            ${guideButton}
+            ${buttons}
           </div>
         </div>
-      </details>`;
-  }
-
-  function renderQuarter(qNum, quarterData) {
-    const weeks = (quarterData && quarterData.weeks) ? quarterData.weeks : {};
-    const weekCodes = Object.keys(weeks).sort();
-    const count = weekCodes.length;
-    const body = count === 0
-      ? `<p class="quarter-empty">No weeks published yet.</p>`
-      : weekCodes.map((code) => renderWeek(code, weeks[code])).join("");
-    return `
-      <details class="quarter-block" ${count > 0 ? "open" : ""}>
-        <summary class="quarter-summary">
-          <span style="display:flex; align-items:center; gap:10px;">
-            <span class="chevron">&#9656;</span>
-            Quarter ${pad2(qNum)}
-          </span>
-          <span class="week-count">${count} week${count === 1 ? "" : "s"} published</span>
-        </summary>
-        <div class="quarter-body">${body}</div>
-      </details>`;
+      </div>`;
   }
 
   function renderGrade(gradeKey) {
     const grade = CURRICULUM[gradeKey];
-    const quarterHtml = QUARTERS.map((q) => renderQuarter(q, grade.quarters[q])).join("");
+    const topicsHtml = (grade.topics || []).map(renderTopic).join("") ||
+      `<p style="color:var(--empty); font-style:italic; padding:16px;">No topics published yet.</p>`;
     return `
       <div class="grade-section">
         <div class="grade-header">
           <h2>${grade.label}</h2>
           <span class="subject-tag">${grade.subject}</span>
         </div>
-        <div class="grade-body">${quarterHtml}</div>
+        <div class="grade-body">${topicsHtml}</div>
       </div>`;
   }
 

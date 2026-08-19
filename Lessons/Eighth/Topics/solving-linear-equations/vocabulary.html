@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Solving Linear Equations - Vocabulary</title>
+
+  <!-- Montserrat Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../../lesson-shared.css">
+  <script src="../../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Solving Linear Equations - Vocabulary</span>
+    <h1>Solving Linear Equations: Key Terms &amp; Definitions</h1>
+    <p class="subtitle">HSA.REI.A.1, HSA.REI.B.3 &middot; MP.7: Look for and Make Use of Structure</p>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Algebra I - Solving Linear Equations Vocabulary')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Start on the <strong>Definitions</strong> tab: read each term and copy the notebook box into your math notebook. Move to the <strong>Practice</strong> tab to check your understanding with two quick problems.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('definitions')">1. Definitions</button>
+    <button class="tab-btn" onclick="switchTab('practice')">2. Practice</button>
+  </nav>
+
+  <!-- ========== TAB 1: DEFINITIONS ========== -->
+  <div id="definitions" class="panel active">
+    <div class="section-title">Key Vocabulary: Properties of Equality &amp; Inverse Operations</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Lessons 1-2 &amp; 1-3 &middot; HSA.REI.A.1, HSA.REI.B.3 &amp; MP.7</p>
+
+    <div class="explainer-box">
+      Every equation you solve rests on one idea: whatever you do to one side of an equation, you must do to the other side, or the equation stops being true. Before working with multi-step equations, confirm you can name the property behind each move.
+    </div>
+
+    <!-- NOTEBOOK BOX: Properties of Equality -->
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK — Properties of Equality</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Addition Property:</strong> if \(a = b\), then \(a + c = b + c\).</li>
+        <li><strong>Subtraction Property:</strong> if \(a = b\), then \(a - c = b - c\).</li>
+        <li><strong>Multiplication Property:</strong> if \(a = b\), then \(ac = bc\).</li>
+        <li><strong>Division Property:</strong> if \(a = b\) and \(c \neq 0\), then \(\dfrac{a}{c} = \dfrac{b}{c}\).</li>
+      </ul>
+    </div>
+
+    <!-- NOTEBOOK BOX: Key Terms -->
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK — Key Terms</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Linear equation:</strong> an equation where the variable has an exponent of 1; its graph is a straight line.</li>
+        <li><strong>Solution:</strong> the value(s) of the variable that make the equation true.</li>
+        <li><strong>Inverse operation:</strong> the operation that "undoes" another (addition ↔ subtraction; multiplication ↔ division).</li>
+        <li><strong>Distributive Property:</strong> \(a(b + c) = ab + ac\) — multiply the factor outside the parentheses by each term inside.</li>
+        <li><strong>Like terms:</strong> terms with the same variable raised to the same power; they can be combined.</li>
+        <li><strong>One solution:</strong> exactly one value of \(x\) satisfies the equation.</li>
+        <li><strong>No solution:</strong> the equation simplifies to a false statement (e.g. \(0 = 5\)).</li>
+        <li><strong>Infinitely many solutions:</strong> the equation simplifies to a true statement (e.g. \(0 = 0\)).</li>
+      </ul>
+    </div>
+
+    <!-- REAL-WORLD EXAMPLES BOX -->
+    <div style="background:#f1f5f9; border-left:8px solid var(--accent); padding:24px; border-radius:12px; margin-top:28px;">
+      <h3 style="margin-top:0; color:var(--accent);">Real-World Examples</h3>
+      <ul style="margin-bottom:0;">
+        <li><strong>Wages:</strong> You earn $12 per hour plus a $20 bonus. To find how many hours you worked if you earned $92: \(12h + 20 = 92\).</li>
+        <li><strong>Perimeter:</strong> A rectangle has perimeter 48 cm and length 14 cm. Find the width: \(2(14) + 2w = 48\).</li>
+        <li><strong>Distance:</strong> Two cars 300 km apart drive toward each other at 60 km/h and 90 km/h. When do they meet? \(60t + 90t = 300\).</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ========== TAB 2: PRACTICE ========== -->
+  <div id="practice" class="panel">
+    <div class="section-title">Vocabulary Practice: Check Your Understanding</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Solve each equation for \(x\). Type your answer and click <strong>Check</strong>. If you're wrong twice the correct answer will be revealed.
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>1.</strong> \(x + 9 = 15\) &nbsp; — name the inverse operation, then solve for \(x\).
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-0-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="x =">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(0)">Check</button>
+      </div>
+      <div id="vp-0-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>2.</strong> \(4x = 28\) &nbsp; — name the inverse operation, then solve for \(x\).
+      <div style="margin-top:10px;">
+        <input type="text" id="vp-1-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="x =">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVP(1)">Check</button>
+      </div>
+      <div id="vp-1-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+</div><!-- /.app-container -->
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // VOCABULARY PRACTICE
+  // ==========================================
+  const vpProblems = [
+    { q: "x + 9 = 15", a: 6, tol: 0.001 },
+    { q: "4x = 28",    a: 7, tol: 0.001 }
+  ];
+
+  vpProblems.forEach((p, i) =>
+    LessonProgress.preRegister(`vp-${i}`, `Vocabulary Practice #${i + 1}: ${p.q}`, '2. Practice')
+  );
+
+  function checkVP(idx) {
+    const p = vpProblems[idx];
+    const val = document.getElementById(`vp-${idx}-input`).value;
+    const fb  = document.getElementById(`vp-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter your answer before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, {
+      key: `vp-${idx}`,
+      label: `Vocabulary Practice #${idx + 1}: ${p.q}`,
+      answer: val,
+      section: '2. Practice',
+      correct: LessonCheck.numericMatch(val, p.a, p.tol)
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Q01W02 Teacher Guide - Daily Breakdown, Answer Keys &amp; Challenge Bank</title>
+
+  <!-- Montserrat Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../../lesson-shared.css">
+  <style>
+    .pacing-table td:nth-child(2), .pacing-table th:nth-child(2) { text-align: center; white-space: nowrap; }
+    .flag-box {
+      background: #fff1f2;
+      border: 3px solid #fb7185;
+      border-left: 10px solid #e11d48;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .flag-box h4 { margin-top: 0; color: #be123c; }
+    .answer-day-heading {
+      background: var(--primary);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 28px 0 12px 0;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .challenge-day-heading {
+      background: #b45309;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 28px 0 12px 0;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .solution-toggle > summary {
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--primary);
+      padding: 4px 0;
+    }
+    a.btn-lg {
+      display: inline-block;
+      text-decoration: none;
+      margin: 4px 0 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Q01W02 - Teacher Guide</span>
+    <h1>Teacher Guide: Add, Subtract, and Multiply Decimals</h1>
+    <p class="subtitle">Daily Breakdown, Digital &amp; Paper Answer Keys, and Challenge Bank for Monday-Friday</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">This page is for you, not students</strong>
+    It is not linked from the student pages and has no student-facing print button. Use the tabs below for the week-at-a-glance, a complete day-by-day breakdown (standards, objectives, and the full digital + paper activity flow with timing), a digital answer key, the official Savvas paper materials (Quick Check, Additional Practice, Enrichment) reproduced with their answer keys, and a bank of harder challenge problems for early finishers.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('overview')">1. Week Overview</button>
+    <button class="tab-btn" onclick="switchTab('pacing')">2. Daily Breakdown</button>
+    <button class="tab-btn" onclick="switchTab('answerkey')">3. Digital Answer Key</button>
+    <button class="tab-btn" onclick="switchTab('paper')">4. Paper Materials &amp; Key</button>
+    <button class="tab-btn" onclick="switchTab('challenge')">5. Challenge Bank</button>
+  </nav>
+
+  <!-- PANEL 1: WEEK OVERVIEW -->
+  <div id="overview" class="panel active">
+    <div class="section-title">Week Overview: Q01W02, August 17-21, 2026</div>
+
+    <div class="explainer-box">
+      <strong>Lesson 1.2 - Add, Subtract, and Multiply Decimals.</strong> This is the first content week after Welcome Week (Q01W01). Every day reuses the same standard-algorithm foundation: line up decimal points for addition/subtraction, count total decimal places for multiplication, and always estimate by rounding before calculating exactly.
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Day</th><th>Format</th><th>Focus</th><th>Standards</th></tr></thead>
+      <tbody>
+        <tr><td>Monday</td><td>45 min</td><td>Place value, addition/subtraction, and multiplication algorithms (direct instruction)</td><td>6.NS.B.3, MP6</td></tr>
+        <tr><td>Tuesday</td><td>90 min (double)</td><td>Multi-step decimal word problems, keyword analysis</td><td>6.NS.B.3, MP1</td></tr>
+        <tr><td>Wednesday</td><td>90 min (double)</td><td>Error analysis, IXL digital practice, health science application</td><td>6.NS.B.3, MP6</td></tr>
+        <tr><td>Thursday</td><td>45 min</td><td>Real-world jigsaw: themed groups (Medicine, Market, Engineering, Arts) solve the same skill in different contexts, then share out</td><td>6.NS.B.3, MP1</td></tr>
+        <tr><td>Friday</td><td>45 min</td><td>Graded Classwork (paper assessment) + digital warm-up/reflection</td><td>6.NS.B.3, MP6</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Weekly Objectives</div>
+      <ul>
+        <li>Explain the place-value reasoning behind aligning decimal points for addition/subtraction versus counting total decimal digits for multiplication.</li>
+        <li>Calculate multi-digit decimal sums, differences, and products using standard algorithms.</li>
+        <li>Use rounding strategies to estimate answers and confirm calculated results.</li>
+        <li>Interpret contextual word problems to determine which operation is required.</li>
+        <li>Evaluate solutions by rounding to find approximate values and confirm problem resolutions.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Materials Needed</div>
+      <ul>
+        <li><strong>Monday:</strong> whiteboard/projector for the whole-class Whiteboard Suite tab; one device per student (or pairs) for the rest; the Weekly Practice Set can be printed from the Printables button in the Daily Breakdown for early finishers/homework.</li>
+        <li><strong>Tuesday &amp; Wednesday (double periods):</strong> one device per student; IXL login for Wednesday's Tab 2; Tuesday's batch worksheets print from the Printables button in the Daily Breakdown.</li>
+        <li><strong>Thursday:</strong> pre-assign each table to one of 4 themed groups (Medicine, Market, Engineering, Arts) and hand out that group's 6 physical problem cards, printed from the Printables button in the Daily Breakdown (it matches the on-screen version exactly). Plan ~15 minutes for the mixing/sharing activity, and remind students to scan or print-to-PDF their completed card for the exit ticket.</li>
+        <li><strong>Friday:</strong> printed Graded Classwork assessment (Printables button in the Digital Answer Key tab) or the original Practice Set PDF's Friday section - pick one, plus devices for the completion checkbox and closing reflection.</li>
+        <li><strong>Every day:</strong> printer or "print to PDF" access so students can submit their Print My Progress page to Google Classroom.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PANEL 2: DAILY BREAKDOWN -->
+  <div id="pacing" class="panel">
+    <div class="section-title">Daily Breakdown: Standards, Activities, Digital + Paper, Minute-by-Minute</div>
+    <p>Each day below is fully broken down from the written Math 6 Lesson Plan: standards, objectives, multidisciplinary approach, real-life application, the complete activity flow (digital page tabs <em>and</em> paper materials), and the metacognition question. Timing tables add up to exactly 45 or 90 minutes - adjust freely, they're a starting script, not a rule.</p>
+
+    <!-- ============ MONDAY ============ -->
+    <div class="answer-day-heading">Monday, August 17 - 45 minutes</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Standards &amp; Objectives</div>
+      <p style="margin:0 0 8px 0;"><strong>CCSS.Math.Content.6.NS.B.3</strong> (fluently add, subtract, multiply, and divide multi-digit decimals) &amp; <strong>MP6</strong> (Attend to Precision).</p>
+      <ul style="margin-bottom:0;">
+        <li>Explain the place-value reasoning behind aligning decimal points for addition/subtraction versus counting total decimal digits for multiplication.</li>
+        <li>Calculate multi-digit decimal sums, differences, and products using standard algorithms.</li>
+        <li>Use rounding strategies to estimate answers and confirm calculated results.</li>
+      </ul>
+    </div>
+    <div class="explainer-box">
+      <strong>Multidisciplinary:</strong> Personal Finance (transaction totals, sales tax) &amp; Physical Science (metric lab measurements). <strong>Real-life application:</strong> calculating a grocery total and exact change at checkout.
+    </div>
+    <table class="data-table pacing-table">
+      <thead><tr><th>Activity</th><th>Min</th><th>Digital / Paper</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td>Warm-Up: Place Value &amp; Rounding</td><td>8</td><td>Digital - Tab 1</td><td>Students copy the notebook box and click through the place-value chart. Cold-call 2-3 students on what a column means.</td></tr>
+        <tr><td>Step 1 - Direct Instruction: Addition &amp; Subtraction</td><td>12</td><td>Digital - Tab 2</td><td>Model the carousel's 4 worked examples on the projector, then release students to the Marcus word problem and the Challenge Problem.</td></tr>
+        <tr><td>Step 2 - Guided Practice: Multiplication Algorithm</td><td>12</td><td>Digital - Tab 3</td><td>Model 1-2 carousel examples, then let students work the shift simulator, the carpet word problem, and the Challenge Problem.</td></tr>
+        <tr><td>Teacher Verification: Whiteboard Suite</td><td>8</td><td>Digital - Tab 4</td><td>Call volunteers to solve at the board (or have all students do it at their seats) using the 4 preset problems.</td></tr>
+        <tr><td>Closing: Exit Ticket</td><td>5</td><td>Digital - Tab 6</td><td>Students complete and submit the exit ticket, then print their progress page.</td></tr>
+      </tbody>
+    </table>
+    <a class="btn-lg" href="../../../Sixth/Topics/decimal-operations/printables/Monday-Printable.html" target="_blank" rel="noopener">Printables: Monday Practice Set</a>
+    <a class="btn-lg" href="../explanation.html?teacherPrint=1" target="_blank" rel="noopener" style="background:#0f766e;">Print Class Progress (What We Covered)</a>
+    <div class="notebook-box">
+      <div class="notebook-header">Paper materials for today (not timed into the 45 minutes)</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Weekly Practice Set</strong> (printable via the button above): a full week of practice, 15 mixed exercises per day, one day per printed page. Monday's digital Tab 5 covers the same skill with its own 3-part on-screen version (different problems, same idea) for students working at a device. <strong>Early-finisher/homework only</strong> - not a timed class activity.</li>
+        <li><strong>Savvas Additional Practice 1-2, #1-9</strong> (fluency: sums, differences, products): today's Step 2 paper guided practice - hand it out for students to work while you circulate. Full worksheet with answer key is on the Paper Materials tab.</li>
+      </ul>
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">Metacognition Reflection Question</div>
+      <p style="margin:0;">"How did using rounding to find an approximate value help you confirm whether your exact calculated answer was reasonable?"</p>
+    </div>
+
+    <!-- ============ TUESDAY ============ -->
+    <div class="answer-day-heading">Tuesday, August 18 - 90 minutes (Double Period)</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Standards &amp; Objectives</div>
+      <p style="margin:0 0 8px 0;"><strong>CCSS.Math.Content.6.NS.B.3</strong> &amp; <strong>MP1</strong> (Make Sense of Problems and Persevere in Solving Them).</p>
+      <ul style="margin-bottom:0;">
+        <li>Interpret contextual word problems to determine whether addition, subtraction, or multiplication of decimals is required.</li>
+        <li>Solve multi-step word problems involving decimals using standard algorithms.</li>
+        <li>Evaluate solutions by rounding quantities to find approximate values and confirm problem resolutions.</li>
+      </ul>
+    </div>
+    <div class="explainer-box">
+      <strong>Multidisciplinary:</strong> Economics (unit costs, discounts, total expenses) &amp; Geography (precipitation levels, climate variation). <strong>Real-life application:</strong> a travel scenario - fuel consumption, mileage cost, and total trip expenses.
+    </div>
+    <table class="data-table pacing-table">
+      <thead><tr><th>Activity</th><th>Min</th><th>Digital / Paper</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td>Warm-Up: Estimation &amp; Keyword Analysis</td><td>15</td><td>Digital - Tab 1</td><td>Copy the keyword table into notebooks, then try the flour "batches" problem independently.</td></tr>
+        <tr><td>Step 1 - Teacher Modeling: Word Problem Practice</td><td>30</td><td>Digital - Tab 2</td><td>Model 2-3 of the 6 problems together, then let students work through the rest at their own pace, revealing steps to self-check.</td></tr>
+        <tr><td>Step 2 - In-Class Written Exercises: Independent Practice</td><td>30</td><td>Paper (batch picker on Tab 3)</td><td>Each student picks Batch 1 or Batch 2 on Tab 3 (assign numbers however works for the roster - alternating, by table, etc.), copies their own 6 computation + 4 word problems into their notebook, and solves on paper - nothing is typed into the page. For Peer Review, pair students who had different batches: each holds the answer key to the other's batch. Both confirm completion with the checkbox at the bottom of Tab 3.</td></tr>
+        <tr><td>Closing: Exit Ticket</td><td>15</td><td>Digital - Tab 4</td><td>Students complete the 3-question exit ticket and print their progress page.</td></tr>
+      </tbody>
+    </table>
+    <a class="btn-lg" href="../../../Sixth/Topics/decimal-operations/printables/Tuesday-Printable.html" target="_blank" rel="noopener">Printables: Tuesday Independent Practice Batches</a>
+    <a class="btn-lg" href="Tuesday.html?teacherPrint=1" target="_blank" rel="noopener" style="background:#0f766e;">Print Class Progress (What We Covered)</a>
+    <div class="notebook-box">
+      <div class="notebook-header">Paper materials for today</div>
+      <p style="margin:0;"><strong>Savvas Additional Practice 1-2, #10-19 and #20</strong>: extra reps in the same skill as today's batch practice - hand out to students who finish both batches early, or send home for extra reps. Full worksheet with answer key is on the Paper Materials tab.</p>
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">Metacognition Reflection Question</div>
+      <p style="margin:0;">"When solving a complex word problem, how does finding an approximate answer through rounding give you confidence in your final calculation?"</p>
+    </div>
+
+    <!-- ============ WEDNESDAY ============ -->
+    <div class="answer-day-heading">Wednesday, August 19 - 90 minutes (Double Period)</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Standards &amp; Objectives</div>
+      <p style="margin:0 0 8px 0;"><strong>CCSS.Math.Content.6.NS.B.3</strong> &amp; <strong>MP6</strong> (Attend to Precision).</p>
+      <ul style="margin-bottom:0;">
+        <li>Demonstrate procedural fluency in multi-digit decimal addition, subtraction, and multiplication through adaptive digital exercises.</li>
+        <li>Distinguish between correct algorithms and common place-value errors through error analysis tasks.</li>
+        <li>Verify computational accuracy by rounding numbers to find approximate values before completing final calculations.</li>
+      </ul>
+    </div>
+    <div class="explainer-box">
+      <strong>Multidisciplinary:</strong> Digital Literacy (IXL adaptive practice) &amp; Health Science (nutrition labels, daily intake). <strong>Real-life application:</strong> tracking daily nutrient intake and precise serving sizes.
+    </div>
+    <table class="data-table pacing-table">
+      <thead><tr><th>Activity</th><th>Min</th><th>Digital / Paper</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td>Warm-Up: Error Analysis</td><td>20</td><td>Digital - Tab 1</td><td>Students act as the teacher on all 5 problems, verdict + corrected answer.</td></tr>
+        <tr><td>Step 1 - Digital Station Practice: IXL</td><td>40</td><td>Digital (external) - Tab 2</td><td>Students log into IXL and complete the 9 listed skills.</td></tr>
+        <tr><td>Step 2 - Small-Group Teacher Table</td><td><em>(concurrent)</em></td><td>Teacher-led</td><td>Pull small groups for a targeted table check-in on decimal alignment while the rest of the class continues IXL - this happens inside the 40 minutes above, not as extra time.</td></tr>
+        <tr><td>Health Science Application</td><td>20</td><td>Digital - Tab 3</td><td>Students compute the 4 nutrient totals for 2.5 bars and check their work.</td></tr>
+        <tr><td>Closing: Exit Ticket</td><td>10</td><td>Digital - Tab 4</td><td>Students complete the 2-question exit ticket and print their progress page.</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.9rem; color:#64748b;"><em>Teacher Verification today is live IXL Analytics monitoring, not a separate activity - keep the dashboard open during Step 1.</em></p>
+    <a class="btn-lg" href="Wednesday.html?teacherPrint=1" target="_blank" rel="noopener" style="background:#0f766e;">Print Class Progress (What We Covered)</a>
+    <div class="notebook-box">
+      <div class="notebook-header">Metacognition Reflection Question</div>
+      <p style="margin:0;">"How did catching a mistake using rounding or estimation change the way you approached your next problem today?"</p>
+    </div>
+
+    <!-- ============ THURSDAY ============ -->
+    <div class="answer-day-heading">Thursday, August 20 - 45 minutes</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Standards &amp; Objectives</div>
+      <p style="margin:0 0 8px 0;"><strong>CCSS.Math.Content.6.NS.B.3</strong> &amp; <strong>MP1</strong> (Make Sense of Problems and Persevere in Solving Them).</p>
+      <ul style="margin-bottom:0;">
+        <li>Calculate multi-digit decimal operations accurately under timed practice conditions.</li>
+        <li>Organize mathematical steps and rounding estimates clearly in written problem-solving formats.</li>
+        <li>Appraise peer solution methods and estimation strategies during collaborative group reviews.</li>
+      </ul>
+    </div>
+    <div class="explainer-box">
+      <strong>Multidisciplinary:</strong> Medicine (dosages, patient measurements), Market/Business (pricing, change), Engineering (measurement tolerances), and the Arts (mixing ratios, timing) - four real professions that all depend on decimal precision. <strong>Real-life application:</strong> every group solves the same kind of decimal problem, just set in a different job, so the class sees that precision matters everywhere, not only in math class.
+    </div>
+    <table class="data-table pacing-table">
+      <thead><tr><th>Activity</th><th>Min</th><th>Digital / Paper</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td>Warm-Up: Assign Groups &amp; Hand Out Cards</td><td>5</td><td>Paper</td><td>Tell each table which theme they are (Medicine, Market, Engineering, or Arts) and hand out that theme's 6 physical problem cards.</td></tr>
+        <tr><td>Step 1 - My Group: Solve &amp; Submit</td><td>15</td><td>Digital - Tab 1</td><td>Students confirm their group on Tab 1 (locks in - no switching), solve their 6 physical cards together (all real-world scenarios, no bare computation), then each type and submit their own answers on their own device so it saves to their progress.</td></tr>
+        <tr><td>Step 2 - Mixing: Share What You Learned</td><td>15</td><td>Digital - Tab 2</td><td>Once a table finishes, students get ~15 minutes to get up, move around, and find someone from a different theme; they ask about that theme's problems and why precision matters there, then log who they visited and what they learned.</td></tr>
+        <tr><td>Teacher Verification + Closing: Strategy Checklist &amp; Reflection</td><td>10</td><td>Digital - Tab 3</td><td>Students complete the strategy checklist and written reflection, then submit their exit ticket in two parts: a scanned/printed PDF of their completed physical card, plus their digital progress page.</td></tr>
+      </tbody>
+    </table>
+    <a class="btn-lg" href="../../../Sixth/Topics/decimal-operations/printables/Thursday-Printable.html" target="_blank" rel="noopener">Printables: Thursday Group Cards (Medicine / Market / Engineering / Arts)</a>
+    <a class="btn-lg" href="Thursday.html?teacherPrint=1" target="_blank" rel="noopener" style="background:#0f766e;">Print Class Progress (What We Covered)</a>
+    <div class="notebook-box">
+      <div class="notebook-header">How to Run This Jigsaw</div>
+      <p style="margin:0 0 10px 0;">Every group solves the <strong>same kind of decimal problems</strong> - the same skills, different real-world stories. Each theme's card has exactly 6 problems, all genuine word-problem scenarios (no bare computation filler). The page does not time or advance itself; pacing and circulating are teacher-led.</p>
+      <ul style="margin-bottom:0;">
+        <li><strong>Before class:</strong> assign each table a theme (Medicine, Market, Engineering, or Arts) and print/hand out that theme's 6 problem cards from the Printables link above - the cards match the on-screen version exactly.</li>
+        <li><strong>Tab 1:</strong> each student picks the same theme their table was assigned, confirms it (this locks - they cannot switch or peek at another theme's problems), then solves and submits all 6 on their own device.</li>
+        <li><strong>Once a table finishes (mixing, ~15 min):</strong> send them to find someone from a different theme. They should ask what kind of problems that person solved and why precision mattered in that field - not check math, just listen and learn.</li>
+        <li><strong>Tab 2:</strong> after mixing, each student picks which theme they talked to and writes 2-3 sentences on what they learned about that field's real-world use of decimals.</li>
+        <li><strong>Exit ticket:</strong> students scan or print-to-PDF their completed physical card and upload it to Google Classroom, in addition to printing their digital progress page from Tab 3.</li>
+        <li><strong>Optional whole-class close:</strong> ask one student per theme to share out loud what their group's real-world use case was, so every student hears all four before the bell.</li>
+      </ul>
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">Paper materials for today</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Themed group cards (this jigsaw):</strong> use the Printables button above to print each group's 6 problems - they match the on-screen problems exactly (answers are in the Digital Answer Key tab below, organized by theme), so a paper card and a screen check always agree.</li>
+        <li><strong>Savvas Additional Practice 1-2</strong>: keep a few printed copies at the tables as extra problems for groups that finish both their cards and their sharing early. Full worksheet with answer key is on the Paper Materials tab.</li>
+      </ul>
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">Savvas Quick Check &amp; Enrichment 1-2</div>
+      <p style="margin:0 0 8px 0;">The Plan doesn't pin either resource to a specific day's timing, so use your judgment on placement - both are core supplementary material, not throwaway extras. <strong>Suggested use:</strong> Quick Check 1-2 works well as a Wednesday warm-up (it's a quick formative check covering the same skills as that day's IXL practice) or as a Friday take-home before the unit test; Enrichment 1-2 is a strong early-finisher or homework extension any day this week.</p>
+      <a class="btn-lg" href="../../../Sixth/Topics/decimal-operations/printables/Savvas-Practice-Printable.html" target="_blank" rel="noopener">Printables: Quick Check &amp; Enrichment 1-2</a>
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">Metacognition Reflection Question</div>
+      <p style="margin:0;">"What personal strategy will you rely on tomorrow to ensure you do not make decimal alignment or estimation errors on your Graded Classwork?"</p>
+    </div>
+
+    <!-- ============ FRIDAY ============ -->
+    <div class="answer-day-heading">Friday, August 21 - 45 minutes</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Standards &amp; Objectives</div>
+      <p style="margin:0 0 8px 0;"><strong>CCSS.Math.Content.6.NS.B.3</strong> &amp; <strong>MP6</strong> (Attend to Precision).</p>
+      <ul style="margin-bottom:0;">
+        <li>Execute standard algorithms independently to add, subtract, and multiply multi-digit decimals with precision.</li>
+        <li>Formulate complete written solutions for multi-step contextual decimal word problems.</li>
+        <li>Confirm the reasonableness of assessment resolutions by finding approximate values through rounding.</li>
+      </ul>
+    </div>
+    <div class="explainer-box">
+      <strong>Multidisciplinary:</strong> Personal Development (testing stamina, self-checking) &amp; Career Readiness (zero-error precision in engineering, accounting, healthcare). <strong>Real-life application:</strong> a career scenario - a pharmacist verifying dosages or an accountant auditing spreadsheets.
+    </div>
+    <table class="data-table pacing-table">
+      <thead><tr><th>Activity</th><th>Min</th><th>Digital / Paper</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td>Warm-Up: Today's Assessment</td><td>5</td><td>Digital - Tab 1</td><td>Students read the objectives, then put devices away.</td></tr>
+        <tr><td>Step 1 - Administer Graded Classwork</td><td>30</td><td>Paper</td><td>The printed Friday assessment from the Practice Set PDF (pages 13-15). Not a tab on the student page - see Digital Answer Key tab for why.</td></tr>
+        <tr><td>Teacher Verification: Confirm Completion</td><td><em>(end of testing)</em></td><td>Digital - Tab 1</td><td>Once a student turns in their paper test, they check the completion box on Tab 1 - a quick visual for you of who has and hasn't turned it in.</td></tr>
+        <tr><td>Closing: Post-Assessment Reflection</td><td>10</td><td>Digital - Tab 2</td><td>Students answer the two final questions, then print their progress page.</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.9rem; color:#64748b;"><em>The page is intentionally informational this week - no extra practice tabs. If you want a warm-up or study tool the night before, use the Challenge Bank or the Savvas Additional Practice worksheet instead.</em></p>
+    <a class="btn-lg" href="Friday.html?teacherPrint=1" target="_blank" rel="noopener" style="background:#0f766e;">Print Class Progress (What We Covered)</a>
+    <div class="notebook-box">
+      <div class="notebook-header">Metacognition Reflection Question</div>
+      <p style="margin:0;">"Which problem on today's Graded Classwork required the most concentration, and how did rounding help you confirm your solution?"</p>
+    </div>
+  </div>
+
+  <!-- PANEL 3: DIGITAL ANSWER KEY -->
+  <div id="answerkey" class="panel">
+    <div class="section-title">Digital Answer Key: Every Practice Item, All Five Days</div>
+    <p>Matches the answers already built into each page's Check My Work logic, plus Monday's digital Tab 5 practice set. The printable Weekly Practice Set (5 days, 15 exercises each) is a separate, expanded set of problems - its answer key is at the bottom of this tab. For the Savvas paper materials (Quick Check, Enrichment, Additional Practice), see the Paper Materials &amp; Key tab.</p>
+
+    <div class="answer-day-heading">Monday</div>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Guided Practice: Addition &amp; Subtraction</th></tr></thead>
+      <tbody>
+        <tr><td>1: \(16.35+8.9\)</td><td>\(\mathbf{25.25}\)</td></tr>
+        <tr><td>2: \(40.6-17.85\)</td><td>\(\mathbf{22.75}\)</td></tr>
+        <tr><td>3: \(9.75+22.4\)</td><td>\(\mathbf{32.15}\)</td></tr>
+        <tr><td>4: \(63.2-28.47\)</td><td>\(\mathbf{34.73}\)</td></tr>
+        <tr><td>5: \(11.08+34.7\)</td><td>\(\mathbf{45.78}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Guided Practice: Multiplication</th></tr></thead>
+      <tbody>
+        <tr><td>1: \(3.6\times2.5\)</td><td>\(\mathbf{9.0}\)</td></tr>
+        <tr><td>2: \(0.8\times7.25\)</td><td>\(\mathbf{5.8}\)</td></tr>
+        <tr><td>3: \(12.4\times0.5\)</td><td>\(\mathbf{6.2}\)</td></tr>
+        <tr><td>4: \(0.06\times9.2\)</td><td>\(\mathbf{0.552}\)</td></tr>
+        <tr><td>5: \(5.5\times4.4\)</td><td>\(\mathbf{24.2}\)</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.9rem; color:#64748b;"><em>Everything below is submit-only (recorded on the printed progress report, not graded on screen).</em></p>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Addition Challenge (find X)</td><td>\(X = 4\); \(14.45 + 3.20 = 17.65\)</td></tr>
+        <tr><td>Multiplication Challenge (garden seed cost)</td><td>Area \(=17.6\text{ m}^2\); total cost \(= \mathbf{\$26.40}\)</td></tr>
+        <tr><td>Whiteboard Prob 1: \(\$15.75+\$4.80\)</td><td>\(\mathbf{\$20.55}\)</td></tr>
+        <tr><td>Whiteboard Prob 2: \(\$20.00-\$13.45\)</td><td>\(\mathbf{\$6.55}\)</td></tr>
+        <tr><td>Whiteboard Prob 3: \(2.45\text{ g}\times3.2\text{ mL}\)</td><td>partials 0490 + 7350 = 7840; 3 decimal places \(\to \mathbf{7.840}\)</td></tr>
+        <tr><td>Whiteboard Prob 4: \(12.35\text{s}+2.40\text{s}\)</td><td>\(\mathbf{14.75\text{s}}\)</td></tr>
+        <tr><td>Practice Set Part 1 #1: \(14.52+3.8\)</td><td>\(\mathbf{18.32}\)</td></tr>
+        <tr><td>Practice Set Part 1 #2: \(25.9-7.43\)</td><td>\(\mathbf{18.47}\)</td></tr>
+        <tr><td>Practice Set Part 1 #3: \(4.2\times0.15\)</td><td>\(\mathbf{0.63}\) (alignment not needed - multiplication counts total decimal places, not matching place values)</td></tr>
+        <tr><td>Practice Set Part 2 #1: \(12.75+8.6\)</td><td>\(\mathbf{21.35}\)</td></tr>
+        <tr><td>Practice Set Part 2 #2: \(40.2-15.84\)</td><td>\(\mathbf{24.36}\)</td></tr>
+        <tr><td>Practice Set Part 2 #3: \(3.5\times2.4\)</td><td>\(\mathbf{8.4}\)</td></tr>
+        <tr><td>Practice Set Part 2 #4: \(105.3+22.91\)</td><td>\(\mathbf{128.21}\)</td></tr>
+        <tr><td>Practice Set Part 2 #5: \(9.8\times0.07\)</td><td>\(\mathbf{0.686}\)</td></tr>
+        <tr><td>Practice Set Part 2 #6: \(50.0-12.35\)</td><td>\(\mathbf{37.65}\)</td></tr>
+        <tr><td>Practice Set Part 3: Financial Literacy</td><td>Subtotal \(=\mathbf{\$24.09}\); Total \(=\mathbf{\$25.77}\); Change \(=\mathbf{\$24.23}\)</td></tr>
+        <tr><td>Exit Ticket: \(3.5+1.25\)</td><td>\(\mathbf{4.75}\)</td></tr>
+        <tr><td>Exit Ticket: \(3.5\times1.25\)</td><td>\(\mathbf{4.375}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Weekly Practice Set (Printable) - All 5 Days</div>
+    <p style="font-size:0.9rem; color:#64748b;">The printable version (see the Daily Breakdown tab's Monday row) - 15 mixed exercises per day, different numbers from the digital tabs above.</p>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Monday - Decimal Computation</th></tr></thead>
+      <tbody>
+        <tr><td>1: \(14.52+3.8\)</td><td>\(\mathbf{18.32}\)</td></tr>
+        <tr><td>2: \(25.9-7.43\)</td><td>\(\mathbf{18.47}\)</td></tr>
+        <tr><td>3: \(4.2\times0.15\)</td><td>\(\mathbf{0.63}\)</td></tr>
+        <tr><td>4: \(12.75+8.6\)</td><td>\(\mathbf{21.35}\)</td></tr>
+        <tr><td>5: \(40.2-15.84\)</td><td>\(\mathbf{24.36}\)</td></tr>
+        <tr><td>6: \(3.5\times2.4\)</td><td>\(\mathbf{8.4}\)</td></tr>
+        <tr><td>7: \(105.3+22.91\)</td><td>\(\mathbf{128.21}\)</td></tr>
+        <tr><td>8: \(9.8\times0.07\)</td><td>\(\mathbf{0.686}\)</td></tr>
+        <tr><td>9: \(50.0-12.35\)</td><td>\(\mathbf{37.65}\)</td></tr>
+        <tr><td>10: \(6.75+19.4\)</td><td>\(\mathbf{26.15}\)</td></tr>
+        <tr><td>11: \(88.06-34.7\)</td><td>\(\mathbf{53.36}\)</td></tr>
+        <tr><td>12: \(2.9\times5.6\)</td><td>\(\mathbf{16.24}\)</td></tr>
+        <tr><td>13: \(17.25+4.09\)</td><td>\(\mathbf{21.34}\)</td></tr>
+        <tr><td>14: \(63.5-28.19\)</td><td>\(\mathbf{35.31}\)</td></tr>
+        <tr><td>15: \(0.85\times6.4\)</td><td>\(\mathbf{5.44}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Tuesday - Multi-Step Word Problems</th></tr></thead>
+      <tbody>
+        <tr><td>1: 2 books at \$9.49</td><td>\(\mathbf{\$18.98}\)</td></tr>
+        <tr><td>2: \$15.00 &minus; \$6.75</td><td>\(\mathbf{\$8.25}\)</td></tr>
+        <tr><td>3: 3.5 m ribbon &minus; 1.25 m cut</td><td>\(\mathbf{2.25}\) m</td></tr>
+        <tr><td>4: 4 pencils at \$0.65</td><td>\(\mathbf{\$2.60}\)</td></tr>
+        <tr><td>5: 2.8 L &minus; 0.6 L poured out</td><td>\(\mathbf{2.2}\) L</td></tr>
+        <tr><td>6: \$5.00 &minus; \$2.25 snack</td><td>\(\mathbf{\$2.75}\) change</td></tr>
+        <tr><td>7: 3 notebooks (\$1.80) + eraser (\$0.75)</td><td>\(\mathbf{\$6.15}\)</td></tr>
+        <tr><td>8: 5.2 km + 3.75 km</td><td>\(\mathbf{8.95}\) km</td></tr>
+        <tr><td>9: \$40.00 &divide; 5 friends</td><td>\(\mathbf{\$8.00}\) each</td></tr>
+        <tr><td>10: 12.4 m rope &minus; three 2.5 m pieces</td><td>\(\mathbf{4.9}\) m</td></tr>
+        <tr><td>11: \$4.29 &minus; \$0.50 coupon</td><td>\(\mathbf{\$3.79}\)</td></tr>
+        <tr><td>12: 6 stickers at \$0.35</td><td>\(\mathbf{\$2.10}\)</td></tr>
+        <tr><td>13: 1.5 cups \(\times\) 4 batches</td><td>\(\mathbf{6.0}\) cups</td></tr>
+        <tr><td>14: \(68.5^\circ\text{F} - 12.3^\circ\text{F}\)</td><td>\(\mathbf{56.2^\circ\text{F}}\)</td></tr>
+        <tr><td>15: \$25.00 gift card &minus; \$18.60</td><td>\(\mathbf{\$6.40}\) balance</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Wednesday - Precision Practice</th></tr></thead>
+      <tbody>
+        <tr><td>1: \(56.3+8.47\)</td><td>\(\mathbf{64.77}\)</td></tr>
+        <tr><td>2: \(90.1-33.68\)</td><td>\(\mathbf{56.42}\)</td></tr>
+        <tr><td>3: \(5.6\times1.25\)</td><td>\(\mathbf{7.0}\)</td></tr>
+        <tr><td>4: Round \(14.86\) to the nearest tenth</td><td>\(\mathbf{14.9}\)</td></tr>
+        <tr><td>5: Round \(7.253\) to the nearest hundredth</td><td>\(\mathbf{7.25}\)</td></tr>
+        <tr><td>6: \(21.05+6.398\)</td><td>\(\mathbf{27.448}\)</td></tr>
+        <tr><td>7: \(74.2-19.65\)</td><td>\(\mathbf{54.55}\)</td></tr>
+        <tr><td>8: \(0.9\times4.15\)</td><td>\(\mathbf{3.735}\)</td></tr>
+        <tr><td>9: Greater: \(0.45\) or \(0.5\)?</td><td>\(\mathbf{0.5}\)</td></tr>
+        <tr><td>10: \(38.07+12.9\)</td><td>\(\mathbf{50.97}\)</td></tr>
+        <tr><td>11: \(66.4-27.85\)</td><td>\(\mathbf{38.55}\)</td></tr>
+        <tr><td>12: \(3.15\times2.8\)</td><td>\(\mathbf{8.82}\)</td></tr>
+        <tr><td>13: Order \(0.6,\ 0.55,\ 0.605\)</td><td>\(\mathbf{0.55,\ 0.6,\ 0.605}\)</td></tr>
+        <tr><td>14: \(19.3+45.68\)</td><td>\(\mathbf{64.98}\)</td></tr>
+        <tr><td>15: \(82.5-36.94\)</td><td>\(\mathbf{45.56}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Thursday - Real-World Application</th></tr></thead>
+      <tbody>
+        <tr><td>1: 8 gallons at \$3.45</td><td>\(\mathbf{\$27.60}\)</td></tr>
+        <tr><td>2: 4.2 km + 3.65 km</td><td>\(\mathbf{7.85}\) km</td></tr>
+        <tr><td>3: 2.25 cups \(\times\) 3 batches</td><td>\(\mathbf{6.75}\) cups</td></tr>
+        <tr><td>4: \$60.00 &minus; \$24.75 &minus; \$18.30</td><td>\(\mathbf{\$16.95}\)</td></tr>
+        <tr><td>5: 8.5 ft &minus; 3.25 ft &minus; 2.4 ft</td><td>\(\mathbf{2.85}\) ft</td></tr>
+        <tr><td>6: \$45.99 &minus; \$5.00 credit</td><td>\(\mathbf{\$40.99}\)</td></tr>
+        <tr><td>7: \$32.50 &divide; 5 friends</td><td>\(\mathbf{\$6.50}\) each</td></tr>
+        <tr><td>8: 55.5 mi + 48.25 mi</td><td>\(\mathbf{103.75}\) mi</td></tr>
+        <tr><td>9: 3.5 yards at \$6.40</td><td>\(\mathbf{\$22.40}\)</td></tr>
+        <tr><td>10: \$215.60 &minus; \$42.75 taxes</td><td>\(\mathbf{\$172.85}\)</td></tr>
+        <tr><td>11: 450.5 gal &minus; 62.25 gal</td><td>\(\mathbf{388.25}\) gal</td></tr>
+        <tr><td>12: 4 tickets at \$11.25</td><td>\(\mathbf{\$45.00}\)</td></tr>
+        <tr><td>13: 9.8 mi &minus; 6.35 mi hiked</td><td>\(\mathbf{3.45}\) mi</td></tr>
+        <tr><td>14: \$14.29 + \$8.75 + \$3.40</td><td>\(\mathbf{\$26.44}\)</td></tr>
+        <tr><td>15: \$120.50 + \$35.25 deposit</td><td>\(\mathbf{\$155.75}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Friday - Mixed Review</th></tr></thead>
+      <tbody>
+        <tr><td>1: \(31.6+12.85\)</td><td>\(\mathbf{44.45}\)</td></tr>
+        <tr><td>2: \(70.4-26.19\)</td><td>\(\mathbf{44.21}\)</td></tr>
+        <tr><td>3: \(4.5\times2.6\)</td><td>\(\mathbf{11.7}\)</td></tr>
+        <tr><td>4: \(18.75+9.4\)</td><td>\(\mathbf{28.15}\)</td></tr>
+        <tr><td>5: \(55.02-23.8\)</td><td>\(\mathbf{31.22}\)</td></tr>
+        <tr><td>6: \(0.65\times7.2\)</td><td>\(\mathbf{4.68}\)</td></tr>
+        <tr><td>7: \(96.3+14.58\)</td><td>\(\mathbf{110.88}\)</td></tr>
+        <tr><td>8: \(42.1-17.65\)</td><td>\(\mathbf{24.45}\)</td></tr>
+        <tr><td>9: \(3.8\times5.25\)</td><td>\(\mathbf{19.95}\)</td></tr>
+        <tr><td>10: \(27.09+8.6\)</td><td>\(\mathbf{35.69}\)</td></tr>
+        <tr><td>11: \(64.5-29.37\)</td><td>\(\mathbf{35.13}\)</td></tr>
+        <tr><td>12: \(0.9\times0.35\)</td><td>\(\mathbf{0.315}\)</td></tr>
+        <tr><td>13: backpack \$22.49 + lunchbox \$8.75</td><td>\(\mathbf{\$31.24}\)</td></tr>
+        <tr><td>14: \$30.00 &minus; \$12.65</td><td>\(\mathbf{\$17.35}\)</td></tr>
+        <tr><td>15: 1.75 cups \(\times\) 4 batches</td><td>\(\mathbf{7.0}\) cups</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tuesday</div>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Guided Practice: Word Problems</th></tr></thead>
+      <tbody>
+        <tr><td>1: Book club, \(5\times\$9.75\)</td><td>\(\mathbf{\$48.75}\)</td></tr>
+        <tr><td>2: Hiker, \(6.4+3.85\)</td><td>\(\mathbf{10.25}\) miles</td></tr>
+        <tr><td>3: Tailor, \(12.5-4.75\)</td><td>\(\mathbf{7.75}\) inches</td></tr>
+        <tr><td>4: Vending machine, \(8\times\$3.25\)</td><td>\(\mathbf{\$26.00}\)</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.9rem; color:#64748b;"><em>Everything below is submit-only (recorded on the printed progress report, not graded on screen).</em></p>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Warm-Up: recipe flour (\(2.5\times4\))</td><td>\(\mathbf{10}\) cups</td></tr>
+        <tr><td>Word Problem 1: Road Trip</td><td>\(\mathbf{\$67.50}\)</td></tr>
+        <tr><td>Word Problem 2: Precipitation</td><td>\(\mathbf{4.93}\) inches</td></tr>
+        <tr><td>Word Problem 3: School Supplies Budget</td><td>\(\mathbf{-\$6.25}\) (over budget)</td></tr>
+        <tr><td>Word Problem 4: Farmer's Market Profit</td><td>\(\mathbf{\$45.50}\)</td></tr>
+        <tr><td>Word Problem 5: Sports Equipment Sale</td><td>\(\mathbf{\$67.72}\)</td></tr>
+        <tr><td>Word Problem 6: Mountain Elevation</td><td>\(\mathbf{1478.95}\) meters</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.9rem; color:#64748b;"><em>Independent Practice (Tab 3) is paper-based and not graded on the page - the answer keys below are what each batch's peer-review partner sees on screen.</em></p>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Independent Practice - Batch 1</th></tr></thead>
+      <tbody>
+        <tr><td>Computation 1: \(18.6+9.75\)</td><td>\(\mathbf{28.35}\)</td></tr>
+        <tr><td>Computation 2: \(62.4-18.79\)</td><td>\(\mathbf{43.61}\)</td></tr>
+        <tr><td>Computation 3: \(7.5\times3.2\)</td><td>\(\mathbf{24}\)</td></tr>
+        <tr><td>Computation 4: \(0.6\times4.25\)</td><td>\(\mathbf{2.55}\)</td></tr>
+        <tr><td>Computation 5: \(25.08+6.7\)</td><td>\(\mathbf{31.78}\)</td></tr>
+        <tr><td>Computation 6: \(9.4\times0.5\)</td><td>\(\mathbf{4.7}\)</td></tr>
+        <tr><td>Word 1: \(3\) books at \(\$12.99\)</td><td>\(\mathbf{\$38.97}\)</td></tr>
+        <tr><td>Word 2: \(\$25.00-\$8.45\)</td><td>\(\mathbf{\$16.55}\)</td></tr>
+        <tr><td>Word 3: \(8\) notebooks at \(\$1.75\)</td><td>\(\mathbf{\$14.00}\)</td></tr>
+        <tr><td>Word 4: \(2.5\) L \(-\) \(0.6\) L poured out</td><td>\(\mathbf{1.9}\) liters</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Independent Practice - Batch 2</th></tr></thead>
+      <tbody>
+        <tr><td>Computation 1: \(14.3+8.65\)</td><td>\(\mathbf{22.95}\)</td></tr>
+        <tr><td>Computation 2: \(50.2-27.36\)</td><td>\(\mathbf{22.84}\)</td></tr>
+        <tr><td>Computation 3: \(6.5\times1.4\)</td><td>\(\mathbf{9.1}\)</td></tr>
+        <tr><td>Computation 4: \(0.8\times3.75\)</td><td>\(\mathbf{3.0}\)</td></tr>
+        <tr><td>Computation 5: \(33.09+7.2\)</td><td>\(\mathbf{40.29}\)</td></tr>
+        <tr><td>Computation 6: \(12.5\times0.06\)</td><td>\(\mathbf{0.75}\)</td></tr>
+        <tr><td>Word 1: \(5\) packs of pencils at \(\$2.49\)</td><td>\(\mathbf{\$12.45}\)</td></tr>
+        <tr><td>Word 2: \(\$30.00-\$11.40-\$5.25\)</td><td>\(\mathbf{\$13.35}\)</td></tr>
+        <tr><td>Word 3: relay splits \(14.25+13.8+14.02\)</td><td>\(\mathbf{42.07}\)s</td></tr>
+        <tr><td>Word 4: \(0.75\) cups \(\times\ 6\) batches</td><td>\(\mathbf{4.5}\) cups</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Wednesday</div>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Guided Practice</th></tr></thead>
+      <tbody>
+        <tr><td>1: \(27.4+15.85\)</td><td>\(\mathbf{43.25}\)</td></tr>
+        <tr><td>2: \(60.3-24.6\)</td><td>\(\mathbf{35.7}\)</td></tr>
+        <tr><td>3: \(4.4\times3.5\)</td><td>\(\mathbf{15.4}\)</td></tr>
+        <tr><td>4: \(0.9\times6.25\)</td><td>\(\mathbf{5.625}\)</td></tr>
+        <tr><td>5: \(88.05-39.7\)</td><td>\(\mathbf{48.35}\)</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.9rem; color:#64748b;"><em>Everything below is submit-only (recorded on the printed progress report, not graded on screen).</em></p>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Error Analysis 1: \(15.4-2.65\)</td><td>Correct, no mistake: \(\mathbf{12.75}\)</td></tr>
+        <tr><td>Error Analysis 2: \(4.2\times0.3\)</td><td>Mistake (shifted 1 place, not 2); correct \(=\mathbf{1.26}\)</td></tr>
+        <tr><td>Error Analysis 3: \(8.05+12.1\)</td><td>Mistake (decimals not aligned); correct \(=\mathbf{20.15}\)</td></tr>
+        <tr><td>Error Analysis 4: \(6.25+3.4\)</td><td>Mistake (misaligned 3.4 as 0.34); correct \(=\mathbf{9.65}\)</td></tr>
+        <tr><td>Error Analysis 5: \(5.1\times2.03\)</td><td>Mistake (shifted 2 places, not 3); correct \(=\mathbf{10.353}\)</td></tr>
+        <tr><td>Error Analysis 6: \(30.5-12.75\)</td><td>Correct, no mistake: \(\mathbf{17.75}\)</td></tr>
+        <tr><td>Error Analysis 7: \(3.4\times0.25\)</td><td>Mistake (shifted only 2 places, not 3); correct \(=\mathbf{0.85}\)</td></tr>
+        <tr><td>Health Science: Total Fat (2.5 bars)</td><td>\(\mathbf{10.625}\) g</td></tr>
+        <tr><td>Health Science: Protein (2.5 bars)</td><td>\(\mathbf{22.875}\) g</td></tr>
+        <tr><td>Health Science: Carbohydrates (2.5 bars)</td><td>\(\mathbf{71.0}\) g</td></tr>
+        <tr><td>Health Science: Fiber (2.5 bars)</td><td>\(\mathbf{9.5}\) g</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Thursday - Real-World Decimal Jigsaw</div>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Guided Practice (shared warm-up, before group problems)</th></tr></thead>
+      <tbody>
+        <tr><td>1: \(14.6+9.35\)</td><td>\(\mathbf{23.95}\)</td></tr>
+        <tr><td>2: \(52.8-26.45\)</td><td>\(\mathbf{26.35}\)</td></tr>
+        <tr><td>3: \(6.2\times4.5\)</td><td>\(\mathbf{27.9}\)</td></tr>
+        <tr><td>4: \(0.35\times8.8\)</td><td>\(\mathbf{3.08}\)</td></tr>
+        <tr><td>5: \(71.05-33.6\)</td><td>\(\mathbf{37.45}\)</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.9rem; color:#64748b;">The 6 group problems below are submit-only (recorded on the printed progress report, not graded on screen) and are also the <strong>physical cards</strong> to print and hand out at each themed table - the on-screen version and the paper version match exactly. Every problem is a genuine word-problem scenario in that group's field; there are no bare computation drills.</p>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Medicine</th></tr></thead>
+      <tbody>
+        <tr><td>1: Nurse gives doses of 12.5 mL, 8.75 mL, 6.4 mL. Total?</td><td>\(\mathbf{27.65}\) mL</td></tr>
+        <tr><td>2: Temperature drops from \(100.45\)&deg;F to \(98.6\)&deg;F. How many degrees?</td><td>\(\mathbf{1.85}\)&deg;F</td></tr>
+        <tr><td>3: Bottle has 50 mL; dispenses 12.5, 9.75, 14.25 mL. Remaining?</td><td>\(\mathbf{13.5}\) mL</td></tr>
+        <tr><td>4: 2.5 mL every 6 hrs, 4 times a day. Total?</td><td>\(\mathbf{10.0}\) mL</td></tr>
+        <tr><td>5: 3 boxes syringes at \(\$18.75\) + bandages \(\$9.40\). Total cost?</td><td>\(\mathbf{\$65.65}\)</td></tr>
+        <tr><td>6: 0.75 mL per tube for 12 tubes. Total?</td><td>\(\mathbf{9.0}\) mL</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Market</th></tr></thead>
+      <tbody>
+        <tr><td>1: Apples at \(\$2.35\)/kg, buy \(3.4\) kg. Total?</td><td>\(\mathbf{\$7.99}\)</td></tr>
+        <tr><td>2: Register has \(\$112.75\); pays \(\$45.60\) in bills. Left?</td><td>\(\mathbf{\$67.15}\)</td></tr>
+        <tr><td>3: 6 crates at \(\$8.25\), sold for \(\$72.90\) total. Profit?</td><td>\(\mathbf{\$23.40}\)</td></tr>
+        <tr><td>4: Change from \(\$20\) for a \(\$13.45\) purchase?</td><td>\(\mathbf{\$6.55}\)</td></tr>
+        <tr><td>5: \(\$45.80\) jacket marked down \(\$12.25\). New price?</td><td>\(\mathbf{\$33.55}\)</td></tr>
+        <tr><td>6: 2.5 kg coffee at \(\$9.60\)/kg. Total?</td><td>\(\mathbf{\$24.00}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Engineering</th></tr></thead>
+      <tbody>
+        <tr><td>1: Join beams \(245.6\) cm \(+89.75\) cm, remove \(34.2\) cm. Final length?</td><td>\(\mathbf{301.15}\) cm</td></tr>
+        <tr><td>2: Target \(12.50\) cm; measured \(12.53\) cm. Difference?</td><td>\(\mathbf{0.03}\) cm</td></tr>
+        <tr><td>3: Weld 3.75 mm + 2.6 mm sheets, grind off 0.85 mm. Final thickness?</td><td>\(\mathbf{5.5}\) mm</td></tr>
+        <tr><td>4: 8 bolts at 0.45 kg each. Total weight?</td><td>\(\mathbf{3.6}\) kg</td></tr>
+        <tr><td>5: Beam 4.2 m extended by 1.85 m. New length?</td><td>\(\mathbf{6.05}\) m</td></tr>
+        <tr><td>6: Target 6.75 cm; measured 6.82 cm. Oversized by?</td><td>\(\mathbf{0.07}\) cm</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Arts</th></tr></thead>
+      <tbody>
+        <tr><td>1: Mix \(2.5\) L \(+1.75\) L \(+0.6\) L of paint. Total?</td><td>\(\mathbf{4.85}\) L</td></tr>
+        <tr><td>2: Song is \(24.5\)s; repeat a \(1.25\)s riff 2 extra times. New length?</td><td>\(\mathbf{27.0}\)s</td></tr>
+        <tr><td>3: Mix 1.5 kg + 0.75 kg clay + 0.35 kg additive. Total weight?</td><td>\(\mathbf{2.6}\) kg</td></tr>
+        <tr><td>4: 4 sections at 2.25 min each. Total routine length?</td><td>\(\mathbf{9.0}\) min</td></tr>
+        <tr><td>5: 6 canvases at \(\$4.85\) each. Total cost?</td><td>\(\mathbf{\$29.10}\)</td></tr>
+        <tr><td>6: 45.6s clip, trim 8.75s from start and 6.4s from end. New length?</td><td>\(\mathbf{30.45}\)s</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Friday</div>
+    <p>Friday is intentionally informational this week - no digital practice problems to key. The actual graded test and its answer key are on the Paper Materials &amp; Key tab.</p>
+  </div>
+
+  <!-- PANEL 3B: PAPER MATERIALS & ANSWER KEY -->
+  <div id="paper" class="panel">
+    <div class="section-title">Paper Materials &amp; Answer Key</div>
+    <p>Everything printed and handed to students this week, reproduced in full with answer keys, plus where each one fits. See the Daily Breakdown tab for the reasoning behind each placement.</p>
+
+    <div class="answer-day-heading">Graded Classwork (Q01W02 - Lesson 1.2)</div>
+    <div class="flag-box">
+      <h4>Keep this confidential from students</h4>
+      <p style="margin:0;">This section and the printable below are the actual Friday assessment and its answer key. Do not link or share this Teacher Guide page with students. The original uploaded Practice Set PDF also has a Friday assessment (Section 1-3, 10 problems, pages 16-19) if you'd rather use that instead - use one or the other with a given class, not both, since they overlap in skill coverage.</p>
+    </div>
+
+    <a class="btn-lg" href="../../../Sixth/Topics/decimal-operations/printables/Graded-Classwork-Printable.html" target="_blank" rel="noopener">Printables: Graded Classwork (Q01W02 - Lesson 1.2)</a>
+
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Problem</th><th>Answer</th><th>Points</th></tr></thead>
+      <tbody>
+        <tr><td colspan="4"><strong>Section 1: Mixed Operations - Estimate &amp; Exact (60 pts)</strong></td></tr>
+        <tr><td>1</td><td>Add: \(24.68+9.75\)</td><td>Estimate \(\approx 25+10=35\); exact \(\mathbf{34.43}\)</td><td>10</td></tr>
+        <tr><td>2</td><td>Subtract: \(83.4-27.56\)</td><td>Estimate \(\approx 83-28=55\); exact \(\mathbf{55.84}\)</td><td>10</td></tr>
+        <tr><td>3</td><td>Multiply: \(6.5\times3.4\)</td><td>Estimate \(\approx 7\times3=21\); exact \(\mathbf{22.1}\)</td><td>10</td></tr>
+        <tr><td>4</td><td>Add: \(145.2+38.09\)</td><td>Estimate \(\approx 145+38=183\); exact \(\mathbf{183.29}\)</td><td>10</td></tr>
+        <tr><td>5</td><td>Subtract: \(92.03-45.8\)</td><td>Estimate \(\approx 92-46=46\); exact \(\mathbf{46.23}\)</td><td>10</td></tr>
+        <tr><td>6</td><td>Multiply: \(0.75\times8.4\)</td><td>Estimate \(\approx 1\times8=8\); exact \(\mathbf{6.3}\)</td><td>10</td></tr>
+        <tr><td colspan="4"><strong>Section 2: Word Problems (40 pts)</strong></td></tr>
+        <tr><td>7</td><td>3 notebooks (\$8.75) + 1 backpack (\$12.49)</td><td>\(\mathbf{\$38.74}\)</td><td>10</td></tr>
+        <tr><td>8</td><td>\$45.00 &minus; \$18.65 &minus; \$9.40</td><td>\(\mathbf{\$16.95}\)</td><td>10</td></tr>
+        <tr><td>9</td><td>Garden perimeter, \(12.5\text{ m}\times8.75\text{ m}\)</td><td>\(\mathbf{42.5}\) m</td><td>10</td></tr>
+        <tr><td>10</td><td>\(2.5\) cups \(\times\) 6 batches</td><td>\(\mathbf{15.0}\) cups</td><td>10</td></tr>
+        <tr><td colspan="4"><strong>Extra Credit (bonus, not shown to students)</strong></td></tr>
+        <tr><td>11</td><td>2 books (\$14.25) + 3 pens (\$2.50), tax \$3.62, paid with \$60</td><td>Subtotal \(\mathbf{\$36.00}\); total \(\mathbf{\$39.62}\); change \(\mathbf{\$20.38}\)</td><td>8</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Additional Practice 1-2: Fluently Add, Subtract, and Multiply Decimals</div>
+    <p><strong>Used on:</strong> Monday (#1-9, Step 2 guided practice), Tuesday (#10-19 and #20, Step 2 in-class written exercises), and Thursday (leftover copies as station backup) - the Plan names this resource directly on all three days ("Savvas Lesson 1.2 exercises" / "Savvas mixed practice worksheets").</p>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Problem</th><th>Answer</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>\(45.6+26.3\)</td><td>\(\mathbf{71.9}\)</td></tr>
+        <tr><td>2</td><td>\(14.25-5.14\)</td><td>\(\mathbf{9.11}\)</td></tr>
+        <tr><td>3</td><td>\(17.2+6.08\)</td><td>\(\mathbf{23.28}\)</td></tr>
+        <tr><td>4</td><td>\(3.652-1.41\)</td><td>\(\mathbf{2.242}\)</td></tr>
+        <tr><td>5</td><td>\(18.06+9.798\)</td><td>\(\mathbf{27.858}\)</td></tr>
+        <tr><td>6</td><td>\(8.006-6.38\)</td><td>\(\mathbf{1.626}\)</td></tr>
+        <tr><td>7</td><td>\(4.89\times2.2\)</td><td>\(\mathbf{10.758}\)</td></tr>
+        <tr><td>8</td><td>\(2.01\times0.43\)</td><td>\(\mathbf{0.8643}\)</td></tr>
+        <tr><td>9</td><td>\(54.1\times0.69\)</td><td>\(\mathbf{37.329}\)</td></tr>
+        <tr><td>10</td><td>Look for Relationships: complete \(7.5,\ 6.25,\ 5,\ \_\_\)</td><td>\(\mathbf{3.75}\); subtract 1.25 each time</td></tr>
+        <tr><td>11</td><td>Critique Reasoning: is \(4.4-0.33=1.1\) reasonable?</td><td>No; estimate \(4-0=4\), so \(1.1\) is not reasonable (correct answer is \(4.07\))</td></tr>
+        <tr><td>12</td><td>Kittens weigh 3.6, 4.2, 3.3 oz; each gains 2.3 oz. New weights?</td><td>\(\mathbf{5.9}\), \(\mathbf{6.5}\), \(\mathbf{5.6}\) ounces</td></tr>
+        <tr><td>13</td><td>\(4(5.75+7.25)\) for a group of 4 at the matinee</td><td>\(4\times13=\mathbf{\$52}\)</td></tr>
+        <tr><td>14</td><td>Reasoning: product of two decimals less than 1?</td><td>Yes, always less than either factor - part of a part of one</td></tr>
+        <tr><td>15</td><td>Two factors multiply to \(34.44\); one is a whole number. Least decimal places in the other?</td><td>\(\mathbf{2}\) decimal places</td></tr>
+        <tr><td>16</td><td>Cost table (2 parts=\$0.90 ... 15 parts=\$6.75); cost of 11 parts?</td><td>\(\mathbf{\$4.95}\)</td></tr>
+        <tr><td>17</td><td>Perimeter of 5-sided figure is 45.56 m; 3 sides sum to 24.2 m; find each of the 2 equal sides</td><td>\(45.56-24.2=21.36\); \(21.36\div2=\mathbf{10.68}\) m each</td></tr>
+        <tr><td>18</td><td>Critique Reasoning: Kim says \(8\times0.952=76.16\)</td><td>Estimate \(8\times1=8\), so \(\mathbf{7.616}\) is reasonable - Kim misplaced the decimal</td></tr>
+        <tr><td>19</td><td>Higher Order Thinking: why does \(104.3\times10=1{,}043\) but \(104.3\times0.10=10.43\)?</td><td>Multiplying by 10 makes a number 10\(\times\) greater; multiplying by 0.10 makes it 10\(\times\) smaller (only part of the number)</td></tr>
+        <tr><td>20A</td><td>Craft table: glue \$2.39/tube, tape \$1.99/roll. How much more is glue than tape?</td><td>\(\mathbf{\$0.40}\)</td></tr>
+        <tr><td>20B</td><td>Total cost for 2 packs of markers (\$4.50 each) + 1 pack construction paper (\$3.79)</td><td>\(\mathbf{\$12.79}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Quick Check 1-2</div>
+    <p><strong>Suggested use:</strong> not pinned to a specific day in the Plan, but a strong fit as a Wednesday warm-up or Friday take-home diagnostic.</p>
+    <a class="btn-lg" href="../../../Sixth/Topics/decimal-operations/printables/Savvas-Practice-Printable.html" target="_blank" rel="noopener">Printables: Quick Check &amp; Enrichment 1-2</a>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Problem</th><th>Answer</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Candidate A got 0.443 of the vote, Candidate B got 0.531. How much greater is B's share?</td><td><strong>C</strong> - \(0.531-0.443=\mathbf{0.088}\)</td></tr>
+        <tr><td>2</td><td>\(8.1+2.53\)</td><td>\(\mathbf{10.63}\)</td></tr>
+        <tr><td>3</td><td>\(2.4\times0.87\)</td><td>\(\mathbf{2.088}\)</td></tr>
+        <tr><td>4</td><td>24 cartons at \$6.88 each, \$1.75 discount per carton - best estimate expression?</td><td><strong>A</strong> - \(\$5\times25\) (round \$6.88-\$1.75=\$5.13 to \$5, and 24 to 25)</td></tr>
+        <tr><td>5</td><td>Nicole gave her mom \$40 for a \$9.75+\$29.99+\$15.00 order, got \$5.26 back plus babysitting money owed. How much was owed?</td><td>Order total \(=\$54.74\); \(54.74-40.00=\$14.74\) short; mom gave back \$5.26, so she covered \(14.74+5.26=\mathbf{\$20.00}\) from babysitting money owed</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.9rem; color:#64748b;"><em>Item 1's printed option B ("00.12") looks like a typo in the source document for 0.12 - treat the four choices as 0.078 / 0.12 / 0.088 / 0.188 when reading it aloud.</em></p>
+
+    <div class="answer-day-heading">Enrichment 1-2: Computer World Pen Drive Orders</div>
+    <p><strong>Suggested use:</strong> not pinned to a specific day in the Plan - a strong early-finisher or homework extension any day this week.</p>
+    <div class="explainer-box">
+      Alex orders pen drives from two companies: RAM Parts charges \(\$5.31\)/drive + \(\$6.95\) shipping per order; HD ALL charges \(\$5.61\)/drive with free shipping. Students complete cost tables for orders of 7, 13, 19, 25, and 33 drives from each company.
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Qty</th><th>RAM Parts Total</th><th>HD ALL Total</th><th>Cheaper Company</th></tr></thead>
+      <tbody>
+        <tr><td>7</td><td>\(\mathbf{\$44.12}\)</td><td>\(\mathbf{\$39.27}\)</td><td>HD ALL</td></tr>
+        <tr><td>13</td><td>\(\mathbf{\$75.98}\)</td><td>\(\mathbf{\$72.93}\)</td><td>HD ALL</td></tr>
+        <tr><td>19</td><td>\(\mathbf{\$107.84}\)</td><td>\(\mathbf{\$106.59}\)</td><td>HD ALL</td></tr>
+        <tr><td>25</td><td>\(\mathbf{\$139.70}\)</td><td>\(\mathbf{\$140.25}\)</td><td>RAM Parts</td></tr>
+        <tr><td>33</td><td>\(\mathbf{\$182.18}\)</td><td>\(\mathbf{\$185.13}\)</td><td>RAM Parts</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Part 3</strong> (RAM Parts offers free shipping over \$100): the 19-drive order changes to RAM Parts - before free shipping it was \(\$107.84 > \$106.59\) (HD ALL cheaper); with free shipping it's \(\$100.89 < \$106.59\) (RAM Parts cheaper).</p>
+    <p><strong>Part 4</strong> (HD ALL offers 5% off all orders): total for all five orders \(= \mathbf{\$516.96}\).</p>
+  </div>
+
+  <!-- PANEL 4: CHALLENGE BANK -->
+  <div id="challenge" class="panel">
+    <div class="section-title">Challenge Bank: One Level Harder</div>
+    <p>Extra problems for early finishers or homework extension. Each is a step above that day's practice - more decimal places, chained multi-step reasoning, or (where CCSS.6.NS.B.3 also calls for it) a first light touch of decimal division. Click a problem to reveal its full solution.</p>
+    <a class="btn-lg" href="../../../Sixth/Topics/decimal-operations/printables/Challenge-Bank-Printable.html" target="_blank" rel="noopener">Printables: Challenge Bank (no solutions shown)</a>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Quick Check 1-2 and Enrichment 1-2</div>
+      <p style="margin:0;">These have their own dedicated printable (not bundled into the Challenge Bank print button above): Quick Check is a short 5-problem formative check, and Enrichment is the pen-drive-ordering scenario. Neither is pinned to a specific day in the Plan - Quick Check works well as a Wednesday warm-up or Friday take-home, and Enrichment as an early-finisher or homework extension any day. Full text and answer keys are on the Paper Materials &amp; Key tab.</p>
+      <a class="btn-lg" href="../../../Sixth/Topics/decimal-operations/printables/Savvas-Practice-Printable.html" target="_blank" rel="noopener" style="margin-top:10px;">Printables: Quick Check &amp; Enrichment 1-2</a>
+    </div>
+
+    <div class="challenge-day-heading">Monday - Decimal Operations, Harder Tier</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Compute \(124.5 \times 0.036\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Multiply as whole numbers: \(1245 \times 36 = 44{,}820\). Total decimal places: \(1 + 3 = 4\). Shift 4 places left: \(44820 \rightarrow \mathbf{4.482}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> A lab tech mixes three solutions: \(12.075\) L, \(8.4\) L, and \(0.925\) L. She splits the total evenly into 4 containers. How many liters go in each container?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Total \(= 12.075 + 8.4 + 0.925 = 21.4\) L. Divide evenly: \(21.4 \div 4 = \mathbf{5.35}\) L per container.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> Find the missing digits \(A\) and \(B\): \(A7.B \times 4 = 110.8\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(A7.B = 110.8 \div 4 = 27.7\). So \(A = \mathbf{2}\) and \(B = \mathbf{7}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> Compute \(0.125 \times 64.8\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(125 \times 648 = 81{,}000\). Total decimal places: \(3+1=4\). Shift: \(\mathbf{8.1}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> Compute \(54.72 \div 6\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(54.72 \div 6 = \mathbf{9.12}\).</p>
+      </details>
+    </div>
+
+    <div class="challenge-day-heading">Tuesday - Multi-Step Word Problems, Harder Tier</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> A caterer buys \(15.5\) lbs of chicken at \(\$3.40\)/lb and \(8.25\) lbs of beef at \(\$5.60\)/lb, then pays a \(\$12.50\) delivery fee. She splits the total cost evenly across 4 event budgets. How much does each budget pay?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Chicken \(= 15.5 \times 3.40 = \$52.70\). Beef \(= 8.25 \times 5.60 = \$46.20\). Subtotal \(= 52.70+46.20=\$98.90\). Plus delivery: \(98.90+12.50=\$111.40\). Split 4 ways: \(111.40 \div 4 = \mathbf{\$27.85}\) per budget.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> A runner's 4 lap times are \(68.45\)s, \(71.2\)s, \(69.85\)s, and \(70.5\)s. What was her average lap time?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Total \(= 68.45+71.2+69.85+70.5=280.0\)s. Average \(= 280.0 \div 4 = \mathbf{70.0}\)s per lap.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> A store buys 24 phone cases at \(\$4.25\) each and sells them at \(\$9.99\) each. What is the total profit?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Cost \(= 24 \times 4.25 = \$102.00\). Revenue \(= 24 \times 9.99 = \$239.76\). Profit \(= 239.76-102.00 = \mathbf{\$137.76}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> Four friends split a \(\$68.80\) dinner bill evenly, then each leaves an additional \(\$3.25\) tip. How much does each friend pay in total?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Bill share: \(68.80 \div 4 = \$17.20\). Plus tip: \(17.20+3.25 = \mathbf{\$20.45}\) per friend.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> A vendor buys 15 crates of fruit at \(\$8.40\) each and gets a \(\$12.50\) bulk discount off the total. What does the vendor pay?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(15 \times 8.40 = \$126.00\). Minus discount: \(126.00-12.50 = \mathbf{\$113.50}\).</p>
+      </details>
+    </div>
+
+    <div class="challenge-day-heading">Wednesday - Error Analysis &amp; Health Science, Harder Tier</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> A student computed \(23.4 - 5.68 + 1.2\) and got \(30.28\). Find the mistake and the correct answer.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p><strong>Mistake:</strong> the student added \(5.68\) instead of subtracting it. <strong>Correct:</strong> \(23.4-5.68=17.72\); \(17.72+1.2=\mathbf{18.92}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> A student eats \(1.5\) bars of Snack A (\(5.2\) g fat/bar) and \(2\) bars of Snack B (\(3.75\) g fat/bar). What is the total fat?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Snack A: \(1.5 \times 5.2 = 7.8\) g. Snack B: \(2 \times 3.75 = 7.5\) g. Total \(= 7.8+7.5 = \mathbf{15.3}\) g.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> A student computed \(0.25 \times 0.4\) and got \(1.0\). Find the mistake and the correct answer.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p><strong>Mistake:</strong> \(0.25\) has 2 decimal places and \(0.4\) has 1, so the product needs 3 decimal places - the student only shifted 1. <strong>Correct:</strong> \(25 \times 4 = 100\), shift 3 places: \(\mathbf{0.100 = 0.1}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> A student computed \(9.6 \div 0.8\) and got \(1.2\). Find the mistake and the correct answer.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p><strong>Mistake:</strong> the student didn't shift the decimal point in both numbers before dividing. <strong>Correct:</strong> \(9.6 \div 0.8 = 96 \div 8 = \mathbf{12}\) (check: \(0.8 \times 12 = 9.6\)).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> A hiker eats 3 granola bars with \(6.4\) g of protein each, then gives away \(2.5\) g of protein worth of bar to a friend. How much protein did the hiker actually eat?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(3 \times 6.4 = 19.2\) g. Minus given away: \(19.2 - 2.5 = \mathbf{16.7}\) g.</p>
+      </details>
+    </div>
+
+    <div class="challenge-day-heading">Thursday - Real-World Precision, Harder Tier</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Compute \(0.045 \times 3.2\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(45 \times 32 = 1440\). Total decimal places: \(3+1=4\). Shift: \(\mathbf{0.144}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> A cyclist rides \(42.5\) km in \(1.25\) hours. What is her average speed in km/h?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(42.5 \div 1.25 = \mathbf{34}\) km/h.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> Compute \(0.008 \times 1.5\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(8 \times 15 = 120\). Total decimal places: \(3+1=4\). Shift: \(\mathbf{0.012}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> A tank drains at a rate of \(2.5\) liters per minute. How many minutes does it take to drain \(84.5\) liters?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(84.5 \div 2.5 = \mathbf{33.8}\) minutes.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> Compute \(0.032 \times 250\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(32 \times 250 = 8{,}000\). Total decimal places: \(3\). Shift: \(\mathbf{8.0}\).</p>
+      </details>
+    </div>
+
+    <div class="challenge-day-heading">Friday - Enrichment for Early Finishers</div>
+    <p style="font-size:0.9rem; color:#64748b;"><em>These are original problems, unrelated to the graded assessment, safe to hand out to students who finish the paper test early.</em></p>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> A biologist records 3 measurements: \(45.125\) mm, \(38.75\) mm, and \(52.6\) mm. Find the range (largest minus smallest).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(52.6 - 45.125 = \mathbf{7.475}\) mm.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> Compute \(212.5 \times 0.048\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(2125 \times 48 = 102{,}000\). Total decimal places: \(1+3=4\). Shift: \(\mathbf{10.2}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> A charity raised \(\$145.60\) on day 1, then \(1.5\) times that amount on day 2. What was the two-day total?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Day 2 \(= 145.60 \times 1.5 = \$218.40\). Total \(= 145.60+218.40 = \mathbf{\$364.00}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> Compute \(3.6 \times 125\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(36 \times 125 = 4{,}500\). Total decimal places: \(1\). Shift: \(\mathbf{450.0}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> A charity splits \(\$39.36\) in raised funds evenly among 8 local families. How much does each family receive?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(39.36 \div 8 = \mathbf{\$4.92}\) per family.</p>
+      </details>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+</script>
+</body>
+</html>

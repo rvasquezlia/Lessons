@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Lesson 1.4 - Multiply and Divide Integers</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../../../lesson-shared.css">
+  <script src="../../../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Q01W02 - Tuesday</span>
+    <h1>Multiply and Divide Integers</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Pre-Algebra 7 - Tuesday, Aug 18 - Lesson 1.4')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Tab 2's Guided Practice checks your answers on screen as you go, with up to 2 tries per problem. Everything else on this page (Warm-Up, More Practice, Applications, IXL, Exit Ticket) just submits and saves your work - your teacher reviews it from your printed progress report, not on screen. <strong>Calculators are not allowed this quarter</strong> - do every calculation by hand. Finish every tab, then type your name in the blue bar and click Print My Progress.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('warmup')">1. Warm-Up</button>
+    <button class="tab-btn" onclick="switchTab('lesson14')">2. Lesson 1.4</button>
+    <button class="tab-btn" onclick="switchTab('more')">3. More Practice</button>
+    <button class="tab-btn" onclick="switchTab('applications')">4. Applications</button>
+    <button class="tab-btn" onclick="switchTab('ixl')">5. IXL Practice</button>
+    <button class="tab-btn" onclick="switchTab('exitticket')">6. Exit Ticket</button>
+  </nav>
+
+  <!-- TAB 1: WARM-UP -->
+  <div id="warmup" class="panel active">
+    <div class="section-title">Warm-Up: Key Concept Review</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Tuesday, August 18, 2026 &middot; 45 min &middot; CCSS.Math.Content.7.NS.A.2b-c &amp; MP.8: Look for and Express Regularity in Repeated Reasoning</p>
+
+    <div class="explainer-box">
+      Yesterday you added and subtracted integers. Today's rule is simpler: for both <strong>multiplication</strong> and <strong>division</strong> of integers, <strong>same signs give a positive result; different signs give a negative result.</strong>
+    </div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Answer the 3 warm-up questions below and submit each one.
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>1.</strong> \(4 \times (-5)\)
+      <div style="margin-top:10px;">
+        <input type="text" id="wu-0-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkWarmup(0)">Check</button>
+      </div>
+      <div id="wu-0-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>2.</strong> \(-6 \times (-3)\)
+      <div style="margin-top:10px;">
+        <input type="text" id="wu-1-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkWarmup(1)">Check</button>
+      </div>
+      <div id="wu-1-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>3.</strong> \(-20 \div 4\)
+      <div style="margin-top:10px;">
+        <input type="text" id="wu-2-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkWarmup(2)">Check</button>
+      </div>
+      <div id="wu-2-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: LESSON 1.4 -->
+  <div id="lesson14" class="panel">
+    <div class="section-title">Lesson 1.4: Multiply and Divide Integers</div>
+    <div class="explainer-box">
+      <strong>Same signs &rarr; positive.</strong> <strong>Different signs &rarr; negative.</strong> This rule holds for both multiplication and division - and for division, remember that division "undoes" multiplication, so the sign rule is identical.
+    </div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Step through the worked examples using the arrows and Next Step button. Then copy each guided practice problem into your notebook, solve it there, type just your final answer, and check it. You get up to <strong>2 tries</strong> per problem - after a second miss, the correct method is shown and it locks.
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="l14-prev-btn" onclick="changeL14(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="l14-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="l14-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="l14-next-btn" onclick="changeL14(1)">Next &rarr;</button>
+      </div>
+      <div id="l14-content" style="min-height: 200px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextL14Step()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetL14Step()">Reset Steps</button>
+      </div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:24px;">
+      <div class="notebook-header">Guided Practice</div>
+      <p style="margin:0;">Copy each problem into your notebook and solve it there first, then type just your final answer below and check it. You get up to <strong>2 tries</strong> per problem - after a second miss, the correct method is shown and it locks.</p>
+    </div>
+    <div id="l14-practice-list"></div>
+  </div>
+
+  <!-- TAB 3: MORE PRACTICE -->
+  <div id="more" class="panel">
+    <div class="section-title">More Practice: Multiply and Divide Integers</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      This is your individual practice set (notebooks allowed - just like the Additional Practice sheet). Copy each problem into your notebook, solve it there, then type just your final answer and submit. This isn't graded on screen - your teacher reviews it from your printed progress report.
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">More Practice</div>
+      <p style="margin:0;">Work through all 5 problems below.</p>
+    </div>
+    <div id="more-practice-list"></div>
+  </div>
+
+  <!-- TAB 4: APPLICATIONS -->
+  <div id="applications" class="panel">
+    <div class="section-title">Applications: Stock Market &amp; Electric Charge</div>
+    <div class="explainer-box">
+      <strong>Multidisciplinary connection:</strong> Financial Literacy and Physical Science. Multiplying integers scales a repeated change - a daily stock loss repeated over several days, or a repeated electric charge added by many electrons.
+    </div>
+
+    <div class="step-box">
+      <h3 style="margin-top:0; color:var(--primary);">Real-Life Scenario: Stock Market</h3>
+      <div class="howto-box">
+        <strong class="howto-label">For this problem</strong>
+        Divide the total change by the number of days to find the average daily change, then multiply that daily rate by 3 more days.
+      </div>
+      <p>A stock's value changed by the same amount each day for \(6\) trading days, for a total change of \(-\$42\).</p>
+      <p><strong>Task:</strong> find the average daily change. Then, if it continues at that same daily rate for \(3\) more days, find the additional change.</p>
+      <div class="form-group">
+        <label>Average daily change:</label>
+        <input type="text" id="stock-avg" class="form-control-lg" style="max-width:200px;" placeholder="$ amount">
+      </div>
+      <div class="form-group">
+        <label>Additional change over 3 more days:</label>
+        <input type="text" id="stock-more" class="form-control-lg" style="max-width:200px;" placeholder="$ amount">
+      </div>
+      <button class="btn-lg" onclick="checkStock()">Check My Work</button>
+      <div id="stock-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="step-box" style="margin-top:24px;">
+      <h3 style="margin-top:0; color:var(--primary);">Real-Life Scenario: Electric Charge</h3>
+      <div class="howto-box">
+        <strong class="howto-label">For this problem</strong>
+        Multiply the number of electrons by the charge each one carries.
+      </div>
+      <p>A balloon gains \(8\) extra electrons after being rubbed on hair. Each electron carries a charge of \(-1\) (in elementary charge units).</p>
+      <p><strong>Task:</strong> find the total charge added to the balloon.</p>
+      <div class="form-group">
+        <label>Total charge added:</label>
+        <input type="text" id="charge-total" class="form-control-lg" style="max-width:200px;" placeholder="charge units">
+      </div>
+      <button class="btn-lg" onclick="checkCharge()">Check My Work</button>
+      <div id="charge-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 5: IXL PRACTICE -->
+  <div id="ixl" class="panel">
+    <div class="section-title">IXL Targeted Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Work with your assigned partner on the pair-work skills below. When you're both finished, check the box to confirm.
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">Pair Work (With a Partner)</div>
+      <p style="margin:0;"><strong>5R8</strong> - Multiply and divide integers &nbsp;&middot;&nbsp; <strong>R8D</strong> - Multiply and divide integers: word problems</p>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" id="confirm-ixl" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;" onchange="confirmIXL(this)">
+      <label for="confirm-ixl" style="display:inline; font-weight:700;">My partner and I completed IXL skills 5R8 and R8D.</label>
+    </div>
+  </div>
+
+  <!-- TAB 6: EXIT TICKET -->
+  <div id="exitticket" class="panel">
+    <div class="section-title">Exit Ticket</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Solve the problem, answer the reflection question, then click Submit Exit Ticket. Finish by typing your name in the blue bar at the top of the page and clicking Print My Progress.
+    </div>
+
+    <form id="exit-form" onsubmit="submitExitTicket(event)">
+      <div class="form-group">
+        <label>1. Solve: \(-9 \times (-6)\)</label>
+        <input type="text" id="exit-1" class="form-control-lg" placeholder="Answer">
+      </div>
+      <div class="form-group">
+        <label>2. What mental rule or pattern do you rely on to quickly remember what sign to give your answer when multiplying two numbers with different signs?</label>
+        <textarea id="exit-2" class="form-control-lg" rows="3" placeholder="Explain your reasoning..."></textarea>
+      </div>
+      <button type="submit" class="btn-lg">Submit Exit Ticket</button>
+    </form>
+    <div id="exit-feedback" class="feedback-msg"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // WARM-UP
+  // ==========================================
+  const warmupProblems = [
+    { q: "4 × (-5)", a: -20, tol: 0.001 },
+    { q: "-6 × (-3)", a: 18, tol: 0.001 },
+    { q: "-20 ÷ 4", a: -5, tol: 0.001 }
+  ];
+
+  function checkWarmup(idx) {
+    const p = warmupProblems[idx];
+    const val = document.getElementById(`wu-${idx}-input`).value;
+    const fb = document.getElementById(`wu-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter your answer before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: `wu-${idx}`, label: `Warm-Up: ${p.q}`, answer: val, section: '1. Warm-Up', correct: LessonCheck.numericMatch(val, p.a, p.tol) });
+  }
+
+  // ==========================================
+  // LESSON 1.4 CAROUSEL + GUIDED PRACTICE
+  // ==========================================
+  let currentL14 = 0;
+  let currentL14Step = 1;
+
+  const l14Examples = [
+    {
+      title: "Example 1 (different signs): \\(-6 \\times 7\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Multiply the absolute values:</strong> \\(6 \\times 7 = 42\\)",
+        "<strong>Step 2 - Different signs, so the product is negative:</strong> \\(-6 \\times 7 = \\mathbf{-42}\\)"
+      ]
+    },
+    {
+      title: "Example 2 (same signs): \\(-8 \\times (-5)\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Multiply the absolute values:</strong> \\(8 \\times 5 = 40\\)",
+        "<strong>Step 2 - Same signs, so the product is positive:</strong> \\(-8 \\times (-5) = \\mathbf{40}\\)"
+      ]
+    },
+    {
+      title: "Example 3 (division): \\(-45 \\div (-9)\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Divide the absolute values:</strong> \\(45 \\div 9 = 5\\)",
+        "<strong>Step 2 - Same signs, so the quotient is positive:</strong> \\(-45 \\div (-9) = \\mathbf{5}\\)"
+      ]
+    }
+  ];
+
+  function renderL14() {
+    const ex = l14Examples[currentL14];
+    document.getElementById('l14-title').innerText = `Example ${currentL14 + 1} of ${l14Examples.length}`;
+    document.getElementById('l14-dots').innerHTML = l14Examples.map((_, i) =>
+      `<div class="dot ${i === currentL14 ? 'active' : ''}" onclick="jumpL14(${i})"></div>`
+    ).join('');
+
+    let stepsHtml = '';
+    for (let i = 0; i < currentL14Step; i++) {
+      stepsHtml += `<div class="step-item visible">${ex.steps[i]}</div>`;
+    }
+    document.getElementById('l14-content').innerHTML = `<h3 style="color:var(--primary); margin-top:0;">${ex.title}</h3>${stepsHtml}`;
+
+    document.getElementById('l14-prev-btn').disabled = currentL14 === 0;
+    document.getElementById('l14-next-btn').disabled = currentL14 === l14Examples.length - 1;
+    triggerMathJax();
+  }
+
+  function changeL14(dir) {
+    currentL14 = Math.max(0, Math.min(l14Examples.length - 1, currentL14 + dir));
+    currentL14Step = 1;
+    renderL14();
+  }
+  function jumpL14(idx) { currentL14 = idx; currentL14Step = 1; renderL14(); }
+  function nextL14Step() {
+    if (currentL14Step < l14Examples[currentL14].maxSteps) { currentL14Step++; renderL14(); }
+  }
+  function resetL14Step() { currentL14Step = 1; renderL14(); }
+
+  const l14Practice = [
+    { q: "\\(-6 \\times 7\\)", a: -42, tol: 0.001 },
+    { q: "\\(-8 \\times (-5)\\)", a: 40, tol: 0.001 },
+    { q: "\\(-24 \\div 6\\)", a: -4, tol: 0.001 },
+    { q: "\\(-45 \\div (-9)\\)", a: 5, tol: 0.001 },
+    { q: "\\(9 \\times (-4)\\)", a: -36, tol: 0.001 }
+  ];
+
+  function renderL14Practice() {
+    const html = l14Practice.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="l14p-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkL14Practice(${i})">Check</button>
+        <div id="l14p-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('l14-practice-list').innerHTML = html;
+    l14Practice.forEach((p, i) => LessonProgress.preRegister(`l14p-${i}`, `Lesson 1.4 Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '2. Lesson 1.4'));
+  }
+
+  function checkL14Practice(idx) {
+    const p = l14Practice[idx];
+    const raw = document.getElementById(`l14p-${idx}-input`).value;
+    const fb = document.getElementById(`l14p-${idx}-feedback`);
+
+    if (!raw.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+
+    const correct = LessonCheck.numericMatch(raw, p.a, p.tol);
+
+    LessonCheck.check(`l14p-${idx}`, correct, fb, {
+      correct: `Correct! Answer: \\(\\mathbf{${p.a}}\\)`,
+      retry: "Not quite yet. Same signs give a positive result; different signs give a negative result. Try again.",
+      reveal: `Here's the correct answer: \\(\\mathbf{${p.a}}\\)`
+    }, { label: `Lesson 1.4 Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '2. Lesson 1.4' });
+  }
+
+  // ==========================================
+  // MORE PRACTICE (submit-only)
+  // ==========================================
+  const morePractice = [
+    { q: "\\(-12 \\times (-3)\\)", a: 36, tol: 0.001 },
+    { q: "\\(18 \\div (-3)\\)", a: -6, tol: 0.001 },
+    { q: "\\(-63 \\div 7\\)", a: -9, tol: 0.001 },
+    { q: "\\(-5 \\times (-5) \\times (-2)\\)", a: -50, tol: 0.001 },
+    { q: "A submarine descends at a constant rate of \\(-25\\) m per minute for \\(6\\) minutes. Total change in depth?", a: -150, tol: 0.001 }
+  ];
+
+  function renderMorePractice() {
+    const html = morePractice.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="more-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkMore(${i})">Submit</button>
+        <div id="more-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('more-practice-list').innerHTML = html;
+    morePractice.forEach((p, i) => LessonProgress.preRegister(`more-${i}`, `More Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '3. More Practice'));
+  }
+
+  function checkMore(idx) {
+    const p = morePractice[idx];
+    const raw = document.getElementById(`more-${idx}-input`).value;
+    const fb = document.getElementById(`more-${idx}-feedback`);
+
+    if (!raw.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: `more-${idx}`, label: `More Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '3. More Practice', correct: LessonCheck.numericMatch(raw, p.a, p.tol) });
+  }
+
+  // ==========================================
+  // APPLICATIONS
+  // ==========================================
+  function checkStock() {
+    const avg = document.getElementById('stock-avg').value;
+    const more = document.getElementById('stock-more').value;
+    const fb = document.getElementById('stock-feedback');
+
+    if (!avg.trim() || !more.trim()) {
+      LessonCheck.incomplete(fb, "Enter both the average daily change and the 3-day change before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: 'tue-stock', label: 'Stock Market: -42 over 6 days, then 3 more days', answer: `avg=${avg}, 3-day=${more}`, section: '4. Applications', correct: LessonCheck.numericMatch(avg, -7, 0.1) && LessonCheck.numericMatch(more, -21, 0.5) });
+  }
+
+  function checkCharge() {
+    const val = document.getElementById('charge-total').value;
+    const fb = document.getElementById('charge-feedback');
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter the total charge before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: 'tue-charge', label: 'Electric Charge: 8 electrons at -1 each', answer: val, section: '4. Applications', correct: LessonCheck.numericMatch(val, -8, 0.1) });
+  }
+
+  // ==========================================
+  // IXL CONFIRMATION
+  // ==========================================
+  function confirmIXL(cb) {
+    if (cb.checked) {
+      LessonProgress.record('tue-confirm-ixl', 'Confirmed: completed IXL skills 5R8 and R8D', 'Yes', 'reflection', '5. IXL Practice');
+    }
+  }
+
+  // ==========================================
+  // EXIT TICKET
+  // ==========================================
+  function submitExitTicket(e) {
+    e.preventDefault();
+    const a1 = document.getElementById('exit-1').value;
+    const a2 = document.getElementById('exit-2').value.trim();
+    const fb = document.getElementById('exit-feedback');
+
+    if (!a1.trim() || a2.length <= 5) {
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg error';
+      fb.innerText = "Please solve the problem and write a complete reflection before submitting.";
+      return;
+    }
+
+    fb.className = "feedback-msg success";
+    fb.innerText = "Exit Ticket submitted and logged successfully!";
+    fb.style.display = "block";
+    LessonProgress.record('tue-exit-1', 'Exit Ticket: solve -9x(-6)', a1, 'reflection', '6. Exit Ticket');
+    LessonProgress.recordText('Exit Ticket: mental rule for different-sign multiplication', a2, '6. Exit Ticket');
+  }
+
+  // Initial render
+  renderL14();
+  renderL14Practice();
+  renderMorePractice();
+
+  // Pre-register every question so the printed report always shows the
+  // full page, blank for anything never attempted.
+  warmupProblems.forEach((p, i) => LessonProgress.preRegister(`wu-${i}`, `Warm-Up: ${p.q}`, '1. Warm-Up'));
+  LessonProgress.preRegister('tue-stock', 'Stock Market: -42 over 6 days, then 3 more days', '4. Applications');
+  LessonProgress.preRegister('tue-charge', 'Electric Charge: 8 electrons at -1 each', '4. Applications');
+  LessonProgress.preRegister('tue-confirm-ixl', 'Confirmed: completed IXL skills 5R8 and R8D', '5. IXL Practice');
+  LessonProgress.preRegister('tue-exit-1', 'Exit Ticket: solve -9x(-6)', '6. Exit Ticket');
+</script>
+<div id="print-report"></div>
+</body>
+</html>

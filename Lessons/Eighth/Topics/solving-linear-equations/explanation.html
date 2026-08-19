@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Lessons 1-2 & 1-3 - Solving Linear Equations</title>
+
+  <!-- Montserrat Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../../lesson-shared.css">
+  <script src="../../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Q01W02 - Double Period</span>
+    <h1>Solving Linear Equations</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Algebra I - Monday, Aug 17 - Lessons 1-2 & 1-3')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Work through the tabs in order. Tabs 2 and 3 introduce the two lessons - read each worked example, then solve the guided practice and check your answer. Tab 4 applies both lessons to real scenarios. Tab 5 is your IXL practice. Finish with Tab 6, then type your name above and click <strong>Print My Progress</strong>. <strong>Calculators are allowed</strong> this year in Eighth Grade.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('warmup')">1. Warm-Up</button>
+    <button class="tab-btn" onclick="switchTab('lesson12')">2. Lesson 1-2</button>
+    <button class="tab-btn" onclick="switchTab('lesson13')">3. Lesson 1-3</button>
+    <button class="tab-btn" onclick="switchTab('applications')">4. Applications</button>
+    <button class="tab-btn" onclick="switchTab('ixl')">5. IXL Practice</button>
+    <button class="tab-btn" onclick="switchTab('exitticket')">6. Exit Ticket</button>
+  </nav>
+
+  <!-- TAB 1: WARM-UP -->
+  <div id="warmup" class="panel active">
+    <div class="section-title">Warm-Up: Properties of Equality &amp; Inverse Operations</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Monday, August 17, 2026 &middot; 90 min (Double Period) &middot; HSA.REI.A.1, HSA.REI.B.3 &amp; MP.7: Look for and Make Use of Structure</p>
+
+    <div class="explainer-box">
+      Every equation you solve today rests on one idea: whatever you do to one side of an equation, you must do to the other side, or the equation stops being true. Before we work with multi-step equations, confirm you can name the property behind each move.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Properties of Equality</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Addition Property:</strong> if \(a = b\), then \(a + c = b + c\).</li>
+        <li><strong>Subtraction Property:</strong> if \(a = b\), then \(a - c = b - c\).</li>
+        <li><strong>Multiplication Property:</strong> if \(a = b\), then \(ac = bc\).</li>
+        <li><strong>Division Property:</strong> if \(a = b\) and \(c \neq 0\), then \(\frac{a}{c} = \frac{b}{c}\).</li>
+      </ul>
+    </div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      For each equation, identify the inverse operation you'd apply first, solve for \(x\), and check your answer.
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>1.</strong> \(x + 9 = 15\)
+      <div style="margin-top:10px;">
+        <input type="text" id="wu-0-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="x =">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkWarmup(0)">Check</button>
+      </div>
+      <div id="wu-0-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>2.</strong> \(4x = 28\)
+      <div style="margin-top:10px;">
+        <input type="text" id="wu-1-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="x =">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkWarmup(1)">Check</button>
+      </div>
+      <div id="wu-1-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: LESSON 1-2 -->
+  <div id="lesson12" class="panel">
+    <div class="section-title">Lesson 1-2: Solving Linear Equations</div>
+    <div class="explainer-box">
+      A linear equation with the variable on one side can always be solved by undoing operations in reverse order (reverse PEMDAS): simplify each side first, then use inverse operations to isolate the variable.
+    </div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Step through all four worked examples using the arrows and Next Step button. Then solve the guided practice problems and check each one. Finish with the Challenge Problem.
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="l12-prev-btn" onclick="changeL12(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="l12-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 2</span>
+          <div class="carousel-indicators" id="l12-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="l12-next-btn" onclick="changeL12(1)">Next &rarr;</button>
+      </div>
+      <div id="l12-content" style="min-height: 220px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextL12Step()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetL12Step()">Reset Steps</button>
+      </div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:24px;">
+      <div class="notebook-header">Guided Practice</div>
+      <p style="margin:0;">Copy each equation into your notebook (or your handout) and show your work there, then type just your final answer below. You get up to <strong>2 tries</strong> per problem - after a second miss, the correct method is shown and it locks.</p>
+    </div>
+    <div id="l12-practice-list"></div>
+
+    <div class="challenge-box" style="margin-top:24px;">
+      <h3 style="margin-top:0; color:#b45309;">Challenge Problem</h3>
+      <p>Solve \(2(3x - 4) + 5 = 27\), and explain which operation you undid first and why.</p>
+      <div class="form-group">
+        <label>Solution (\(x =\)):</label>
+        <input type="text" id="l12-challenge-x" class="form-control-lg" style="max-width:200px;" placeholder="x =">
+      </div>
+      <div class="form-group">
+        <label>Which operation did you undo first, and why?</label>
+        <textarea id="l12-challenge-explain" class="form-control-lg" rows="2" placeholder="I started by..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkL12Challenge()">Check My Work</button>
+      <div id="l12-challenge-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: LESSON 1-3 -->
+  <div id="lesson13" class="panel">
+    <div class="section-title">Lesson 1-3: Equations With a Variable on Both Sides</div>
+    <div class="explainer-box">
+      <strong>Transition question:</strong> what changes when the variable appears on both sides? Your first move is no longer isolating the variable directly - it's collecting all variable terms onto one side first, using the same properties of equality as before.
+    </div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Step through all four worked examples. Read the special-cases box carefully - it previews what you'll dig into on Wednesday. Then solve the guided practice and the Challenge Problem.
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="l13-prev-btn" onclick="changeL13(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="l13-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 2</span>
+          <div class="carousel-indicators" id="l13-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="l13-next-btn" onclick="changeL13(1)">Next &rarr;</button>
+      </div>
+      <div id="l13-content" style="min-height: 220px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextL13Step()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetL13Step()">Reset Steps</button>
+      </div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:24px;">
+      <div class="notebook-header">When the Variable Disappears</div>
+      <p style="margin:0 0 10px 0;">Sometimes collecting variable terms eliminates the variable entirely. What's left tells you the answer:</p>
+      <p style="margin:0 0 6px 0;">\(2(x+3) = 2x + 7 \;\rightarrow\; 2x + 6 = 2x + 7 \;\rightarrow\; 6 = 7\). A false statement means <strong>no solution</strong> - no value of \(x\) works.</p>
+      <p style="margin:0;">\(4(x+1) = 4x + 4 \;\rightarrow\; 4x + 4 = 4x + 4 \;\rightarrow\; 4 = 4\). A true statement means <strong>infinitely many solutions</strong> - every value of \(x\) works.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Guided Practice</div>
+      <p style="margin:0;">Copy each equation into your notebook (or your handout) and solve it there for \(x\). If the variable eliminates itself, type "no solution" or "infinite" instead of a number. You get up to <strong>2 tries</strong> per problem - after a second miss, the correct method is shown and it locks.</p>
+    </div>
+    <div id="l13-practice-list"></div>
+
+    <div class="challenge-box" style="margin-top:24px;">
+      <h3 style="margin-top:0; color:#b45309;">Challenge Problem</h3>
+      <p>Solve \(8x - 3 = 5x + 2(x + 6)\). Distribute before you collect variable terms.</p>
+      <div class="form-group">
+        <label>Solution (\(x =\)):</label>
+        <input type="text" id="l13-challenge-x" class="form-control-lg" style="max-width:200px;" placeholder="x =">
+      </div>
+      <div class="form-group">
+        <label>What was your first move, and why?</label>
+        <textarea id="l13-challenge-explain" class="form-control-lg" rows="2" placeholder="I started by..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkL13Challenge()">Check My Work</button>
+      <div id="l13-challenge-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: REAL-WORLD APPLICATIONS -->
+  <div id="applications" class="panel">
+    <div class="section-title">Applications: Mixture &amp; Work-Time Problems</div>
+    <div class="explainer-box">
+      <strong>Multidisciplinary connection:</strong> Science &amp; Mathematical Modeling, Engineering &amp; Logical Reasoning. Linear equations model relationships between measurable quantities - here, a chemistry mixture and a combined work rate.
+    </div>
+
+    <div class="step-box">
+      <h3 style="margin-top:0; color:var(--primary);">Concrete Scenario: Mixture Investigation</h3>
+      <div class="howto-box">
+        <strong class="howto-label">For this problem</strong>
+        Let \(x\) represent the liters of 50% solution. Write the mixture equation, solve for \(x\), then find the amount of the second solution.
+      </div>
+      <p>A chemistry lab needs to prepare \(12\) liters of a \(30\%\) acid solution by combining a \(50\%\) acid solution with a \(20\%\) acid solution.</p>
+      <p><strong>Task:</strong> if \(x\) is the number of liters of \(50\%\) solution used, then \((12 - x)\) is the number of liters of \(20\%\) solution used. The equation is \(0.5x + 0.2(12 - x) = 0.3(12)\). Solve for \(x\), then find how much \(20\%\) solution is needed.</p>
+
+      <div class="form-group">
+        <label>Liters of 50% solution (\(x\)):</label>
+        <input type="text" id="mix-x" class="form-control-lg" style="max-width:200px;" placeholder="liters">
+      </div>
+      <div class="form-group">
+        <label>Liters of 20% solution:</label>
+        <input type="text" id="mix-other" class="form-control-lg" style="max-width:200px;" placeholder="liters">
+      </div>
+      <button class="btn-lg" onclick="checkMixture()">Check My Work</button>
+      <div id="mix-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="step-box" style="margin-top:24px;">
+      <h3 style="margin-top:0; color:var(--primary);">Real-Life Application: Work &amp; Time Scenario</h3>
+      <div class="howto-box">
+        <strong class="howto-label">For this problem</strong>
+        Each printer's rate (pages per minute) times the shared time \(x\) gives the pages that printer contributes. Together they must total 260 pages.
+      </div>
+      <p>Print Shop A's printer produces \(5\) pages per minute. Print Shop B's printer produces \(8\) pages per minute. Working at the same time, the two printers must produce a combined order of \(260\) pages.</p>
+      <p><strong>Task:</strong> write and solve an equation for \(x\), the number of minutes it takes both printers, working together, to complete the order.</p>
+
+      <div class="form-group">
+        <label>Time in minutes (\(x\)):</label>
+        <input type="text" id="wt-x" class="form-control-lg" style="max-width:200px;" placeholder="minutes">
+      </div>
+      <button class="btn-lg" onclick="checkWorkTime()">Check My Work</button>
+      <div id="wt-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 5: IXL PRACTICE -->
+  <div id="ixl" class="panel">
+    <div class="section-title">IXL Targeted Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Log into IXL and complete the skill listed below. When you're finished, check the box to confirm.
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">Today's IXL Skill</div>
+      <p style="margin:0;"><strong>28N</strong> - Solve linear equations with variables on one side</p>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" id="confirm-ixl" style="width:18px; height:18px; margin-right:8px; vertical-align:middle;" onchange="confirmIXL(this)">
+      <label for="confirm-ixl" style="display:inline; font-weight:700;">I completed IXL skill 28N.</label>
+    </div>
+  </div>
+
+  <!-- TAB 6: EXIT TICKET -->
+  <div id="exitticket" class="panel">
+    <div class="section-title">Exit Ticket</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Solve the equation, answer the reflection question, then click Submit Exit Ticket. Finish by typing your name in the blue bar at the top of the page and clicking Print My Progress.
+    </div>
+
+    <form id="exit-form" onsubmit="submitExitTicket(event)">
+      <div class="form-group">
+        <label>1. Solve: \(6x - 7 = 29\)</label>
+        <input type="text" id="exit-1" class="form-control-lg" placeholder="x =">
+      </div>
+      <div class="form-group">
+        <label>2. Which step in solving a linear equation is most important for keeping both sides equal, and why?</label>
+        <textarea id="exit-2" class="form-control-lg" rows="3" placeholder="Explain your reasoning..."></textarea>
+      </div>
+      <button type="submit" class="btn-lg">Submit Exit Ticket</button>
+    </form>
+    <div id="exit-feedback" class="feedback-msg"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // WARM-UP
+  // ==========================================
+  const warmupProblems = [
+    { q: "x + 9 = 15", a: 6, tol: 0.001 },
+    { q: "4x = 28", a: 7, tol: 0.001 }
+  ];
+
+  function checkWarmup(idx) {
+    const p = warmupProblems[idx];
+    const val = document.getElementById(`wu-${idx}-input`).value;
+    const fb = document.getElementById(`wu-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter your answer before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: `wu-${idx}`, label: `Warm-Up: ${p.q}`, answer: val, section: '1. Warm-Up', correct: LessonCheck.numericMatch(val, p.a, p.tol) });
+  }
+
+  // ==========================================
+  // LESSON 1-2 CAROUSEL
+  // ==========================================
+  let currentL12 = 0;
+  let currentL12Step = 1;
+
+  const l12Examples = [
+    {
+      title: "Example 1: \\(3(x + 2) = 21\\)",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1 - Distribute:</strong> \\(3x + 6 = 21\\)",
+        "<strong>Step 2 - Subtract 6 from both sides:</strong> \\(3x = 15\\)",
+        "<strong>Step 3 - Divide both sides by 3:</strong> \\(x = \\mathbf{5}\\)"
+      ]
+    },
+    {
+      title: "Example 2: \\(2(x - 3) + 4 = 10\\)",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1 - Distribute:</strong> \\(2x - 6 + 4 = 10\\)",
+        "<strong>Step 2 - Combine like terms, then subtract 2 from both sides:</strong> \\(2x - 2 = 10 \\;\\rightarrow\\; 2x = 12\\)",
+        "<strong>Step 3 - Divide both sides by 2:</strong> \\(x = \\mathbf{6}\\)"
+      ]
+    },
+    {
+      title: "Example 3: \\(5(x - 2) + 3 = 23\\)",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1 - Distribute:</strong> \\(5x - 10 + 3 = 23\\)",
+        "<strong>Step 2 - Combine like terms, then add 7 to both sides:</strong> \\(5x - 7 = 23 \\;\\rightarrow\\; 5x = 30\\)",
+        "<strong>Step 3 - Divide both sides by 5:</strong> \\(x = \\mathbf{6}\\)"
+      ]
+    },
+    {
+      title: "Example 4: \\(8x - 4(x - 6) + 8 = 44\\)",
+      maxSteps: 4,
+      steps: [
+        "<strong>Step 1 - Distribute the \\(-4\\):</strong> \\(8x - 4x + 24 + 8 = 44\\) <em>(Distributive Property)</em>",
+        "<strong>Step 2 - Combine like terms:</strong> \\(4x + 32 = 44\\) <em>(Simplify)</em>",
+        "<strong>Step 3 - Subtract 32 from both sides:</strong> \\(4x = 12\\) <em>(Subtraction Property of Equality)</em>",
+        "<strong>Step 4 - Divide both sides by 4:</strong> \\(x = \\mathbf{3}\\) <em>(Division Property of Equality)</em>"
+      ]
+    }
+  ];
+
+  function renderL12() {
+    const ex = l12Examples[currentL12];
+    document.getElementById('l12-title').innerText = `Example ${currentL12 + 1} of ${l12Examples.length}`;
+    document.getElementById('l12-dots').innerHTML = l12Examples.map((_, i) =>
+      `<div class="dot ${i === currentL12 ? 'active' : ''}" onclick="jumpL12(${i})"></div>`
+    ).join('');
+
+    let stepsHtml = '';
+    for (let i = 0; i < currentL12Step; i++) {
+      stepsHtml += `<div class="step-item visible">${ex.steps[i]}</div>`;
+    }
+    document.getElementById('l12-content').innerHTML = `<h3 style="color:var(--primary); margin-top:0;">${ex.title}</h3>${stepsHtml}`;
+
+    document.getElementById('l12-prev-btn').disabled = currentL12 === 0;
+    document.getElementById('l12-next-btn').disabled = currentL12 === l12Examples.length - 1;
+    triggerMathJax();
+  }
+
+  function changeL12(dir) {
+    currentL12 = Math.max(0, Math.min(l12Examples.length - 1, currentL12 + dir));
+    currentL12Step = 1;
+    renderL12();
+  }
+  function jumpL12(idx) { currentL12 = idx; currentL12Step = 1; renderL12(); }
+  function nextL12Step() {
+    if (currentL12Step < l12Examples[currentL12].maxSteps) { currentL12Step++; renderL12(); }
+  }
+  function resetL12Step() { currentL12Step = 1; renderL12(); }
+
+  // Lesson 1-2 guided practice
+  const l12Practice = [
+    { q: "\\(2x - 5 = 11\\)", a: 8, tol: 0.001 },
+    { q: "\\(4x + 7 = -9\\)", a: -4, tol: 0.001 },
+    { q: "\\(-3x + 8 = 2\\)", a: 2, tol: 0.001 },
+    { q: "\\(5(x - 3) = 20\\)", a: 7, tol: 0.001 },
+    { q: "\\(7x - 9 = 19\\)", a: 4, tol: 0.001 },
+    { q: "\\(-4x + 6 = -14\\)", a: 5, tol: 0.001 },
+    { q: "\\(5h - 13 = 12\\)", a: 5, tol: 0.001 },
+    { q: "\\(8(n + 2) = 24\\)", a: 1, tol: 0.001 }
+  ];
+
+  function renderL12Practice() {
+    const html = l12Practice.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="l12p-${i}-input" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="x =">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkL12Practice(${i})">Check</button>
+        <div id="l12p-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('l12-practice-list').innerHTML = html;
+    l12Practice.forEach((p, i) => LessonProgress.preRegister(`l12p-${i}`, `Lesson 1-2 Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '2. Lesson 1-2'));
+  }
+
+  function checkL12Practice(idx) {
+    const p = l12Practice[idx];
+    const val = document.getElementById(`l12p-${idx}-input`).value;
+    const fb = document.getElementById(`l12p-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+
+    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
+
+    LessonCheck.check(`l12p-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(\\rightarrow x = \\mathbf{${p.a}}\\)`,
+      retry: "Not quite yet. Simplify each side first, then undo operations in reverse order. Try again.",
+      reveal: `Here's the correct procedure: simplify, then apply inverse operations to isolate \\(x\\). ${p.q} \\(\\rightarrow x = \\mathbf{${p.a}}\\)`
+    }, { label: `Lesson 1-2 Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '2. Lesson 1-2' });
+  }
+
+  function checkL12Challenge() {
+    const x = document.getElementById('l12-challenge-x').value;
+    const explain = document.getElementById('l12-challenge-explain').value.trim();
+    const fb = document.getElementById('l12-challenge-feedback');
+
+    if (!x.trim() || explain.length <= 5) {
+      LessonCheck.incomplete(fb, "Enter your solution and explain your first move before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: 'l12-challenge', label: 'Lesson 1-2 Challenge: 2(3x-4)+5=27', answer: `x=${x}`, section: '2. Lesson 1-2', correct: LessonCheck.numericMatch(x, 5, 0.001) });
+  }
+
+  // ==========================================
+  // LESSON 1-3 CAROUSEL
+  // ==========================================
+  let currentL13 = 0;
+  let currentL13Step = 1;
+
+  const l13Examples = [
+    {
+      title: "Example 1: \\(5x + 3 = 2x + 12\\)",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1 - Subtract \\(2x\\) from both sides</strong> to collect variable terms on the left: \\(3x + 3 = 12\\)",
+        "<strong>Step 2 - Subtract 3 from both sides:</strong> \\(3x = 9\\)",
+        "<strong>Step 3 - Divide both sides by 3:</strong> \\(x = \\mathbf{3}\\)"
+      ]
+    },
+    {
+      title: "Example 2: \\(7x - 4 = 3x + 16\\)",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1 - Subtract \\(3x\\) from both sides:</strong> \\(4x - 4 = 16\\)",
+        "<strong>Step 2 - Add 4 to both sides:</strong> \\(4x = 20\\)",
+        "<strong>Step 3 - Divide both sides by 4:</strong> \\(x = \\mathbf{5}\\)"
+      ]
+    },
+    {
+      title: "Example 3: \\(9x - 2 = 4x + 23\\)",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1 - Subtract \\(4x\\) from both sides:</strong> \\(5x - 2 = 23\\)",
+        "<strong>Step 2 - Add 2 to both sides:</strong> \\(5x = 25\\)",
+        "<strong>Step 3 - Divide both sides by 5:</strong> \\(x = \\mathbf{5}\\)"
+      ]
+    },
+    {
+      title: "Example 4: \\(4y - 7 + 2y = -3(y-1) - 1\\)",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1 - Combine like terms on the left; distribute on the right:</strong> \\(6y - 7 = -3y + 3 - 1 \\;\\rightarrow\\; 6y - 7 = -3y + 2\\)",
+        "<strong>Step 2 - Add \\(3y\\) to both sides, then add 7 to both sides:</strong> \\(9y - 7 = 2 \\;\\rightarrow\\; 9y = 9\\)",
+        "<strong>Step 3 - Divide both sides by 9:</strong> \\(y = \\mathbf{1}\\)"
+      ]
+    }
+  ];
+
+  function renderL13() {
+    const ex = l13Examples[currentL13];
+    document.getElementById('l13-title').innerText = `Example ${currentL13 + 1} of ${l13Examples.length}`;
+    document.getElementById('l13-dots').innerHTML = l13Examples.map((_, i) =>
+      `<div class="dot ${i === currentL13 ? 'active' : ''}" onclick="jumpL13(${i})"></div>`
+    ).join('');
+
+    let stepsHtml = '';
+    for (let i = 0; i < currentL13Step; i++) {
+      stepsHtml += `<div class="step-item visible">${ex.steps[i]}</div>`;
+    }
+    document.getElementById('l13-content').innerHTML = `<h3 style="color:var(--primary); margin-top:0;">${ex.title}</h3>${stepsHtml}`;
+
+    document.getElementById('l13-prev-btn').disabled = currentL13 === 0;
+    document.getElementById('l13-next-btn').disabled = currentL13 === l13Examples.length - 1;
+    triggerMathJax();
+  }
+
+  function changeL13(dir) {
+    currentL13 = Math.max(0, Math.min(l13Examples.length - 1, currentL13 + dir));
+    currentL13Step = 1;
+    renderL13();
+  }
+  function jumpL13(idx) { currentL13 = idx; currentL13Step = 1; renderL13(); }
+  function nextL13Step() {
+    if (currentL13Step < l13Examples[currentL13].maxSteps) { currentL13Step++; renderL13(); }
+  }
+  function resetL13Step() { currentL13Step = 1; renderL13(); }
+
+  // Lesson 1-3 guided practice (includes one no-solution case)
+  const l13Practice = [
+    { q: "\\(6x + 9 = 2x - 7\\)", type: "number", a: -4, tol: 0.001 },
+    { q: "\\(3(x + 4) = x + 18\\)", type: "number", a: 3, tol: 0.001 },
+    { q: "\\(5x - 2 = 5x + 9\\)", type: "special", a: "no solution" },
+    { q: "\\(8x - 1 = 3x + 24\\)", type: "number", a: 5, tol: 0.001 },
+    { q: "\\(2(x - 3) = x + 1\\)", type: "number", a: 7, tol: 0.001 },
+    { q: "\\(-8x - (3x + 6) = 4 - x\\)", type: "number", a: -1, tol: 0.001 },
+    { q: "\\(14 + 3n = 8n - 3(n - 4)\\)", type: "number", a: 1, tol: 0.001 }
+  ];
+
+  function renderL13Practice() {
+    const html = l13Practice.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="l13p-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="x = or type">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkL13Practice(${i})">Check</button>
+        <div id="l13p-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('l13-practice-list').innerHTML = html;
+    l13Practice.forEach((p, i) => LessonProgress.preRegister(`l13p-${i}`, `Lesson 1-3 Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '3. Lesson 1-3'));
+  }
+
+  function checkL13Practice(idx) {
+    const p = l13Practice[idx];
+    const raw = document.getElementById(`l13p-${idx}-input`).value;
+    const fb = document.getElementById(`l13p-${idx}-feedback`);
+
+    if (!raw.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+
+    let correct;
+    if (p.type === "number") {
+      correct = LessonCheck.numericMatch(raw, p.a, p.tol);
+    } else {
+      correct = raw.trim().toLowerCase().includes("no solution") || raw.trim().toLowerCase() === "none";
+    }
+    const answerText = p.type === "number" ? `x = \\(\\mathbf{${p.a}}\\)` : `<strong>${p.a}</strong>`;
+
+    LessonCheck.check(`l13p-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(\\rightarrow\\) ${answerText}`,
+      retry: "Not quite yet. Collect variable terms on one side first, then simplify. Try again.",
+      reveal: `Here's the correct procedure: collect variable terms on one side, then simplify. ${p.q} \\(\\rightarrow\\) ${answerText}`
+    }, { label: `Lesson 1-3 Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '3. Lesson 1-3' });
+  }
+
+  function checkL13Challenge() {
+    const x = document.getElementById('l13-challenge-x').value;
+    const explain = document.getElementById('l13-challenge-explain').value.trim();
+    const fb = document.getElementById('l13-challenge-feedback');
+
+    if (!x.trim() || explain.length <= 5) {
+      LessonCheck.incomplete(fb, "Enter your solution and explain your first move before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: 'l13-challenge', label: 'Lesson 1-3 Challenge: 8x-3=5x+2(x+6)', answer: `x=${x}`, section: '3. Lesson 1-3', correct: LessonCheck.numericMatch(x, 15, 0.001) });
+  }
+
+  // ==========================================
+  // APPLICATIONS
+  // ==========================================
+  function checkMixture() {
+    const mx = document.getElementById('mix-x').value;
+    const other = document.getElementById('mix-other').value;
+    const fb = document.getElementById('mix-feedback');
+
+    if (!mx.trim() || !other.trim()) {
+      LessonCheck.incomplete(fb, "Enter both the liters of 50% solution and the liters of 20% solution before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: 'mon-mixture', label: 'Mixture Investigation: 50% and 20% solutions', answer: `50% solution=${mx}L, 20% solution=${other}L`, section: '4. Applications', correct: LessonCheck.numericMatch(mx, 4, 0.01) && LessonCheck.numericMatch(other, 8, 0.01) });
+  }
+
+  function checkWorkTime() {
+    const val = document.getElementById('wt-x').value;
+    const fb = document.getElementById('wt-feedback');
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter the time in minutes before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: 'mon-worktime', label: 'Work & Time: two printers, 260 pages', answer: `${val} minutes`, section: '4. Applications', correct: LessonCheck.numericMatch(val, 20, 0.01) });
+  }
+
+  // ==========================================
+  // IXL CONFIRMATION
+  // ==========================================
+  function confirmIXL(cb) {
+    if (cb.checked) {
+      LessonProgress.record('mon-confirm-ixl', 'Confirmed: completed IXL skill 28N', 'Yes', 'reflection', '5. IXL Practice');
+    }
+  }
+
+  // ==========================================
+  // EXIT TICKET
+  // ==========================================
+  function submitExitTicket(e) {
+    e.preventDefault();
+    const a1 = document.getElementById('exit-1').value;
+    const a2 = document.getElementById('exit-2').value.trim();
+    const fb = document.getElementById('exit-feedback');
+
+    if (!a1.trim() || a2.length <= 5) {
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg error';
+      fb.innerText = "Please solve the equation and write a complete reflection before submitting.";
+      return;
+    }
+
+    fb.className = "feedback-msg success";
+    fb.innerText = "Exit Ticket submitted and logged successfully!";
+    fb.style.display = "block";
+    LessonProgress.record('mon-exit-1', 'Exit Ticket: solve 6x-7=29', a1, 'reflection', '6. Exit Ticket');
+    LessonProgress.recordText('Exit Ticket: which step keeps both sides equal', a2, '6. Exit Ticket');
+  }
+
+  // Initial render
+  renderL12();
+  renderL12Practice();
+  renderL13();
+  renderL13Practice();
+
+  // Pre-register every question so the printed report always shows the
+  // full page, blank for anything never attempted.
+  warmupProblems.forEach((p, i) => LessonProgress.preRegister(`wu-${i}`, `Warm-Up: ${p.q}`, '1. Warm-Up'));
+  LessonProgress.preRegister('l12-challenge', 'Lesson 1-2 Challenge: 2(3x-4)+5=27', '2. Lesson 1-2');
+  LessonProgress.preRegister('l13-challenge', 'Lesson 1-3 Challenge: 8x-3=5x+2(x+6)', '3. Lesson 1-3');
+  LessonProgress.preRegister('mon-mixture', 'Mixture Investigation: 50% and 20% solutions', '4. Applications');
+  LessonProgress.preRegister('mon-worktime', 'Work & Time: two printers, 260 pages', '4. Applications');
+  LessonProgress.preRegister('mon-confirm-ixl', 'Confirmed: completed IXL skill 28N', '5. IXL Practice');
+  LessonProgress.preRegister('mon-exit-1', 'Exit Ticket: solve 6x-7=29', '6. Exit Ticket');
+</script>
+<div id="print-report"></div>
+</body>
+</html>
