@@ -51,13 +51,14 @@
         <div class="header-controls">
             <button id="themeToggle" class="theme-btn" onclick="toggleTheme()">Light Mode</button>
             <select id="topicSelect" class="topic-selector" onchange="jumpToTopic(this.value)">
-                <option value="0">1. Number Line & Absolute Value</option>
-                <option value="6">2. The Coordinate Plane</option>
-                <option value="10">3. Decimals & Fraction Division</option>
-                <option value="12">4. Exponents & Algebra Basics</option>
-                <option value="16">5. Ratios & Percentages</option>
-                <option value="18">6. Geometry Foundations</option>
-                <option value="22">7. Next Week Teaser Hook</option>
+                <option value="0">0. Operation Keywords</option>
+                <option value="2">1. Number Line &amp; Absolute Value</option>
+                <option value="8">2. The Coordinate Plane</option>
+                <option value="12">3. Decimals &amp; Fraction Division</option>
+                <option value="14">4. Exponents &amp; Algebra Basics</option>
+                <option value="18">5. Ratios &amp; Percentages</option>
+                <option value="20">6. Geometry Foundations</option>
+                <option value="24">7. Next Week Teaser Hook</option>
             </select>
         </div>
     </header>
@@ -89,6 +90,57 @@
 
     <script>
         const slides = [
+            // TOPIC 0: OPERATION KEYWORDS
+            {
+                category: "Operation Keywords",
+                ccss: "CCSS.MATH.CONTENT.7.NS.A.1",
+                title: "0. Integer Word Problem Keywords (Concept)",
+                content: `
+                    <div class="key-concept">
+                        <strong>Key Concept:</strong> Integer word problems hide two types of clues — sign words tell you whether a number is positive or negative, and operation words tell you what to do with it.
+                    </div>
+                    <div class="teacher-example" style="overflow-x:auto;">
+                        <strong>Sign Clue Words</strong>
+                        <table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:0.92rem;">
+                            <thead><tr style="background:#e0f2fe;"><th style="padding:6px;text-align:left;">Sign</th><th style="padding:6px;text-align:left;">Clue Words</th></tr></thead>
+                            <tbody>
+                                <tr><td style="padding:6px;"><strong>Positive (+)</strong></td><td style="padding:6px;">gained, rose, increased, above, up, climbed, deposit, income, profit, forward</td></tr>
+                                <tr><td style="padding:6px;"><strong>Negative (&minus;)</strong></td><td style="padding:6px;">lost, dropped, decreased, below, down, withdrawal, owe, debt, expense, below zero</td></tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <strong>Operation Clue Words</strong>
+                        <table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:0.92rem;">
+                            <thead><tr style="background:#e0f2fe;"><th style="padding:6px;">Operation</th><th style="padding:6px;">Clue Words</th><th style="padding:6px;">Example</th></tr></thead>
+                            <tbody>
+                                <tr><td style="padding:6px;"><strong>Addition</strong></td><td style="padding:6px;">combined, total change, net result, altogether</td><td style="padding:6px;">deposit $40, then withdrawal $25</td></tr>
+                                <tr><td style="padding:6px;"><strong>Subtraction</strong></td><td style="padding:6px;">difference between, how much higher/colder/farther</td><td style="padding:6px;">difference between the peak and valley elevation</td></tr>
+                                <tr><td style="padding:6px;"><strong>Multiplication</strong></td><td style="padding:6px;">same change repeated, each day for __ days, loses __ every __</td><td style="padding:6px;">drops $3 each day for 4 days</td></tr>
+                                <tr><td style="padding:6px;"><strong>Division</strong></td><td style="padding:6px;">average change per unit, spread evenly over time</td><td style="padding:6px;">total change per day</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `
+            },
+            {
+                category: "Operation Keywords",
+                ccss: "CCSS.MATH.CONTENT.7.NS.A.1",
+                title: "0. Integer Word Problem Keywords (Exercise)",
+                content: `
+                    <div class="guided-practice">
+                        <strong>Identify the sign and operation for each phrase:</strong>
+                        <br><br>1. "The temperature <em>dropped</em> 6° then <em>rose</em> 4°." — What are the two signed numbers? What operation combines them?
+                        <br>2. "A stock <em>loses</em> $3 every day for 5 days." — Is the daily change positive or negative? What operation models the total?
+                        <br>3. "Find the <em>difference between</em> a cliff at 180 m and a lake bed at −40 m." — Which operation does 'difference between' signal?
+                        <br><button class="reveal-btn" onclick="toggleSolution('solKW7')">Check Answers</button>
+                        <div id="solKW7" class="solution-content">
+                            1. <strong>−6 and +4</strong> → <strong>Add</strong> them: $(-6) + 4 = -2°$ total change.
+                            <br>2. Daily change is <strong>negative (−$3)</strong> → <strong>Multiply</strong>: $(-3) 	imes 5 = -\$15$ total loss.
+                            <br>3. "Difference between" → <strong>Subtract</strong>: $180 - (-40) = 220$ m apart.
+                        </div>
+                    </div>
+                `
+            },
             // TOPIC 1: THE NUMBER LINE & ABSOLUTE VALUE
             {
                 category: "Number Line Basics",
