@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 1,
+  "title": "Lessons Taxonomy",
+  "description": "Canonical curriculum tree for grade, subject, topic, and page navigation.",
+  "grades": [
+    {
+      "id": "sixth",
+      "title": "Sixth Grade",
+      "slug": "Sixth",
+      "subjects": [
+        {
+          "id": "math-6",
+          "title": "Math 6",
+          "slug": "math-6",
+          "overviewPages": {
+            "syllabus": "Lessons/Sixth/syllabus.html",
+            "refresher": "Lessons/Sixth/refresher.html"
+          },
+          "topics": [
+            {
+              "id": "decimal-operations",
+              "title": "Decimal Operations",
+              "slug": "decimal-operations",
+              "standard": "6.NS.B.3",
+              "summary": "Add, subtract, multiply, and divide decimals; multi-step word problems; error analysis; real-world jigsaw; graded classwork.",
+              "pages": [
+                {
+                  "id": "vocabulary",
+                  "title": "Vocabulary",
+                  "slug": "vocabulary",
+                  "label": "Key Terms & Place Value",
+                  "sourcePath": "Lessons/Sixth/Topics/decimal-operations/vocabulary.html"
+                },
+                {
+                  "id": "explanation",
+                  "title": "Explanation",
+                  "slug": "explanation",
+                  "label": "Add, Subtract, Multiply & Divide Decimals",
+                  "sourcePath": "Lessons/Sixth/Topics/decimal-operations/explanation.html"
+                },
+                {
+                  "id": "guided",
+                  "title": "Guided",
+                  "slug": "guided",
+                  "label": "Multi-Step Word Problems",
+                  "sourcePath": "Lessons/Sixth/Topics/decimal-operations/practice/guided.html"
+                },
+                {
+                  "id": "exercises",
+                  "title": "Exercises",
+                  "slug": "exercises",
+                  "label": "Error Analysis & Health Science",
+                  "sourcePath": "Lessons/Sixth/Topics/decimal-operations/practice/exercises.html"
+                },
+                {
+                  "id": "enrichment",
+                  "title": "Enrichment",
+                  "slug": "enrichment",
+                  "label": "Real-World Decimal Jigsaw",
+                  "sourcePath": "Lessons/Sixth/Topics/decimal-operations/practice/enrichment.html"
+                },
+                {
+                  "id": "assessment",
+                  "title": "Assessment",
+                  "slug": "assessment",
+                  "label": "Graded Classwork",
+                  "sourcePath": "Lessons/Sixth/Topics/decimal-operations/practice/assessment.html"
+                },
+                {
+                  "id": "teacher-guide",
+                  "title": "Teacher Guide",
+                  "slug": "teacher-guide",
+                  "label": "Teacher Guide",
+                  "sourcePath": "Lessons/Sixth/Topics/decimal-operations/teacher-guide.html"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seventh",
+      "title": "Seventh Grade",
+      "slug": "Seventh",
+      "subjects": [
+        {
+          "id": "pre-algebra",
+          "title": "Pre-Algebra",
+          "slug": "pre-algebra",
+          "overviewPages": {
+            "syllabus": "Lessons/Seventh/syllabus.html",
+            "refresher": "Lessons/Seventh/refresher.html"
+          },
+          "topics": [
+            {
+              "id": "integers-and-operations",
+              "title": "Integers & Operations",
+              "slug": "integers-and-operations",
+              "standard": "7.NS.A.1–2",
+              "summary": "Lessons 1.1–1.4: opposites & absolute value, add/subtract/multiply/divide integers, official Savvas Quick Check, graded classwork.",
+              "pages": [
+                {
+                  "id": "vocabulary",
+                  "title": "Vocabulary",
+                  "slug": "vocabulary",
+                  "label": "Key Terms & Integer Properties",
+                  "sourcePath": "Lessons/Seventh/Topics/integers-and-operations/vocabulary.html"
+                },
+                {
+                  "id": "explanation",
+                  "title": "Explanation",
+                  "slug": "explanation",
+                  "label": "Integers, Opposites & Operations",
+                  "sourcePath": "Lessons/Seventh/Topics/integers-and-operations/explanation.html"
+                },
+                {
+                  "id": "guided",
+                  "title": "Guided",
+                  "slug": "guided",
+                  "label": "Multiply & Divide Integers",
+                  "sourcePath": "Lessons/Seventh/Topics/integers-and-operations/practice/guided.html"
+                },
+                {
+                  "id": "exercises",
+                  "title": "Exercises",
+                  "slug": "exercises",
+                  "label": "Quick Check 1.1–1.4",
+                  "sourcePath": "Lessons/Seventh/Topics/integers-and-operations/practice/exercises.html"
+                },
+                {
+                  "id": "enrichment",
+                  "title": "Enrichment",
+                  "slug": "enrichment",
+                  "label": "Skill Reinforcement",
+                  "sourcePath": "Lessons/Seventh/Topics/integers-and-operations/practice/enrichment.html"
+                },
+                {
+                  "id": "assessment",
+                  "title": "Assessment",
+                  "slug": "assessment",
+                  "label": "Graded Classwork",
+                  "sourcePath": "Lessons/Seventh/Topics/integers-and-operations/practice/assessment.html"
+                },
+                {
+                  "id": "teacher-guide",
+                  "title": "Teacher Guide",
+                  "slug": "teacher-guide",
+                  "label": "Teacher Guide",
+                  "sourcePath": "Lessons/Seventh/Topics/integers-and-operations/teacher-guide.html"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "eighth",
+      "title": "Eighth Grade",
+      "slug": "Eighth",
+      "subjects": [
+        {
+          "id": "algebra-1",
+          "title": "Algebra I",
+          "slug": "algebra-1",
+          "overviewPages": {
+            "syllabus": "Lessons/Eighth/syllabus.html",
+            "refresher": "Lessons/Eighth/refresher.html"
+          },
+          "topics": [
+            {
+              "id": "solving-linear-equations",
+              "title": "Solving Linear Equations",
+              "slug": "solving-linear-equations",
+              "standard": "HSA.CED.A.1, HSA.REI.A.1, HSA.REI.B.3",
+              "summary": "Lessons 1-2 & 1-3: variables on one and both sides, classifying solutions, real-world applications, graded classwork.",
+              "pages": [
+                {
+                  "id": "vocabulary",
+                  "title": "Vocabulary",
+                  "slug": "vocabulary",
+                  "label": "Key Terms & Properties of Equality",
+                  "sourcePath": "Lessons/Eighth/Topics/solving-linear-equations/vocabulary.html"
+                },
+                {
+                  "id": "explanation",
+                  "title": "Explanation",
+                  "slug": "explanation",
+                  "label": "Solving Linear Equations",
+                  "sourcePath": "Lessons/Eighth/Topics/solving-linear-equations/explanation.html"
+                },
+                {
+                  "id": "guided",
+                  "title": "Guided",
+                  "slug": "guided",
+                  "label": "Practice: Solving Linear Equations",
+                  "sourcePath": "Lessons/Eighth/Topics/solving-linear-equations/practice/guided.html"
+                },
+                {
+                  "id": "exercises",
+                  "title": "Exercises",
+                  "slug": "exercises",
+                  "label": "One, None, or Infinitely Many Solutions?",
+                  "sourcePath": "Lessons/Eighth/Topics/solving-linear-equations/practice/exercises.html"
+                },
+                {
+                  "id": "enrichment",
+                  "title": "Enrichment",
+                  "slug": "enrichment",
+                  "label": "Review: Solving Linear Equations",
+                  "sourcePath": "Lessons/Eighth/Topics/solving-linear-equations/practice/enrichment.html"
+                },
+                {
+                  "id": "assessment",
+                  "title": "Assessment",
+                  "slug": "assessment",
+                  "label": "Graded Classwork",
+                  "sourcePath": "Lessons/Eighth/Topics/solving-linear-equations/practice/assessment.html"
+                },
+                {
+                  "id": "teacher-guide",
+                  "title": "Teacher Guide",
+                  "slug": "teacher-guide",
+                  "label": "Teacher Guide",
+                  "sourcePath": "Lessons/Eighth/Topics/solving-linear-equations/teacher-guide.html"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
