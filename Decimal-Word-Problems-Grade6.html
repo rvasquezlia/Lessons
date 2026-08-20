@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decimal Word Problems - Easy Guided Practice (Grade 6)</title>
+
+  <!-- Montserrat Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="./lesson-shared.css">
+  <script src="./lesson-shared.js"></script>
+
+  <style>
+    .op-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+      margin: 18px 0;
+    }
+    .op-card {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-top: 8px solid var(--op-color, var(--primary));
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+    .op-card .op-icon {
+      font-size: 2rem;
+      display: block;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .op-card .op-title {
+      text-align: center;
+      font-weight: 800;
+      color: var(--op-color, var(--primary));
+      font-size: 1.15rem;
+      margin-bottom: 10px;
+    }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .chip {
+      background: #f8fafc;
+      color: var(--op-color, var(--primary));
+      border: 2px solid var(--op-color, var(--primary));
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+    .op-card .op-example {
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.92rem;
+      color: #334155;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="./assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Extra Practice - Grade 6 Decimal Word Problems</span>
+    <h1>Decimal Word Problems Made Easy</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Decimal Word Problems - Easy Guided Practice (Grade 6)')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Work through the tabs in order. Tab 1 shows you the keyword pictures that tell you which operation a word problem wants: <strong>add (+)</strong>, <strong>subtract (-)</strong>, or <strong>multiply (&times;)</strong>. Tab 2 walks through one easy guided example for each operation with decimals. Tab 3 has 5 word problems for you to solve on your own. Finish, type your name above, and click <strong>Print My Progress</strong>.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('vocab')">1. Vocabulary</button>
+    <button class="tab-btn" onclick="switchTab('guided')">2. Guided Examples</button>
+    <button class="tab-btn" onclick="switchTab('practice')">3. Practice (5 Problems)</button>
+  </nav>
+
+  <!-- TAB 1: VOCABULARY -->
+  <div id="vocab" class="panel active">
+    <div class="section-title">Vocabulary: Spot the Keyword, Pick the Operation</div>
+
+    <div class="explainer-box">
+      Every decimal word problem is hiding a clue. Find the <strong>keyword</strong> in the sentence and it tells you exactly which operation to use.
+    </div>
+
+    <div class="op-card-grid">
+      <div class="op-card" style="--op-color: var(--success);">
+        <span class="op-icon">&#10133;</span>
+        <div class="op-title">Addition</div>
+        <div class="chip-row">
+          <span class="chip">total</span>
+          <span class="chip">sum</span>
+          <span class="chip">combined</span>
+          <span class="chip">altogether</span>
+          <span class="chip">in all</span>
+          <span class="chip">plus</span>
+        </div>
+        <div class="op-example">"How much did she spend <strong>in all</strong>?" &rarr; add the amounts.</div>
+      </div>
+
+      <div class="op-card" style="--op-color: var(--accent);">
+        <span class="op-icon">&#10134;</span>
+        <div class="op-title">Subtraction</div>
+        <div class="chip-row">
+          <span class="chip">difference</span>
+          <span class="chip">change back</span>
+          <span class="chip">left over</span>
+          <span class="chip">remaining</span>
+          <span class="chip">how much more</span>
+        </div>
+        <div class="op-example">"How much <strong>change</strong> did he get back?" &rarr; subtract.</div>
+      </div>
+
+      <div class="op-card" style="--op-color: var(--primary);">
+        <span class="op-icon">&#10006;</span>
+        <div class="op-title">Multiplication</div>
+        <div class="chip-row">
+          <span class="chip">each</span>
+          <span class="chip">per</span>
+          <span class="chip">every</span>
+          <span class="chip">times</span>
+          <span class="chip">groups of</span>
+        </div>
+        <div class="op-example">"<strong>Each</strong> bracelet costs \(\$2.50\)." &rarr; multiply price &times; how many.</div>
+      </div>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
+      <p style="margin:0 0 10px 0;"><strong>Title:</strong> Decimal Word Problem Vocabulary</p>
+      <ul style="margin-bottom:0;">
+        <li><strong>Add</strong> when two or more amounts are being <em>combined</em> into a <em>total</em>.</li>
+        <li><strong>Subtract</strong> when you're finding <em>change</em>, <em>how much more/less</em>, or what's <em>left over</em>.</li>
+        <li><strong>Multiply</strong> when the <em>same</em> price or amount happens <em>each</em> time, for several items or people.</li>
+        <li><strong>Decimal Tip:</strong> Always line up the decimal points before you add or subtract. Add extra zeros so both numbers have the same number of decimal places.</li>
+      </ul>
+    </div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Copy the vocabulary above into your notebook. Study the keyword cards, then answer the 3 quick-check questions below.
+    </div>
+
+    <div class="notebook-box" style="margin-top:6px;">
+      <div class="notebook-header">Quick Check</div>
+      <p style="margin:0;">Read each phrase and type the operation it points to: <strong>add</strong>, <strong>subtract</strong>, or <strong>multiply</strong>.</p>
+    </div>
+
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>1.</strong> "What is the <em>combined</em> weight of both bags?"
+      <div style="margin-top:10px;">
+        <input type="text" id="vq-0-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVocabQuick(0)">Check</button>
+      </div>
+      <div id="vq-0-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>2.</strong> "How much <em>change</em> will she get back from a \(\$20\) bill?"
+      <div style="margin-top:10px;">
+        <input type="text" id="vq-1-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVocabQuick(1)">Check</button>
+      </div>
+      <div id="vq-1-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>3.</strong> "<em>Each</em> ticket costs \(\$4.25\). What is the cost for 6 tickets?"
+      <div style="margin-top:10px;">
+        <input type="text" id="vq-2-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVocabQuick(2)">Check</button>
+      </div>
+      <div id="vq-2-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: GUIDED EXAMPLES -->
+  <div id="guided" class="panel">
+    <div class="section-title">Guided Examples: One Easy Example per Operation</div>
+    <div class="explainer-box">
+      For each problem: <strong>find the keyword</strong>, <strong>decide the operation</strong>, <strong>line up the decimal points</strong>, then <strong>solve</strong>. Use the arrows to move between the 3 examples, and click <strong>Next Step</strong> to reveal the solution one piece at a time.
+    </div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read each word problem and try it yourself in your notebook first. Then click through the steps to check your thinking.
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="ge-prev-btn" onclick="changeGE(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="ge-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="ge-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="ge-next-btn" onclick="changeGE(1)">Next &rarr;</button>
+      </div>
+      <div id="ge-content" style="min-height: 220px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextGEStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetGEStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: PRACTICE -->
+  <div id="practice" class="panel">
+    <div class="section-title">Your Turn: 5 Word Problems</div>
+    <div class="explainer-box">
+      Solve each problem in your notebook first: underline the keyword, decide the operation, line up the decimal points, then compute. Type just your final answer below and check it.
+    </div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      You get up to <strong>2 tries</strong> per problem - after a second miss, the correct answer is shown and it locks. Type money answers as a plain number, like <strong>4.65</strong> (no dollar sign needed).
+    </div>
+
+    <div id="practice-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // VOCABULARY QUICK CHECK
+  // ==========================================
+  const vocabQuick = [
+    { q: "Combined weight of both bags", a: "add" },
+    { q: "Change back from a $20 bill", a: "subtract" },
+    { q: "Each ticket costs $4.25, cost for 6 tickets", a: "multiply" }
+  ];
+
+  function checkVocabQuick(idx) {
+    const p = vocabQuick[idx];
+    const val = document.getElementById(`vq-${idx}-input`).value;
+    const fb = document.getElementById(`vq-${idx}-feedback`);
+
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter your answer before submitting.");
+      return;
+    }
+
+    const correct = val.trim().toLowerCase() === p.a;
+    LessonCheck.check(`vq-${idx}`, correct, fb, {
+      correct: `Correct! Answer: <strong>${p.a}</strong>`,
+      retry: "Not quite yet. Look back at the keyword cards above. Try again.",
+      reveal: `Here's the correct answer: <strong>${p.a}</strong>`
+    }, { label: `Vocabulary Quick Check: ${p.q}`, answer: val, section: '1. Vocabulary' });
+  }
+
+  // ==========================================
+  // GUIDED EXAMPLES CAROUSEL
+  // ==========================================
+  let currentGE = 0;
+  let currentGEStep = 1;
+
+  const geExamples = [
+    {
+      title: "Example 1 (Addition): Shopping Total",
+      maxSteps: 3,
+      steps: [
+        "<strong>Problem:</strong> Mateo buys a notebook for \\(\\$3.45\\) and a pen for \\(\\$1.20\\). What is the <em>total</em> he spends?",
+        "<strong>Step 1 - Find the keyword:</strong> \\(\\text{&ldquo;total&rdquo;}\\) means we <strong>add</strong> the two amounts.",
+        "<strong>Step 2 - Line up the decimal points and add:</strong> \\(3.45 + 1.20 = \\mathbf{\\$4.65}\\)"
+      ]
+    },
+    {
+      title: "Example 2 (Subtraction): Change Back",
+      maxSteps: 3,
+      steps: [
+        "<strong>Problem:</strong> Valentina has \\(\\$10.00\\). She spends \\(\\$6.75\\) on lunch. How much <em>change</em> does she get back?",
+        "<strong>Step 1 - Find the keyword:</strong> \\(\\text{&ldquo;change back&rdquo;}\\) means we <strong>subtract</strong> what she spent from what she started with.",
+        "<strong>Step 2 - Line up the decimal points and subtract:</strong> \\(10.00 - 6.75 = \\mathbf{\\$3.25}\\)"
+      ]
+    },
+    {
+      title: "Example 3 (Multiplication): Same Price, Several Items",
+      maxSteps: 3,
+      steps: [
+        "<strong>Problem:</strong> <em>Each</em> bracelet costs \\(\\$2.50\\). Diego buys \\(4\\) bracelets. What is the total cost?",
+        "<strong>Step 1 - Find the keyword:</strong> \\(\\text{&ldquo;each&rdquo;}\\) means the <em>same</em> price repeats \\(4\\) times, so we <strong>multiply</strong>.",
+        "<strong>Step 2 - Multiply:</strong> \\(4 \\times 2.50 = \\mathbf{\\$10.00}\\)"
+      ]
+    }
+  ];
+
+  function renderGE() {
+    const ex = geExamples[currentGE];
+    document.getElementById('ge-title').innerText = `Example ${currentGE + 1} of ${geExamples.length}`;
+    document.getElementById('ge-dots').innerHTML = geExamples.map((_, i) =>
+      `<div class="dot ${i === currentGE ? 'active' : ''}" onclick="jumpGE(${i})"></div>`
+    ).join('');
+
+    let stepsHtml = `<h3 style="color:var(--primary); margin-top:0;">${ex.title}</h3>`;
+    for (let i = 0; i < currentGEStep; i++) {
+      stepsHtml += `<div class="step-item visible">${ex.steps[i]}</div>`;
+    }
+    document.getElementById('ge-content').innerHTML = stepsHtml;
+
+    document.getElementById('ge-prev-btn').disabled = currentGE === 0;
+    document.getElementById('ge-next-btn').disabled = currentGE === geExamples.length - 1;
+    triggerMathJax();
+  }
+
+  function changeGE(dir) {
+    currentGE = Math.max(0, Math.min(geExamples.length - 1, currentGE + dir));
+    currentGEStep = 1;
+    renderGE();
+  }
+  function jumpGE(idx) { currentGE = idx; currentGEStep = 1; renderGE(); }
+  function nextGEStep() {
+    if (currentGEStep < geExamples[currentGE].maxSteps) { currentGEStep++; renderGE(); }
+  }
+  function resetGEStep() { currentGEStep = 1; renderGE(); }
+
+  // ==========================================
+  // PRACTICE (5 PROBLEMS)
+  // ==========================================
+  const practiceProblems = [
+    { q: "A recipe needs \\(1.5\\) cups of flour and \\(0.75\\) cups of sugar. How many cups of dry ingredients in all?", a: 2.25, tol: 0.01 },
+    { q: "Camila had \\(\\$25.00\\). She bought a book for \\(\\$14.35\\). How much money does she have left?", a: 10.65, tol: 0.01 },
+    { q: "Gas costs \\(\\$3.20\\) per gallon. How much will \\(5\\) gallons cost?", a: 16.00, tol: 0.01 },
+    { q: "Diego has \\(\\$8.50\\). He earns \\(\\$5.25\\) from chores, then spends \\(\\$3.00\\) on a snack. How much money does he have now?", a: 10.75, tol: 0.01 },
+    { q: "Each notebook costs \\(\\$1.75\\). Sofia buys \\(6\\) notebooks for her class. What is the total cost?", a: 10.50, tol: 0.01 }
+  ];
+
+  function renderPractice() {
+    const html = practiceProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 12px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px;">
+          <input type="text" id="pr-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="Answer">
+          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkPractice(${i})">Check</button>
+        </div>
+        <div id="pr-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('practice-list').innerHTML = html;
+    practiceProblems.forEach((p, i) => LessonProgress.preRegister(`pr-${i}`, `Practice #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '').replace(/<[^>]+>/g, '')}`, '3. Practice'));
+    triggerMathJax();
+  }
+
+  function checkPractice(idx) {
+    const p = practiceProblems[idx];
+    const raw = document.getElementById(`pr-${idx}-input`).value;
+    const fb = document.getElementById(`pr-${idx}-feedback`);
+
+    if (!raw.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+
+    const correct = LessonCheck.numericMatch(raw, p.a, p.tol);
+    const label = `Practice #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '').replace(/<[^>]+>/g, '')}`;
+
+    LessonCheck.check(`pr-${idx}`, correct, fb, {
+      correct: `Correct! Answer: \\(\\mathbf{\\$${p.a.toFixed(2)}}\\)`,
+      retry: "Not quite yet. Underline the keyword first: is it a total, a change/difference, or the same amount repeated? Then line up the decimal points. Try again.",
+      reveal: `Here's the correct answer: \\(\\mathbf{\\$${p.a.toFixed(2)}}\\)`
+    }, { label, answer: raw, section: '3. Practice' });
+  }
+
+  // Initial render
+  renderGE();
+  renderPractice();
+
+  // Pre-register every question so the printed report always shows the
+  // full page, blank for anything never attempted.
+  vocabQuick.forEach((p, i) => LessonProgress.preRegister(`vq-${i}`, `Vocabulary Quick Check: ${p.q}`, '1. Vocabulary'));
+</script>
+<div id="print-report"></div>
+</body>
+</html>
