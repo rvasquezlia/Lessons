@@ -83,49 +83,21 @@
 
     <h3>Example 1: Adding Decimals (\(12.7 + 4.25\))</h3>
     <div class="step-box">
-      <button class="btn-lg" onclick="revealEx1Step()">Reveal Next Step</button>
-      <button class="btn-secondary" onclick="resetEx1Steps()">Reset</button>
-
-      <div id="ex1-step-1" class="step-item">
-        <strong>Step 1: Estimate.</strong> Round to the nearest whole number: \(12.7 \rightarrow 13\) and \(4.25 \rightarrow 4\). Estimate: \(13 + 4 = 17\).
-      </div>
-      <div id="ex1-step-2" class="step-item">
-        <strong>Step 2: Exact calculation.</strong> Line up the decimal points!
-        <table class="data-table" style="text-align:center; margin-top:10px;">
-          <thead><tr><th>Tens</th><th>Ones</th><th>Tenths</th><th>Hundredths</th></tr></thead>
-          <tbody>
-            <tr><td>1</td><td>2</td><td>7</td><td>0</td></tr>
-            <tr><td>+</td><td>4</td><td>2</td><td>5</td></tr>
-            <tr style="font-weight:900; color:var(--primary);"><td>1</td><td>6</td><td>9</td><td>5</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div id="ex1-step-3" class="step-item">
-        <strong>Check Your Work:</strong> Our exact answer is \(16.95\). Our estimate was \(17\). Since \(16.95\) is very close to \(17\), our answer is reasonable!
+      <p style="text-align:center;"><strong>Estimate Check:</strong> \(12.7 \approx 13\), \(4.25 \approx 4\) &rarr; \(13 + 4 = 17\)</p>
+      <div id="ex1-worked-content" style="min-height:240px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextEx1Step()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetEx1Step()">Reset Steps</button>
       </div>
     </div>
 
     <h3>Example 2: Subtracting Decimals (\(8.4 - 2.76\))</h3>
     <div class="step-box">
-      <button class="btn-lg" onclick="revealEx2Step()">Reveal Next Step</button>
-      <button class="btn-secondary" onclick="resetEx2Steps()">Reset</button>
-
-      <div id="ex2-step-1" class="step-item">
-        <strong>Step 1: Estimate.</strong> Round to the nearest whole number: \(8.4 \rightarrow 8\) and \(2.76 \rightarrow 3\). Estimate: \(8 - 3 = 5\).
-      </div>
-      <div id="ex2-step-2" class="step-item">
-        <strong>Step 2: Exact calculation.</strong> Use placeholder zeros!
-        <table class="data-table" style="text-align:center; margin-top:10px;">
-          <thead><tr><th>Ones</th><th>Tenths</th><th>Hundredths</th></tr></thead>
-          <tbody>
-            <tr><td>8</td><td>4</td><td>0</td></tr>
-            <tr><td>- 2</td><td>7</td><td>6</td></tr>
-            <tr style="font-weight:900; color:var(--primary);"><td>5</td><td>6</td><td>4</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div id="ex2-step-3" class="step-item">
-        <strong>Check Your Work:</strong> The exact answer \(5.64\) is close to the estimate of \(5\). This confirms the decimal point is in the correct place.
+      <p style="text-align:center;"><strong>Estimate Check:</strong> \(8.4 \approx 8\), \(2.76 \approx 3\) &rarr; \(8 - 3 = 5\)</p>
+      <div id="ex2-worked-content" style="min-height:240px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextEx2Step()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetEx2Step()">Reset Steps</button>
       </div>
     </div>
 
@@ -343,23 +315,122 @@
   renderEstExactList('tryit-list', tryitProblems, 'tryit', '1. Add & Subtract Decimals', 'check');
 
   // ==========================================
-  // EXAMPLE 1 & 2 STEP REVEAL (Panel 1)
+  // EXAMPLE 1: ADDING DECIMALS (Panel 1) - same algo-table grid convention
+  // as the multiplication worked example, broken into smaller pedagogical
+  // steps (set up -> add the small places -> add the large places -> check)
+  // instead of dumping the whole calculation in one step.
   // ==========================================
-  let ex1Step = 0, ex2Step = 0;
-  function revealEx1Step() {
-    if (ex1Step < 3) { ex1Step++; document.getElementById(`ex1-step-${ex1Step}`).classList.add('visible'); triggerMathJax(); }
+  let ex1WorkedStep = 1;
+  const ex1WorkedMaxStep = 4;
+
+  function renderEx1Worked() {
+    const step = ex1WorkedStep;
+    const html = `
+      <table class="algo-table" style="margin:20px auto;">
+        <tr>
+          <td></td>
+          <td class="grid-cell">1</td>
+          <td class="grid-cell">2</td>
+          <td class="decimal-cell">.</td>
+          <td class="grid-cell">7</td>
+          <td class="grid-cell" style="color:#0284c7;">0</td>
+        </tr>
+        <tr>
+          <td class="grid-cell line-under">+</td>
+          <td class="grid-cell line-under"></td>
+          <td class="grid-cell line-under">4</td>
+          <td class="decimal-cell line-under">.</td>
+          <td class="grid-cell line-under">2</td>
+          <td class="grid-cell line-under">5</td>
+        </tr>
+        ${step >= 2 ? `
+        <tr style="${step >= 3 ? 'color:var(--primary); font-weight:900;' : ''}">
+          <td></td>
+          <td class="grid-cell">${step >= 3 ? '1' : ''}</td>
+          <td class="grid-cell">${step >= 3 ? '6' : ''}</td>
+          <td class="decimal-cell">.</td>
+          <td class="grid-cell">9</td>
+          <td class="grid-cell">5</td>
+        </tr>` : ''}
+      </table>
+      <p style="text-align:center; font-weight:bold;">
+        ${step === 1 ? 'Step 1: Line up the decimal points. Pad \\(12.7\\) with a trailing zero (\\(12.70\\), shown in blue) so both numbers have the same number of decimal places.' : ''}
+        ${step === 2 ? 'Step 2: Add the smallest place values first - the hundredths and tenths columns: \\(0 + 5 = 5\\) and \\(7 + 2 = 9\\). No regrouping is needed here.' : ''}
+        ${step === 3 ? 'Step 3: Add the ones and tens columns: \\(2 + 4 = 6\\) and \\(1 + 0 = 1\\). Exact Sum = \\(\\mathbf{16.95}\\).' : ''}
+        ${step === 4 ? 'Check Your Work: our exact answer \\(16.95\\) is very close to the estimate of \\(17\\), so this is reasonable!' : ''}
+      </p>
+    `;
+    document.getElementById('ex1-worked-content').innerHTML = html;
+    triggerMathJax();
   }
-  function resetEx1Steps() {
-    ex1Step = 0;
-    for (let i = 1; i <= 3; i++) document.getElementById(`ex1-step-${i}`).classList.remove('visible');
+  function nextEx1Step() {
+    if (ex1WorkedStep < ex1WorkedMaxStep) { ex1WorkedStep++; renderEx1Worked(); }
   }
-  function revealEx2Step() {
-    if (ex2Step < 3) { ex2Step++; document.getElementById(`ex2-step-${ex2Step}`).classList.add('visible'); triggerMathJax(); }
+  function resetEx1Step() {
+    ex1WorkedStep = 1; renderEx1Worked();
   }
-  function resetEx2Steps() {
-    ex2Step = 0;
-    for (let i = 1; i <= 3; i++) document.getElementById(`ex2-step-${i}`).classList.remove('visible');
+  renderEx1Worked();
+
+  // ==========================================
+  // EXAMPLE 2: SUBTRACTING DECIMALS (Panel 1) - same grid convention, with
+  // the regrouping/borrowing cascade shown as its own separate step (in red,
+  // struck-through digits) before the subtraction step, instead of being
+  // folded into a single "exact calculation" block.
+  // ==========================================
+  let ex2WorkedStep = 1;
+  const ex2WorkedMaxStep = 4;
+
+  function renderEx2Worked() {
+    const step = ex2WorkedStep;
+    const html = `
+      <table class="algo-table" style="margin:20px auto;">
+        <tr class="carry-row">
+          <td></td>
+          <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">7</span>' : ''}</td>
+          <td class="decimal-cell"></td>
+          <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">13</span>' : ''}</td>
+          <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">10</span>' : ''}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="grid-cell">${step >= 2 ? '<span class="struck-digit">8</span>' : '8'}</td>
+          <td class="decimal-cell">.</td>
+          <td class="grid-cell">${step >= 2 ? '<span class="struck-digit">4</span>' : '4'}</td>
+          <td class="grid-cell" style="color:#0284c7;">${step >= 2 ? '<span class="struck-digit">0</span>' : '0'}</td>
+        </tr>
+        <tr>
+          <td class="grid-cell line-under">-</td>
+          <td class="grid-cell line-under">2</td>
+          <td class="decimal-cell line-under">.</td>
+          <td class="grid-cell line-under">7</td>
+          <td class="grid-cell line-under">6</td>
+        </tr>
+        ${step >= 3 ? `
+        <tr style="color:var(--primary); font-weight:900;">
+          <td></td>
+          <td class="grid-cell">5</td>
+          <td class="decimal-cell">.</td>
+          <td class="grid-cell">6</td>
+          <td class="grid-cell">4</td>
+        </tr>` : ''}
+      </table>
+      <p style="text-align:center; font-weight:bold;">
+        ${step === 1 ? 'Step 1: Line up the decimal points. Pad \\(8.4\\) with a trailing zero (\\(8.40\\), shown in blue) so both numbers have the same number of decimal places.' : ''}
+        ${step === 2 ? 'Step 2: Regroup. The hundredths column cannot subtract \\(0 - 6\\), so it borrows from the tenths column. The tenths column then cannot subtract \\(3 - 7\\), so it borrows from the ones column - shown in red above.' : ''}
+        ${step === 3 ? 'Step 3: Subtract each column with the regrouped values: \\(10 - 6 = 4\\), \\(13 - 7 = 6\\), \\(7 - 2 = 5\\). Exact Difference = \\(\\mathbf{5.64}\\).' : ''}
+        ${step === 4 ? 'Check Your Work: the exact answer \\(5.64\\) is close to the estimate of \\(5\\). This confirms the decimal point is in the correct place.' : ''}
+      </p>
+    `;
+    document.getElementById('ex2-worked-content').innerHTML = html;
+    triggerMathJax();
   }
+  function nextEx2Step() {
+    if (ex2WorkedStep < ex2WorkedMaxStep) { ex2WorkedStep++; renderEx2Worked(); }
+  }
+  function resetEx2Step() {
+    ex2WorkedStep = 1; renderEx2Worked();
+  }
+  renderEx2Worked();
 
   // ==========================================
   // WORKED MULTIPLICATION EXAMPLE (Panel 2) - corrected 4-column grid
