@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Integer Operations - Pretest &amp; Weekly Review</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Q01W02 - Pretest &amp; Review</span>
+    <h1>Integer Operations: Pretest &amp; Weekly Review</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Pre-Algebra 7 - Integer Operations: Pretest &amp; Weekly Review')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    This page pulls together the whole week's integer work - opposites, absolute value, the four operations, and word problems - in one place so you can review and pretest yourself before the week begins. Work the tabs below <strong>in order, left to right</strong>. Tabs 1-3 are review: reference material and guided practice with two tries and a reveal if you miss twice. Tabs 4-6 are pretest-style: you submit once and your teacher reviews it from your printed report, just like a real pretest. When you finish the Exit Ticket, type your name above and click <strong>Print My Progress</strong>.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('numbersystem')">1. Number System &amp; Absolute Value</button>
+    <button class="tab-btn" onclick="switchTab('reference')">2. Operation Rules</button>
+    <button class="tab-btn" onclick="switchTab('mixedpractice')">3. Mixed Computation</button>
+    <button class="tab-btn" onclick="switchTab('erroranalysis')">4. Error Analysis</button>
+    <button class="tab-btn" onclick="switchTab('vocabulary')">5. Vocabulary &amp; Translating</button>
+    <button class="tab-btn" onclick="switchTab('wordproblems')">6. Real-World Problems</button>
+    <button class="tab-btn" onclick="switchTab('exitticket')">7. Exit Ticket</button>
+  </nav>
+
+  <!-- PANEL 1: NUMBER SYSTEM & ABSOLUTE VALUE -->
+  <div id="numbersystem" class="panel active">
+    <div class="section-title">Understanding the Number System</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Weekly Review &middot; Lessons 1.1-1.2 &middot; CCSS.Math.Content.7.NS.A.1</p>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read the vocabulary box and copy it into your notebook. Then work through the opposites and absolute value practice below - you get two tries per item before the answer is shown.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
+      <ul>
+        <li><strong>Whole Numbers:</strong> the numbers used for counting, starting from zero (\(0, 1, 2, 3, \dots\)). They don't include fractions, decimals, or negatives.</li>
+        <li><strong>Integers:</strong> all the whole numbers, their negative counterparts, and zero (\(\dots, -3, -2, -1, 0, 1, 2, 3, \dots\)). Every whole number is an integer, but not every integer is a whole number.</li>
+        <li><strong>Positive Numbers:</strong> any number greater than zero - to the right of zero on a number line.</li>
+        <li><strong>Negative Numbers:</strong> any number less than zero - to the left of zero on a number line.</li>
+        <li><strong>Opposites:</strong> two numbers the same distance from zero but in opposite directions. \(5\) and \(-5\) are opposites. The opposite of \(0\) is \(0\).</li>
+        <li><strong>Absolute Value \(|x|\):</strong> a number's distance from zero, always non-negative. \(|5| = 5\) and \(|-5| = 5\).</li>
+      </ul>
+    </div>
+
+    <div class="explainer-box">
+      <strong>Visualizing Opposites: \(-4\) and \(4\)</strong> - notice that both are exactly 4 units away from zero, just in opposite directions.
+      <div id="opposites-numberline" style="margin-top:10px;"></div>
+    </div>
+
+    <h3>Part 1: Finding Opposites</h3>
+    <div id="opposites-list"></div>
+
+    <h3 style="margin-top:28px;">Part 2: Absolute Value</h3>
+    <div id="absvalue-list"></div>
+
+    <h3 style="margin-top:28px;">Part 3: Compare Using \(<, >,\) or \(=\)</h3>
+    <div id="compare-list"></div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Critical Thinking</h3>
+      <p>Explain why the absolute value of a number is never negative. Use the concept of distance in your answer.</p>
+      <textarea id="absvalue-critical" class="form-control-lg" rows="3" placeholder="Explain using the idea of distance..."></textarea>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkAbsValueCritical()">Submit My Work</button>
+      <div id="absvalue-critical-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: REFERENCE GUIDE -->
+  <div id="reference" class="panel">
+    <div class="section-title">Integer Operations Reference Guide</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Copy the rules into your notebook, study the visual example, then answer the two Check Your Understanding problems.
+    </div>
+    <p>Integers are whole numbers and their opposites (\(\dots, -3, -2, -1, 0, 1, 2, 3, \dots\)). This guide provides the essential rules for adding, subtracting, multiplying, and dividing integers.</p>
+
+    <div class="notebook-box">
+      <div class="notebook-header">1. Addition Rules</div>
+      <ul>
+        <li><strong>Same Signs:</strong> Add the absolute values and keep the common sign. \(5+3=8\) &nbsp;&nbsp; \(-5+(-3)=-8\)</li>
+        <li><strong>Different Signs:</strong> Subtract the smaller absolute value from the larger. Keep the sign of the number with the larger absolute value. \(-7+4=-3\) (subtract \(7-4=3\); keep negative because \(|-7|>|4|\)). \(10+(-2)=8\) (subtract \(10-2=8\); keep positive because \(|10|>|-2|\)).</li>
+      </ul>
+    </div>
+
+    <div class="explainer-box">
+      <strong>Visualizing Addition: \(-3 + 5 = 2\)</strong> - starting at 0, move left 3 units, then right 5 units to land at 2.
+      <div id="addition-numberline" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">2. Subtraction Rules: "Keep-Change-Change"</div>
+      <p style="margin:0 0 10px 0;">To subtract an integer, add its opposite. Follow these three steps to rewrite the problem as addition:</p>
+      <ol>
+        <li>Keep the first number exactly as it is.</li>
+        <li>Change the subtraction sign to an addition sign.</li>
+        <li>Change the sign of the second number to its opposite.</li>
+      </ol>
+      <p style="margin:10px 0 0 0;"><em>Example:</em> \(4 - (-3)\): Keep the 4, Change \(-\) to \(+\), Change \(-3\) to \(3\) &rarr; \(4 + 3 = \mathbf{7}\).</p>
+      <p style="margin:6px 0 0 0;"><em>Example:</em> \(-2 - 5\): Keep \(-2\), Change \(-\) to \(+\), Change \(5\) to \(-5\) &rarr; \(-2 + (-5) = \mathbf{-7}\).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">3. Multiplication &amp; Division Sign Laws</div>
+      <ul>
+        <li><strong>Same Signs = Positive:</strong> \((+)\times(+)=(+)\), \((-)\times(-)=(+)\). Examples: \(6\times2=12\), \(-4\times(-3)=12\), \(-20\div(-5)=4\).</li>
+        <li><strong>Different Signs = Negative:</strong> \((+)\times(-)=(-)\), \((-)\times(+)=(-)\). Examples: \(8\times(-2)=-16\), \(-9\times3=-27\), \(15\div(-3)=-5\).</li>
+      </ul>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Check Your Understanding</h3>
+      <p>Use the rules above to solve these two problems. Show your steps.</p>
+      <div id="checkunderstand-list"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: MIXED COMPUTATION PRACTICE -->
+  <div id="mixedpractice" class="panel">
+    <div class="section-title">Computing Integers: Mixed Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Use the rules from the Reference Guide. For subtraction, use Keep-Change-Change to rewrite as addition. For multiplication and division, count the signs. You get two tries per problem.
+    </div>
+
+    <h3>Part 1: Addition and Subtraction</h3>
+    <p>Rewrite subtraction problems as addition before solving.</p>
+    <div id="mp-part1-list"></div>
+
+    <h3 style="margin-top:28px;">Part 2: Multiplication and Division</h3>
+    <div id="mp-part2-list"></div>
+
+    <h3 style="margin-top:28px;">Part 3: Vertical Format and Multi-Step Practice</h3>
+    <div id="mp-part3-list"></div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">19. Explain the Rule</h3>
+      <p>A student says that \(-5 - 8\) is \(3\) because \(8 - 5 = 3\). Explain why this student is incorrect using the Keep-Change-Change rule.</p>
+      <textarea id="mp-explain19" class="form-control-lg" rows="3" placeholder="Explain the student's error..."></textarea>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkMPExplain19()">Submit My Work</button>
+      <div id="mp-explain19-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">20. Challenge</h3>
+      <p>Find the value of the expression \(\dfrac{(-2)^3 + 10}{-2}\). Show each step of your work.</p>
+      <div class="form-group">
+        <input type="text" id="mp-challenge20-answer" class="form-control-lg" style="max-width:180px;" placeholder="Final value">
+        <textarea id="mp-challenge20-explain" class="form-control-lg" rows="3" style="margin-top:10px;" placeholder="Show each step..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkMPChallenge20()">Submit My Work</button>
+      <div id="mp-challenge20-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 4: ERROR ANALYSIS -->
+  <div id="erroranalysis" class="panel">
+    <div class="section-title">Error Analysis: Spot the Mistake</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      This tab is pretest-style: even experts make mistakes! For each problem, identify the specific error, name the correct rule, and give the right answer. You submit once - your work is reviewed from your printed report, not revealed on screen.
+    </div>
+    <div id="erroranalysis-list"></div>
+
+    <div class="notebook-box" style="margin-top:24px;">
+      <div class="notebook-header">Remember the Sign Laws</div>
+      <p style="margin:0;"><strong>Multiplying or dividing:</strong> Same signs &rarr; positive. Different signs &rarr; negative.<br><strong>Adding:</strong> Same signs &rarr; add and keep the sign. Different signs &rarr; subtract and keep the sign of the larger absolute value.</p>
+    </div>
+  </div>
+
+  <!-- PANEL 5: VOCABULARY & TRANSLATING -->
+  <div id="vocabulary" class="panel">
+    <div class="section-title">Integer Literacy: Vocabulary and Key Words</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Certain words act as "clues" telling you whether a number is positive or negative, and whether a situation calls for multiplication or division. Sort the words below, then translate the phrases into integers.
+    </div>
+
+    <div class="explainer-box">
+      <strong>Positive Integers (+):</strong> represent gains, increases, or positions above a reference point (like sea level or zero).<br>
+      <strong>Negative Integers (-):</strong> represent losses, decreases, or positions below a reference point.
+    </div>
+
+    <h3>Part 1: Categorizing Clue Words</h3>
+    <p>Sort each word by whether it represents a positive or negative change.</p>
+    <div id="cluewords-list"></div>
+    <div style="text-align:center; margin-top:14px;">
+      <button class="btn-lg" onclick="checkClueWords()">Check My Sorting</button>
+    </div>
+    <div id="cluewords-feedback" class="feedback-msg" style="margin-top:14px;"></div>
+
+    <h3 style="margin-top:28px;">Part 2: Multiplication and Division Clue Words</h3>
+    <p>Sort each clue word by the operation it most often represents.</p>
+    <div id="opmatch-list"></div>
+    <div style="text-align:center; margin-top:14px;">
+      <button class="btn-lg" onclick="checkOpMatch()">Check My Matches</button>
+    </div>
+    <div id="opmatch-feedback" class="feedback-msg" style="margin-top:14px;"></div>
+
+    <h3 style="margin-top:28px;">Part 3: Translating Phrases</h3>
+    <p>Write the integer (positive or negative) that represents each phrase.</p>
+    <div id="translate-list"></div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Critical Thinking</h3>
+      <p>Explain why the number zero is important when we talk about integers like "elevation" or "bank accounts." What does zero represent in those specific contexts?</p>
+      <textarea id="vocab-critical" class="form-control-lg" rows="3" placeholder="Explain what zero represents..."></textarea>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkVocabCritical()">Submit My Work</button>
+      <div id="vocab-critical-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 6: REAL-WORLD WORD PROBLEMS -->
+  <div id="wordproblems" class="panel">
+    <div class="section-title">Real-World Integer Word Problems</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      This tab is pretest-style: identify the clue words, write the expression, then solve. You submit once per problem - your work is reviewed from your printed report.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Clue Words Reference</div>
+      <p style="margin:0;"><strong>Positive (+):</strong> Deposit, Gain, Above Sea Level, Ascend, Credit, Rise.<br><strong>Negative (-):</strong> Withdraw, Loss, Below Sea Level, Descend, Debt, Debit.<br><strong>Multiplication Clues:</strong> Rate, Per, Each. &nbsp;&nbsp; <strong>Division Clues:</strong> Shared, Average, Per.</p>
+    </div>
+
+    <h3>1. Addition Section</h3>
+    <div class="explainer-box"><strong>Guided Example (Temperature):</strong> It was \(-8\)&deg;F and rose \(12\)&deg;F. Expression: \(-8 + 12 = 4\). The new temperature is \(4\)&deg;F.</div>
+    <div id="wp-add-list"></div>
+
+    <h3 style="margin-top:28px;">2. Subtraction Section</h3>
+    <div class="explainer-box"><strong>Guided Example (Elevation):</strong> A bird is 20ft above sea level (\(+20\)) and dives 25ft down (\(-25\)). Expression: \(20 - 25 = -5\). Result: 5ft below sea level.</div>
+    <div id="wp-sub-list"></div>
+
+    <h3 style="margin-top:28px;">3. Multiplication Section</h3>
+    <div class="explainer-box"><strong>Guided Example (Stock Market):</strong> A stock drops \$3 each day for 4 days. Expression: \(-3 \times 4\). The total change is \(-\$12\).</div>
+    <div id="wp-mult-list"></div>
+
+    <h3 style="margin-top:28px;">4. Division Section</h3>
+    <div class="explainer-box"><strong>Guided Example (Shared Debt):</strong> Four friends together owe \$80 for a lost library book, shared equally. Expression: \(-80 \div 4\). Each person owes \$20 (\(-\$20\)).</div>
+    <div id="wp-div-list"></div>
+  </div>
+
+  <!-- PANEL 7: EXIT TICKET -->
+  <div id="exitticket" class="panel">
+    <div class="section-title">Exit Ticket: Integer Operations Readiness Check</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Answer all four questions, then click Submit Exit Ticket. This is the last step before you print your progress - go back to the Student Name box in the blue bar at the top of the page, type your name, and click Print My Progress.
+    </div>
+
+    <form id="exit-form" onsubmit="submitExitTicket(event)">
+      <div class="form-group">
+        <label>1. Solve: \(-9 + (-6) = \) ?</label>
+        <input type="text" id="exit-1" class="form-control-lg" placeholder="Enter your answer">
+      </div>
+      <div class="form-group">
+        <label>2. Solve using Keep-Change-Change: \(-7 - (-4) = \) ?</label>
+        <input type="text" id="exit-2" class="form-control-lg" placeholder="Enter your answer">
+      </div>
+      <div class="form-group">
+        <label>3. Explain in your own words why "same signs" always give a positive answer when multiplying or dividing.</label>
+        <textarea id="exit-explain" class="form-control-lg" rows="3" placeholder="Explain the sign rule..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>4. Which part of integer operations felt the most confusing this week, and what will you review before the pretest?</label>
+        <textarea id="exit-reflect" class="form-control-lg" rows="3" placeholder="Reflect on your learning..."></textarea>
+      </div>
+      <button type="submit" class="btn-lg">Submit Exit Ticket</button>
+    </form>
+    <div id="exit-feedback" class="feedback-msg"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // REUSABLE SINGLE-FIELD PRACTICE LIST
+  // mode 'check' = 2 tries then reveal; mode 'submit' = pretest-style single submission
+  // ==========================================
+  const listRegistry = {};
+
+  function renderSimpleList(containerId, problems, keyPrefix, section, mode) {
+    listRegistry[keyPrefix] = { problems, section, mode };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkSimpleItem('${keyPrefix}', ${i})">${mode === 'submit' ? 'Submit' : 'Check'}</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, p.label || p.q.replace(/\\\(|\\\)/g, ''), section));
+  }
+
+  function checkSimpleItem(keyPrefix, idx) {
+    const cfg = listRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = p.a !== undefined ? LessonCheck.numericMatch(val, p.a, p.tol || 0.01) : (p.accepted || []).includes(normalizeExpr(val));
+    const label = p.label || p.q.replace(/\\\(|\\\)/g, '');
+    const answerText = p.displayAnswer || (p.a !== undefined ? String(p.a) : (p.accepted ? p.accepted[0] : ''));
+
+    if (cfg.mode === 'submit') {
+      LessonCheck.submit(fb, { key: `${keyPrefix}-${idx}`, label, answer: val, section: cfg.section, correct });
+    } else {
+      LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+        correct: `Correct! Answer: ${answerText}`,
+        retry: p.hint || "Not quite yet. Review the rule and try again.",
+        reveal: `Here's the correct answer: ${answerText}`
+      }, { label, answer: val, section: cfg.section });
+    }
+  }
+
+  function normalizeExpr(s) {
+    return String(s || '').toLowerCase().replace(/\s+/g, '');
+  }
+
+  // ==========================================
+  // PANEL 1: NUMBER SYSTEM & ABSOLUTE VALUE
+  // ==========================================
+  renderNumberLine('opposites-numberline', {
+    min: -6, max: 6, step: 1,
+    points: [{ value: -4, label: '-4', color: '#1e3a8a' }, { value: 4, label: '4', color: '#1e3a8a' }],
+    arrows: [{ from: 0, to: -4, label: '4 units', color: '#d97706', row: 0 }, { from: 0, to: 4, label: '4 units', color: '#d97706', row: 0 }]
+  });
+
+  const oppositesProblems = [
+    { q: "Opposite of \\(-12\\)", a: 12, hint: "The opposite is the same distance from zero, on the other side." },
+    { q: "Opposite of \\(7\\)", a: -7 },
+    { q: "Opposite of \\(0\\)", a: 0 },
+    { q: "Opposite of \\(-55\\)", a: 55 }
+  ];
+  renderSimpleList('opposites-list', oppositesProblems, 'opp', '1. Number System & Absolute Value', 'check');
+
+  const absValueProblems = [
+    { q: "\\(|-9|\\)", a: 9 },
+    { q: "\\(|15|\\)", a: 15 },
+    { q: "\\(|0|\\)", a: 0 },
+    { q: "\\(|-100|\\)", a: 100 }
+  ];
+  renderSimpleList('absvalue-list', absValueProblems, 'absval', '1. Number System & Absolute Value', 'check');
+
+  const compareProblems = [
+    { q: "\\(|-5|\\) ___ \\(-10\\) (enter <, >, or =)", accepted: [">"], displayAnswer: ">", label: "Compare |-5| ___ -10" },
+    { q: "\\(|12|\\) ___ \\(3\\) (enter <, >, or =)", accepted: [">"], displayAnswer: ">", label: "Compare |12| ___ 3" },
+    { q: "\\(-2\\) ___ \\(|-12|\\) (enter <, >, or =)", accepted: ["<"], displayAnswer: "<", label: "Compare -2 ___ |-12|" }
+  ];
+  renderSimpleList('compare-list', compareProblems, 'cmp', '1. Number System & Absolute Value', 'check');
+
+  function checkAbsValueCritical() {
+    const explain = document.getElementById('absvalue-critical').value.trim();
+    const fb = document.getElementById('absvalue-critical-feedback');
+    if (explain.length <= 5) { LessonCheck.incomplete(fb, "Write your explanation before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'absvalue-critical', label: 'Critical Thinking: why is absolute value never negative?', answer: explain, section: '1. Number System & Absolute Value' });
+  }
+
+  // ==========================================
+  // PANEL 2: REFERENCE GUIDE
+  // ==========================================
+  renderNumberLine('addition-numberline', {
+    min: -10, max: 10, step: 1,
+    points: [{ value: 2, label: '2', color: '#1e3a8a' }],
+    arrows: [{ from: 0, to: -3, label: '-3', color: '#dc2626', row: 0 }, { from: -3, to: 2, label: '+5', color: '#15803d', row: 1 }]
+  });
+
+  const checkUnderstandProblems = [
+    { q: "Problem A: \\(-12 - (-5) = \\) ?", a: -7, hint: "Use Keep-Change-Change first." },
+    { q: "Problem B: \\((-3) \\times 4 + (-2) = \\) ?", a: -14, hint: "Multiply first: \\((-3) \\times 4\\), then add." }
+  ];
+  renderSimpleList('checkunderstand-list', checkUnderstandProblems, 'cu', '2. Operation Rules', 'check');
+
+  // ==========================================
+  // PANEL 3: MIXED COMPUTATION PRACTICE
+  // ==========================================
+  const mpPart1 = [
+    { q: "1. \\(-15 + (-8) = \\) ?", a: -23 },
+    { q: "2. \\(12 - (-7) = \\) ?", a: 19 },
+    { q: "3. \\(-20 - 5 = \\) ?", a: -25 },
+    { q: "4. \\(-9 + 14 = \\) ?", a: 5 },
+    { q: "5. \\(-32 + (-18) = \\) ?", a: -50 },
+    { q: "6. \\(11 - 25 = \\) ?", a: -14 }
+  ];
+  renderSimpleList('mp-part1-list', mpPart1, 'mp1', '3. Mixed Computation', 'check');
+
+  const mpPart2 = [
+    { q: "7. \\(-6 \\times (-9) = \\) ?", a: 54 },
+    { q: "8. \\(-48 \\div 8 = \\) ?", a: -6 },
+    { q: "9. \\(12 \\times (-4) = \\) ?", a: -48 },
+    { q: "10. \\(-100 \\div (-5) = \\) ?", a: 20 }
+  ];
+  renderSimpleList('mp-part2-list', mpPart2, 'mp2', '3. Mixed Computation', 'check');
+
+  const mpPart3 = [
+    { q: "11. \\(-14 + 30 = \\) ?", a: 16, label: "11. -14 + 30" },
+    { q: "12. \\(-26 - (-15) = \\) ?", a: -11, label: "12. -26 - (-15)" },
+    { q: "13. \\(-42 + 18 = \\) ?", a: -24, label: "13. -42 + 18" },
+    { q: "14. \\(-7 \\times (-8) = \\) ?", a: 56, label: "14. -7 x (-8)" },
+    { q: "15. \\(-250 \\div 10 = \\) ?", a: -25, label: "15. -250 / 10" },
+    { q: "16. \\(-13 - (-13) = \\) ?", a: 0, label: "16. -13 - (-13)" },
+    { q: "17. \\(-3 \\times 5 \\times (-2) = \\) ?", a: 30, label: "17. -3 x 5 x (-2)" },
+    { q: "18. \\((-4 + 10) \\div (-3) = \\) ?", a: -2, label: "18. (-4+10) / -3" }
+  ];
+  renderSimpleList('mp-part3-list', mpPart3, 'mp3', '3. Mixed Computation', 'check');
+
+  function checkMPExplain19() {
+    const explain = document.getElementById('mp-explain19').value.trim();
+    const fb = document.getElementById('mp-explain19-feedback');
+    if (explain.length <= 5) { LessonCheck.incomplete(fb, "Write your explanation before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'mp-explain19', label: "19. Explain the Rule: is -5-8 = 3?", answer: explain, section: '3. Mixed Computation' });
+  }
+
+  function checkMPChallenge20() {
+    const answer = document.getElementById('mp-challenge20-answer').value;
+    const explain = document.getElementById('mp-challenge20-explain').value.trim();
+    const fb = document.getElementById('mp-challenge20-feedback');
+    if (!answer.trim() || explain.length <= 5) { LessonCheck.incomplete(fb, "Fill in the final value and show your steps before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'mp-challenge20', label: '20. Challenge: ((-2)^3 + 10) / -2', answer, section: '3. Mixed Computation', correct: LessonCheck.numericMatch(answer, -1, 0.01) });
+  }
+
+  // ==========================================
+  // PANEL 4: ERROR ANALYSIS (pretest-style)
+  // ==========================================
+  const errorAnalysisProblems = [
+    { student: "\\(-8 + (-5) = -3\\)", rule: "Same Signs: Add the absolute values and keep the common sign.", correctAnswer: "-13" },
+    { student: "\\(-10 - (-4)\\) &rarr; \\(-10 - 4 = -14\\)", rule: "Keep-Change-Change: \\(-10 - (-4)\\) becomes \\(-10 + 4\\).", correctAnswer: "-6" },
+    { student: "\\(-6 \\times (-3) = -18\\)", rule: "Same Signs in multiplication always give a Positive product.", correctAnswer: "18" },
+    { student: "\\(12 + (-15) = 3\\)", rule: "Different Signs: subtract and keep the sign of the number with the larger absolute value (15 > 12).", correctAnswer: "-3" },
+    { student: "\\(-20 \\div 5 = 4\\)", rule: "Different Signs in division always give a Negative quotient.", correctAnswer: "-4" }
+  ];
+
+  function renderErrorAnalysis() {
+    const html = errorAnalysisProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>Problem ${i + 1}.</strong> Student work: ${p.student}
+        <div style="margin-top:10px;">
+          <label style="font-weight:700; font-size:0.95rem; display:block; margin-bottom:6px;">Identify the error and name the correct rule:</label>
+          <textarea id="ea-${i}-explain" class="form-control-lg" rows="2" placeholder="What did the student do wrong?"></textarea>
+        </div>
+        <div style="margin-top:10px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <label style="font-weight:700; font-size:0.95rem;">Correct Answer: <input type="text" id="ea-${i}-answer" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="Correct value"></label>
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkErrorAnalysis(${i})">Submit</button>
+        </div>
+        <div id="ea-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('erroranalysis-list').innerHTML = html;
+    errorAnalysisProblems.forEach((p, i) => LessonProgress.preRegister(`ea-${i}`, `Error Analysis ${i + 1}: ${p.student.replace(/\\\(|\\\)|&rarr;/g, '')}`, '4. Error Analysis'));
+  }
+  renderErrorAnalysis();
+
+  function checkErrorAnalysis(idx) {
+    const p = errorAnalysisProblems[idx];
+    const explain = document.getElementById(`ea-${idx}-explain`).value.trim();
+    const answer = document.getElementById(`ea-${idx}-answer`).value;
+    const fb = document.getElementById(`ea-${idx}-feedback`);
+    if (explain.length <= 5 || !answer.trim()) {
+      LessonCheck.incomplete(fb, "Explain the error and give the correct answer before submitting.");
+      return;
+    }
+    const correct = LessonCheck.numericMatch(answer, parseFloat(p.correctAnswer), 0.01);
+    LessonCheck.submit(fb, { key: `ea-${idx}`, label: `Error Analysis ${idx + 1}: ${p.student.replace(/\\\(|\\\)|&rarr;/g, '')}`, answer: `${explain} | Correct answer given: ${answer}`, section: '4. Error Analysis', correct });
+  }
+
+  // ==========================================
+  // PANEL 5: VOCABULARY & TRANSLATING
+  // ==========================================
+  const clueWords = [
+    { word: "Deposit", sign: "pos" }, { word: "Credit", sign: "pos" }, { word: "Ascend", sign: "pos" }, { word: "Above Sea Level", sign: "pos" }, { word: "Gain", sign: "pos" }, { word: "Rise", sign: "pos" },
+    { word: "Below Sea Level", sign: "neg" }, { word: "Debt", sign: "neg" }, { word: "Withdraw", sign: "neg" }, { word: "Loss", sign: "neg" }, { word: "Debit", sign: "neg" }, { word: "Descend", sign: "neg" }
+  ];
+
+  function renderClueWords() {
+    const html = clueWords.map((item, i) => `
+      <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap;">
+        <strong style="min-width:200px;">${i + 1}. "${item.word}"</strong>
+        <select id="cw-${i}" class="form-control-lg" style="max-width:200px;">
+          <option value="">Select...</option>
+          <option value="pos">Positive (+)</option>
+          <option value="neg">Negative (-)</option>
+        </select>
+      </div>
+    `).join('');
+    document.getElementById('cluewords-list').innerHTML = html;
+    LessonProgress.preRegister('cluewords', 'Categorizing Clue Words: positive vs. negative', '5. Vocabulary & Translating');
+  }
+  renderClueWords();
+
+  function checkClueWords() {
+    const fb = document.getElementById('cluewords-feedback');
+    let allFilled = true, allCorrect = true;
+    const chosen = [];
+    clueWords.forEach((item, i) => {
+      const val = document.getElementById(`cw-${i}`).value;
+      chosen.push(val || '(blank)');
+      if (!val) allFilled = false;
+      else if (val !== item.sign) allCorrect = false;
+    });
+    if (!allFilled) { LessonCheck.incomplete(fb, "Choose positive or negative for every word before checking."); return; }
+    LessonCheck.check('cluewords', allCorrect, fb, {
+      correct: 'Correct! Every word is sorted correctly.',
+      retry: 'Some words are sorted incorrectly. Review: Positive = Deposit, Credit, Ascend, Above Sea Level, Gain, Rise. Negative = Below Sea Level, Debt, Withdraw, Loss, Debit, Descend.',
+      reveal: 'Correct sorting: Positive (+) = Deposit, Credit, Ascend, Above Sea Level, Gain, Rise. Negative (-) = Below Sea Level, Debt, Withdraw, Loss, Debit, Descend.'
+    }, { label: 'Categorizing Clue Words: positive vs. negative', answer: chosen.join(', '), section: '5. Vocabulary & Translating' });
+  }
+
+  const opMatchWords = [
+    { word: "shared equally", op: "div" }, { word: "every", op: "mult" }, { word: "average", op: "div" }, { word: "rate", op: "mult" }, { word: "split", op: "div" }, { word: "each", op: "mult" }
+  ];
+
+  function renderOpMatch() {
+    const html = opMatchWords.map((item, i) => `
+      <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap;">
+        <strong style="min-width:200px;">${i + 1}. "${item.word}"</strong>
+        <select id="om-${i}" class="form-control-lg" style="max-width:220px;">
+          <option value="">Select...</option>
+          <option value="mult">Multiplication (&times;)</option>
+          <option value="div">Division (&divide;)</option>
+        </select>
+      </div>
+    `).join('');
+    document.getElementById('opmatch-list').innerHTML = html;
+    LessonProgress.preRegister('opmatch', 'Multiplication/Division Clue Words match-up', '5. Vocabulary & Translating');
+  }
+  renderOpMatch();
+
+  function checkOpMatch() {
+    const fb = document.getElementById('opmatch-feedback');
+    let allFilled = true, allCorrect = true;
+    const chosen = [];
+    opMatchWords.forEach((item, i) => {
+      const val = document.getElementById(`om-${i}`).value;
+      chosen.push(val || '(blank)');
+      if (!val) allFilled = false;
+      else if (val !== item.op) allCorrect = false;
+    });
+    if (!allFilled) { LessonCheck.incomplete(fb, "Choose an operation for every word before checking."); return; }
+    LessonCheck.check('opmatch', allCorrect, fb, {
+      correct: 'Correct! Every clue word matches the right operation.',
+      retry: "Some matches aren't right yet. 'each', 'every', 'rate', 'per' point to multiplication; 'shared equally', 'average', 'split', 'per' point to division.",
+      reveal: "Correct matches: Multiplication = every, rate, each. Division = shared equally, average, split."
+    }, { label: 'Multiplication/Division Clue Words match-up', answer: chosen.join(', '), section: '5. Vocabulary & Translating' });
+  }
+
+  const translateItems = [
+    { q: "1. A debt of \\$25", a: -25, label: "Translate: a debt of $25" },
+    { q: "2. An airplane climbs 3,000 feet", a: 3000, label: "Translate: airplane climbs 3,000 feet" },
+    { q: "3. A submarine descends 150 meters", a: -150, label: "Translate: submarine descends 150 meters" },
+    { q: "4. A football team loses 8 yards", a: -8, label: "Translate: football team loses 8 yards" },
+    { q: "5. A player earns 500 bonus points", a: 500, label: "Translate: player earns 500 bonus points" }
+  ];
+  renderSimpleList('translate-list', translateItems, 'tr', '5. Vocabulary & Translating', 'check');
+
+  function checkVocabCritical() {
+    const explain = document.getElementById('vocab-critical').value.trim();
+    const fb = document.getElementById('vocab-critical-feedback');
+    if (explain.length <= 5) { LessonCheck.incomplete(fb, "Write your explanation before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'vocab-critical', label: 'Critical Thinking: why is zero important for elevation/bank accounts?', answer: explain, section: '5. Vocabulary & Translating' });
+  }
+
+  // ==========================================
+  // PANEL 6: REAL-WORLD WORD PROBLEMS (pretest-style)
+  // ==========================================
+  const wpAdd = [
+    { q: "1. Temperature Change: At 6:00 AM in Anchorage it was \\(-12\\)&deg;F. By noon it had risen \\(15\\)&deg;F. What was the temperature at noon?", a: 3, label: "Word Problem: temperature change (Anchorage)" },
+    { q: "2. Sports (Football): On the first play, a team gained 12 yards. On the second play, they lost 15 yards. What was the total change in yardage?", a: -3, label: "Word Problem: football yardage change" },
+    { q: "3. Debt: Marcus owes his friend \\$25. He deposits \\$40 into his wallet and pays the full debt. How much money does he have left?", a: 15, label: "Word Problem: Marcus's debt" },
+    { q: "4. Scuba Diving: A diver is at 30 feet below sea level. She ascends 12 feet. What is her new depth (as a signed number of feet)?", a: -18, label: "Word Problem: scuba diver's new depth" }
+  ];
+  renderSimpleList('wp-add-list', wpAdd, 'wpa', '6. Real-World Problems', 'submit');
+
+  const wpSub = [
+    { q: "1. Bank Account: Sarah had a balance of \\$45. She withdraws \\$60. What is her new account balance?", a: -15, label: "Word Problem: Sarah's bank balance" },
+    { q: "2. Elevation: A submarine is 150 meters below sea level. It descends another 75 meters. What is its new elevation (as a signed number of meters)?", a: -225, label: "Word Problem: submarine elevation" },
+    { q: "3. Mountain Climbing: A hiker starts at 2,500 feet above sea level and descends 800 feet. What is her elevation now?", a: 1700, label: "Word Problem: hiker's elevation" },
+    { q: "4. Extreme Weather: The record low in a town is \\(-20\\)&deg;C and the record high is \\(35\\)&deg;C. What is the difference between the record high and record low?", a: 55, label: "Word Problem: record high minus low" }
+  ];
+  renderSimpleList('wp-sub-list', wpSub, 'wps', '6. Real-World Problems', 'submit');
+
+  const wpMult = [
+    { q: "1. Submarine Descent: A submarine descends at a rate of 20 meters per minute. What is its change in elevation after 6 minutes?", a: -120, label: "Word Problem: submarine descent rate" },
+    { q: "2. Bank Fees: A bank charges a \\$5 monthly service fee for 8 months. What is the total change in the account balance?", a: -40, label: "Word Problem: bank fees total change" }
+  ];
+  renderSimpleList('wp-mult-list', wpMult, 'wpm', '6. Real-World Problems', 'submit');
+
+  const wpDiv = [
+    { q: "1. Temperature Drop: Over 5 hours, the temperature dropped a total of 30 degrees. What was the average hourly change?", a: -6, label: "Word Problem: average hourly temperature drop" },
+    { q: "2. Cooling Down: A chemical solution's temperature dropped a total of 24&deg;C over 6 hours at a constant rate. What was the change per hour?", a: -4, label: "Word Problem: chemical cooling rate" }
+  ];
+  renderSimpleList('wp-div-list', wpDiv, 'wpd', '6. Real-World Problems', 'submit');
+
+  // ==========================================
+  // PANEL 7: EXIT TICKET
+  // ==========================================
+  LessonProgress.preRegister('exit-ticket', 'Exit Ticket: addition, subtraction, and reflections', '7. Exit Ticket');
+
+  function submitExitTicket(e) {
+    e.preventDefault();
+    const a1 = document.getElementById('exit-1').value;
+    const a2 = document.getElementById('exit-2').value;
+    const exp = document.getElementById('exit-explain').value.trim();
+    const ref = document.getElementById('exit-reflect').value.trim();
+    const fb = document.getElementById('exit-feedback');
+
+    if (!a1.trim() || !a2.trim() || exp.length <= 5 || ref.length <= 5) {
+      LessonCheck.incomplete(fb, "Fill in both answers and both explanation boxes before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: 'exit-ticket', label: 'Exit Ticket: addition, subtraction, and reflections', answer: `Q1=${a1}, Q2=${a2}`, section: '7. Exit Ticket', correct: LessonCheck.numericMatch(a1, -15, 0.01) && LessonCheck.numericMatch(a2, -3, 0.01) }, "Exit Ticket submitted and logged successfully!");
+    LessonProgress.recordText('Exit Ticket: sign rule explanation', exp, '7. Exit Ticket');
+    LessonProgress.recordText('Exit Ticket: metacognition reflection', ref, '7. Exit Ticket');
+  }
+</script>
+<div id="print-report"></div>
+</body>
+</html>
