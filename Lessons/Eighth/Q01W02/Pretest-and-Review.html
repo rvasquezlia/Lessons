@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Linear Equations - Pretest &amp; Weekly Review</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Q01W02 - Pretest &amp; Review</span>
+    <h1>Linear Equations: Pretest &amp; Weekly Review</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Algebra I - Linear Equations: Pretest &amp; Weekly Review')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    This page pulls together the whole week's linear equations work - sign rules, inverse operations, error analysis, translating word problems, and application - in one place so you can review and pretest yourself. Work the tabs below <strong>in order, left to right</strong>. Tabs 1, 2, 4, and 5 are review: reference material and guided practice with two tries and a reveal if you miss twice. Tabs 3 and 6 are pretest-style: you submit once and your teacher reviews it from your printed report, just like a real pretest. When you finish the Exit Ticket, type your name above and click <strong>Print My Progress</strong>.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('fundamentals')">1. Fundamentals</button>
+    <button class="tab-btn" onclick="switchTab('guidedpractice')">2. Guided Practice</button>
+    <button class="tab-btn" onclick="switchTab('erroranalysis')">3. Error Analysis</button>
+    <button class="tab-btn" onclick="switchTab('mathlanguage')">4. Translating to Algebra</button>
+    <button class="tab-btn" onclick="switchTab('wordproblem')">5. Word Problem Application</button>
+    <button class="tab-btn" onclick="switchTab('pretest')">6. Linear Equations Pretest</button>
+    <button class="tab-btn" onclick="switchTab('exitticket')">7. Exit Ticket</button>
+  </nav>
+
+  <!-- PANEL 1: FUNDAMENTALS -->
+  <div id="fundamentals" class="panel active">
+    <div class="section-title">Linear Equation Fundamentals: Signs and Rules</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">Weekly Review &middot; Lessons 1-2 &amp; 1-3 &middot; CCSS.Math.Content.8.EE.C.7</p>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Copy both reference tables into your notebook, read the Golden Rule box, then answer the two Check Your Understanding questions.
+    </div>
+
+    <p>Before solving equations, you must master the rules of integers and the logic of keeping an equation balanced. Use this guide as your reference for the fundamental laws of algebra.</p>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Part 1: Integer Operation Laws (Sign Rules)</div>
+      <table class="data-table">
+        <thead><tr><th>Operation</th><th>The Rule</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Addition</strong></td><td><strong>Same Signs:</strong> Add the absolute values and keep the sign. (\(-3+(-5)=-8\))<br><strong>Different Signs:</strong> Subtract the smaller absolute value from the larger; keep the sign of the number with the larger absolute value. (\(-10+4=-6\))</td></tr>
+          <tr><td><strong>Subtraction</strong></td><td><strong>Add the Opposite:</strong> Change the subtraction sign to addition and change the sign of the second number, then follow addition rules. (\(5-(-2)\) becomes \(5+2=7\))</td></tr>
+          <tr><td><strong>Multiplication &amp; Division</strong></td><td><strong>Same Signs:</strong> Always Positive (\(+\times+=+\) or \(-\times-=+\)). <strong>Different Signs:</strong> Always Negative (\(+\times-=-\)).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="explainer-box">
+      <strong>The Golden Rule of Equations:</strong> An equation is like a balanced scale. Whatever you do to one side of the equation, you <strong>MUST</strong> do to the other side. This maintains the equality while you work to isolate the variable.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Part 2: Inverse Operations</div>
+      <p style="margin:0 0 10px 0;">To solve an equation, you must "undo" the operations surrounding the variable using Inverse Operations.</p>
+      <table class="data-table">
+        <thead><tr><th>If the equation shows...</th><th>Inverse</th><th>Action to take on BOTH sides</th></tr></thead>
+        <tbody>
+          <tr><td>Addition (\(+5\))</td><td>&harr;</td><td>Subtract 5</td></tr>
+          <tr><td>Subtraction (\(-8\))</td><td>&harr;</td><td>Add 8</td></tr>
+          <tr><td>Multiplication (\(3x\))</td><td>&harr;</td><td>Divide by 3</td></tr>
+          <tr><td>Division (\(\frac{x}{4}\))</td><td>&harr;</td><td>Multiply by 4</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Check Your Understanding</h3>
+      <div class="form-group">
+        <label>1. Explain why we must perform the same operation on both sides of an equation. What would happen if we only subtracted a number from the left side?</label>
+        <textarea id="fund-q1" class="form-control-lg" rows="3" placeholder="Explain the Golden Rule..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkFundQ1()">Submit My Work</button>
+      <div id="fund-q1-feedback" class="feedback-msg"></div>
+
+      <div class="form-group" style="margin-top:20px;">
+        <label>2. Rewrite \(-12 - (-5)\) as "adding the opposite," then solve it.</label>
+        <input type="text" id="fund-q2" class="form-control-lg" style="max-width:180px;" placeholder="Solve">
+      </div>
+      <button class="btn-lg" onclick="checkFundQ2()">Check</button>
+      <div id="fund-q2-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: GUIDED PRACTICE -->
+  <div id="guidedpractice" class="panel">
+    <div class="section-title">Guided Practice: Step-by-Step Computing</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Use the fundamental rules of integers and the Golden Rule of Equations. Click "Reveal Reasoning" on each problem to see the "Think Aloud" reasoning applied at every step, then reveal the solution.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Remember the Sign Laws</div>
+      <ul>
+        <li><strong>Addition:</strong> Different signs? Subtract absolute values and keep the sign of the larger number.</li>
+        <li><strong>Subtraction:</strong> Rewrite as Adding the Opposite before solving.</li>
+        <li><strong>Mult/Div:</strong> Same signs = Positive; Different signs = Negative.</li>
+      </ul>
+    </div>
+
+    <div id="guided-steps-container"></div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Critical Thinking (Problem 5)</h3>
+      <p>If you had chosen to subtract \(5x\) from both sides instead of \(2x\), would the final answer change? Explain why the Golden Rule ensures the result stays the same.</p>
+      <textarea id="guided-critical" class="form-control-lg" rows="3" placeholder="Explain your reasoning..."></textarea>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkGuidedCritical()">Submit My Work</button>
+      <div id="guided-critical-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: ERROR ANALYSIS -->
+  <div id="erroranalysis" class="panel">
+    <div class="section-title">Error Analysis: Spot the Mistake</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      This tab is pretest-style: a student has made a common algebraic error in each problem. Identify the specific mistake using math vocabulary, explain why it's incorrect, and solve correctly. You submit once - your work is reviewed from your printed report.
+    </div>
+    <div id="erroranalysis-list"></div>
+  </div>
+
+  <!-- PANEL 4: MATH LANGUAGE -->
+  <div id="mathlanguage" class="panel">
+    <div class="section-title">Math Language: Translating to Algebra</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Algebra is like a secret code - read the Turn-Around Rule box and the keyword table, then translate each phrase into algebraic form. You get two tries per item.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The "Turn-Around" Rule</div>
+      <p style="margin:0;">Be careful with "less than" and "subtracted from." These are "turn-around" phrases. <em>Example:</em> "5 less than a number" means you start with the number and take 5 away. Correct: \(n - 5\). Incorrect: \(5 - n\).</p>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Operation</th><th>Natural Language Phrases</th><th>Symbol</th></tr></thead>
+      <tbody>
+        <tr><td>Addition</td><td>Sum, increased by, plus, total, added to, more than</td><td>\(+\)</td></tr>
+        <tr><td>Subtraction</td><td>Difference, decreased by, minus, less than, subtracted from</td><td>\(-\)</td></tr>
+        <tr><td>Multiplication</td><td>Product, times, of, twice (\(\times2\)), triple (\(\times3\))</td><td>\(\cdot\) or \(()\)</td></tr>
+        <tr><td>Division</td><td>Quotient, divided by, per, out of, ratio</td><td>\(\div\) or fraction bar</td></tr>
+        <tr><td>Equals</td><td>Is, equals, yields, amounts to, is the same as</td><td>\(=\)</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:24px;">Part 1: Translation Practice</h3>
+    <p>Translate each verbal phrase into an algebraic expression or equation. Use \(n\) to represent "a number."</p>
+    <div id="translate-list"></div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Part 2: Critical Thinking</h3>
+      <p>Explain the difference between the expressions "5 times a number plus 2" and "5 times the sum of a number and 2." How does the math language change the way we use parentheses?</p>
+      <textarea id="lang-critical" class="form-control-lg" rows="3" placeholder="Explain the difference..."></textarea>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkLangCritical()">Submit My Work</button>
+      <div id="lang-critical-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 5: WORD PROBLEM APPLICATION -->
+  <div id="wordproblem" class="panel">
+    <div class="section-title">Word Problem Application</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Follow the 4-Step Method for each problem: define the variable, write the equation, solve, and interpret. Enter just the final answer for each problem below - you get two tries.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The 4-Step Method</div>
+      <ol>
+        <li><strong>Define the Variable:</strong> choose a letter and state exactly what it represents.</li>
+        <li><strong>Write the Equation:</strong> use translation keywords to build your equation.</li>
+        <li><strong>Solve:</strong> use inverse operations to isolate the variable, performing the same operation on both sides.</li>
+        <li><strong>Interpret:</strong> write your final answer as a complete sentence with units.</li>
+      </ol>
+    </div>
+
+    <div class="explainer-box">
+      <strong>Resolved Example: The Taxi Ride.</strong> A taxi ride costs a flat fee of \$5.00 plus \$2.00 per mile. If the total cost was \$17.00, how many miles was the ride?<br>
+      Let \(m\) = miles. Equation: \(2m + 5 = 17\). Solve: \(2m = 12 \rightarrow m = 6\). The taxi ride was 6 miles long.
+    </div>
+
+    <div id="wordapp-list"></div>
+  </div>
+
+  <!-- PANEL 6: LINEAR EQUATIONS PRETEST -->
+  <div id="pretest" class="panel">
+    <div class="section-title">Linear Equations Pretest</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      This is a real pretest: it covers integer operations, solving multi-step equations, error analysis, and word problem translation. Show all your work on paper for each problem, then submit your final answer here. Nothing is revealed on screen - your teacher reviews everything from your printed report.
+    </div>
+
+    <h3>Part 1: Bare Computation</h3>
+    <p>Solve for the variable in each equation. Show every step on paper, including the inverse operations used.</p>
+    <div id="pretest-part1-list"></div>
+
+    <h3 style="margin-top:28px;">Part 2: Error Analysis</h3>
+    <p>Identify the mistake in the work shown below. Explain why it's an error and provide the correct solution.</p>
+    <div id="pretest-part2-list"></div>
+
+    <h3 style="margin-top:28px;">Part 3: Word Problems</h3>
+    <p>For each scenario, define your variable, write an equation, solve it, and interpret the result on paper. Enter your final answer below.</p>
+    <div id="pretest-part3-list"></div>
+  </div>
+
+  <!-- PANEL 7: EXIT TICKET -->
+  <div id="exitticket" class="panel">
+    <div class="section-title">Exit Ticket: Linear Equations Readiness Check</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Answer all four questions, then click Submit Exit Ticket. This is the last step before you print your progress - go back to the Student Name box in the blue bar at the top of the page, type your name, and click Print My Progress.
+    </div>
+
+    <form id="exit-form" onsubmit="submitExitTicket(event)">
+      <div class="form-group">
+        <label>1. Solve: \(x + 9 = -6\)</label>
+        <input type="text" id="exit-1" class="form-control-lg" placeholder="Enter your answer">
+      </div>
+      <div class="form-group">
+        <label>2. Solve: \(3x - 4 = 11\)</label>
+        <input type="text" id="exit-2" class="form-control-lg" placeholder="Enter your answer">
+      </div>
+      <div class="form-group">
+        <label>3. In your own words, state the Golden Rule of Equations and explain why it works.</label>
+        <textarea id="exit-explain" class="form-control-lg" rows="3" placeholder="Explain the Golden Rule..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>4. Which part of solving linear equations felt the most confusing this week, and what will you review before the pretest?</label>
+        <textarea id="exit-reflect" class="form-control-lg" rows="3" placeholder="Reflect on your learning..."></textarea>
+      </div>
+      <button type="submit" class="btn-lg">Submit Exit Ticket</button>
+    </form>
+    <div id="exit-feedback" class="feedback-msg"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  function normalizeExpr(s) {
+    return String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, '');
+  }
+
+  // ==========================================
+  // REUSABLE SINGLE-FIELD PRACTICE LIST
+  // mode 'check' = 2 tries then reveal; mode 'submit' = pretest-style single submission
+  // ==========================================
+  const listRegistry = {};
+
+  function renderSimpleList(containerId, problems, keyPrefix, section, mode) {
+    listRegistry[keyPrefix] = { problems, section, mode };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkSimpleItem('${keyPrefix}', ${i})">${mode === 'submit' ? 'Submit' : 'Check'}</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, p.label || p.q.replace(/\\\(|\\\)/g, ''), section));
+  }
+
+  function checkSimpleItem(keyPrefix, idx) {
+    const cfg = listRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = p.a !== undefined ? LessonCheck.numericMatch(val, p.a, p.tol || 0.01) : (p.accepted || []).includes(normalizeExpr(val));
+    const label = p.label || p.q.replace(/\\\(|\\\)/g, '');
+    const answerText = p.displayAnswer || (p.a !== undefined ? String(p.a) : (p.accepted ? p.accepted[0] : ''));
+
+    if (cfg.mode === 'submit') {
+      LessonCheck.submit(fb, { key: `${keyPrefix}-${idx}`, label, answer: val, section: cfg.section, correct });
+    } else {
+      LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+        correct: `Correct! Answer: ${answerText}`,
+        retry: p.hint || "Not quite yet. Review the rule and try again.",
+        reveal: `Here's the correct answer: ${answerText}`
+      }, { label, answer: val, section: cfg.section });
+    }
+  }
+
+  // ==========================================
+  // PANEL 1: FUNDAMENTALS
+  // ==========================================
+  function checkFundQ1() {
+    const explain = document.getElementById('fund-q1').value.trim();
+    const fb = document.getElementById('fund-q1-feedback');
+    if (explain.length <= 5) { LessonCheck.incomplete(fb, "Write your explanation before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'fund-q1', label: 'Check Your Understanding 1: why perform the same operation on both sides?', answer: explain, section: '1. Fundamentals' });
+  }
+
+  function checkFundQ2() {
+    const val = document.getElementById('fund-q2').value;
+    const fb = document.getElementById('fund-q2-feedback');
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking."); return; }
+    const correct = LessonCheck.numericMatch(val, -7, 0.01);
+    LessonCheck.check('fund-q2', correct, fb, {
+      correct: 'Correct! \\(-12 - (-5) = -12 + 5 = -7\\)',
+      retry: "Not quite yet. Rewrite as adding the opposite: \\(-12 + 5\\), then solve.",
+      reveal: 'Correct rewrite and solution: \\(-12 - (-5) = -12 + 5 = -7\\)'
+    }, { label: 'Check Your Understanding 2: rewrite -12 - (-5) and solve', answer: val, section: '1. Fundamentals' });
+  }
+
+  // ==========================================
+  // PANEL 2: GUIDED PRACTICE (step-reveal worked examples)
+  // ==========================================
+  const guidedProblems = [
+    {
+      title: "1. One-Step (Addition): Solve \\(x + 15 = -4\\)",
+      reasoning: "<strong>Goal:</strong> Isolate \\(x\\). <strong>Step:</strong> Subtract 15 from both sides (inverse of +15). <strong>Sign Rule:</strong> On the right, we have \\(-4 - 15\\). Rewrite as adding the opposite: \\(-4 + (-15)\\). Since the signs are the same, add and keep the negative sign.",
+      solution: "\\(x = -19\\)"
+    },
+    {
+      title: "2. One-Step (Division): Solve \\(-3x = 21\\)",
+      reasoning: "<strong>Goal:</strong> Isolate \\(x\\). <strong>Step:</strong> Divide both sides by -3 (inverse of multiplication). <strong>Sign Rule:</strong> We are dividing a positive (21) by a negative (-3). Different signs give a negative quotient.",
+      solution: "\\(x = -7\\)"
+    },
+    {
+      title: "3. Two-Step Equation: Solve \\(2x - 8 = -20\\)",
+      reasoning: "<strong>Step 1:</strong> Add 8 to both sides to move the constant. \\(-20 + 8\\) has different signs; subtract \\(8\\) from \\(20\\) and keep the negative sign: \\(-12\\). <strong>Step 2:</strong> Divide by 2. Negative divided by positive gives a negative.",
+      solution: "\\(x = -6\\)"
+    },
+    {
+      title: "4. Two-Step (Rational): Solve \\(\\frac{x}{-4} + 5 = 2\\)",
+      reasoning: "<strong>Step 1:</strong> Subtract 5 from both sides. \\(2 - 5\\) becomes \\(2 + (-5) = -3\\). <strong>Step 2:</strong> Multiply both sides by -4. Sign Rule: \\(-3 \\times -4\\). Same signs give a positive product.",
+      solution: "\\(x = 12\\)"
+    },
+    {
+      title: "5. Variables on Both Sides: Solve \\(5x + 10 = 2x - 11\\)",
+      reasoning: "<strong>Step 1:</strong> Subtract \\(2x\\) from both sides to group variables: \\(5x - 2x = 3x\\). <strong>Step 2:</strong> Subtract 10 from both sides: \\(-11 - 10\\) becomes \\(-11 + (-10) = -21\\). <strong>Step 3:</strong> Divide by 3. Different signs give a negative.",
+      solution: "\\(x = -7\\)"
+    }
+  ];
+
+  function renderGuidedSteps() {
+    const html = guidedProblems.map((p, i) => `
+      <div class="step-box" style="margin-top:16px;">
+        <h3 style="margin-top:0; color:var(--primary);">${p.title}</h3>
+        <button class="btn-lg" onclick="revealGuidedStep(${i})">Reveal Reasoning</button>
+        <button class="btn-secondary" onclick="resetGuidedStep(${i})">Reset</button>
+        <div id="guided-${i}-reasoning" class="step-item" style="margin-top:14px;">${p.reasoning}</div>
+        <div id="guided-${i}-solution" class="step-item" style="margin-top:14px; font-weight:800; color:var(--primary);">Solution: ${p.solution}</div>
+      </div>
+    `).join('');
+    document.getElementById('guided-steps-container').innerHTML = html;
+  }
+  renderGuidedSteps();
+
+  const guidedStepCount = {};
+  function revealGuidedStep(i) {
+    const count = (guidedStepCount[i] || 0) + 1;
+    guidedStepCount[i] = count;
+    if (count >= 1) document.getElementById(`guided-${i}-reasoning`).classList.add('visible');
+    if (count >= 2) document.getElementById(`guided-${i}-solution`).classList.add('visible');
+    triggerMathJax();
+  }
+  function resetGuidedStep(i) {
+    guidedStepCount[i] = 0;
+    document.getElementById(`guided-${i}-reasoning`).classList.remove('visible');
+    document.getElementById(`guided-${i}-solution`).classList.remove('visible');
+  }
+
+  function checkGuidedCritical() {
+    const explain = document.getElementById('guided-critical').value.trim();
+    const fb = document.getElementById('guided-critical-feedback');
+    if (explain.length <= 5) { LessonCheck.incomplete(fb, "Write your explanation before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'guided-critical', label: 'Critical Thinking: subtracting 5x vs. 2x in Problem 5', answer: explain, section: '2. Guided Practice' });
+  }
+
+  // ==========================================
+  // PANEL 3: ERROR ANALYSIS (pretest-style)
+  // ==========================================
+  const erroranalysisProblems = [
+    { title: "1. Distributive Property", eq: "\\(3(x - 5) = 12\\)", student: "\\(3x - 5 = 12 \\rightarrow 3x = 17 \\rightarrow x = \\frac{17}{3}\\)", correctAnswer: "9" },
+    { title: "2. Integer Subtraction", eq: "\\(x - 8 = -15\\)", student: "\\(x - 8 + 8 = -15 - 8 \\rightarrow x = -23\\)", correctAnswer: "-7" },
+    { title: "3. Balancing Equations", eq: "\\(2x + 10 = 4\\)", student: "\\(2x + 10 - 10 = 4 \\rightarrow 2x = 4 \\rightarrow x = 2\\)", correctAnswer: "-3" },
+    { title: "4. Variables on Both Sides", eq: "\\(5x = 2x + 18\\)", student: "\\(5x + 2x = 18 \\rightarrow 7x = 18 \\rightarrow x = \\frac{18}{7}\\)", correctAnswer: "6" }
+  ];
+
+  function renderErrorAnalysis() {
+    const html = erroranalysisProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${p.title}.</strong> Solve: ${p.eq}<br>
+        <span style="color:#475569;">Student Work: ${p.student}</span>
+        <div style="margin-top:10px;">
+          <label style="font-weight:700; font-size:0.95rem; display:block; margin-bottom:6px;">Identify and explain the error:</label>
+          <textarea id="ea-${i}-explain" class="form-control-lg" rows="2" placeholder="What did the student do wrong?"></textarea>
+        </div>
+        <div style="margin-top:10px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <label style="font-weight:700; font-size:0.95rem;">Correct Solution: \\(x = \\) <input type="text" id="ea-${i}-answer" class="form-control-lg" style="max-width:120px; display:inline-block;" placeholder="Value"></label>
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkErrorAnalysis(${i})">Submit</button>
+        </div>
+        <div id="ea-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('erroranalysis-list').innerHTML = html;
+    erroranalysisProblems.forEach((p, i) => LessonProgress.preRegister(`ea-${i}`, `Error Analysis: ${p.title}`, '3. Error Analysis'));
+  }
+  renderErrorAnalysis();
+
+  function checkErrorAnalysis(idx) {
+    const p = erroranalysisProblems[idx];
+    const explain = document.getElementById(`ea-${idx}-explain`).value.trim();
+    const answer = document.getElementById(`ea-${idx}-answer`).value;
+    const fb = document.getElementById(`ea-${idx}-feedback`);
+    if (explain.length <= 5 || !answer.trim()) {
+      LessonCheck.incomplete(fb, "Explain the error and give the correct solution before submitting.");
+      return;
+    }
+    const correct = LessonCheck.numericMatch(answer, parseFloat(p.correctAnswer), 0.01);
+    LessonCheck.submit(fb, { key: `ea-${idx}`, label: `Error Analysis: ${p.title}`, answer: `${explain} | x = ${answer}`, section: '3. Error Analysis', correct });
+  }
+
+  // ==========================================
+  // PANEL 4: MATH LANGUAGE
+  // ==========================================
+  const translateItems = [
+    { q: "1. The sum of a number and 12", accepted: ["n+12", "12+n"], displayAnswer: "\\(n + 12\\)", label: "Translate: sum of a number and 12" },
+    { q: "2. 8 less than a number", accepted: ["n-8"], displayAnswer: "\\(n - 8\\)", label: "Translate: 8 less than a number" },
+    { q: "3. The product of 5 and a number", accepted: ["5n", "n5", "5xn", "nx5"], displayAnswer: "\\(5n\\)", label: "Translate: product of 5 and a number" },
+    { q: "4. A number divided by -3", accepted: ["n/-3", "n/(-3)"], displayAnswer: "\\(\\frac{n}{-3}\\)", label: "Translate: a number divided by -3" },
+    { q: "5. 10 subtracted from a number is 25", accepted: ["n-10=25"], displayAnswer: "\\(n - 10 = 25\\)", label: "Translate: 10 subtracted from a number is 25" },
+    { q: "6. Twice a number increased by 7", accepted: ["2n+7"], displayAnswer: "\\(2n + 7\\)", label: "Translate: twice a number increased by 7" },
+    { q: "7. The quotient of a number and 4 is -2", accepted: ["n/4=-2"], displayAnswer: "\\(\\frac{n}{4} = -2\\)", label: "Translate: quotient of a number and 4 is -2" },
+    { q: "8. 15 more than triple a number", accepted: ["3n+15", "15+3n"], displayAnswer: "\\(3n + 15\\)", label: "Translate: 15 more than triple a number" },
+    { q: "9. A number decreased by 6 is 14", accepted: ["n-6=14"], displayAnswer: "\\(n - 6 = 14\\)", label: "Translate: a number decreased by 6 is 14" },
+    { q: "10. The product of -2 and a number is 18", accepted: ["-2n=18", "n-2=18"], displayAnswer: "\\(-2n = 18\\)", label: "Translate: product of -2 and a number is 18" }
+  ];
+  renderSimpleList('translate-list', translateItems, 'tr', '4. Translating to Algebra', 'check');
+
+  function checkLangCritical() {
+    const explain = document.getElementById('lang-critical').value.trim();
+    const fb = document.getElementById('lang-critical-feedback');
+    if (explain.length <= 5) { LessonCheck.incomplete(fb, "Write your explanation before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'lang-critical', label: 'Critical Thinking: 5n+2 vs. 5(n+2)', answer: explain, section: '4. Translating to Algebra' });
+  }
+
+  // ==========================================
+  // PANEL 5: WORD PROBLEM APPLICATION
+  // ==========================================
+  const wordAppProblems = [
+    { q: "1. Cell Phone Plan: \\$35 flat fee plus \\$0.10 per text. Marcus's bill was \\$42.50. How many text messages did he send?", a: 75, label: "Word Problem: cell phone plan" },
+    { q: "2. Temperature Drop: Anchorage started at 12&deg;F, dropping 3 degrees every hour, until it reached \\(-15\\)&deg;F. How many hours passed?", a: 9, label: "Word Problem: temperature drop" },
+    { q: "3. Savings Account: Sarah has \\$150 and saves \\$25 per week. How many weeks until she has \\$500?", a: 14, label: "Word Problem: savings account" },
+    { q: "4. Perimeter Challenge: A rectangular garden's length is 5 feet more than its width, with a perimeter of 42 feet (\\(P=2L+2W\\)). What is the width?", a: 8, label: "Word Problem: garden perimeter" },
+    { q: "5. Gym Memberships: Gym A charges a \\$50 sign-up fee plus \\$20/month; Gym B charges \\$30/month with no sign-up fee. After how many months are the total costs equal?", a: 5, label: "Word Problem: comparing gym memberships" }
+  ];
+  renderSimpleList('wordapp-list', wordAppProblems, 'wa', '5. Word Problem Application', 'check');
+
+  // ==========================================
+  // PANEL 6: LINEAR EQUATIONS PRETEST (submit-only)
+  // ==========================================
+  const pretestPart1 = [
+    { q: "1. Solve for \\(x\\): \\(x - (-12) = 5\\)", a: -7, label: "Pretest 1: x - (-12) = 5" },
+    { q: "2. Solve for \\(y\\): \\(-3y + 7 = -14\\)", a: 7, label: "Pretest 2: -3y + 7 = -14" },
+    { q: "3. Solve for \\(a\\): \\(\\frac{a}{-4} - 8 = -2\\)", a: -24, label: "Pretest 3: a/-4 - 8 = -2" },
+    { q: "4. Solve for \\(m\\): \\(5m - 2 = 3m + 10\\)", a: 6, label: "Pretest 4: 5m - 2 = 3m + 10" }
+  ];
+  renderSimpleList('pretest-part1-list', pretestPart1, 'pt1', '6. Linear Equations Pretest', 'submit');
+
+  const pretestPart2 = [
+    { q: "5. Solve: \\(-2(x-4)=10\\). Student Work - Step 1: \\(-2x-8=10\\); Step 2: \\(-2x=18\\); Step 3: \\(x=-9\\). What is the correct solution?", a: -1, label: "Pretest 5: error analysis -2(x-4)=10" },
+    { q: "6. Solve: \\(x+15=-5\\). Student Work - Step 1: \\(x+15-15=-5+15\\); Step 2: \\(x=10\\). What is the correct solution?", a: -20, label: "Pretest 6: error analysis x+15=-5" }
+  ];
+  renderSimpleList('pretest-part2-list', pretestPart2, 'pt2', '6. Linear Equations Pretest', 'submit');
+
+  const pretestPart3 = [
+    { q: "7. A scuba diver descends at 3 meters per minute. How many minutes to reach an elevation of \\(-27\\) meters?", a: 9, label: "Pretest 7: scuba diver minutes" },
+    { q: "8. Fairbanks temperature was \\(-12\\)&deg;F, rising \\(2\\)&deg;F per hour. How many hours to reach \\(0\\)&deg;F?", a: 6, label: "Pretest 8: Fairbanks temperature hours" },
+    { q: "9. A gym charges a one-time \\$50 fee plus \\$30/month. Marcus has spent \\$260 total. How many months has he been a member?", a: 7, label: "Pretest 9: gym membership months" },
+    { q: "10. The sum of three times a number and \\(-15\\) equals the product of \\(-2\\) and \\(6\\). What is the number?", a: 1, label: "Pretest 10: 3n + (-15) = -2 x 6" }
+  ];
+  renderSimpleList('pretest-part3-list', pretestPart3, 'pt3', '6. Linear Equations Pretest', 'submit');
+
+  // ==========================================
+  // PANEL 7: EXIT TICKET
+  // ==========================================
+  LessonProgress.preRegister('exit-ticket', 'Exit Ticket: two equations and reflections', '7. Exit Ticket');
+
+  function submitExitTicket(e) {
+    e.preventDefault();
+    const a1 = document.getElementById('exit-1').value;
+    const a2 = document.getElementById('exit-2').value;
+    const exp = document.getElementById('exit-explain').value.trim();
+    const ref = document.getElementById('exit-reflect').value.trim();
+    const fb = document.getElementById('exit-feedback');
+
+    if (!a1.trim() || !a2.trim() || exp.length <= 5 || ref.length <= 5) {
+      LessonCheck.incomplete(fb, "Fill in both answers and both explanation boxes before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: 'exit-ticket', label: 'Exit Ticket: two equations and reflections', answer: `Q1=${a1}, Q2=${a2}`, section: '7. Exit Ticket', correct: LessonCheck.numericMatch(a1, -15, 0.01) && LessonCheck.numericMatch(a2, 5, 0.01) }, "Exit Ticket submitted and logged successfully!");
+    LessonProgress.recordText('Exit Ticket: Golden Rule explanation', exp, '7. Exit Ticket');
+    LessonProgress.recordText('Exit Ticket: metacognition reflection', ref, '7. Exit Ticket');
+  }
+</script>
+<div id="print-report"></div>
+</body>
+</html>
