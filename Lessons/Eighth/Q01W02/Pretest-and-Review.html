@@ -357,31 +357,57 @@
   // ==========================================
   // PANEL 2: GUIDED PRACTICE (step-reveal worked examples)
   // ==========================================
+  // Each problem is broken into small "chunks" (Goal, Step, Sign Rule,
+  // Solution, ...) revealed one at a time via repeated clicks, instead of
+  // one dense paragraph appearing all at once - this mirrors how a teacher
+  // actually talks through a problem on the board, one idea per beat.
   const guidedProblems = [
     {
       title: "1. One-Step (Addition): Solve \\(x + 15 = -4\\)",
-      reasoning: "<strong>Goal:</strong> Isolate \\(x\\). <strong>Step:</strong> Subtract 15 from both sides (inverse of +15). <strong>Sign Rule:</strong> On the right, we have \\(-4 - 15\\). Rewrite as adding the opposite: \\(-4 + (-15)\\). Since the signs are the same, add and keep the negative sign.",
-      solution: "\\(x = -19\\)"
+      chunks: [
+        { label: "Goal", text: "Isolate \\(x\\)." },
+        { label: "Step", text: "Subtract 15 from both sides (the inverse of \\(+15\\))." },
+        { label: "Sign Rule", text: "On the right, we now have \\(-4 - 15\\). Rewrite it as adding the opposite: \\(-4 + (-15)\\). Since the signs are the same, add the absolute values and keep the negative sign." },
+        { label: "Solution", text: "\\(x = -19\\)" }
+      ]
     },
     {
       title: "2. One-Step (Division): Solve \\(-3x = 21\\)",
-      reasoning: "<strong>Goal:</strong> Isolate \\(x\\). <strong>Step:</strong> Divide both sides by -3 (inverse of multiplication). <strong>Sign Rule:</strong> We are dividing a positive (21) by a negative (-3). Different signs give a negative quotient.",
-      solution: "\\(x = -7\\)"
+      chunks: [
+        { label: "Goal", text: "Isolate \\(x\\)." },
+        { label: "Step", text: "Divide both sides by \\(-3\\) (the inverse of multiplying by \\(-3\\))." },
+        { label: "Sign Rule", text: "We are dividing a positive (\\(21\\)) by a negative (\\(-3\\)). Different signs give a negative quotient." },
+        { label: "Solution", text: "\\(x = -7\\)" }
+      ]
     },
     {
       title: "3. Two-Step Equation: Solve \\(2x - 8 = -20\\)",
-      reasoning: "<strong>Step 1:</strong> Add 8 to both sides to move the constant. \\(-20 + 8\\) has different signs; subtract \\(8\\) from \\(20\\) and keep the negative sign: \\(-12\\). <strong>Step 2:</strong> Divide by 2. Negative divided by positive gives a negative.",
-      solution: "\\(x = -6\\)"
+      chunks: [
+        { label: "Step 1", text: "Add 8 to both sides to move the constant off the variable term." },
+        { label: "Sign Rule", text: "\\(-20 + 8\\) has different signs; subtract \\(8\\) from \\(20\\) and keep the negative sign, giving \\(-12\\)." },
+        { label: "Step 2", text: "Divide both sides by 2 (the inverse of multiplying by 2). A negative divided by a positive gives a negative." },
+        { label: "Solution", text: "\\(x = -6\\)" }
+      ]
     },
     {
       title: "4. Two-Step (Rational): Solve \\(\\frac{x}{-4} + 5 = 2\\)",
-      reasoning: "<strong>Step 1:</strong> Subtract 5 from both sides. \\(2 - 5\\) becomes \\(2 + (-5) = -3\\). <strong>Step 2:</strong> Multiply both sides by -4. Sign Rule: \\(-3 \\times -4\\). Same signs give a positive product.",
-      solution: "\\(x = 12\\)"
+      chunks: [
+        { label: "Step 1", text: "Subtract 5 from both sides." },
+        { label: "Sign Rule", text: "\\(2 - 5\\) becomes \\(2 + (-5) = -3\\)." },
+        { label: "Step 2", text: "Multiply both sides by \\(-4\\) (the inverse of dividing by \\(-4\\))." },
+        { label: "Sign Rule", text: "\\(-3 \\times -4\\): same signs give a positive product." },
+        { label: "Solution", text: "\\(x = 12\\)" }
+      ]
     },
     {
       title: "5. Variables on Both Sides: Solve \\(5x + 10 = 2x - 11\\)",
-      reasoning: "<strong>Step 1:</strong> Subtract \\(2x\\) from both sides to group variables: \\(5x - 2x = 3x\\). <strong>Step 2:</strong> Subtract 10 from both sides: \\(-11 - 10\\) becomes \\(-11 + (-10) = -21\\). <strong>Step 3:</strong> Divide by 3. Different signs give a negative.",
-      solution: "\\(x = -7\\)"
+      chunks: [
+        { label: "Step 1", text: "Subtract \\(2x\\) from both sides to group the variable terms: \\(5x - 2x = 3x\\)." },
+        { label: "Step 2", text: "Subtract 10 from both sides to isolate the variable term." },
+        { label: "Sign Rule", text: "\\(-11 - 10\\) becomes \\(-11 + (-10) = -21\\)." },
+        { label: "Step 3", text: "Divide both sides by 3. Different signs give a negative." },
+        { label: "Solution", text: "\\(x = -7\\)" }
+      ]
     }
   ];
 
@@ -389,10 +415,9 @@
     const html = guidedProblems.map((p, i) => `
       <div class="step-box" style="margin-top:16px;">
         <h3 style="margin-top:0; color:var(--primary);">${p.title}</h3>
-        <button class="btn-lg" onclick="revealGuidedStep(${i})">Reveal Reasoning</button>
+        <button class="btn-lg" onclick="revealGuidedStep(${i})">Reveal Next Step</button>
         <button class="btn-secondary" onclick="resetGuidedStep(${i})">Reset</button>
-        <div id="guided-${i}-reasoning" class="step-item" style="margin-top:14px;">${p.reasoning}</div>
-        <div id="guided-${i}-solution" class="step-item" style="margin-top:14px; font-weight:800; color:var(--primary);">Solution: ${p.solution}</div>
+        <div id="guided-${i}-chunks" style="margin-top:14px;"></div>
       </div>
     `).join('');
     document.getElementById('guided-steps-container').innerHTML = html;
@@ -400,17 +425,24 @@
   renderGuidedSteps();
 
   const guidedStepCount = {};
-  function revealGuidedStep(i) {
-    const count = (guidedStepCount[i] || 0) + 1;
-    guidedStepCount[i] = count;
-    if (count >= 1) document.getElementById(`guided-${i}-reasoning`).classList.add('visible');
-    if (count >= 2) document.getElementById(`guided-${i}-solution`).classList.add('visible');
+  function renderGuidedChunks(i) {
+    const p = guidedProblems[i];
+    const count = guidedStepCount[i] || 0;
+    const html = p.chunks.slice(0, count).map((c, idx) => {
+      const isSolution = idx === p.chunks.length - 1;
+      return `<div class="step-item visible" style="margin-top:10px; ${isSolution ? 'font-weight:800; color:var(--primary);' : ''}"><strong>${c.label}:</strong> ${c.text}</div>`;
+    }).join('');
+    document.getElementById(`guided-${i}-chunks`).innerHTML = html;
     triggerMathJax();
+  }
+  function revealGuidedStep(i) {
+    const p = guidedProblems[i];
+    guidedStepCount[i] = Math.min((guidedStepCount[i] || 0) + 1, p.chunks.length);
+    renderGuidedChunks(i);
   }
   function resetGuidedStep(i) {
     guidedStepCount[i] = 0;
-    document.getElementById(`guided-${i}-reasoning`).classList.remove('visible');
-    document.getElementById(`guided-${i}-solution`).classList.remove('visible');
+    renderGuidedChunks(i);
   }
 
   function checkGuidedCritical() {
