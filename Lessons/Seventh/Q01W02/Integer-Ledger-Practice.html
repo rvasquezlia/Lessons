@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: The Integer Ledger - Practice</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+
+  <style>
+    /* Page-local additions for the number-line explorer and the Rules
+       Reminder sub-selector - built from the same variables/tokens as
+       lesson-shared.css rather than a separate palette. */
+    .explorer-controls { display:flex; gap:20px; flex-wrap:wrap; align-items:flex-end; margin-bottom:18px; }
+    .explorer-field { display:flex; flex-direction:column; gap:6px; }
+    .explorer-field label { font-weight:800; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.5px; color:#475569; }
+    .explorer-field input { width:120px; }
+    .explorer-result { font-size:1.15rem; font-weight:700; color:var(--text); }
+    .explorer-result strong { color:var(--primary); font-size:1.4rem; }
+    #ledger-numberline svg text { font-family:'Montserrat', sans-serif; }
+    .rule-select-row { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; }
+    .rule-panel { display:none; }
+    .rule-panel.active { display:block; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Q01W02 - Practice</span>
+    <h1>The Integer Ledger</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Pre-Algebra 7 - The Integer Ledger')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Every deposit, drop, and debt is a signed number - this page is extra practice with all four integer operations. Work the tabs <strong>in order, left to right</strong>. Tab 1 is just for exploring, nothing to check. Tabs 2-4 are review: reference material and guided practice with two tries and a reveal if you miss twice. Tabs 5-6 are quiz-style: you submit once and your teacher reviews it from your printed report. When you finish the Closing Reflection, type your name above and click <strong>Print My Progress</strong>.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('readline')">1. Read the Line</button>
+    <button class="tab-btn" onclick="switchTab('rules')">2. Rules Reminder</button>
+    <button class="tab-btn" onclick="switchTab('postentries')">3. Post the Entries</button>
+    <button class="tab-btn" onclick="switchTab('multistep')">4. Multi-Step Challenge</button>
+    <button class="tab-btn" onclick="switchTab('audit')">5. Audit the Work</button>
+    <button class="tab-btn" onclick="switchTab('realworld')">6. Real-World Entries</button>
+    <button class="tab-btn" onclick="switchTab('reflection')">7. Closing Reflection</button>
+  </nav>
+
+  <!-- PANEL 1: READ THE LINE -->
+  <div id="readline" class="panel active">
+    <div class="section-title">Read the Line</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Set a starting point and a change, then watch which way the jump moves on the number line - left is negative, right is positive. Nothing to submit here; just build your intuition before you start posting entries.
+    </div>
+
+    <div class="explainer-box">
+      <div class="explorer-controls">
+        <div class="explorer-field">
+          <label for="ledger-start">Start at</label>
+          <input type="number" id="ledger-start" class="form-control-lg" value="-3">
+        </div>
+        <div class="explorer-field">
+          <label for="ledger-change">Then add</label>
+          <input type="number" id="ledger-change" class="form-control-lg" value="5">
+        </div>
+        <div class="explorer-result">= <strong id="ledger-answer">2</strong></div>
+      </div>
+      <div id="ledger-numberline"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: RULES REMINDER -->
+  <div id="rules" class="panel">
+    <div class="section-title">Rules Reminder</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Pick a rule below to review it, copy it into your notebook, then answer the two Check Your Understanding problems.
+    </div>
+
+    <div class="rule-select-row">
+      <button class="problem-btn active" data-rule="add" onclick="showRule('add')">Addition</button>
+      <button class="problem-btn" data-rule="sub" onclick="showRule('sub')">Subtraction</button>
+      <button class="problem-btn" data-rule="mul" onclick="showRule('mul')">Multiplication &amp; Division</button>
+    </div>
+
+    <div class="notebook-box rule-panel active" data-rule="add">
+      <div class="notebook-header">Addition Rules</div>
+      <ul>
+        <li><strong>Same signs:</strong> add the absolute values and keep the common sign. \(-5 + (-3) = -8\)</li>
+        <li><strong>Different signs:</strong> subtract the smaller absolute value from the larger; keep the sign of the number with the larger absolute value. \(-10 + 7 = -3\)</li>
+      </ul>
+    </div>
+    <div class="notebook-box rule-panel" data-rule="sub">
+      <div class="notebook-header">Subtraction Rule: Keep-Change-Change</div>
+      <p style="margin:0 0 10px 0;">Keep the first number, change subtraction to addition, change the sign of the second number.</p>
+      <p style="margin:0;"><em>Example:</em> \(4 - (-9) \rightarrow 4 + 9 = \mathbf{13}\)</p>
+    </div>
+    <div class="notebook-box rule-panel" data-rule="mul">
+      <div class="notebook-header">Multiplication &amp; Division Sign Laws</div>
+      <ul>
+        <li><strong>Same signs:</strong> the result is always positive. \(-4 \times (-5) = 20\)</li>
+        <li><strong>Different signs:</strong> the result is always negative. \(-20 \div 5 = -4\)</li>
+      </ul>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Check Your Understanding</h3>
+      <p>Use the rule you just reviewed - and the others above it - to solve these two problems.</p>
+      <div id="rules-check-list"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: POST THE ENTRIES -->
+  <div id="postentries" class="panel">
+    <div class="section-title">Post the Entries</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Type each answer and check it. You get two tries per problem before the reasoning is revealed.
+    </div>
+    <div id="entries-list"></div>
+  </div>
+
+  <!-- PANEL 4: MULTI-STEP CHALLENGE -->
+  <div id="multistep" class="panel">
+    <div class="section-title">Multi-Step Challenge</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Work the inner parentheses first, then finish the operation. You get two tries before the steps are revealed.
+    </div>
+    <div id="multistep-list"></div>
+  </div>
+
+  <!-- PANEL 5: AUDIT THE WORK -->
+  <div id="audit" class="panel">
+    <div class="section-title">Audit the Work</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      This tab is quiz-style: decide whether the student is correct, then submit. Your teacher reviews the explanation from your printed report, not on screen.
+    </div>
+
+    <div class="challenge-box">
+      <p style="margin-top:0;">Ana says \(-10 - 4 = -6\), reasoning that \(10 - 4 = 6\) and the sign is negative. Is she correct?</p>
+      <select id="audit-choice" class="form-control-lg" style="max-width:260px;">
+        <option value="">Select...</option>
+        <option value="correct">She's correct</option>
+        <option value="incorrect">She's incorrect</option>
+      </select>
+      <button class="btn-lg" style="margin-top:14px;" onclick="checkAudit()">Submit</button>
+      <div id="audit-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="explainer-box" id="audit-explain" style="display:none; margin-top:22px;">
+      Ana treated this as a same-signs problem, but it isn't one - there's no second negative to combine with. Using Keep-Change-Change: \(-10 - 4 \rightarrow -10 + (-4)\). Now the signs <em>are</em> the same, so add the absolute values and keep the negative sign: \(10 + 4 = 14\), giving <strong>\(-14\)</strong>. She mixed up "same signs add" with treating the whole expression as if the 4 were already negative-and-being-subtracted, rather than converting the operation first.
+    </div>
+  </div>
+
+  <!-- PANEL 6: REAL-WORLD ENTRIES -->
+  <div id="realworld" class="panel">
+    <div class="section-title">Real-World Entries</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read each entry and write the signed integer it represents. This tab is quiz-style: you submit once and your teacher reviews it from your printed report.
+    </div>
+    <div id="realworld-list"></div>
+  </div>
+
+  <!-- PANEL 7: CLOSING REFLECTION -->
+  <div id="reflection" class="panel">
+    <div class="section-title">Closing Reflection</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      No grading here - just think it through in writing, then go back to the Student Name box in the blue bar at the top of the page, type your name, and click Print My Progress.
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Debt vs. Credit</h3>
+      <p>Would you represent <strong>"debt"</strong> with a positive or negative integer? Why - and how does that compare to <strong>"credit"</strong>?</p>
+      <textarea id="reflection-text" class="form-control-lg" rows="3" placeholder="Type your reasoning here..."></textarea>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkReflection()">Submit My Work</button>
+      <div id="reflection-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // REUSABLE SINGLE-FIELD PRACTICE LIST
+  // mode 'check' = 2 tries then reveal; mode 'submit' = quiz-style single submission
+  // (same pattern as Operations-with-Integers-Review.html)
+  // ==========================================
+  const listRegistry = {};
+
+  function renderSimpleList(containerId, problems, keyPrefix, section, mode) {
+    listRegistry[keyPrefix] = { problems, section, mode };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkSimpleItem('${keyPrefix}', ${i})">${mode === 'submit' ? 'Submit' : 'Check'}</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, p.label || p.q.replace(/\\\(|\\\)/g, ''), section));
+  }
+
+  function checkSimpleItem(keyPrefix, idx) {
+    const cfg = listRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = LessonCheck.numericMatch(val, p.a, p.tol || 0.01);
+    const label = p.label || p.q.replace(/\\\(|\\\)/g, '');
+    const answerText = String(p.a);
+
+    if (cfg.mode === 'submit') {
+      LessonCheck.submit(fb, { key: `${keyPrefix}-${idx}`, label, answer: val, section: cfg.section, correct });
+    } else {
+      LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+        correct: `Correct! Answer: ${answerText}`,
+        retry: p.hint || "Not quite yet. Review the rule and try again.",
+        reveal: `Here's the correct answer: ${answerText}`
+      }, { label, answer: val, section: cfg.section });
+    }
+  }
+
+  // ==========================================
+  // PANEL 1: READ THE LINE
+  // ==========================================
+  const ledgerStart = document.getElementById('ledger-start');
+  const ledgerChange = document.getElementById('ledger-change');
+  const ledgerAnswer = document.getElementById('ledger-answer');
+
+  function drawLedgerLine(start, change) {
+    const end = start + change;
+    const lo = Math.min(start, end, -5) - 2;
+    const hi = Math.max(start, end, 5) + 2;
+    const w = 600, marginX = 26, axisY = 78;
+    const scale = (w - marginX * 2) / (hi - lo);
+    const x = v => marginX + (v - lo) * scale;
+
+    let ticks = '';
+    for (let i = Math.ceil(lo); i <= Math.floor(hi); i++) {
+      const tx = x(i);
+      ticks += `<line x1="${tx}" y1="${axisY - 5}" x2="${tx}" y2="${axisY + 5}" stroke="#94a3b8" stroke-width="1"/>`;
+      if (i % (hi - lo > 24 ? 4 : 2) === 0 || i === 0) {
+        ticks += `<text x="${tx}" y="${axisY + 20}" font-size="11" fill="#475569" text-anchor="middle">${i}</text>`;
+      }
+    }
+
+    const arcColor = change >= 0 ? '#d97706' : '#2563eb';
+    const midX = (x(start) + x(end)) / 2;
+    const arcHeight = Math.min(42, 12 + Math.abs(x(end) - x(start)) * 0.18);
+    const arcPath = `M ${x(start)} ${axisY} Q ${midX} ${axisY - arcHeight} ${x(end)} ${axisY}`;
+
+    document.getElementById('ledger-numberline').innerHTML = `
+      <svg viewBox="0 0 ${w} 118" style="width:100%; max-width:600px; display:block; margin:0 auto;" role="img" aria-label="Number line from ${start} to ${end}">
+        <line x1="${marginX - 8}" y1="${axisY}" x2="${w - marginX + 8}" y2="${axisY}" stroke="#1e3a8a" stroke-width="1.5"/>
+        ${ticks}
+        <circle cx="${x(start)}" cy="${axisY}" r="5" fill="#1e3a8a"/>
+        <text x="${x(start)}" y="${axisY - 10}" font-size="11" fill="#1e3a8a" text-anchor="middle" font-weight="700">start</text>
+        <path d="${arcPath}" fill="none" stroke="${arcColor}" stroke-width="2.5" marker-end="url(#ledger-arrow)"/>
+        <circle cx="${x(end)}" cy="${axisY}" r="6" fill="${arcColor}"/>
+        <defs>
+          <marker id="ledger-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 z" fill="${arcColor}"/>
+          </marker>
+        </defs>
+      </svg>`;
+    ledgerAnswer.textContent = end;
+  }
+  function updateLedgerLine() {
+    const s = parseFloat(ledgerStart.value) || 0;
+    const c = parseFloat(ledgerChange.value) || 0;
+    drawLedgerLine(s, c);
+  }
+  ledgerStart.addEventListener('input', updateLedgerLine);
+  ledgerChange.addEventListener('input', updateLedgerLine);
+  updateLedgerLine();
+
+  // ==========================================
+  // PANEL 2: RULES REMINDER
+  // ==========================================
+  function showRule(ruleId) {
+    document.querySelectorAll('.problem-btn[data-rule]').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.rule-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.problem-btn[data-rule="${ruleId}"]`).classList.add('active');
+    document.querySelector(`.rule-panel[data-rule="${ruleId}"]`).classList.add('active');
+    triggerMathJax();
+  }
+
+  const rulesCheckProblems = [
+    { q: "\\(-13 + (-7) = \\) ?", a: -20, hint: "Same signs: add the absolute values and keep the common sign." },
+    { q: "\\(9 - (-6) = \\) ?", a: 15, hint: "Keep-Change-Change: \\(9 - (-6) \\rightarrow 9 + 6\\)." }
+  ];
+  renderSimpleList('rules-check-list', rulesCheckProblems, 'rc', '2. Rules Reminder', 'check');
+
+  // ==========================================
+  // PANEL 3: POST THE ENTRIES
+  // ==========================================
+  const entriesProblems = [
+    { q: "\\(-15 + 8 = \\) ?", a: -7, hint: "Different signs: subtract 8 from 15, then keep the sign of the larger absolute value \\((-15)\\). Result: \\(-7\\)." },
+    { q: "\\(-4 \\times (-9) = \\) ?", a: 36, hint: "Same signs multiplying &rarr; positive. \\(4 \\times 9 = 36\\)." },
+    { q: "\\(12 - (-5) = \\) ?", a: 17, hint: "Keep-Change-Change: \\(12 - (-5) \\rightarrow 12 + 5 = 17\\)." },
+    { q: "\\(-20 \\div 4 = \\) ?", a: -5, hint: "Different signs dividing &rarr; negative. \\(20 \\div 4 = 5\\), so \\(-5\\)." },
+    { q: "\\(-11 + (-14) = \\) ?", a: -25, hint: "Same signs adding &rarr; add the absolute values and keep the sign: \\(11 + 14 = 25\\), so \\(-25\\)." },
+    { q: "\\(-7 \\times 6 = \\) ?", a: -42, hint: "Different signs multiplying &rarr; negative. \\(7 \\times 6 = 42\\), so \\(-42\\)." },
+    { q: "\\(-18 - 5 = \\) ?", a: -23, hint: "Keep-Change-Change: \\(-18 - 5 \\rightarrow -18 + (-5) = -23\\)." },
+    { q: "\\(-48 \\div (-8) = \\) ?", a: 6, hint: "Same signs dividing &rarr; positive. \\(48 \\div 8 = 6\\)." },
+    { q: "\\(25 + (-30) = \\) ?", a: -5, hint: "Different signs: subtract 25 from 30, keep the sign of the larger absolute value \\((-30)\\). Result: \\(-5\\)." }
+  ];
+  renderSimpleList('entries-list', entriesProblems, 'pe', '3. Post the Entries', 'check');
+
+  // ==========================================
+  // PANEL 4: MULTI-STEP CHALLENGE
+  // ==========================================
+  const multistepProblems = [
+    { q: "\\(-3 \\times (4 + (-6)) = \\) ?", a: 6, hint: "Step 1 - resolve the parentheses: \\(4 + (-6) = -2\\) (different signs, subtract, keep the sign of the larger absolute value). Step 2 - multiply: \\(-3 \\times (-2) = 6\\) (same signs &rarr; positive).", label: "Multi-Step: -3 x (4 + (-6))" }
+  ];
+  renderSimpleList('multistep-list', multistepProblems, 'ms', '4. Multi-Step Challenge', 'check');
+
+  // ==========================================
+  // PANEL 5: AUDIT THE WORK
+  // ==========================================
+  LessonProgress.preRegister('audit', "Audit the Work: is Ana's -10-4=-6 correct?", '5. Audit the Work');
+
+  function checkAudit() {
+    const val = document.getElementById('audit-choice').value;
+    const fb = document.getElementById('audit-feedback');
+    if (!val) {
+      LessonCheck.incomplete(fb, "Choose an answer before submitting.");
+      return;
+    }
+    LessonCheck.submit(fb, {
+      key: 'audit',
+      label: "Audit the Work: is Ana's -10-4=-6 correct?",
+      answer: val === 'incorrect' ? "She's incorrect" : "She's correct",
+      section: '5. Audit the Work',
+      correct: val === 'incorrect'
+    });
+    const explain = document.getElementById('audit-explain');
+    explain.style.display = 'block';
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // PANEL 6: REAL-WORLD ENTRIES
+  // ==========================================
+  const realworldProblems = [
+    { q: "During a winter storm in Chicago, the afternoon temperature was \\(15\\)&deg;F. By midnight it had dropped 22 degrees. Write the integer for the temperature change.", a: -22, label: "Real-World: Chicago temperature drop" },
+    { q: "Sarah's bank statement shows an \"ATM Withdrawal\" of \\$45. Write the integer for this transaction.", a: -45, label: "Real-World: Sarah's ATM withdrawal" },
+    { q: "A research submarine is exploring a trench 1,200 feet below sea level. Write the integer for its position.", a: -1200, label: "Real-World: submarine trench depth" },
+    { q: "The quarterback was tackled behind the line of scrimmage for a loss of 8 yards. Write the integer for this play.", a: -8, label: "Real-World: quarterback loss of yardage" },
+    { q: "A boutique's monthly report showed a total gain of \\$1,500 in sales. Write the integer for this gain.", a: 1500, label: "Real-World: boutique sales gain" },
+    { q: "Hikers reached a peak 850 feet above their starting point. Write the integer for this elevation change.", a: 850, label: "Real-World: hikers' elevation gain" }
+  ];
+  renderSimpleList('realworld-list', realworldProblems, 'rw', '6. Real-World Entries', 'submit');
+
+  // ==========================================
+  // PANEL 7: CLOSING REFLECTION
+  // ==========================================
+  function checkReflection() {
+    const explain = document.getElementById('reflection-text').value.trim();
+    const fb = document.getElementById('reflection-feedback');
+    if (explain.length <= 5) { LessonCheck.incomplete(fb, "Write your explanation before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'reflection', label: 'Closing Reflection: debt vs. credit', answer: explain, section: '7. Closing Reflection' });
+  }
+</script>
+<div id="print-report"></div>
+</body>
+</html>
