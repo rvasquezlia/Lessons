@@ -85,59 +85,6 @@ header {
 h1 { margin: 8px 0; font-size: 2.3rem; font-weight: 800; }
 p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
 
-/* ================================================================
-   TOPIC NAV - the six section links (Vocabulary & Literacy,
-   Explanation, Practice Set, Word Problems, Test Prep, Teacher's
-   Guide) shown at the top of every page inside a topic folder, plus
-   a "back to all topics" link. Each of the six pages is a separate
-   HTML file (not a JS tab) so this is plain links, with `.current`
-   marking whichever page is presently open.
-   ================================================================ */
-.topic-nav-wrap {
-  background: #0f172a;
-  padding: 10px 20px;
-}
-.topic-nav-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #cbd5e1;
-  text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 700;
-  margin: 0 0 8px 2px;
-}
-.topic-nav-back:hover { color: #fff; text-decoration: underline; }
-.topic-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.topic-nav-link {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  text-decoration: none;
-  color: #e2e8f0;
-  background: rgba(255,255,255,0.08);
-  border: 2px solid rgba(255,255,255,0.15);
-  border-radius: 30px;
-  padding: 8px 16px;
-  font-weight: 700;
-  font-size: 0.88rem;
-  transition: background 0.15s ease, transform 0.12s ease;
-}
-.topic-nav-link:hover { background: rgba(255,255,255,0.18); transform: translateY(-1px); }
-.topic-nav-link .topic-nav-icon { font-size: 1rem; }
-.topic-nav-link.current {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #000;
-}
-
 /* Print-progress utility bar (name field + print button), shown under the header */
 .progress-bar {
   display: flex;

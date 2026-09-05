@@ -182,7 +182,6 @@
       transition: transform 0.12s ease, box-shadow 0.12s ease;
     }
     .section-link:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.12); }
-    .section-link .section-icon { font-size: 1.1rem; line-height: 1; }
     .section-link.vocab    { background: var(--c-vocab-bg);    color: var(--c-vocab);    border-color: var(--c-vocab); }
     .section-link.explain  { background: var(--c-explain-bg);  color: var(--c-explain);  border-color: var(--c-explain); }
     .section-link.practice { background: var(--c-practice-bg); color: var(--c-practice); border-color: var(--c-practice); }
@@ -251,12 +250,12 @@
    * "Coming soon" instead of a link.
    */
   const SECTIONS = [
-    { key: "vocab",    cls: "vocab",    icon: "\u{1F4D6}", label: "Vocabulary &amp; Literacy" },
-    { key: "explain",  cls: "explain",  icon: "\u{1F9EE}", label: "Explanation" },
-    { key: "practice", cls: "practice", icon: "✏️", label: "Practice Set" },
-    { key: "word",     cls: "word",     icon: "\u{1F4DD}", label: "Word Problems" },
-    { key: "test",     cls: "test",     icon: "\u{1F3AF}", label: "Test Prep" },
-    { key: "teacher",  cls: "teacher",  icon: "\u{1F9D1}‍\u{1F3EB}", label: "Teacher's Guide" }
+    { key: "vocab",    cls: "vocab",    label: "Vocabulary &amp; Literacy" },
+    { key: "explain",  cls: "explain",  label: "Explanation" },
+    { key: "practice", cls: "practice", label: "Practice Set" },
+    { key: "word",     cls: "word",     label: "Word Problems" },
+    { key: "test",     cls: "test",     label: "Test Prep" },
+    { key: "teacher",  cls: "teacher",  label: "Teacher's Guide" }
   ];
 
   const CURRICULUM = {
@@ -318,11 +317,10 @@
   function renderSectionLink(section, topic) {
     const href = topic[section.key];
     if (!href) {
-      return `<span class="empty-tag">${section.icon} ${section.label}<br>Coming soon</span>`;
+      return `<span class="empty-tag">${section.label}<br>Coming soon</span>`;
     }
     return `
       <a class="section-link ${section.cls}" href="${topic.base}${href}">
-        <span class="section-icon">${section.icon}</span>
         <span>${section.label}</span>
       </a>`;
   }
