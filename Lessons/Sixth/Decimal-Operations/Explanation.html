@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Decimal Operations - Explanation</title>
+
+  <!-- Montserrat Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Decimal Operations &middot; Explanation</span>
+    <h1>Decimal Operations: Explanation</h1>
+  </header>
+
+  <div class="topic-nav-wrap">
+    <a class="topic-nav-back" href="../../index.html">&larr; All Topics</a>
+    <ul class="topic-nav">
+      <li><a class="topic-nav-link" href="Vocabulary-Literacy.html"><span class="topic-nav-icon">📖</span>Vocabulary &amp; Literacy</a></li>
+      <li><a class="topic-nav-link current" href="Explanation.html"><span class="topic-nav-icon">🧮</span>Explanation</a></li>
+      <li><a class="topic-nav-link" href="Practice-Set.html"><span class="topic-nav-icon">✏️</span>Practice Set</a></li>
+      <li><a class="topic-nav-link" href="Word-Problems.html"><span class="topic-nav-icon">📝</span>Word Problems</a></li>
+      <li><a class="topic-nav-link" href="Test-Prep.html"><span class="topic-nav-icon">🎯</span>Test Prep</a></li>
+      <li><a class="topic-nav-link" href="Teacher-Guide.html"><span class="topic-nav-icon">🧑‍🏫</span>Teacher's Guide</a></li>
+    </ul>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    This page teaches every algorithm you need for Decimal Operations, broken into steps with fully worked examples. Work through the tabs <strong>in order, left to right</strong>: place value &amp; rounding, then addition &amp; subtraction, then multiplication, then the whiteboard modeling suite. Click through each carousel's <strong>Next Step</strong> button to watch a worked example unfold one step at a time - there's nothing to submit here except the whiteboard suite. When you're ready to practice on your own, move on to Practice Set and Word Problems.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('pv-foundations')">1. Place Value &amp; Rounding</button>
+    <button class="tab-btn" onclick="switchTab('addition-proof')">2. Addition &amp; Subtraction</button>
+    <button class="tab-btn" onclick="switchTab('multiplication-proof')">3. Multiplication</button>
+    <button class="tab-btn" onclick="switchTab('wordproblem-strategy')">4. Word Problem Strategy</button>
+    <button class="tab-btn" onclick="switchTab('whiteboard')">5. Whiteboard Modeling</button>
+  </nav>
+
+  <!-- PANEL 1: PLACE VALUE & ROUNDING FOUNDATIONS -->
+  <div id="pv-foundations" class="panel active">
+    <div class="section-title">Foundational Concept: Place Value &amp; Rounding Strategy</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read the notebook box and copy it into your math notebook. Then click each column in the chart below to review what it means - there's nothing to submit here, this is background you'll use for every algorithm on this page. (This chart is the same one from the Vocabulary &amp; Literacy page - it's repeated here so you don't have to leave this page to use it.)
+    </div>
+
+    <div class="explainer-box">
+      The <strong>decimal point (\(\cdot\))</strong> separates <strong>whole quantities</strong> (on the left) from <strong>fractional parts</strong> (on the right). Every move to the left makes a digit \(10\times\) larger; every move to the right drops it to \(\frac{1}{10}\)th of its value.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
+      <p style="margin:0 0 10px 0;"><strong>Lesson Title:</strong> Decimal Operations &amp; Place Value Alignment</p>
+      <ul>
+        <li><strong>Decimal Point (\(\cdot\)):</strong> Separates Whole Numbers from Parts of a Whole.</li>
+        <li><strong>Tenths (\(0.1\)):</strong> \(\frac{1}{10}\)th of a whole (1 dime = $0.10).</li>
+        <li><strong>Hundredths (\(0.01\)):</strong> \(\frac{1}{100}\)th of a whole (1 penny = $0.01).</li>
+        <li><strong>Thousandths (\(0.001\)):</strong> \(\frac{1}{1000}\)th of a whole (Metric lab scales &amp; sports split-times).</li>
+      </ul>
+    </div>
+
+    <p class="no-print" style="text-align:center;"><strong>Click any column to inspect its mathematical value and cash equivalent:</strong></p>
+
+    <div class="pv-chart">
+      <div class="pv-column" onclick="inspectPV('hundreds')">
+        <div class="pv-title">Hundreds</div>
+        <div class="pv-val">100</div>
+        <div class="pv-money">$100 Bill</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('tens')">
+        <div class="pv-title">Tens</div>
+        <div class="pv-val">10</div>
+        <div class="pv-money">$10 Bill</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('ones')">
+        <div class="pv-title">Ones</div>
+        <div class="pv-val">1</div>
+        <div class="pv-money">$1 Dollar</div>
+      </div>
+      <div class="pv-column" style="background:#fee2e2; border-color:#ef4444;" onclick="inspectPV('decimal')">
+        <div class="pv-title">Decimal</div>
+        <div class="pv-val">\(\cdot\)</div>
+        <div class="pv-money">ANCHOR</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('tenths')">
+        <div class="pv-title">Tenths</div>
+        <div class="pv-val">0.1</div>
+        <div class="pv-money">1 Dime</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('hundredths')">
+        <div class="pv-title">Hundredths</div>
+        <div class="pv-val">0.01</div>
+        <div class="pv-money">1 Penny</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('thousandths')">
+        <div class="pv-title">Thousandths</div>
+        <div class="pv-val">0.001</div>
+        <div class="pv-money">Metric/Sports</div>
+      </div>
+    </div>
+
+    <div id="pv-inspector" class="no-print" style="background:#f1f5f9; padding:20px; border-radius:12px; border:2px solid var(--border); margin-top:16px;">
+      <h3 style="margin-top:0; color:var(--primary);" id="inspector-title">Click a column above!</h3>
+      <p id="inspector-body" style="margin:0;">Explore how digits relate to whole quantities and fractional parts.</p>
+    </div>
+
+    <div style="background:#f1f5f9; border-left:8px solid var(--accent); padding:24px; border-radius:12px; margin-top:28px;">
+      <h3 style="margin-top:0; color:var(--accent);">Estimation Strategy: How and Why We Round</h3>
+      <p>Before calculating exact answers, we <strong>round</strong> numbers to estimate the result. Estimation acts as a safety check against place-value errors!</p>
+
+      <strong>The Rounding Rule:</strong>
+      <ol>
+        <li>Identify your target place value position.</li>
+        <li>Look at the digit directly to its right.</li>
+        <li>If that digit is <strong>5 or greater</strong>, round up (add 1 to the target digit). If it's <strong>4 or less</strong>, keep the target digit the same.</li>
+      </ol>
+      <p><em>Example:</em> Round 14.86 to the nearest tenth. Look at the hundredths digit (6). Since \(6 \ge 5\), \(14.86 \rightarrow 14.9\).</p>
+    </div>
+  </div>
+
+  <!-- PANEL 2: ADDITION & SUBTRACTION -->
+  <div id="addition-proof" class="panel">
+    <div class="section-title">Addition &amp; Subtraction: Visual Alignment &amp; Regrouping</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Copy the notebook box into your notebook. Click through the carousel's <strong>Next Step</strong> button to watch four worked examples, then step through the two Extra Guided Examples below it the same way. Finally, click <strong>Click to Reveal Next Step</strong> on Marcus's word problem to see it solved step by step.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
+      <p style="margin:0 0 10px 0;"><strong>Rule #1 for Addition &amp; Subtraction:</strong> Line up the decimal points.</p>
+      <ol>
+        <li><strong>Line up the decimal points vertically.</strong> Tenths stay under tenths, hundredths under hundredths.</li>
+        <li><strong>Pad empty places with trailing zeros</strong> so every number has the same number of decimal places (write 3.5 as 3.50).</li>
+        <li><strong>Regroup when carrying:</strong> if a column's sum is \(\ge 10\), write the ones digit in that column and carry 1 to the next column on the left.</li>
+        <li><strong>Regroup when borrowing:</strong> strike through the digit you're borrowing from and write its new value above it.</li>
+        <li><strong>Bring the decimal point straight down</strong> into your final answer.</li>
+      </ol>
+      <p style="margin:12px 0 0 0; font-size:0.95rem; color:#78350f;"><em>Tip:</em> in our examples, carried and borrowed digits are shown in red so they're easy to spot on the page - that's just a classroom convention, not part of the math itself.</p>
+    </div>
+
+    <h3>Guided Example Carousel: Step-by-Step Alignment</h3>
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="add-prev-btn" onclick="changeAddEx(-1)">&larr; Previous Example</button>
+        <div style="text-align:center;">
+          <span id="add-ex-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Exercise 1 of 4</span>
+          <div class="carousel-indicators" id="add-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="add-next-btn" onclick="changeAddEx(1)">Next Example &rarr;</button>
+      </div>
+
+      <div id="add-carousel-content" style="min-height: 380px;"></div>
+
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextAddExStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetAddExStep()">Reset Steps</button>
+      </div>
+    </div>
+
+    <h3 style="margin-top:28px;">Extra Guided Example 1: Adding Decimals (\(12.7 + 4.25\))</h3>
+    <div class="step-box">
+      <p style="text-align:center;"><strong>Estimate Check:</strong> \(12.7 \approx 13\), \(4.25 \approx 4\) &rarr; \(13 + 4 = 17\)</p>
+      <div id="ex1-worked-content" style="min-height:240px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextEx1Step()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetEx1Step()">Reset Steps</button>
+      </div>
+    </div>
+
+    <h3>Extra Guided Example 2: Subtracting Decimals (\(8.4 - 2.76\))</h3>
+    <div class="step-box">
+      <p style="text-align:center;"><strong>Estimate Check:</strong> \(8.4 \approx 8\), \(2.76 \approx 3\) &rarr; \(8 - 3 = 5\)</p>
+      <div id="ex2-worked-content" style="min-height:240px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextEx2Step()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetEx2Step()">Reset Steps</button>
+      </div>
+    </div>
+
+    <div class="step-box" style="margin-top:24px;">
+      <h3 style="margin-top:0; color:var(--primary);">Guided Word Problem: Step-by-Step</h3>
+      <p><strong>Scenario:</strong> Marcus is building a wooden frame. He cuts a board that is \(14.25\text{ cm}\) long, then attaches a second board that is \(8.7\text{ cm}\) long. He needs the combined board to reach a target length of \(25.0\text{ cm}\). How much longer is his target than his combined board?</p>
+
+      <button class="btn-lg" onclick="revealAddStep()">Click to Reveal Next Step</button>
+      <button class="btn-secondary" onclick="resetAddSteps()">Reset</button>
+
+      <div id="add-step-1" class="step-item">
+        <strong>Step 1: Estimate the combined board length.</strong><br>
+        Round values to nearest whole unit: \(14.25 \rightarrow 14\) and \(8.7 \rightarrow 9\).<br>
+        Estimated combined length \(\approx 14 + 9 = 23\text{ cm}\).
+      </div>
+
+      <div id="add-step-2" class="step-item">
+        <strong>Step 2: Calculate exact combined length (\(14.25 + 8.70\)).</strong><br>
+        Line up decimals and pad trailing zero: \(14.25 + 8.70 = \mathbf{22.95\text{ cm}}\).
+      </div>
+
+      <div id="add-step-3" class="step-item">
+        <strong>Step 3: Calculate difference between target and combined length (\(25.00 - 22.95\)).</strong><br>
+        Pad zero to target: \(25.00 - 22.95\).
+      </div>
+
+      <div id="add-step-4" class="step-item">
+        <strong>Step 4: Final Answer &amp; Reasonable Check.</strong><br>
+        \(25.00 - 22.95 = \mathbf{2.05\text{ cm}}\).<br>
+        Reasonable check: \(25 - 23 = 2\text{ cm}\), which closely matches \(2.05\text{ cm}\)!
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: MULTIPLICATION -->
+  <div id="multiplication-proof" class="panel">
+    <div class="section-title">Multiplication Mechanics: Standard Algorithm &amp; Place Alignment</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read the rule, then copy the notebook box into your notebook. Work through the multiplication carousel and the extra guided example the same way as the last tab. Try the decimal shift slider to see how the total decimal-place count moves the point, then step through the carpet-area word problem.
+    </div>
+
+    <div class="explainer-box">
+      <strong>Standard Algorithm Rule:</strong> Multiply the factors as whole integers, ignoring the decimal points. The first partial product aligns with the ones column. The second partial product shifts one position left into its own dedicated grid column, aligning with the tens column (\(245 \times 30 = 7350\)). Add the partial products as whole integers, then place the decimal point in the final product based on the combined total of decimal places.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
+      <p style="margin:0 0 10px 0;"><strong>Rule #2 for Multiplication:</strong> Multiply as whole numbers, then place the decimal point last.</p>
+      <ol>
+        <li><strong>Set up the factors as whole numbers</strong>, ignoring the decimal points for now.</li>
+        <li><strong>First partial product:</strong> multiply the top factor by the ones digit (\(245 \times 2 = 490\)).</li>
+        <li><strong>Second partial product:</strong> multiply the top factor by the tens digit (\(245 \times 30 = 7350\)). Give the "+" sign its own cell on the left, and line up every digit in its own grid cell.</li>
+        <li><strong>Add the partial products:</strong> draw a solid line beneath them and add as whole numbers (\(490 + 7350 = 7840\)).</li>
+        <li><strong>Place the decimal point:</strong> count the total decimal places in both original factors, then shift the decimal that many places to the left in your final product (\(7840 \rightarrow 7.840\)).</li>
+      </ol>
+      <p style="margin:12px 0 0 0; font-size:0.95rem; color:#78350f;"><em>Tip:</em> carried digits are shown in red in our examples for the same reason - it's a visual guide, not part of the math itself.</p>
+    </div>
+
+    <div style="background:#f1f5f9; padding:24px; border-radius:12px; margin-bottom:20px;">
+      <h3>Fraction Proof: Calculating \(3.5 \times 1.25\)</h3>
+      \[3.5 = \frac{35}{10} \quad (1 \text{ decimal place})\]
+      \[1.25 = \frac{125}{100} \quad (2 \text{ decimal places})\]
+      \[\frac{35}{10} \times \frac{125}{100} = \frac{35 \times 125}{10 \times 100} = \frac{4375}{1000} = \mathbf{4.375} \quad (1 + 2 = 3 \text{ total places shift!})\]
+    </div>
+
+    <h3>Guided Example Carousel: Step-by-Step Multiplication</h3>
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="mult-prev-btn" onclick="changeMultEx(-1)">&larr; Previous Example</button>
+        <div style="text-align:center;">
+          <span id="mult-ex-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Exercise 1 of 4</span>
+          <div class="carousel-indicators" id="mult-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="mult-next-btn" onclick="changeMultEx(1)">Next Example &rarr;</button>
+      </div>
+
+      <div id="mult-carousel-content" style="min-height: 420px;"></div>
+
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextMultExStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetMultExStep()">Reset Steps</button>
+      </div>
+    </div>
+
+    <h3 style="margin-top:28px;">Extra Guided Example: \(3.2 \times 4.8\)</h3>
+    <div class="step-box">
+      <p style="text-align:center;"><strong>Estimate Check:</strong> \(3.2 \approx 3\), \(4.8 \approx 5\) &rarr; \(3 \times 5 = 15\)</p>
+      <div id="mult-worked-content" style="min-height:260px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextMultWorkedStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetMultWorkedStep()">Reset Steps</button>
+      </div>
+    </div>
+
+    <div class="slider-container">
+      <h3>Interactive Shift Simulator: \(35 \times 125 = 4375\)</h3>
+      <p>Move the slider to shift the decimal point based on total decimal places in factors:</p>
+      <div>Factor 1: 3.5 (1 place) | Factor 2: 1.25 (2 places) \(\rightarrow\) <strong>Total = 3 Places</strong></div>
+      <div class="shifted-num" id="shift-display">4375.</div>
+      <input type="range" id="shiftRange" min="0" max="4" value="0" style="width: 70%;" oninput="runShiftSim(this.value)">
+      <div id="shift-status" style="font-weight:bold; margin-top:10px; color:var(--accent);">Current Shift: 0 places (4375)</div>
+    </div>
+
+    <div class="step-box" style="margin-top:24px;">
+      <h3 style="margin-top:0; color:var(--primary);">Guided Word Problem: Step-by-Step</h3>
+      <p><strong>Scenario:</strong> A classroom carpet measures \(4.2\text{ meters}\) wide and \(3.15\text{ meters}\) long. What is the total area of the carpet in square meters?</p>
+
+      <button class="btn-lg" onclick="revealMultStep()">Click to Reveal Next Step</button>
+      <button class="btn-secondary" onclick="resetMultSteps()">Reset</button>
+
+      <div id="mult-step-1" class="step-item">
+        <strong>Step 1: Estimate the total area (\(4.2 \times 3.15\)).</strong><br>
+        Round values to whole numbers: \(4.2 \rightarrow 4\) and \(3.15 \rightarrow 3\).<br>
+        Estimated Area \(\approx 4 \times 3 = 12\text{ m}^2\).
+      </div>
+
+      <div id="mult-step-2" class="step-item">
+        <strong>Step 2: Count total decimal places in factors.</strong><br>
+        \(4.2\) (1 decimal place) and \(3.15\) (2 decimal places) \(\rightarrow\) <strong>Total = 3 decimal places</strong>.
+      </div>
+
+      <div id="mult-step-3" class="step-item">
+        <strong>Step 3: Multiply as whole numbers (\(42 \times 315\)).</strong><br>
+        \[42 \times 315 = 13230\]
+      </div>
+
+      <div id="mult-step-4" class="step-item">
+        <strong>Step 4: Shift the decimal 3 places to the left, then verify.</strong><br>
+        \(13230 \rightarrow \mathbf{13.230\text{ m}^2}\) or \(\mathbf{13.23\text{ m}^2}\).<br>
+        Reasonable check: \(13.23\text{ m}^2\) is close to our estimate of \(12\text{ m}^2\).
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 4: WORD PROBLEM STRATEGY -->
+  <div id="wordproblem-strategy" class="panel">
+    <div class="section-title">Word Problem Strategy: Estimate, Then Solve</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read the strategy box, then work through all six worked examples in the carousel. For each one, try to solve it on paper first, then click <strong>Next Step</strong> to reveal the estimate, then the exact calculation, then the final answer - and compare it to what you got.
+    </div>
+
+    <div class="explainer-box">
+      Every word problem below follows the same two-step routine: <strong>estimate first</strong> by rounding, then <strong>calculate the exact answer</strong> and compare it to your estimate. If your exact answer isn't close to your estimate, go back and check your work. Not sure which operation a problem needs? Review the Keyword Clues tab on the Vocabulary &amp; Literacy page.
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="wp-prev-btn" onclick="changeWordProblem(-1)">&larr; Previous Problem</button>
+        <div style="text-align:center;">
+          <span id="wp-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Problem 1 of 6</span>
+          <div class="carousel-indicators" id="wp-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="wp-next-btn" onclick="changeWordProblem(1)">Next Problem &rarr;</button>
+      </div>
+
+      <div id="wp-content" style="min-height: 320px;"></div>
+
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextWordProblemStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetWordProblemStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 5: WHITEBOARD MODELING -->
+  <div id="whiteboard" class="panel">
+    <div class="section-title">Whiteboard Modeling (Teacher-Led Demonstration)</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Pick a problem button above. Fill in every digit box (leave a box blank only if that place value is truly empty), pick the decimal places for the multiplication problem, then click Check Whiteboard Solution. This tab is meant for whole-class or small-group modeling at the board, not silent independent practice.
+    </div>
+    <p>Select a problem for student volunteers to solve at the board!</p>
+
+    <div class="problem-selector">
+      <button class="problem-btn active" onclick="loadWBProblem(1)">Prob 1: Grocery \(\$15.75 + \$4.80\)</button>
+      <button class="problem-btn" onclick="loadWBProblem(2)">Prob 2: Cash Change \(\$20.00 - \$13.45\)</button>
+      <button class="problem-btn" onclick="loadWBProblem(3)">Prob 3: Science \(2.45\text{ g} \times 3.2\text{ mL}\)</button>
+      <button class="problem-btn" onclick="loadWBProblem(4)">Prob 4: Sports \(12.35\text{s} + 2.40\text{s}\)</button>
+    </div>
+
+    <div id="wb-container" class="wb-grid"></div>
+
+    <div style="text-align: center; margin-top: 20px;">
+      <button class="btn-lg" onclick="checkWhiteboard()">Submit Whiteboard Solution</button>
+    </div>
+    <div id="wb-feedback" class="feedback-msg"></div>
+  </div>
+</div>
+
+<script>
+  let addStepCount = 0;
+  let multStepCount = 0;
+
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // Place Value Inspector Logic
+  const pvDetails = {
+    hundreds: { title: "Hundreds Column (100)", body: "100 times 1 Whole. Money: $100 bill. Example: In 354.2, 3 represents 300." },
+    tens: { title: "Tens Column (10)", body: "10 times 1 Whole. Money: $10 bill. Example: In 54.2, 5 represents 50." },
+    ones: { title: "Ones Column (1)", body: "The base whole unit. Money: $1 dollar. Example: In 4.25, 4 represents 4 whole dollars." },
+    decimal: { title: "The Decimal Point (\\(\\cdot\\))", body: "The critical anchor separating whole numbers from fractional parts." },
+    tenths: { title: "Tenths Column (0.1 = \\(\\frac{1}{10}\\))", body: "1 Whole cut into 10 equal parts. Money: 1 Dime ($0.10). 10 Tenths make 1 Whole." },
+    hundredths: { title: "Hundredths Column (0.01 = \\(\\frac{1}{100}\\))", body: "1 Whole cut into 100 equal parts. Money: 1 Penny ($0.01). 100 Hundredths make 1 Whole." },
+    thousandths: { title: "Thousandths Column (0.001 = \\(\\frac{1}{1000}\\))", body: "1 Whole cut into 1,000 equal parts. Used in metric science measurements and sports timing!" }
+  };
+
+  function inspectPV(col) {
+    const detail = pvDetails[col];
+    document.getElementById('inspector-title').innerText = detail.title;
+    document.getElementById('inspector-body').innerText = detail.body;
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // ADDITION & SUBTRACTION CAROUSEL DATA & LOGIC
+  // ==========================================
+  let currentAddEx = 0;
+  let currentAddExStep = 1;
+
+  const addExamples = [
+    {
+      title: "Exercise 1: Whole Number + Decimal (\\(12 + 4.85\\))",
+      desc: "Pad 12 with trailing zeros to make 12.00 and align decimal places vertically.",
+      maxSteps: 3,
+      render: (step) => `
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(12 + 5 = 17\\)</p>
+        <table class="algo-table">
+          <tr class="carry-row">
+            <td></td>
+            <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">1</span>' : ''}</td>
+            <td></td>
+            <td class="decimal-cell"></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td class="grid-cell">1</td>
+            <td class="grid-cell">2</td>
+            <td class="decimal-cell">.</td>
+            <td class="grid-cell" style="color:#0284c7;">0</td>
+            <td class="grid-cell" style="color:#0284c7;">0</td>
+          </tr>
+          <tr>
+            <td class="grid-cell line-under">+</td>
+            <td class="grid-cell line-under"></td>
+            <td class="grid-cell line-under">4</td>
+            <td class="decimal-cell line-under">.</td>
+            <td class="grid-cell line-under">8</td>
+            <td class="grid-cell line-under">5</td>
+          </tr>
+          ${step >= 3 ? `
+          <tr style="color:var(--primary); font-weight:900;">
+            <td></td>
+            <td class="grid-cell">1</td>
+            <td class="grid-cell">6</td>
+            <td class="decimal-cell">.</td>
+            <td class="grid-cell">8</td>
+            <td class="grid-cell">5</td>
+          </tr>` : ''}
+        </table>
+        <p style="text-align:center; font-weight:bold;">
+          ${step === 1 ? 'Step 1: Set up grid and pad trailing zeros.' : ''}
+          ${step === 2 ? 'Step 2: Add hundredths (\\(0+5=5\\)), tenths (\\(0+8=8\\)), and carry 1 in ones (\\(2+4=6\\)).' : ''}
+          ${step === 3 ? 'Step 3: Complete calculation! Exact Sum = \\(\\mathbf{16.85}\\)' : ''}
+        </p>
+      `
+    },
+    {
+      title: "Exercise 2: Regrouping Across Zeros (\\(20.00 - 13.45\\))",
+      desc: "Visual borrowing across zeros from tens to hundredths.",
+      maxSteps: 3,
+      render: (step) => `
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(20 - 13 = 7\\)</p>
+        <table class="algo-table">
+          <tr class="carry-row">
+            <td></td>
+            <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">1</span>' : ''}</td>
+            <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">9</span>' : ''}</td>
+            <td class="decimal-cell"></td>
+            <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">9</span>' : ''}</td>
+            <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">10</span>' : ''}</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td class="grid-cell">${step >= 2 ? '<span class="struck-digit">2</span>' : '2'}</td>
+            <td class="grid-cell">${step >= 2 ? '<span class="struck-digit">0</span>' : '0'}</td>
+            <td class="decimal-cell">.</td>
+            <td class="grid-cell">${step >= 2 ? '<span class="struck-digit">0</span>' : '0'}</td>
+            <td class="grid-cell">${step >= 2 ? '<span class="struck-digit">0</span>' : '0'}</td>
+          </tr>
+          <tr>
+            <td class="grid-cell line-under">-</td>
+            <td class="grid-cell line-under">1</td>
+            <td class="grid-cell line-under">3</td>
+            <td class="decimal-cell line-under">.</td>
+            <td class="grid-cell line-under">4</td>
+            <td class="grid-cell line-under">5</td>
+          </tr>
+          ${step >= 3 ? `
+          <tr style="color:var(--primary); font-weight:900;">
+            <td></td>
+            <td class="grid-cell">0</td>
+            <td class="grid-cell">6</td>
+            <td class="decimal-cell">.</td>
+            <td class="grid-cell">5</td>
+            <td class="grid-cell">5</td>
+          </tr>` : ''}
+        </table>
+        <p style="text-align:center; font-weight:bold;">
+          ${step === 1 ? 'Step 1: Align decimal points and set up problem.' : ''}
+          ${step === 2 ? 'Step 2: Borrow across zeros (\\(20.00 \\rightarrow 1\\text{ ten}, 9\\text{ ones}, 9\\text{ tenths}, 10\\text{ hundredths}\\)).' : ''}
+          ${step === 3 ? 'Step 3: Subtract each column! Exact Difference = \\(\\mathbf{6.55}\\)' : ''}
+        </p>
+      `
+    },
+    {
+      title: "Exercise 3: Mixed Place Values (\\(0.45 + 12.3 + 1.008\\))",
+      desc: "Pad empty places with zeros to match 3 decimal places.",
+      maxSteps: 3,
+      render: (step) => `
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(0 + 12 + 1 = 13\\)</p>
+        <table class="algo-table">
+          <tr class="carry-row">
+            <td></td><td></td><td></td><td class="decimal-cell"></td><td></td><td></td><td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td class="grid-cell">0</td>
+            <td class="decimal-cell">.</td>
+            <td class="grid-cell">4</td>
+            <td class="grid-cell">5</td>
+            <td class="grid-cell" style="color:#0284c7;">0</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td class="grid-cell">1</td>
+            <td class="grid-cell">2</td>
+            <td class="decimal-cell">.</td>
+            <td class="grid-cell">3</td>
+            <td class="grid-cell" style="color:#0284c7;">0</td>
+            <td class="grid-cell" style="color:#0284c7;">0</td>
+          </tr>
+          <tr>
+            <td class="grid-cell line-under">+</td>
+            <td class="grid-cell line-under"></td>
+            <td class="grid-cell line-under">1</td>
+            <td class="decimal-cell line-under">.</td>
+            <td class="grid-cell line-under">0</td>
+            <td class="grid-cell line-under">0</td>
+            <td class="grid-cell line-under">8</td>
+          </tr>
+          ${step >= 3 ? `
+          <tr style="color:var(--primary); font-weight:900;">
+            <td></td>
+            <td class="grid-cell">1</td>
+            <td class="grid-cell">3</td>
+            <td class="decimal-cell">.</td>
+            <td class="grid-cell">7</td>
+            <td class="grid-cell">5</td>
+            <td class="grid-cell">8</td>
+          </tr>` : ''}
+        </table>
+        <p style="text-align:center; font-weight:bold;">
+          ${step === 1 ? 'Step 1: Align decimal points vertically.' : ''}
+          ${step === 2 ? 'Step 2: Pad trailing zeros so all numbers have 3 decimal places.' : ''}
+          ${step === 3 ? 'Step 3: Add column by column! Exact Sum = \\(\\mathbf{13.758}\\)' : ''}
+        </p>
+      `
+    },
+    {
+      title: "Exercise 4: Financial Context ($45.50 - $18.75)",
+      desc: "Regrouping dollars and dimes with continuous lines and clear currency alignment.",
+      maxSteps: 3,
+      render: (step) => `
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(\$46 - \$19 = \$27\\)</p>
+        <table class="algo-table">
+          <tr class="carry-row">
+            <td class="currency-cell"></td>
+            <td></td>
+            <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">3</span>' : ''}</td>
+            <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">14</span>' : ''}</td>
+            <td class="decimal-cell"></td>
+            <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">14</span>' : ''}</td>
+            <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">10</span>' : ''}</td>
+          </tr>
+          <tr>
+            <td class="currency-cell">$</td>
+            <td></td>
+            <td class="grid-cell">4</td>
+            <td class="grid-cell">${step >= 2 ? '<span class="struck-digit">5</span>' : '5'}</td>
+            <td class="decimal-cell">.</td>
+            <td class="grid-cell">${step >= 2 ? '<span class="struck-digit">5</span>' : '5'}</td>
+            <td class="grid-cell">${step >= 2 ? '<span class="struck-digit">0</span>' : '0'}</td>
+          </tr>
+          <tr>
+            <td class="currency-cell line-under">$</td>
+            <td class="grid-cell line-under">-</td>
+            <td class="grid-cell line-under">1</td>
+            <td class="grid-cell line-under">8</td>
+            <td class="decimal-cell line-under">.</td>
+            <td class="grid-cell line-under">7</td>
+            <td class="grid-cell line-under">5</td>
+          </tr>
+          ${step >= 3 ? `
+          <tr style="color:var(--primary); font-weight:900;">
+            <td class="currency-cell">$</td>
+            <td></td>
+            <td class="grid-cell">2</td>
+            <td class="grid-cell">6</td>
+            <td class="decimal-cell">.</td>
+            <td class="grid-cell">7</td>
+            <td class="grid-cell">5</td>
+          </tr>` : ''}
+        </table>
+        <p style="text-align:center; font-weight:bold;">
+          ${step === 1 ? 'Step 1: Set up dollar quantities aligned by decimal.' : ''}
+          ${step === 2 ? 'Step 2: Regroup 1 dime to pennies and 1 ten dollar bill to ones.' : ''}
+          ${step === 3 ? 'Step 3: Subtract! Exact Difference = \\(\\mathbf{\\$26.75}\\)' : ''}
+        </p>
+      `
+    }
+  ];
+
+  function renderAddCarousel() {
+    const ex = addExamples[currentAddEx];
+    document.getElementById('add-ex-title').innerText = ex.title;
+
+    const dotsContainer = document.getElementById('add-dots');
+    dotsContainer.innerHTML = addExamples.map((_, i) =>
+      `<div class="dot ${i === currentAddEx ? 'active' : ''}" onclick="jumpToAddEx(${i})"></div>`
+    ).join('');
+
+    document.getElementById('add-carousel-content').innerHTML = `
+      <p style="text-align:center; color:#475569;">${ex.desc}</p>
+      ${ex.render(currentAddExStep)}
+    `;
+
+    document.getElementById('add-prev-btn').disabled = currentAddEx === 0;
+    document.getElementById('add-next-btn').disabled = currentAddEx === addExamples.length - 1;
+
+    triggerMathJax();
+  }
+
+  function changeAddEx(dir) {
+    currentAddEx = Math.max(0, Math.min(addExamples.length - 1, currentAddEx + dir));
+    currentAddExStep = 1;
+    renderAddCarousel();
+  }
+
+  function jumpToAddEx(idx) {
+    currentAddEx = idx;
+    currentAddExStep = 1;
+    renderAddCarousel();
+  }
+
+  function nextAddExStep() {
+    if (currentAddExStep < addExamples[currentAddEx].maxSteps) {
+      currentAddExStep++;
+      renderAddCarousel();
+    }
+  }
+
+  function resetAddExStep() {
+    currentAddExStep = 1;
+    renderAddCarousel();
+  }
+
+  function showAddExFullyWorked(i) {
+    currentAddEx = i;
+    currentAddExStep = addExamples[i].maxSteps;
+    renderAddCarousel();
+  }
+  TeacherPrint.registerCarousel('add-carousel-content', addExamples.length, showAddExFullyWorked);
+  renderAddCarousel();
+
+  // ==========================================
+  // EXTRA GUIDED EXAMPLE 1: ADDING DECIMALS
+  // ==========================================
+  let ex1WorkedStep = 1;
+  const ex1WorkedMaxStep = 4;
+
+  function renderEx1Worked() {
+    const step = ex1WorkedStep;
+    const html = `
+      <table class="algo-table" style="margin:20px auto;">
+        <tr>
+          <td></td>
+          <td class="grid-cell">1</td>
+          <td class="grid-cell">2</td>
+          <td class="decimal-cell">.</td>
+          <td class="grid-cell">7</td>
+          <td class="grid-cell" style="color:#0284c7;">0</td>
+        </tr>
+        <tr>
+          <td class="grid-cell line-under">+</td>
+          <td class="grid-cell line-under"></td>
+          <td class="grid-cell line-under">4</td>
+          <td class="decimal-cell line-under">.</td>
+          <td class="grid-cell line-under">2</td>
+          <td class="grid-cell line-under">5</td>
+        </tr>
+        ${step >= 2 ? `
+        <tr style="${step >= 3 ? 'color:var(--primary); font-weight:900;' : ''}">
+          <td></td>
+          <td class="grid-cell">${step >= 3 ? '1' : ''}</td>
+          <td class="grid-cell">${step >= 3 ? '6' : ''}</td>
+          <td class="decimal-cell">.</td>
+          <td class="grid-cell">9</td>
+          <td class="grid-cell">5</td>
+        </tr>` : ''}
+      </table>
+      <p style="text-align:center; font-weight:bold;">
+        ${step === 1 ? 'Step 1: Line up the decimal points. Pad \\(12.7\\) with a trailing zero (\\(12.70\\), shown in blue) so both numbers have the same number of decimal places.' : ''}
+        ${step === 2 ? 'Step 2: Add the smallest place values first - the hundredths and tenths columns: \\(0 + 5 = 5\\) and \\(7 + 2 = 9\\). No regrouping is needed here.' : ''}
+        ${step === 3 ? 'Step 3: Add the ones and tens columns: \\(2 + 4 = 6\\) and \\(1 + 0 = 1\\). Exact Sum = \\(\\mathbf{16.95}\\).' : ''}
+        ${step === 4 ? 'Check Your Work: our exact answer \\(16.95\\) is very close to the estimate of \\(17\\), so this is reasonable!' : ''}
+      </p>
+    `;
+    document.getElementById('ex1-worked-content').innerHTML = html;
+    triggerMathJax();
+  }
+  function nextEx1Step() { if (ex1WorkedStep < ex1WorkedMaxStep) { ex1WorkedStep++; renderEx1Worked(); } }
+  function resetEx1Step() { ex1WorkedStep = 1; renderEx1Worked(); }
+  renderEx1Worked();
+
+  // ==========================================
+  // EXTRA GUIDED EXAMPLE 2: SUBTRACTING DECIMALS
+  // ==========================================
+  let ex2WorkedStep = 1;
+  const ex2WorkedMaxStep = 4;
+
+  function renderEx2Worked() {
+    const step = ex2WorkedStep;
+    const html = `
+      <table class="algo-table" style="margin:20px auto;">
+        <tr class="carry-row">
+          <td></td>
+          <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">7</span>' : ''}</td>
+          <td class="decimal-cell"></td>
+          <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">13</span>' : ''}</td>
+          <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">10</span>' : ''}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="grid-cell">${step >= 2 ? '<span class="struck-digit">8</span>' : '8'}</td>
+          <td class="decimal-cell">.</td>
+          <td class="grid-cell">${step >= 2 ? '<span class="struck-digit">4</span>' : '4'}</td>
+          <td class="grid-cell" style="color:#0284c7;">${step >= 2 ? '<span class="struck-digit">0</span>' : '0'}</td>
+        </tr>
+        <tr>
+          <td class="grid-cell line-under">-</td>
+          <td class="grid-cell line-under">2</td>
+          <td class="decimal-cell line-under">.</td>
+          <td class="grid-cell line-under">7</td>
+          <td class="grid-cell line-under">6</td>
+        </tr>
+        ${step >= 3 ? `
+        <tr style="color:var(--primary); font-weight:900;">
+          <td></td>
+          <td class="grid-cell">5</td>
+          <td class="decimal-cell">.</td>
+          <td class="grid-cell">6</td>
+          <td class="grid-cell">4</td>
+        </tr>` : ''}
+      </table>
+      <p style="text-align:center; font-weight:bold;">
+        ${step === 1 ? 'Step 1: Line up the decimal points. Pad \\(8.4\\) with a trailing zero (\\(8.40\\), shown in blue) so both numbers have the same number of decimal places.' : ''}
+        ${step === 2 ? 'Step 2: Regroup. The hundredths column cannot subtract \\(0 - 6\\), so it borrows from the tenths column. The tenths column then cannot subtract \\(3 - 7\\), so it borrows from the ones column - shown in red above.' : ''}
+        ${step === 3 ? 'Step 3: Subtract each column with the regrouped values: \\(10 - 6 = 4\\), \\(13 - 7 = 6\\), \\(7 - 2 = 5\\). Exact Difference = \\(\\mathbf{5.64}\\).' : ''}
+        ${step === 4 ? 'Check Your Work: the exact answer \\(5.64\\) is close to the estimate of \\(5\\). This confirms the decimal point is in the correct place.' : ''}
+      </p>
+    `;
+    document.getElementById('ex2-worked-content').innerHTML = html;
+    triggerMathJax();
+  }
+  function nextEx2Step() { if (ex2WorkedStep < ex2WorkedMaxStep) { ex2WorkedStep++; renderEx2Worked(); } }
+  function resetEx2Step() { ex2WorkedStep = 1; renderEx2Worked(); }
+  renderEx2Worked();
+
+  // ==========================================
+  // MULTIPLICATION CAROUSEL DATA & LOGIC
+  // ==========================================
+  let currentMultEx = 0;
+  let currentMultExStep = 1;
+
+  const multExamples = [
+    {
+      title: "Exercise 1: Single Digit Multiplier (\\(2.45 \\times 6\\))",
+      desc: "Multiply top factor by ones digit (\\(245 \\times 6\\)), calculate integer sum, then shift decimal 2 places left.",
+      maxSteps: 4,
+      render: (step) => `
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(2 \\times 6 = 12\\)</p>
+        <table class="algo-table">
+          <tr class="carry-row">
+            <td></td>
+            <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">2</span>' : ''}</td>
+            <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">3</span>' : ''}</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td class="grid-cell">2</td>
+            <td class="grid-cell">4</td>
+            <td class="grid-cell">5</td>
+          </tr>
+          <tr>
+            <td class="grid-cell line-under">&times;</td>
+            <td class="grid-cell line-under"></td>
+            <td class="grid-cell line-under"></td>
+            <td class="grid-cell line-under">6</td>
+          </tr>
+          ${step >= 3 ? `
+          <tr style="color:var(--primary); font-weight:900;">
+            <td class="grid-cell">1</td>
+            <td class="grid-cell">4</td>
+            <td class="grid-cell">${step >= 4 ? '<span class="decimal-mark">.</span>' : ''}7</td>
+            <td class="grid-cell">0</td>
+          </tr>` : ''}
+        </table>
+        <p style="text-align:center; font-weight:bold;">
+          ${step === 1 ? 'Step 1: Set up the factors as standard multi-digit integers (\\(245 \\times 6\\)).' : ''}
+          ${step === 2 ? 'Step 2: Multiply \\(245 \\times 6 = 1470\\). The carried digits 3 and 2 are shown in red above, just to make them easy to spot.' : ''}
+          ${step === 3 ? 'Step 3: Complete the whole-number product, \\(1470\\). No decimal point in the grid yet - multiplication comes first.' : ''}
+          ${step === 4 ? 'Step 4: Multiplication is done - now shift the decimal 2 places to the left. Placed product: \\(\\mathbf{14.70}\\)' : ''}
+        </p>
+      `
+    },
+    {
+      title: "Exercise 2: Multi-Digit Multiplication (\\(2.45 \\times 3.2\\))",
+      desc: "Multiply as integers (\\(245 \\times 32\\)). Tens partial product '+' sign sits in its own cell, shifting digits under tens column.",
+      maxSteps: 5,
+      render: (step) => `
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(2 \\times 3 = 6\\)</p>
+        <table class="algo-table">
+          <tr class="carry-row">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>${step === 2 ? '<span style="color:var(--highlight-carry);">1</span>' : ''}</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td class="grid-cell">2</td>
+            <td class="grid-cell">4</td>
+            <td class="grid-cell">5</td>
+          </tr>
+          <tr>
+            <td class="grid-cell line-under">&times;</td>
+            <td class="grid-cell line-under"></td>
+            <td class="grid-cell line-under"></td>
+            <td class="grid-cell line-under">3</td>
+            <td class="grid-cell line-under">2</td>
+          </tr>
+          ${step >= 2 ? `
+          <tr>
+            <td></td>
+            <td></td>
+            <td class="grid-cell">4</td>
+            <td class="grid-cell">9</td>
+            <td class="grid-cell">0</td>
+          </tr>` : ''}
+          ${step >= 3 ? `
+          <tr>
+            <td class="grid-cell line-under">+</td>
+            <td class="grid-cell line-under">7</td>
+            <td class="grid-cell line-under">3</td>
+            <td class="grid-cell line-under">5</td>
+            <td class="grid-cell line-under">0</td>
+          </tr>` : ''}
+          ${step >= 4 ? `
+          <tr style="color:var(--primary); font-weight:900;">
+            <td></td>
+            <td class="grid-cell">7</td>
+            <td class="grid-cell">${step >= 5 ? '<span class="decimal-mark">.</span>' : ''}8</td>
+            <td class="grid-cell">4</td>
+            <td class="grid-cell">0</td>
+          </tr>` : ''}
+        </table>
+        <p style="text-align:center; font-weight:bold;">
+          ${step === 1 ? 'Step 1: Set up factors as standard integers (\\(245 \\times 32\\)).' : ''}
+          ${step === 2 ? 'Step 2: Multiply by ones digit (\\(245 \\times 2 = 490\\)), lined up to the right in the ones column.' : ''}
+          ${step === 3 ? 'Step 3: Multiply by the tens digit (\\(245 \\times 30 = 7350\\)). Place a placeholder zero in the ones column, then write 735 starting in the tens column. The "+" sign gets its own grid cell, never mixed in with a digit.' : ''}
+          ${step === 4 ? 'Step 4: Add the partial products, \\(490 + 7350 = 7840\\). Still no decimal point in the grid - multiplication isn\'t done yet.' : ''}
+          ${step === 5 ? 'Step 5: Multiplication is done - shift the decimal \\(2+1=3\\) places to the left. Placed product: \\(\\mathbf{7.840}\\)' : ''}
+        </p>
+      `
+    },
+    {
+      title: "Exercise 3: Small Decimals (\\(0.03 \\times 0.004\\))",
+      desc: "Multiply non-zero digits and shift decimal point left.",
+      maxSteps: 3,
+      render: (step) => `
+        <p style="text-align:center;"><strong>Decimal Count:</strong> \\(0.03\\) (2 places) \\(+\\) \\(0.004\\) (3 places) \\(= 5\\) total places</p>
+        <div style="text-align:center; padding:20px; background:#eff6ff; border-radius:12px; margin:20px 0;">
+          <div style="font-size:2rem; font-weight:800; color:var(--primary);">
+            ${step === 1 ? '\\[3 \\times 4 = 12\\]' : ''}
+            ${step === 2 ? '\\[12. \\rightarrow \\text{Shift } 5 \\text{ places LEFT}\\]' : ''}
+            ${step === 3 ? '\\[\\mathbf{0.00012}\\]' : ''}
+          </div>
+        </div>
+        <p style="text-align:center; font-weight:bold;">
+          ${step === 1 ? 'Step 1: Multiply non-zero integers (\\(3 \\times 4 = 12\\)).' : ''}
+          ${step === 2 ? 'Step 2: Count \\(2 + 3 = 5\\) total decimal places.' : ''}
+          ${step === 3 ? 'Step 3: Shift 12. five places left inserting leading zeros! Exact = \\(\\mathbf{0.00012}\\)' : ''}
+        </p>
+      `
+    },
+    {
+      title: "Exercise 4: Unit Rate (\\(3.5\\text{ lbs} \\times \\$2.40/\\text{lb}\\))",
+      desc: "Multiply as whole integers (\\(240 \\times 35\\)). The tens partial product gets its own separate '+' cell.",
+      maxSteps: 5,
+      render: (step) => `
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(4 \\times \\$2 = \\$8\\)</p>
+        <table class="algo-table">
+          <tr class="carry-row">
+            <td class="currency-cell"></td>
+            <td></td>
+            <td>${step === 2 ? '<span style="color:var(--highlight-carry);">1</span>' : ''}</td>
+            <td>${step === 2 ? '<span style="color:var(--highlight-carry);">2</span>' : ''}</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="currency-cell">$</td>
+            <td></td>
+            <td></td>
+            <td class="grid-cell">2</td>
+            <td class="grid-cell">4</td>
+            <td class="grid-cell">0</td>
+          </tr>
+          <tr>
+            <td class="currency-cell line-under"></td>
+            <td class="grid-cell line-under">&times;</td>
+            <td class="grid-cell line-under"></td>
+            <td class="grid-cell line-under"></td>
+            <td class="grid-cell line-under">3</td>
+            <td class="grid-cell line-under">5</td>
+          </tr>
+          ${step >= 2 ? `
+          <tr>
+            <td class="currency-cell"></td>
+            <td></td>
+            <td class="grid-cell">1</td>
+            <td class="grid-cell">2</td>
+            <td class="grid-cell">0</td>
+            <td class="grid-cell">0</td>
+          </tr>` : ''}
+          ${step >= 3 ? `
+          <tr>
+            <td class="currency-cell line-under"></td>
+            <td class="grid-cell line-under">+</td>
+            <td class="grid-cell line-under">7</td>
+            <td class="grid-cell line-under">2</td>
+            <td class="grid-cell line-under">0</td>
+            <td class="grid-cell line-under">0</td>
+          </tr>` : ''}
+          ${step >= 4 ? `
+          <tr style="color:var(--primary); font-weight:900;">
+            <td class="currency-cell">$</td>
+            <td></td>
+            <td class="grid-cell">8</td>
+            <td class="grid-cell">${step >= 5 ? '<span class="decimal-mark">.</span>' : ''}4</td>
+            <td class="grid-cell">0</td>
+            <td class="grid-cell">0</td>
+          </tr>` : ''}
+        </table>
+        <p style="text-align:center; font-weight:bold;">
+          ${step === 1 ? 'Step 1: Set up factors \\(240 \\times 35\\) as whole numbers.' : ''}
+          ${step === 2 ? 'Step 2: Multiply by ones (\\(240 \\times 5 = 1200\\)), lined up to the right in the ones column.' : ''}
+          ${step === 3 ? 'Step 3: Multiply by the tens digit (\\(240 \\times 30 = 7200\\)). Place a placeholder zero in the ones column, then write 72 starting in the tens column. The "+" sign gets its own grid cell.' : ''}
+          ${step === 4 ? 'Step 4: Add the partial products as a whole number, \\(8400\\). Still no decimal in the grid.' : ''}
+          ${step === 5 ? 'Step 5: Multiplication is done - shift the decimal \\(2+1=3\\) places to the left. Final placed product: \\(\\mathbf{\\$8.400}\\)' : ''}
+        </p>
+      `
+    }
+  ];
+
+  function renderMultCarousel() {
+    const ex = multExamples[currentMultEx];
+    document.getElementById('mult-ex-title').innerText = ex.title;
+
+    const dotsContainer = document.getElementById('mult-dots');
+    dotsContainer.innerHTML = multExamples.map((_, i) =>
+      `<div class="dot ${i === currentMultEx ? 'active' : ''}" onclick="jumpToMultEx(${i})"></div>`
+    ).join('');
+
+    document.getElementById('mult-carousel-content').innerHTML = `
+      <p style="text-align:center; color:#475569;">${ex.desc}</p>
+      ${ex.render(currentMultExStep)}
+    `;
+
+    document.getElementById('mult-prev-btn').disabled = currentMultEx === 0;
+    document.getElementById('mult-next-btn').disabled = currentMultEx === multExamples.length - 1;
+
+    triggerMathJax();
+  }
+
+  function changeMultEx(dir) {
+    currentMultEx = Math.max(0, Math.min(multExamples.length - 1, currentMultEx + dir));
+    currentMultExStep = 1;
+    renderMultCarousel();
+  }
+
+  function jumpToMultEx(idx) {
+    currentMultEx = idx;
+    currentMultExStep = 1;
+    renderMultCarousel();
+  }
+
+  function nextMultExStep() {
+    if (currentMultExStep < multExamples[currentMultEx].maxSteps) {
+      currentMultExStep++;
+      renderMultCarousel();
+    }
+  }
+
+  function resetMultExStep() {
+    currentMultExStep = 1;
+    renderMultCarousel();
+  }
+
+  function showMultExFullyWorked(i) {
+    currentMultEx = i;
+    currentMultExStep = multExamples[i].maxSteps;
+    renderMultCarousel();
+  }
+  TeacherPrint.registerCarousel('mult-carousel-content', multExamples.length, showMultExFullyWorked);
+  renderMultCarousel();
+
+  // ==========================================
+  // WORD PROBLEM REVEAL LOGIC (add / mult guided problems)
+  // ==========================================
+  function revealAddStep() {
+    if (addStepCount < 4) {
+      addStepCount++;
+      const el = document.getElementById(`add-step-${addStepCount}`);
+      if (el) el.classList.add('visible');
+      triggerMathJax();
+    }
+  }
+  function resetAddSteps() {
+    addStepCount = 0;
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById(`add-step-${i}`);
+      if (el) el.classList.remove('visible');
+    }
+  }
+  function revealMultStep() {
+    if (multStepCount < 4) {
+      multStepCount++;
+      const el = document.getElementById(`mult-step-${multStepCount}`);
+      if (el) el.classList.add('visible');
+      triggerMathJax();
+    }
+  }
+  function resetMultSteps() {
+    multStepCount = 0;
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById(`mult-step-${i}`);
+      if (el) el.classList.remove('visible');
+    }
+  }
+
+  // ==========================================
+  // EXTRA GUIDED EXAMPLE: MULTIPLICATION (3.2 x 4.8)
+  // ==========================================
+  let multWorkedStep = 1;
+  const multWorkedMaxStep = 5;
+
+  function renderMultWorked() {
+    const step = multWorkedStep;
+    const html = `
+      <table class="algo-table" style="margin:20px auto;">
+        <tr class="carry-row">
+          <td></td><td></td>
+          <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">2</span>' : ''}</td>
+          <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">1</span>' : ''}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td><td></td><td></td>
+          <td class="grid-cell">3</td>
+          <td class="grid-cell">2</td>
+        </tr>
+        <tr>
+          <td class="grid-cell line-under">&times;</td><td class="grid-cell line-under"></td><td class="grid-cell line-under"></td>
+          <td class="grid-cell line-under">4</td>
+          <td class="grid-cell line-under">8</td>
+        </tr>
+        ${step >= 2 ? `
+        <tr>
+          <td></td><td></td>
+          <td class="grid-cell">2</td>
+          <td class="grid-cell">5</td>
+          <td class="grid-cell">6</td>
+        </tr>` : ''}
+        ${step >= 3 ? `
+        <tr>
+          <td class="grid-cell line-under">+</td>
+          <td class="grid-cell line-under">1</td>
+          <td class="grid-cell line-under">2</td>
+          <td class="grid-cell line-under">8</td>
+          <td class="grid-cell line-under">0</td>
+        </tr>` : ''}
+        ${step >= 4 ? `
+        <tr style="color:var(--primary); font-weight:900;">
+          <td></td>
+          <td class="grid-cell">1</td>
+          <td class="grid-cell">5</td>
+          <td class="grid-cell">${step >= 5 ? '<span class="decimal-mark">.</span>' : ''}3</td>
+          <td class="grid-cell">6</td>
+        </tr>` : ''}
+      </table>
+      <p style="text-align:center; font-weight:bold;">
+        ${step === 1 ? 'Step 1: Set up the factors as whole numbers (\\(32 \\times 48\\)), ignoring the decimal points for now.' : ''}
+        ${step === 2 ? 'Step 2: Multiply by the ones digit (\\(32 \\times 8 = 256\\)), lined up to the right in the ones column. The carried digits are shown in red just to make them easy to spot.' : ''}
+        ${step === 3 ? 'Step 3: Multiply by the tens digit (\\(32 \\times 40 = 1280\\)). Place a placeholder zero in the ones column, then write 128 starting in the tens column. The "+" sign gets its own grid cell, never mixed in with a digit.' : ''}
+        ${step === 4 ? 'Step 4: Add the partial products as whole numbers: \\(256 + 1280 = 1536\\). Still no decimal point in the grid - multiplication is not done yet.' : ''}
+        ${step === 5 ? 'Step 5: Count the total decimal places in both factors (\\(3.2\\) has 1, \\(4.8\\) has 1, total \\(2\\)) and shift the decimal 2 places left. Exact Answer: \\(\\mathbf{15.36}\\). Compare to the estimate of \\(15\\) - very close, so this is reasonable!' : ''}
+      </p>
+    `;
+    document.getElementById('mult-worked-content').innerHTML = html;
+    triggerMathJax();
+  }
+  function nextMultWorkedStep() { if (multWorkedStep < multWorkedMaxStep) { multWorkedStep++; renderMultWorked(); } }
+  function resetMultWorkedStep() { multWorkedStep = 1; renderMultWorked(); }
+  renderMultWorked();
+
+  // Shift Simulator
+  function runShiftSim(val) {
+    const disp = document.getElementById('shift-display');
+    const status = document.getElementById('shift-status');
+    if (val == 0) { disp.innerText = "4375."; status.innerText = "0 Places Shifted = 4375"; }
+    else if (val == 1) { disp.innerText = "437.5"; status.innerText = "1 Place Shifted = 437.5"; }
+    else if (val == 2) { disp.innerText = "43.75"; status.innerText = "2 Places Shifted = 43.75"; }
+    else if (val == 3) { disp.innerText = "4.375"; status.innerText = "3 Places Shifted = 4.375 (CORRECT PRODUCT!)"; }
+    else if (val == 4) { disp.innerText = "0.4375"; status.innerText = "4 Places Shifted = 0.4375"; }
+  }
+
+  // ==========================================
+  // WORD PROBLEM CAROUSEL DATA & LOGIC
+  // ==========================================
+  let currentWP = 0;
+  let currentWPStep = 1;
+
+  const wordProblems = [
+    {
+      category: "Travel &amp; Economics",
+      title: "1. The Road Trip",
+      scenario: "The Miller family is planning a \\(450.5\\)-mile trip. Their car travels \\(25.5\\) miles per gallon of fuel. If gasoline costs \\(\\$3.82\\) per gallon, how much will they spend on fuel for the entire trip?",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1: Estimate.</strong><br>Round the distance and the mileage: \\(450.5 \\rightarrow 450\\) miles, \\(25.5 \\rightarrow 25\\) miles per gallon.<br>Gallons needed \\(\\approx 450 \\div 25 = 18\\) gallons. Price \\(\\approx \\$4\\) per gallon.<br>Estimated cost \\(\\approx 18 \\times 4 = \\mathbf{\\$72}\\).",
+        "<strong>Step 2: Calculate the exact cost.</strong><br>Gallons needed: \\(450.5 \\div 25.5 \\approx 17.67\\) gallons.<br>Cost: \\(17.67 \\times 3.82 = \\mathbf{\\$67.50}\\).",
+        "<strong>Step 3: Final answer and reasonableness check.</strong><br>The Millers will spend about \\(\\mathbf{\\$67.50}\\) on fuel.<br>Reasonable check: our estimate was \\(\\$72\\), which is close to \\(\\$67.50\\)."
+      ]
+    },
+    {
+      category: "Geography",
+      title: "2. Precipitation Analysis",
+      scenario: "In the Amazon Rainforest, a weather station recorded \\(12.45\\) inches of rain in January, \\(15.8\\) inches in February, and \\(9.32\\) inches in March. The historical average for these three months combined is \\(42.5\\) inches. How much more rain is needed to reach the historical average?",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1: Estimate.</strong><br>Round each month: \\(12.45 \\rightarrow 12\\), \\(15.8 \\rightarrow 16\\), \\(9.32 \\rightarrow 9\\). Sum \\(\\approx 37\\) inches.<br>Target \\(\\approx 43\\) inches, so more rain needed \\(\\approx 43 - 37 = \\mathbf{6}\\) inches.",
+        "<strong>Step 2: Calculate the exact total.</strong><br>\\(12.45 + 15.8 + 9.32 = 37.57\\) inches recorded.<br>More rain needed: \\(42.5 - 37.57 = \\mathbf{4.93}\\) inches.",
+        "<strong>Step 3: Final answer and reasonableness check.</strong><br>The region needs about \\(\\mathbf{4.93}\\) more inches of rain to reach the historical average.<br>Reasonable check: our estimate was \\(6\\) inches, in the same range as \\(4.93\\) inches."
+      ]
+    },
+    {
+      category: "Economics",
+      title: "3. School Supplies Budget",
+      scenario: "An elementary school teacher has a budget of \\(\\$150.00\\). She buys \\(25\\) packs of markers for \\(\\$4.75\\) each and \\(30\\) boxes of crayons for \\(\\$1.25\\) each. After these purchases, how much money is left in her budget?",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1: Estimate.</strong><br>Markers \\(\\approx 25 \\times 5 = \\$125\\). Crayons \\(\\approx 30 \\times 1 = \\$30\\). Total spent \\(\\approx \\$155\\).<br>Money left \\(\\approx \\$150 - \\$155 = \\mathbf{-\\$5}\\) (she may be over budget!).",
+        "<strong>Step 2: Calculate the exact totals.</strong><br>Markers: \\(25 \\times 4.75 = \\$118.75\\). Crayons: \\(30 \\times 1.25 = \\$37.50\\).<br>Total spent: \\(118.75 + 37.50 = \\$156.25\\).<br>Money left: \\(150.00 - 156.25 = \\mathbf{-\\$6.25}\\).",
+        "<strong>Step 3: Final answer and reasonableness check.</strong><br>The teacher is \\(\\mathbf{\\$6.25}\\) <em>over</em> her budget, not under it. A negative answer here is a real result, not a mistake!<br>Reasonable check: our estimate also predicted going over budget by about \\(\\$5\\), which matches."
+      ]
+    },
+    {
+      category: "Economics",
+      title: "4. Farmer's Market Profit",
+      scenario: "A farmer sells \\(12.5\\) pounds of organic tomatoes for \\(\\$3.20\\) per pound and \\(8.75\\) pounds of peppers for \\(\\$2.40\\) per pound. If the farmer had to pay a \\(\\$15.50\\) fee to rent the stall, what was the farmer's total profit for the day?",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1: Estimate.</strong><br>Tomatoes \\(\\approx 13 \\times 3 = \\$39\\). Peppers \\(\\approx 9 \\times 2 = \\$18\\). Revenue \\(\\approx \\$57\\).<br>Profit \\(\\approx 57 - 16 = \\mathbf{\\$41}\\).",
+        "<strong>Step 2: Calculate the exact profit.</strong><br>Tomatoes: \\(12.5 \\times 3.20 = \\$40.00\\). Peppers: \\(8.75 \\times 2.40 = \\$21.00\\).<br>Revenue: \\(40.00 + 21.00 = \\$61.00\\).<br>Profit: \\(61.00 - 15.50 = \\mathbf{\\$45.50}\\).",
+        "<strong>Step 3: Final answer and reasonableness check.</strong><br>The farmer's total profit was \\(\\mathbf{\\$45.50}\\).<br>Reasonable check: our estimate was \\(\\$41\\), close to \\(\\$45.50\\)."
+      ]
+    },
+    {
+      category: "Economics",
+      title: "5. Sports Equipment Sale",
+      scenario: "A sporting goods store has soccer balls on sale. Each ball normally costs \\(\\$24.99\\) but is discounted by \\(\\$6.50\\). If Maria buys \\(3\\) soccer balls at the sale price, plus a \\(\\$12.25\\) pump, what is her total cost?",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1: Estimate.</strong><br>Sale price \\(\\approx 25 - 7 = \\$18\\). Three balls \\(\\approx 3 \\times 18 = \\$54\\). Plus the pump \\(\\approx \\$12\\).<br>Total \\(\\approx 54 + 12 = \\mathbf{\\$66}\\).",
+        "<strong>Step 2: Calculate the exact cost.</strong><br>Sale price: \\(24.99 - 6.50 = \\$18.49\\).<br>Three balls: \\(3 \\times 18.49 = \\$55.47\\).<br>Total with pump: \\(55.47 + 12.25 = \\mathbf{\\$67.72}\\).",
+        "<strong>Step 3: Final answer and reasonableness check.</strong><br>Maria's total cost is \\(\\mathbf{\\$67.72}\\).<br>Reasonable check: our estimate was \\(\\$66\\), close to \\(\\$67.72\\)."
+      ]
+    },
+    {
+      category: "Geography",
+      title: "6. Mountain Elevation Change",
+      scenario: "A hiking trail starts at an elevation of \\(1{,}245.6\\) meters. Over the first leg, hikers climb \\(389.75\\) meters. On the second leg, they descend \\(156.4\\) meters to reach a lookout point. What is the elevation of the lookout point?",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1: Estimate.</strong><br>Round each value: \\(1245.6 \\rightarrow 1246\\), \\(389.75 \\rightarrow 390\\), \\(156.4 \\rightarrow 156\\).<br>\\(1246 + 390 - 156 \\approx \\mathbf{1480}\\) meters.",
+        "<strong>Step 2: Calculate the exact elevation.</strong><br>After climbing: \\(1245.6 + 389.75 = 1635.35\\) meters.<br>After descending: \\(1635.35 - 156.4 = \\mathbf{1478.95}\\) meters.",
+        "<strong>Step 3: Final answer and reasonableness check.</strong><br>The lookout point is at \\(\\mathbf{1478.95}\\) meters.<br>Reasonable check: our estimate was \\(1480\\) meters, very close to \\(1478.95\\)."
+      ]
+    }
+  ];
+
+  function renderWordProblemCarousel() {
+    const wp = wordProblems[currentWP];
+    document.getElementById('wp-title').innerText = `Problem ${currentWP + 1} of ${wordProblems.length}`;
+
+    const dotsContainer = document.getElementById('wp-dots');
+    dotsContainer.innerHTML = wordProblems.map((_, i) =>
+      `<div class="dot ${i === currentWP ? 'active' : ''}" onclick="jumpToWordProblem(${i})"></div>`
+    ).join('');
+
+    let stepsHtml = '';
+    for (let i = 0; i < currentWPStep; i++) {
+      stepsHtml += `<div class="step-item visible">${wp.steps[i]}</div>`;
+    }
+
+    document.getElementById('wp-content').innerHTML = `
+      <span class="category-badge" style="background:rgba(37,99,235,0.12); color:var(--primary-light); padding:6px 14px; border-radius:20px; font-size:0.85rem; font-weight:800; text-transform:uppercase;">${wp.category}</span>
+      <h3 style="color:var(--primary); margin:12px 0;">${wp.title}</h3>
+      <p>${wp.scenario}</p>
+      ${stepsHtml}
+    `;
+
+    document.getElementById('wp-prev-btn').disabled = currentWP === 0;
+    document.getElementById('wp-next-btn').disabled = currentWP === wordProblems.length - 1;
+
+    triggerMathJax();
+  }
+
+  function changeWordProblem(dir) {
+    currentWP = Math.max(0, Math.min(wordProblems.length - 1, currentWP + dir));
+    currentWPStep = 1;
+    renderWordProblemCarousel();
+  }
+  function jumpToWordProblem(idx) {
+    currentWP = idx;
+    currentWPStep = 1;
+    renderWordProblemCarousel();
+  }
+  function nextWordProblemStep() {
+    if (currentWPStep < wordProblems[currentWP].maxSteps) {
+      currentWPStep++;
+      renderWordProblemCarousel();
+    }
+  }
+  function resetWordProblemStep() {
+    currentWPStep = 1;
+    renderWordProblemCarousel();
+  }
+  function showWordProblemFullyWorked(i) {
+    currentWP = i;
+    currentWPStep = wordProblems[i].maxSteps;
+    renderWordProblemCarousel();
+  }
+  TeacherPrint.registerCarousel('wp-content', wordProblems.length, showWordProblemFullyWorked);
+  renderWordProblemCarousel();
+
+  // ==========================================
+  // WHITEBOARD DATA & MECHANICS
+  // ==========================================
+  const wbProblems = {
+    1: { type: "add", title: "Financial Grocery Sum: \\(\\$15.75 + \\$4.80\\)", row1: ["1","5","7","5"], row2: ["0","4","8","0"], ans: ["2","0","5","5"] },
+    2: { type: "sub", title: "Making Change: \\(\\$20.00 - \\$13.45\\)", row1: ["2","0","0","0"], row2: ["1","3","4","5"], ans: ["0","6","5","5"] },
+    3: {
+      type: "mult",
+      title: "Science Metric Calculation: \\(2.45\\text{ g} \\times 3.2\\text{ mL}\\)",
+      row1: ["2","4","5"],
+      row2: ["3","2"],
+      p1: ["0","4","9","0"],
+      p2: ["7","3","5","0"],
+      ans: ["7","8","4","0"],
+      decimalPlaces: 3
+    },
+    4: { type: "add", title: "Sports Relay Timing: \\(12.35\\text{s} + 2.40\\text{s}\\)", row1: ["1","2","3","5"], row2: ["0","2","4","0"], ans: ["1","4","7","5"] }
+  };
+
+  let currentWBProb = 1;
+
+  function loadWBProblem(id) {
+    currentWBProb = id;
+    document.querySelectorAll('.problem-btn').forEach((b, idx) => {
+      b.classList.toggle('active', idx + 1 === id);
+    });
+
+    const prob = wbProblems[id];
+    const container = document.getElementById('wb-container');
+
+    if (prob.type === "mult") {
+      container.innerHTML = `
+        <h3>${prob.title}</h3>
+        <p style="font-size:0.95rem; color:#64748b; margin:-5px 0 10px 0;">Multiply as integers in the grid below, then write the final product with the placed decimal point in the answer box.</p>
+        <div class="digit-row">
+          <div style="width:65px;"></div>
+          <div class="digit-box">${prob.row1[0]}</div>
+          <div class="digit-box">${prob.row1[1]}</div>
+          <div class="digit-box">${prob.row1[2]}</div>
+        </div>
+        <div class="digit-row">
+          <div class="digit-box" style="border:none; background:transparent;">&times;</div>
+          <div style="width:65px;"></div>
+          <div class="digit-box">${prob.row2[0]}</div>
+          <div class="digit-box">${prob.row2[1]}</div>
+        </div>
+        <div class="digit-row" style="border-top:4px solid var(--primary); padding-top:10px;">
+          <input type="text" id="wb-p1-0" class="digit-box input" maxlength="1" placeholder="0">
+          <input type="text" id="wb-p1-1" class="digit-box input" maxlength="1">
+          <input type="text" id="wb-p1-2" class="digit-box input" maxlength="1">
+          <input type="text" id="wb-p1-3" class="digit-box input" maxlength="1">
+        </div>
+        <div class="digit-row">
+          <input type="text" id="wb-p2-0" class="digit-box input" maxlength="1">
+          <input type="text" id="wb-p2-1" class="digit-box input" maxlength="1">
+          <input type="text" id="wb-p2-2" class="digit-box input" maxlength="1">
+          <input type="text" id="wb-p2-3" class="digit-box input" maxlength="1" placeholder="0">
+        </div>
+        <div class="digit-row" style="border-top:4px solid var(--primary); padding-top:10px;">
+          <input type="text" id="wb-i0" class="digit-box input" maxlength="1">
+          <input type="text" id="wb-i1" class="digit-box input" maxlength="1">
+          <input type="text" id="wb-i2" class="digit-box input" maxlength="1">
+          <input type="text" id="wb-i3" class="digit-box input" maxlength="1">
+        </div>
+        <div style="margin-top:18px; font-weight:800; text-align:center;">
+          Count the total decimal places in both factors above. How many decimal places should your final answer have?<br>
+          <select id="wb-dec-places" class="form-control-lg" style="width:260px; text-align:center; margin-top:8px;">
+            <option value="">Select a number...</option>
+            <option value="0">0 decimal places</option>
+            <option value="1">1 decimal place</option>
+            <option value="2">2 decimal places</option>
+            <option value="3">3 decimal places</option>
+            <option value="4">4 decimal places</option>
+          </select>
+        </div>
+      `;
+    } else {
+      const isMoney = prob.title.includes("$");
+      container.innerHTML = `
+        <h3>${prob.title}</h3>
+        <div class="digit-row">
+          ${isMoney ? '<div style="width:25px;"></div>' : ''}
+          <div class="column-header">Tens</div>
+          <div class="column-header">Ones</div>
+          <div style="width:18px;"></div>
+          <div class="column-header">Tenths</div>
+          <div class="column-header">Hund.</div>
+        </div>
+        <div class="digit-row">
+          ${isMoney ? '<div style="font-weight:900; color:var(--primary); font-size:1.5rem;">$</div>' : ''}
+          <div class="digit-box">${prob.row1[0]}</div>
+          <div class="digit-box">${prob.row1[1]}</div>
+          <div class="decimal-point">.</div>
+          <div class="digit-box">${prob.row1[2]}</div>
+          <div class="digit-box">${prob.row1[3]}</div>
+        </div>
+        <div class="digit-row">
+          ${isMoney ? '<div style="font-weight:900; color:var(--primary); font-size:1.5rem;">$</div>' : ''}
+          <div class="digit-box">${prob.row2[0]}</div>
+          <div class="digit-box">${prob.row2[1]}</div>
+          <div class="decimal-point">.</div>
+          <div class="digit-box">${prob.row2[2]}</div>
+          <div class="digit-box">${prob.row2[3]}</div>
+        </div>
+        <div class="digit-row" style="border-top:4px solid var(--primary); padding-top:10px;">
+          ${isMoney ? '<div style="font-weight:900; color:var(--primary); font-size:1.5rem;">$</div>' : ''}
+          <input type="text" id="wb-i0" class="digit-box input" maxlength="1">
+          <input type="text" id="wb-i1" class="digit-box input" maxlength="1">
+          <div class="decimal-point">.</div>
+          <input type="text" id="wb-i2" class="digit-box input" maxlength="1">
+          <input type="text" id="wb-i3" class="digit-box input" maxlength="1">
+        </div>
+      `;
+    }
+    document.getElementById('wb-feedback').style.display = 'none';
+    triggerMathJax();
+  }
+
+  function checkWhiteboard() {
+    const prob = wbProblems[currentWBProb];
+    const fb = document.getElementById('wb-feedback');
+
+    if (prob.type === "mult") {
+      const p1_0 = document.getElementById('wb-p1-0').value;
+      const p1_1 = document.getElementById('wb-p1-1').value;
+      const p1_2 = document.getElementById('wb-p1-2').value;
+      const p1_3 = document.getElementById('wb-p1-3').value;
+      const p2_0 = document.getElementById('wb-p2-0').value;
+      const p2_1 = document.getElementById('wb-p2-1').value;
+      const p2_2 = document.getElementById('wb-p2-2').value;
+      const p2_3 = document.getElementById('wb-p2-3').value;
+      const u0 = document.getElementById('wb-i0').value;
+      const u1 = document.getElementById('wb-i1').value;
+      const u2 = document.getElementById('wb-i2').value;
+      const u3 = document.getElementById('wb-i3').value;
+      const decPlaces = document.getElementById('wb-dec-places').value;
+
+      const allFilled = [p1_0, p1_1, p1_2, p1_3, p2_0, p2_1, p2_2, p2_3, u0, u1, u2, u3, decPlaces].every(v => v.trim() !== '');
+      if (!allFilled) {
+        LessonCheck.incomplete(fb, "Fill in every box (both partial products, the final answer, and the decimal places) before checking - this won't count as an attempt yet.");
+        return;
+      }
+
+      const correct = p1_0 === prob.p1[0] && p1_1 === prob.p1[1] && p1_2 === prob.p1[2] && p1_3 === prob.p1[3]
+        && p2_0 === prob.p2[0] && p2_1 === prob.p2[1] && p2_2 === prob.p2[2] && p2_3 === prob.p2[3]
+        && u0 === prob.ans[0] && u1 === prob.ans[1] && u2 === prob.ans[2] && u3 === prob.ans[3]
+        && Number(decPlaces) === prob.decimalPlaces;
+
+      LessonCheck.submit(fb, { key: `wb-${currentWBProb}`, label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${p1_0}${p1_1}${p1_2}${p1_3} / ${p2_0}${p2_1}${p2_2}${p2_3} / ${u0}${u1}${u2}${u3}, ${decPlaces} decimal places`, section: '5. Whiteboard Modeling', correct });
+    } else {
+      const u0 = document.getElementById('wb-i0').value;
+      const u1 = document.getElementById('wb-i1').value;
+      const u2 = document.getElementById('wb-i2').value;
+      const u3 = document.getElementById('wb-i3').value;
+
+      if (![u0, u1, u2, u3].every(v => v.trim() !== '')) {
+        LessonCheck.incomplete(fb, "Fill in all four digit boxes before submitting.");
+        return;
+      }
+
+      const correct = u0 === prob.ans[0] && u1 === prob.ans[1] && u2 === prob.ans[2] && u3 === prob.ans[3];
+
+      LessonCheck.submit(fb, { key: `wb-${currentWBProb}`, label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${u0}${u1}${u2}${u3}`, section: '5. Whiteboard Modeling', correct });
+    }
+  }
+
+  loadWBProblem(1);
+
+  function fillWBAnswers(prob) {
+    const setDigit = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.setAttribute('value', val);
+    };
+    if (prob.type === "mult") {
+      prob.p1.forEach((d, i) => setDigit(`wb-p1-${i}`, d));
+      prob.p2.forEach((d, i) => setDigit(`wb-p2-${i}`, d));
+      prob.ans.forEach((d, i) => setDigit(`wb-i${i}`, d));
+      const decEl = document.getElementById('wb-dec-places');
+      const opt = decEl && decEl.querySelector(`option[value="${prob.decimalPlaces}"]`);
+      if (opt) opt.setAttribute('selected', 'selected');
+    } else {
+      prob.ans.forEach((d, i) => setDigit(`wb-i${i}`, d));
+    }
+  }
+  TeacherPrint.registerCarousel('wb-container', Object.keys(wbProblems).length, (i, includeAnswers) => {
+    loadWBProblem(i + 1);
+    if (includeAnswers) fillWBAnswers(wbProblems[i + 1]);
+  });
+</script>
+</body>
+</html>

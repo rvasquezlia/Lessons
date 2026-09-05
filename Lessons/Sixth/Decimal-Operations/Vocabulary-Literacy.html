@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Decimal Operations - Vocabulary &amp; Literacy</title>
+
+  <!-- Montserrat Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <style>
+    .term-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 18px 0;
+    }
+    .term-card {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .term-card .term-name {
+      font-weight: 900;
+      color: var(--primary);
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .term-card .term-def { margin: 0; }
+    .term-card .term-example {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: #78350f;
+      background: #fffbeb;
+      border-radius: 6px;
+      padding: 6px 10px;
+    }
+    .keyword-col-heading {
+      font-weight: 800;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+    .kw-add { background: var(--success); }
+    .kw-sub { background: var(--error); }
+    .kw-mult { background: var(--primary); }
+    .keyword-list { list-style:none; padding-left:0; margin:0 0 20px 0; }
+    .keyword-list li {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px 14px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Decimal Operations &middot; Vocabulary &amp; Literacy</span>
+    <h1>Decimal Operations: Vocabulary &amp; Literacy</h1>
+  </header>
+
+  <div class="topic-nav-wrap">
+    <a class="topic-nav-back" href="../../index.html">&larr; All Topics</a>
+    <ul class="topic-nav">
+      <li><a class="topic-nav-link current" href="Vocabulary-Literacy.html"><span class="topic-nav-icon">📖</span>Vocabulary &amp; Literacy</a></li>
+      <li><a class="topic-nav-link" href="Explanation.html"><span class="topic-nav-icon">🧮</span>Explanation</a></li>
+      <li><a class="topic-nav-link" href="Practice-Set.html"><span class="topic-nav-icon">✏️</span>Practice Set</a></li>
+      <li><a class="topic-nav-link" href="Word-Problems.html"><span class="topic-nav-icon">📝</span>Word Problems</a></li>
+      <li><a class="topic-nav-link" href="Test-Prep.html"><span class="topic-nav-icon">🎯</span>Test Prep</a></li>
+      <li><a class="topic-nav-link" href="Teacher-Guide.html"><span class="topic-nav-icon">🧑‍🏫</span>Teacher's Guide</a></li>
+    </ul>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    This page has every keyword and term you need to understand Decimal Operations, before you touch the algorithms themselves. Work through the tabs in order: the Word Bank first (copy it into your notebook), then the interactive place-value chart, then the keyword clues that tell you which operation a word problem needs, and finish with the short understanding check. There's no progress report to print from this page - come back to it any time as a reference while you work through Explanation, Practice Set, and Word Problems.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('wordbank')">1. Word Bank</button>
+    <button class="tab-btn" onclick="switchTab('placevalue')">2. Place Value in Action</button>
+    <button class="tab-btn" onclick="switchTab('keywords')">3. Keyword Clues</button>
+    <button class="tab-btn" onclick="switchTab('checkunderstanding')">4. Check Your Understanding</button>
+  </nav>
+
+  <!-- PANEL 1: WORD BANK -->
+  <div id="wordbank" class="panel active">
+    <div class="section-title">Word Bank: Decimal Operations</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read every card below and copy the Word Bank into your math notebook. You'll see every one of these words again in Explanation, Practice Set, Word Problems, and Test Prep - knowing them now makes everything else in this topic easier.
+    </div>
+
+    <div class="explainer-box">
+      Decimal Operations is all about <strong>place value</strong> - the value a digit has because of its position in a number. Every term below connects back to that one idea.
+    </div>
+
+    <div class="term-grid">
+      <div class="term-card">
+        <span class="term-name">Decimal Point (\(\cdot\))</span>
+        <p class="term-def">The dot that separates whole quantities (on the left) from fractional parts (on the right).</p>
+        <div class="term-example">In \(14.9\), the decimal point sits between the ones and the tenths.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Place Value</span>
+        <p class="term-def">The value a digit has because of where it sits in a number - each place is \(10\times\) the value of the place to its right.</p>
+        <div class="term-example">In \(354.2\), the 3 represents 300 because it's in the hundreds place.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Tenths (\(0.1\))</span>
+        <p class="term-def">\(\frac{1}{10}\)th of a whole - the first place to the right of the decimal point.</p>
+        <div class="term-example">1 dime is \(\$0.10\), or one tenth of a dollar.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Hundredths (\(0.01\))</span>
+        <p class="term-def">\(\frac{1}{100}\)th of a whole - the second place to the right of the decimal point.</p>
+        <div class="term-example">1 penny is \(\$0.01\), or one hundredth of a dollar.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Thousandths (\(0.001\))</span>
+        <p class="term-def">\(\frac{1}{1000}\)th of a whole - the third place to the right of the decimal point.</p>
+        <div class="term-example">Metric lab measurements and sports split-times often use thousandths.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Standard Algorithm</span>
+        <p class="term-def">The step-by-step written method for adding, subtracting, or multiplying that lines digits up in columns.</p>
+        <div class="term-example">Lining up decimal points before adding is part of the standard algorithm for addition.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Regroup (Carry)</span>
+        <p class="term-def">When a column's sum is \(10\) or more, write the ones digit in that column and carry \(1\) to the next column on the left.</p>
+        <div class="term-example">In \(12.00 + 4.85\), the ones column carries a \(1\) into the tens.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Regroup (Borrow)</span>
+        <p class="term-def">When a column can't subtract without going negative, "borrow" \(1\) from the column to its left, striking through and rewriting that digit.</p>
+        <div class="term-example">In \(20.00 - 13.45\), the hundredths column borrows all the way from the tens.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Partial Product</span>
+        <p class="term-def">One piece of a multiplication problem, found by multiplying by a single digit of the second factor before adding all the pieces together.</p>
+        <div class="term-example">In \(245 \times 32\), \(245 \times 2 = 490\) and \(245 \times 30 = 7350\) are the two partial products.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Decimal Places</span>
+        <p class="term-def">The number of digits written to the right of the decimal point.</p>
+        <div class="term-example">\(3.5\) has 1 decimal place; \(1.25\) has 2 decimal places.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Estimate</span>
+        <p class="term-def">An approximate answer found by rounding, calculated before the exact answer as a reasonableness check.</p>
+        <div class="term-example">Before computing \(14.25 + 8.7\) exactly, estimate \(14 + 9 = 23\).</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Round</span>
+        <p class="term-def">To replace a number with a nearby, simpler value based on the digit right after the target place.</p>
+        <div class="term-example">\(14.86\) rounds to \(14.9\) (nearest tenth) because the hundredths digit, \(6\), is \(5\) or greater.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Sum</span>
+        <p class="term-def">The answer to an addition problem.</p>
+        <div class="term-example">The sum of \(3.5\) and \(1.25\) is \(4.75\).</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Difference</span>
+        <p class="term-def">The answer to a subtraction problem.</p>
+        <div class="term-example">The difference between \(25.00\) and \(22.95\) is \(2.05\).</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Product</span>
+        <p class="term-def">The answer to a multiplication problem.</p>
+        <div class="term-example">The product of \(3.5\) and \(1.25\) is \(4.375\).</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Reasonableness</span>
+        <p class="term-def">Whether an exact answer makes sense compared to the estimate - a check that catches decimal-placement mistakes.</p>
+        <div class="term-example">If your exact answer isn't close to your estimate, you likely lined up digits or shifted the decimal incorrectly.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: PLACE VALUE IN ACTION -->
+  <div id="placevalue" class="panel">
+    <div class="section-title">Place Value in Action</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Click each column in the chart below to see what it means in math and in money. There's nothing to submit here - this is background you'll use for the rest of the topic.
+    </div>
+
+    <div class="explainer-box">
+      The <strong>decimal point (\(\cdot\))</strong> separates <strong>whole quantities</strong> (on the left) from <strong>fractional parts</strong> (on the right). Every move to the left makes a digit \(10\times\) larger; every move to the right drops it to \(\frac{1}{10}\)th of its value.
+    </div>
+
+    <p class="no-print" style="text-align:center;"><strong>Click any column to inspect its mathematical value and cash equivalent:</strong></p>
+
+    <div class="pv-chart">
+      <div class="pv-column" onclick="inspectPV('hundreds')">
+        <div class="pv-title">Hundreds</div>
+        <div class="pv-val">100</div>
+        <div class="pv-money">$100 Bill</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('tens')">
+        <div class="pv-title">Tens</div>
+        <div class="pv-val">10</div>
+        <div class="pv-money">$10 Bill</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('ones')">
+        <div class="pv-title">Ones</div>
+        <div class="pv-val">1</div>
+        <div class="pv-money">$1 Dollar</div>
+      </div>
+      <div class="pv-column" style="background:#fee2e2; border-color:#ef4444;" onclick="inspectPV('decimal')">
+        <div class="pv-title">Decimal</div>
+        <div class="pv-val">\(\cdot\)</div>
+        <div class="pv-money">ANCHOR</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('tenths')">
+        <div class="pv-title">Tenths</div>
+        <div class="pv-val">0.1</div>
+        <div class="pv-money">1 Dime</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('hundredths')">
+        <div class="pv-title">Hundredths</div>
+        <div class="pv-val">0.01</div>
+        <div class="pv-money">1 Penny</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('thousandths')">
+        <div class="pv-title">Thousandths</div>
+        <div class="pv-val">0.001</div>
+        <div class="pv-money">Metric/Sports</div>
+      </div>
+    </div>
+
+    <div id="pv-inspector" class="no-print" style="background:#f1f5f9; padding:20px; border-radius:12px; border:2px solid var(--border); margin-top:16px;">
+      <h3 style="margin-top:0; color:var(--primary);" id="inspector-title">Click a column above!</h3>
+      <p id="inspector-body" style="margin:0;">Explore how digits relate to whole quantities and fractional parts.</p>
+    </div>
+
+    <div style="background:#f1f5f9; border-left:8px solid var(--accent); padding:24px; border-radius:12px; margin-top:28px;">
+      <h3 style="margin-top:0; color:var(--accent);">Reading a Decimal Out Loud</h3>
+      <p>Say the whole-number part normally, say "and" for the decimal point, then read the decimal digits as if they were a whole number followed by the name of the smallest place shown.</p>
+      <p style="margin-bottom:0;"><em>Example:</em> \(14.9\) is read "fourteen and nine tenths." \(3.05\) is read "three and five hundredths."</p>
+    </div>
+  </div>
+
+  <!-- PANEL 3: KEYWORD CLUES -->
+  <div id="keywords" class="panel">
+    <div class="section-title">Keyword Clues for Word Problems</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Copy the three keyword lists into your notebook - you'll use them every time you read a word problem in this topic. Then sort the practice keywords and translate the practice phrases below, checking your work as you go.
+    </div>
+
+    <div class="explainer-box">
+      Every decimal word problem follows the same two-step routine: <strong>estimate first</strong> by rounding, then <strong>calculate the exact answer</strong> and compare it to your estimate. But before you can even start, you have to know which operation the words are asking for - that's what these keywords are for.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
+      <div class="keyword-col-heading kw-add">Addition (+)</div>
+      <ul class="keyword-list">
+        <li>total, sum, combined, altogether, increased by</li>
+      </ul>
+      <div class="keyword-col-heading kw-sub">Subtraction (&minus;)</div>
+      <ul class="keyword-list">
+        <li>difference, how much more, change, remaining, decreased by, less than (turns the order around!)</li>
+      </ul>
+      <div class="keyword-col-heading kw-mult">Multiplication (&times;)</div>
+      <ul class="keyword-list">
+        <li>product, total of equal groups, area, "times as many," twice, of (in context of groups)</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The "Less Than" Turn-Around</div>
+      <p style="margin:0;">Why does the phrase "6.5 less than 10.75" result in the expression \(10.75 - 6.5\) instead of \(6.5 - 10.75\)? The word "than" reverses the numerical order compared to how it's written in the phrase - always write the second number first when you see "less than."</p>
+    </div>
+
+    <h3>Sort the Keywords</h3>
+    <div id="wordsort-list"></div>
+    <div style="text-align:center; margin-top:14px;">
+      <button class="btn-lg" onclick="checkWordSort()">Check My Sorting</button>
+    </div>
+    <div id="wordsort-feedback" class="feedback-msg" style="margin-top:14px;"></div>
+
+    <h3 style="margin-top:28px;">Translate Phrases Into Expressions</h3>
+    <p>Rewrite each word problem phrase as a numerical expression. You do not need to solve it yet - just translate the words.</p>
+    <div id="translate-list"></div>
+  </div>
+
+  <!-- PANEL 4: CHECK YOUR UNDERSTANDING -->
+  <div id="checkunderstanding" class="panel">
+    <div class="section-title">Check Your Understanding</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Match each term to its correct definition. You get up to <strong>2 tries</strong> per question - after a second miss, the correct definition is shown and it locks. This is just a quick check - it doesn't print a progress report.
+    </div>
+
+    <div id="vocab-quiz-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // Place Value Inspector Logic
+  const pvDetails = {
+    hundreds: { title: "Hundreds Column (100)", body: "100 times 1 Whole. Money: $100 bill. Example: In 354.2, 3 represents 300." },
+    tens: { title: "Tens Column (10)", body: "10 times 1 Whole. Money: $10 bill. Example: In 54.2, 5 represents 50." },
+    ones: { title: "Ones Column (1)", body: "The base whole unit. Money: $1 dollar. Example: In 4.25, 4 represents 4 whole dollars." },
+    decimal: { title: "The Decimal Point (\\(\\cdot\\))", body: "The critical anchor separating whole numbers from fractional parts." },
+    tenths: { title: "Tenths Column (0.1 = \\(\\frac{1}{10}\\))", body: "1 Whole cut into 10 equal parts. Money: 1 Dime ($0.10). 10 Tenths make 1 Whole." },
+    hundredths: { title: "Hundredths Column (0.01 = \\(\\frac{1}{100}\\))", body: "1 Whole cut into 100 equal parts. Money: 1 Penny ($0.01). 100 Hundredths make 1 Whole." },
+    thousandths: { title: "Thousandths Column (0.001 = \\(\\frac{1}{1000}\\))", body: "1 Whole cut into 1,000 equal parts. Used in metric science measurements and sports timing!" }
+  };
+
+  function inspectPV(col) {
+    const detail = pvDetails[col];
+    document.getElementById('inspector-title').innerText = detail.title;
+    document.getElementById('inspector-body').innerText = detail.body;
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // KEYWORD SORT
+  // ==========================================
+  const wordSortItems = [
+    { word: "sum", op: "add" }, { word: "total", op: "add" }, { word: "increased by", op: "add" }, { word: "altogether", op: "add" },
+    { word: "difference", op: "sub" }, { word: "less than", op: "sub" }, { word: "decreased by", op: "sub" }, { word: "remain", op: "sub" },
+    { word: "product", op: "mult" }, { word: "times", op: "mult" }, { word: "of (in context of groups)", op: "mult" }, { word: "twice", op: "mult" }
+  ];
+
+  function renderWordSort() {
+    const html = wordSortItems.map((item, i) => `
+      <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap;">
+        <strong style="min-width:220px;">${i + 1}. "${item.word}"</strong>
+        <select id="wordsort-${i}" class="form-control-lg" style="max-width:220px;">
+          <option value="">Select an operation...</option>
+          <option value="add">Addition (+)</option>
+          <option value="sub">Subtraction (-)</option>
+          <option value="mult">Multiplication (&times;)</option>
+        </select>
+      </div>
+    `).join('');
+    document.getElementById('wordsort-list').innerHTML = html;
+  }
+  renderWordSort();
+
+  function checkWordSort() {
+    const fb = document.getElementById('wordsort-feedback');
+    let allFilled = true;
+    let allCorrect = true;
+    wordSortItems.forEach((item, i) => {
+      const val = document.getElementById(`wordsort-${i}`).value;
+      if (!val) allFilled = false;
+      else if (val !== item.op) allCorrect = false;
+    });
+    if (!allFilled) {
+      LessonCheck.incomplete(fb, "Choose an operation for every keyword before checking.");
+      return;
+    }
+    LessonCheck.show(fb, allCorrect ? 'correct' : 'retry', {
+      correct: 'Correct! Every keyword is sorted into the right operation.',
+      retry: "Some keywords aren't sorted correctly yet. Review: sum/total/increased by/altogether = addition; difference/less than/decreased by/remain = subtraction; product/times/of/twice = multiplication."
+    });
+  }
+
+  // ==========================================
+  // TRANSLATE PHRASES
+  // ==========================================
+  const translateItems = [
+    { phrase: "The sum of 12.5 and 4.75", accepted: ["12.5+4.75", "4.75+12.5"], answer: "\\(12.5 + 4.75\\)" },
+    { phrase: "The difference between 20.8 and 9.2", accepted: ["20.8-9.2"], answer: "\\(20.8 - 9.2\\)" },
+    { phrase: "The product of 3.5 and 2.1", accepted: ["3.5x2.1", "3.5*2.1", "3.5×2.1", "2.1x3.5", "2.1*3.5", "2.1×3.5"], answer: "\\(3.5 \\times 2.1\\)" },
+    { phrase: "8.4 increased by 15.22", accepted: ["8.4+15.22", "15.22+8.4"], answer: "\\(8.4 + 15.22\\)" },
+    { phrase: "6.5 less than 10.75", accepted: ["10.75-6.5"], answer: "\\(10.75 - 6.5\\)" }
+  ];
+
+  function normalizeExpr(s) {
+    return String(s || '').toLowerCase().replace(/\s+/g, '');
+  }
+
+  function renderTranslateList() {
+    const html = translateItems.map((item, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${item.phrase}
+        <input type="text" id="translate-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="e.g. 3.5+2.1">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkTranslate(${i})">Check</button>
+        <div id="translate-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('translate-list').innerHTML = html;
+  }
+  renderTranslateList();
+
+  function checkTranslate(idx) {
+    const item = translateItems[idx];
+    const val = document.getElementById(`translate-${idx}-input`).value;
+    const fb = document.getElementById(`translate-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an expression before checking.");
+      return;
+    }
+    const correct = item.accepted.includes(normalizeExpr(val));
+    LessonCheck.show(fb, correct ? 'correct' : 'reveal', {
+      correct: `Correct! ${item.answer}`,
+      reveal: `The expression is ${item.answer}`
+    });
+  }
+
+  // ==========================================
+  // VOCABULARY QUIZ (Check Your Understanding)
+  // ==========================================
+  const vocabQuiz = [
+    { term: "Decimal Point", choices: ["The dot separating whole quantities from fractional parts", "The answer to a multiplication problem", "An approximate answer found by rounding"], correct: 0 },
+    { term: "Estimate", choices: ["The answer to an addition problem", "An approximate answer found by rounding, used to check reasonableness", "A digit's value based on its position"], correct: 1 },
+    { term: "Partial Product", choices: ["One piece of a multiplication problem before the pieces are added together", "The number of digits right of the decimal point", "The value a digit has because of its position"], correct: 0 },
+    { term: "Regroup (Borrow)", choices: ["Carrying a 1 into the next column when a sum is 10 or more", "Taking 1 from the column to the left when subtraction would go negative", "Rounding a number to the nearest tenth"], correct: 1 },
+    { term: "Product", choices: ["The answer to a subtraction problem", "The answer to an addition problem", "The answer to a multiplication problem"], correct: 2 },
+    { term: "Decimal Places", choices: ["The number of digits written to the right of the decimal point", "The columns to the left of the decimal point", "Another name for the decimal point itself"], correct: 0 }
+  ];
+
+  function renderVocabQuiz() {
+    const html = vocabQuiz.map((item, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}. What is the correct definition of "${item.term}"?</strong>
+        <div style="margin-top:10px;">
+          <select id="vocab-${i}" class="form-control-lg">
+            <option value="">Select a definition...</option>
+            ${item.choices.map((c, ci) => `<option value="${ci}">${c}</option>`).join('')}
+          </select>
+        </div>
+        <div style="margin-top:10px;">
+          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVocabQuiz(${i})">Check</button>
+        </div>
+        <div id="vocab-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('vocab-quiz-list').innerHTML = html;
+  }
+  renderVocabQuiz();
+
+  function checkVocabQuiz(idx) {
+    const item = vocabQuiz[idx];
+    const val = document.getElementById(`vocab-${idx}`).value;
+    const fb = document.getElementById(`vocab-${idx}-feedback`);
+    if (val === '') {
+      LessonCheck.incomplete(fb, "Choose a definition before checking.");
+      return;
+    }
+    const correct = Number(val) === item.correct;
+    LessonCheck.check(`vocab-${idx}`, correct, fb, {
+      correct: `Correct! "${item.term}" means: ${item.choices[item.correct]}`,
+      retry: "Not quite yet. Re-read the Word Bank tab and try again.",
+      reveal: `"${item.term}" means: ${item.choices[item.correct]}`
+    });
+  }
+</script>
+</body>
+</html>

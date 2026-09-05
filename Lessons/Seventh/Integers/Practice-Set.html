@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Integers - Practice Set</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Integers - Practice Set</span>
+    <h1>Practice Set: Computing With Integers</h1>
+  </header>
+
+  <div class="topic-nav-wrap">
+    <a class="topic-nav-back" href="../../index.html">&larr; All Topics</a>
+    <ul class="topic-nav">
+      <li><a class="topic-nav-link" href="Vocabulary-Literacy.html"><span class="topic-nav-icon">📖</span>Vocabulary &amp; Literacy</a></li>
+      <li><a class="topic-nav-link" href="Explanation.html"><span class="topic-nav-icon">🧮</span>Explanation</a></li>
+      <li><a class="topic-nav-link current" href="Practice-Set.html"><span class="topic-nav-icon">✏️</span>Practice Set</a></li>
+      <li><a class="topic-nav-link" href="Word-Problems.html"><span class="topic-nav-icon">📝</span>Word Problems</a></li>
+      <li><a class="topic-nav-link" href="Test-Prep.html"><span class="topic-nav-icon">🎯</span>Test Prep</a></li>
+      <li><a class="topic-nav-link" href="Teacher-Guide.html"><span class="topic-nav-icon">🧑‍🏫</span>Teacher's Guide</a></li>
+    </ul>
+  </div>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Pre-Algebra 7 - Integers Practice Set')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Pure computation - no word problems here, those are on the <strong>Word Problems</strong> page. Work through the 5 tabs in any order your teacher assigns. Copy each problem into your notebook, solve it there first, then type just your final answer and check it. You get up to <strong>2 tries</strong> per problem - after a second miss, the correct answer is shown and it locks. When you finish, type your name above and click <strong>Print My Progress</strong>. <strong>Calculators are not allowed this quarter.</strong>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('opposites')">1. Opposites &amp; Absolute Value</button>
+    <button class="tab-btn" onclick="switchTab('addition')">2. Add Integers</button>
+    <button class="tab-btn" onclick="switchTab('subtraction')">3. Subtract Integers</button>
+    <button class="tab-btn" onclick="switchTab('muldiv')">4. Multiply &amp; Divide</button>
+    <button class="tab-btn" onclick="switchTab('mixed')">5. Mixed &amp; Order of Operations</button>
+  </nav>
+
+  <div id="opposites" class="panel active">
+    <div class="section-title">Opposites &amp; Absolute Value</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Find the opposite, the absolute value, or compare using \(<, >,\) or \(=\) - as asked.
+    </div>
+    <div id="opp-list"></div>
+  </div>
+
+  <div id="addition" class="panel">
+    <div class="section-title">Add Integers</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Same signs: add and keep the sign. Different signs: subtract and keep the sign of the larger absolute value.
+    </div>
+    <div id="add-list"></div>
+  </div>
+
+  <div id="subtraction" class="panel">
+    <div class="section-title">Subtract Integers</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Use Keep-Change-Change to rewrite every subtraction as addition before solving.
+    </div>
+    <div id="sub-list"></div>
+  </div>
+
+  <div id="muldiv" class="panel">
+    <div class="section-title">Multiply &amp; Divide Integers</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Same signs give a positive result; different signs give a negative result - for both multiplication and division.
+    </div>
+    <div id="md-list"></div>
+  </div>
+
+  <div id="mixed" class="panel">
+    <div class="section-title">Mixed Computation &amp; Order of Operations</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      First identify which operation you're doing, then apply the correct sign rule. For problems with parentheses or exponents, work the innermost parentheses (and exponents) first, then finish left to right.
+    </div>
+    <div id="mixed-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // REUSABLE SINGLE-FIELD PRACTICE LIST (check mode: 2 tries then reveal)
+  // ==========================================
+  function renderPracticeList(containerId, problems, keyPrefix, section) {
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkPractice('${keyPrefix}', ${i})">Check</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, `${section} #${i + 1}: ${p.label || p.q.replace(/\\\(|\\\)/g, '')}`, section));
+  }
+
+  const listRegistry = {};
+
+  function checkPractice(keyPrefix, idx) {
+    const cfg = listRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const raw = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet."); return; }
+    const correct = p.a !== undefined ? LessonCheck.numericMatch(raw, p.a, p.tol || 0.001) : (p.accepted || []).includes(String(raw).trim());
+    const answerText = p.displayAnswer || (p.a !== undefined ? String(p.a) : (p.accepted ? p.accepted[0] : ''));
+    const label = `${cfg.section} #${idx + 1}: ${p.label || p.q.replace(/\\\(|\\\)/g, '')}`;
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! Answer: \\(\\mathbf{${answerText}}\\)`,
+      retry: p.hint || "Not quite yet. Review the rule and try again.",
+      reveal: `Here's the correct answer: \\(\\mathbf{${answerText}}\\)`
+    }, { label, answer: raw, section: cfg.section });
+  }
+
+  function setup(containerId, problems, keyPrefix, section) {
+    listRegistry[keyPrefix] = { problems, section };
+    renderPracticeList(containerId, problems, keyPrefix, section);
+  }
+
+  // ==========================================
+  // TAB 1: OPPOSITES & ABSOLUTE VALUE
+  // ==========================================
+  const oppProblems = [
+    { q: "Opposite of 15", a: -15, label: "Opposite of 15" },
+    { q: "Opposite of -23", a: 23, label: "Opposite of -23" },
+    { q: "Opposite of -12", a: 12, label: "Opposite of -12" },
+    { q: "Opposite of 0", a: 0, label: "Opposite of 0" },
+    { q: "\\(|-9|\\)", a: 9, label: "|-9|" },
+    { q: "\\(|14|\\)", a: 14, label: "|14|" },
+    { q: "\\(|-100|\\)", a: 100, label: "|-100|" },
+    { q: "\\(|0|\\)", a: 0, label: "|0|" },
+    { q: "Which is farther from 0: -20 or 15? Type just the number.", accepted: ["-20"], displayAnswer: "-20", label: "Farther from 0: -20 or 15?" },
+    { q: "\\(|-5|\\) ___ \\(-10\\) (enter <, >, or =)", accepted: [">"], displayAnswer: ">", label: "Compare |-5| ___ -10" },
+    { q: "\\(|12|\\) ___ \\(3\\) (enter <, >, or =)", accepted: [">"], displayAnswer: ">", label: "Compare |12| ___ 3" },
+    { q: "\\(-2\\) ___ \\(|-12|\\) (enter <, >, or =)", accepted: ["<"], displayAnswer: "<", label: "Compare -2 ___ |-12|" }
+  ];
+  setup('opp-list', oppProblems, 'opp', '1. Opposites & Absolute Value');
+
+  // ==========================================
+  // TAB 2: ADD INTEGERS
+  // ==========================================
+  const addProblems = [
+    { q: "\\(-6 + (-9)\\)", a: -15 },
+    { q: "\\(14 + (-20)\\)", a: -6 },
+    { q: "\\(-18 + 25\\)", a: 7 },
+    { q: "\\(-7 + (-7)\\)", a: -14 },
+    { q: "\\(30 + (-30)\\)", a: 0 },
+    { q: "\\(-15 + (-8)\\)", a: -23 },
+    { q: "\\(-9 + 14\\)", a: 5 },
+    { q: "\\(-32 + (-18)\\)", a: -50 },
+    { q: "\\(-11 + (-14)\\)", a: -25 },
+    { q: "\\(25 + (-30)\\)", a: -5 }
+  ];
+  setup('add-list', addProblems, 'add', '2. Add Integers');
+
+  // ==========================================
+  // TAB 3: SUBTRACT INTEGERS
+  // ==========================================
+  const subProblems = [
+    { q: "\\(12 - 20\\)", a: -8 },
+    { q: "\\(-5 - 9\\)", a: -14 },
+    { q: "\\(-8 - (-15)\\)", a: 7 },
+    { q: "\\(20 - (-6)\\)", a: 26 },
+    { q: "\\(-14 - (-14)\\)", a: 0 },
+    { q: "\\(12 - (-7)\\)", a: 19 },
+    { q: "\\(-20 - 5\\)", a: -25 },
+    { q: "\\(11 - 25\\)", a: -14 },
+    { q: "\\(-26 - (-15)\\)", a: -11 },
+    { q: "\\(-18 - 5\\)", a: -23 }
+  ];
+  setup('sub-list', subProblems, 'sub', '3. Subtract Integers');
+
+  // ==========================================
+  // TAB 4: MULTIPLY & DIVIDE
+  // ==========================================
+  const mdProblems = [
+    { q: "\\(-6 \\times 7\\)", a: -42 },
+    { q: "\\(-8 \\times (-5)\\)", a: 40 },
+    { q: "\\(-24 \\div 6\\)", a: -4 },
+    { q: "\\(-45 \\div (-9)\\)", a: 5 },
+    { q: "\\(9 \\times (-4)\\)", a: -36 },
+    { q: "\\(-12 \\times (-3)\\)", a: 36 },
+    { q: "\\(18 \\div (-3)\\)", a: -6 },
+    { q: "\\(-63 \\div 7\\)", a: -9 },
+    { q: "\\(-5 \\times (-5) \\times (-2)\\)", a: -50 },
+    { q: "\\(-6 \\times (-9)\\)", a: 54 },
+    { q: "\\(-48 \\div 8\\)", a: -6 },
+    { q: "\\(-100 \\div (-5)\\)", a: 20 }
+  ];
+  setup('md-list', mdProblems, 'md', '4. Multiply & Divide');
+
+  // ==========================================
+  // TAB 5: MIXED & ORDER OF OPERATIONS
+  // ==========================================
+  const mixedProblems = [
+    { q: "\\(-14 + 30\\)", a: 16 },
+    { q: "\\(-42 + 18\\)", a: -24 },
+    { q: "\\(-7 \\times (-8)\\)", a: 56 },
+    { q: "\\(-250 \\div 10\\)", a: -25 },
+    { q: "\\(-13 - (-13)\\)", a: 0 },
+    { q: "\\(-3 \\times 5 \\times (-2)\\)", a: 30, hint: "Multiply left to right, tracking the sign after each step." },
+    { q: "\\((-4 + 10) \\div (-3)\\)", a: -2, hint: "Work the parentheses first: \\(-4+10=6\\). Then divide." },
+    { q: "\\(-3 \\times (4 + (-6))\\)", a: 6, hint: "Work the parentheses first: \\(4+(-6)=-2\\). Then multiply." },
+    { q: "\\(\\dfrac{(-2)^3 + 10}{-2}\\)", a: -1, hint: "\\((-2)^3 = -8\\) first, then add 10, then divide." },
+    { q: "\\(-6 \\times (-7)\\)", a: 42 },
+    { q: "\\(-36 \\div 4\\)", a: -9 },
+    { q: "\\(22 - (-8)\\)", a: 30 }
+  ];
+  setup('mixed-list', mixedProblems, 'mixed', '5. Mixed & Order of Operations');
+</script>
+<div id="print-report"></div>
+</body>
+</html>

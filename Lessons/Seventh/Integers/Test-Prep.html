@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Integers - Test Prep</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Integers - Test Prep</span>
+    <h1>Test Prep: Integers, Opposites &amp; Operations</h1>
+  </header>
+
+  <div class="topic-nav-wrap">
+    <a class="topic-nav-back" href="../../index.html">&larr; All Topics</a>
+    <ul class="topic-nav">
+      <li><a class="topic-nav-link" href="Vocabulary-Literacy.html"><span class="topic-nav-icon">📖</span>Vocabulary &amp; Literacy</a></li>
+      <li><a class="topic-nav-link" href="Explanation.html"><span class="topic-nav-icon">🧮</span>Explanation</a></li>
+      <li><a class="topic-nav-link" href="Practice-Set.html"><span class="topic-nav-icon">✏️</span>Practice Set</a></li>
+      <li><a class="topic-nav-link" href="Word-Problems.html"><span class="topic-nav-icon">📝</span>Word Problems</a></li>
+      <li><a class="topic-nav-link current" href="Test-Prep.html"><span class="topic-nav-icon">🎯</span>Test Prep</a></li>
+      <li><a class="topic-nav-link" href="Teacher-Guide.html"><span class="topic-nav-icon">🧑‍🏫</span>Teacher's Guide</a></li>
+    </ul>
+  </div>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Pre-Algebra 7 - Integers Test Prep')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    This page reviews the entire topic before your assessment. Work the tabs <strong>in order, left to right</strong>. Tabs 1-3 are review: reference material, common mistakes, and a full practice quiz - all with two tries and a reveal if you miss twice. Tab 4, <strong>Mixed Practice</strong>, is a printable-style worksheet: you submit each answer once and it is <strong>not</strong> revealed on screen - your teacher grades it from your printed report, just like a paper test. When you finish, type your name above and click <strong>Print My Progress</strong>. <strong>Calculators are not allowed this quarter.</strong>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('concepts')">1. Concept Review</button>
+    <button class="tab-btn" onclick="switchTab('errors')">2. Error Analysis</button>
+    <button class="tab-btn" onclick="switchTab('quickcheck')">3. Timed Review Quiz</button>
+    <button class="tab-btn" onclick="switchTab('mixedpractice')">4. Mixed Practice</button>
+  </nav>
+
+  <!-- TAB 1: CONCEPT REVIEW -->
+  <div id="concepts" class="panel active">
+    <div class="section-title">Concept Review: Every Rule in One Place</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Skim the reference boxes - if any rule feels shaky, go back to <strong>Explanation</strong> for the full worked examples. Then answer the 4 Check Your Understanding problems.
+    </div>
+
+    <p>Integers are whole numbers and their opposites (\(\dots, -3, -2, -1, 0, 1, 2, 3, \dots\)). This guide provides the essential rules for adding, subtracting, multiplying, and dividing integers.</p>
+
+    <div class="notebook-box">
+      <div class="notebook-header">1. Addition Rules</div>
+      <ul>
+        <li><strong>Same Signs:</strong> Add the absolute values and keep the common sign. \(5+3=8\) &nbsp;&nbsp; \(-5+(-3)=-8\)</li>
+        <li><strong>Different Signs:</strong> Subtract the smaller absolute value from the larger. Keep the sign of the number with the larger absolute value. \(-7+4=-3\). \(10+(-2)=8\).</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">2. Subtraction Rule: "Keep-Change-Change"</div>
+      <p style="margin:0 0 10px 0;">To subtract an integer, add its opposite: keep the first number, change subtraction to addition, change the sign of the second number.</p>
+      <p style="margin:0;"><em>Example:</em> \(4 - (-3) \rightarrow 4 + 3 = \mathbf{7}\). &nbsp;&nbsp; <em>Example:</em> \(-2 - 5 \rightarrow -2 + (-5) = \mathbf{-7}\).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">3. Multiplication &amp; Division Sign Laws</div>
+      <ul>
+        <li><strong>Same Signs = Positive:</strong> \(6\times2=12\), \(-4\times(-3)=12\), \(-20\div(-5)=4\).</li>
+        <li><strong>Different Signs = Negative:</strong> \(8\times(-2)=-16\), \(-9\times3=-27\), \(15\div(-3)=-5\).</li>
+      </ul>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Check Your Understanding</h3>
+      <p>Use the rules above to solve these four problems.</p>
+      <div id="cu-list"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: ERROR ANALYSIS -->
+  <div id="errors" class="panel">
+    <div class="section-title">Error Analysis: Spot the Mistake</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Even experts make mistakes! For each problem, identify the specific error, name the correct rule, and give the right answer. This tab is quiz-style: you submit once and your work is reviewed from your printed report, not revealed on screen.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Common Misconceptions to Watch For</div>
+      <ul style="margin-bottom:0;">
+        <li>Forgetting to flip the sign when subtracting a negative number (\(a - (-b) = a + b\), not \(a - b\)).</li>
+        <li>Assuming a sum of two integers is always positive or always negative - it depends on the signs <strong>and</strong> the absolute values.</li>
+        <li>Multiplying/dividing three or more negative integers: track the sign one pair at a time, don't guess from the total count.</li>
+      </ul>
+    </div>
+
+    <div id="errors-list"></div>
+
+    <div class="challenge-box" style="margin-top:20px;">
+      <p style="margin-top:0;">Ana says \(-10 - 4 = -6\), reasoning that \(10 - 4 = 6\) and the sign is negative. Is she correct?</p>
+      <select id="audit-choice" class="form-control-lg" style="max-width:260px;">
+        <option value="">Select...</option>
+        <option value="correct">She's correct</option>
+        <option value="incorrect">She's incorrect</option>
+      </select>
+      <button class="btn-lg" style="margin-top:14px;" onclick="checkAudit()">Submit</button>
+      <div id="audit-feedback" class="feedback-msg"></div>
+    </div>
+    <div class="explainer-box" id="audit-explain" style="display:none; margin-top:22px;">
+      Ana treated this as a same-signs problem, but it isn't one - there's no second negative to combine with. Using Keep-Change-Change: \(-10 - 4 \rightarrow -10 + (-4)\). Now the signs <em>are</em> the same, so add the absolute values and keep the negative sign: \(10 + 4 = 14\), giving <strong>\(-14\)</strong>.
+    </div>
+  </div>
+
+  <!-- TAB 3: TIMED REVIEW QUIZ -->
+  <div id="quickcheck" class="panel">
+    <div class="section-title">Timed Review Quiz</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      These are the same items from the official Savvas Quick Check, now used as a comprehensive review. Solve each problem in your notebook, then type your answer and check it - two tries per problem.
+    </div>
+
+    <div class="notebook-box"><div class="notebook-header">Set A: Opposites, Absolute Value &amp; Comparing</div></div>
+    <div class="step-box">
+      <p><strong>1.</strong> Which of these situations can be represented by the opposite of \(-25\)?<br>
+      A. A scuba diver is 25 feet below sea level.&nbsp;&nbsp; B. Leon gets paid $25.&nbsp;&nbsp; C. An airplane descends 25 feet.&nbsp;&nbsp; D. Sara has a $25 debt.</p>
+      <select id="qc-a0" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('a', 0)">Check</button>
+      <div id="qc-a0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;">
+      <p><strong>2.</strong> The number line shows Allie's scores in two rounds of a card game. Select all statements that explain her gains and losses.</p>
+      <div id="qc-a1-numberline"></div>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc-a1-cb0"> She gains 4 points in Round 1.</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc-a1-cb1"> She gains 4 points in Round 2.</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc-a1-cb2"> She loses 4 points in Round 1.</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc-a1-cb3"> She loses 4 points in Round 2.</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc-a1-cb4"> She has 0 points at the end of two rounds.</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc-a1-cb5"> She has 4 points at the end of two rounds.</label>
+      <button class="btn-lg" style="margin-top:6px;" onclick="checkQCMulti('a1', [0,3,4], 6)">Check</button>
+      <div id="qc-a1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;">
+      <p><strong>3.</strong> The number line shows an arrow starting at \(-4\) and ending at \(-13\). Which subtraction expression does it show?</p>
+      <div id="qc-a2-numberline"></div>
+      <p style="margin:0;">A. \(-13 + 4\)&nbsp;&nbsp; B. \(-4 - 13\)&nbsp;&nbsp; C. \(-4 - 9\)&nbsp;&nbsp; D. \(-4 + 9\)</p>
+      <select id="qc-a2" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('a', 2)">Check</button>
+      <div id="qc-a2-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:24px;"><div class="notebook-header">Set B: Add &amp; Subtract Integers</div></div>
+    <div class="step-box">
+      <p><strong>4.</strong> Sandra played a matching game. She scored 18 points for correct matches and \(-6\) points for incorrect matches. How many points did Sandra make?</p>
+      <input type="text" id="qc-b0" class="form-control-lg" style="max-width:200px;" placeholder="points">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('b', 0)">Check</button>
+      <div id="qc-b0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;">
+      <p><strong>5.</strong> When you add a positive number and a negative number, how can you tell whether the sum will be positive or negative?<br>
+      A. Always negative.&nbsp;&nbsp; B. Always positive.&nbsp;&nbsp; C. Sign of the addend with the lesser absolute value.&nbsp;&nbsp; D. Sign of the addend with the greater absolute value.</p>
+      <select id="qc-b1" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('b', 1)">Check</button>
+      <div id="qc-b1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;">
+      <p><strong>6.</strong> Rob borrows $15.00 from his father, then borrows $3.00 more. How much money does Rob owe his father in total?</p>
+      <input type="text" id="qc-b2" class="form-control-lg" style="max-width:200px;" placeholder="amount owed">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('b', 2)">Check</button>
+      <div id="qc-b2-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;">
+      <p><strong>7.</strong> Adrienne and Suki simplified \(-8 - (-6)\). Adrienne got \(-14\); Suki got \(-2\). Whose answer is correct, and what was the other's error?<br>
+      A. Suki's; Adrienne subtracted 6 instead of subtracting \(-6\).&nbsp;&nbsp; B. Suki's; Adrienne subtracted 8 instead of subtracting \(-8\).&nbsp;&nbsp; C. Adrienne's; Suki added 6 instead of subtracting \(-6\).&nbsp;&nbsp; D. Adrienne's; Suki added 8 instead of subtracting 8.</p>
+      <select id="qc-b3" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('b', 3)">Check</button>
+      <div id="qc-b3-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:24px;"><div class="notebook-header">Set C: Multiply &amp; Divide Integers</div></div>
+    <div class="step-box">
+      <p><strong>8.</strong> For each product, choose whether it is positive or negative.</p>
+      <div style="margin:6px 0;">\(-3 \cdot (-15)\): <select id="qc-c0a" class="form-control-lg" style="max-width:150px; display:inline-block;"><option value="">Choose...</option><option value="positive">Positive</option><option value="negative">Negative</option></select></div>
+      <div style="margin:6px 0;">\(x(-x)\), for \(x \neq 0\): <select id="qc-c0b" class="form-control-lg" style="max-width:150px; display:inline-block;"><option value="">Choose...</option><option value="positive">Positive</option><option value="negative">Negative</option></select></div>
+      <div style="margin:6px 0;">\(-5 \cdot (-2) \cdot (-1)\): <select id="qc-c0c" class="form-control-lg" style="max-width:150px; display:inline-block;"><option value="">Choose...</option><option value="positive">Positive</option><option value="negative">Negative</option></select></div>
+      <div style="margin:6px 0;">A negative number times two positive numbers: <select id="qc-c0d" class="form-control-lg" style="max-width:150px; display:inline-block;"><option value="">Choose...</option><option value="positive">Positive</option><option value="negative">Negative</option></select></div>
+      <button class="btn-lg" style="margin-top:6px;" onclick="checkQCSigns()">Check</button>
+      <div id="qc-c0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;">
+      <p><strong>9.</strong> Chase simplified \(-2 \times (5 - 3)\) and got \(4\). Chase is incorrect. What is the correct value?</p>
+      <input type="text" id="qc-c1" class="form-control-lg" style="max-width:200px;" placeholder="Answer">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('c', 1)">Check</button>
+      <div id="qc-c1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;">
+      <p><strong>10.</strong> Select all the expressions that are equal to \(-8\).</p>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc-c2-cb0"> \(\frac{80}{100}\)</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc-c2-cb1"> \(\frac{-800}{100}\)</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc-c2-cb2"> \(80 \div (-10)\)</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc-c2-cb3"> \(-80 \div (-10)\)</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc-c2-cb4"> \(\frac{-80}{100}\)</label>
+      <button class="btn-lg" style="margin-top:6px;" onclick="checkQCMulti('c2', [1,2], 5)">Check</button>
+      <div id="qc-c2-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: MIXED PRACTICE (submit-only, no reveal) -->
+  <div id="mixedpractice" class="panel">
+    <div class="section-title">Mixed Practice: Printable Worksheet</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      This is a comprehensive worksheet covering every skill in this topic. Solve each item in your notebook, type your final answer, and click Submit. <strong>Your answer is recorded but not checked on screen</strong> - your teacher grades this from your printed progress report, exactly like a paper test.
+    </div>
+    <div id="mp-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // TAB 1: CONCEPT REVIEW
+  // ==========================================
+  const cuProblems = [
+    { q: "Problem A: \\(-12 - (-5) = \\) ?", a: -7, hint: "Use Keep-Change-Change first." },
+    { q: "Problem B: \\((-3) \\times 4 + (-2) = \\) ?", a: -14, hint: "Multiply first: \\((-3) \\times 4\\), then add." },
+    { q: "Problem C: \\(-13 + (-7) = \\) ?", a: -20, hint: "Same signs: add the absolute values and keep the common sign." },
+    { q: "Problem D: \\(9 - (-6) = \\) ?", a: 15, hint: "Keep-Change-Change: \\(9 - (-6) \\rightarrow 9 + 6\\)." }
+  ];
+  function renderCU() {
+    const html = cuProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="cu-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkCU(${i})">Check</button>
+        <div id="cu-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('cu-list').innerHTML = html;
+    cuProblems.forEach((p, i) => LessonProgress.preRegister(`cu-${i}`, `1. Concept Review #${i + 1}`, '1. Concept Review'));
+  }
+  renderCU();
+  function checkCU(idx) {
+    const p = cuProblems[idx];
+    const raw = document.getElementById(`cu-${idx}-input`).value;
+    const fb = document.getElementById(`cu-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
+    const correct = LessonCheck.numericMatch(raw, p.a, 0.01);
+    LessonCheck.check(`cu-${idx}`, correct, fb, {
+      correct: `Correct! Answer: \\(\\mathbf{${p.a}}\\)`,
+      retry: p.hint,
+      reveal: `Here's the correct answer: \\(\\mathbf{${p.a}}\\)`
+    }, { label: `1. Concept Review #${idx + 1}`, answer: raw, section: '1. Concept Review' });
+  }
+
+  // ==========================================
+  // TAB 2: ERROR ANALYSIS
+  // ==========================================
+  const errorAnalysisProblems = [
+    { student: "\\(-8 + (-5) = -3\\)", rule: "Same Signs: Add the absolute values and keep the common sign.", correctAnswer: "-13" },
+    { student: "\\(-10 - (-4)\\) &rarr; \\(-10 - 4 = -14\\)", rule: "Keep-Change-Change: \\(-10 - (-4)\\) becomes \\(-10 + 4\\).", correctAnswer: "-6" },
+    { student: "\\(-6 \\times (-3) = -18\\)", rule: "Same Signs in multiplication always give a Positive product.", correctAnswer: "18" },
+    { student: "\\(12 + (-15) = 3\\)", rule: "Different Signs: subtract and keep the sign of the number with the larger absolute value (15 > 12).", correctAnswer: "-3" },
+    { student: "\\(-20 \\div 5 = 4\\)", rule: "Different Signs in division always give a Negative quotient.", correctAnswer: "-4" }
+  ];
+  function renderErrorAnalysis() {
+    const html = errorAnalysisProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>Problem ${i + 1}.</strong> Student work: ${p.student}
+        <div style="margin-top:10px;">
+          <label style="font-weight:700; font-size:0.95rem; display:block; margin-bottom:6px;">Identify the error and name the correct rule:</label>
+          <textarea id="ea-${i}-explain" class="form-control-lg" rows="2" placeholder="What did the student do wrong?"></textarea>
+        </div>
+        <div style="margin-top:10px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <label style="font-weight:700; font-size:0.95rem;">Correct Answer: <input type="text" id="ea-${i}-answer" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="Correct value"></label>
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkErrorAnalysis(${i})">Submit</button>
+        </div>
+        <div id="ea-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('errors-list').innerHTML = html;
+    errorAnalysisProblems.forEach((p, i) => LessonProgress.preRegister(`ea-${i}`, `2. Error Analysis #${i + 1}: ${p.student.replace(/\\\(|\\\)|&rarr;/g, '')}`, '2. Error Analysis'));
+  }
+  renderErrorAnalysis();
+  function checkErrorAnalysis(idx) {
+    const p = errorAnalysisProblems[idx];
+    const explain = document.getElementById(`ea-${idx}-explain`).value.trim();
+    const answer = document.getElementById(`ea-${idx}-answer`).value;
+    const fb = document.getElementById(`ea-${idx}-feedback`);
+    if (explain.length <= 5 || !answer.trim()) { LessonCheck.incomplete(fb, "Explain the error and give the correct answer before submitting."); return; }
+    const correct = LessonCheck.numericMatch(answer, parseFloat(p.correctAnswer), 0.01);
+    LessonCheck.submit(fb, { key: `ea-${idx}`, label: `2. Error Analysis #${idx + 1}: ${p.student.replace(/\\\(|\\\)|&rarr;/g, '')}`, answer: `${explain} | Correct answer given: ${answer}`, section: '2. Error Analysis', correct });
+  }
+
+  LessonProgress.preRegister('audit', "2. Error Analysis: is Ana's -10-4=-6 correct?", '2. Error Analysis');
+  function checkAudit() {
+    const val = document.getElementById('audit-choice').value;
+    const fb = document.getElementById('audit-feedback');
+    if (!val) { LessonCheck.incomplete(fb, "Choose an answer before submitting."); return; }
+    LessonCheck.submit(fb, {
+      key: 'audit',
+      label: "2. Error Analysis: is Ana's -10-4=-6 correct?",
+      answer: val === 'incorrect' ? "She's incorrect" : "She's correct",
+      section: '2. Error Analysis',
+      correct: val === 'incorrect'
+    });
+    document.getElementById('audit-explain').style.display = 'block';
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // TAB 3: TIMED REVIEW QUIZ
+  // ==========================================
+  renderNumberLine('qc-a1-numberline', {
+    min: -10, max: 10, step: 2,
+    arrows: [
+      { from: 0, to: 4, label: 'Round 1', color: '#15803d', row: 0 },
+      { from: 4, to: 0, label: 'Round 2', color: '#b45309', row: 1 }
+    ]
+  });
+  renderNumberLine('qc-a2-numberline', {
+    min: -15, max: -1, step: 2,
+    arrows: [{ from: -4, to: -13, color: '#d97706', row: 0 }]
+  });
+
+  const qcAnswers = {
+    a: { 0: "B", 2: "C" },
+    b: { 0: 12, 1: "D", 2: 18, 3: "A" },
+    c: { 1: -4 }
+  };
+  function checkQC(set, idx) {
+    const id = `qc-${set}${idx}`;
+    const raw = document.getElementById(id).value;
+    const fb = document.getElementById(`${id}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
+    const expected = qcAnswers[set][idx];
+    const correct = typeof expected === "number" ? LessonCheck.numericMatch(raw, expected, 0.01) : raw.trim().toUpperCase() === expected;
+    LessonCheck.check(id, correct, fb, {
+      correct: "Correct!",
+      retry: "Not quite yet. Review the problem and try again.",
+      reveal: `The correct answer is \\(\\mathbf{${expected}}\\).`
+    }, { label: `3. Timed Review Quiz: ${id}`, answer: raw, section: '3. Timed Review Quiz' });
+  }
+  function checkQCMulti(name, correctSet, count) {
+    const fb = document.getElementById(`qc-${name}-feedback`);
+    const checked = [];
+    for (let i = 0; i < count; i++) checked.push(document.getElementById(`qc-${name}-cb${i}`).checked);
+    if (!checked.some(c => c)) { LessonCheck.incomplete(fb, "Check at least one box before submitting."); return; }
+    const correct = checked.every((c, i) => c === correctSet.includes(i));
+    const answer = checked.map((c, i) => c ? i + 1 : null).filter(x => x).join(', ') || '(none selected)';
+    LessonCheck.check(`qc-${name}`, correct, fb, {
+      correct: "Correct!",
+      retry: "Not quite yet. Review and try again.",
+      reveal: `Correct choices: ${correctSet.map(i => i + 1).join(', ')}.`
+    }, { label: `3. Timed Review Quiz: ${name}`, answer, section: '3. Timed Review Quiz' });
+  }
+  function checkQCSigns() {
+    const a = document.getElementById('qc-c0a').value, b = document.getElementById('qc-c0b').value,
+          c = document.getElementById('qc-c0c').value, d = document.getElementById('qc-c0d').value;
+    const fb = document.getElementById('qc-c0-feedback');
+    if (!a || !b || !c || !d) { LessonCheck.incomplete(fb, "Choose Positive or Negative for all four before checking."); return; }
+    const correct = a === "positive" && b === "negative" && c === "negative" && d === "negative";
+    LessonCheck.check('qc-c0', correct, fb, {
+      correct: "Correct!",
+      retry: "Not quite yet. Review the sign rules and try again.",
+      reveal: "The correct signs are Positive, Negative, Negative, Negative."
+    }, { label: '3. Timed Review Quiz: sign of each product', answer: `${a}, ${b}, ${c}, ${d}`, section: '3. Timed Review Quiz' });
+  }
+  ['a0','a1','a2','b0','b1','b2','b3','c0','c1','c2'].forEach(id => LessonProgress.preRegister(`qc-${id}`, `3. Timed Review Quiz: ${id}`, '3. Timed Review Quiz'));
+
+  // ==========================================
+  // TAB 4: MIXED PRACTICE (submit-only, no reveal - LessonCheck.submit only)
+  // ==========================================
+  const mpProblems = [
+    { q: "Find the opposite of \\(42\\).", a: -42, label: "Opposite of 42" },
+    { q: "Find \\(|-36|\\).", a: 36, label: "|-36|" },
+    { q: "Which is greater: \\(-18\\) or \\(-25\\)? Type just the number.", accepted: ["-18"], label: "Greater: -18 or -25" },
+    { q: "Add: \\(-23 + 9\\)", a: -14, label: "Add: -23 + 9" },
+    { q: "Add: \\(17 + (-29)\\)", a: -12, label: "Add: 17 + (-29)" },
+    { q: "Subtract: \\(-14 - 19\\)", a: -33, label: "Subtract: -14 - 19" },
+    { q: "Subtract: \\(8 - (-13)\\)", a: 21, label: "Subtract: 8 - (-13)" },
+    { q: "Multiply: \\(-9 \\times 6\\)", a: -54, label: "Multiply: -9 x 6" },
+    { q: "Multiply: \\(-11 \\times (-4)\\)", a: 44, label: "Multiply: -11 x (-4)" },
+    { q: "Divide: \\(-81 \\div 9\\)", a: -9, label: "Divide: -81 / 9" },
+    { q: "Divide: \\(-64 \\div (-8)\\)", a: 8, label: "Divide: -64 / (-8)" },
+    { q: "Word Problem: A diver is at \\(-42\\) ft and rises \\(18\\) ft. What is her new depth?", a: -24, label: "Diver's new depth" },
+    { q: "Word Problem: The temperature was \\(-6^\\circ\\text{F}\\) and rose \\(21^\\circ\\text{F}\\). What is the new temperature?", a: 15, label: "New temperature" },
+    { q: "Word Problem: A stock dropped \\$4 each day for 5 days. What is the total change?", a: -20, label: "Stock total change" },
+    { q: "Word Problem: Four friends share a \\$60 restaurant debt equally. What integer represents each friend's share?", a: -15, label: "Shared debt per friend" },
+    { q: "Multi-Step: Evaluate \\(-5 + 3 \\times (-4)\\).", a: -17, label: "Order of operations: -5 + 3x(-4)" },
+    { q: "Multi-Step Word Problem: A submarine at \\(-150\\) m descends \\(40\\) m, then rises \\(90\\) m. What is its final depth?", a: -100, label: "Submarine final depth" }
+  ];
+  function renderMP() {
+    const html = mpProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px;">
+          <input type="text" id="mp-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkMP(${i})">Submit</button>
+        </div>
+        <div id="mp-${i}-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('mp-list').innerHTML = html;
+    mpProblems.forEach((p, i) => LessonProgress.preRegister(`mp-${i}`, `4. Mixed Practice #${i + 1}: ${p.label}`, '4. Mixed Practice'));
+  }
+  renderMP();
+  function checkMP(idx) {
+    const p = mpProblems[idx];
+    const raw = document.getElementById(`mp-${idx}-input`).value;
+    const fb = document.getElementById(`mp-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
+    const correct = p.a !== undefined ? LessonCheck.numericMatch(raw, p.a, 0.01) : (p.accepted || []).includes(String(raw).trim());
+    // submit-only: recorded for the printed report, never revealed on screen.
+    LessonCheck.submit(fb, { key: `mp-${idx}`, label: `4. Mixed Practice #${idx + 1}: ${p.label}`, answer: raw, section: '4. Mixed Practice', correct });
+  }
+</script>
+<div id="print-report"></div>
+</body>
+</html>

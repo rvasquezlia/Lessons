@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Integers - Vocabulary &amp; Literacy</title>
+
+  <!-- Montserrat Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+
+  <style>
+    .glossary-term {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 10px;
+      padding: 14px 20px;
+      margin-bottom: 14px;
+    }
+    .glossary-term .term-name { font-weight: 900; color: var(--primary); font-size: 1.1rem; }
+    .glossary-term .term-def { margin: 6px 0 0 0; }
+    .match-row { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap; }
+    .match-row strong { min-width: 220px; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Integers - Vocabulary &amp; Literacy</span>
+    <h1>Vocabulary &amp; Literacy: Integers, Opposites &amp; Operations</h1>
+  </header>
+
+  <div class="topic-nav-wrap">
+    <a class="topic-nav-back" href="../../index.html">&larr; All Topics</a>
+    <ul class="topic-nav">
+      <li><a class="topic-nav-link current" href="Vocabulary-Literacy.html"><span class="topic-nav-icon">📖</span>Vocabulary &amp; Literacy</a></li>
+      <li><a class="topic-nav-link" href="Explanation.html"><span class="topic-nav-icon">🧮</span>Explanation</a></li>
+      <li><a class="topic-nav-link" href="Practice-Set.html"><span class="topic-nav-icon">✏️</span>Practice Set</a></li>
+      <li><a class="topic-nav-link" href="Word-Problems.html"><span class="topic-nav-icon">📝</span>Word Problems</a></li>
+      <li><a class="topic-nav-link" href="Test-Prep.html"><span class="topic-nav-icon">🎯</span>Test Prep</a></li>
+      <li><a class="topic-nav-link" href="Teacher-Guide.html"><span class="topic-nav-icon">🧑‍🏫</span>Teacher's Guide</a></li>
+    </ul>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Before you can compute with integers, you need the words that describe them. Work through the three tabs in order: number vocabulary, operation vocabulary, then the "clue words" that tell you whether a real-world situation is positive or negative. Copy every glossary box into your notebook. The short checks are just for you - there's no Print My Progress button here, so use them to see what's solid before you move on to <strong>Explanation</strong>.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('numvocab')">1. Number Vocabulary</button>
+    <button class="tab-btn" onclick="switchTab('opvocab')">2. Operation Vocabulary</button>
+    <button class="tab-btn" onclick="switchTab('cluewords')">3. Word-Problem Clue Words</button>
+  </nav>
+
+  <!-- TAB 1: NUMBER VOCABULARY -->
+  <div id="numvocab" class="panel active">
+    <div class="section-title">Number Vocabulary: Integers, Opposites &amp; Absolute Value</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read and copy each term into your notebook. Then try the 3 quick checks at the bottom - you get 2 tries per question before the answer is shown.
+    </div>
+
+    <div class="glossary-term">
+      <div class="term-name">Whole Numbers</div>
+      <p class="term-def">The numbers used for counting, starting from zero: \(0, 1, 2, 3, \ldots\). They don't include fractions, decimals, or negatives.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Integers</div>
+      <p class="term-def">All the whole numbers, their negative counterparts, and zero: \(\ldots, -3, -2, -1, 0, 1, 2, 3, \ldots\). Every whole number is an integer, but not every integer is a whole number.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Positive Numbers</div>
+      <p class="term-def">Any number greater than zero - to the right of zero on a number line.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Negative Numbers</div>
+      <p class="term-def">Any number less than zero - to the left of zero on a number line.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Opposite Integers (Additive Inverse)</div>
+      <p class="term-def">Two numbers the same distance from zero but in opposite directions. \(5\) and \(-5\) are opposites. The opposite of \(0\) is \(0\). "Additive inverse" is another name for the same idea - you'll see it again in the subtraction rule.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Absolute Value \(|x|\)</div>
+      <p class="term-def">A number's distance from zero, always non-negative. \(|5| = 5\) and \(|-5| = 5\) - direction doesn't matter, only distance.</p>
+    </div>
+
+    <div class="explainer-box">
+      <strong>Visualizing Opposites: \(-4\) and \(4\)</strong> - both are exactly 4 units from zero, just in opposite directions.
+      <div id="opposites-numberline" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Quick Check</div>
+      <p style="margin:0;">Use the vocabulary above to answer these three questions.</p>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>1.</strong> What is the opposite of \(-8\)?
+      <div style="margin-top:10px;">
+        <input type="text" id="nv-0-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkNumVocab(0)">Check</button>
+      </div>
+      <div id="nv-0-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>2.</strong> Find \(|-12|\).
+      <div style="margin-top:10px;">
+        <input type="text" id="nv-1-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkNumVocab(1)">Check</button>
+      </div>
+      <div id="nv-1-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>3.</strong> Which integer is greater: \(-3\) or \(-7\)? Type just the number.
+      <div style="margin-top:10px;">
+        <input type="text" id="nv-2-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkNumVocab(2)">Check</button>
+      </div>
+      <div id="nv-2-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: OPERATION VOCABULARY -->
+  <div id="opvocab" class="panel">
+    <div class="section-title">Operation Vocabulary: Naming the Parts and the Strategies</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      These are the words your teacher and your textbook use for the parts of each operation, plus the names of the two big strategies you'll use all topic long. Copy them into your notebook, then try the matching check.
+    </div>
+
+    <div class="glossary-term">
+      <div class="term-name">Addend &amp; Sum</div>
+      <p class="term-def">An <strong>addend</strong> is a number being added. The <strong>sum</strong> is the result of addition. In \(-6 + 5 = -1\), \(-6\) and \(5\) are addends and \(-1\) is the sum.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Difference</div>
+      <p class="term-def">The result of subtraction. In \(8 - 15 = -7\), \(-7\) is the difference.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Factor &amp; Product</div>
+      <p class="term-def">A <strong>factor</strong> is a number being multiplied. The <strong>product</strong> is the result of multiplication. In \(-4 \times 5 = -20\), \(-4\) and \(5\) are factors and \(-20\) is the product.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Quotient</div>
+      <p class="term-def">The result of division. In \(-20 \div 4 = -5\), \(-5\) is the quotient.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Same Signs / Different Signs</div>
+      <p class="term-def">Shorthand for whether two numbers are both positive, both negative (<strong>same signs</strong>), or one of each (<strong>different signs</strong>) - the very first thing you check before adding, subtracting, multiplying, or dividing integers.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Keep-Change-Change</div>
+      <p class="term-def">The name of the strategy for subtracting integers: <strong>keep</strong> the first number, <strong>change</strong> subtraction to addition, <strong>change</strong> the sign of the second number. It rewrites every subtraction as an addition problem you already know how to solve.</p>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Match the Term to Its Job</h3>
+      <p>For each operation, choose the word that names its <em>result</em>.</p>
+      <div class="match-row"><strong>Addition &rarr; result is the...</strong>
+        <select id="ov-0" class="form-control-lg" style="max-width:200px;"><option value="">Choose...</option><option value="Sum">Sum</option><option value="Difference">Difference</option><option value="Product">Product</option><option value="Quotient">Quotient</option></select>
+      </div>
+      <div class="match-row"><strong>Subtraction &rarr; result is the...</strong>
+        <select id="ov-1" class="form-control-lg" style="max-width:200px;"><option value="">Choose...</option><option value="Sum">Sum</option><option value="Difference">Difference</option><option value="Product">Product</option><option value="Quotient">Quotient</option></select>
+      </div>
+      <div class="match-row"><strong>Multiplication &rarr; result is the...</strong>
+        <select id="ov-2" class="form-control-lg" style="max-width:200px;"><option value="">Choose...</option><option value="Sum">Sum</option><option value="Difference">Difference</option><option value="Product">Product</option><option value="Quotient">Quotient</option></select>
+      </div>
+      <div class="match-row"><strong>Division &rarr; result is the...</strong>
+        <select id="ov-3" class="form-control-lg" style="max-width:200px;"><option value="">Choose...</option><option value="Sum">Sum</option><option value="Difference">Difference</option><option value="Product">Product</option><option value="Quotient">Quotient</option></select>
+      </div>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkOpVocab()">Check My Matches</button>
+      <div id="ov-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: WORD-PROBLEM CLUE WORDS -->
+  <div id="cluewords" class="panel">
+    <div class="section-title">Integer Literacy: Reading Word Problems</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Certain words act as "clues" telling you whether a number is positive or negative, and whether a situation calls for multiplication or division. Sort the words below, then practice translating phrases into signed integers. You'll use this skill on every page in <strong>Word Problems</strong>.
+    </div>
+
+    <div class="explainer-box">
+      <strong>Positive Integers (+):</strong> represent gains, increases, or positions above a reference point (like sea level or zero).<br>
+      <strong>Negative Integers (-):</strong> represent losses, decreases, or positions below a reference point.
+    </div>
+
+    <h3>Part 1: Categorizing Clue Words</h3>
+    <p>Sort each word by whether it represents a positive or negative change.</p>
+    <div id="cluewords-list"></div>
+    <div style="text-align:center; margin-top:14px;">
+      <button class="btn-lg" onclick="checkClueWords()">Check My Sorting</button>
+    </div>
+    <div id="cluewords-feedback" class="feedback-msg" style="margin-top:14px;"></div>
+
+    <h3 style="margin-top:28px;">Part 2: Multiplication and Division Clue Words</h3>
+    <p>Sort each clue word by the operation it most often represents.</p>
+    <div id="opmatch-list"></div>
+    <div style="text-align:center; margin-top:14px;">
+      <button class="btn-lg" onclick="checkOpMatch()">Check My Matches</button>
+    </div>
+    <div id="opmatch-feedback" class="feedback-msg" style="margin-top:14px;"></div>
+
+    <h3 style="margin-top:28px;">Part 3: Translating Phrases Into Integers</h3>
+    <p>Write the integer (positive or negative) that represents each phrase.</p>
+    <div id="translate-list"></div>
+
+    <h3 style="margin-top:28px;">Part 4: Real-World Entries (Write the Integer)</h3>
+    <p>Same skill, longer list - read each entry and write the signed integer it represents. This is quiz-style: submit once.</p>
+    <div id="realworld-list"></div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Critical Thinking</h3>
+      <p>Explain why the number zero is important when we talk about integers like "elevation" or "bank accounts." What does zero represent in those specific contexts?</p>
+      <textarea id="vocab-critical" class="form-control-lg" rows="3" placeholder="Explain what zero represents..."></textarea>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkVocabCritical()">Submit My Work</button>
+      <div id="vocab-critical-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // TAB 1: NUMBER VOCABULARY
+  // ==========================================
+  renderNumberLine('opposites-numberline', {
+    min: -6, max: 6, step: 1,
+    points: [{ value: -4, label: '-4', color: '#1e3a8a' }, { value: 4, label: '4', color: '#1e3a8a' }],
+    arrows: [{ from: 0, to: -4, label: '4 units', color: '#d97706', row: 0 }, { from: 0, to: 4, label: '4 units', color: '#d97706', row: 0 }]
+  });
+
+  const numVocabProblems = [
+    { q: "Opposite of -8", type: "number", a: 8, tol: 0.001 },
+    { q: "|-12|", type: "number", a: 12, tol: 0.001 },
+    { q: "Greater: -3 or -7", type: "text", a: "-3" }
+  ];
+
+  function checkNumVocab(idx) {
+    const p = numVocabProblems[idx];
+    const raw = document.getElementById(`nv-${idx}-input`).value;
+    const fb = document.getElementById(`nv-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet."); return; }
+    const correct = p.type === "number" ? LessonCheck.numericMatch(raw, p.a, p.tol) : raw.trim() === p.a;
+    LessonCheck.check(`nv-${idx}`, correct, fb, {
+      correct: `Correct! Answer: <strong>${p.a}</strong>`,
+      retry: "Not quite yet. Picture the number on a number line and try again.",
+      reveal: `Here's the correct answer: <strong>${p.a}</strong>`
+    });
+  }
+
+  // ==========================================
+  // TAB 2: OPERATION VOCABULARY MATCH
+  // ==========================================
+  function checkOpVocab() {
+    const vals = ['ov-0', 'ov-1', 'ov-2', 'ov-3'].map(id => document.getElementById(id).value);
+    const fb = document.getElementById('ov-feedback');
+    if (vals.some(v => !v)) { LessonCheck.incomplete(fb, "Choose a word for all four operations before checking."); return; }
+    const expected = ['Sum', 'Difference', 'Product', 'Quotient'];
+    const correct = vals.every((v, i) => v === expected[i]);
+    LessonCheck.check('ov-match', correct, fb, {
+      correct: "Correct! Addition -> Sum, Subtraction -> Difference, Multiplication -> Product, Division -> Quotient.",
+      retry: "Some of these aren't matched yet. Review the glossary boxes above and try again.",
+      reveal: "Addition -> Sum, Subtraction -> Difference, Multiplication -> Product, Division -> Quotient."
+    });
+  }
+
+  // ==========================================
+  // TAB 3: CLUE WORDS (reused pattern)
+  // ==========================================
+  const clueWords = [
+    { word: "Deposit", sign: "pos" }, { word: "Credit", sign: "pos" }, { word: "Ascend", sign: "pos" }, { word: "Above Sea Level", sign: "pos" }, { word: "Gain", sign: "pos" }, { word: "Rise", sign: "pos" },
+    { word: "Below Sea Level", sign: "neg" }, { word: "Debt", sign: "neg" }, { word: "Withdraw", sign: "neg" }, { word: "Loss", sign: "neg" }, { word: "Debit", sign: "neg" }, { word: "Descend", sign: "neg" }
+  ];
+
+  function renderClueWords() {
+    const html = clueWords.map((item, i) => `
+      <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap;">
+        <strong style="min-width:200px;">${i + 1}. "${item.word}"</strong>
+        <select id="cw-${i}" class="form-control-lg" style="max-width:200px;">
+          <option value="">Select...</option>
+          <option value="pos">Positive (+)</option>
+          <option value="neg">Negative (-)</option>
+        </select>
+      </div>
+    `).join('');
+    document.getElementById('cluewords-list').innerHTML = html;
+  }
+  renderClueWords();
+
+  function checkClueWords() {
+    const fb = document.getElementById('cluewords-feedback');
+    let allFilled = true, allCorrect = true;
+    clueWords.forEach((item, i) => {
+      const val = document.getElementById(`cw-${i}`).value;
+      if (!val) allFilled = false;
+      else if (val !== item.sign) allCorrect = false;
+    });
+    if (!allFilled) { LessonCheck.incomplete(fb, "Choose positive or negative for every word before checking."); return; }
+    LessonCheck.check('cluewords', allCorrect, fb, {
+      correct: 'Correct! Every word is sorted correctly.',
+      retry: 'Some words are sorted incorrectly. Review: Positive = Deposit, Credit, Ascend, Above Sea Level, Gain, Rise. Negative = Below Sea Level, Debt, Withdraw, Loss, Debit, Descend.',
+      reveal: 'Correct sorting: Positive (+) = Deposit, Credit, Ascend, Above Sea Level, Gain, Rise. Negative (-) = Below Sea Level, Debt, Withdraw, Loss, Debit, Descend.'
+    });
+  }
+
+  const opMatchWords = [
+    { word: "shared equally", op: "div" }, { word: "every", op: "mult" }, { word: "average", op: "div" }, { word: "rate", op: "mult" }, { word: "split", op: "div" }, { word: "each", op: "mult" }
+  ];
+
+  function renderOpMatch() {
+    const html = opMatchWords.map((item, i) => `
+      <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap;">
+        <strong style="min-width:200px;">${i + 1}. "${item.word}"</strong>
+        <select id="om-${i}" class="form-control-lg" style="max-width:220px;">
+          <option value="">Select...</option>
+          <option value="mult">Multiplication (&times;)</option>
+          <option value="div">Division (&divide;)</option>
+        </select>
+      </div>
+    `).join('');
+    document.getElementById('opmatch-list').innerHTML = html;
+  }
+  renderOpMatch();
+
+  function checkOpMatch() {
+    const fb = document.getElementById('opmatch-feedback');
+    let allFilled = true, allCorrect = true;
+    opMatchWords.forEach((item, i) => {
+      const val = document.getElementById(`om-${i}`).value;
+      if (!val) allFilled = false;
+      else if (val !== item.op) allCorrect = false;
+    });
+    if (!allFilled) { LessonCheck.incomplete(fb, "Choose an operation for every word before checking."); return; }
+    LessonCheck.check('opmatch', allCorrect, fb, {
+      correct: 'Correct! Every clue word matches the right operation.',
+      retry: "Some matches aren't right yet. 'each', 'every', 'rate' point to multiplication; 'shared equally', 'average', 'split' point to division.",
+      reveal: "Correct matches: Multiplication = every, rate, each. Division = shared equally, average, split."
+    });
+  }
+
+  // Reusable single-field list renderer (check mode, no printed report on this page)
+  function renderSimpleList(containerId, problems, keyPrefix) {
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkTranslate('${keyPrefix}', ${i})">Check</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+  }
+
+  const translateProblems = [
+    { q: "A debt of \\$25", a: -25 },
+    { q: "An airplane climbs 3,000 feet", a: 3000 },
+    { q: "A submarine descends 150 meters", a: -150 },
+    { q: "A football team loses 8 yards", a: -8 },
+    { q: "A player earns 500 bonus points", a: 500 }
+  ];
+  renderSimpleList('translate-list', translateProblems, 'tr');
+
+  function checkTranslate(keyPrefix, idx) {
+    const p = translateProblems[idx];
+    const raw = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
+    const correct = LessonCheck.numericMatch(raw, p.a, 0.01);
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! Answer: <strong>${p.a}</strong>`,
+      retry: "Not quite yet. Which clue word tells you the sign? Try again.",
+      reveal: `Here's the correct answer: <strong>${p.a}</strong>`
+    });
+  }
+
+  const realworldProblems = [
+    { q: "During a winter storm in Chicago, the afternoon temperature was 15°F. By midnight it had dropped 22 degrees. Write the integer for the temperature change.", a: -22 },
+    { q: "Sarah's bank statement shows an ATM Withdrawal of $45. Write the integer for this transaction.", a: -45 },
+    { q: "A research submarine is exploring a trench 1,200 feet below sea level. Write the integer for its position.", a: -1200 },
+    { q: "The quarterback was tackled behind the line of scrimmage for a loss of 8 yards. Write the integer for this play.", a: -8 },
+    { q: "A boutique's monthly report showed a total gain of $1,500 in sales. Write the integer for this gain.", a: 1500 },
+    { q: "Hikers reached a peak 850 feet above their starting point. Write the integer for this elevation change.", a: 850 }
+  ];
+
+  function renderRealworld() {
+    const html = realworldProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="rw-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkRealworld(${i})">Submit</button>
+        <div id="rw-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('realworld-list').innerHTML = html;
+  }
+  renderRealworld();
+
+  function checkRealworld(idx) {
+    const p = realworldProblems[idx];
+    const raw = document.getElementById(`rw-${idx}-input`).value;
+    const fb = document.getElementById(`rw-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
+    LessonCheck.submit(fb, { key: `rw-${idx}`, label: `Real-World Entry #${idx + 1}`, answer: raw, correct: LessonCheck.numericMatch(raw, p.a, 0.01) });
+  }
+
+  function checkVocabCritical() {
+    const explain = document.getElementById('vocab-critical').value.trim();
+    const fb = document.getElementById('vocab-critical-feedback');
+    if (explain.length <= 5) { LessonCheck.incomplete(fb, "Write your explanation before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'vocab-critical', label: 'Critical Thinking: why is zero important for elevation/bank accounts?', answer: explain });
+  }
+</script>
+</body>
+</html>

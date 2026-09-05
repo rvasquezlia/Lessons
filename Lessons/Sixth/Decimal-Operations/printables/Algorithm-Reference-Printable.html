@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decimal Operations Algorithm Reference - Printable</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../../printable-shared.css">
+</head>
+<body class="practice-print">
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Decimal Operations &middot; Explanation</span>
+    <h1>Algorithm Reference</h1>
+  </header>
+
+  <div class="content">
+    <div class="howto-box no-print">
+      <strong class="howto-label">For the teacher</strong>
+      The two rule boxes from the Explanation page, as a quick-reference card. Good for a standing desk reference during Practice Set and Word Problems.
+    </div>
+    <button class="btn-print no-print" onclick="window.print()">Print This Page</button>
+    <p class="print-tip no-print">Tip: in the print dialog, set Margins to "Default" and turn off "Headers and footers" for the cleanest printout.</p>
+
+    <div class="section-title">Rule #1: Addition &amp; Subtraction</div>
+    <p class="group-context">Line up the decimal points.</p>
+    <div class="problem-item">
+      <p style="margin:0;">1. Line up the decimal points vertically. Tenths stay under tenths, hundredths under hundredths.<br>
+      2. Pad empty places with trailing zeros so every number has the same number of decimal places (write 3.5 as 3.50).<br>
+      3. Regroup when carrying: if a column's sum is \(\ge 10\), write the ones digit in that column and carry 1 to the next column on the left.<br>
+      4. Regroup when borrowing: strike through the digit you're borrowing from and write its new value above it.<br>
+      5. Bring the decimal point straight down into your final answer.</p>
+    </div>
+
+    <div class="section-title">Rule #2: Multiplication</div>
+    <p class="group-context">Multiply as whole numbers, then place the decimal point last.</p>
+    <div class="problem-item">
+      <p style="margin:0;">1. Set up the factors as whole numbers, ignoring the decimal points for now.<br>
+      2. First partial product: multiply the top factor by the ones digit (\(245 \times 2 = 490\)).<br>
+      3. Second partial product: multiply the top factor by the tens digit (\(245 \times 30 = 7350\)). Give the "+" sign its own cell.<br>
+      4. Add the partial products as whole numbers (\(490 + 7350 = 7840\)).<br>
+      5. Place the decimal point: count the total decimal places in both original factors, then shift the decimal that many places to the left in your final product (\(7840 \rightarrow 7.840\)).</p>
+    </div>
+
+    <div class="section-title">The Rounding Rule</div>
+    <div class="problem-item">
+      <p style="margin:0;">1. Identify your target place value position.<br>
+      2. Look at the digit directly to its right.<br>
+      3. If that digit is 5 or greater, round up (add 1 to the target digit). If it's 4 or less, keep the target digit the same.<br>
+      <em>Example:</em> Round 14.86 to the nearest tenth. Look at the hundredths digit (6). Since \(6 \ge 5\), \(14.86 \rightarrow 14.9\).</p>
+    </div>
+
+    <div class="section-title">Estimate-Then-Exact Routine</div>
+    <div class="problem-item">
+      <p style="margin:0;">Every word problem: (1) round to <strong>estimate</strong> first, (2) calculate the <strong>exact</strong> answer, (3) compare them - if your exact answer isn't close to your estimate, check your decimal placement.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

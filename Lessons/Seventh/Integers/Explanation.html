@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Integers - Explanation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Integers - Explanation</span>
+    <h1>Explanation: Relating Integers and Operating With Them</h1>
+  </header>
+
+  <div class="topic-nav-wrap">
+    <a class="topic-nav-back" href="../../index.html">&larr; All Topics</a>
+    <ul class="topic-nav">
+      <li><a class="topic-nav-link" href="Vocabulary-Literacy.html"><span class="topic-nav-icon">📖</span>Vocabulary &amp; Literacy</a></li>
+      <li><a class="topic-nav-link current" href="Explanation.html"><span class="topic-nav-icon">🧮</span>Explanation</a></li>
+      <li><a class="topic-nav-link" href="Practice-Set.html"><span class="topic-nav-icon">✏️</span>Practice Set</a></li>
+      <li><a class="topic-nav-link" href="Word-Problems.html"><span class="topic-nav-icon">📝</span>Word Problems</a></li>
+      <li><a class="topic-nav-link" href="Test-Prep.html"><span class="topic-nav-icon">🎯</span>Test Prep</a></li>
+      <li><a class="topic-nav-link" href="Teacher-Guide.html"><span class="topic-nav-icon">🧑‍🏫</span>Teacher's Guide</a></li>
+    </ul>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Every rule you need for this topic is here, broken into steps with fully worked examples. Work through the 4 tabs in order. For each carousel, read the example, then click <strong>Next Step</strong> to reveal the solution one step at a time - don't skip ahead in your head, watch each step land before predicting the next. Copy every notebook box into your math notebook. When you're ready to solve problems yourself, move on to <strong>Practice Set</strong>. <strong>Calculators are not allowed this quarter.</strong>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('opposites')">1. Opposites &amp; Absolute Value</button>
+    <button class="tab-btn" onclick="switchTab('addition')">2. Add Integers</button>
+    <button class="tab-btn" onclick="switchTab('subtraction')">3. Subtract Integers</button>
+    <button class="tab-btn" onclick="switchTab('muldiv')">4. Multiply &amp; Divide Integers</button>
+  </nav>
+
+  <!-- TAB 1: OPPOSITES & ABSOLUTE VALUE -->
+  <div id="opposites" class="panel active">
+    <div class="section-title">Relating Integers to Their Opposites; Absolute Value</div>
+    <div class="explainer-box">
+      Every integer has an <strong>opposite</strong> the same distance from \(0\) but on the other side of the number line. The <strong>absolute value</strong> of a number is that distance - always \(0\) or positive, never negative. To compare two integers, the one farther to the <em>right</em> on the number line is always greater, even if it "looks smaller" without its sign.
+    </div>
+
+    <div class="number-line-wrap" style="overflow-x:auto; margin: 16px 0;">
+      <div style="display:flex; width:max-content; border:2px solid var(--border); border-radius:8px; overflow:hidden; margin:0 auto;">
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; background:#fef3c7; color:#b45309; border-right:1px solid #e2e8f0;">-10</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; border-right:1px solid #e2e8f0;">-9</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; border-right:1px solid #e2e8f0;">-8</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; border-right:1px solid #e2e8f0;">-7</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; border-right:1px solid #e2e8f0;">-5</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:800; background:var(--accent); color:#fff; border-right:1px solid #e2e8f0;">-6</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; border-right:1px solid #e2e8f0;">-4</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; border-right:1px solid #e2e8f0;">-3</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; border-right:1px solid #e2e8f0;">-2</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; border-right:1px solid #e2e8f0;">-1</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:800; background:var(--primary); color:#fff; border-right:1px solid #e2e8f0;">0</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; border-right:1px solid #e2e8f0;">1</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; border-right:1px solid #e2e8f0;">2</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; border-right:1px solid #e2e8f0;">3</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; border-right:1px solid #e2e8f0;">4</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; border-right:1px solid #e2e8f0;">5</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:800; background:var(--accent); color:#fff; border-right:1px solid #e2e8f0;">6</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; border-right:1px solid #e2e8f0;">7</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; border-right:1px solid #e2e8f0;">8</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; border-right:1px solid #e2e8f0;">9</div>
+        <div style="width:34px; text-align:center; padding:8px 0; font-weight:700;">10</div>
+      </div>
+      <p style="text-align:center; color:#64748b; font-size:0.85rem; margin:6px 0 0 0;">\(-6\) and \(6\) are <strong>opposites</strong>: both \(6\) steps from \(0\), on opposite sides. \(0\) is its own opposite.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>To find an opposite:</strong> flip the sign. The opposite of a positive number is negative, and the opposite of a negative number is positive.</li>
+        <li><strong>To find an absolute value:</strong> drop the sign - the answer is always \(0\) or positive, because it measures distance, not direction.</li>
+        <li><strong>To compare two integers:</strong> picture them on a number line. Whichever is farther right is greater, regardless of which has the bigger absolute value.</li>
+      </ul>
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="opp-prev-btn" onclick="changeOpp(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="opp-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="opp-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="opp-next-btn" onclick="changeOpp(1)">Next &rarr;</button>
+      </div>
+      <div id="opp-content" style="min-height: 160px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextOppStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetOppStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: ADD INTEGERS -->
+  <div id="addition" class="panel">
+    <div class="section-title">Adding Integers</div>
+    <div class="explainer-box">
+      <strong>Same signs:</strong> add the absolute values, keep the common sign. <strong>Different signs:</strong> subtract the smaller absolute value from the larger, and keep the sign of the number with the larger absolute value.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">1. Addition Rules - COPY INTO NOTEBOOK</div>
+      <ul>
+        <li><strong>Same Signs:</strong> Add the absolute values and keep the common sign. \(5+3=8\) &nbsp;&nbsp; \(-5+(-3)=-8\)</li>
+        <li><strong>Different Signs:</strong> Subtract the smaller absolute value from the larger. Keep the sign of the number with the larger absolute value. \(-7+4=-3\) (subtract \(7-4=3\); keep negative because \(|-7|>|4|\)). \(10+(-2)=8\) (subtract \(10-2=8\); keep positive because \(|10|>|-2|\)).</li>
+      </ul>
+    </div>
+
+    <div class="explainer-box">
+      <strong>Visualizing Addition: \(-3 + 5 = 2\)</strong> - starting at 0, move left 3 units, then right 5 units to land at 2.
+      <div id="addition-numberline" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="add-prev-btn" onclick="changeAdd(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="add-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="add-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="add-next-btn" onclick="changeAdd(1)">Next &rarr;</button>
+      </div>
+      <div id="add-content" style="min-height: 160px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextAddStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetAddStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: SUBTRACT INTEGERS -->
+  <div id="subtraction" class="panel">
+    <div class="section-title">Subtracting Integers</div>
+    <div class="explainer-box">
+      <strong>Subtracting is adding the opposite:</strong> \(a - b = a + (-b)\). Rewrite the subtraction as addition of the opposite, then use the addition rules above.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">2. Subtraction Rule: "Keep-Change-Change" - COPY INTO NOTEBOOK</div>
+      <p style="margin:0 0 10px 0;">To subtract an integer, add its opposite. Follow these three steps to rewrite the problem as addition:</p>
+      <ol>
+        <li>Keep the first number exactly as it is.</li>
+        <li>Change the subtraction sign to an addition sign.</li>
+        <li>Change the sign of the second number to its opposite.</li>
+      </ol>
+      <p style="margin:10px 0 0 0;"><em>Example:</em> \(4 - (-3)\): Keep the 4, Change \(-\) to \(+\), Change \(-3\) to \(3\) &rarr; \(4 + 3 = \mathbf{7}\).</p>
+      <p style="margin:6px 0 0 0;"><em>Example:</em> \(-2 - 5\): Keep \(-2\), Change \(-\) to \(+\), Change \(5\) to \(-5\) &rarr; \(-2 + (-5) = \mathbf{-7}\).</p>
+    </div>
+
+    <div class="explainer-box">
+      <strong>Reading a Subtraction on the Number Line: \(-4 - 9 = -13\)</strong> - the arrow starts at \(-4\) and moves 9 units further left (in the negative direction).
+      <div id="subtraction-numberline" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="sub-prev-btn" onclick="changeSub(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="sub-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="sub-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="sub-next-btn" onclick="changeSub(1)">Next &rarr;</button>
+      </div>
+      <div id="sub-content" style="min-height: 160px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextSubStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetSubStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: MULTIPLY & DIVIDE INTEGERS -->
+  <div id="muldiv" class="panel">
+    <div class="section-title">Multiplying and Dividing Integers</div>
+    <div class="explainer-box">
+      <strong>Same signs &rarr; positive.</strong> <strong>Different signs &rarr; negative.</strong> This rule holds for both multiplication and division - division "undoes" multiplication, so the sign rule is identical.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">3. Multiplication &amp; Division Sign Laws - COPY INTO NOTEBOOK</div>
+      <ul>
+        <li><strong>Same Signs = Positive:</strong> \((+)\times(+)=(+)\), \((-)\times(-)=(+)\). Examples: \(6\times2=12\), \(-4\times(-3)=12\), \(-20\div(-5)=4\).</li>
+        <li><strong>Different Signs = Negative:</strong> \((+)\times(-)=(-)\), \((-)\times(+)=(-)\). Examples: \(8\times(-2)=-16\), \(-9\times3=-27\), \(15\div(-3)=-5\).</li>
+      </ul>
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="md-prev-btn" onclick="changeMd(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="md-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="md-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="md-next-btn" onclick="changeMd(1)">Next &rarr;</button>
+      </div>
+      <div id="md-content" style="min-height: 160px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextMdStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetMdStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // Generic carousel factory - each tab gets its own instance so state doesn't collide.
+  function makeCarousel(prefix, examples) {
+    let current = 0, step = 1;
+    function render() {
+      const ex = examples[current];
+      document.getElementById(`${prefix}-title`).innerText = `Example ${current + 1} of ${examples.length}`;
+      document.getElementById(`${prefix}-dots`).innerHTML = examples.map((_, i) =>
+        `<div class="dot ${i === current ? 'active' : ''}" onclick="${prefix}Jump(${i})"></div>`
+      ).join('');
+      let stepsHtml = '';
+      for (let i = 0; i < step; i++) stepsHtml += `<div class="step-item visible">${ex.steps[i]}</div>`;
+      document.getElementById(`${prefix}-content`).innerHTML = `<h3 style="color:var(--primary); margin-top:0;">${ex.title}</h3>${stepsHtml}`;
+      document.getElementById(`${prefix}-prev-btn`).disabled = current === 0;
+      document.getElementById(`${prefix}-next-btn`).disabled = current === examples.length - 1;
+      triggerMathJax();
+    }
+    function change(dir) { current = Math.max(0, Math.min(examples.length - 1, current + dir)); step = 1; render(); }
+    function jump(idx) { current = idx; step = 1; render(); }
+    function nextStep() { if (step < examples[current].maxSteps) { step++; render(); } }
+    function resetStep() { step = 1; render(); }
+    function showAt(i, includeAnswers) { current = i; step = examples[i].maxSteps; render(); }
+    window[`change${cap(prefix)}`] = change;
+    window[`${prefix}Jump`] = jump;
+    window[`next${cap(prefix)}Step`] = nextStep;
+    window[`reset${cap(prefix)}Step`] = resetStep;
+    render();
+    if (window.TeacherPrint) TeacherPrint.registerCarousel(`${prefix}-content`, examples.length, showAt);
+  }
+  function cap(s) { return s === 'md' ? 'Md' : s.charAt(0).toUpperCase() + s.slice(1); }
+
+  // ==========================================
+  // TAB 1: OPPOSITES & ABSOLUTE VALUE
+  // ==========================================
+  const oppExamples = [
+    {
+      title: "Example 1 - Find the opposite of \\(-15\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Locate \\(-15\\) on the number line:</strong> it is 15 units to the left of 0.",
+        "<strong>Step 2 - Flip the sign to land the same distance on the other side:</strong> the opposite of \\(-15\\) is \\(\\mathbf{15}\\)."
+      ]
+    },
+    {
+      title: "Example 2 - Find \\(|7|\\) and \\(|-7|\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Measure the distance from 0, ignoring direction:</strong> \\(7\\) is 7 units from 0, and \\(-7\\) is also 7 units from 0.",
+        "<strong>Step 2 - Absolute value is always non-negative:</strong> \\(|7| = \\mathbf{7}\\) and \\(|-7| = \\mathbf{7}\\) - same distance, same absolute value."
+      ]
+    },
+    {
+      title: "Example 3 - Compare \\(-9\\) and \\(4\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Ignore which one \"looks bigger\" by absolute value:</strong> \\(|-9|=9\\) is bigger than \\(|4|=4\\), but that doesn't decide which integer is greater.",
+        "<strong>Step 2 - Picture the number line - farther right wins:</strong> \\(4\\) is to the right of \\(-9\\), so \\(4 > -9\\), even though \\(-9\\) has the larger absolute value."
+      ]
+    }
+  ];
+  makeCarousel('opp', oppExamples);
+
+  // ==========================================
+  // TAB 2: ADD INTEGERS
+  // ==========================================
+  renderNumberLine('addition-numberline', {
+    min: -10, max: 10, step: 1,
+    points: [{ value: 2, label: '2', color: '#1e3a8a' }],
+    arrows: [{ from: 0, to: -3, label: '-3', color: '#dc2626', row: 0 }, { from: -3, to: 2, label: '+5', color: '#15803d', row: 1 }]
+  });
+
+  const addExamples = [
+    {
+      title: "Example 1 (same signs): \\(-8 + (-5)\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Same signs, so add the absolute values:</strong> \\(8 + 5 = 13\\)",
+        "<strong>Step 2 - Keep the common (negative) sign:</strong> \\(-8 + (-5) = \\mathbf{-13}\\)"
+      ]
+    },
+    {
+      title: "Example 2 (different signs): \\(-12 + 7\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Different signs, so subtract the smaller absolute value from the larger:</strong> \\(|{-12}| = 12\\), \\(|7| = 7\\), \\(12 - 7 = 5\\)",
+        "<strong>Step 2 - Keep the sign of the number with the larger absolute value (\\(-12\\)):</strong> \\(-12 + 7 = \\mathbf{-5}\\)"
+      ]
+    },
+    {
+      title: "Example 3 (bank balance): \\(-45 + 120\\)",
+      maxSteps: 2,
+      steps: [
+        "A checking account is overdrawn by \\(\\$45\\) (balance \\(-45\\)). A deposit of \\(\\$120\\) is made.",
+        "<strong>Different signs:</strong> \\(120 - 45 = 75\\); keep the positive sign (\\(120\\) has the larger absolute value). New balance: \\(-45 + 120 = \\mathbf{\\$75}\\)"
+      ]
+    }
+  ];
+  makeCarousel('add', addExamples);
+
+  // ==========================================
+  // TAB 3: SUBTRACT INTEGERS
+  // ==========================================
+  renderNumberLine('subtraction-numberline', {
+    min: -15, max: -1, step: 2,
+    arrows: [{ from: -4, to: -13, color: '#d97706', row: 0 }]
+  });
+
+  const subExamples = [
+    {
+      title: "Example 1: \\(8 - 15\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Rewrite as adding the opposite:</strong> \\(8 - 15 = 8 + (-15)\\)",
+        "<strong>Step 2 - Add using the rule for different signs:</strong> \\(8 + (-15) = \\mathbf{-7}\\)"
+      ]
+    },
+    {
+      title: "Example 2: \\(-6 - (-10)\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Rewrite as adding the opposite of \\(-10\\), which is \\(10\\):</strong> \\(-6 - (-10) = -6 + 10\\)",
+        "<strong>Step 2 - Add using the rule for different signs:</strong> \\(-6 + 10 = \\mathbf{4}\\)"
+      ]
+    },
+    {
+      title: "Example 3 (elevation): \\(5895 - (-155)\\)",
+      maxSteps: 2,
+      steps: [
+        "A mountain peak is at \\(5{,}895\\) m elevation. A valley floor is at \\(-155\\) m (below sea level). Find the difference in elevation: \\(5895 - (-155)\\)",
+        "<strong>Rewrite as adding the opposite:</strong> \\(5895 - (-155) = 5895 + 155 = \\mathbf{6{,}050 \\text{ m}}\\)"
+      ]
+    }
+  ];
+  makeCarousel('sub', subExamples);
+
+  // ==========================================
+  // TAB 4: MULTIPLY & DIVIDE INTEGERS
+  // ==========================================
+  const mdExamples = [
+    {
+      title: "Example 1 (different signs): \\(-6 \\times 7\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Multiply the absolute values:</strong> \\(6 \\times 7 = 42\\)",
+        "<strong>Step 2 - Different signs, so the product is negative:</strong> \\(-6 \\times 7 = \\mathbf{-42}\\)"
+      ]
+    },
+    {
+      title: "Example 2 (same signs): \\(-8 \\times (-5)\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Multiply the absolute values:</strong> \\(8 \\times 5 = 40\\)",
+        "<strong>Step 2 - Same signs, so the product is positive:</strong> \\(-8 \\times (-5) = \\mathbf{40}\\)"
+      ]
+    },
+    {
+      title: "Example 3 (division): \\(-45 \\div (-9)\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Divide the absolute values:</strong> \\(45 \\div 9 = 5\\)",
+        "<strong>Step 2 - Same signs, so the quotient is positive:</strong> \\(-45 \\div (-9) = \\mathbf{5}\\)"
+      ]
+    }
+  ];
+  makeCarousel('md', mdExamples);
+</script>
+</body>
+</html>

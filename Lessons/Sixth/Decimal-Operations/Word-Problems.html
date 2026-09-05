@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Decimal Operations - Word Problems</title>
+
+  <!-- Montserrat Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <style>
+    .set-heading {
+      font-weight: 800;
+      color: white;
+      background: var(--primary-light);
+      padding: 8px 16px;
+      border-radius: 8px;
+      margin: 24px 0 10px 0;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Decimal Operations &middot; Word Problems</span>
+    <h1>Decimal Operations: Word Problems</h1>
+  </header>
+
+  <div class="topic-nav-wrap">
+    <a class="topic-nav-back" href="../../index.html">&larr; All Topics</a>
+    <ul class="topic-nav">
+      <li><a class="topic-nav-link" href="Vocabulary-Literacy.html"><span class="topic-nav-icon">📖</span>Vocabulary &amp; Literacy</a></li>
+      <li><a class="topic-nav-link" href="Explanation.html"><span class="topic-nav-icon">🧮</span>Explanation</a></li>
+      <li><a class="topic-nav-link" href="Practice-Set.html"><span class="topic-nav-icon">✏️</span>Practice Set</a></li>
+      <li><a class="topic-nav-link current" href="Word-Problems.html"><span class="topic-nav-icon">📝</span>Word Problems</a></li>
+      <li><a class="topic-nav-link" href="Test-Prep.html"><span class="topic-nav-icon">🎯</span>Test Prep</a></li>
+      <li><a class="topic-nav-link" href="Teacher-Guide.html"><span class="topic-nav-icon">🧑‍🏫</span>Teacher's Guide</a></li>
+    </ul>
+  </div>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Math 6 - Decimal Operations - Word Problems')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Every problem on this page is a <strong>word problem</strong> - read carefully to decide which operation (or operations) it needs. Not sure? Review the Keyword Clues tab on the Vocabulary &amp; Literacy page first. Work through the tabs in any order: estimate first by rounding, then calculate the exact answer, then type it in and check. When you finish, type your name above and click <strong>Print My Progress</strong>.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('guided')">1. Guided Practice</button>
+    <button class="tab-btn" onclick="switchTab('mixed')">2. Mixed Word Problems</button>
+    <button class="tab-btn" onclick="switchTab('realworld')">3. Real-World Applications</button>
+    <button class="tab-btn" onclick="switchTab('careers')">4. Career Connections</button>
+    <button class="tab-btn" onclick="switchTab('financial')">5. Financial Literacy</button>
+    <button class="tab-btn" onclick="switchTab('challenge')">6. Challenge Tier</button>
+  </nav>
+
+  <!-- PANEL 1: GUIDED PRACTICE -->
+  <div id="guided" class="panel active">
+    <div class="section-title">Guided Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Start here. Copy each problem into your notebook, solve it there first, then type just your final answer and check it. You get up to <strong>2 tries</strong> per problem.
+    </div>
+    <div id="guided-list"></div>
+  </div>
+
+  <!-- PANEL 2: MIXED WORD PROBLEMS -->
+  <div id="mixed" class="panel">
+    <div class="section-title">Mixed Word Problems</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      These 15 problems mix all three operations. Read each one carefully, decide what it's asking for, then solve and check.
+    </div>
+    <div id="mixed-list"></div>
+  </div>
+
+  <!-- PANEL 3: REAL-WORLD APPLICATIONS -->
+  <div id="realworld" class="panel">
+    <div class="section-title">Real-World Applications</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Two sets of real-world scenarios - budgets, travel, savings, and more. Same routine: estimate, then solve exactly.
+    </div>
+    <div class="set-heading">Set A</div>
+    <div id="realworld-a-list"></div>
+    <div class="set-heading">Set B</div>
+    <div id="realworld-b-list"></div>
+  </div>
+
+  <!-- PANEL 4: CAREER CONNECTIONS -->
+  <div id="careers" class="panel">
+    <div class="section-title">Career Connections: Decimal Precision on the Job</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Medicine, market/business, engineering, the arts, and health science all depend on getting decimals right. Every group below solves the <strong>same kind of decimal problems</strong> - just set in a different real job. Work through however many stations you'd like.
+    </div>
+    <div class="explainer-box">
+      A misplaced decimal point can mean the wrong medicine dose, the wrong price, a part that doesn't fit, a song that's the wrong length, or the wrong nutrition total. Precision matters everywhere, not just in math class.
+    </div>
+    <div id="career-stations"></div>
+  </div>
+
+  <!-- PANEL 5: FINANCIAL LITERACY -->
+  <div id="financial" class="panel">
+    <div class="section-title">Financial Literacy</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Multi-part money problems - work through each part in order since later parts often depend on earlier ones.
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Shopping for a Science Experiment</h3>
+      <p>You are shopping for ingredients for a science experiment. You buy a gallon of distilled water for \(\$2.89\), a pack of pH strips for \(\$12.45\), and a glass beaker for \(\$8.75\).</p>
+      <div class="form-group">
+        <label>A. Subtotal for these three items:</label>
+        <input type="text" id="fin-a" class="form-control-lg" style="max-width:220px;" placeholder="$ subtotal">
+      </div>
+      <div class="form-group">
+        <label>B. If sales tax is \(\$1.68\), what is your final total?</label>
+        <input type="text" id="fin-b" class="form-control-lg" style="max-width:220px;" placeholder="$ total">
+      </div>
+      <div class="form-group">
+        <label>C. If you pay with a \(\$50.00\) bill, how much change should you receive?</label>
+        <input type="text" id="fin-c" class="form-control-lg" style="max-width:220px;" placeholder="$ change">
+      </div>
+      <button class="btn-lg" onclick="checkFinancialLiteracy()">Submit My Work</button>
+      <div id="fin-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Garden Seed Cost</h3>
+      <p><strong>Multi-Step Real World Application:</strong> A garden is \(5.5\text{ meters}\) long and \(3.2\text{ meters}\) wide. Grass seed costs $1.50 per square meter. How much will it cost to seed the entire garden?</p>
+      <div class="form-group">
+        <label>Total cost to seed the garden:</label>
+        <input type="text" id="garden-cost" class="form-control-lg" style="max-width:220px;" placeholder="$ total cost">
+        <textarea id="garden-explain" class="form-control-lg" rows="2" style="margin-top:10px;" placeholder="Show your steps: area, then total cost..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkGardenChallenge()">Submit My Work</button>
+      <div id="garden-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 6: CHALLENGE TIER -->
+  <div id="challenge" class="panel">
+    <div class="section-title">Challenge Tier: Multi-Step Word Problems</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      These take more than one step to solve - work them out fully on paper before typing your final answer.
+    </div>
+    <div id="challenge-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // GENERIC CHECK-STYLE WORD PROBLEM LIST (2 tries, then reveal)
+  // ==========================================
+  const checkListRegistry = {};
+
+  function renderCheckList(containerId, problems, keyPrefix, section) {
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px;">
+          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Your answer">
+          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
+        </div>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, p.label || `#${i + 1}: ${p.q.replace(/<[^>]+>/g, '').replace(/\\\(|\\\)/g, '')}`, section));
+    TeacherPrint.registerAnswerList(containerId, problems.map((p, i) => ({ inputId: `${keyPrefix}-${i}-input`, answerText: p.aText || String(p.a) })));
+  }
+
+  function checkListItem(keyPrefix, idx) {
+    const cfg = checkListRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter your answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = LessonCheck.numericMatch(val, p.a, p.tol);
+    const label = p.label || `#${idx + 1}: ${p.q.replace(/<[^>]+>/g, '').replace(/\\\(|\\\)/g, '')}`;
+    const answerText = p.aText || String(p.a);
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! The answer is \\(\\mathbf{${answerText}}\\)`,
+      retry: "Not quite yet. Re-read the problem, estimate first, then check your operation choice and calculation.",
+      reveal: `Here's the answer: \\(\\mathbf{${answerText}}\\)`
+    }, { label, answer: val, section: cfg.section });
+  }
+
+  // ==========================================
+  // TAB 1: GUIDED PRACTICE (Tuesday's original guided practice)
+  // ==========================================
+  const guidedProblems = [
+    { q: "A book club buys 5 copies of a novel at \\(\\$9.75\\) each. What is the total cost?", a: 48.75, tol: 0.02 },
+    { q: "A hiker walks \\(6.4\\) km in the morning and \\(3.85\\) km in the afternoon. How many kilometers did she walk in total?", a: 10.25, tol: 0.02, aText: "10.25 km" },
+    { q: "A tailor has \\(12.5\\) meters of fabric and uses \\(4.75\\) meters for a project. How much fabric is left?", a: 7.75, tol: 0.02, aText: "7.75 m" },
+    { q: "A vending machine holds 8 rows of snacks, each row worth \\(\\$3.25\\). What is the total value of a fully stocked machine?", a: 26.0, tol: 0.05 }
+  ];
+  checkListRegistry['guided'] = { problems: guidedProblems, section: '1. Guided Practice' };
+  renderCheckList('guided-list', guidedProblems, 'guided', '1. Guided Practice');
+
+  // ==========================================
+  // TAB 2: MIXED WORD PROBLEMS (Weekly printable Tuesday set)
+  // ==========================================
+  const mixedProblems = [
+    { q: "A book costs \\(\\$9.49\\). You buy \\(2\\) copies. What is the total cost?", a: 18.98, tol: 0.02 },
+    { q: "You have \\(\\$15.00\\) and spend \\(\\$6.75\\). How much do you have left?", a: 8.25, tol: 0.02 },
+    { q: "A ribbon is \\(3.5\\) m long. You cut off \\(1.25\\) m. How much ribbon remains?", a: 2.25, tol: 0.02, aText: "2.25 m" },
+    { q: "Pencils cost \\(\\$0.65\\) each. What is the cost of \\(4\\) pencils?", a: 2.60, tol: 0.02 },
+    { q: "A jug holds \\(2.8\\) L. If \\(0.6\\) L is poured out, how much remains?", a: 2.2, tol: 0.02, aText: "2.2 L" },
+    { q: "A snack costs \\(\\$2.25\\). You pay with a \\(\\$5.00\\) bill. How much change do you get?", a: 2.75, tol: 0.02 },
+    { q: "\\(3\\) notebooks at \\(\\$1.80\\) each plus a \\(\\$0.75\\) eraser. What is the total?", a: 6.15, tol: 0.02 },
+    { q: "A runner covers \\(5.2\\) km, then \\(3.75\\) km more. What is the total distance?", a: 8.95, tol: 0.02, aText: "8.95 km" },
+    { q: "\\(\\$40.00\\) is split evenly between \\(5\\) friends. How much does each friend get?", a: 8.00, tol: 0.02 },
+    { q: "A rope is \\(12.4\\) m long. Three pieces of \\(2.5\\) m each are cut off. How much rope is left?", a: 4.9, tol: 0.02, aText: "4.9 m" },
+    { q: "A cereal box costs \\(\\$4.29\\). A coupon takes \\(\\$0.50\\) off. What is the new price?", a: 3.79, tol: 0.02 },
+    { q: "Stickers cost \\(\\$0.35\\) each. What is the cost of \\(6\\) stickers?", a: 2.10, tol: 0.02 },
+    { q: "A recipe needs \\(1.5\\) cups of flour per batch. How many cups for \\(4\\) batches?", a: 6.0, tol: 0.05, aText: "6.0 cups" },
+    { q: "The temperature starts at \\(68.5^\\circ\\text{F}\\) and drops \\(12.3^\\circ\\text{F}\\). What is the new temperature?", a: 56.2, tol: 0.02, aText: "56.2°F" },
+    { q: "A \\(\\$25.00\\) gift card is used to buy an item for \\(\\$18.60\\). What balance is left on the card?", a: 6.40, tol: 0.02 }
+  ];
+  checkListRegistry['mixed'] = { problems: mixedProblems, section: '2. Mixed Word Problems' };
+  renderCheckList('mixed-list', mixedProblems, 'mixed', '2. Mixed Word Problems');
+
+  // ==========================================
+  // TAB 3: REAL-WORLD APPLICATIONS
+  // ==========================================
+  const realworldA = [
+    { q: "Gas costs \\(\\$3.45\\) per gallon. What is the cost of \\(8\\) gallons?", a: 27.60, tol: 0.05 },
+    { q: "A hiker walks \\(4.2\\) km, rests, then walks \\(3.65\\) km more. What is the total distance?", a: 7.85, tol: 0.02, aText: "7.85 km" },
+    { q: "A recipe needs \\(2.25\\) cups of sugar per batch. How much sugar for \\(3\\) batches?", a: 6.75, tol: 0.05, aText: "6.75 cups" },
+    { q: "A \\(\\$60.00\\) budget covers \\(\\$24.75\\) on food and \\(\\$18.30\\) on supplies. How much money is left?", a: 16.95, tol: 0.02 },
+    { q: "A board is \\(8.5\\) ft long. Pieces of \\(3.25\\) ft and \\(2.4\\) ft are cut off. How much board remains?", a: 2.85, tol: 0.02, aText: "2.85 ft" },
+    { q: "A phone bill is \\(\\$45.99\\). A \\(\\$5.00\\) credit is applied. What is the new bill?", a: 40.99, tol: 0.02 },
+    { q: "\\(5\\) friends split a \\(\\$32.50\\) pizza bill evenly. How much does each friend pay?", a: 6.50, tol: 0.02 },
+    { q: "A car travels \\(55.5\\) miles, then \\(48.25\\) more miles. What is the total distance?", a: 103.75, tol: 0.05, aText: "103.75 mi" },
+    { q: "Fabric costs \\(\\$6.40\\) per yard. What is the cost of \\(3.5\\) yards?", a: 22.40, tol: 0.05 },
+    { q: "A paycheck of \\(\\$215.60\\) has \\(\\$42.75\\) deducted for taxes. What is the take-home pay?", a: 172.85, tol: 0.05 },
+    { q: "A pool holds \\(450.5\\) gallons. \\(62.25\\) gallons drain out. How many gallons are left?", a: 388.25, tol: 0.05, aText: "388.25 gal" },
+    { q: "\\(4\\) friends buy tickets at \\(\\$11.25\\) each. What is the total cost?", a: 45.00, tol: 0.05 },
+    { q: "A trail is \\(9.8\\) miles. You have hiked \\(6.35\\) miles. How many miles remain?", a: 3.45, tol: 0.02, aText: "3.45 mi" },
+    { q: "A grocery bill has items costing \\(\\$14.29\\), \\(\\$8.75\\), and \\(\\$3.40\\). What is the total?", a: 26.44, tol: 0.02 },
+    { q: "A savings account has \\(\\$120.50\\). A deposit of \\(\\$35.25\\) is made. What is the new balance?", a: 155.75, tol: 0.02 }
+  ];
+  const realworldB = [
+    { q: "A school garden project bought \\(3.8\\) pounds of organic soil for \\(\\$5.25\\) per pound. What is the product of the weight and the price?", a: 19.95, tol: 0.02 },
+    { q: "A scientist measured two liquid samples. The first was \\(15.75\\text{ mL}\\). The second was \\(8.4\\text{ mL}\\) less than the first. What is the volume of the second sample?", a: 7.35, tol: 0.02, aText: "7.35 mL" },
+    { q: "On Monday, a construction crew laid \\(12.45\\) meters of concrete. On Tuesday, the length increased by \\(9.8\\) meters. What is the sum of the concrete laid over both days?", a: 22.25, tol: 0.02, aText: "22.25 m" },
+    { q: "A baker uses \\(0.75\\) cups of sugar for one batch. If the baker makes twice that amount, then adds an additional \\(1.25\\) cups for a cake, what is the total amount of sugar used?", a: 2.75, tol: 0.02, aText: "2.75 cups" },
+    { q: "A runner's water bottle held \\(24.5\\) ounces. After a long run, the amount decreased by \\(18.75\\) ounces. How many ounces remain?", a: 5.75, tol: 0.02, aText: "5.75 oz" },
+    { q: "A local shop sells craft ribbon for \\(\\$2.15\\) per yard. A student buys \\(4.5\\) yards. What is the product of the price and the length?", a: 9.675, tol: 0.02 }
+  ];
+  checkListRegistry['rwa'] = { problems: realworldA, section: '3. Real-World Applications' };
+  checkListRegistry['rwb'] = { problems: realworldB, section: '3. Real-World Applications' };
+  renderCheckList('realworld-a-list', realworldA, 'rwa', '3. Real-World Applications');
+  renderCheckList('realworld-b-list', realworldB, 'rwb', '3. Real-World Applications');
+
+  // ==========================================
+  // TAB 4: CAREER CONNECTIONS (station cards)
+  // ==========================================
+  const careerGroups = {
+    medicine: {
+      name: 'Medicine',
+      context: "Nurses and doctors calculate medicine doses, patient measurements, and lab results every day. A misplaced decimal point can be dangerous, so precision matters.",
+      problems: [
+        { q: "A nurse gives a patient three doses of medicine: 12.5 mL, 8.75 mL, and 6.4 mL over one day. What is the total amount of medicine given?", a: 27.65, tol: 0.05, aText: "27.65 mL" },
+        { q: "A patient's temperature was 100.45°F this morning and 98.6°F this afternoon. How many degrees did it drop?", a: 1.85, tol: 0.02, aText: "1.85°F" },
+        { q: "A pharmacy technician has a bottle with 50 mL of solution. She dispenses three prescriptions of 12.5 mL, 9.75 mL, and 14.25 mL. How much solution remains in the bottle?", a: 13.5, tol: 0.05, aText: "13.5 mL" },
+        { q: "A patient must take 2.5 mL of medicine every 6 hours, 4 times a day. How much medicine total does the patient take in one day?", a: 10.0, tol: 0.1, aText: "10.0 mL" },
+        { q: "A hospital orders 3 boxes of syringes at $18.75 each, plus a box of bandages for $9.40. What is the total cost of the order?", a: 65.65, tol: 0.05 },
+        { q: "A lab technician needs 0.75 mL of a solution for each of 12 test tubes. How much solution does she need in total?", a: 9.0, tol: 0.1, aText: "9.0 mL" }
+      ]
+    },
+    market: {
+      name: 'Market',
+      context: "Store owners, cashiers, and vendors calculate prices, discounts, and change every day. Being off by even a few cents adds up fast across many customers.",
+      problems: [
+        { q: "A vendor sells apples for $2.35 per kilogram. A customer buys 3.4 kilograms. How much does the customer pay?", a: 7.99, tol: 0.05 },
+        { q: "A cash register has $112.75 in it at the start of the day. After paying $45.60 in supplier bills, how much is left?", a: 67.15, tol: 0.05 },
+        { q: "A vendor buys 6 crates of oranges at $8.25 each, then sells all of them for a total of $72.90. What is her profit?", a: 23.40, tol: 0.05 },
+        { q: "A cashier gives change from a $20 bill for a purchase of $13.45. How much change is given?", a: 6.55, tol: 0.02 },
+        { q: "A store marks down a $45.80 jacket by $12.25. What is the new price?", a: 33.55, tol: 0.05 },
+        { q: "A shopper buys 2.5 kg of coffee beans at $9.60 per kg. How much does she pay?", a: 24.00, tol: 0.05 }
+      ]
+    },
+    engineering: {
+      name: 'Engineering',
+      context: "Engineers measure and build parts that must fit together exactly. A part that is off by even a few hundredths of a centimeter can make a whole machine fail.",
+      problems: [
+        { q: "An engineer joins three metal beams: 245.6 cm, 89.75 cm, and then removes a 34.2 cm section. What is the final length?", a: 301.15, tol: 0.05, aText: "301.15 cm" },
+        { q: "A part must measure exactly 12.50 cm. The measured part is 12.53 cm. By how many cm does it differ from the target?", a: 0.03, tol: 0.005, aText: "0.03 cm" },
+        { q: "A machinist welds two metal sheets measuring 3.75 mm and 2.6 mm thick together, then grinds off 0.85 mm from the total. What is the final thickness?", a: 5.5, tol: 0.05, aText: "5.5 mm" },
+        { q: "An engineer needs 8 bolts that each weigh 0.45 kg. What is the total weight of the bolts?", a: 3.6, tol: 0.1, aText: "3.6 kg" },
+        { q: "A support beam measuring 4.2 m is extended by welding on a 1.85 m section. What is the new total length?", a: 6.05, tol: 0.02, aText: "6.05 m" },
+        { q: "A gear part must be 6.75 cm in diameter. The manufactured part measures 6.82 cm. By how many cm is it oversized?", a: 0.07, tol: 0.005, aText: "0.07 cm" }
+      ]
+    },
+    arts: {
+      name: 'Arts',
+      context: "Artists and designers measure canvases, mix paint ratios, and time performances. Precise measurements keep proportions and timing looking and sounding right.",
+      problems: [
+        { q: "A painter mixes 2.5 liters of blue paint, 1.75 liters of white paint, and 0.6 liters of yellow paint. How many liters of paint does she have in total?", a: 4.85, tol: 0.05, aText: "4.85 L" },
+        { q: "A song is 24.5 seconds long. A musician repeats a 1.25-second riff 2 extra times at the end. How long is the song now?", a: 27.0, tol: 0.05, aText: "27.0 s" },
+        { q: "A sculptor mixes 1.5 kg of clay with 0.75 kg of a second clay and 0.35 kg of a hardening additive. What is the total weight of the mixture?", a: 2.6, tol: 0.05, aText: "2.6 kg" },
+        { q: "A dance routine has 4 sections that each last 2.25 minutes. How long is the whole routine?", a: 9.0, tol: 0.1, aText: "9.0 min" },
+        { q: "An art teacher buys 6 canvases at $4.85 each. What is the total cost?", a: 29.10, tol: 0.1 },
+        { q: "A photographer's video clip is 45.6 seconds long. She trims 8.75 seconds off the start and 6.4 seconds off the end. How long is the clip now?", a: 30.45, tol: 0.05, aText: "30.45 s" }
+      ]
+    },
+    science: {
+      name: 'Science & Health',
+      context: "Nutritionists and scientists use decimals to track exact nutrient intake and measurement totals. Below is a nutrition label for a \"Super-Grain Energy Bar.\" Calculate the totals for a student who eats 2.5 bars.",
+      table: [
+        ["Total Fat", "4.25 g"], ["Protein", "9.15 g"], ["Carbohydrates", "28.4 g"], ["Fiber", "3.8 g"]
+      ],
+      problems: [
+        { q: "Total Fat for 2.5 bars (per-bar amount: 4.25 g)", a: 10.625, tol: 0.05, aText: "10.625 g" },
+        { q: "Protein for 2.5 bars (per-bar amount: 9.15 g)", a: 22.875, tol: 0.05, aText: "22.875 g" },
+        { q: "Carbohydrates for 2.5 bars (per-bar amount: 28.4 g)", a: 71.0, tol: 0.1, aText: "71.0 g" },
+        { q: "Fiber for 2.5 bars (per-bar amount: 3.8 g)", a: 9.5, tol: 0.05, aText: "9.5 g" }
+      ]
+    }
+  };
+
+  function renderCareerStations() {
+    const html = Object.keys(careerGroups).map((key) => {
+      const g = careerGroups[key];
+      const tableHtml = g.table ? `
+        <table class="data-table" style="margin-top:10px;">
+          <thead><tr><th>Nutrient (per 1 bar)</th><th>Amount</th></tr></thead>
+          <tbody>${g.table.map((row) => `<tr><td>${row[0]}</td><td>${row[1]}</td></tr>`).join('')}</tbody>
+        </table>` : '';
+      const itemsHtml = g.problems.map((p, i) => `
+        <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px;">
+          <strong>${i + 1}.</strong> ${p.q}
+          <div style="margin-top:10px; display:flex; gap:14px; flex-wrap:wrap; align-items:center;">
+            <input type="text" id="career-${key}-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+            <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkCareerItem('${key}', ${i})">Submit</button>
+          </div>
+          <div id="career-${key}-${i}-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+        </div>
+      `).join('');
+      return `
+        <div class="station-card">
+          <span class="station-label">${g.name}</span>
+          <p style="margin:8px 0 0 0;">${g.context}</p>
+          ${tableHtml}
+          ${itemsHtml}
+        </div>
+      `;
+    }).join('');
+    document.getElementById('career-stations').innerHTML = html;
+    Object.keys(careerGroups).forEach((key) => {
+      const g = careerGroups[key];
+      g.problems.forEach((p, i) => LessonProgress.preRegister(`career-${key}-${i}`, `${g.name} #${i + 1}`, '4. Career Connections'));
+      TeacherPrint.registerAnswerList('career-stations', g.problems.map((p, i) => ({ inputId: `career-${key}-${i}-input`, answerText: p.aText || String(p.a) })));
+    });
+  }
+  renderCareerStations();
+
+  function checkCareerItem(key, idx) {
+    const g = careerGroups[key];
+    const p = g.problems[idx];
+    const val = document.getElementById(`career-${key}-${idx}-input`).value;
+    const fb = document.getElementById(`career-${key}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter your answer before submitting.");
+      return;
+    }
+    LessonCheck.submit(fb, { key: `career-${key}-${idx}`, label: `${g.name} #${idx + 1}`, answer: val, section: '4. Career Connections', correct: LessonCheck.numericMatch(val, p.a, p.tol) });
+  }
+
+  // ==========================================
+  // TAB 5: FINANCIAL LITERACY
+  // ==========================================
+  function checkFinancialLiteracy() {
+    const a = document.getElementById('fin-a').value;
+    const b = document.getElementById('fin-b').value;
+    const c = document.getElementById('fin-c').value;
+    const fb = document.getElementById('fin-feedback');
+    if (!a.trim() || !b.trim() || !c.trim()) {
+      LessonCheck.incomplete(fb, "Fill in the subtotal, total, and change before submitting.");
+      return;
+    }
+    LessonCheck.submit(fb, { key: 'fin-literacy', label: 'Financial Literacy: subtotal / total / change', answer: `A=$${a}, B=$${b}, C=$${c}`, section: '5. Financial Literacy', correct: LessonCheck.numericMatch(a, 24.09, 0.02) && LessonCheck.numericMatch(b, 25.77, 0.02) && LessonCheck.numericMatch(c, 24.23, 0.02) });
+  }
+  LessonProgress.preRegister('fin-literacy', 'Financial Literacy: subtotal / total / change', '5. Financial Literacy');
+
+  function checkGardenChallenge() {
+    const cost = document.getElementById('garden-cost').value;
+    const explain = document.getElementById('garden-explain').value.trim();
+    const fb = document.getElementById('garden-feedback');
+    if (!cost.trim() || explain.length <= 5) {
+      LessonCheck.incomplete(fb, "Fill in the total cost and write your explanation before submitting.");
+      return;
+    }
+    LessonCheck.submit(fb, { key: 'garden-challenge', label: 'Garden Seed Cost Challenge', answer: `$${cost}`, section: '5. Financial Literacy', correct: LessonCheck.numericMatch(cost, 26.40, 0.05) });
+  }
+  LessonProgress.preRegister('garden-challenge', 'Garden Seed Cost Challenge', '5. Financial Literacy');
+
+  // ==========================================
+  // TAB 6: CHALLENGE TIER
+  // ==========================================
+  const challengeProblems = [
+    { q: "A caterer buys \\(15.5\\) lbs of chicken at \\(\\$3.40\\)/lb and \\(8.25\\) lbs of beef at \\(\\$5.60\\)/lb, then pays a \\(\\$12.50\\) delivery fee. She splits the total cost evenly across 4 event budgets. How much does each budget pay?", a: 27.85, tol: 0.05 },
+    { q: "A runner's 4 lap times are \\(68.45\\)s, \\(71.2\\)s, \\(69.85\\)s, and \\(70.5\\)s. What was her average lap time?", a: 70.0, tol: 0.1, aText: "70.0 s" },
+    { q: "A store buys 24 phone cases at \\(\\$4.25\\) each and sells them at \\(\\$9.99\\) each. What is the total profit?", a: 137.76, tol: 0.1 },
+    { q: "Four friends split a \\(\\$68.80\\) dinner bill evenly, then each leaves an additional \\(\\$3.25\\) tip. How much does each friend pay in total?", a: 20.45, tol: 0.05 },
+    { q: "A vendor buys 15 crates of fruit at \\(\\$8.40\\) each and gets a \\(\\$12.50\\) bulk discount off the total. What does the vendor pay?", a: 113.50, tol: 0.1 },
+    { q: "A student eats \\(1.5\\) bars of Snack A (\\(5.2\\) g fat/bar) and \\(2\\) bars of Snack B (\\(3.75\\) g fat/bar). What is the total fat?", a: 15.3, tol: 0.1, aText: "15.3 g" },
+    { q: "A hiker eats 3 granola bars with \\(6.4\\) g of protein each, then gives away \\(2.5\\) g of protein worth of bar to a friend. How much protein did the hiker actually eat?", a: 16.7, tol: 0.1, aText: "16.7 g" },
+    { q: "A cyclist rides \\(42.5\\) km in \\(1.25\\) hours. What is her average speed in km/h?", a: 34, tol: 0.5, aText: "34 km/h" },
+    { q: "A tank drains at a rate of \\(2.5\\) liters per minute. How many minutes does it take to drain \\(84.5\\) liters?", a: 33.8, tol: 0.1, aText: "33.8 min" },
+    { q: "A biologist records 3 measurements: \\(45.125\\) mm, \\(38.75\\) mm, and \\(52.6\\) mm. Find the range (largest minus smallest).", a: 7.475, tol: 0.01, aText: "7.475 mm" },
+    { q: "A charity raised \\(\\$145.60\\) on day 1, then \\(1.5\\) times that amount on day 2. What was the two-day total?", a: 364.00, tol: 0.1 },
+    { q: "A charity splits \\(\\$39.36\\) in raised funds evenly among 8 local families. How much does each family receive?", a: 4.92, tol: 0.02 }
+  ];
+  checkListRegistry['challenge'] = { problems: challengeProblems, section: '6. Challenge Tier' };
+  renderCheckList('challenge-list', challengeProblems, 'challenge', '6. Challenge Tier');
+</script>
+<div id="print-report"></div>
+</body>
+</html>

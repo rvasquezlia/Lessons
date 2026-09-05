@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Decimal Operations - Test Prep</title>
+
+  <!-- Montserrat Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <style>
+    .section-heading {
+      font-weight: 800;
+      color: white;
+      background: var(--primary);
+      padding: 8px 16px;
+      border-radius: 8px;
+      margin: 24px 0 10px 0;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Decimal Operations &middot; Test Prep</span>
+    <h1>Decimal Operations: Test Prep</h1>
+  </header>
+
+  <div class="topic-nav-wrap">
+    <a class="topic-nav-back" href="../../index.html">&larr; All Topics</a>
+    <ul class="topic-nav">
+      <li><a class="topic-nav-link" href="Vocabulary-Literacy.html"><span class="topic-nav-icon">📖</span>Vocabulary &amp; Literacy</a></li>
+      <li><a class="topic-nav-link" href="Explanation.html"><span class="topic-nav-icon">🧮</span>Explanation</a></li>
+      <li><a class="topic-nav-link" href="Practice-Set.html"><span class="topic-nav-icon">✏️</span>Practice Set</a></li>
+      <li><a class="topic-nav-link" href="Word-Problems.html"><span class="topic-nav-icon">📝</span>Word Problems</a></li>
+      <li><a class="topic-nav-link current" href="Test-Prep.html"><span class="topic-nav-icon">🎯</span>Test Prep</a></li>
+      <li><a class="topic-nav-link" href="Teacher-Guide.html"><span class="topic-nav-icon">🧑‍🏫</span>Teacher's Guide</a></li>
+    </ul>
+  </div>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Math 6 - Decimal Operations - Test Prep')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    This page reviews everything in Decimal Operations, then finishes with a <strong>Mixed Practice</strong> set styled like a real printed test. Work the tabs <strong>in order, left to right</strong>. Tabs 1-2 are guided review: step through the worked examples, then try the short practice (2 tries, with a reveal if you miss twice). Tab 3 is a quick concept check. Tab 4, <strong>Mixed Practice</strong>, works differently from every other tab on this site: you submit each answer <strong>once</strong> and it is simply recorded - there's no right/wrong shown on screen, because it's meant to be graded by your teacher from your printed report, just like a paper test. Finish with Tab 5's readiness reflection, then type your name above and click <strong>Print My Progress</strong>.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('reviewaddsub')">1. Review: Add &amp; Subtract</button>
+    <button class="tab-btn" onclick="switchTab('reviewmult')">2. Review: Multiply</button>
+    <button class="tab-btn" onclick="switchTab('conceptcheck')">3. Concept Check</button>
+    <button class="tab-btn" onclick="switchTab('mixedpractice')">4. Mixed Practice</button>
+    <button class="tab-btn" onclick="switchTab('readiness')">5. Readiness Check</button>
+  </nav>
+
+  <!-- PANEL 1: REVIEW ADD & SUBTRACT -->
+  <div id="reviewaddsub" class="panel active">
+    <div class="section-title">Full Review: Adding and Subtracting Decimals</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read the estimation strategy box, then click "Next Step" on Example 1 and Example 2 to review each worked problem. Try the practice problem yourself at the bottom - you get two tries before the method is shown.
+    </div>
+
+    <div class="explainer-box">
+      When adding or subtracting decimals, the most important rule is to <strong>line up the decimal points</strong>. This ensures you are adding or subtracting digits with the same place value (tenths with tenths, ones with ones, etc.).
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The Strategy: Estimate First!</div>
+      <p style="margin:0 0 10px 0;">Before calculating the exact answer, always round your numbers to the nearest whole number to find an estimate.</p>
+      <ul>
+        <li>If your exact answer is close to your estimate, your decimal placement is likely correct.</li>
+        <li>If your exact answer is very different, you may have lined up the digits incorrectly.</li>
+      </ul>
+    </div>
+
+    <h3>Example 1: Adding Decimals (\(12.7 + 4.25\))</h3>
+    <div class="step-box">
+      <p style="text-align:center;"><strong>Estimate Check:</strong> \(12.7 \approx 13\), \(4.25 \approx 4\) &rarr; \(13 + 4 = 17\)</p>
+      <div id="ex1-worked-content" style="min-height:240px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextEx1Step()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetEx1Step()">Reset Steps</button>
+      </div>
+    </div>
+
+    <h3>Example 2: Subtracting Decimals (\(8.4 - 2.76\))</h3>
+    <div class="step-box">
+      <p style="text-align:center;"><strong>Estimate Check:</strong> \(8.4 \approx 8\), \(2.76 \approx 3\) &rarr; \(8 - 3 = 5\)</p>
+      <div id="ex2-worked-content" style="min-height:240px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextEx2Step()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetEx2Step()">Reset Steps</button>
+      </div>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Try It Yourself</div>
+      <p style="margin:0;">Solve the problem below. Show your estimate first, then line up the decimals to find the exact answer.</p>
+    </div>
+    <div id="tryit-list"></div>
+  </div>
+
+  <!-- PANEL 2: REVIEW MULTIPLY -->
+  <div id="reviewmult" class="panel">
+    <div class="section-title">Full Review: Multiplying Decimals</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read the Golden Rule box, then click through the worked multiplication example step by step. Try the guided practice problem, then answer the Critical Thinking question.
+    </div>
+
+    <div class="explainer-box">
+      Multiplying decimals is very similar to multiplying whole numbers. The biggest difference is knowing where to place the decimal point in your final answer. We use estimation to make sure our answer makes sense.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The Golden Rule</div>
+      <p style="margin:0;">When multiplying decimals, you do <strong>not</strong> need to line up the decimal points like you do for addition and subtraction. Instead, you count the <strong>total number of decimal places</strong> in the factors to place the decimal in your product.</p>
+    </div>
+
+    <h3>Worked Example: \(3.2 \times 4.8\)</h3>
+    <div class="step-box">
+      <p style="text-align:center;"><strong>Estimate Check:</strong> \(3.2 \approx 3\), \(4.8 \approx 5\) &rarr; \(3 \times 5 = 15\)</p>
+      <div id="mult-worked-content" style="min-height:260px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextMultWorkedStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetMultWorkedStep()">Reset Steps</button>
+      </div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:24px;">
+      <div class="notebook-header">Guided Practice</div>
+      <p style="margin:0;">Solve using the estimate-then-exact method above. You get up to <strong>2 tries</strong> per problem.</p>
+    </div>
+    <div id="mult-guided-list"></div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Critical Thinking</h3>
+      <p>Explain why the product of \(0.2 \times 0.3\) is \(0.06\) and not \(0.6\). Use the rule about decimal places in your explanation.</p>
+      <div class="form-group">
+        <textarea id="mult-critical-explain" class="form-control-lg" rows="3" placeholder="Explain using the decimal-place rule..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkMultCritical()">Submit My Work</button>
+      <div id="mult-critical-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: CONCEPT CHECK -->
+  <div id="conceptcheck" class="panel">
+    <div class="section-title">Concept Check</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Quick true/false and short-answer questions about the rules themselves, not just computation. You get up to 2 tries per question.
+    </div>
+    <div id="concept-list"></div>
+  </div>
+
+  <!-- PANEL 4: MIXED PRACTICE (submit-only, printable worksheet style) -->
+  <div id="mixedpractice" class="panel">
+    <div class="section-title">Mixed Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab - read this carefully</strong>
+      This tab works like a <strong>real printed test</strong>: type your answer and click Submit <strong>once</strong>. Your answer is simply recorded - you will not be told if it's right or wrong on screen. Your teacher reviews every answer here from your printed progress report, the same way they would grade a paper test. Once you submit an item, it locks so it can't be quietly changed afterward.
+    </div>
+
+    <div class="section-heading">Section 1: Mixed Operations - Estimate &amp; Exact</div>
+    <div id="mp-section1-list"></div>
+
+    <div class="section-heading">Section 2: Word Problems</div>
+    <div id="mp-section2-list"></div>
+
+    <div class="challenge-box">
+      <span class="notebook-header" style="color:#b45309;">Extra Credit (optional)</span>
+      <p style="margin-top:10px;">A student buys 2 books at \(\$14.25\) each and 3 pens at \(\$2.50\) each. Sales tax on the order is \(\$3.62\). The student pays with a \(\$60.00\) bill.</p>
+      <div class="form-group">
+        <label>A. Subtotal for the books and pens:</label>
+        <input type="text" id="mp-ec-a" class="form-control-lg" style="max-width:200px;" placeholder="$ subtotal">
+      </div>
+      <div class="form-group">
+        <label>B. Total cost including tax:</label>
+        <input type="text" id="mp-ec-b" class="form-control-lg" style="max-width:200px;" placeholder="$ total">
+      </div>
+      <div class="form-group">
+        <label>C. Change received from \(\$60.00\):</label>
+        <input type="text" id="mp-ec-c" class="form-control-lg" style="max-width:200px;" placeholder="$ change">
+      </div>
+      <button class="btn-lg" onclick="submitExtraCredit()">Submit Extra Credit</button>
+      <div id="mp-ec-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="section-heading">More Mixed Computation</div>
+    <div id="mp-more-computation-list"></div>
+
+    <div class="section-heading">More Word Problems</div>
+    <div id="mp-more-wordproblems-list"></div>
+  </div>
+
+  <!-- PANEL 5: READINESS CHECK -->
+  <div id="readiness" class="panel">
+    <div class="section-title">Readiness Check: Decimal Operations</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Answer all four questions, then click Submit. This is the last step before you print your progress - go back to the Student Name box in the blue bar at the top of the page, type your name, and click Print My Progress.
+    </div>
+
+    <form id="exit-form" onsubmit="submitReadiness(event)">
+      <div class="form-group">
+        <label>1. Compute the exact sum: \(9.6 + 3.75\)</label>
+        <input type="text" id="exit-1" class="form-control-lg" placeholder="Enter exact sum">
+      </div>
+
+      <div class="form-group">
+        <label>2. Compute the exact product: \(2.4 \times 1.5\)</label>
+        <input type="text" id="exit-2" class="form-control-lg" placeholder="Enter exact product">
+      </div>
+
+      <div class="form-group">
+        <label>3. Why do we line up decimal points for addition and subtraction, but count total decimal places for multiplication?</label>
+        <textarea id="exit-explain" class="form-control-lg" rows="3" placeholder="Explain using place value reasoning..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>4. How did rounding to find an estimate help you check your exact answers in this topic?</label>
+        <textarea id="exit-reflect" class="form-control-lg" rows="3" placeholder="How did estimating help you?"></textarea>
+      </div>
+
+      <button type="submit" class="btn-lg">Submit Readiness Check</button>
+    </form>
+    <div id="exit-feedback" class="feedback-msg"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // REUSABLE TWO-FIELD (ESTIMATE + EXACT) PRACTICE LIST - 'check' mode only, used on Tabs 1-2
+  // ==========================================
+  const estExactRegistry = {};
+
+  function renderEstExactList(containerId, problems, keyPrefix, section) {
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px; display:flex; gap:14px; flex-wrap:wrap; align-items:center;">
+          <label style="font-weight:700; font-size:0.95rem;">Estimate: <input type="text" id="${keyPrefix}-${i}-est" class="form-control-lg" style="max-width:120px; display:inline-block;" placeholder="Est."></label>
+          <label style="font-weight:700; font-size:0.95rem;">Exact: <input type="text" id="${keyPrefix}-${i}-exact" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="Exact answer"></label>
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkEstExactItem('${keyPrefix}', ${i})">Check</button>
+        </div>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, `${p.q.replace(/\\\(|\\\)/g, '')}`, section));
+  }
+
+  function checkEstExactItem(keyPrefix, idx) {
+    const cfg = estExactRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const est = document.getElementById(`${keyPrefix}-${idx}-est`).value;
+    const exact = document.getElementById(`${keyPrefix}-${idx}-exact`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!est.trim() || !exact.trim()) {
+      LessonCheck.incomplete(fb, "Fill in both your estimate and your exact answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = LessonCheck.numericMatch(exact, p.a, p.tol);
+    const label = p.q.replace(/\\\(|\\\)/g, '');
+    const answer = `Est=${est}, Exact=${exact}`;
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(= \\mathbf{${p.a}}\\)`,
+      retry: "Not quite yet on the exact answer. Re-check your decimal alignment (or decimal-place count for multiplication), then try again.",
+      reveal: `Here's the correct answer: ${p.q} \\(= \\mathbf{${p.a}}\\)`
+    }, { label, answer, section: cfg.section });
+  }
+
+  // TAB 1: Try It Yourself
+  const tryitProblems = [{ q: "\\(15.62 + 7.9\\)", a: 23.52, tol: 0.01 }];
+  estExactRegistry['tryit'] = { problems: tryitProblems, section: '1. Review: Add & Subtract' };
+  renderEstExactList('tryit-list', tryitProblems, 'tryit', '1. Review: Add & Subtract');
+
+  // EXAMPLE 1: ADDING DECIMALS worked steps
+  let ex1WorkedStep = 1;
+  const ex1WorkedMaxStep = 4;
+  function renderEx1Worked() {
+    const step = ex1WorkedStep;
+    const html = `
+      <table class="algo-table" style="margin:20px auto;">
+        <tr>
+          <td></td>
+          <td class="grid-cell">1</td>
+          <td class="grid-cell">2</td>
+          <td class="decimal-cell">.</td>
+          <td class="grid-cell">7</td>
+          <td class="grid-cell" style="color:#0284c7;">0</td>
+        </tr>
+        <tr>
+          <td class="grid-cell line-under">+</td>
+          <td class="grid-cell line-under"></td>
+          <td class="grid-cell line-under">4</td>
+          <td class="decimal-cell line-under">.</td>
+          <td class="grid-cell line-under">2</td>
+          <td class="grid-cell line-under">5</td>
+        </tr>
+        ${step >= 2 ? `
+        <tr style="${step >= 3 ? 'color:var(--primary); font-weight:900;' : ''}">
+          <td></td>
+          <td class="grid-cell">${step >= 3 ? '1' : ''}</td>
+          <td class="grid-cell">${step >= 3 ? '6' : ''}</td>
+          <td class="decimal-cell">.</td>
+          <td class="grid-cell">9</td>
+          <td class="grid-cell">5</td>
+        </tr>` : ''}
+      </table>
+      <p style="text-align:center; font-weight:bold;">
+        ${step === 1 ? 'Step 1: Line up the decimal points. Pad \\(12.7\\) with a trailing zero (\\(12.70\\), shown in blue) so both numbers have the same number of decimal places.' : ''}
+        ${step === 2 ? 'Step 2: Add the smallest place values first - the hundredths and tenths columns: \\(0 + 5 = 5\\) and \\(7 + 2 = 9\\). No regrouping is needed here.' : ''}
+        ${step === 3 ? 'Step 3: Add the ones and tens columns: \\(2 + 4 = 6\\) and \\(1 + 0 = 1\\). Exact Sum = \\(\\mathbf{16.95}\\).' : ''}
+        ${step === 4 ? 'Check Your Work: our exact answer \\(16.95\\) is very close to the estimate of \\(17\\), so this is reasonable!' : ''}
+      </p>
+    `;
+    document.getElementById('ex1-worked-content').innerHTML = html;
+    triggerMathJax();
+  }
+  function nextEx1Step() { if (ex1WorkedStep < ex1WorkedMaxStep) { ex1WorkedStep++; renderEx1Worked(); } }
+  function resetEx1Step() { ex1WorkedStep = 1; renderEx1Worked(); }
+  renderEx1Worked();
+
+  // EXAMPLE 2: SUBTRACTING DECIMALS worked steps
+  let ex2WorkedStep = 1;
+  const ex2WorkedMaxStep = 4;
+  function renderEx2Worked() {
+    const step = ex2WorkedStep;
+    const html = `
+      <table class="algo-table" style="margin:20px auto;">
+        <tr class="carry-row">
+          <td></td>
+          <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">7</span>' : ''}</td>
+          <td class="decimal-cell"></td>
+          <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">13</span>' : ''}</td>
+          <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">10</span>' : ''}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="grid-cell">${step >= 2 ? '<span class="struck-digit">8</span>' : '8'}</td>
+          <td class="decimal-cell">.</td>
+          <td class="grid-cell">${step >= 2 ? '<span class="struck-digit">4</span>' : '4'}</td>
+          <td class="grid-cell" style="color:#0284c7;">${step >= 2 ? '<span class="struck-digit">0</span>' : '0'}</td>
+        </tr>
+        <tr>
+          <td class="grid-cell line-under">-</td>
+          <td class="grid-cell line-under">2</td>
+          <td class="decimal-cell line-under">.</td>
+          <td class="grid-cell line-under">7</td>
+          <td class="grid-cell line-under">6</td>
+        </tr>
+        ${step >= 3 ? `
+        <tr style="color:var(--primary); font-weight:900;">
+          <td></td>
+          <td class="grid-cell">5</td>
+          <td class="decimal-cell">.</td>
+          <td class="grid-cell">6</td>
+          <td class="grid-cell">4</td>
+        </tr>` : ''}
+      </table>
+      <p style="text-align:center; font-weight:bold;">
+        ${step === 1 ? 'Step 1: Line up the decimal points. Pad \\(8.4\\) with a trailing zero (\\(8.40\\), shown in blue) so both numbers have the same number of decimal places.' : ''}
+        ${step === 2 ? 'Step 2: Regroup. The hundredths column cannot subtract \\(0 - 6\\), so it borrows from the tenths column. The tenths column then cannot subtract \\(3 - 7\\), so it borrows from the ones column - shown in red above.' : ''}
+        ${step === 3 ? 'Step 3: Subtract each column with the regrouped values: \\(10 - 6 = 4\\), \\(13 - 7 = 6\\), \\(7 - 2 = 5\\). Exact Difference = \\(\\mathbf{5.64}\\).' : ''}
+        ${step === 4 ? 'Check Your Work: the exact answer \\(5.64\\) is close to the estimate of \\(5\\). This confirms the decimal point is in the correct place.' : ''}
+      </p>
+    `;
+    document.getElementById('ex2-worked-content').innerHTML = html;
+    triggerMathJax();
+  }
+  function nextEx2Step() { if (ex2WorkedStep < ex2WorkedMaxStep) { ex2WorkedStep++; renderEx2Worked(); } }
+  function resetEx2Step() { ex2WorkedStep = 1; renderEx2Worked(); }
+  renderEx2Worked();
+
+  // TAB 2: WORKED MULTIPLICATION EXAMPLE
+  let multWorkedStep = 1;
+  const multWorkedMaxStep = 5;
+  function renderMultWorked() {
+    const step = multWorkedStep;
+    const html = `
+      <table class="algo-table" style="margin:20px auto;">
+        <tr class="carry-row">
+          <td></td><td></td>
+          <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">2</span>' : ''}</td>
+          <td>${step >= 2 ? '<span style="color:var(--highlight-carry);">1</span>' : ''}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td><td></td><td></td>
+          <td class="grid-cell">3</td>
+          <td class="grid-cell">2</td>
+        </tr>
+        <tr>
+          <td class="grid-cell line-under">&times;</td><td class="grid-cell line-under"></td><td class="grid-cell line-under"></td>
+          <td class="grid-cell line-under">4</td>
+          <td class="grid-cell line-under">8</td>
+        </tr>
+        ${step >= 2 ? `
+        <tr>
+          <td></td><td></td>
+          <td class="grid-cell">2</td>
+          <td class="grid-cell">5</td>
+          <td class="grid-cell">6</td>
+        </tr>` : ''}
+        ${step >= 3 ? `
+        <tr>
+          <td class="grid-cell line-under">+</td>
+          <td class="grid-cell line-under">1</td>
+          <td class="grid-cell line-under">2</td>
+          <td class="grid-cell line-under">8</td>
+          <td class="grid-cell line-under">0</td>
+        </tr>` : ''}
+        ${step >= 4 ? `
+        <tr style="color:var(--primary); font-weight:900;">
+          <td></td>
+          <td class="grid-cell">1</td>
+          <td class="grid-cell">5</td>
+          <td class="grid-cell">${step >= 5 ? '<span class="decimal-mark">.</span>' : ''}3</td>
+          <td class="grid-cell">6</td>
+        </tr>` : ''}
+      </table>
+      <p style="text-align:center; font-weight:bold;">
+        ${step === 1 ? 'Step 1: Set up the factors as whole numbers (\\(32 \\times 48\\)), ignoring the decimal points for now.' : ''}
+        ${step === 2 ? 'Step 2: Multiply by the ones digit (\\(32 \\times 8 = 256\\)), lined up to the right in the ones column. The carried digits are shown in red just to make them easy to spot.' : ''}
+        ${step === 3 ? 'Step 3: Multiply by the tens digit (\\(32 \\times 40 = 1280\\)). Place a placeholder zero in the ones column, then write 128 starting in the tens column. The "+" sign gets its own grid cell, never mixed in with a digit.' : ''}
+        ${step === 4 ? 'Step 4: Add the partial products as whole numbers: \\(256 + 1280 = 1536\\). Still no decimal point in the grid - multiplication is not done yet.' : ''}
+        ${step === 5 ? 'Step 5: Count the total decimal places in both factors (\\(3.2\\) has 1, \\(4.8\\) has 1, total \\(2\\)) and shift the decimal 2 places left. Exact Answer: \\(\\mathbf{15.36}\\). Compare to the estimate of \\(15\\) - very close, so this is reasonable!' : ''}
+      </p>
+    `;
+    document.getElementById('mult-worked-content').innerHTML = html;
+    triggerMathJax();
+  }
+  function nextMultWorkedStep() { if (multWorkedStep < multWorkedMaxStep) { multWorkedStep++; renderMultWorked(); } }
+  function resetMultWorkedStep() { multWorkedStep = 1; renderMultWorked(); }
+  renderMultWorked();
+
+  const multGuidedProblems = [{ q: "\\(2.5 \\times 1.4\\)", a: 3.5, tol: 0.01 }];
+  estExactRegistry['multguided'] = { problems: multGuidedProblems, section: '2. Review: Multiply' };
+  renderEstExactList('mult-guided-list', multGuidedProblems, 'multguided', '2. Review: Multiply');
+
+  function checkMultCritical() {
+    const explain = document.getElementById('mult-critical-explain').value.trim();
+    const fb = document.getElementById('mult-critical-feedback');
+    if (explain.length <= 5) {
+      LessonCheck.incomplete(fb, "Write your explanation before submitting.");
+      return;
+    }
+    LessonCheck.submit(fb, { key: 'mult-critical', label: 'Critical Thinking: why is 0.2 x 0.3 = 0.06, not 0.6?', answer: explain, section: '2. Review: Multiply' });
+  }
+
+  // ==========================================
+  // TAB 3: CONCEPT CHECK
+  // ==========================================
+  const conceptItems = [
+    { q: "True or False: When adding decimals, you should line up the digits on the right edge, the same way you would for whole numbers.", type: "tf", correctVal: "false", explain: "False - line up the decimal points, not the right edge, so tenths stay under tenths and hundredths under hundredths." },
+    { q: "True or False: When multiplying decimals, you count the total number of decimal places in both factors to place the decimal point in the product.", type: "tf", correctVal: "true", explain: "True - multiplication doesn't need the decimal points lined up first; you multiply as whole numbers, then place the decimal based on the total count." },
+    { q: "Round \\(7.253\\) to the nearest hundredth.", type: "text", correctVal: "7.25", tol: 0.001, explain: "The thousandths digit is 3, which is less than 5, so the hundredths digit stays the same: \\(7.25\\)." },
+    { q: "How many decimal places should the product of \\(0.45 \\times 1.3\\) have?", type: "text", correctVal: "3", tol: 0.5, explain: "\\(0.45\\) has 2 decimal places and \\(1.3\\) has 1, so the product needs \\(2 + 1 = 3\\) decimal places." }
+  ];
+
+  function renderConceptList() {
+    const html = conceptItems.map((item, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${item.q}
+        <div style="margin-top:10px;">
+          ${item.type === 'tf'
+            ? `<select id="concept-${i}" class="form-control-lg" style="max-width:160px;"><option value="">Select...</option><option value="true">True</option><option value="false">False</option></select>`
+            : `<input type="text" id="concept-${i}" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">`}
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem; margin-left:10px;" onclick="checkConceptItem(${i})">Check</button>
+        </div>
+        <div id="concept-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('concept-list').innerHTML = html;
+    conceptItems.forEach((item, i) => LessonProgress.preRegister(`concept-${i}`, item.q.replace(/\\\(|\\\)/g, ''), '3. Concept Check'));
+  }
+  renderConceptList();
+
+  function checkConceptItem(idx) {
+    const item = conceptItems[idx];
+    const val = document.getElementById(`concept-${idx}`).value;
+    const fb = document.getElementById(`concept-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Choose or enter an answer before checking.");
+      return;
+    }
+    const correct = item.type === 'tf' ? val === item.correctVal : LessonCheck.numericMatch(val, Number(item.correctVal), item.tol);
+    LessonCheck.check(`concept-${idx}`, correct, fb, {
+      correct: `Correct! ${item.explain}`,
+      retry: "Not quite yet. Review the rule and try again.",
+      reveal: item.explain
+    }, { label: item.q.replace(/\\\(|\\\)/g, ''), answer: val, section: '3. Concept Check' });
+  }
+
+  // ==========================================
+  // TAB 4: MIXED PRACTICE (submit-only for every item)
+  // ==========================================
+  function renderSubmitList(containerId, problems, keyPrefix, section) {
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px;">
+          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Your answer">
+          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="submitListItem('${keyPrefix}', ${i})">Submit</button>
+        </div>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, p.label || p.q.replace(/\\\(|\\\)/g, ''), section));
+  }
+
+  const submitListRegistry = {};
+
+  function submitListItem(keyPrefix, idx) {
+    const cfg = submitListRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter your answer before submitting.");
+      return;
+    }
+    const label = p.label || p.q.replace(/\\\(|\\\)/g, '');
+    LessonCheck.submit(fb, { key: `${keyPrefix}-${idx}`, label, answer: val, section: cfg.section, correct: LessonCheck.numericMatch(val, p.a, p.tol) });
+  }
+
+  const mpSection1 = [
+    { q: "Add: \\(24.68 + 9.75\\)", a: 34.43, tol: 0.02 },
+    { q: "Subtract: \\(83.4 - 27.56\\)", a: 55.84, tol: 0.02 },
+    { q: "Multiply: \\(6.5 \\times 3.4\\)", a: 22.1, tol: 0.05 },
+    { q: "Add: \\(145.2 + 38.09\\)", a: 183.29, tol: 0.02 },
+    { q: "Subtract: \\(92.03 - 45.8\\)", a: 46.23, tol: 0.02 },
+    { q: "Multiply: \\(0.75 \\times 8.4\\)", a: 6.3, tol: 0.05 }
+  ];
+  const mpSection2 = [
+    { q: "A school store sells notebooks for \\(\\$8.75\\) each and backpacks for \\(\\$12.49\\) each. A student buys 3 notebooks and 1 backpack. What is the total cost before tax?", a: 38.74, tol: 0.05 },
+    { q: "A student has \\(\\$45.00\\). She spends \\(\\$18.65\\) on art supplies and \\(\\$9.40\\) on a poster. How much money does she have left?", a: 16.95, tol: 0.05 },
+    { q: "A rectangular garden bed measures \\(12.5\\) meters by \\(8.75\\) meters. What is the perimeter of the garden bed?", a: 42.5, tol: 0.1, aText: "42.5 m" },
+    { q: "A recipe calls for \\(2.5\\) cups of flour per batch. A baker wants to make \\(6\\) batches for a bake sale. How many cups of flour are needed?", a: 15.0, tol: 0.1, aText: "15.0 cups" }
+  ];
+  submitListRegistry['mp1'] = { problems: mpSection1, section: 'Mixed Practice - Section 1' };
+  submitListRegistry['mp2'] = { problems: mpSection2, section: 'Mixed Practice - Section 2' };
+  renderSubmitList('mp-section1-list', mpSection1, 'mp1', 'Mixed Practice - Section 1');
+  renderSubmitList('mp-section2-list', mpSection2, 'mp2', 'Mixed Practice - Section 2');
+
+  function submitExtraCredit() {
+    const a = document.getElementById('mp-ec-a').value;
+    const b = document.getElementById('mp-ec-b').value;
+    const c = document.getElementById('mp-ec-c').value;
+    const fb = document.getElementById('mp-ec-feedback');
+    if (!a.trim() && !b.trim() && !c.trim()) {
+      LessonCheck.incomplete(fb, "Fill in at least one part before submitting, or leave all blank to skip this optional problem.");
+      return;
+    }
+    LessonCheck.submit(fb, { key: 'mp-ec', label: 'Extra Credit: books, pens, tax, and change', answer: `A=$${a}, B=$${b}, C=$${c}`, section: 'Mixed Practice - Extra Credit', correct: LessonCheck.numericMatch(a, 36.00, 0.05) && LessonCheck.numericMatch(b, 39.62, 0.05) && LessonCheck.numericMatch(c, 20.38, 0.05) });
+  }
+  LessonProgress.preRegister('mp-ec', 'Extra Credit: books, pens, tax, and change', 'Mixed Practice - Extra Credit');
+
+  const mpMoreComputation = [
+    { q: "\\(25.68 + 12.4\\)", a: 38.08, tol: 0.02 },
+    { q: "\\(7.81 + 19.3\\)", a: 27.11, tol: 0.02 },
+    { q: "\\(42.15 - 15.8\\)", a: 26.35, tol: 0.02 },
+    { q: "\\(60.02 - 24.5\\)", a: 35.52, tol: 0.02 },
+    { q: "\\(12.4 \\times 0.6\\)", a: 7.44, tol: 0.05 },
+    { q: "\\(2.15 \\times 4.3\\)", a: 9.245, tol: 0.02 },
+    { q: "\\(0.85 \\times 9.2\\)", a: 7.82, tol: 0.05 }
+  ];
+  submitListRegistry['mpmc'] = { problems: mpMoreComputation, section: 'Mixed Practice - More Computation' };
+  renderSubmitList('mp-more-computation-list', mpMoreComputation, 'mpmc', 'Mixed Practice - More Computation');
+
+  const mpMoreWordProblems = [
+    { q: "A school garden project bought \\(3.8\\) pounds of organic soil for \\(\\$5.25\\) per pound. What is the total cost?", a: 19.95, tol: 0.05 },
+    { q: "On Monday, a construction crew laid \\(12.45\\) meters of concrete. On Tuesday, the length increased by \\(9.8\\) meters. What is the sum of the concrete laid over both days?", a: 22.25, tol: 0.05, aText: "22.25 m" },
+    { q: "A baker uses \\(0.75\\) cups of sugar for one batch. If the baker makes twice that amount, then adds an additional \\(1.25\\) cups for a cake, what is the total amount of sugar used?", a: 2.75, tol: 0.05, aText: "2.75 cups" },
+    { q: "A runner's water bottle held \\(24.5\\) ounces. After a long run, the amount decreased by \\(18.75\\) ounces. How many ounces remain?", a: 5.75, tol: 0.05, aText: "5.75 oz" },
+    { q: "A local shop sells craft ribbon for \\(\\$2.15\\) per yard. A student buys \\(4.5\\) yards. What is the total cost?", a: 9.675, tol: 0.05 }
+  ];
+  submitListRegistry['mpmw'] = { problems: mpMoreWordProblems, section: 'Mixed Practice - More Word Problems' };
+  renderSubmitList('mp-more-wordproblems-list', mpMoreWordProblems, 'mpmw', 'Mixed Practice - More Word Problems');
+
+  // ==========================================
+  // TAB 5: READINESS CHECK
+  // ==========================================
+  LessonProgress.preRegister('readiness', 'Readiness Check: sum, product, and reflections', '5. Readiness Check');
+
+  function submitReadiness(e) {
+    e.preventDefault();
+    const a1 = document.getElementById('exit-1').value;
+    const a2 = document.getElementById('exit-2').value;
+    const exp = document.getElementById('exit-explain').value.trim();
+    const ref = document.getElementById('exit-reflect').value.trim();
+    const fb = document.getElementById('exit-feedback');
+
+    if (!a1.trim() || !a2.trim() || exp.length <= 5 || ref.length <= 5) {
+      LessonCheck.incomplete(fb, "Fill in the sum, the product, and both explanation boxes before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, { key: 'readiness', label: 'Readiness Check: sum, product, and reflections', answer: `Sum=${a1}, Product=${a2}`, section: '5. Readiness Check', correct: LessonCheck.numericMatch(a1, 13.35, 0.01) && LessonCheck.numericMatch(a2, 3.6, 0.01) }, "Readiness Check submitted and logged successfully!");
+    LessonProgress.recordText('Readiness Check: procedural difference explanation', exp, '5. Readiness Check');
+    LessonProgress.recordText('Readiness Check: estimation reflection', ref, '5. Readiness Check');
+  }
+</script>
+<div id="print-report"></div>
+</body>
+</html>

@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Solving Linear Equations - Practice Set</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Algebra I &middot; Solving Linear Equations</span>
+    <h1>Practice Set</h1>
+  </header>
+
+  <div class="topic-nav-wrap">
+    <a class="topic-nav-back" href="../../index.html">&larr; All Topics</a>
+    <ul class="topic-nav">
+      <li><a class="topic-nav-link" href="Vocabulary-Literacy.html"><span class="topic-nav-icon">📖</span>Vocabulary &amp; Literacy</a></li>
+      <li><a class="topic-nav-link" href="Explanation.html"><span class="topic-nav-icon">🧮</span>Explanation</a></li>
+      <li><a class="topic-nav-link current" href="Practice-Set.html"><span class="topic-nav-icon">✏️</span>Practice Set</a></li>
+      <li><a class="topic-nav-link" href="Word-Problems.html"><span class="topic-nav-icon">📝</span>Word Problems</a></li>
+      <li><a class="topic-nav-link" href="Test-Prep.html"><span class="topic-nav-icon">🎯</span>Test Prep</a></li>
+      <li><a class="topic-nav-link" href="Teacher-Guide.html"><span class="topic-nav-icon">🧑‍🏫</span>Teacher's Guide</a></li>
+    </ul>
+  </div>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Algebra I - Solving Linear Equations - Practice Set')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Every problem here is pure computation - no word problems (those live on the Word Problems page). Work through the tabs in any order. Each item gives you up to <strong>2 tries</strong> - after a second miss, the correct method is shown and it locks. When you're done, type your name above and click <strong>Print My Progress</strong>. <strong>Calculators are allowed</strong> this year in Eighth Grade.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('warmup')">1. Warm-Up</button>
+    <button class="tab-btn" onclick="switchTab('oneside')">2. Variable on One Side</button>
+    <button class="tab-btn" onclick="switchTab('bothsides')">3. Variables on Both Sides</button>
+    <button class="tab-btn" onclick="switchTab('mixed')">4. Mixed Equations Bank</button>
+    <button class="tab-btn" onclick="switchTab('classify')">5. Classify the Solution</button>
+    <button class="tab-btn" onclick="switchTab('strategy')">6. Strategy Challenge</button>
+    <button class="tab-btn" onclick="switchTab('detective')">7. Error Analysis</button>
+  </nav>
+
+  <!-- TAB 1: WARM-UP -->
+  <div id="warmup" class="panel active">
+    <div class="section-title">Warm-Up: One-Step and Two-Step Equations</div>
+    <div class="explainer-box">
+      Confirm you can apply a single inverse operation before moving into multi-step and both-sides equations.
+    </div>
+    <div id="warmup-list"></div>
+  </div>
+
+  <!-- TAB 2: VARIABLE ON ONE SIDE -->
+  <div id="oneside" class="panel">
+    <div class="section-title">Variable on One Side</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Guided Practice</div>
+      <p style="margin:0;">Copy each equation into your notebook (or your handout) and show your work there, then type just your final answer below.</p>
+    </div>
+    <div id="l12-practice-list"></div>
+  </div>
+
+  <!-- TAB 3: VARIABLES ON BOTH SIDES -->
+  <div id="bothsides" class="panel">
+    <div class="section-title">Variables on Both Sides</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Guided Practice</div>
+      <p style="margin:0;">Copy each equation into your notebook (or your handout) and solve it there for \(x\). If the variable eliminates itself, type "no solution" or "infinite" instead of a number.</p>
+    </div>
+    <div id="l13-practice-list"></div>
+  </div>
+
+  <!-- TAB 4: MIXED EQUATIONS BANK -->
+  <div id="mixed" class="panel">
+    <div class="section-title">Mixed Equations Bank</div>
+    <div class="explainer-box">
+      These equations mix every type from this topic - variable on one side, variable on both sides, and cases where the variable cancels. Solve each and type "no solution" or "infinite" where the variable cancels.
+    </div>
+    <div id="mixed-list"></div>
+  </div>
+
+  <!-- TAB 5: CLASSIFY THE SOLUTION -->
+  <div id="classify" class="panel">
+    <div class="section-title">Classify the Solution</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Guided Practice</div>
+      <p style="margin:0;">Simplify fully, then select a classification. If it has one solution, also enter the value of \(x\).</p>
+    </div>
+    <div id="classify-list"></div>
+    <div class="notebook-box" style="margin-top:20px;">
+      <div class="notebook-header">More Practice: Quick Classify</div>
+      <div id="classify-more-list"></div>
+    </div>
+  </div>
+
+  <!-- TAB 6: STRATEGY CHALLENGE -->
+  <div id="strategy" class="panel">
+    <div class="section-title">Strategy Challenge: Pick Your Approach</div>
+    <div class="explainer-box">
+      Different equations reward different first moves. Pick a group below, solve its flagship equation, then work through 7 more equations that reward the same strategy.
+    </div>
+
+    <div id="strategy-picker-box" class="station-card">
+      <span class="station-label">Step 1</span>
+      <h3 style="margin-top:8px; color:var(--primary);">Which group would you like to try?</h3>
+      <p>Once you confirm, it locks in for the rest of this tab. You may reload the page to try another group later.</p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:12px;">
+        <button class="btn-lg" onclick="chooseStrategyGroup('A')">Group A: Variables on Both Sides</button>
+        <button class="btn-lg" onclick="chooseStrategyGroup('B')">Group B: Distribute First</button>
+        <button class="btn-lg" onclick="chooseStrategyGroup('C')">Group C: Watch the Variable</button>
+        <button class="btn-lg" onclick="chooseStrategyGroup('D')">Group D: Watch the Variable</button>
+      </div>
+    </div>
+
+    <div id="strategy-content" style="display:none;">
+      <div class="step-box">
+        <h3 id="strategy-title" style="margin-top:0; color:var(--primary);"></h3>
+        <p id="strategy-equation" style="font-size:1.3rem;"></p>
+        <div class="form-group">
+          <label>Solution:</label>
+          <input type="text" id="strategy-x" class="form-control-lg" style="max-width:220px;" placeholder="x = or type your classification">
+        </div>
+        <button class="btn-lg" onclick="checkStrategy()">Check</button>
+        <div id="strategy-feedback" class="feedback-msg"></div>
+      </div>
+
+      <div class="notebook-box" style="margin-top:20px;">
+        <div class="notebook-header">More Practice: Your Group's Strategy Set</div>
+        <div id="strategy-more-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 7: ERROR ANALYSIS -->
+  <div id="detective" class="panel">
+    <div class="section-title">Error Analysis: Spot the Mistake</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Each problem shows a solved equation with a mistake somewhere in the work. Find the first step where the work goes wrong, identify the step number, and enter the correct solution.
+    </div>
+    <div id="ed-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // TAB 1: WARM-UP
+  // ==========================================
+  const warmupProblems = [
+    { q: "\\(x + 9 = 15\\)", a: 6 },
+    { q: "\\(4x = 28\\)", a: 7 },
+    { q: "\\(\\dfrac{x}{3} + 4 = 9\\)", a: 15 },
+    { q: "\\(2x - 7 = 3\\)", a: 5 },
+    { q: "\\(5x - 8 = 22\\)", a: 6 },
+    { q: "\\(3x + 4 = -2x + 24\\)", a: 4 }
+  ];
+
+  function renderWarmup() {
+    const html = warmupProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="wu-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="x =">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkWarmup(${i})">Check</button>
+        <div id="wu-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('warmup-list').innerHTML = html;
+    warmupProblems.forEach((p, i) => LessonProgress.preRegister(`wu-${i}`, `Warm-Up #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '1. Warm-Up'));
+    triggerMathJax();
+  }
+
+  function checkWarmup(idx) {
+    const p = warmupProblems[idx];
+    const val = document.getElementById(`wu-${idx}-input`).value;
+    const fb = document.getElementById(`wu-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking - this won't count as an attempt yet."); return; }
+    const correct = LessonCheck.numericMatch(val, p.a, 0.001);
+    LessonCheck.check(`wu-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(\\rightarrow x = \\mathbf{${p.a}}\\)`,
+      retry: "Not quite yet. Identify the inverse operation and try again.",
+      reveal: `Here's the correct procedure: ${p.q} \\(\\rightarrow x = \\mathbf{${p.a}}\\)`
+    }, { label: `Warm-Up #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '1. Warm-Up' });
+  }
+
+  // ==========================================
+  // TAB 2: VARIABLE ON ONE SIDE
+  // ==========================================
+  const l12Practice = [
+    { q: "\\(2x - 5 = 11\\)", a: 8 },
+    { q: "\\(4x + 7 = -9\\)", a: -4 },
+    { q: "\\(-3x + 8 = 2\\)", a: 2 },
+    { q: "\\(5(x - 3) = 20\\)", a: 7 },
+    { q: "\\(7x - 9 = 19\\)", a: 4 },
+    { q: "\\(-4x + 6 = -14\\)", a: 5 },
+    { q: "\\(5h - 13 = 12\\)", a: 5 },
+    { q: "\\(8(n + 2) = 24\\)", a: 1 }
+  ];
+
+  function renderL12Practice() {
+    const html = l12Practice.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="l12p-${i}-input" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="x =">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkL12Practice(${i})">Check</button>
+        <div id="l12p-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('l12-practice-list').innerHTML = html;
+    l12Practice.forEach((p, i) => LessonProgress.preRegister(`l12p-${i}`, `Variable on One Side #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '2. Variable on One Side'));
+  }
+
+  function checkL12Practice(idx) {
+    const p = l12Practice[idx];
+    const val = document.getElementById(`l12p-${idx}-input`).value;
+    const fb = document.getElementById(`l12p-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet."); return; }
+    const correct = LessonCheck.numericMatch(val, p.a, 0.001);
+    LessonCheck.check(`l12p-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(\\rightarrow x = \\mathbf{${p.a}}\\)`,
+      retry: "Not quite yet. Simplify each side first, then undo operations in reverse order. Try again.",
+      reveal: `Here's the correct procedure: simplify, then apply inverse operations to isolate \\(x\\). ${p.q} \\(\\rightarrow x = \\mathbf{${p.a}}\\)`
+    }, { label: `Variable on One Side #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '2. Variable on One Side' });
+  }
+
+  // ==========================================
+  // TAB 3: VARIABLES ON BOTH SIDES
+  // ==========================================
+  const l13Practice = [
+    { q: "\\(6x + 9 = 2x - 7\\)", type: "number", a: -4 },
+    { q: "\\(3(x + 4) = x + 18\\)", type: "number", a: 3 },
+    { q: "\\(5x - 2 = 5x + 9\\)", type: "special", a: "no solution" },
+    { q: "\\(8x - 1 = 3x + 24\\)", type: "number", a: 5 },
+    { q: "\\(2(x - 3) = x + 1\\)", type: "number", a: 7 },
+    { q: "\\(-8x - (3x + 6) = 4 - x\\)", type: "number", a: -1 },
+    { q: "\\(14 + 3n = 8n - 3(n - 4)\\)", type: "number", a: 1 }
+  ];
+
+  function renderL13Practice() {
+    const html = l13Practice.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="l13p-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="x = or type">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkL13Practice(${i})">Check</button>
+        <div id="l13p-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('l13-practice-list').innerHTML = html;
+    l13Practice.forEach((p, i) => LessonProgress.preRegister(`l13p-${i}`, `Variables on Both Sides #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '3. Variables on Both Sides'));
+  }
+
+  function checkL13Practice(idx) {
+    const p = l13Practice[idx];
+    const raw = document.getElementById(`l13p-${idx}-input`).value;
+    const fb = document.getElementById(`l13p-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet."); return; }
+    let correct;
+    if (p.type === "number") { correct = LessonCheck.numericMatch(raw, p.a, 0.001); }
+    else { correct = raw.trim().toLowerCase().includes("no solution") || raw.trim().toLowerCase() === "none"; }
+    const answerText = p.type === "number" ? `x = \\(\\mathbf{${p.a}}\\)` : `<strong>${p.a}</strong>`;
+    LessonCheck.check(`l13p-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(\\rightarrow\\) ${answerText}`,
+      retry: "Not quite yet. Collect variable terms on one side first, then simplify. Try again.",
+      reveal: `Here's the correct procedure: collect variable terms on one side, then simplify. ${p.q} \\(\\rightarrow\\) ${answerText}`
+    }, { label: `Variables on Both Sides #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '3. Variables on Both Sides' });
+  }
+
+  // ==========================================
+  // TAB 4: MIXED EQUATIONS BANK
+  // ==========================================
+  const mixedProblems = [
+    { q: "\\(4x - 9 = 15\\)", type: "number", a: 6 },
+    { q: "\\(6 - 2x = -8\\)", type: "number", a: 7 },
+    { q: "\\(3(x - 5) = 12\\)", type: "number", a: 9 },
+    { q: "\\(6x - 4 = 2x + 20\\)", type: "number", a: 6 },
+    { q: "\\(9 - 2x = 5x - 5\\)", type: "number", a: 2 },
+    { q: "\\(4(x + 2) = 2(x + 7)\\)", type: "number", a: 3 },
+    { q: "\\(5x + 12 = -3\\)", type: "number", a: -3 },
+    { q: "\\(7 - 4x = -5\\)", type: "number", a: 3 },
+    { q: "\\(2(x + 4) = 3x - 1\\)", type: "number", a: 9 },
+    { q: "\\(2x + 9 = 21\\)", type: "number", a: 6 },
+    { q: "\\(7 - 3x = -8\\)", type: "number", a: 5 },
+    { q: "\\(4(x - 1) = 2x + 6\\)", type: "number", a: 5 },
+    { q: "\\(5x - 2 = 5x + 6\\)", type: "special", a: "no solution" },
+    { q: "\\(3(x + 2) = 3x + 6\\)", type: "special", a: "infinite" },
+    { q: "\\(6x - 4 = 2x + 16\\)", type: "number", a: 5 },
+    { q: "\\(5(x + 1) = 5x + 5\\)", type: "special", a: "infinite" },
+    { q: "\\(3x - 9 = 3x + 2\\)", type: "special", a: "no solution" }
+  ];
+
+  function renderMixed() {
+    const html = mixedProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="mix-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="x = or type">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkMixed(${i})">Check</button>
+        <div id="mix-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('mixed-list').innerHTML = html;
+    mixedProblems.forEach((p, i) => LessonProgress.preRegister(`mix-${i}`, `Mixed Bank #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '4. Mixed Equations Bank'));
+    triggerMathJax();
+  }
+
+  function checkMixed(idx) {
+    const p = mixedProblems[idx];
+    const raw = document.getElementById(`mix-${idx}-input`).value;
+    const fb = document.getElementById(`mix-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet."); return; }
+    let correct;
+    if (p.type === "number") { correct = LessonCheck.numericMatch(raw, p.a, 0.001); }
+    else {
+      const norm = raw.trim().toLowerCase();
+      correct = p.a === "no solution" ? (norm.includes("no solution") || norm === "none") : norm.includes("infinite");
+    }
+    const answerText = p.type === "number" ? `x = \\(\\mathbf{${p.a}}\\)` : `<strong>${p.a}</strong>`;
+    LessonCheck.check(`mix-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(\\rightarrow\\) ${answerText}`,
+      retry: "Not quite yet. Simplify fully and watch what happens to the variable term. Try again.",
+      reveal: `Here's the correct procedure: ${p.q} \\(\\rightarrow\\) ${answerText}`
+    }, { label: `Mixed Bank #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '4. Mixed Equations Bank' });
+  }
+
+  // ==========================================
+  // TAB 5: CLASSIFY THE SOLUTION
+  // ==========================================
+  const classifyItems = [
+    { q: "\\(2x + 5 = 3x - 1\\)", verdict: "one", a: 6 },
+    { q: "\\(2(x + 3) = 2x + 7\\)", verdict: "none" },
+    { q: "\\(4(x + 1) = 4x + 4\\)", verdict: "infinite" },
+    { q: "\\(6x - 2 = 3(2x + 1)\\)", verdict: "none" },
+    { q: "\\(5(x - 2) = 5x - 10\\)", verdict: "infinite" },
+    { q: "\\(7x + 3 = 4x + 18\\)", verdict: "one", a: 5 },
+    { q: "\\(8x - 4 = 8x + 3\\)", verdict: "none" },
+    { q: "\\(3(x - 2) = 3x - 6\\)", verdict: "infinite" }
+  ];
+  const verdictLabel = { one: "One solution", none: "No solution", infinite: "Infinitely many solutions" };
+
+  function renderClassify() {
+    const html = classifyItems.map((item, i) => `
+      <div class="step-box" style="margin-top:14px;">
+        <p style="margin:0 0 10px 0;"><strong>${i + 1}.</strong> ${item.q}</p>
+        <div class="form-group">
+          <label>Classification:</label>
+          <select id="cl-${i}-verdict" class="form-control-lg" style="max-width:280px;">
+            <option value="">Select...</option>
+            <option value="one">One solution</option>
+            <option value="none">No solution</option>
+            <option value="infinite">Infinitely many solutions</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>If one solution, enter x (otherwise leave blank):</label>
+          <input type="text" id="cl-${i}-x" class="form-control-lg" style="max-width:160px;" placeholder="x = (if applicable)">
+        </div>
+        <button class="btn-lg" style="padding:8px 18px; font-size:0.95rem;" onclick="checkClassify(${i})">Check</button>
+        <div id="cl-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('classify-list').innerHTML = html;
+    classifyItems.forEach((item, i) => LessonProgress.preRegister(`cl-${i}`, `Classify #${i + 1}: ${item.q.replace(/\\\(|\\\)/g, '')}`, '5. Classify the Solution'));
+    triggerMathJax();
+  }
+
+  function checkClassify(idx) {
+    const item = classifyItems[idx];
+    const verdict = document.getElementById(`cl-${idx}-verdict`).value;
+    const xVal = document.getElementById(`cl-${idx}-x`).value;
+    const fb = document.getElementById(`cl-${idx}-feedback`);
+    if (!verdict || (item.verdict === "one" && !xVal.trim())) {
+      LessonCheck.incomplete(fb, "Choose a classification (and enter x, if it has one solution) before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const verdictOk = verdict === item.verdict;
+    const xOk = item.verdict !== "one" || LessonCheck.numericMatch(xVal, item.a, 0.001);
+    const correct = verdictOk && xOk;
+    const answerText = item.verdict === "one" ? `<strong>${verdictLabel[item.verdict]}</strong>, \\(x = \\mathbf{${item.a}}\\)` : `<strong>${verdictLabel[item.verdict]}</strong>`;
+    LessonCheck.check(`cl-${idx}`, correct, fb, {
+      correct: `Correct! ${item.q} is ${answerText}`,
+      retry: "Not quite yet. Simplify both sides fully - if the variable cancels, look at what's left. Try again.",
+      reveal: `Here's the correct classification: ${item.q} is ${answerText}`
+    }, { label: `Classify #${idx + 1}: ${item.q.replace(/\\\(|\\\)/g, '')}`, answer: `${verdict || '(none)'}${xVal ? ', x=' + xVal : ''}`, section: '5. Classify the Solution' });
+  }
+
+  const comparisonMore = [
+    { q: "\\(20+8x=5+11x\\)", verdict: "one", a: 5 },
+    { q: "\\(30+12x=45+12x\\)", verdict: "none" },
+    { q: "\\(4(x+3)=4x+12\\)", verdict: "infinite" },
+    { q: "\\(9+6x=3+9x\\)", verdict: "one", a: 2 },
+    { q: "\\(5(x+2)=5x+8\\)", verdict: "none" },
+    { q: "\\(7x-4=4x+17\\)", verdict: "one", a: 7 }
+  ];
+
+  function renderClassifyMore() {
+    const html = comparisonMore.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 9}.</strong> ${p.q}
+        <select id="cm-${i}-verdict" class="form-control-lg" style="max-width:230px; display:inline-block;">
+          <option value="">Classify...</option>
+          <option value="one">One solution</option>
+          <option value="none">No solution</option>
+          <option value="infinite">Infinitely many solutions</option>
+        </select>
+        <input type="text" id="cm-${i}-x" class="form-control-lg" style="max-width:120px; display:inline-block;" placeholder="x = (if one)">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkClassifyMore(${i})">Check</button>
+        <div id="cm-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('classify-more-list').innerHTML = html;
+    comparisonMore.forEach((p, i) => LessonProgress.preRegister(`cm-${i}`, `Quick Classify #${i + 9}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '5. Classify the Solution'));
+    triggerMathJax();
+  }
+
+  function checkClassifyMore(idx) {
+    const p = comparisonMore[idx];
+    const verdict = document.getElementById(`cm-${idx}-verdict`).value;
+    const xVal = document.getElementById(`cm-${idx}-x`).value;
+    const fb = document.getElementById(`cm-${idx}-feedback`);
+    if (!verdict || (p.verdict === "one" && !xVal.trim())) {
+      LessonCheck.incomplete(fb, "Choose a classification (and enter x, if it has one solution) before checking.");
+      return;
+    }
+    const correct = verdict === p.verdict && (p.verdict !== 'one' || LessonCheck.numericMatch(xVal, p.a, 0.01));
+    const answerText = p.verdict === "one" ? `<strong>${verdictLabel[p.verdict]}</strong>, \\(x = \\mathbf{${p.a}}\\)` : `<strong>${verdictLabel[p.verdict]}</strong>`;
+    LessonCheck.check(`cm-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} is ${answerText}`,
+      retry: "Not quite yet. Simplify both sides fully. Try again.",
+      reveal: `Here's the correct classification: ${p.q} is ${answerText}`
+    }, { label: `Quick Classify #${idx + 9}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: `${verdict}${xVal ? ', x=' + xVal : ''}`, section: '5. Classify the Solution' });
+  }
+
+  // ==========================================
+  // TAB 6: STRATEGY CHALLENGE
+  // ==========================================
+  const strategyGroups = {
+    A: {
+      title: "Group A: Variables on Both Sides", eq: "\\(5x - 3 = 2x + 12\\)", type: "number", a: 5,
+      more: [
+        { q: "\\(6x + 4 = 2x + 16\\)", type: "number", a: 3 },
+        { q: "\\(3x - 7 = x + 9\\)", type: "number", a: 8 },
+        { q: "\\(8x - 10 = 3x + 35\\)", type: "number", a: 9 },
+        { q: "\\(4x + 6 = x - 3\\)", type: "number", a: -3 },
+        { q: "\\(9x - 2 = 5x + 14\\)", type: "number", a: 4 },
+        { q: "\\(2x + 30 = 7x - 5\\)", type: "number", a: 7 },
+        { q: "\\(10x - 4 = 6x + 20\\)", type: "number", a: 6 }
+      ]
+    },
+    B: {
+      title: "Group B: Distribute First", eq: "\\(3(2x - 1) = 4x + 9\\)", type: "number", a: 6,
+      more: [
+        { q: "\\(2(x + 5) = x - 2\\)", type: "number", a: -12 },
+        { q: "\\(4(x - 3) = 2x + 2\\)", type: "number", a: 7 },
+        { q: "\\(5(2x + 1) = 3x - 2\\)", type: "number", a: -1 },
+        { q: "\\(2(3x - 4) = x + 37\\)", type: "number", a: 9 },
+        { q: "\\(6(x + 2) = 3x - 3\\)", type: "number", a: -5 },
+        { q: "\\(3(x - 4) + 2x = x + 28\\)", type: "number", a: 10 },
+        { q: "\\(4(2x + 3) - 5 = 5x + 16\\)", type: "number", a: 3 }
+      ]
+    },
+    C: {
+      title: "Group C: Watch the Variable", eq: "\\(7x + 2 = 7x - 5\\)", type: "special", a: "no solution",
+      more: [
+        { q: "\\(5x - 3 = 2x + 9\\)", type: "number", a: 4 },
+        { q: "\\(6x + 8 = 6x - 1\\)", type: "special", a: "no solution" },
+        { q: "\\(4x - 7 = x + 14\\)", type: "number", a: 7 },
+        { q: "\\(3x + 10 = 3x - 4\\)", type: "special", a: "no solution" },
+        { q: "\\(9x - 6 = 5x + 18\\)", type: "number", a: 6 },
+        { q: "\\(2x + 15 = 2x - 3\\)", type: "special", a: "no solution" },
+        { q: "\\(8x - 11 = 3x + 29\\)", type: "number", a: 8 }
+      ]
+    },
+    D: {
+      title: "Group D: Watch the Variable", eq: "\\(2(x + 3) = 2x + 6\\)", type: "special", a: "infinite",
+      more: [
+        { q: "\\(5(x - 1) = 5x - 5\\)", type: "special", a: "infinite" },
+        { q: "\\(3x + 7 = 8x - 8\\)", type: "number", a: 3 },
+        { q: "\\(4(x + 2) - 3 = 4x + 5\\)", type: "special", a: "infinite" },
+        { q: "\\(6x - 9 = x + 16\\)", type: "number", a: 5 },
+        { q: "\\(3(2x - 4) = 6x - 12\\)", type: "special", a: "infinite" },
+        { q: "\\(7x + 3 = 2x + 33\\)", type: "number", a: 6 },
+        { q: "\\(3(3x - 2) - 2x = 5x + 2\\)", type: "number", a: 4 }
+      ]
+    }
+  };
+
+  let chosenStrategyGroup = null;
+
+  function chooseStrategyGroup(key) {
+    chosenStrategyGroup = key;
+    const g = strategyGroups[key];
+    document.getElementById('strategy-picker-box').innerHTML = `
+      <span class="station-label">Locked In</span>
+      <h3 style="margin-top:8px; color:var(--primary);">Your group: ${g.title}</h3>
+      <p>Scroll down to solve your flagship equation.</p>
+    `;
+    document.getElementById('strategy-title').innerText = g.title;
+    document.getElementById('strategy-equation').innerHTML = g.eq;
+    document.getElementById('strategy-content').style.display = 'block';
+    LessonProgress.preRegister(`strategy-${key}`, `Strategy Challenge (${g.title}): ${g.eq.replace(/\\\(|\\\)/g, '')}`, '6. Strategy Challenge');
+    renderStrategyMore();
+    triggerMathJax();
+  }
+
+  function checkStrategy() {
+    const g = strategyGroups[chosenStrategyGroup];
+    const raw = document.getElementById('strategy-x').value;
+    const fb = document.getElementById('strategy-feedback');
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter your solution before checking."); return; }
+    let correct;
+    if (g.type === "number") { correct = LessonCheck.numericMatch(raw, g.a, 0.001); }
+    else {
+      const norm = raw.trim().toLowerCase();
+      correct = g.a === "no solution" ? (norm.includes("no solution") || norm === "none") : norm.includes("infinite");
+    }
+    const answerText = g.type === "number" ? `x = \\(\\mathbf{${g.a}}\\)` : `<strong>${g.a}</strong>`;
+    LessonCheck.check(`strategy-${chosenStrategyGroup}`, correct, fb, {
+      correct: `Correct! ${g.eq} \\(\\rightarrow\\) ${answerText}`,
+      retry: "Not quite yet. Try again.",
+      reveal: `Here's the correct solution: ${g.eq} \\(\\rightarrow\\) ${answerText}`
+    }, { label: `Strategy Challenge (${g.title}): ${g.eq.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '6. Strategy Challenge' });
+  }
+
+  function renderStrategyMore() {
+    const g = strategyGroups[chosenStrategyGroup];
+    const html = g.more.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 2}.</strong> ${p.q}
+        <input type="text" id="stm-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="x = or classify">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkStrategyMore(${i})">Check</button>
+        <div id="stm-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('strategy-more-list').innerHTML = html;
+    g.more.forEach((p, i) => LessonProgress.preRegister(`stm-${i}`, `Strategy Set #${i + 2} (${g.title}): ${p.q.replace(/\\\(|\\\)/g, '')}`, '6. Strategy Challenge'));
+    triggerMathJax();
+  }
+
+  function checkStrategyMore(idx) {
+    const g = strategyGroups[chosenStrategyGroup];
+    const p = g.more[idx];
+    const raw = document.getElementById(`stm-${idx}-input`).value;
+    const fb = document.getElementById(`stm-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
+    let correct;
+    if (p.type === "number") { correct = LessonCheck.numericMatch(raw, p.a, 0.001); }
+    else {
+      const norm = raw.trim().toLowerCase();
+      correct = p.a === "no solution" ? (norm.includes("no solution") || norm === "none") : norm.includes("infinite");
+    }
+    const answerText = p.type === "number" ? `x = \\(\\mathbf{${p.a}}\\)` : `<strong>${p.a}</strong>`;
+    LessonCheck.check(`stm-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(\\rightarrow\\) ${answerText}`,
+      retry: "Not quite yet. Try again.",
+      reveal: `Here's the correct solution: ${p.q} \\(\\rightarrow\\) ${answerText}`
+    }, { label: `Strategy Set #${idx + 2} (${g.title}): ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '6. Strategy Challenge' });
+  }
+
+  // ==========================================
+  // TAB 7: ERROR ANALYSIS
+  // ==========================================
+  const errorDetective = [
+    { problem: "\\(3(x-4)=2x+5\\)", steps: ["\\(3x-4=2x+5\\)", "\\(3x-2x=5+4\\)", "\\(x=9\\)"], a: 17, wrongStep: '1' },
+    { problem: "\\(4(x-2)+5=3x-1\\)", steps: ["\\(4x-2+5=3x-1\\)", "\\(4x+3=3x-1\\)", "\\(x=-4\\)"], a: 2, wrongStep: '1' },
+    { problem: "\\(2(x+3)-7=x-4\\)", steps: ["\\(2x+6-7=x-4\\)", "\\(2x+1=x-4\\)", "\\(x=-5\\)"], a: -3, wrongStep: '2' },
+    { problem: "\\(3(2x-1)=4x+15\\)", steps: ["\\(6x-3=4x+15\\)", "\\(2x=12\\)", "\\(x=6\\)"], a: 9, wrongStep: '2' },
+    { problem: "\\(6(x+1)-4=2(x+7)\\)", steps: ["\\(6x+2=2x+7\\)", "\\(4x=5\\)", "\\(x=1.25\\)"], a: 3, wrongStep: '1' },
+    { problem: "\\(5(x-3)+2x=3x+9\\)", steps: ["\\(7x-15=3x+9\\)", "\\(4x=-6\\)", "\\(x=-1.5\\)"], a: 6, wrongStep: '2' },
+    { problem: "\\(2(3x+4)-5=4x+13\\)", steps: ["\\(6x+8=4x+13\\)", "\\(2x=5\\)", "\\(x=2.5\\)"], a: 5, wrongStep: '1' },
+    { problem: "\\(6x-2(x-4)=5x-3\\)", steps: ["\\(6x-2x-8=5x-3\\)", "\\(4x-8=5x-3\\)", "\\(x=-5\\)"], a: 11, wrongStep: '1' }
+  ];
+
+  function renderDetective() {
+    const html = errorDetective.map((p, i) => `
+      <div class="step-box" style="margin-top:14px;">
+        <p><strong>Problem ${i + 1}:</strong> ${p.problem}</p>
+        <p><strong>Student work:</strong></p>
+        <p style="margin:0 0 4px 0;">Step 1: ${p.steps[0]}</p>
+        <p style="margin:0 0 4px 0;">Step 2: ${p.steps[1]}</p>
+        <p style="margin:0 0 12px 0;">Step 3: ${p.steps[2]}</p>
+        <div class="form-group">
+          <label>Which step number has the first mistake?</label>
+          <input type="text" id="ed-${i}-step" class="form-control-lg" style="max-width:160px;" placeholder="Step #">
+        </div>
+        <div class="form-group">
+          <label>What is the correct solution (\\(x =\\))?</label>
+          <input type="text" id="ed-${i}-answer" class="form-control-lg" style="max-width:200px;" placeholder="x =">
+        </div>
+        <button class="btn-lg" onclick="checkDetective(${i})">Check</button>
+        <div id="ed-${i}-feedback" class="feedback-msg"></div>
+      </div>
+    `).join('');
+    document.getElementById('ed-list').innerHTML = html;
+    errorDetective.forEach((p, i) => LessonProgress.preRegister(`ed-${i}`, `Error Analysis #${i + 1}: ${p.problem.replace(/\\\(|\\\)/g, '')}`, '7. Error Analysis'));
+    triggerMathJax();
+  }
+
+  function checkDetective(idx) {
+    const p = errorDetective[idx];
+    const step = document.getElementById(`ed-${idx}-step`).value.trim();
+    const answer = document.getElementById(`ed-${idx}-answer`).value;
+    const fb = document.getElementById(`ed-${idx}-feedback`);
+    if (!step || !answer.trim()) {
+      LessonCheck.incomplete(fb, "Identify the step number and enter the correct solution before checking.");
+      return;
+    }
+    const correct = step === p.wrongStep && LessonCheck.numericMatch(answer, p.a, 0.01);
+    LessonCheck.check(`ed-${idx}`, correct, fb, {
+      correct: `Correct! The mistake is in Step ${p.wrongStep}; the correct solution is \\(x = \\mathbf{${p.a}}\\).`,
+      retry: "Not quite yet. Check each step against the Distributive Property and properties of equality. Try again.",
+      reveal: `The mistake is in Step ${p.wrongStep}; the correct solution is \\(x = \\mathbf{${p.a}}\\).`
+    }, { label: `Error Analysis #${idx + 1}: ${p.problem.replace(/\\\(|\\\)/g, '')}`, answer: `Step ${step}, x=${answer}`, section: '7. Error Analysis' });
+  }
+
+  // Initial render
+  renderWarmup();
+  renderL12Practice();
+  renderL13Practice();
+  renderMixed();
+  renderClassify();
+  renderClassifyMore();
+  renderDetective();
+</script>
+<div id="print-report"></div>
+</body>
+</html>
