@@ -24,12 +24,18 @@
       --card: #ffffff;
       --text: #0f172a;
       --border: #94a3b8;
-      --success: #15803d;
-      --success-bg: #dcfce7;
-      --guide: #7c2d12;
-      --guide-bg: #fff7ed;
       --empty: #64748b;
       --empty-bg: #f1f5f9;
+
+      /* One accent color per section, reused for its chip on every
+         topic card so the same section always reads the same color
+         no matter which grade or topic it belongs to. */
+      --c-vocab: #0f766e;      --c-vocab-bg: #ccfbf1;
+      --c-explain: #1d4ed8;    --c-explain-bg: #dbeafe;
+      --c-practice: #15803d;   --c-practice-bg: #dcfce7;
+      --c-word: #7c3aed;       --c-word-bg: #ede9fe;
+      --c-test: #b91c1c;       --c-test-bg: #fee2e2;
+      --c-teacher: #92400e;    --c-teacher-bg: #fef3c7;
     }
     * { box-sizing: border-box; }
     body, input, button {
@@ -90,168 +96,121 @@
 
     .content { padding: 28px 32px 36px 32px; }
 
-    /* ===== Grade (class) section ===== */
-    .grade-section {
-      margin-bottom: 30px;
+    /* ===== Grade picker (pill tabs, one per grade) ===== */
+    .grade-picker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .grade-pill {
+      border: 2px solid var(--primary-light);
+      background: var(--card);
+      color: var(--primary);
+      padding: 12px 26px;
+      border-radius: 40px;
+      font-weight: 800;
+      font-size: 1.02rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .grade-pill:hover { background: #dbeafe; }
+    .grade-pill.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 6px 14px rgba(30,58,138,0.35);
+    }
+    .grade-pill .pill-subject {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.75;
+      margin-top: 2px;
+    }
+
+    /* ===== Grade panel ===== */
+    .grade-panel { display: none; }
+    .grade-panel.active { display: block; }
+
+    .grade-intro {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .grade-intro h2 { margin: 0 0 4px 0; font-size: 1.6rem; color: var(--primary); font-weight: 800; }
+    .grade-intro p { margin: 0; color: #475569; font-size: 0.98rem; }
+
+    /* ===== Topic cards ===== */
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .topic-card {
       border: 2px solid var(--border);
       border-radius: 14px;
       overflow: hidden;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
     }
-    .grade-header {
+    .topic-card-head {
       background: var(--primary-light);
       color: white;
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
+      padding: 18px 20px;
     }
-    .grade-header h2 { margin: 0; font-size: 1.5rem; font-weight: 800; }
-    .grade-header span.subject-tag {
-      background: rgba(255,255,255,0.18);
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .grade-body { padding: 16px 20px; }
-
-    /* ===== Quarter accordion ===== */
-    details.quarter-block {
-      border: 2px solid var(--primary-light);
-      border-radius: 12px;
-      margin-bottom: 14px;
-      overflow: hidden;
-    }
-    details.quarter-block:last-child { margin-bottom: 0; }
-    summary.quarter-summary {
-      list-style: none;
-      cursor: pointer;
-      background: #dbeafe;
-      color: var(--primary);
-      padding: 12px 18px;
-      font-weight: 800;
-      font-size: 1.05rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    summary.quarter-summary::-webkit-details-marker { display: none; }
-    summary.quarter-summary::marker { content: ""; }
-    summary.quarter-summary .chevron {
-      transition: transform 0.15s ease;
-      font-size: 0.85rem;
-    }
-    details[open] > summary.quarter-summary .chevron { transform: rotate(90deg); }
-    summary.quarter-summary .week-count {
-      font-weight: 700;
-      font-size: 0.82rem;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      color: #1d4ed8;
-      opacity: 0.8;
-    }
-    .quarter-body { padding: 14px 16px 16px 16px; }
-    .quarter-empty {
-      color: var(--empty);
-      font-style: italic;
-      font-size: 0.95rem;
-      padding: 4px 4px 8px 4px;
-    }
-
-    /* ===== Week accordion ===== */
-    details.week-block {
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      margin-bottom: 12px;
-      background: var(--bg);
-      overflow: hidden;
-    }
-    details.week-block:last-child { margin-bottom: 0; }
-    summary.week-summary {
-      list-style: none;
-      cursor: pointer;
-      padding: 10px 16px;
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      flex-wrap: wrap;
-      background: var(--card);
-    }
-    summary.week-summary::-webkit-details-marker { display: none; }
-    summary.week-summary::marker { content: ""; }
-    summary.week-summary .chevron {
-      transition: transform 0.15s ease;
-      font-size: 0.8rem;
-      color: var(--primary);
-    }
-    details[open] > summary.week-summary .chevron { transform: rotate(90deg); }
-    summary.week-summary .week-code {
-      background: var(--accent);
-      color: #000;
-      padding: 3px 12px;
-      border-radius: 16px;
-      font-weight: 800;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-    }
-    summary.week-summary .week-title { font-weight: 800; color: var(--primary); font-size: 1.05rem; }
-    .week-body { padding: 14px 16px 16px 16px; }
-    p.week-sub { margin: 0 0 14px 0; color: #475569; font-size: 0.92rem; }
-
-    /* ===== Day / guide button grid (6 buttons: Mon-Fri + Guide) ===== */
-    .item-row {
+    .topic-card-head h3 { margin: 0 0 6px 0; font-size: 1.25rem; font-weight: 800; }
+    .topic-card-head p { margin: 0; font-size: 0.9rem; opacity: 0.95; }
+    .topic-card-body { padding: 16px 18px 18px 18px; }
+    .section-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 10px;
     }
-    .day-btn, .guide-btn, .empty-tag {
-      display: block;
+    .section-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       text-decoration: none;
       border-radius: 10px;
-      padding: 12px 12px;
+      padding: 11px 12px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      border: 2px solid transparent;
       transition: transform 0.12s ease, box-shadow 0.12s ease;
     }
-    .day-btn { background: var(--success-bg); border: 2px solid var(--success); color: var(--text); }
-    .guide-btn { background: var(--guide-bg); border: 2px solid var(--guide); color: var(--guide); }
-    .day-btn:hover, .guide-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.12); }
+    .section-link:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.12); }
+    .section-link .section-icon { font-size: 1.1rem; line-height: 1; }
+    .section-link.vocab    { background: var(--c-vocab-bg);    color: var(--c-vocab);    border-color: var(--c-vocab); }
+    .section-link.explain  { background: var(--c-explain-bg);  color: var(--c-explain);  border-color: var(--c-explain); }
+    .section-link.practice { background: var(--c-practice-bg); color: var(--c-practice); border-color: var(--c-practice); }
+    .section-link.word     { background: var(--c-word-bg);     color: var(--c-word);     border-color: var(--c-word); }
+    .section-link.test     { background: var(--c-test-bg);     color: var(--c-test);     border-color: var(--c-test); }
+    .section-link.teacher  { background: var(--c-teacher-bg);  color: var(--c-teacher);  border-color: var(--c-teacher); }
 
-    .item-label {
-      display: block;
-      font-weight: 800;
-      text-transform: uppercase;
-      font-size: 0.76rem;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-    }
-    .day-btn .item-label { color: var(--success); }
-    .guide-btn .item-label { color: var(--guide); }
-    .item-topic {
-      display: block;
-      font-size: 0.88rem;
-      font-weight: 600;
-      line-height: 1.3;
-    }
-
-    /* Tag shown for a day/guide slot with no content yet */
     .empty-tag {
+      display: block;
       background: var(--empty-bg);
       border: 2px dashed var(--border);
       color: var(--empty);
+      border-radius: 10px;
+      padding: 11px 12px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      font-style: italic;
       cursor: default;
     }
-    .empty-tag .item-label { color: var(--empty); }
-    .empty-tag .item-topic { font-style: italic; }
 
     .coming-soon {
       color: var(--empty);
       font-style: italic;
-      font-size: 0.95rem;
-      padding: 16px 20px;
+      font-size: 1rem;
+      text-align: center;
+      padding: 40px 20px;
+      border: 2px dashed var(--border);
+      border-radius: 14px;
     }
 
     footer {
@@ -272,170 +231,158 @@
     </div>
     <span class="badge">2026-2027 Academic Year</span>
     <h1>Lesson Plans</h1>
-    <p class="subtitle">Digital lessons, guided practice, and teacher guides - organized by grade, quarter, and week</p>
+    <p class="subtitle">Digital lessons organized by topic - vocabulary, explanation, practice, word problems, test prep, and teacher guides</p>
   </header>
 
-  <div class="content" id="content"></div>
+  <div class="content">
+    <div class="grade-picker" id="grade-picker"></div>
+    <div id="grade-panels"></div>
+  </div>
 
   <footer>Lincoln International Academy &middot; Lesson Plans Index</footer>
 </div>
 
 <script>
   /*
-   * CURRICULUM is the single source of truth for this index.
-   * To publish a new week: add one entry under the right grade/quarter's
-   * `weeks` object. To add a day within a week that isn't built yet,
-   * either omit it from `days` (it will show as a "No content yet" tag)
-   * or leave the whole `guide` key out to tag the Teacher Guide as empty.
-   * Quarters 1-4 always render for every grade, even with zero weeks,
-   * so the full-year structure is visible as soon as classes are created.
+   * CURRICULUM is the single source of truth for this index. Each grade
+   * holds a list of topics (no more day/week structure) - to publish a
+   * new topic, add an entry to that grade's `topics` array with an href
+   * for each of the six sections. Omit a section's href to show it as
+   * "Coming soon" instead of a link.
    */
-  const QUARTERS = [1, 2, 3, 4];
-  const DAY_ORDER = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  const SECTIONS = [
+    { key: "vocab",    cls: "vocab",    icon: "\u{1F4D6}", label: "Vocabulary &amp; Literacy" },
+    { key: "explain",  cls: "explain",  icon: "\u{1F9EE}", label: "Explanation" },
+    { key: "practice", cls: "practice", icon: "✏️", label: "Practice Set" },
+    { key: "word",     cls: "word",     icon: "\u{1F4DD}", label: "Word Problems" },
+    { key: "test",     cls: "test",     icon: "\u{1F3AF}", label: "Test Prep" },
+    { key: "teacher",  cls: "teacher",  icon: "\u{1F9D1}‍\u{1F3EB}", label: "Teacher's Guide" }
+  ];
 
   const CURRICULUM = {
     Sixth: {
       label: "Sixth Grade",
       subject: "Math 6",
-      quarters: {
-        1: {
-          weeks: {
-            "Q01W02": {
-              title: "Decimal Operations",
-              summary: "Add, subtract, and multiply decimals; multi-step word problems; error analysis; real-world jigsaw; graded classwork.",
-              days: {
-                Monday:    { topic: "Add, Subtract &amp; Multiply Decimals", href: "Sixth/Q01W02/Monday.html" },
-                Tuesday:   { topic: "Multi-Step Word Problems", href: "Sixth/Q01W02/Tuesday.html" },
-                Wednesday: { topic: "Error Analysis &amp; Health Science", href: "Sixth/Q01W02/Wednesday.html" },
-                Thursday:  { topic: "Real-World Decimal Jigsaw", href: "Sixth/Q01W02/Thursday.html" },
-                Friday:    { topic: "Graded Classwork", href: "Sixth/Q01W02/Friday.html" }
-              },
-              guide: { href: "Sixth/Q01W02/Teacher-Guide.html" }
-            }
-          }
+      topics: [
+        {
+          title: "Decimal Operations",
+          summary: "Add, subtract, and multiply decimals with the standard algorithms, then apply them to multi-step and real-world word problems.",
+          base: "Sixth/Decimal-Operations/",
+          vocab: "Vocabulary-Literacy.html",
+          explain: "Explanation.html",
+          practice: "Practice-Set.html",
+          word: "Word-Problems.html",
+          test: "Test-Prep.html",
+          teacher: "Teacher-Guide.html"
         }
-      }
+      ]
     },
     Seventh: {
       label: "Seventh Grade",
       subject: "Pre-Algebra",
-      quarters: {
-        1: {
-          weeks: {
-            "Q01W02": {
-              title: "Relate Integers and Opposites; Operations With Integers",
-              summary: "Lessons 1.1-1.4: opposites &amp; absolute value, add/subtract/multiply/divide integers, official Savvas Quick Check, graded classwork.",
-              days: {
-                Monday:    { topic: "Relate Integers and Opposites; Add &amp; Subtract Integers", href: "Seventh/Q01W02/Monday.html" },
-                Tuesday:   { topic: "Multiply and Divide Integers", href: "Seventh/Q01W02/Tuesday.html" },
-                Wednesday: { topic: "Practice: Quick Check 1.1-1.4", href: "Seventh/Q01W02/Wednesday.html" },
-                Thursday:  { topic: "Practice: Skill Reinforcement", href: "Seventh/Q01W02/Thursday.html" },
-                Friday:    { topic: "Graded Classwork", href: "Seventh/Q01W02/Friday.html" }
-              },
-              guide: { href: "Seventh/Q01W02/Teacher-Guide.html" }
-            }
-          }
+      topics: [
+        {
+          title: "Integers: Opposites &amp; Operations",
+          summary: "Relate integers and their opposites, then add, subtract, multiply, and divide integers with confidence.",
+          base: "Seventh/Integers/",
+          vocab: "Vocabulary-Literacy.html",
+          explain: "Explanation.html",
+          practice: "Practice-Set.html",
+          word: "Word-Problems.html",
+          test: "Test-Prep.html",
+          teacher: "Teacher-Guide.html"
         }
-      }
+      ]
     },
     Eighth: {
       label: "Eighth Grade",
       subject: "Algebra I",
-      quarters: {
-        1: {
-          weeks: {
-            "Q01W02": {
-              title: "Solving Linear Equations",
-              summary: "Lessons 1-2 &amp; 1-3: variables on one and both sides, classifying solutions, real-world applications, graded classwork.",
-              days: {
-                Monday:    { topic: "Solving Linear Equations", href: "Eighth/Q01W02/Monday.html" },
-                Tuesday:   { topic: "Practice: Solving Linear Equations", href: "Eighth/Q01W02/Tuesday.html" },
-                Wednesday: { topic: "One, None, or Infinitely Many Solutions?", href: "Eighth/Q01W02/Wednesday.html" },
-                Thursday:  { topic: "Review: Solving Linear Equations", href: "Eighth/Q01W02/Thursday.html" },
-                Friday:    { topic: "Graded Classwork", href: "Eighth/Q01W02/Friday.html" }
-              },
-              guide: { href: "Eighth/Q01W02/Teacher-Guide.html" }
-            }
-          }
+      topics: [
+        {
+          title: "Solving Linear Equations",
+          summary: "Solve equations with variables on one and both sides, and classify solutions as one, none, or infinitely many.",
+          base: "Eighth/Linear-Equations/",
+          vocab: "Vocabulary-Literacy.html",
+          explain: "Explanation.html",
+          practice: "Practice-Set.html",
+          word: "Word-Problems.html",
+          test: "Test-Prep.html",
+          teacher: "Teacher-Guide.html"
         }
-      }
+      ]
     }
   };
 
   const GRADE_ORDER = ["Sixth", "Seventh", "Eighth"];
 
-  function pad2(n) { return String(n).padStart(2, "0"); }
-
-  function renderDayOrGuide(kind, label, entry) {
-    if (!entry) {
-      return `
-        <span class="empty-tag">
-          <span class="item-label">${label}</span>
-          <span class="item-topic">No content yet</span>
-        </span>`;
+  function renderSectionLink(section, topic) {
+    const href = topic[section.key];
+    if (!href) {
+      return `<span class="empty-tag">${section.icon} ${section.label}<br>Coming soon</span>`;
     }
-    const cls = kind === "guide" ? "guide-btn" : "day-btn";
     return `
-      <a class="${cls}" href="${entry.href}">
-        <span class="item-label">${label}</span>
-        <span class="item-topic">${entry.topic || "Teacher Guide"}</span>
+      <a class="section-link ${section.cls}" href="${topic.base}${href}">
+        <span class="section-icon">${section.icon}</span>
+        <span>${section.label}</span>
       </a>`;
   }
 
-  function renderWeek(weekCode, week) {
-    const dayButtons = DAY_ORDER.map((day) => renderDayOrGuide("day", day, week.days[day])).join("");
-    const guideButton = renderDayOrGuide("guide", "Teacher Guide", week.guide);
+  function renderTopicCard(topic) {
+    const sectionLinks = SECTIONS.map((s) => renderSectionLink(s, topic)).join("");
     return `
-      <details class="week-block" open>
-        <summary class="week-summary">
-          <span class="chevron">&#9656;</span>
-          <span class="week-code">${weekCode}</span>
-          <span class="week-title">${week.title}</span>
-        </summary>
-        <div class="week-body">
-          <p class="week-sub">${week.summary || ""}</p>
-          <div class="item-row">
-            ${dayButtons}
-            ${guideButton}
-          </div>
+      <div class="topic-card">
+        <div class="topic-card-head">
+          <h3>${topic.title}</h3>
+          <p>${topic.summary || ""}</p>
         </div>
-      </details>`;
-  }
-
-  function renderQuarter(qNum, quarterData) {
-    const weeks = (quarterData && quarterData.weeks) ? quarterData.weeks : {};
-    const weekCodes = Object.keys(weeks).sort();
-    const count = weekCodes.length;
-    const body = count === 0
-      ? `<p class="quarter-empty">No weeks published yet.</p>`
-      : weekCodes.map((code) => renderWeek(code, weeks[code])).join("");
-    return `
-      <details class="quarter-block" ${count > 0 ? "open" : ""}>
-        <summary class="quarter-summary">
-          <span style="display:flex; align-items:center; gap:10px;">
-            <span class="chevron">&#9656;</span>
-            Quarter ${pad2(qNum)}
-          </span>
-          <span class="week-count">${count} week${count === 1 ? "" : "s"} published</span>
-        </summary>
-        <div class="quarter-body">${body}</div>
-      </details>`;
-  }
-
-  function renderGrade(gradeKey) {
-    const grade = CURRICULUM[gradeKey];
-    const quarterHtml = QUARTERS.map((q) => renderQuarter(q, grade.quarters[q])).join("");
-    return `
-      <div class="grade-section">
-        <div class="grade-header">
-          <h2>${grade.label}</h2>
-          <span class="subject-tag">${grade.subject}</span>
+        <div class="topic-card-body">
+          <div class="section-grid">${sectionLinks}</div>
         </div>
-        <div class="grade-body">${quarterHtml}</div>
       </div>`;
   }
 
-  document.getElementById("content").innerHTML = GRADE_ORDER.map(renderGrade).join("");
+  function renderGradePanel(gradeKey, isFirst) {
+    const grade = CURRICULUM[gradeKey];
+    const topics = grade.topics || [];
+    const body = topics.length === 0
+      ? `<p class="coming-soon">No topics published yet for ${grade.label} - check back soon.</p>`
+      : `<div class="topic-grid">${topics.map(renderTopicCard).join("")}</div>`;
+    return `
+      <div class="grade-panel${isFirst ? " active" : ""}" id="panel-${gradeKey}">
+        <div class="grade-intro">
+          <h2>${grade.label}</h2>
+          <p>${grade.subject}</p>
+        </div>
+        ${body}
+      </div>`;
+  }
+
+  function renderGradePill(gradeKey, isFirst) {
+    const grade = CURRICULUM[gradeKey];
+    return `
+      <button type="button" class="grade-pill${isFirst ? " active" : ""}" data-grade="${gradeKey}">
+        ${grade.label}
+        <span class="pill-subject">${grade.subject}</span>
+      </button>`;
+  }
+
+  function showGrade(gradeKey) {
+    document.querySelectorAll(".grade-panel").forEach((el) => {
+      el.classList.toggle("active", el.id === `panel-${gradeKey}`);
+    });
+    document.querySelectorAll(".grade-pill").forEach((el) => {
+      el.classList.toggle("active", el.dataset.grade === gradeKey);
+    });
+  }
+
+  document.getElementById("grade-picker").innerHTML =
+    GRADE_ORDER.map((g, i) => renderGradePill(g, i === 0)).join("");
+  document.getElementById("grade-panels").innerHTML =
+    GRADE_ORDER.map((g, i) => renderGradePanel(g, i === 0)).join("");
+
+  document.querySelectorAll(".grade-pill").forEach((btn) => {
+    btn.addEventListener("click", () => showGrade(btn.dataset.grade));
+  });
 </script>
 
 </body>
