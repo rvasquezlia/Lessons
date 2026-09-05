@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Solving Linear Equations - Word Problems</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Algebra I &middot; Solving Linear Equations</span>
+    <h1>Word Problems</h1>
+  </header>
+
+  <div class="topic-nav-wrap">
+    <a class="topic-nav-back" href="../../index.html">&larr; All Topics</a>
+    <ul class="topic-nav">
+      <li><a class="topic-nav-link" href="Vocabulary-Literacy.html"><span class="topic-nav-icon">📖</span>Vocabulary &amp; Literacy</a></li>
+      <li><a class="topic-nav-link" href="Explanation.html"><span class="topic-nav-icon">🧮</span>Explanation</a></li>
+      <li><a class="topic-nav-link" href="Practice-Set.html"><span class="topic-nav-icon">✏️</span>Practice Set</a></li>
+      <li><a class="topic-nav-link current" href="Word-Problems.html"><span class="topic-nav-icon">📝</span>Word Problems</a></li>
+      <li><a class="topic-nav-link" href="Test-Prep.html"><span class="topic-nav-icon">🎯</span>Test Prep</a></li>
+      <li><a class="topic-nav-link" href="Teacher-Guide.html"><span class="topic-nav-icon">🧑‍🏫</span>Teacher's Guide</a></li>
+    </ul>
+  </div>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Algebra I - Solving Linear Equations - Word Problems')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Every item on this page is a word problem - use the 4-Step Method from the Explanation page: define the variable, write the equation, solve, and interpret. Some items are checked on screen with up to 2 tries; others ask for a written recommendation and are simply recorded for your teacher to review from your printed report. Finish every tab, then type your name above and click <strong>Print My Progress</strong>. <strong>Calculators are allowed</strong> this year in Eighth Grade.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('mixture')">1. Mixture &amp; Work-Rate</button>
+    <button class="tab-btn" onclick="switchTab('cost')">2. Cost Comparisons</button>
+    <button class="tab-btn" onclick="switchTab('savings')">3. Savings &amp; Billing</button>
+    <button class="tab-btn" onclick="switchTab('savvas')">4. More Word Problems</button>
+    <button class="tab-btn" onclick="switchTab('challenge')">5. Challenge Word Problems</button>
+  </nav>
+
+  <!-- TAB 1: MIXTURE & WORK-RATE -->
+  <div id="mixture" class="panel active">
+    <div class="section-title">Mixture &amp; Work-Rate Applications</div>
+    <div class="explainer-box">
+      <strong>Multidisciplinary connection:</strong> Science &amp; Mathematical Modeling, Engineering &amp; Logical Reasoning. Linear equations model relationships between measurable quantities - here, a chemistry mixture and a combined work rate.
+    </div>
+
+    <div class="step-box">
+      <h3 style="margin-top:0; color:var(--primary);">Mixture Investigation</h3>
+      <p>A chemistry lab needs to prepare \(12\) liters of a \(30\%\) acid solution by combining a \(50\%\) acid solution with a \(20\%\) acid solution.</p>
+      <p><strong>Task:</strong> if \(x\) is the number of liters of \(50\%\) solution used, then \((12 - x)\) is the number of liters of \(20\%\) solution used. The equation is \(0.5x + 0.2(12 - x) = 0.3(12)\). Solve for \(x\), then find how much \(20\%\) solution is needed.</p>
+      <div class="form-group">
+        <label>Liters of 50% solution (\(x\)):</label>
+        <input type="text" id="mix-x" class="form-control-lg" style="max-width:200px;" placeholder="liters">
+      </div>
+      <div class="form-group">
+        <label>Liters of 20% solution:</label>
+        <input type="text" id="mix-other" class="form-control-lg" style="max-width:200px;" placeholder="liters">
+      </div>
+      <button class="btn-lg" onclick="checkMixture()">Check</button>
+      <div id="mix-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="step-box" style="margin-top:24px;">
+      <h3 style="margin-top:0; color:var(--primary);">Work &amp; Time Scenario</h3>
+      <p>Print Shop A's printer produces \(5\) pages per minute. Print Shop B's printer produces \(8\) pages per minute. Working at the same time, the two printers must produce a combined order of \(260\) pages.</p>
+      <p><strong>Task:</strong> write and solve an equation for \(x\), the number of minutes it takes both printers, working together, to complete the order.</p>
+      <div class="form-group">
+        <label>Time in minutes (\(x\)):</label>
+        <input type="text" id="wt-x" class="form-control-lg" style="max-width:200px;" placeholder="minutes">
+      </div>
+      <button class="btn-lg" onclick="checkWorkTime()">Check</button>
+      <div id="wt-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: COST COMPARISONS -->
+  <div id="cost" class="panel">
+    <div class="section-title">Real-Life Application: Cost Comparison Scenarios</div>
+    <div class="explainer-box">
+      Set the two total-cost expressions equal to each other, solve for the number of months, then use the result to make a recommendation.
+    </div>
+
+    <div class="step-box">
+      <h3 style="margin-top:0; color:var(--primary);">Comparing Two Gym Plans</h3>
+      <p>Gym A charges a \(\$40\) sign-up fee plus \(\$25\) per month. Gym B charges no sign-up fee, but \(\$33\) per month.</p>
+      <p><strong>Task:</strong> after how many months, \(x\), do both gyms cost the same total amount?</p>
+      <div class="form-group">
+        <label>Months (\(x\)):</label>
+        <input type="text" id="budget-x" class="form-control-lg" style="max-width:200px;" placeholder="months">
+      </div>
+      <div class="form-group">
+        <label>Which plan would you recommend for someone keeping the membership less than 5 months, and why?</label>
+        <textarea id="budget-explain" class="form-control-lg" rows="2" placeholder="I would recommend..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkBudget()">Submit My Work</button>
+      <div id="budget-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:20px;">
+      <div class="notebook-header">More Practice: Break-Even Scenarios (Gym Plans)</div>
+      <p style="margin:0 0 10px 0;">For each pair of plans, find the number of months, \(x\), where both cost the same total amount.</p>
+      <div id="budget-more-list"></div>
+    </div>
+
+    <div class="step-box" style="margin-top:24px;">
+      <h3 style="margin-top:0; color:var(--primary);">Choosing an Internet Provider</h3>
+      <p>Provider A charges a \(\$45\) setup fee plus \(\$20\) per month. Provider B charges a \(\$65\) setup fee plus \(\$15\) per month.</p>
+      <p><strong>Task:</strong> after how many months, \(x\), do both providers cost the same total amount? If a customer plans to keep service for a full year, which provider costs less overall?</p>
+      <div class="form-group">
+        <label>Months where costs are equal (\(x\)):</label>
+        <input type="text" id="decision-x" class="form-control-lg" style="max-width:200px;" placeholder="months">
+      </div>
+      <div class="form-group">
+        <label>Which provider is the better choice for a full year of service, and why?</label>
+        <textarea id="decision-explain" class="form-control-lg" rows="2" placeholder="For a full year..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkDecision()">Submit My Work</button>
+      <div id="decision-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:20px;">
+      <div class="notebook-header">More Practice: Break-Even Scenarios (Internet Providers)</div>
+      <p style="margin:0 0 10px 0;">For each pair of providers, find the number of months, \(x\), where both cost the same total amount.</p>
+      <div id="decision-more-list"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: SAVINGS & BILLING COMPARISONS -->
+  <div id="savings" class="panel">
+    <div class="section-title">Real-Life Application: Savings &amp; Billing Comparisons</div>
+    <div class="explainer-box">
+      A false statement like \(6 = 7\) means <strong>no solution</strong>. A true statement like \(4 = 4\) means <strong>infinitely many solutions</strong>. Here, classify what each comparison means for the two people or plans involved.
+    </div>
+
+    <div class="step-box">
+      <h3 style="margin-top:0; color:var(--primary);">Two Savings Plans</h3>
+      <p>Friend 1 starts with \(\$50\) and saves \(\$10\) per week: total after \(x\) weeks is \(50 + 10x\). Friend 2 starts with \(\$80\) and also saves \(\$10\) per week: total after \(x\) weeks is \(80 + 10x\).</p>
+      <p><strong>Task:</strong> set \(50 + 10x = 80 + 10x\) and classify it. What does that classification mean for these two friends' savings?</p>
+      <div class="form-group">
+        <label>Classification:</label>
+        <select id="comp1-verdict" class="form-control-lg" style="max-width:280px;">
+          <option value="">Select...</option>
+          <option value="one">One solution</option>
+          <option value="none">No solution</option>
+          <option value="infinite">Infinitely many solutions</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>What does that mean for these two friends' savings?</label>
+        <textarea id="comp1-explain" class="form-control-lg" rows="2" placeholder="It means..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkComparison1()">Submit My Work</button>
+      <div id="comp1-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="step-box" style="margin-top:24px;">
+      <h3 style="margin-top:0; color:var(--primary);">Two Ways to Write the Same Plan</h3>
+      <p>A phone plan's monthly cost is written two different ways by two different billing systems: \(2(3x + 5)\) and \(6x + 10\), where \(x\) is gigabytes of extra data used.</p>
+      <p><strong>Task:</strong> set \(2(3x+5) = 6x+10\) and classify it. What does that classification mean about the two billing systems?</p>
+      <div class="form-group">
+        <label>Classification:</label>
+        <select id="comp2-verdict" class="form-control-lg" style="max-width:280px;">
+          <option value="">Select...</option>
+          <option value="one">One solution</option>
+          <option value="none">No solution</option>
+          <option value="infinite">Infinitely many solutions</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>What does that mean about the two billing systems?</label>
+        <textarea id="comp2-explain" class="form-control-lg" rows="2" placeholder="It means..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkComparison2()">Submit My Work</button>
+      <div id="comp2-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:20px;">
+      <div class="notebook-header">More Practice: Quick Classify (Savings &amp; Billing)</div>
+      <div id="comp-more-list"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: MORE WORD PROBLEMS -->
+  <div id="savvas" class="panel">
+    <div class="section-title">More Word Problems</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Follow the 4-Step Method for each problem: define the variable, write the equation, solve, and interpret. Enter just the final answer for each problem below - you get two tries.
+    </div>
+    <div id="wordapp-list"></div>
+  </div>
+
+  <!-- TAB 5: CHALLENGE WORD PROBLEMS -->
+  <div id="challenge" class="panel">
+    <div class="section-title">Challenge Word Problems</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      These are one level harder - more setup before you get to an equation. Define your variable, write the equation, solve, and enter your final answer.
+    </div>
+    <div id="challenge-wp-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // TAB 1: MIXTURE & WORK-RATE
+  // ==========================================
+  function checkMixture() {
+    const mx = document.getElementById('mix-x').value;
+    const other = document.getElementById('mix-other').value;
+    const fb = document.getElementById('mix-feedback');
+    if (!mx.trim() || !other.trim()) {
+      LessonCheck.incomplete(fb, "Enter both the liters of 50% solution and the liters of 20% solution before checking.");
+      return;
+    }
+    const correct = LessonCheck.numericMatch(mx, 4, 0.01) && LessonCheck.numericMatch(other, 8, 0.01);
+    LessonCheck.check('mix-invest', correct, fb, {
+      correct: "Correct! 4 L of 50% solution and 8 L of 20% solution.",
+      retry: "Not quite yet. Write the mixture equation \\(0.5x + 0.2(12-x) = 0.3(12)\\) and solve for x. Try again.",
+      reveal: "Here's the correct answer: 4 L of 50% solution and 8 L of 20% solution."
+    }, { label: 'Mixture Investigation: 50% and 20% solutions', answer: `50% solution=${mx}L, 20% solution=${other}L`, section: '1. Mixture & Work-Rate' });
+  }
+
+  function checkWorkTime() {
+    const val = document.getElementById('wt-x').value;
+    const fb = document.getElementById('wt-feedback');
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter the time in minutes before checking."); return; }
+    const correct = LessonCheck.numericMatch(val, 20, 0.01);
+    LessonCheck.check('wt-x', correct, fb, {
+      correct: "Correct! 20 minutes.",
+      retry: "Not quite yet. Add the two rates together: 5x + 8x = 260. Try again.",
+      reveal: "Here's the correct answer: 20 minutes."
+    }, { label: 'Work & Time: two printers, 260 pages', answer: `${val} minutes`, section: '1. Mixture & Work-Rate' });
+  }
+
+  // ==========================================
+  // TAB 2: COST COMPARISONS
+  // ==========================================
+  function checkBudget() {
+    const x = document.getElementById('budget-x').value;
+    const explain = document.getElementById('budget-explain').value.trim();
+    const fb = document.getElementById('budget-feedback');
+    if (!x.trim() || explain.length <= 5) { LessonCheck.incomplete(fb, "Enter the number of months and your recommendation before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'budget-gym', label: 'Cost Comparison: Gym A vs Gym B', answer: `x=${x} months`, section: '2. Cost Comparisons', correct: LessonCheck.numericMatch(x, 5, 0.001) });
+  }
+
+  const budgetMore = [
+    { plan1: "\\$50 sign-up + \\$20/month", plan2: "\\$30 sign-up + \\$25/month", a: 4 },
+    { plan1: "\\$60 sign-up + \\$15/month", plan2: "no sign-up fee + \\$25/month", a: 6 },
+    { plan1: "\\$61 sign-up + \\$10/month", plan2: "\\$25 sign-up + \\$22/month", a: 3 },
+    { plan1: "\\$5 sign-up + \\$25/month", plan2: "\\$95 sign-up + \\$15/month", a: 9 },
+    { plan1: "\\$116 sign-up + \\$8/month", plan2: "\\$20 sign-up + \\$20/month", a: 8 },
+    { plan1: "\\$30 sign-up + \\$30/month", plan2: "\\$150 sign-up + \\$18/month", a: 10 },
+    { plan1: "\\$24 sign-up + \\$22/month", plan2: "\\$40 sign-up + \\$14/month", a: 2 }
+  ];
+
+  function renderBudgetMore() {
+    const html = budgetMore.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 2}.</strong> Plan A: ${p.plan1}. Plan B: ${p.plan2}.
+        <div style="margin-top:8px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+          <input type="text" id="bm-${i}-input" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="months">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkBudgetMore(${i})">Check</button>
+        </div>
+        <div id="bm-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('budget-more-list').innerHTML = html;
+    budgetMore.forEach((p, i) => LessonProgress.preRegister(`bm-${i}`, `Break-Even (Gym) #${i + 2}`, '2. Cost Comparisons'));
+    triggerMathJax();
+  }
+
+  function checkBudgetMore(idx) {
+    const p = budgetMore[idx];
+    const val = document.getElementById(`bm-${idx}-input`).value;
+    const fb = document.getElementById(`bm-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter the number of months before checking."); return; }
+    const correct = LessonCheck.numericMatch(val, p.a, 0.01);
+    LessonCheck.check(`bm-${idx}`, correct, fb, {
+      correct: `Correct! \\(x = \\mathbf{${p.a}}\\) months.`,
+      retry: "Not quite yet. Set the two total-cost expressions equal and solve. Try again.",
+      reveal: `Here's the correct answer: \\(x = \\mathbf{${p.a}}\\) months.`
+    }, { label: `Break-Even (Gym) #${idx + 2}`, answer: `x=${val} months`, section: '2. Cost Comparisons' });
+  }
+
+  function checkDecision() {
+    const x = document.getElementById('decision-x').value;
+    const explain = document.getElementById('decision-explain').value.trim();
+    const fb = document.getElementById('decision-feedback');
+    if (!x.trim() || explain.length <= 5) { LessonCheck.incomplete(fb, "Enter the number of months and your recommendation before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'decision-internet', label: 'Cost Comparison: Internet Providers A vs B', answer: `x=${x} months`, section: '2. Cost Comparisons', correct: LessonCheck.numericMatch(x, 4, 0.001) });
+  }
+
+  const decisionMore = [
+    { plan1: "\\$43 setup + \\$18/month", plan2: "\\$25 setup + \\$24/month", a: 3 },
+    { plan1: "\\$94 setup + \\$12/month", plan2: "\\$10 setup + \\$24/month", a: 7 },
+    { plan1: "\\$10 setup + \\$25/month", plan2: "\\$90 setup + \\$15/month", a: 8 },
+    { plan1: "\\$64 setup + \\$9/month", plan2: "\\$40 setup + \\$21/month", a: 2 },
+    { plan1: "\\$110 setup + \\$18/month", plan2: "\\$20 setup + \\$28/month", a: 9 },
+    { plan1: "\\$60 setup + \\$14/month", plan2: "\\$130 setup + \\$7/month", a: 10 },
+    { plan1: "\\$39 setup + \\$16/month", plan2: "\\$15 setup + \\$20/month", a: 6 }
+  ];
+
+  function renderDecisionMore() {
+    const html = decisionMore.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 2}.</strong> Provider A: ${p.plan1}. Provider B: ${p.plan2}.
+        <div style="margin-top:8px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+          <input type="text" id="dm-${i}-input" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="months">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkDecisionMore(${i})">Check</button>
+        </div>
+        <div id="dm-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('decision-more-list').innerHTML = html;
+    decisionMore.forEach((p, i) => LessonProgress.preRegister(`dm-${i}`, `Break-Even (Internet) #${i + 2}`, '2. Cost Comparisons'));
+    triggerMathJax();
+  }
+
+  function checkDecisionMore(idx) {
+    const p = decisionMore[idx];
+    const val = document.getElementById(`dm-${idx}-input`).value;
+    const fb = document.getElementById(`dm-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter the number of months before checking."); return; }
+    const correct = LessonCheck.numericMatch(val, p.a, 0.01);
+    LessonCheck.check(`dm-${idx}`, correct, fb, {
+      correct: `Correct! \\(x = \\mathbf{${p.a}}\\) months.`,
+      retry: "Not quite yet. Set the two total-cost expressions equal and solve. Try again.",
+      reveal: `Here's the correct answer: \\(x = \\mathbf{${p.a}}\\) months.`
+    }, { label: `Break-Even (Internet) #${idx + 2}`, answer: `x=${val} months`, section: '2. Cost Comparisons' });
+  }
+
+  // ==========================================
+  // TAB 3: SAVINGS & BILLING
+  // ==========================================
+  function checkComparison1() {
+    const verdict = document.getElementById('comp1-verdict').value;
+    const explain = document.getElementById('comp1-explain').value.trim();
+    const fb = document.getElementById('comp1-feedback');
+    if (!verdict || explain.length <= 5) { LessonCheck.incomplete(fb, "Choose a classification and explain what it means before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'comp1', label: 'Comparison: two savings plans', answer: `${verdict}`, section: '3. Savings & Billing', correct: verdict === 'none' });
+  }
+
+  function checkComparison2() {
+    const verdict = document.getElementById('comp2-verdict').value;
+    const explain = document.getElementById('comp2-explain').value.trim();
+    const fb = document.getElementById('comp2-feedback');
+    if (!verdict || explain.length <= 5) { LessonCheck.incomplete(fb, "Choose a classification and explain what it means before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'comp2', label: 'Comparison: two billing expressions', answer: `${verdict}`, section: '3. Savings & Billing', correct: verdict === 'infinite' });
+  }
+
+  const comparisonMore = [
+    { q: "\\(20+8x=5+11x\\)", verdict: "one", a: 5 },
+    { q: "\\(30+12x=45+12x\\)", verdict: "none" },
+    { q: "\\(4(x+3)=4x+12\\)", verdict: "infinite" },
+    { q: "\\(9+6x=3+9x\\)", verdict: "one", a: 2 },
+    { q: "\\(5(x+2)=5x+8\\)", verdict: "none" },
+    { q: "\\(7x-4=4x+17\\)", verdict: "one", a: 7 }
+  ];
+
+  function renderComparisonMore() {
+    const html = comparisonMore.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 3}.</strong> ${p.q}
+        <select id="cm-${i}-verdict" class="form-control-lg" style="max-width:230px; display:inline-block;">
+          <option value="">Classify...</option>
+          <option value="one">One solution</option>
+          <option value="none">No solution</option>
+          <option value="infinite">Infinitely many solutions</option>
+        </select>
+        <input type="text" id="cm-${i}-x" class="form-control-lg" style="max-width:120px; display:inline-block;" placeholder="x = (if one)">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkComparisonMore(${i})">Submit</button>
+        <div id="cm-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('comp-more-list').innerHTML = html;
+    comparisonMore.forEach((p, i) => LessonProgress.preRegister(`cm-${i}`, `Quick Classify #${i + 3}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '3. Savings & Billing'));
+    triggerMathJax();
+  }
+
+  function checkComparisonMore(idx) {
+    const p = comparisonMore[idx];
+    const verdict = document.getElementById(`cm-${idx}-verdict`).value;
+    const xVal = document.getElementById(`cm-${idx}-x`).value;
+    const fb = document.getElementById(`cm-${idx}-feedback`);
+    if (!verdict || (p.verdict === "one" && !xVal.trim())) {
+      LessonCheck.incomplete(fb, "Choose a classification (and enter x, if it has one solution) before submitting.");
+      return;
+    }
+    const correct = verdict === p.verdict && (p.verdict !== 'one' || LessonCheck.numericMatch(xVal, p.a, 0.01));
+    LessonCheck.submit(fb, { key: `cm-${idx}`, label: `Quick Classify #${idx + 3}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: `${verdict}${xVal ? ', x=' + xVal : ''}`, section: '3. Savings & Billing', correct });
+  }
+
+  // ==========================================
+  // TAB 4: MORE WORD PROBLEMS
+  // ==========================================
+  function normalizeExpr(s) {
+    return String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, '');
+  }
+
+  const wordAppProblems = [
+    { q: "Cell Phone Plan: \\$35 flat fee plus \\$0.10 per text. Marcus's bill was \\$42.50. How many text messages did he send?", a: 75 },
+    { q: "Temperature Drop: Anchorage started at 12&deg;F, dropping 3 degrees every hour, until it reached \\(-15\\)&deg;F. How many hours passed?", a: 9 },
+    { q: "Savings Account: Sarah has \\$150 and saves \\$25 per week. How many weeks until she has \\$500?", a: 14 },
+    { q: "Perimeter Challenge: A rectangular garden's length is 5 feet more than its width, with a perimeter of 42 feet (\\(P=2L+2W\\)). What is the width?", a: 8 },
+    { q: "Gym Memberships: Gym A charges a \\$50 sign-up fee plus \\$20/month; Gym B charges \\$30/month with no sign-up fee. After how many months are the total costs equal?", a: 5 }
+  ];
+
+  function renderWordApp() {
+    const html = wordAppProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:8px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+          <input type="text" id="wa-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkWordApp(${i})">Check</button>
+        </div>
+        <div id="wa-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('wordapp-list').innerHTML = html;
+    wordAppProblems.forEach((p, i) => LessonProgress.preRegister(`wa-${i}`, `Word Problem #${i + 1}`, '4. More Word Problems'));
+  }
+
+  function checkWordApp(idx) {
+    const p = wordAppProblems[idx];
+    const val = document.getElementById(`wa-${idx}-input`).value;
+    const fb = document.getElementById(`wa-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
+    const correct = LessonCheck.numericMatch(val, p.a, 0.01);
+    LessonCheck.check(`wa-${idx}`, correct, fb, {
+      correct: `Correct! Answer: ${p.a}`,
+      retry: "Not quite yet. Define your variable, write the equation, then solve. Try again.",
+      reveal: `Here's the correct answer: ${p.a}`
+    }, { label: `Word Problem #${idx + 1}`, answer: val, section: '4. More Word Problems' });
+  }
+
+  // ==========================================
+  // TAB 5: CHALLENGE WORD PROBLEMS
+  // ==========================================
+  const challengeWordProblems = [
+    { q: "Two consecutive integers have a sum of 47. Write and solve an equation to find both integers. Enter the smaller integer.", a: 23 },
+    { q: "Three consecutive even integers have a sum of 72. Write and solve an equation to find all three. Enter the smallest.", a: 22 },
+    { q: "Two numbers differ by 12 and have a sum of 58. Write and solve an equation to find both numbers. Enter the smaller number.", a: 23 },
+    { q: "A parent is 4 times as old as her son; in 6 years she will be 3 times as old as her son will be then. Write and solve an equation for the son's current age, \\(x\\).", a: 12 }
+  ];
+
+  function renderChallengeWP() {
+    const html = challengeWordProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px;">
+        <strong>C${i + 1}.</strong> ${p.q}
+        <div style="margin-top:8px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+          <input type="text" id="cwp-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkChallengeWP(${i})">Check</button>
+        </div>
+        <div id="cwp-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('challenge-wp-list').innerHTML = html;
+    challengeWordProblems.forEach((p, i) => LessonProgress.preRegister(`cwp-${i}`, `Challenge Word Problem C${i + 1}`, '5. Challenge Word Problems'));
+    triggerMathJax();
+  }
+
+  function checkChallengeWP(idx) {
+    const p = challengeWordProblems[idx];
+    const val = document.getElementById(`cwp-${idx}-input`).value;
+    const fb = document.getElementById(`cwp-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
+    const correct = LessonCheck.numericMatch(val, p.a, 0.01);
+    LessonCheck.check(`cwp-${idx}`, correct, fb, {
+      correct: `Correct! ${p.a}`,
+      retry: "Not quite yet. Define your variable carefully and write the equation before solving. Try again.",
+      reveal: `Here's the correct answer: ${p.a}`
+    }, { label: `Challenge Word Problem C${idx + 1}`, answer: val, section: '5. Challenge Word Problems' });
+  }
+
+  // Initial render
+  renderBudgetMore();
+  renderDecisionMore();
+  renderComparisonMore();
+  renderWordApp();
+  renderChallengeWP();
+  LessonProgress.preRegister('budget-gym', 'Cost Comparison: Gym A vs Gym B', '2. Cost Comparisons');
+  LessonProgress.preRegister('decision-internet', 'Cost Comparison: Internet Providers A vs B', '2. Cost Comparisons');
+  LessonProgress.preRegister('comp1', 'Comparison: two savings plans', '3. Savings & Billing');
+  LessonProgress.preRegister('comp2', 'Comparison: two billing expressions', '3. Savings & Billing');
+</script>
+<div id="print-report"></div>
+</body>
+</html>

@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Integers - Teacher Guide</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <style>
+    .pacing-table td:nth-child(2), .pacing-table th:nth-child(2) { text-align: center; white-space: nowrap; }
+    .flag-box {
+      background: #fff1f2;
+      border: 3px solid #fb7185;
+      border-left: 10px solid #e11d48;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .flag-box h4 { margin-top: 0; color: #be123c; }
+    .answer-day-heading {
+      background: var(--primary);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 28px 0 12px 0;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .challenge-day-heading {
+      background: #b45309;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 28px 0 12px 0;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .solution-toggle > summary {
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--primary);
+      padding: 4px 0;
+    }
+    a.btn-lg {
+      display: inline-block;
+      text-decoration: none;
+      margin: 4px 0 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Integers - Teacher Guide</span>
+    <h1>Teacher Guide: Integers, Opposites &amp; Operations</h1>
+    <p class="subtitle">Pacing, Answer Keys, Printables &amp; Challenge Bank for All Six Sections</p>
+  </header>
+
+  <div class="topic-nav-wrap">
+    <a class="topic-nav-back" href="../../index.html">&larr; All Topics</a>
+    <ul class="topic-nav">
+      <li><a class="topic-nav-link" href="Vocabulary-Literacy.html"><span class="topic-nav-icon">📖</span>Vocabulary &amp; Literacy</a></li>
+      <li><a class="topic-nav-link" href="Explanation.html"><span class="topic-nav-icon">🧮</span>Explanation</a></li>
+      <li><a class="topic-nav-link" href="Practice-Set.html"><span class="topic-nav-icon">✏️</span>Practice Set</a></li>
+      <li><a class="topic-nav-link" href="Word-Problems.html"><span class="topic-nav-icon">📝</span>Word Problems</a></li>
+      <li><a class="topic-nav-link" href="Test-Prep.html"><span class="topic-nav-icon">🎯</span>Test Prep</a></li>
+      <li><a class="topic-nav-link current" href="Teacher-Guide.html"><span class="topic-nav-icon">🧑‍🏫</span>Teacher's Guide</a></li>
+    </ul>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">This page is for you, not students</strong>
+    It is not linked from the student pages and has no student-facing print button. Use the tabs below for pacing and standards, a complete digital answer key for every section, the official Savvas paper materials reproduced, and a bank of harder challenge problems for early finishers.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('overview')">1. Topic Overview &amp; Pacing</button>
+    <button class="tab-btn" onclick="switchTab('keys-practice')">2. Answer Keys: Explanation &amp; Practice Set</button>
+    <button class="tab-btn" onclick="switchTab('keys-wp')">3. Answer Keys: Word Problems</button>
+    <button class="tab-btn" onclick="switchTab('keys-testprep')">4. Answer Keys: Test Prep</button>
+    <button class="tab-btn" onclick="switchTab('paper')">5. Printables &amp; Challenge Bank</button>
+  </nav>
+
+  <!-- PANEL 1: TOPIC OVERVIEW & PACING -->
+  <div id="overview" class="panel active">
+    <div class="section-title">Topic Overview: Integers, Opposites &amp; Operations</div>
+
+    <div class="explainer-box">
+      <strong>Savvas Lessons 1.1-1.4 - Relate Integers and Opposites; Operations With Integers.</strong> This topic now runs as six standalone pages instead of five daily pages: students move through <strong>Vocabulary &amp; Literacy</strong>, <strong>Explanation</strong>, <strong>Practice Set</strong>, and <strong>Word Problems</strong> in roughly that order, then use <strong>Test Prep</strong> to review everything before an assessment. <strong>Calculators are not permitted this quarter (Q1-Q2)</strong> - they return in Q3.
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Section</th><th>Suggested Time</th><th>Focus</th></tr></thead>
+      <tbody>
+        <tr><td>Vocabulary &amp; Literacy</td><td>~30-40 min</td><td>Number vocabulary (integers, opposites, absolute value), operation vocabulary, and the "clue words" that signal sign and operation in word problems.</td></tr>
+        <tr><td>Explanation</td><td>~1-2 class periods</td><td>Fully worked, step-by-step examples for opposites/absolute value, addition, subtraction (Keep-Change-Change), and multiplication/division.</td></tr>
+        <tr><td>Practice Set</td><td>~1-2 class periods</td><td>Computation-only practice, organized into 5 tabs by skill, up to 2 tries per problem with a reveal.</td></tr>
+        <tr><td>Word Problems</td><td>~1 class period</td><td>Every item is a real-world scenario, organized by operation and then by complexity, submit-only with teacher review from the printed report.</td></tr>
+        <tr><td>Test Prep</td><td>~1 class period + assessment</td><td>Concept review, error analysis, a timed review quiz (official Savvas items), and a submit-only Mixed Practice worksheet that doubles as a paper-equivalent assessment.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Standards &amp; Objectives</div>
+      <p style="margin:0 0 8px 0;"><strong>CCSS.Math.Content.7.NS.A.1a, 7.NS.A.1b, 7.NS.A.1c, 7.NS.A.1d, 7.NS.A.2b, 7.NS.A.2c</strong> &amp; <strong>MP.1, MP.3, MP.4, MP.5, MP.7, MP.8</strong>.</p>
+      <ul style="margin-bottom:0;">
+        <li>Relate integers to their opposites and find absolute value.</li>
+        <li>Add integers using the rules for same and different signs.</li>
+        <li>Subtract integers by rewriting as adding the opposite.</li>
+        <li>Multiply and divide integers using the same-sign/different-sign rule.</li>
+        <li>Apply integer operations to real-world situations (finance, elevation, temperature, science, sports).</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Multidisciplinary Connections</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Geography &amp; Earth Science:</strong> sea level, elevation, temperature.</li>
+        <li><strong>Financial Literacy:</strong> bank balances, deposits/withdrawals, stock market gains/losses.</li>
+        <li><strong>Physical Science:</strong> electric charge (electrons/protons).</li>
+        <li><strong>PE &amp; Sports Statistics:</strong> yardage gains/losses, cumulative scores.</li>
+        <li><strong>Critical Thinking &amp; Self-Assessment:</strong> error analysis, metacognitive reflection.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Materials Needed</div>
+      <ul>
+        <li>One device per student for all six pages.</li>
+        <li>Printer or "print to PDF" access so students can submit their Print My Progress page (from Practice Set, Word Problems, and Test Prep) to Google Classroom.</li>
+        <li>Printed or shared-via-Classroom copies of the Timed Review Quiz (see Printables tab) for small-group review during Test Prep.</li>
+        <li>Printed Mixed Practice (Printables tab) if you prefer a paper-only assessment instead of, or alongside, the digital submit-only tab.</li>
+        <li><strong>No calculators this quarter.</strong></li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Common Misconceptions to Watch For</div>
+      <ul style="margin-bottom:0;">
+        <li>Forgetting to flip the sign when subtracting a negative number (\(a - (-b) = a + b\), not \(a - b\)).</li>
+        <li>Assuming a sum of two integers is always positive or always negative - it depends on the signs <strong>and</strong> the absolute values.</li>
+        <li>Multiplying/dividing three or more negative integers: track the sign one pair at a time, don't guess from the total count.</li>
+        <li>Confusing "greater absolute value" with "greater integer" when comparing two negatives.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Differentiation &amp; Additional IXL Practice</div>
+      <p style="margin:0 0 10px 0;">Not required assignments - use these for targeted reinforcement, extension, or support based on observed skill gaps.</p>
+      <p style="margin:0 0 6px 0;"><strong>Opposites &amp; absolute value support/extension:</strong> ERH, QZA (integers and absolute value), 6EV (opposite integers on a number line).</p>
+      <p style="margin:0 0 6px 0;"><strong>Add/subtract support/extension:</strong> FNS, PBC (add/subtract integers and word problems).</p>
+      <p style="margin:0 0 6px 0;"><strong>Multiply/divide support/extension:</strong> 5R8, R8D (multiply/divide integers and word problems).</p>
+      <p style="margin:0;"><strong>Combined review:</strong> K94 (fill-in-the-blank mixed operations), P6A (mixed word problems).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Suggested Metacognition Prompts</div>
+      <ul style="margin-bottom:0;">
+        <li>"How does drawing a number line help you visualize whether your final answer should be positive or negative when adding a negative number?"</li>
+        <li>"What mental rule or pattern do you rely on to quickly remember what sign to give your answer when multiplying two numbers with different signs?"</li>
+        <li>"Which concept from this topic do you feel most confident in, and which rule do you want to double-check before the assessment?"</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PANEL 2: ANSWER KEYS - EXPLANATION & PRACTICE SET -->
+  <div id="keys-practice" class="panel">
+    <div class="section-title">Answer Keys: Explanation &amp; Practice Set</div>
+    <p>Explanation's carousels are fully worked examples with the final answer shown in each last step - nothing further to key. Practice Set's answers, tab by tab, follow below (matches the Check My Work logic already built into each item).</p>
+
+    <div class="answer-day-heading">Tab 1: Opposites &amp; Absolute Value</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Opposite of 15</td><td>\(\mathbf{-15}\)</td></tr>
+        <tr><td>2. Opposite of -23</td><td>\(\mathbf{23}\)</td></tr>
+        <tr><td>3. Opposite of -12</td><td>\(\mathbf{12}\)</td></tr>
+        <tr><td>4. Opposite of 0</td><td>\(\mathbf{0}\)</td></tr>
+        <tr><td>5. \(|-9|\)</td><td>\(\mathbf{9}\)</td></tr>
+        <tr><td>6. \(|14|\)</td><td>\(\mathbf{14}\)</td></tr>
+        <tr><td>7. \(|-100|\)</td><td>\(\mathbf{100}\)</td></tr>
+        <tr><td>8. \(|0|\)</td><td>\(\mathbf{0}\)</td></tr>
+        <tr><td>9. Farther from 0: -20 or 15?</td><td><strong>-20</strong></td></tr>
+        <tr><td>10. \(|-5|\) ___ \(-10\)</td><td><strong>&gt;</strong></td></tr>
+        <tr><td>11. \(|12|\) ___ \(3\)</td><td><strong>&gt;</strong></td></tr>
+        <tr><td>12. \(-2\) ___ \(|-12|\)</td><td><strong>&lt;</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 2: Add Integers</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(-6+(-9)\)</td><td>\(\mathbf{-15}\)</td></tr>
+        <tr><td>2. \(14+(-20)\)</td><td>\(\mathbf{-6}\)</td></tr>
+        <tr><td>3. \(-18+25\)</td><td>\(\mathbf{7}\)</td></tr>
+        <tr><td>4. \(-7+(-7)\)</td><td>\(\mathbf{-14}\)</td></tr>
+        <tr><td>5. \(30+(-30)\)</td><td>\(\mathbf{0}\)</td></tr>
+        <tr><td>6. \(-15+(-8)\)</td><td>\(\mathbf{-23}\)</td></tr>
+        <tr><td>7. \(-9+14\)</td><td>\(\mathbf{5}\)</td></tr>
+        <tr><td>8. \(-32+(-18)\)</td><td>\(\mathbf{-50}\)</td></tr>
+        <tr><td>9. \(-11+(-14)\)</td><td>\(\mathbf{-25}\)</td></tr>
+        <tr><td>10. \(25+(-30)\)</td><td>\(\mathbf{-5}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 3: Subtract Integers</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(12-20\)</td><td>\(\mathbf{-8}\)</td></tr>
+        <tr><td>2. \(-5-9\)</td><td>\(\mathbf{-14}\)</td></tr>
+        <tr><td>3. \(-8-(-15)\)</td><td>\(\mathbf{7}\)</td></tr>
+        <tr><td>4. \(20-(-6)\)</td><td>\(\mathbf{26}\)</td></tr>
+        <tr><td>5. \(-14-(-14)\)</td><td>\(\mathbf{0}\)</td></tr>
+        <tr><td>6. \(12-(-7)\)</td><td>\(\mathbf{19}\)</td></tr>
+        <tr><td>7. \(-20-5\)</td><td>\(\mathbf{-25}\)</td></tr>
+        <tr><td>8. \(11-25\)</td><td>\(\mathbf{-14}\)</td></tr>
+        <tr><td>9. \(-26-(-15)\)</td><td>\(\mathbf{-11}\)</td></tr>
+        <tr><td>10. \(-18-5\)</td><td>\(\mathbf{-23}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 4: Multiply &amp; Divide</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(-6 \times 7\)</td><td>\(\mathbf{-42}\)</td></tr>
+        <tr><td>2. \(-8 \times (-5)\)</td><td>\(\mathbf{40}\)</td></tr>
+        <tr><td>3. \(-24 \div 6\)</td><td>\(\mathbf{-4}\)</td></tr>
+        <tr><td>4. \(-45 \div (-9)\)</td><td>\(\mathbf{5}\)</td></tr>
+        <tr><td>5. \(9 \times (-4)\)</td><td>\(\mathbf{-36}\)</td></tr>
+        <tr><td>6. \(-12 \times (-3)\)</td><td>\(\mathbf{36}\)</td></tr>
+        <tr><td>7. \(18 \div (-3)\)</td><td>\(\mathbf{-6}\)</td></tr>
+        <tr><td>8. \(-63 \div 7\)</td><td>\(\mathbf{-9}\)</td></tr>
+        <tr><td>9. \(-5 \times (-5) \times (-2)\)</td><td>\(\mathbf{-50}\)</td></tr>
+        <tr><td>10. \(-6 \times (-9)\)</td><td>\(\mathbf{54}\)</td></tr>
+        <tr><td>11. \(-48 \div 8\)</td><td>\(\mathbf{-6}\)</td></tr>
+        <tr><td>12. \(-100 \div (-5)\)</td><td>\(\mathbf{20}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 5: Mixed &amp; Order of Operations</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(-14+30\)</td><td>\(\mathbf{16}\)</td></tr>
+        <tr><td>2. \(-42+18\)</td><td>\(\mathbf{-24}\)</td></tr>
+        <tr><td>3. \(-7 \times (-8)\)</td><td>\(\mathbf{56}\)</td></tr>
+        <tr><td>4. \(-250 \div 10\)</td><td>\(\mathbf{-25}\)</td></tr>
+        <tr><td>5. \(-13-(-13)\)</td><td>\(\mathbf{0}\)</td></tr>
+        <tr><td>6. \(-3 \times 5 \times (-2)\)</td><td>\(\mathbf{30}\)</td></tr>
+        <tr><td>7. \((-4+10) \div (-3)\)</td><td>\(\mathbf{-2}\)</td></tr>
+        <tr><td>8. \(-3 \times (4+(-6))\)</td><td>\(\mathbf{6}\)</td></tr>
+        <tr><td>9. \(\dfrac{(-2)^3+10}{-2}\)</td><td>\(\mathbf{-1}\)</td></tr>
+        <tr><td>10. \(-6 \times (-7)\)</td><td>\(\mathbf{42}\)</td></tr>
+        <tr><td>11. \(-36 \div 4\)</td><td>\(\mathbf{-9}\)</td></tr>
+        <tr><td>12. \(22-(-8)\)</td><td>\(\mathbf{30}\)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 3: ANSWER KEYS - WORD PROBLEMS -->
+  <div id="keys-wp" class="panel">
+    <div class="section-title">Answer Keys: Word Problems</div>
+
+    <div class="answer-day-heading">Tab 1: Addition &amp; Subtraction</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Football yardage: +12, -15</td><td>\(\mathbf{-3}\) yd</td></tr>
+        <tr><td>2. Marcus's debt: owes $25, deposits $40, pays debt</td><td>\(\mathbf{\$15}\) left</td></tr>
+        <tr><td>3. Scuba diver: -30 ft, ascends 12 ft</td><td>\(\mathbf{-18}\) ft</td></tr>
+        <tr><td>4. Sarah's bank: $45, withdraws $60</td><td>\(\mathbf{-\$15}\)</td></tr>
+        <tr><td>5. Submarine: -150 m, descends 75 m more</td><td>\(\mathbf{-225}\) m</td></tr>
+        <tr><td>6. Hiker: 2,500 ft, descends 800 ft</td><td>\(\mathbf{1{,}700}\) ft</td></tr>
+        <tr><td>7. Record high 35&deg;C minus record low -20&deg;C</td><td>\(\mathbf{55}\)</td></tr>
+        <tr><td>8. Friday 82&deg;F, -2&deg;F Sat, +2&deg;F Sun</td><td>\(\mathbf{82}\)&deg;F</td></tr>
+        <tr><td>9. Anchorage -3&deg;C, drops 6 more</td><td>\(\mathbf{-9}\)&deg;C</td></tr>
+        <tr><td>10. Hiker elevation -120, +45, -10</td><td>\(\mathbf{-85}\) m net</td></tr>
+        <tr><td>Bank Balance (multi-step): -85, +40, +25, -30</td><td>\(\mathbf{-\$50}\)</td></tr>
+        <tr><td>Temperature (multi-step): dawn -4, +11, -15</td><td>noon \(\mathbf{7}\)&deg;C, evening \(\mathbf{-8}\)&deg;C</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 2: Multiplication &amp; Division</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Submarine descent 20 m/min &times; 6 min</td><td>\(\mathbf{-120}\) m</td></tr>
+        <tr><td>2. Bank fee $5/month &times; 8</td><td>\(\mathbf{-\$40}\)</td></tr>
+        <tr><td>3. Temp drop 30&deg; over 5 hr</td><td>\(\mathbf{-6}\)/hr</td></tr>
+        <tr><td>4. Chemical cooling 24&deg;C over 6 hr</td><td>\(\mathbf{-4}\)/hr</td></tr>
+        <tr><td>5. Submarine -25 m/min &times; 6 min</td><td>\(\mathbf{-150}\) m</td></tr>
+        <tr><td>Stock (multi-step): -42 over 6 days, then 3 more</td><td>avg \(\mathbf{-\$7}\)/day, additional \(\mathbf{-\$21}\)</td></tr>
+        <tr><td>Electric Charge: 8 electrons at -1 each</td><td>\(\mathbf{-8}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 3: Mixed &amp; Multi-Step</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Balloon 1,200 m, -85 m/min &times; 6 min, +150 m</td><td>\(\mathbf{840}\) m</td></tr>
+        <tr><td>2. Company: -$1,250/month &times; 4, +$2,000 month 5</td><td>\(\mathbf{-\$3{,}000}\)</td></tr>
+        <tr><td>3. Three dives: -320, -410, -275, average</td><td>\(\mathbf{-335}\) m</td></tr>
+        <tr><td>4. Stock $64, -$3/hr &times; 5 hr, +$22 correction</td><td>\(\mathbf{\$71}\)</td></tr>
+        <tr><td>5. Diver -18, +7, -12</td><td>\(\mathbf{-23}\) m</td></tr>
+        <tr><td>6. Rashawn vs. Jessie (score difference)</td><td>Rashawn \(-6\), Jessie \(-8\); Rashawn ahead by \(\mathbf{2}\)</td></tr>
+        <tr><td>7. Ashley's average: -12, then +5</td><td>\(\mathbf{-7}\) net change</td></tr>
+        <tr><td>8. Cave tour: down 8 m, then opposite of -8 m</td><td>\(\mathbf{16}\) m total</td></tr>
+        <tr><td>9. Train east 50, north 22, west 50, south ?</td><td>\(\mathbf{22}\) km</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 4: ANSWER KEYS - TEST PREP -->
+  <div id="keys-testprep" class="panel">
+    <div class="section-title">Answer Keys: Test Prep</div>
+
+    <div class="answer-day-heading">Tab 1: Concept Review</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>A. \(-12-(-5)\)</td><td>\(\mathbf{-7}\)</td></tr>
+        <tr><td>B. \((-3)\times4+(-2)\)</td><td>\(\mathbf{-14}\)</td></tr>
+        <tr><td>C. \(-13+(-7)\)</td><td>\(\mathbf{-20}\)</td></tr>
+        <tr><td>D. \(9-(-6)\)</td><td>\(\mathbf{15}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 2: Error Analysis</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(-8+(-5)=-3\)</td><td>Should add and keep sign: \(\mathbf{-13}\)</td></tr>
+        <tr><td>2. \(-10-(-4) \rightarrow -10-4=-14\)</td><td>Should become \(-10+4\): \(\mathbf{-6}\)</td></tr>
+        <tr><td>3. \(-6 \times (-3) = -18\)</td><td>Same signs = positive: \(\mathbf{18}\)</td></tr>
+        <tr><td>4. \(12+(-15)=3\)</td><td>Keep sign of larger absolute value: \(\mathbf{-3}\)</td></tr>
+        <tr><td>5. \(-20 \div 5 = 4\)</td><td>Different signs = negative: \(\mathbf{-4}\)</td></tr>
+        <tr><td>Audit: Ana's \(-10-4=-6\)</td><td>Incorrect - correct value is \(\mathbf{-14}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 3: Timed Review Quiz</div>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Set A - Opposites, Absolute Value &amp; Comparing</th></tr></thead>
+      <tbody>
+        <tr><td>1. Opposite of -25</td><td><strong>B</strong> - Leon gets paid $25 (represents \(+25\))</td></tr>
+        <tr><td>2. Allie's rounds (select all)</td><td>Gains 4 in Round 1; loses 4 in Round 2; has 0 at the end</td></tr>
+        <tr><td>3. Number-line subtraction, -4 to -13</td><td><strong>C</strong> - \(-4-9\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Set B - Add &amp; Subtract Integers</th></tr></thead>
+      <tbody>
+        <tr><td>4. Sandra: 18 correct, -6 incorrect</td><td>\(\mathbf{12}\) points</td></tr>
+        <tr><td>5. Sign of a mixed sum</td><td><strong>D</strong></td></tr>
+        <tr><td>6. Rob borrows $15, then $3 more</td><td>Owes \(\mathbf{\$18}\)</td></tr>
+        <tr><td>7. Adrienne vs Suki: \(-8-(-6)\)</td><td><strong>A</strong> - Suki's \(-2\) is correct</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Set C - Multiply &amp; Divide Integers</th></tr></thead>
+      <tbody>
+        <tr><td>8. Sign of each product</td><td>Positive, Negative, Negative, Negative</td></tr>
+        <tr><td>9. Chase's error: \(-2 \times (5-3)\)</td><td>\(\mathbf{-4}\)</td></tr>
+        <tr><td>10. Select all equal to -8</td><td>\(\frac{-800}{100}\) and \(80\div(-10)\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 4: Mixed Practice (submit-only, 100 points)</div>
+    <p style="font-size:0.9rem; color:#64748b;"><em>Matches the paper Mixed Practice printable exactly.</em></p>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Problem</th><th>Answer</th><th>Points</th></tr></thead>
+      <tbody>
+        <tr><td colspan="4"><strong>Opposites, Absolute Value &amp; Comparing (12 pts)</strong></td></tr>
+        <tr><td>1</td><td>Opposite of 42</td><td>\(\mathbf{-42}\)</td><td>4</td></tr>
+        <tr><td>2</td><td>\(|-36|\)</td><td>\(\mathbf{36}\)</td><td>4</td></tr>
+        <tr><td>3</td><td>Greater: -18 or -25?</td><td><strong>-18</strong></td><td>4</td></tr>
+        <tr><td colspan="4"><strong>Add, Subtract, Multiply &amp; Divide (40 pts)</strong></td></tr>
+        <tr><td>4</td><td>\(-23+9\)</td><td>\(\mathbf{-14}\)</td><td>5</td></tr>
+        <tr><td>5</td><td>\(17+(-29)\)</td><td>\(\mathbf{-12}\)</td><td>5</td></tr>
+        <tr><td>6</td><td>\(-14-19\)</td><td>\(\mathbf{-33}\)</td><td>5</td></tr>
+        <tr><td>7</td><td>\(8-(-13)\)</td><td>\(\mathbf{21}\)</td><td>5</td></tr>
+        <tr><td>8</td><td>\(-9 \times 6\)</td><td>\(\mathbf{-54}\)</td><td>5</td></tr>
+        <tr><td>9</td><td>\(-11 \times (-4)\)</td><td>\(\mathbf{44}\)</td><td>5</td></tr>
+        <tr><td>10</td><td>\(-81 \div 9\)</td><td>\(\mathbf{-9}\)</td><td>5</td></tr>
+        <tr><td>11</td><td>\(-64 \div (-8)\)</td><td>\(\mathbf{8}\)</td><td>5</td></tr>
+        <tr><td colspan="4"><strong>Word Problems (32 pts)</strong></td></tr>
+        <tr><td>12</td><td>Diver at -42 ft rises 18 ft</td><td>\(\mathbf{-24}\) ft</td><td>8</td></tr>
+        <tr><td>13</td><td>Temperature -6&deg;F rises 21&deg;F</td><td>\(\mathbf{15}\)&deg;F</td><td>8</td></tr>
+        <tr><td>14</td><td>Stock -$4/day for 5 days</td><td>\(\mathbf{-\$20}\)</td><td>8</td></tr>
+        <tr><td>15</td><td>4 friends share $60 debt equally</td><td>\(\mathbf{-\$15}\) each</td><td>8</td></tr>
+        <tr><td colspan="4"><strong>Multi-Step (16 pts)</strong></td></tr>
+        <tr><td>16</td><td>\(-5+3\times(-4)\)</td><td>\(\mathbf{-17}\)</td><td>4</td></tr>
+        <tr><td>17</td><td>Submarine -150 m, -40 m, +90 m</td><td>\(\mathbf{-100}\) m</td><td>12</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 5: PRINTABLES & CHALLENGE BANK -->
+  <div id="paper" class="panel">
+    <div class="section-title">Printables &amp; Challenge Bank</div>
+    <p>The Timed Review Quiz uses the official Savvas Quick Check 1-1 through 1-4, reproduced in full. The Mixed Practice printable and the Challenge Bank are original material aligned to this topic.</p>
+
+    <div class="flag-box">
+      <h4>Keep the Mixed Practice printable confidential from students</h4>
+      <p style="margin:0;">The Mixed Practice tab and printable function as this topic's graded assessment. Do not link or share this Teacher Guide page with students.</p>
+    </div>
+
+    <a class="btn-lg" href="printables/Mixed-Practice-Printable.html" target="_blank" rel="noopener">Printables: Mixed Practice (Test Prep Assessment)</a>
+    <p>See the Digital Answer Key tab above (Tab 4) for the full item-by-item key.</p>
+
+    <div class="answer-day-heading">Timed Review Quiz (Set A-C)</div>
+    <a class="btn-lg" href="printables/Timed-Review-Quiz-Printable.html" target="_blank" rel="noopener">Printables: Timed Review Quiz</a>
+    <p>See the Digital Answer Key tab above (Tab 4, Timed Review Quiz) for the full item-by-item key.</p>
+
+    <div class="answer-day-heading">Challenge Bank: One Level Harder</div>
+    <p>Extra problems for early finishers or homework extension at any point in this topic. Each is a step above Practice Set/Word Problems difficulty - triple operations, missing-integer puzzles, or multi-step real-world scenarios. Click a problem to reveal its full solution.</p>
+    <a class="btn-lg" href="printables/Challenge-Bank-Printable.html" target="_blank" rel="noopener">Printables: Challenge Bank (no solutions shown)</a>
+
+    <div class="challenge-day-heading">Opposites, Absolute Value, Add &amp; Subtract - Harder Tier</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Find the opposite of the opposite of \(-17\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Opposite of \(-17\) is \(17\); opposite of \(17\) is \(-17\). Taking the opposite twice returns the original number: \(\mathbf{-17}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> Find \(|-8| + |5|\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(|-8| = 8\) and \(|5| = 5\). \(8 + 5 = \mathbf{13}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> Evaluate \(-34 + 19 - (-12)\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(-34 + 19 = -15\). \(-15 - (-12) = -15 + 12 = \mathbf{-3}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> A submarine at \(-215\) m dives another \(180\) m, then rises \(95\) m. What is its final depth?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(-215 - 180 = -395\). \(-395 + 95 = \mathbf{-300}\) m.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> Which has the greater absolute value: \(-45\) or \(38\)?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(|-45| = 45\), \(|38| = 38\). Since \(45 > 38\), \(\mathbf{-45}\) has the greater absolute value.</p>
+      </details>
+    </div>
+
+    <div class="challenge-day-heading">Multiply &amp; Divide Integers - Harder Tier</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Evaluate \(-6 \times (-4) \times (-3)\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(-6 \times (-4) = 24\) (same signs, positive). \(24 \times (-3) = \mathbf{-72}\) (different signs, negative).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> Evaluate \(-144 \div (-12)\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Same signs, so the quotient is positive: \(144 \div 12 = \mathbf{12}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> A weather station records a temperature change of \(-4^\circ\text{C}\) every hour for 5 hours. What is the total change?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(-4 \times 5 = \mathbf{-20}^\circ\text{C}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> Evaluate \(-8 \times 7 \div (-2)\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(-8 \times 7 = -56\). \(-56 \div (-2) = \mathbf{28}\) (same signs, positive).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> Find two integers whose product is \(-36\) and whose sum is \(-5\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Try factor pairs of \(36\) with opposite signs: \(4\) and \(-9\) give \(4 \times (-9) = -36\) and \(4 + (-9) = -5\). The integers are \(\mathbf{4}\) and \(\mathbf{-9}\).</p>
+      </details>
+    </div>
+
+    <div class="challenge-day-heading">Error Analysis - Harder Tier</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> A student computed \(-18 - (-25)\) and got \(-43\). Find the mistake and the correct answer.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>The student subtracted \(25\) instead of adding it (didn't flip the sign). Correct: \(-18 - (-25) = -18 + 25 = \mathbf{7}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> A student computed \(-9 \times (-3) \times (-2)\) and got \(54\). Find the mistake and the correct answer.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>The student likely stopped tracking sign after the first two factors. \(-9 \times (-3) = 27\); \(27 \times (-2) = \mathbf{-54}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> A student computed \(-56 \div (-8)\) and got \(-7\). Find the mistake and the correct answer.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Same signs should give a positive quotient. Correct: \(-56 \div (-8) = \mathbf{7}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> A student computed \(-12 + (-15)\) and got \(3\). Find the mistake and the correct answer.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>The student subtracted instead of adding. Same signs add and keep the sign: \(-12 + (-15) = \mathbf{-27}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> A student computed \(8 - 20\) and got \(12\). Find the mistake and the correct answer.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>The student subtracted the smaller from the larger and dropped the sign. Correct: \(8 - 20 = \mathbf{-12}\).</p>
+      </details>
+    </div>
+
+    <div class="challenge-day-heading">Real-World Precision - Harder Tier</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> A hot air balloon at \(1{,}200\) m descends at \(-85\) m/min for 6 minutes, then rises \(150\) m. What is its final altitude?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(-85 \times 6 = -510\). \(1200 - 510 = 690\). \(690 + 150 = \mathbf{840}\) m.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> A company's profit changed by \(-\$1{,}250\) each month for 4 months, then it gained back \(\$2{,}000\) in month 5. What was the net change over all 5 months?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(-1250 \times 4 = -5000\). \(-5000 + 2000 = \mathbf{-\$3{,}000}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> Three deep-sea dives reach \(-320\) m, \(-410\) m, and \(-275\) m. What is the average depth?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(-320 + (-410) + (-275) = -1{,}005\). \(-1{,}005 \div 3 = \mathbf{-335}\) m.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> A stock opens at \(\$64\), drops \(\$3\) per hour for 5 hours, then a single correction adds \(\$22\). What is the closing price?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(-3 \times 5 = -15\). \(64 - 15 = 49\). \(49 + 22 = \mathbf{\$71}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> A scuba diver descends 18 m below the surface, then ascends 7 m, then descends another 12 m. What is the diver's final depth relative to the surface?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(-18 + 7 = -11\). \(-11 - 12 = \mathbf{-23}\) m.</p>
+      </details>
+    </div>
+
+    <div class="challenge-day-heading">Enrichment for Early Finishers</div>
+    <p style="font-size:0.9rem; color:#64748b;"><em>These are original problems, unrelated to the Mixed Practice assessment, safe to hand out to students who finish early.</em></p>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Find the missing integer: \(-14 + \underline{\hspace{1cm}} = -30\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(-30 - (-14) = -30 + 14 = \mathbf{-16}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> Find the missing integer: \(\underline{\hspace{1cm}} - (-9) = 5\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>If \(n + 9 = 5\), then \(n = 5 - 9 = \mathbf{-4}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> The product of three consecutive negative integers is \(-210\). What are the three integers?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Try \(-5, -6, -7\): \((-5)(-6) = 30\), \(30 \times (-7) = -210\). The integers are \(\mathbf{-5}\), \(\mathbf{-6}\), and \(\mathbf{-7}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> A number decreased by 8 equals its own opposite. Find the number.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(n - 8 = -n \rightarrow 2n = 8 \rightarrow n = \mathbf{4}\). Check: \(4 - 8 = -4\), and the opposite of \(4\) is \(-4\). &#10003;</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> Two integers are opposites. Their difference is 24. What are the two integers?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Let the integers be \(a\) and \(-a\). \(a - (-a) = 2a = 24 \rightarrow a = 12\). The integers are \(\mathbf{12}\) and \(\mathbf{-12}\).</p>
+      </details>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+</script>
+</body>
+</html>

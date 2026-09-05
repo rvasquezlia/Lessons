@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Solving Linear Equations - Vocabulary &amp; Literacy</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <style>
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .glossary-card {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .glossary-term {
+      font-weight: 900;
+      color: var(--primary);
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .glossary-def { margin: 0 0 8px 0; }
+    .glossary-example {
+      background: #f1f5f9;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.92rem;
+      color: #334155;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Algebra I &middot; Solving Linear Equations</span>
+    <h1>Vocabulary &amp; Literacy</h1>
+  </header>
+
+  <div class="topic-nav-wrap">
+    <a class="topic-nav-back" href="../../index.html">&larr; All Topics</a>
+    <ul class="topic-nav">
+      <li><a class="topic-nav-link current" href="Vocabulary-Literacy.html"><span class="topic-nav-icon">📖</span>Vocabulary &amp; Literacy</a></li>
+      <li><a class="topic-nav-link" href="Explanation.html"><span class="topic-nav-icon">🧮</span>Explanation</a></li>
+      <li><a class="topic-nav-link" href="Practice-Set.html"><span class="topic-nav-icon">✏️</span>Practice Set</a></li>
+      <li><a class="topic-nav-link" href="Word-Problems.html"><span class="topic-nav-icon">📝</span>Word Problems</a></li>
+      <li><a class="topic-nav-link" href="Test-Prep.html"><span class="topic-nav-icon">🎯</span>Test Prep</a></li>
+      <li><a class="topic-nav-link" href="Teacher-Guide.html"><span class="topic-nav-icon">🧑‍🏫</span>Teacher's Guide</a></li>
+    </ul>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Start here before the Explanation page. Tab 1 is a glossary of every term you'll need for this topic - read through it once, then use it as a reference any time a word is unfamiliar. Tab 2 teaches you to read algebra "in words" and translate phrases into symbols, with practice you can check as you go. Tab 3 is a short self-check of the vocabulary itself. This page has no printable progress report - it's a reference and warm-up, not graded work.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('glossary')">1. Key Vocabulary</button>
+    <button class="tab-btn" onclick="switchTab('translate')">2. Translating Words to Algebra</button>
+    <button class="tab-btn" onclick="switchTab('selfcheck')">3. Quick Vocabulary Check</button>
+  </nav>
+
+  <!-- TAB 1: GLOSSARY -->
+  <div id="glossary" class="panel active">
+    <div class="section-title">Key Vocabulary: Solving Linear Equations</div>
+    <div class="explainer-box">
+      Every term below shows up somewhere in this topic - in the Explanation, in the Practice Set, or in a Word Problem. Read through them once before you start, and come back any time a word trips you up.
+    </div>
+
+    <h3 style="color:var(--primary);">Parts of an Equation</h3>
+    <div class="glossary-grid">
+      <div class="glossary-card">
+        <span class="glossary-term">Expression</span>
+        <p class="glossary-def">A combination of numbers, variables, and operations with <strong>no equal sign</strong>.</p>
+        <div class="glossary-example">Example: \(4x - 3\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Equation</span>
+        <p class="glossary-def">A mathematical sentence stating that two expressions are equal, joined by an "=" sign.</p>
+        <div class="glossary-example">Example: \(3x + 5 = 20\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Linear Equation</span>
+        <p class="glossary-def">An equation where the variable is only raised to the first power (no \(x^2\), no \(x\) under a root) - its graph is a straight line.</p>
+        <div class="glossary-example">Example: \(2x - 7 = 9\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Variable</span>
+        <p class="glossary-def">A letter that represents an unknown or changing number.</p>
+        <div class="glossary-example">Example: the \(x\) in \(2x - 7 = 9\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Term</span>
+        <p class="glossary-def">A single number, variable, or product/quotient of numbers and variables, separated from other terms by \(+\) or \(-\).</p>
+        <div class="glossary-example">In \(4x + 7\), the terms are \(4x\) and \(7\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Coefficient</span>
+        <p class="glossary-def">The number multiplied by a variable in a term.</p>
+        <div class="glossary-example">In \(6x\), the coefficient is \(6\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Constant</span>
+        <p class="glossary-def">A term that is just a fixed number, with no variable attached.</p>
+        <div class="glossary-example">In \(3x + 9\), \(9\) is the constant</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Like Terms</span>
+        <p class="glossary-def">Terms with the exact same variable part, so they can be combined by adding or subtracting their coefficients.</p>
+        <div class="glossary-example">\(5x\) and \(-2x\) are like terms; \(5x\) and \(5x^2\) are not</div>
+      </div>
+    </div>
+
+    <h3 style="color:var(--primary); margin-top:28px;">Solving Moves</h3>
+    <div class="glossary-grid">
+      <div class="glossary-card">
+        <span class="glossary-term">Properties of Equality</span>
+        <p class="glossary-def">Rules that let you add, subtract, multiply, or divide <strong>both sides</strong> of an equation by the same amount without changing its solution.</p>
+        <div class="glossary-example">If \(a = b\), then \(a + c = b + c\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Inverse Operations</span>
+        <p class="glossary-def">Opposite operations that "undo" each other - used to peel operations away from a variable.</p>
+        <div class="glossary-example">Addition &harr; Subtraction; Multiplication &harr; Division</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Distributive Property</span>
+        <p class="glossary-def">Multiplying a factor by every term inside a set of parentheses.</p>
+        <div class="glossary-example">\(a(b + c) = ab + ac\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Isolate the Variable</span>
+        <p class="glossary-def">The goal of solving: use inverse operations until the variable stands alone on one side of the equation.</p>
+        <div class="glossary-example">\(3x = 15 \rightarrow x = 5\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Solution</span>
+        <p class="glossary-def">A value that makes an equation true when substituted for the variable.</p>
+        <div class="glossary-example">\(x = 6\) is the solution of \(x + 9 = 15\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Solution Set</span>
+        <p class="glossary-def">The complete collection of every value that solves an equation - just one value, no values, or every real number.</p>
+        <div class="glossary-example">"All real numbers" or "&empty;" (empty set)</div>
+      </div>
+    </div>
+
+    <h3 style="color:var(--primary); margin-top:28px;">Classifying Solutions</h3>
+    <div class="glossary-grid">
+      <div class="glossary-card">
+        <span class="glossary-term">One Solution</span>
+        <p class="glossary-def">The equation simplifies until exactly one value of the variable makes it true.</p>
+        <div class="glossary-example">\(2x + 5 = 3x - 1 \rightarrow x = 6\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">No Solution</span>
+        <p class="glossary-def">The variable cancels out completely, leaving a <strong>false</strong> statement. No value of the variable works.</p>
+        <div class="glossary-example">\(2(x+3) = 2x + 7 \rightarrow 6 = 7\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Infinitely Many Solutions</span>
+        <p class="glossary-def">The variable cancels out completely, leaving a <strong>true</strong> statement. Every real number works.</p>
+        <div class="glossary-example">\(4(x+1) = 4x + 4 \rightarrow 4 = 4\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Identity</span>
+        <p class="glossary-def">Another name for an equation with infinitely many solutions - both sides are always equal, no matter the value of the variable.</p>
+        <div class="glossary-example">\(2(x+3) = 2x + 6\)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: TRANSLATING WORDS TO ALGEBRA -->
+  <div id="translate" class="panel">
+    <div class="section-title">Translating Words to Algebra</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Algebra is like a secret code - read the Turn-Around Rule box and the keyword table, then translate each phrase into algebraic form. You get two tries per item.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The "Turn-Around" Rule</div>
+      <p style="margin:0;">Be careful with "less than" and "subtracted from." These are "turn-around" phrases. <em>Example:</em> "5 less than a number" means you start with the number and take 5 away. Correct: \(n - 5\). Incorrect: \(5 - n\).</p>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Operation</th><th>Natural Language Phrases</th><th>Symbol</th></tr></thead>
+      <tbody>
+        <tr><td>Addition</td><td>Sum, increased by, plus, total, added to, more than</td><td>\(+\)</td></tr>
+        <tr><td>Subtraction</td><td>Difference, decreased by, minus, less than, subtracted from</td><td>\(-\)</td></tr>
+        <tr><td>Multiplication</td><td>Product, times, of, twice (\(\times2\)), triple (\(\times3\))</td><td>\(\cdot\) or \(()\)</td></tr>
+        <tr><td>Division</td><td>Quotient, divided by, per, out of, ratio</td><td>\(\div\) or fraction bar</td></tr>
+        <tr><td>Equals</td><td>Is, equals, yields, amounts to, is the same as</td><td>\(=\)</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:24px;">Translation Practice</h3>
+    <p>Translate each verbal phrase into an algebraic expression or equation. Use \(n\) to represent "a number."</p>
+    <div id="translate-list"></div>
+  </div>
+
+  <!-- TAB 3: QUICK VOCABULARY CHECK -->
+  <div id="selfcheck" class="panel">
+    <div class="section-title">Quick Vocabulary Check</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Type the vocabulary word that matches each definition or example. You get two tries per item, then the correct term is shown.
+    </div>
+    <div id="vocab-check-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  function normalizeExpr(s) {
+    return String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, '');
+  }
+
+  // ==========================================
+  // TRANSLATION PRACTICE
+  // ==========================================
+  const translateItems = [
+    { q: "The sum of a number and 12", accepted: ["n+12", "12+n"], displayAnswer: "\\(n + 12\\)" },
+    { q: "8 less than a number", accepted: ["n-8"], displayAnswer: "\\(n - 8\\)" },
+    { q: "The product of 5 and a number", accepted: ["5n", "n5", "5xn", "nx5"], displayAnswer: "\\(5n\\)" },
+    { q: "A number divided by -3", accepted: ["n/-3", "n/(-3)"], displayAnswer: "\\(\\frac{n}{-3}\\)" },
+    { q: "10 subtracted from a number is 25", accepted: ["n-10=25"], displayAnswer: "\\(n - 10 = 25\\)" },
+    { q: "Twice a number increased by 7", accepted: ["2n+7"], displayAnswer: "\\(2n + 7\\)" },
+    { q: "The quotient of a number and 4 is -2", accepted: ["n/4=-2"], displayAnswer: "\\(\\frac{n}{4} = -2\\)" },
+    { q: "15 more than triple a number", accepted: ["3n+15", "15+3n"], displayAnswer: "\\(3n + 15\\)" },
+    { q: "A number decreased by 6 is 14", accepted: ["n-6=14"], displayAnswer: "\\(n - 6 = 14\\)" },
+    { q: "The product of -2 and a number is 18", accepted: ["-2n=18", "n-2=18"], displayAnswer: "\\(-2n = 18\\)" }
+  ];
+
+  function renderTranslate() {
+    const html = translateItems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="tr-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkTranslate(${i})">Check</button>
+        <div id="tr-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('translate-list').innerHTML = html;
+    triggerMathJax();
+  }
+
+  function checkTranslate(idx) {
+    const p = translateItems[idx];
+    const val = document.getElementById(`tr-${idx}-input`).value;
+    const fb = document.getElementById(`tr-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = p.accepted.includes(normalizeExpr(val));
+    LessonCheck.check(`tr-${idx}`, correct, fb, {
+      correct: `Correct! ${p.displayAnswer}`,
+      retry: "Not quite yet. Re-read the phrase carefully, watch for turn-around words, and try again.",
+      reveal: `Here's the correct translation: ${p.displayAnswer}`
+    });
+  }
+
+  // ==========================================
+  // QUICK VOCABULARY CHECK
+  // ==========================================
+  const vocabCheckItems = [
+    { q: "This word names a fixed number in an expression with no variable attached, like the 9 in 3x + 9.", accepted: ["constant"] },
+    { q: "This is the name for the number multiplied by a variable, like the 6 in 6x.", accepted: ["coefficient"] },
+    { q: "This property lets you multiply a(b + c) to get ab + ac.", accepted: ["distributiveproperty", "distributive"] },
+    { q: "This is the name for terms like 5x and -2x, which share the same variable part.", accepted: ["liketerms", "like"] },
+    { q: "When an equation simplifies to a false statement like 6 = 7, it has this many solutions.", accepted: ["nosolution", "none", "no"] },
+    { q: "When an equation simplifies to a true statement like 4 = 4, it has this many solutions.", accepted: ["infinitelymanysolutions", "infinite", "infinitelymany"] }
+  ];
+
+  function renderVocabCheck() {
+    const html = vocabCheckItems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px;">
+          <input type="text" id="vc-${i}-input" class="form-control-lg" style="max-width:260px; display:inline-block;" placeholder="Type the term">
+          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVocab(${i})">Check</button>
+        </div>
+        <div id="vc-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('vocab-check-list').innerHTML = html;
+  }
+
+  function checkVocab(idx) {
+    const p = vocabCheckItems[idx];
+    const val = document.getElementById(`vc-${idx}-input`).value;
+    const fb = document.getElementById(`vc-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Type a term before checking.");
+      return;
+    }
+    const correct = p.accepted.includes(normalizeExpr(val));
+    LessonCheck.check(`vc-${idx}`, correct, fb, {
+      correct: `Correct! That's <strong>${p.accepted[0]}</strong>.`,
+      retry: "Not quite yet. Look back at the glossary tab and try again.",
+      reveal: `The correct term is <strong>${p.accepted[0]}</strong>.`
+    });
+  }
+
+  renderTranslate();
+  renderVocabCheck();
+</script>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Integers - Word Problems</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Integers - Word Problems</span>
+    <h1>Word Problems: Integers in Real Life</h1>
+  </header>
+
+  <div class="topic-nav-wrap">
+    <a class="topic-nav-back" href="../../index.html">&larr; All Topics</a>
+    <ul class="topic-nav">
+      <li><a class="topic-nav-link" href="Vocabulary-Literacy.html"><span class="topic-nav-icon">📖</span>Vocabulary &amp; Literacy</a></li>
+      <li><a class="topic-nav-link" href="Explanation.html"><span class="topic-nav-icon">🧮</span>Explanation</a></li>
+      <li><a class="topic-nav-link" href="Practice-Set.html"><span class="topic-nav-icon">✏️</span>Practice Set</a></li>
+      <li><a class="topic-nav-link current" href="Word-Problems.html"><span class="topic-nav-icon">📝</span>Word Problems</a></li>
+      <li><a class="topic-nav-link" href="Test-Prep.html"><span class="topic-nav-icon">🎯</span>Test Prep</a></li>
+      <li><a class="topic-nav-link" href="Teacher-Guide.html"><span class="topic-nav-icon">🧑‍🏫</span>Teacher's Guide</a></li>
+    </ul>
+  </div>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Pre-Algebra 7 - Integers Word Problems')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Every item on this page is a word problem - use your <strong>Vocabulary &amp; Literacy</strong> clue words to decide the sign and the operation, then compute using the rules from <strong>Explanation</strong>. This is quiz-style: you submit each answer once and your teacher reviews it from your printed progress report, not on screen. Finish all 3 tabs, then type your name above and click <strong>Print My Progress</strong>. <strong>Calculators are not allowed this quarter.</strong>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('addsub')">1. Addition &amp; Subtraction</button>
+    <button class="tab-btn" onclick="switchTab('muldiv')">2. Multiplication &amp; Division</button>
+    <button class="tab-btn" onclick="switchTab('mixed')">3. Mixed &amp; Multi-Step</button>
+  </nav>
+
+  <!-- TAB 1: ADDITION & SUBTRACTION -->
+  <div id="addsub" class="panel active">
+    <div class="section-title">Addition &amp; Subtraction Word Problems</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Clue Words Reference</div>
+      <p style="margin:0;"><strong>Positive (+):</strong> Deposit, Gain, Above Sea Level, Ascend, Credit, Rise.<br><strong>Negative (-):</strong> Withdraw, Loss, Below Sea Level, Descend, Debt, Debit.</p>
+    </div>
+
+    <div class="explainer-box">
+      <div style="font-weight:800; color:var(--primary); text-transform:uppercase; font-size:0.85rem; letter-spacing:0.03em; margin-bottom:10px;">Guided Example: Temperature</div>
+      <p style="margin:0 0 8px 0;"><strong>Scenario:</strong> It was \(-8\)&deg;F and rose \(12\)&deg;F.</p>
+      <p style="margin:0 0 8px 0; text-align:center;"><strong>Expression:</strong> \[-8 + 12 = 4\]</p>
+      <p style="margin:0;"><strong>Result:</strong> The new temperature is \(4\)&deg;F.</p>
+    </div>
+
+    <div id="as-list"></div>
+
+    <div class="step-box" style="margin-top:24px;">
+      <h3 style="margin-top:0; color:var(--primary);">Bank Balance (multi-step)</h3>
+      <p>Malena's account starts at \(-\$85\) (she overdrew it). She deposits \(\$40\), then deposits \(\$25\), then withdraws \(\$30\).</p>
+      <p><strong>Task:</strong> find her final balance.</p>
+      <div class="form-group">
+        <label>Final balance:</label>
+        <input type="text" id="bank-final" class="form-control-lg" style="max-width:200px;" placeholder="$ amount">
+      </div>
+      <button class="btn-lg" onclick="checkBank()">Submit</button>
+      <div id="bank-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="step-box" style="margin-top:24px;">
+      <h3 style="margin-top:0; color:var(--primary);">Temperature Change (multi-step)</h3>
+      <p>The temperature at dawn was \(-4^\circ\text{C}\). By noon it rose \(11^\circ\text{C}\). By evening it had dropped \(15^\circ\text{C}\) from its noon value.</p>
+      <p><strong>Task:</strong> find the noon temperature and the evening temperature.</p>
+      <div class="form-group">
+        <label>Noon temperature:</label>
+        <input type="text" id="temp-noon" class="form-control-lg" style="max-width:200px;" placeholder="&deg;C">
+      </div>
+      <div class="form-group">
+        <label>Evening temperature:</label>
+        <input type="text" id="temp-evening" class="form-control-lg" style="max-width:200px;" placeholder="&deg;C">
+      </div>
+      <button class="btn-lg" onclick="checkTemp()">Submit</button>
+      <div id="temp-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: MULTIPLICATION & DIVISION -->
+  <div id="muldiv" class="panel">
+    <div class="section-title">Multiplication &amp; Division Word Problems</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Clue Words Reference</div>
+      <p style="margin:0;"><strong>Multiplication Clues:</strong> Rate, Per, Each, Every. &nbsp;&nbsp; <strong>Division Clues:</strong> Shared, Average, Split, Per.</p>
+    </div>
+
+    <div class="explainer-box">
+      <div style="font-weight:800; color:var(--primary); text-transform:uppercase; font-size:0.85rem; letter-spacing:0.03em; margin-bottom:10px;">Guided Example: Stock Market</div>
+      <p style="margin:0 0 8px 0;"><strong>Scenario:</strong> A stock drops \$3 each day for 4 days.</p>
+      <p style="margin:0 0 8px 0; text-align:center;"><strong>Expression:</strong> \[-3 \times 4 = -12\]</p>
+      <p style="margin:0;"><strong>Result:</strong> The total change is \(-\$12\).</p>
+    </div>
+
+    <div id="md-list"></div>
+
+    <div class="step-box" style="margin-top:24px;">
+      <h3 style="margin-top:0; color:var(--primary);">Stock Market (multi-step)</h3>
+      <p>A stock's value changed by the same amount each day for \(6\) trading days, for a total change of \(-\$42\).</p>
+      <p><strong>Task:</strong> find the average daily change. Then, if it continues at that same daily rate for \(3\) more days, find the additional change.</p>
+      <div class="form-group">
+        <label>Average daily change:</label>
+        <input type="text" id="stock-avg" class="form-control-lg" style="max-width:200px;" placeholder="$ amount">
+      </div>
+      <div class="form-group">
+        <label>Additional change over 3 more days:</label>
+        <input type="text" id="stock-more" class="form-control-lg" style="max-width:200px;" placeholder="$ amount">
+      </div>
+      <button class="btn-lg" onclick="checkStock()">Submit</button>
+      <div id="stock-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="step-box" style="margin-top:24px;">
+      <h3 style="margin-top:0; color:var(--primary);">Electric Charge</h3>
+      <p>A balloon gains \(8\) extra electrons after being rubbed on hair. Each electron carries a charge of \(-1\) (in elementary charge units).</p>
+      <p><strong>Task:</strong> find the total charge added to the balloon.</p>
+      <div class="form-group">
+        <label>Total charge added:</label>
+        <input type="text" id="charge-total" class="form-control-lg" style="max-width:200px;" placeholder="charge units">
+      </div>
+      <button class="btn-lg" onclick="checkCharge()">Submit</button>
+      <div id="charge-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: MIXED & MULTI-STEP -->
+  <div id="mixed" class="panel">
+    <div class="section-title">Mixed &amp; Multi-Step Word Problems</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      These combine several operations, or ask you to compare two scenarios. Read carefully - identify each step before you compute.
+    </div>
+    <div id="mixed-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // REUSABLE SINGLE-FIELD WORD PROBLEM LIST (submit mode - quiz-style)
+  // ==========================================
+  function renderList(containerId, problems, keyPrefix, section) {
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px;">
+          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkItem('${keyPrefix}', ${i})">Submit</button>
+        </div>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, `${section} #${i + 1}: ${p.label}`, section));
+  }
+
+  const listRegistry = {};
+
+  function checkItem(keyPrefix, idx) {
+    const cfg = listRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const raw = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
+    LessonCheck.submit(fb, { key: `${keyPrefix}-${idx}`, label: `${cfg.section} #${idx + 1}: ${p.label}`, answer: raw, section: cfg.section, correct: LessonCheck.numericMatch(raw, p.a, p.tol || 0.01) });
+  }
+
+  function setup(containerId, problems, keyPrefix, section) {
+    listRegistry[keyPrefix] = { problems, section };
+    renderList(containerId, problems, keyPrefix, section);
+  }
+
+  // ==========================================
+  // TAB 1: ADDITION & SUBTRACTION
+  // ==========================================
+  const asProblems = [
+    { q: "Sports (Football): On the first play, a team gained 12 yards. On the second play, they lost 15 yards. What was the total change in yardage?", a: -3, label: "Football yardage change" },
+    { q: "Debt: Marcus owes his friend \\$25. He deposits \\$40 into his wallet and pays the full debt. How much money does he have left?", a: 15, label: "Marcus's debt" },
+    { q: "Scuba Diving: A diver is at 30 feet below sea level. She ascends 12 feet. What is her new depth (as a signed number of feet)?", a: -18, label: "Scuba diver's new depth" },
+    { q: "Bank Account: Sarah had a balance of \\$45. She withdraws \\$60. What is her new account balance?", a: -15, label: "Sarah's bank balance" },
+    { q: "Elevation: A submarine is 150 meters below sea level. It descends another 75 meters. What is its new elevation (as a signed number of meters)?", a: -225, label: "Submarine elevation" },
+    { q: "Mountain Climbing: A hiker starts at 2,500 feet above sea level and descends 800 feet. What is her elevation now?", a: 1700, label: "Hiker's elevation" },
+    { q: "Extreme Weather: The record low in a town is \\(-20\\)&deg;C and the record high is \\(35\\)&deg;C. What is the difference between the record high and record low?", a: 55, label: "Record high minus low" },
+    { q: "On Friday, the temperature was \\(82^\\circ\\text{F}\\). It changed by \\(-2^\\circ\\text{F}\\) on Saturday, then by \\(2^\\circ\\text{F}\\) on Sunday. What was the temperature on Sunday?", a: 82, label: "Friday-Sunday temperature" },
+    { q: "The temperature in Anchorage, Alaska, was \\(-3^\\circ\\text{C}\\) in the afternoon. After the sun went down, the temperature dropped 6 degrees. What was the temperature after the sun went down?", a: -9, label: "Anchorage evening temperature" },
+    { q: "A hiker's elevation changes by \\(-120\\) m, then \\(45\\) m, then \\(-10\\) m. What is the net change?", a: -85, label: "Hiker's net elevation change" }
+  ];
+  setup('as-list', asProblems, 'as', '1. Addition & Subtraction');
+
+  function checkBank() {
+    const val = document.getElementById('bank-final').value;
+    const fb = document.getElementById('bank-feedback');
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter the final balance before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'wp-bank', label: '1. Addition & Subtraction: Bank Balance -85, +40, +25, -30', answer: val, section: '1. Addition & Subtraction', correct: LessonCheck.numericMatch(val, -50, 0.5) });
+  }
+  function checkTemp() {
+    const noon = document.getElementById('temp-noon').value;
+    const evening = document.getElementById('temp-evening').value;
+    const fb = document.getElementById('temp-feedback');
+    if (!noon.trim() || !evening.trim()) { LessonCheck.incomplete(fb, "Enter both the noon and evening temperatures before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'wp-temp', label: '1. Addition & Subtraction: Temperature Change dawn -4, +11, -15', answer: `noon=${noon}, evening=${evening}`, section: '1. Addition & Subtraction', correct: LessonCheck.numericMatch(noon, 7, 0.5) && LessonCheck.numericMatch(evening, -8, 0.5) });
+  }
+  LessonProgress.preRegister('wp-bank', '1. Addition & Subtraction: Bank Balance -85, +40, +25, -30', '1. Addition & Subtraction');
+  LessonProgress.preRegister('wp-temp', '1. Addition & Subtraction: Temperature Change dawn -4, +11, -15', '1. Addition & Subtraction');
+
+  // ==========================================
+  // TAB 2: MULTIPLICATION & DIVISION
+  // ==========================================
+  const mdProblems = [
+    { q: "Submarine Descent: A submarine descends at a rate of 20 meters per minute. What is its change in elevation after 6 minutes?", a: -120, label: "Submarine descent rate" },
+    { q: "Bank Fees: A bank charges a \\$5 monthly service fee for 8 months. What is the total change in the account balance?", a: -40, label: "Bank fees total change" },
+    { q: "Temperature Drop: Over 5 hours, the temperature dropped a total of 30 degrees. What was the average hourly change?", a: -6, label: "Average hourly temperature drop" },
+    { q: "Cooling Down: A chemical solution's temperature dropped a total of 24&deg;C over 6 hours at a constant rate. What was the change per hour?", a: -4, label: "Chemical cooling rate" },
+    { q: "A submarine descends at a constant rate of \\(-25\\) m per minute for \\(6\\) minutes. What is the total change in depth?", a: -150, label: "Submarine total depth change" }
+  ];
+  setup('md-list', mdProblems, 'md', '2. Multiplication & Division');
+
+  function checkStock() {
+    const avg = document.getElementById('stock-avg').value;
+    const more = document.getElementById('stock-more').value;
+    const fb = document.getElementById('stock-feedback');
+    if (!avg.trim() || !more.trim()) { LessonCheck.incomplete(fb, "Enter both the average daily change and the 3-day change before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'wp-stock', label: '2. Multiplication & Division: Stock Market -42 over 6 days, then 3 more days', answer: `avg=${avg}, 3-day=${more}`, section: '2. Multiplication & Division', correct: LessonCheck.numericMatch(avg, -7, 0.1) && LessonCheck.numericMatch(more, -21, 0.5) });
+  }
+  function checkCharge() {
+    const val = document.getElementById('charge-total').value;
+    const fb = document.getElementById('charge-feedback');
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter the total charge before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'wp-charge', label: '2. Multiplication & Division: Electric Charge 8 electrons at -1 each', answer: val, section: '2. Multiplication & Division', correct: LessonCheck.numericMatch(val, -8, 0.1) });
+  }
+  LessonProgress.preRegister('wp-stock', '2. Multiplication & Division: Stock Market -42 over 6 days, then 3 more days', '2. Multiplication & Division');
+  LessonProgress.preRegister('wp-charge', '2. Multiplication & Division: Electric Charge 8 electrons at -1 each', '2. Multiplication & Division');
+
+  // ==========================================
+  // TAB 3: MIXED & MULTI-STEP
+  // ==========================================
+  const mixedProblems = [
+    { q: "A hot air balloon at \\(1{,}200\\) m descends at \\(-85\\) m/min for 6 minutes, then rises \\(150\\) m. What is its final altitude?", a: 840, label: "Hot air balloon final altitude" },
+    { q: "A company's profit changed by \\(-\\$1{,}250\\) each month for 4 months, then it gained back \\(\\$2{,}000\\) in month 5. What was the net change over all 5 months?", a: -3000, label: "Company's 5-month net change" },
+    { q: "Three deep-sea dives reach \\(-320\\) m, \\(-410\\) m, and \\(-275\\) m. What is the average depth?", a: -335, label: "Average depth of three dives" },
+    { q: "A stock opens at \\(\\$64\\), drops \\(\\$3\\) per hour for 5 hours, then a single correction adds \\(\\$22\\). What is the closing price?", a: 71, label: "Stock closing price" },
+    { q: "A scuba diver descends 18 m below the surface, then ascends 7 m, then descends another 12 m. What is the diver's final depth relative to the surface?", a: -23, label: "Scuba diver's final depth" },
+    { q: "Rashawn and Jessie lose points for each incorrect answer, and neither has answered correctly. Rashawn misses two 3-point questions; Jessie misses four 2-point questions. Who is ahead, and by how many points (enter a signed number for Rashawn's score minus Jessie's score)?", a: 2, label: "Rashawn vs. Jessie point comparison", hint: "Rashawn: -6 points. Jessie: -8 points. -6 - (-8) = 2, so Rashawn is ahead by 2." },
+    { q: "Ashley's math average decreased 12 points to 78. Then an extra credit assignment raised her final average by 5 points. What was the net change from her starting average to her final average?", a: -7, label: "Ashley's average net change" },
+    { q: "Kristen and her family climb down 8 meters below ground level on a cave tour. To return to ground level, they climb the opposite of \\(-8\\) meters. What is the total distance they climbed, counting both directions?", a: 16, label: "Cave tour total distance" },
+    { q: "A train travels east 50 km, then north 22 km, then west 50 km, then south a certain distance, ending back at its original location. How many kilometers did it travel south?", a: 22, label: "Train journey south distance" }
+  ];
+  setup('mixed-list', mixedProblems, 'mixed', '3. Mixed & Multi-Step');
+</script>
+<div id="print-report"></div>
+</body>
+</html>

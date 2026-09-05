@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Solving Linear Equations - Teacher's Guide</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <style>
+    .pacing-table td:nth-child(2), .pacing-table th:nth-child(2) { text-align: center; white-space: nowrap; }
+    .flag-box {
+      background: #fff1f2;
+      border: 3px solid #fb7185;
+      border-left: 10px solid #e11d48;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .flag-box h4 { margin-top: 0; color: #be123c; }
+    .answer-section-heading {
+      background: var(--primary);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 28px 0 12px 0;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .challenge-section-heading {
+      background: #b45309;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 28px 0 12px 0;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .solution-toggle > summary {
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--primary);
+      padding: 4px 0;
+    }
+    a.btn-lg {
+      display: inline-block;
+      text-decoration: none;
+      margin: 4px 0 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Algebra I &middot; Solving Linear Equations</span>
+    <h1>Teacher's Guide</h1>
+    <p class="subtitle">Topic Overview, Pacing, Digital Answer Keys, Printables, and Challenge Bank</p>
+  </header>
+
+  <div class="topic-nav-wrap">
+    <a class="topic-nav-back" href="../../index.html">&larr; All Topics</a>
+    <ul class="topic-nav">
+      <li><a class="topic-nav-link" href="Vocabulary-Literacy.html"><span class="topic-nav-icon">📖</span>Vocabulary &amp; Literacy</a></li>
+      <li><a class="topic-nav-link" href="Explanation.html"><span class="topic-nav-icon">🧮</span>Explanation</a></li>
+      <li><a class="topic-nav-link" href="Practice-Set.html"><span class="topic-nav-icon">✏️</span>Practice Set</a></li>
+      <li><a class="topic-nav-link" href="Word-Problems.html"><span class="topic-nav-icon">📝</span>Word Problems</a></li>
+      <li><a class="topic-nav-link" href="Test-Prep.html"><span class="topic-nav-icon">🎯</span>Test Prep</a></li>
+      <li><a class="topic-nav-link current" href="Teacher-Guide.html"><span class="topic-nav-icon">🧑‍🏫</span>Teacher's Guide</a></li>
+    </ul>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">This page is for you, not students</strong>
+    It is not linked from the student pages and has no student-facing print button. Use the tabs below for the topic-at-a-glance and suggested pacing, complete digital answer keys for every student-facing page, printable materials with their answer keys, and a bank of harder challenge problems for early finishers.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('overview')">1. Overview &amp; Pacing</button>
+    <button class="tab-btn" onclick="switchTab('keys1')">2. Answer Keys: Explanation &amp; Practice</button>
+    <button class="tab-btn" onclick="switchTab('keys2')">3. Answer Keys: Word Problems &amp; Test Prep</button>
+    <button class="tab-btn" onclick="switchTab('printables')">4. Printables &amp; Key</button>
+    <button class="tab-btn" onclick="switchTab('challenge')">5. Challenge Bank</button>
+  </nav>
+
+  <!-- PANEL 1: OVERVIEW & PACING -->
+  <div id="overview" class="panel active">
+    <div class="section-title">Topic Overview: Solving Linear Equations</div>
+
+    <div class="explainer-box">
+      <strong>Savvas enVision Algebra 1, Lessons 1-2 &amp; 1-3.</strong> This topic covers solving equations with the variable on one side, equations with the variable on both sides, and classifying solutions as one, none, or infinitely many. It is organized into six sections instead of five daily lessons: Vocabulary &amp; Literacy, Explanation, Practice Set, Word Problems, Test Prep, and this Teacher's Guide. Every section returns to the same core move: whatever you do to one side of an equation, you must do to the other.
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Section</th><th>Purpose</th><th>Suggested Time</th></tr></thead>
+      <tbody>
+        <tr><td>Vocabulary &amp; Literacy</td><td>Glossary of every term needed, plus translating words to algebra.</td><td>~20 min, before instruction begins</td></tr>
+        <tr><td>Explanation</td><td>Direct instruction - every procedure broken into steps, with fully worked examples (carousels, step-reveals, number line, resolved applications).</td><td>~50-60 min, in one or two sittings</td></tr>
+        <tr><td>Practice Set</td><td>Computation-only guided practice, seven tabs from warm-up through strategy challenge and error analysis.</td><td>~60-90 min, can span several days</td></tr>
+        <tr><td>Word Problems</td><td>Every item a real scenario - mixture, work-rate, cost comparisons, savings/billing classification, and challenge word problems.</td><td>~45-60 min</td></tr>
+        <tr><td>Test Prep</td><td>Full review, an error-analysis checkpoint, a submit-only Mixed Practice (printable-worksheet style), and a readiness reflection.</td><td>~45 min, the day before the assessment</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Topic Objectives</div>
+      <ul>
+        <li>Explain why each step used to solve a linear equation preserves equality.</li>
+        <li>Solve linear equations using properties of equality and inverse operations.</li>
+        <li>Solve equations containing variables on both sides.</li>
+        <li>Recognize equations with one solution, no solution, or infinitely many solutions.</li>
+        <li>Apply linear equations to mathematical and real-world situations.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Standards &amp; Objectives</div>
+      <p style="margin:0 0 8px 0;"><strong>HSA.CED.A.1, HSA.REI.A.1, HSA.REI.B.3, HSN.Q.A.2, CCSS.Math.Content.8.EE.C.7</strong> &amp; <strong>MP.1, MP.2, MP.3, MP.4, MP.7</strong>.</p>
+      <p style="margin:0;"><strong>Multidisciplinary connections:</strong> Science &amp; Mathematical Modeling (equations as models for measurable relationships); Engineering &amp; Logical Reasoning (maintaining equivalence through transformations); Communication &amp; Collaboration (defending a classification or strategy choice); Critical Thinking &amp; Self-Assessment.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Common Misconceptions to Watch For</div>
+      <ul style="margin-bottom:0;">
+        <li>Forgetting to distribute to <strong>every</strong> term inside parentheses, not just the first one.</li>
+        <li>Applying an operation to only one side of the equation instead of both.</li>
+        <li>Stopping as soon as the variable cancels, instead of checking whether what remains is true or false.</li>
+        <li>Losing a negative sign when subtracting a variable term from both sides.</li>
+        <li>Confusing "5 less than a number" (\(n-5\)) with "5 minus a number" (\(5-n\)) - the Turn-Around Rule on the Vocabulary &amp; Literacy page addresses this directly.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Materials Needed</div>
+      <ul>
+        <li><strong>Explanation &amp; Vocabulary &amp; Literacy:</strong> one device per student; no printed materials required.</li>
+        <li><strong>Practice Set:</strong> printed Error Analysis and Strategy Challenge cards optional support for small-group work (see Printables); one device per student.</li>
+        <li><strong>Word Problems:</strong> one device per student; no printed materials required.</li>
+        <li><strong>Test Prep:</strong> printed Mixed Practice / assessment (Printables tab), plus devices for the review tabs and closing reflection.</li>
+        <li><strong>Throughout:</strong> printer or "print to PDF" access so students can submit their Print My Progress page to Google Classroom.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Suggested Pacing Across a Week</div>
+      <table class="data-table pacing-table">
+        <thead><tr><th>Day</th><th>Suggested Section(s)</th><th>What happens</th></tr></thead>
+        <tbody>
+          <tr><td>Day 1 (double period, if available)</td><td>Vocabulary &amp; Literacy, then Explanation</td><td>Build the vocabulary base, then model every worked example - carousels for one-side and both-sides equations, the classification step-reveals, and the resolved word-problem examples.</td></tr>
+          <tr><td>Day 2</td><td>Practice Set (Tabs 1-4)</td><td>Warm-up, variable on one side, variables on both sides, and the Mixed Equations Bank.</td></tr>
+          <tr><td>Day 3</td><td>Practice Set (Tabs 5-7)</td><td>Classify the Solution, Strategy Challenge (assign groups A-D), and Error Analysis.</td></tr>
+          <tr><td>Day 4</td><td>Word Problems</td><td>All five tabs - mixture/work-rate, cost comparisons, savings/billing, more word problems, and challenge word problems as time allows.</td></tr>
+          <tr><td>Day 5</td><td>Test Prep, then the assessment</td><td>Full Review and Error Analysis Review in class; Mixed Practice can be completed digitally or from the printed Test Prep worksheet as your actual graded assessment.</td></tr>
+        </tbody>
+      </table>
+      <p style="margin:10px 0 0 0; font-size:0.9rem; color:#64748b;">This is a starting script, not a rule - compress or stretch sections to fit your schedule and class pace.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Differentiated Instruction &amp; Additional IXL Practice</div>
+      <p style="margin:0 0 10px 0;">Not required daily assignments - use these for targeted reinforcement, extension, or support based on observed skill gaps.</p>
+      <p style="margin:0 0 6px 0;"><strong>Lesson 1-2 support &amp; extension:</strong> UFG (one/two-step equations, word problems), QAK (two-step equations), GRH (algebra tiles).</p>
+      <p style="margin:0 0 6px 0;"><strong>Lesson 1-3 support &amp; extension:</strong> PUK (create no-solution/infinite equations), EVP (complete the solution), DN6 (mixed review).</p>
+      <p style="margin:0 0 6px 0;"><strong>Grade 6 foundations</strong> (equation meaning, properties of equality, one-step equations): VMB, VG8, AN8, 5NB, JXM, 35Q, JUA, GMV, WLR, 5D2, T53, BXY, DEJ.</p>
+      <p style="margin:0 0 6px 0;"><strong>Accelerated Grade 7 foundations</strong> (multi-step, distributive property, variables on both sides): Q2B, 8RP, 55K, HZZ, BBZ, ZYL, UEM, BRX, 4N6, XDE, 7TY.</p>
+      <p style="margin:0;"><strong>Suggested pathways:</strong> Equation Solving Foundations 5NB&rarr;WLR&rarr;55K&rarr;28N &middot; Word Problems BXY&rarr;UFG &middot; Variables Both Sides 5NB&rarr;55K&rarr;ZYL&rarr;7S7 &middot; Number of Solutions 5NB&rarr;XDE&rarr;KBP &middot; No Solution/Infinite 5NB&rarr;XDE&rarr;7TY&rarr;PUK &middot; Mixed Review WLR&rarr;HZZ&rarr;DN6.</p>
+    </div>
+  </div>
+
+  <!-- PANEL 2: ANSWER KEYS - EXPLANATION & PRACTICE SET -->
+  <div id="keys1" class="panel">
+    <div class="section-title">Digital Answer Key: Explanation &amp; Practice Set</div>
+    <p>Matches the answers already built into each page's Check My Work logic.</p>
+
+    <div class="answer-section-heading">Explanation - Worked Examples</div>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Variable on One Side (carousel)</th></tr></thead>
+      <tbody>
+        <tr><td>Example 1: \(3(x+2)=21\)</td><td>\(\mathbf{x=5}\)</td></tr>
+        <tr><td>Example 2: \(2(x-3)+4=10\)</td><td>\(\mathbf{x=6}\)</td></tr>
+        <tr><td>Example 3: \(5(x-2)+3=23\)</td><td>\(\mathbf{x=6}\)</td></tr>
+        <tr><td>Example 4: \(8x-4(x-6)+8=44\)</td><td>\(\mathbf{x=3}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Variables on Both Sides (carousel)</th></tr></thead>
+      <tbody>
+        <tr><td>Example 1: \(5x+3=2x+12\)</td><td>\(\mathbf{x=3}\)</td></tr>
+        <tr><td>Example 2: \(7x-4=3x+16\)</td><td>\(\mathbf{x=5}\)</td></tr>
+        <tr><td>Example 3: \(9x-2=4x+23\)</td><td>\(\mathbf{x=5}\)</td></tr>
+        <tr><td>Example 4: \(4y-7+2y=-3(y-1)-1\)</td><td>\(\mathbf{y=1}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Practice Set: Warm-Up</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>\(x+9=15\)</td><td>\(\mathbf{x=6}\)</td></tr>
+        <tr><td>\(4x=28\)</td><td>\(\mathbf{x=7}\)</td></tr>
+        <tr><td>\(\frac{x}{3}+4=9\)</td><td>\(\mathbf{x=15}\)</td></tr>
+        <tr><td>\(2x-7=3\)</td><td>\(\mathbf{x=5}\)</td></tr>
+        <tr><td>\(5x-8=22\)</td><td>\(\mathbf{x=6}\)</td></tr>
+        <tr><td>\(3x+4=-2x+24\)</td><td>\(\mathbf{x=4}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Practice Set: Variable on One Side</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(2x-5=11\)</td><td>\(\mathbf{x=8}\)</td></tr>
+        <tr><td>2. \(4x+7=-9\)</td><td>\(\mathbf{x=-4}\)</td></tr>
+        <tr><td>3. \(-3x+8=2\)</td><td>\(\mathbf{x=2}\)</td></tr>
+        <tr><td>4. \(5(x-3)=20\)</td><td>\(\mathbf{x=7}\)</td></tr>
+        <tr><td>5. \(7x-9=19\)</td><td>\(\mathbf{x=4}\)</td></tr>
+        <tr><td>6. \(-4x+6=-14\)</td><td>\(\mathbf{x=5}\)</td></tr>
+        <tr><td>7. \(5h-13=12\)</td><td>\(\mathbf{h=5}\)</td></tr>
+        <tr><td>8. \(8(n+2)=24\)</td><td>\(\mathbf{n=1}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Practice Set: Variables on Both Sides</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(6x+9=2x-7\)</td><td>\(\mathbf{x=-4}\)</td></tr>
+        <tr><td>2. \(3(x+4)=x+18\)</td><td>\(\mathbf{x=3}\)</td></tr>
+        <tr><td>3. \(5x-2=5x+9\)</td><td><strong>No solution</strong></td></tr>
+        <tr><td>4. \(8x-1=3x+24\)</td><td>\(\mathbf{x=5}\)</td></tr>
+        <tr><td>5. \(2(x-3)=x+1\)</td><td>\(\mathbf{x=7}\)</td></tr>
+        <tr><td>6. \(-8x-(3x+6)=4-x\)</td><td>\(\mathbf{x=-1}\)</td></tr>
+        <tr><td>7. \(14+3n=8n-3(n-4)\)</td><td>\(\mathbf{n=1}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Practice Set: Mixed Equations Bank</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(4x-9=15\)</td><td>\(\mathbf{x=6}\)</td></tr>
+        <tr><td>2. \(6-2x=-8\)</td><td>\(\mathbf{x=7}\)</td></tr>
+        <tr><td>3. \(3(x-5)=12\)</td><td>\(\mathbf{x=9}\)</td></tr>
+        <tr><td>4. \(6x-4=2x+20\)</td><td>\(\mathbf{x=6}\)</td></tr>
+        <tr><td>5. \(9-2x=5x-5\)</td><td>\(\mathbf{x=2}\)</td></tr>
+        <tr><td>6. \(4(x+2)=2(x+7)\)</td><td>\(\mathbf{x=3}\)</td></tr>
+        <tr><td>7. \(5x+12=-3\)</td><td>\(\mathbf{x=-3}\)</td></tr>
+        <tr><td>8. \(7-4x=-5\)</td><td>\(\mathbf{x=3}\)</td></tr>
+        <tr><td>9. \(2(x+4)=3x-1\)</td><td>\(\mathbf{x=9}\)</td></tr>
+        <tr><td>10. \(2x+9=21\)</td><td>\(\mathbf{x=6}\)</td></tr>
+        <tr><td>11. \(7-3x=-8\)</td><td>\(\mathbf{x=5}\)</td></tr>
+        <tr><td>12. \(4(x-1)=2x+6\)</td><td>\(\mathbf{x=5}\)</td></tr>
+        <tr><td>13. \(5x-2=5x+6\)</td><td><strong>No solution</strong></td></tr>
+        <tr><td>14. \(3(x+2)=3x+6\)</td><td><strong>Infinitely many solutions</strong></td></tr>
+        <tr><td>15. \(6x-4=2x+16\)</td><td>\(\mathbf{x=5}\)</td></tr>
+        <tr><td>16. \(5(x+1)=5x+5\)</td><td><strong>Infinitely many solutions</strong></td></tr>
+        <tr><td>17. \(3x-9=3x+2\)</td><td><strong>No solution</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Practice Set: Classify the Solution</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(2x+5=3x-1\)</td><td>One solution, \(\mathbf{x=6}\)</td></tr>
+        <tr><td>2. \(2(x+3)=2x+7\)</td><td><strong>No solution</strong></td></tr>
+        <tr><td>3. \(4(x+1)=4x+4\)</td><td><strong>Infinitely many solutions</strong></td></tr>
+        <tr><td>4. \(6x-2=3(2x+1)\)</td><td><strong>No solution</strong></td></tr>
+        <tr><td>5. \(5(x-2)=5x-10\)</td><td><strong>Infinitely many solutions</strong></td></tr>
+        <tr><td>6. \(7x+3=4x+18\)</td><td>One solution, \(\mathbf{x=5}\)</td></tr>
+        <tr><td>7. \(8x-4=8x+3\)</td><td><strong>No solution</strong></td></tr>
+        <tr><td>8. \(3(x-2)=3x-6\)</td><td><strong>Infinitely many solutions</strong></td></tr>
+        <tr><td>9. \(20+8x=5+11x\)</td><td>One solution, \(\mathbf{x=5}\)</td></tr>
+        <tr><td>10. \(30+12x=45+12x\)</td><td><strong>No solution</strong></td></tr>
+        <tr><td>11. \(4(x+3)=4x+12\)</td><td><strong>Infinitely many solutions</strong></td></tr>
+        <tr><td>12. \(9+6x=3+9x\)</td><td>One solution, \(\mathbf{x=2}\)</td></tr>
+        <tr><td>13. \(5(x+2)=5x+8\)</td><td><strong>No solution</strong></td></tr>
+        <tr><td>14. \(7x-4=4x+17\)</td><td>One solution, \(\mathbf{x=7}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Practice Set: Strategy Challenge (Groups A-D)</div>
+    <table class="data-table">
+      <thead><tr><th>Group</th><th>#</th><th>Equation</th><th>Solution</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="8">A</td><td>1</td><td>\(5x-3=2x+12\)</td><td>\(x=\mathbf{5}\)</td></tr>
+        <tr><td>2</td><td>\(6x+4=2x+16\)</td><td>\(x=\mathbf{3}\)</td></tr>
+        <tr><td>3</td><td>\(3x-7=x+9\)</td><td>\(x=\mathbf{8}\)</td></tr>
+        <tr><td>4</td><td>\(8x-10=3x+35\)</td><td>\(x=\mathbf{9}\)</td></tr>
+        <tr><td>5</td><td>\(4x+6=x-3\)</td><td>\(x=\mathbf{-3}\)</td></tr>
+        <tr><td>6</td><td>\(9x-2=5x+14\)</td><td>\(x=\mathbf{4}\)</td></tr>
+        <tr><td>7</td><td>\(2x+30=7x-5\)</td><td>\(x=\mathbf{7}\)</td></tr>
+        <tr><td>8</td><td>\(10x-4=6x+20\)</td><td>\(x=\mathbf{6}\)</td></tr>
+        <tr><td rowspan="8">B</td><td>1</td><td>\(3(2x-1)=4x+9\)</td><td>\(x=\mathbf{6}\)</td></tr>
+        <tr><td>2</td><td>\(2(x+5)=x-2\)</td><td>\(x=\mathbf{-12}\)</td></tr>
+        <tr><td>3</td><td>\(4(x-3)=2x+2\)</td><td>\(x=\mathbf{7}\)</td></tr>
+        <tr><td>4</td><td>\(5(2x+1)=3x-2\)</td><td>\(x=\mathbf{-1}\)</td></tr>
+        <tr><td>5</td><td>\(2(3x-4)=x+37\)</td><td>\(x=\mathbf{9}\)</td></tr>
+        <tr><td>6</td><td>\(6(x+2)=3x-3\)</td><td>\(x=\mathbf{-5}\)</td></tr>
+        <tr><td>7</td><td>\(3(x-4)+2x=x+28\)</td><td>\(x=\mathbf{10}\)</td></tr>
+        <tr><td>8</td><td>\(4(2x+3)-5=5x+16\)</td><td>\(x=\mathbf{3}\)</td></tr>
+        <tr><td rowspan="8">C</td><td>1</td><td>\(7x+2=7x-5\)</td><td>No solution</td></tr>
+        <tr><td>2</td><td>\(5x-3=2x+9\)</td><td>\(x=\mathbf{4}\)</td></tr>
+        <tr><td>3</td><td>\(6x+8=6x-1\)</td><td>No solution</td></tr>
+        <tr><td>4</td><td>\(4x-7=x+14\)</td><td>\(x=\mathbf{7}\)</td></tr>
+        <tr><td>5</td><td>\(3x+10=3x-4\)</td><td>No solution</td></tr>
+        <tr><td>6</td><td>\(9x-6=5x+18\)</td><td>\(x=\mathbf{6}\)</td></tr>
+        <tr><td>7</td><td>\(2x+15=2x-3\)</td><td>No solution</td></tr>
+        <tr><td>8</td><td>\(8x-11=3x+29\)</td><td>\(x=\mathbf{8}\)</td></tr>
+        <tr><td rowspan="8">D</td><td>1</td><td>\(2(x+3)=2x+6\)</td><td>Infinitely many solutions</td></tr>
+        <tr><td>2</td><td>\(5(x-1)=5x-5\)</td><td>Infinitely many solutions</td></tr>
+        <tr><td>3</td><td>\(3x+7=8x-8\)</td><td>\(x=\mathbf{3}\)</td></tr>
+        <tr><td>4</td><td>\(4(x+2)-3=4x+5\)</td><td>Infinitely many solutions</td></tr>
+        <tr><td>5</td><td>\(6x-9=x+16\)</td><td>\(x=\mathbf{5}\)</td></tr>
+        <tr><td>6</td><td>\(3(2x-4)=6x-12\)</td><td>Infinitely many solutions</td></tr>
+        <tr><td>7</td><td>\(7x+3=2x+33\)</td><td>\(x=\mathbf{6}\)</td></tr>
+        <tr><td>8</td><td>\(3(3x-2)-2x=5x+2\)</td><td>\(x=\mathbf{4}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Practice Set: Error Analysis (Spot the Mistake)</div>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Problem</th><th>First incorrect step</th><th>Correct solution</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>\(3(x-4)=2x+5\)</td><td>Step 1 - the 3 was distributed only to \(x\), not to \(-4\)</td><td>\(x=\mathbf{17}\)</td></tr>
+        <tr><td>2</td><td>\(4(x-2)+5=3x-1\)</td><td>Step 1 - the 4 was distributed only to \(x\), not to \(-2\)</td><td>\(x=\mathbf{2}\)</td></tr>
+        <tr><td>3</td><td>\(2(x+3)-7=x-4\)</td><td>Step 2 - \(6-7\) combined as \(+1\) instead of \(-1\)</td><td>\(x=\mathbf{-3}\)</td></tr>
+        <tr><td>4</td><td>\(3(2x-1)=4x+15\)</td><td>Step 2 - after \(2x-3=15\), the \(-3\) should be added, not subtracted</td><td>\(x=\mathbf{9}\)</td></tr>
+        <tr><td>5</td><td>\(6(x+1)-4=2(x+7)\)</td><td>Step 1 - the right side wasn't fully distributed</td><td>\(x=\mathbf{3}\)</td></tr>
+        <tr><td>6</td><td>\(5(x-3)+2x=3x+9\)</td><td>Step 2 - after \(4x-15=9\), add 15, don't subtract</td><td>\(x=\mathbf{6}\)</td></tr>
+        <tr><td>7</td><td>\(2(3x+4)-5=4x+13\)</td><td>Step 1 - the \(-5\) was dropped after distributing</td><td>\(x=\mathbf{5}\)</td></tr>
+        <tr><td>8</td><td>\(6x-2(x-4)=5x-3\)</td><td>Step 1 - sign error distributing \(-2\) across \((x-4)\)</td><td>\(x=\mathbf{11}\)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 3: ANSWER KEYS - WORD PROBLEMS & TEST PREP -->
+  <div id="keys2" class="panel">
+    <div class="section-title">Digital Answer Key: Word Problems &amp; Test Prep</div>
+
+    <div class="answer-section-heading">Word Problems: Mixture &amp; Work-Rate</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Mixture Investigation</td><td>\(\mathbf{4}\) L of 50% solution, \(\mathbf{8}\) L of 20% solution</td></tr>
+        <tr><td>Work &amp; Time (two printers, 260 pages)</td><td>\(\mathbf{20}\) minutes</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Word Problems: Cost Comparisons</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Gym A vs Gym B</td><td>\(\mathbf{x=5}\) months (both cost \$165)</td></tr>
+        <tr><td>Break-Even (Gym) #2: \$50+\$20/mo vs \$30+\$25/mo</td><td>\(\mathbf{x=4}\) months</td></tr>
+        <tr><td>Break-Even (Gym) #3: \$60+\$15/mo vs no fee+\$25/mo</td><td>\(\mathbf{x=6}\) months</td></tr>
+        <tr><td>Break-Even (Gym) #4: \$61+\$10/mo vs \$25+\$22/mo</td><td>\(\mathbf{x=3}\) months</td></tr>
+        <tr><td>Break-Even (Gym) #5: \$5+\$25/mo vs \$95+\$15/mo</td><td>\(\mathbf{x=9}\) months</td></tr>
+        <tr><td>Break-Even (Gym) #6: \$116+\$8/mo vs \$20+\$20/mo</td><td>\(\mathbf{x=8}\) months</td></tr>
+        <tr><td>Break-Even (Gym) #7: \$30+\$30/mo vs \$150+\$18/mo</td><td>\(\mathbf{x=10}\) months</td></tr>
+        <tr><td>Break-Even (Gym) #8: \$24+\$22/mo vs \$40+\$14/mo</td><td>\(\mathbf{x=2}\) months</td></tr>
+        <tr><td>Internet Provider A vs B</td><td>\(\mathbf{x=4}\) months; Provider B cheaper for a full year</td></tr>
+        <tr><td>Break-Even (Internet) #2: \$43+\$18/mo vs \$25+\$24/mo</td><td>\(\mathbf{x=3}\) months</td></tr>
+        <tr><td>Break-Even (Internet) #3: \$94+\$12/mo vs \$10+\$24/mo</td><td>\(\mathbf{x=7}\) months</td></tr>
+        <tr><td>Break-Even (Internet) #4: \$10+\$25/mo vs \$90+\$15/mo</td><td>\(\mathbf{x=8}\) months</td></tr>
+        <tr><td>Break-Even (Internet) #5: \$64+\$9/mo vs \$40+\$21/mo</td><td>\(\mathbf{x=2}\) months</td></tr>
+        <tr><td>Break-Even (Internet) #6: \$110+\$18/mo vs \$20+\$28/mo</td><td>\(\mathbf{x=9}\) months</td></tr>
+        <tr><td>Break-Even (Internet) #7: \$60+\$14/mo vs \$130+\$7/mo</td><td>\(\mathbf{x=10}\) months</td></tr>
+        <tr><td>Break-Even (Internet) #8: \$39+\$16/mo vs \$15+\$20/mo</td><td>\(\mathbf{x=6}\) months</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Word Problems: Savings &amp; Billing</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Comparison 1: two savings plans</td><td><strong>No solution</strong> - the \$30 gap never closes (same savings rate)</td></tr>
+        <tr><td>Comparison 2: two billing expressions</td><td><strong>Infinitely many solutions</strong> - identical plans written two ways</td></tr>
+        <tr><td>Quick Classify #3: \(20+8x=5+11x\)</td><td>One solution, \(\mathbf{x=5}\)</td></tr>
+        <tr><td>Quick Classify #4: \(30+12x=45+12x\)</td><td><strong>No solution</strong></td></tr>
+        <tr><td>Quick Classify #5: \(4(x+3)=4x+12\)</td><td><strong>Infinitely many solutions</strong></td></tr>
+        <tr><td>Quick Classify #6: \(9+6x=3+9x\)</td><td>One solution, \(\mathbf{x=2}\)</td></tr>
+        <tr><td>Quick Classify #7: \(5(x+2)=5x+8\)</td><td><strong>No solution</strong></td></tr>
+        <tr><td>Quick Classify #8: \(7x-4=4x+17\)</td><td>One solution, \(\mathbf{x=7}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Word Problems: More Word Problems &amp; Challenge</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Cell phone plan</td><td>\(\mathbf{75}\) texts</td></tr>
+        <tr><td>Temperature drop</td><td>\(\mathbf{9}\) hours</td></tr>
+        <tr><td>Savings account</td><td>\(\mathbf{14}\) weeks</td></tr>
+        <tr><td>Perimeter challenge</td><td>\(\mathbf{8}\) ft width</td></tr>
+        <tr><td>Gym memberships</td><td>\(\mathbf{5}\) months</td></tr>
+        <tr><td>C1. Two consecutive integers, sum 47</td><td>\(\mathbf{23}\) and \(\mathbf{24}\)</td></tr>
+        <tr><td>C2. Three consecutive even integers, sum 72</td><td>\(\mathbf{22}\), \(\mathbf{24}\), \(\mathbf{26}\)</td></tr>
+        <tr><td>C3. Two numbers differ by 12, sum 58</td><td>\(\mathbf{23}\) and \(\mathbf{35}\)</td></tr>
+        <tr><td>C4. Parent/son age problem</td><td>Son is \(\mathbf{12}\) now</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Test Prep: Full Review</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Check Your Understanding 2: \(-12-(-5)\)</td><td>\(\mathbf{-7}\)</td></tr>
+        <tr><td>Guided Step-Review 1: \(x+15=-4\)</td><td>\(\mathbf{x=-19}\)</td></tr>
+        <tr><td>Guided Step-Review 2: \(-3x=21\)</td><td>\(\mathbf{x=-7}\)</td></tr>
+        <tr><td>Guided Step-Review 3: \(2x-8=-20\)</td><td>\(\mathbf{x=-6}\)</td></tr>
+        <tr><td>Guided Step-Review 4: \(\frac{x}{-4}+5=2\)</td><td>\(\mathbf{x=12}\)</td></tr>
+        <tr><td>Guided Step-Review 5: \(5x+10=2x-11\)</td><td>\(\mathbf{x=-7}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Test Prep: Error Analysis Review</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(3(x-5)=12\)</td><td>\(\mathbf{x=9}\)</td></tr>
+        <tr><td>2. \(x-8=-15\)</td><td>\(\mathbf{x=-7}\)</td></tr>
+        <tr><td>3. \(2x+10=4\)</td><td>\(\mathbf{x=-3}\)</td></tr>
+        <tr><td>4. \(5x=2x+18\)</td><td>\(\mathbf{x=6}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Test Prep: Mixed Practice (submit-only)</div>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Part 1: Bare Computation</th></tr></thead>
+      <tbody>
+        <tr><td>1. \(x-(-12)=5\)</td><td>\(\mathbf{x=-7}\)</td></tr>
+        <tr><td>2. \(-3y+7=-14\)</td><td>\(\mathbf{y=7}\)</td></tr>
+        <tr><td>3. \(\frac{a}{-4}-8=-2\)</td><td>\(\mathbf{a=-24}\)</td></tr>
+        <tr><td>4. \(5m-2=3m+10\)</td><td>\(\mathbf{m=6}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Part 2: Error Analysis</th></tr></thead>
+      <tbody>
+        <tr><td>5. \(-2(x-4)=10\)</td><td>\(\mathbf{x=-1}\)</td></tr>
+        <tr><td>6. \(x+15=-5\)</td><td>\(\mathbf{x=-20}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Part 3: Word Problems</th></tr></thead>
+      <tbody>
+        <tr><td>7. Scuba diver</td><td>\(\mathbf{9}\) minutes</td></tr>
+        <tr><td>8. Fairbanks temperature</td><td>\(\mathbf{6}\) hours</td></tr>
+        <tr><td>9. Gym membership months</td><td>\(\mathbf{7}\) months</td></tr>
+        <tr><td>10. \(3n+(-15)=-2\times6\)</td><td>\(\mathbf{n=1}\)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 4: PRINTABLES & KEY -->
+  <div id="printables" class="panel">
+    <div class="section-title">Printables &amp; Answer Key</div>
+    <p>The Practice Set group/error cards below are original material written to support small-group work. The official Savvas enVision Algebra 1 resources for Lesson 1-2 and Lesson 1-3 (Mathematical Literacy, Enrichment, Additional Practice, Reteach, Lesson Quiz) are incorporated into the Explanation and Word Problems pages and reproduced in full below with answer keys.</p>
+
+    <div class="answer-section-heading">Test Prep: Printable Worksheet</div>
+    <div class="flag-box">
+      <h4>Keep this confidential from students</h4>
+      <p style="margin:0;">This printable mirrors the Test Prep page's Mixed Practice tab and can double as a paper assessment. Do not link or share this Teacher's Guide page with students.</p>
+    </div>
+    <a class="btn-lg" href="printables/Test-Prep-Printable.html" target="_blank" rel="noopener">Printables: Test Prep Worksheet &amp; Assessment</a>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Problem</th><th>Answer</th><th>Points</th></tr></thead>
+      <tbody>
+        <tr><td colspan="4"><strong>Section 1: Variable on One Side (20 pts)</strong></td></tr>
+        <tr><td>1</td><td>\(4x-9=19\)</td><td>\(\mathbf{x=7}\)</td><td>4</td></tr>
+        <tr><td>2</td><td>\(-2x+7=-11\)</td><td>\(\mathbf{x=9}\)</td><td>4</td></tr>
+        <tr><td>3</td><td>\(6(x-2)=18\)</td><td>\(\mathbf{x=5}\)</td><td>4</td></tr>
+        <tr><td>4</td><td>\(3x+14=-1\)</td><td>\(\mathbf{x=-5}\)</td><td>4</td></tr>
+        <tr><td>5</td><td>\(-5x-3=17\)</td><td>\(\mathbf{x=-4}\)</td><td>4</td></tr>
+        <tr><td colspan="4"><strong>Section 2: Variable on Both Sides (20 pts)</strong></td></tr>
+        <tr><td>6</td><td>\(5x-3=3x+9\)</td><td>\(\mathbf{x=6}\)</td><td>4</td></tr>
+        <tr><td>7</td><td>\(7x+2=4x-16\)</td><td>\(\mathbf{x=-6}\)</td><td>4</td></tr>
+        <tr><td>8</td><td>\(3(x-1)=x+5\)</td><td>\(\mathbf{x=4}\)</td><td>4</td></tr>
+        <tr><td>9</td><td>\(9x-5=4x+45\)</td><td>\(\mathbf{x=10}\)</td><td>4</td></tr>
+        <tr><td>10</td><td>\(2(2x+3)=x-3\)</td><td>\(\mathbf{x=-3}\)</td><td>4</td></tr>
+        <tr><td colspan="4"><strong>Section 3: Classify the Equation (24 pts)</strong></td></tr>
+        <tr><td>11</td><td>\(4x-7=2x+9\)</td><td>One solution, \(\mathbf{x=8}\)</td><td>6</td></tr>
+        <tr><td>12</td><td>\(3x+8=3x-2\)</td><td><strong>No solution</strong></td><td>6</td></tr>
+        <tr><td>13</td><td>\(5(x+2)=5x+10\)</td><td><strong>Infinitely many solutions</strong></td><td>6</td></tr>
+        <tr><td>14</td><td>\(7x-3=4x+15\)</td><td>One solution, \(\mathbf{x=6}\)</td><td>6</td></tr>
+        <tr><td colspan="4"><strong>Section 4: Applications (36 pts)</strong></td></tr>
+        <tr><td>15</td><td>Phone plans: \(30+0.10x=45\)</td><td>\(\mathbf{x=150}\) texts</td><td>9</td></tr>
+        <tr><td>16</td><td>Consecutive odd integers: \(x+(x+2)=76\)</td><td>\(\mathbf{37}\) and \(\mathbf{39}\)</td><td>9</td></tr>
+        <tr><td>17</td><td>Tank: \(40+5x=100\)</td><td>\(\mathbf{x=12}\) minutes</td><td>9</td></tr>
+        <tr><td>18</td><td>Rental plans: \(25+15x=85\)</td><td>\(\mathbf{x=4}\) months</td><td>9</td></tr>
+        <tr><td colspan="4"><strong>Extra Credit (bonus, not shown to students)</strong></td></tr>
+        <tr><td>19</td><td>\(4(2x-3)-5x=3(x+4)+2\)</td><td>Simplifies to \(3x-12=3x+14\) &rarr; <strong>no solution</strong></td><td>10</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Explanation &amp; Word Problems: Savvas Lesson 1-2 &amp; 1-3 (Official Resources)</div>
+    <a class="btn-lg" href="printables/Savvas-Resources-Printable.html" target="_blank" rel="noopener">Print These Resources</a>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Lesson 1-2 Additional Practice (selected)</th></tr></thead>
+      <tbody>
+        <tr><td>1. \(4m-5=11\)</td><td>\(\mathbf{m=4}\)</td></tr>
+        <tr><td>2. \(-3d+10=43\)</td><td>\(\mathbf{d=-11}\)</td></tr>
+        <tr><td>4. \(5h-13=12\)</td><td>\(\mathbf{h=5}\) (used in Practice Set Tab 2)</td></tr>
+        <tr><td>5. \(-8=3y-2\)</td><td>\(\mathbf{y=-2}\)</td></tr>
+        <tr><td>6. \(8(n+2)=24\)</td><td>\(\mathbf{n=1}\) (used in Practice Set Tab 2)</td></tr>
+        <tr><td>13. Three consecutive integers sum to 78</td><td>\(\mathbf{25, 26, 27}\)</td></tr>
+        <tr><td>14. Lunch special, \$4 off &times; 5 days = \$75</td><td>\(\mathbf{p=\$19}\)</td></tr>
+        <tr><td>15. Salad + \$1.50 tip &times; 4 visits = \$54</td><td>\(\mathbf{c=\$12}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Lesson 1-2 Lesson Quiz</th></tr></thead>
+      <tbody>
+        <tr><td>1. Shuttle \$5 + \$1.50/mi = \$41</td><td>\(1.5x+5=41 \rightarrow x=\mathbf{24}\) miles</td></tr>
+        <tr><td>2. Six \$2-off coupons, total \$42, ticket price?</td><td><strong>C</strong> - \(\$9\)</td></tr>
+        <tr><td>3. 74 socks, 1 more pair white than black</td><td>\(\mathbf{36}\) black, \(\mathbf{38}\) white</td></tr>
+        <tr><td>4. 10L of 20% from 5% and 40% solutions</td><td>Part A: <strong>B</strong>; Part B: \(\mathbf{5.7}\) L of 5%, \(\mathbf{4.3}\) L of 40%</td></tr>
+        <tr><td>5. Pistachios/almonds, select all true</td><td><strong>A, C, E</strong> (almonds \$8/lb, pistachios \$12/lb)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Lesson 1-3 Additional Practice (selected)</th></tr></thead>
+      <tbody>
+        <tr><td>1. \(4y-7+2y=-3(y-1)-1\)</td><td>\(\mathbf{y=1}\) (used in Explanation carousel Example 4)</td></tr>
+        <tr><td>3. \(-8x-(3x+6)=4-x\)</td><td>\(\mathbf{x=-1}\) (used in Practice Set Tab 3)</td></tr>
+        <tr><td>4. \(14+3n=8n-3(n-4)\)</td><td>\(\mathbf{n=1}\) (used in Practice Set Tab 3)</td></tr>
+        <tr><td>13. Square/rectangle equal perimeters</td><td>\(4(4x-1)=2(2x+2)+2(2x) \rightarrow \mathbf{x=1}\)</td></tr>
+        <tr><td>14. Movie club: \$25+\$7m vs \$12m</td><td>\(\mathbf{m=5}\) movies</td></tr>
+        <tr><td>15. Cashews \$14/lb + 5 lb peanuts \$6.50/lb &rarr; mix \$10.25/lb</td><td>\(\mathbf{5}\) lb of cashews</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Lesson 1-3 Lesson Quiz</th></tr></thead>
+      <tbody>
+        <tr><td>1. \(4x+2(x-5)=3(2x-4)\) solutions?</td><td><strong>A</strong> - no solution (simplifies to \(6x-10=6x-12\), a false statement)</td></tr>
+        <tr><td>2. Cranberry/apple juice mixture equation</td><td><strong>D</strong> - \(6.30q+14.40=4.50(q+4)\); \(\mathbf{q=2}\) quarts</td></tr>
+        <tr><td>3. \(\frac{3}{2}(4x-2)-3x=5-(x+2)\)</td><td>\(\mathbf{x=\frac{3}{2}}\)</td></tr>
+        <tr><td>5. Tonya vs. Beth dog-walking</td><td><strong>A</strong> - \(20+3m=5m\); \(\mathbf{m=10}\) miles</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Practice Set: Error Analysis Card</div>
+    <a class="btn-lg" href="printables/Error-Detective-Printable.html" target="_blank" rel="noopener">Print This Card</a>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Problem</td><td>\(3(x-4)=2x+5\)</td></tr>
+        <tr><td>First incorrect step</td><td>Step 1 - the 3 was distributed only to \(x\), not to \(-4\) (should read \(3x-12=2x+5\), not \(3x-4=2x+5\))</td></tr>
+        <tr><td>Correct solution</td><td>\(3x-12=2x+5 \rightarrow x=\mathbf{17}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Problem</th><th>First incorrect step</th><th>Correct solution</th></tr></thead>
+      <tbody>
+        <tr><td>2</td><td>\(4(x-2)+5=3x-1\)</td><td>Step 1 - the 4 was distributed only to \(x\), not to \(-2\)</td><td>\(x=\mathbf{2}\)</td></tr>
+        <tr><td>3</td><td>\(2(x+3)-7=x-4\)</td><td>Step 2 - \(6-7\) combined as \(+1\) instead of \(-1\)</td><td>\(x=\mathbf{-3}\)</td></tr>
+        <tr><td>4</td><td>\(3(2x-1)=4x+15\)</td><td>Step 2 - the \(-3\) should be added to both sides, not subtracted</td><td>\(x=\mathbf{9}\)</td></tr>
+        <tr><td>5</td><td>\(6(x+1)-4=2(x+7)\)</td><td>Step 1 - the right side wasn't fully distributed</td><td>\(x=\mathbf{3}\)</td></tr>
+        <tr><td>6</td><td>\(5(x-3)+2x=3x+9\)</td><td>Step 2 - add 15 to both sides, don't subtract</td><td>\(x=\mathbf{6}\)</td></tr>
+        <tr><td>7</td><td>\(2(3x+4)-5=4x+13\)</td><td>Step 1 - the \(-5\) was dropped after distributing</td><td>\(x=\mathbf{5}\)</td></tr>
+        <tr><td>8</td><td>\(6x-2(x-4)=5x-3\)</td><td>Step 1 - sign error distributing \(-2\) across \((x-4)\)</td><td>\(x=\mathbf{11}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Practice Set: Classification Cards</div>
+    <a class="btn-lg" href="printables/Classification-Cards-Printable.html" target="_blank" rel="noopener">Print These Cards</a>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Equation</th><th>Classification</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>\(2x+5=3x-1\)</td><td>One solution, \(x=6\)</td></tr>
+        <tr><td>2</td><td>\(2(x+3)=2x+7\)</td><td>No solution</td></tr>
+        <tr><td>3</td><td>\(4(x+1)=4x+4\)</td><td>Infinitely many solutions</td></tr>
+        <tr><td>4</td><td>\(6x-2=3(2x+1)\)</td><td>No solution</td></tr>
+        <tr><td>5</td><td>\(5(x-2)=5x-10\)</td><td>Infinitely many solutions</td></tr>
+        <tr><td>6</td><td>\(7x+3=4x+18\)</td><td>One solution, \(x=5\)</td></tr>
+        <tr><td>7</td><td>\(8x-4=8x+3\)</td><td>No solution</td></tr>
+        <tr><td>8</td><td>\(3(x-2)=3x-6\)</td><td>Infinitely many solutions</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Practice Set: Strategy Challenge Cards</div>
+    <a class="btn-lg" href="printables/Strategy-Challenge-Printable.html" target="_blank" rel="noopener">Print These Cards</a>
+    <p>See the Strategy Challenge answer table in Tab 2 above for the full key.</p>
+  </div>
+
+  <!-- PANEL 5: CHALLENGE BANK -->
+  <div id="challenge" class="panel">
+    <div class="section-title">Challenge Bank: One Level Harder</div>
+    <p>Extra problems for early finishers or homework extension. Each is a step above that section's practice - more distribution, fractional or negative solutions, or a second pass at classification. Click a problem to reveal its full solution.</p>
+    <a class="btn-lg" href="printables/Challenge-Bank-Printable.html" target="_blank" rel="noopener">Printables: Challenge Bank (no solutions shown)</a>
+
+    <div class="challenge-section-heading">Explanation-Tier Challenges</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Solve \(3(2x - 5) - 4 = 2(x + 7)\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute: \(6x - 15 - 4 = 2x + 14\). Combine: \(6x - 19 = 2x + 14\). Subtract \(2x\): \(4x - 19 = 14\). Add 19: \(4x = 33\). Divide by 4: \(x = \mathbf{\frac{33}{4} = 8.25}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> Solve \(-(x - 6) = 2x + 3\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute the negative: \(-x + 6 = 2x + 3\). Add \(x\): \(6 = 3x + 3\). Subtract 3: \(3 = 3x\). Divide by 3: \(x = \mathbf{1}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> Classify \(4(x + 3) = 2(2x + 6)\). Is this always, sometimes, or never true?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute both sides: \(4x + 12 = 4x + 12\). The two sides are identical, so this is <strong>always true</strong> - infinitely many solutions.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> Solve \(5(2x + 1) - 7 = 3x - 30\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute: \(10x + 5 - 7 = 3x - 30\). Combine: \(10x - 2 = 3x - 30\). Subtract \(3x\): \(7x - 2 = -30\). Add 2: \(7x = -28\). Divide by 7: \(x = \mathbf{-4}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> Solve \(-2(x + 4) = 3x + 7\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute: \(-2x - 8 = 3x + 7\). Add \(2x\): \(-8 = 5x + 7\). Subtract 7: \(-15 = 5x\). Divide by 5: \(x = \mathbf{-3}\).</p>
+      </details>
+    </div>
+
+    <div class="challenge-section-heading">Practice-Set-Tier Challenges</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Solve \(2(3x - 1) + 5 = 3(x + 4) - x\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute: \(6x - 2 + 5 = 3x + 12 - x\). Combine: \(6x + 3 = 2x + 12\). Subtract \(2x\): \(4x + 3 = 12\). Subtract 3: \(4x = 9\). Divide by 4: \(x = \mathbf{\frac{9}{4} = 2.25}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> Solve \(5x - 2(x - 3) = 2x + 20\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute: \(5x - 2x + 6 = 2x + 20\). Combine: \(3x + 6 = 2x + 20\). Subtract \(2x\): \(x + 6 = 20\). Subtract 6: \(x = \mathbf{14}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> Classify \(6x + 11 = 6x - 4\). Explain what the result tells you.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Subtract \(6x\) from both sides: \(11 = -4\), a false statement. This equation has <strong>no solution</strong> - no value of \(x\) can make it true.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> Classify \(4(x - 3) + 2x = 6(x - 2)\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute and combine the left side: \(4x - 12 + 2x = 6(x-2) \rightarrow 6x - 12 = 6x - 12\). Identical sides - <strong>infinitely many solutions</strong>.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> Solve \(7x - 2(x + 1) = 3x + 8\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute: \(7x - 2x - 2 = 3x + 8\). Combine: \(5x - 2 = 3x + 8\). Subtract \(3x\): \(2x - 2 = 8\). Add 2: \(2x = 10\). Divide by 2: \(x = \mathbf{5}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C6.</strong> Classify \(3(x + 2) - x = 2x + 6\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute and combine the left side: \(3x + 6 - x = 2x + 6 \rightarrow 2x + 6 = 2x + 6\). Identical sides - <strong>infinitely many solutions</strong>.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C7.</strong> Classify \(4x + 9 = 4x - 2\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Subtract \(4x\): \(9 = -2\), false. <strong>No solution</strong>.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C8.</strong> Solve \(7 - 2(x - 3) = x + 1\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute: \(7 - 2x + 6 = x + 1\). Combine: \(13 - 2x = x + 1\). Add \(2x\): \(13 = 3x + 1\). Subtract 1: \(12 = 3x\). Divide by 3: \(x = \mathbf{4}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C9.</strong> Classify \(6x - 1 = 2(3x + 4)\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute the right side: \(6x - 1 = 6x + 8\). Subtract \(6x\): \(-1 = 8\), a false statement. <strong>No solution</strong>.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C10.</strong> Classify \(9 - 3(x - 1) = 15 - 3x\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute the left side: \(9 - 3x + 3 = 15 - 3x \rightarrow 12 - 3x = 15 - 3x\). Add \(3x\): \(12 = 15\), a false statement. <strong>No solution</strong>.</p>
+      </details>
+    </div>
+
+    <div class="challenge-section-heading">Word-Problems-Tier Challenges</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Two consecutive integers have a sum of 47. Write and solve an equation to find both integers.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Let \(x\) be the smaller integer: \(x + (x + 1) = 47 \rightarrow 2x + 1 = 47 \rightarrow 2x = 46 \rightarrow x = \mathbf{23}\). The integers are \(\mathbf{23}\) and \(\mathbf{24}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> Solve \(2(4x - 3) = 3(2x + 1) + 1\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute: \(8x - 6 = 6x + 3 + 1 \rightarrow 8x - 6 = 6x + 4\). Subtract \(6x\): \(2x - 6 = 4\). Add 6: \(2x = 10\). Divide by 2: \(x = \mathbf{5}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> Three consecutive even integers have a sum of 72. Write and solve an equation to find all three.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Let \(x\) be the smallest: \(x + (x+2) + (x+4) = 72 \rightarrow 3x + 6 = 72 \rightarrow 3x = 66 \rightarrow x = \mathbf{22}\). The integers are \(\mathbf{22}\), \(\mathbf{24}\), and \(\mathbf{26}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> Two numbers differ by 12 and have a sum of 58. Write and solve an equation to find both numbers.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Let \(x\) be the smaller number: \(x + (x + 12) = 58 \rightarrow 2x + 12 = 58 \rightarrow 2x = 46 \rightarrow x = \mathbf{23}\). The numbers are \(\mathbf{23}\) and \(\mathbf{35}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> Solve \(4(x - 2) + 3 = 2x + 9\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute: \(4x - 8 + 3 = 2x + 9\). Combine: \(4x - 5 = 2x + 9\). Subtract \(2x\): \(2x - 5 = 9\). Add 5: \(2x = 14\). Divide by 2: \(x = \mathbf{7}\).</p>
+      </details>
+    </div>
+
+    <div class="challenge-section-heading">Test-Prep Enrichment for Early Finishers</div>
+    <p style="font-size:0.9rem; color:#64748b;"><em>These are original problems, unrelated to the graded assessment, safe to hand out to students who finish early.</em></p>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Classify \(5(x + 2) - 3x = 2x + 10\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute and combine the left side: \(5x + 10 - 3x = 2x + 10 \rightarrow 2x + 10 = 2x + 10\). Identical sides - <strong>infinitely many solutions</strong>.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> Solve \(9 - 4(x - 2) = 2x - 7\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute: \(9 - 4x + 8 = 2x - 7\). Combine: \(17 - 4x = 2x - 7\). Add \(4x\): \(17 = 6x - 7\). Add 7: \(24 = 6x\). Divide by 6: \(x = \mathbf{4}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> Solve \(6(x - 1) - 2x = 3x + 2\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute: \(6x - 6 - 2x = 3x + 2\). Combine: \(4x - 6 = 3x + 2\). Subtract \(3x\): \(x - 6 = 2\). Add 6: \(x = \mathbf{8}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> A parent is 4 times as old as her son; in 6 years she will be 3 times as old as her son will be then. Write and solve an equation for the son's current age, \(x\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(4x + 6 = 3(x + 6)\). Distribute: \(4x + 6 = 3x + 18\). Subtract \(3x\): \(x + 6 = 18\). Subtract 6: \(x = \mathbf{12}\). The son is 12 now.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> Classify \(5x - 3(x - 2) = 2x + 6\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute the left side: \(5x - 3x + 6 = 2x + 6 \rightarrow 2x + 6 = 2x + 6\). Identical sides - <strong>infinitely many solutions</strong>.</p>
+      </details>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+</script>
+</body>
+</html>
