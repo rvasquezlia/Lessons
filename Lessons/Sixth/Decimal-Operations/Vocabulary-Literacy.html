@@ -67,6 +67,7 @@
     .kw-add { background: var(--success); }
     .kw-sub { background: var(--error); }
     .kw-mult { background: var(--primary); }
+    .kw-div { background: var(--accent); }
     .keyword-list { list-style:none; padding-left:0; margin:0 0 20px 0; }
     .keyword-list li {
       background: #f8fafc;
@@ -161,6 +162,21 @@
         <div class="term-example">In \(245 \times 32\), \(245 \times 2 = 490\) and \(245 \times 30 = 7350\) are the two partial products.</div>
       </div>
       <div class="term-card">
+        <span class="term-name">Dividend</span>
+        <p class="term-def">The number being divided - the total amount getting split up.</p>
+        <div class="term-example">In \(45 \div 1.5\), \(45\) is the dividend.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Divisor</span>
+        <p class="term-def">The number you're dividing by.</p>
+        <div class="term-example">In \(45 \div 1.5\), \(1.5\) is the divisor.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Move the Decimal Point (Division)</span>
+        <p class="term-def">When the divisor is a decimal, multiply both the divisor and the dividend by the same power of \(10\) - shifting both decimal points the same number of places right - until the divisor is a whole number.</p>
+        <div class="term-example">\(3.75 \div 0.25\) becomes \(375 \div 25\) once both decimal points shift 2 places right.</div>
+      </div>
+      <div class="term-card">
         <span class="term-name">Decimal Places</span>
         <p class="term-def">The number of digits written to the right of the decimal point.</p>
         <div class="term-example">\(3.5\) has 1 decimal place; \(1.25\) has 2 decimal places.</div>
@@ -191,9 +207,19 @@
         <div class="term-example">The product of \(3.5\) and \(1.25\) is \(4.375\).</div>
       </div>
       <div class="term-card">
+        <span class="term-name">Quotient</span>
+        <p class="term-def">The answer to a division problem.</p>
+        <div class="term-example">The quotient of \(45\) and \(1.5\) is \(30\).</div>
+      </div>
+      <div class="term-card">
         <span class="term-name">Reasonableness</span>
         <p class="term-def">Whether an exact answer makes sense compared to the estimate - a check that catches decimal-placement mistakes.</p>
         <div class="term-example">If your exact answer isn't close to your estimate, you likely lined up digits or shifted the decimal incorrectly.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Terminating &amp; Repeating Decimals</span>
+        <p class="term-def">A terminating decimal ends after a finite number of digits. A repeating decimal keeps going forever with a digit or group of digits that repeat - round it to a sensible place instead of writing it out forever.</p>
+        <div class="term-example">\(3.75 \div 0.25 = 15\) terminates, but \(47.50 \div 6 = 7.9166\ldots\) repeats and needs rounding.</div>
       </div>
     </div>
   </div>
@@ -267,7 +293,7 @@
     <div class="section-title">Keyword Clues for Word Problems</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Copy the three keyword lists into your notebook - you'll use them every time you read a word problem in this topic. Then sort the practice keywords and translate the practice phrases below, checking your work as you go.
+      Copy the four keyword lists into your notebook - you'll use them every time you read a word problem in this topic. Then sort the practice keywords and translate the practice phrases below, checking your work as you go.
     </div>
 
     <div class="explainer-box">
@@ -287,6 +313,10 @@
       <div class="keyword-col-heading kw-mult">Multiplication (&times;)</div>
       <ul class="keyword-list">
         <li>product, total of equal groups, area, "times as many," twice, of (in context of groups)</li>
+      </ul>
+      <div class="keyword-col-heading kw-div">Division (&divide;)</div>
+      <ul class="keyword-list">
+        <li>quotient, split evenly, divided by, per, each, average, cut into equal pieces</li>
       </ul>
     </div>
 
@@ -358,7 +388,8 @@
   const wordSortItems = [
     { word: "sum", op: "add" }, { word: "total", op: "add" }, { word: "increased by", op: "add" }, { word: "altogether", op: "add" },
     { word: "difference", op: "sub" }, { word: "less than", op: "sub" }, { word: "decreased by", op: "sub" }, { word: "remain", op: "sub" },
-    { word: "product", op: "mult" }, { word: "times", op: "mult" }, { word: "of (in context of groups)", op: "mult" }, { word: "twice", op: "mult" }
+    { word: "product", op: "mult" }, { word: "times", op: "mult" }, { word: "of (in context of groups)", op: "mult" }, { word: "twice", op: "mult" },
+    { word: "quotient", op: "div" }, { word: "split evenly", op: "div" }, { word: "per", op: "div" }, { word: "cut into equal pieces", op: "div" }
   ];
 
   function renderWordSort() {
@@ -370,6 +401,7 @@
           <option value="add">Addition (+)</option>
           <option value="sub">Subtraction (-)</option>
           <option value="mult">Multiplication (&times;)</option>
+          <option value="div">Division (&divide;)</option>
         </select>
       </div>
     `).join('');
@@ -392,7 +424,7 @@
     }
     LessonCheck.show(fb, allCorrect ? 'correct' : 'retry', {
       correct: 'Correct! Every keyword is sorted into the right operation.',
-      retry: "Some keywords aren't sorted correctly yet. Review: sum/total/increased by/altogether = addition; difference/less than/decreased by/remain = subtraction; product/times/of/twice = multiplication."
+      retry: "Some keywords aren't sorted correctly yet. Review: sum/total/increased by/altogether = addition; difference/less than/decreased by/remain = subtraction; product/times/of/twice = multiplication; quotient/split evenly/per/cut into equal pieces = division."
     });
   }
 
@@ -404,7 +436,8 @@
     { phrase: "The difference between 20.8 and 9.2", accepted: ["20.8-9.2"], answer: "\\(20.8 - 9.2\\)" },
     { phrase: "The product of 3.5 and 2.1", accepted: ["3.5x2.1", "3.5*2.1", "3.5×2.1", "2.1x3.5", "2.1*3.5", "2.1×3.5"], answer: "\\(3.5 \\times 2.1\\)" },
     { phrase: "8.4 increased by 15.22", accepted: ["8.4+15.22", "15.22+8.4"], answer: "\\(8.4 + 15.22\\)" },
-    { phrase: "6.5 less than 10.75", accepted: ["10.75-6.5"], answer: "\\(10.75 - 6.5\\)" }
+    { phrase: "6.5 less than 10.75", accepted: ["10.75-6.5"], answer: "\\(10.75 - 6.5\\)" },
+    { phrase: "The quotient of 12.6 and 3", accepted: ["12.6/3", "12.6÷3"], answer: "\\(12.6 \\div 3\\)" }
   ];
 
   function normalizeExpr(s) {
@@ -448,7 +481,10 @@
     { term: "Partial Product", choices: ["One piece of a multiplication problem before the pieces are added together", "The number of digits right of the decimal point", "The value a digit has because of its position"], correct: 0 },
     { term: "Regroup (Borrow)", choices: ["Carrying a 1 into the next column when a sum is 10 or more", "Taking 1 from the column to the left when subtraction would go negative", "Rounding a number to the nearest tenth"], correct: 1 },
     { term: "Product", choices: ["The answer to a subtraction problem", "The answer to an addition problem", "The answer to a multiplication problem"], correct: 2 },
-    { term: "Decimal Places", choices: ["The number of digits written to the right of the decimal point", "The columns to the left of the decimal point", "Another name for the decimal point itself"], correct: 0 }
+    { term: "Decimal Places", choices: ["The number of digits written to the right of the decimal point", "The columns to the left of the decimal point", "Another name for the decimal point itself"], correct: 0 },
+    { term: "Divisor", choices: ["The number being divided", "The number you divide by", "The answer to a division problem"], correct: 1 },
+    { term: "Quotient", choices: ["The number being divided", "The number you divide by", "The answer to a division problem"], correct: 2 },
+    { term: "Move the Decimal Point (Division)", choices: ["Round both numbers to the nearest whole number before dividing", "Multiply both the divisor and the dividend by the same power of 10 until the divisor is a whole number", "Ignore the decimal points and divide the digits only"], correct: 1 }
   ];
 
   function renderVocabQuiz() {
