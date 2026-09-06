@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Literal Equations - Test Prep</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Algebra I &middot; Literal Equations</span>
+    <h1>Test Prep</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Algebra I - Literal Equations - Test Prep')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Work the tabs below <strong>in order, left to right</strong>. Tabs 1 and 2 are review: reference material and guided practice with two tries and a reveal if you miss twice. Tab 3, <strong>Mixed Practice</strong>, is a printable-worksheet style check - you submit each answer once and nothing is revealed on screen; your teacher grades it from your printed report, like a real test. Tab 4 is your final readiness reflection. When you finish, type your name above and click <strong>Print My Progress</strong>.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('review')">1. Full Review</button>
+    <button class="tab-btn" onclick="switchTab('erroranalysis')">2. Error Analysis Review</button>
+    <button class="tab-btn" onclick="switchTab('mixed')">3. Mixed Practice</button>
+    <button class="tab-btn" onclick="switchTab('readiness')">4. Readiness Check</button>
+  </nav>
+
+  <!-- TAB 1: FULL REVIEW -->
+  <div id="review" class="panel active">
+    <div class="section-title">Full Review: Everything in This Topic</div>
+    <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">HSA.CED.A.4 &middot; HSA.REI.A.1</p>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The Core Idea</div>
+      <p style="margin:0;">A literal equation solves exactly like a numeric one - subtract/add, then multiply/divide, in reverse order. The only difference is that <strong>every letter you aren't solving for gets treated like a number</strong>: move it with the properties of equality, never combine it with a letter it doesn't match.</p>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>If your target variable...</th><th>Do this</th></tr></thead>
+      <tbody>
+        <tr><td>Appears once, multiplied or divided</td><td>Undo with one inverse operation.</td></tr>
+        <tr><td>Has something added or subtracted, too</td><td>Undo the addition/subtraction first, then the multiplication/division.</td></tr>
+        <tr><td>Appears more than once</td><td>Factor it out of every term it's in, then divide by what's left.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Check Your Understanding</h3>
+      <div class="form-group">
+        <label>1. Explain why you can treat every letter besides your target variable as if it were a plain number. What would go wrong if you tried to combine \(m\) and \(b\) in \(y=mx+b\)?</label>
+        <textarea id="fund-q1" class="form-control-lg" rows="3" placeholder="Explain your reasoning..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkFundQ1()">Submit My Work</button>
+      <div id="fund-q1-feedback" class="feedback-msg"></div>
+
+      <div class="form-group" style="margin-top:20px;">
+        <label>2. Solve \(2x+7=19\) numerically. Then use \(y=mx+b\) solved for \(x\) with \(y=19\), \(m=2\), \(b=7\). Do you get the same value of \(x\)?</label>
+        <input type="text" id="fund-q2" class="form-control-lg" style="max-width:180px;" placeholder="x =">
+      </div>
+      <button class="btn-lg" onclick="checkFundQ2()">Check</button>
+      <div id="fund-q2-feedback" class="feedback-msg"></div>
+    </div>
+
+    <h3 style="margin-top:24px;">Guided Practice: Step-by-Step Review</h3>
+    <div id="guided-steps-container"></div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Critical Thinking</h3>
+      <p>Suppose you tried to solve \(A = P + Prt\) for \(P\) by dividing only the second term by \((rt)\), instead of factoring \(P\) out of the whole right side first. Would that give the same answer? Explain why factoring is required whenever the target variable appears in more than one term.</p>
+      <textarea id="guided-critical" class="form-control-lg" rows="3" placeholder="Explain your reasoning..."></textarea>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkGuidedCritical()">Submit My Work</button>
+      <div id="guided-critical-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: ERROR ANALYSIS REVIEW -->
+  <div id="erroranalysis" class="panel">
+    <div class="section-title">Error Analysis Review</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Each problem shows a formula, the variable a student solved for, and their (incorrect) result. Type the correct rearrangement. For an exponent, type <code>^</code> (like <code>r^2</code>); for \(\pi\), type <code>pi</code>. You get two tries.
+    </div>
+    <div id="erroranalysis-list"></div>
+  </div>
+
+  <!-- TAB 3: MIXED PRACTICE (submit-only, printable-worksheet style) -->
+  <div id="mixed" class="panel">
+    <div class="section-title">Mixed Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      This is a graded check covering bare rearrangements, error analysis, and word problems. Show all your work on paper, then submit your final answer here. <strong>Nothing is revealed on screen</strong> - your teacher reviews everything from your printed report, exactly like a paper test.
+    </div>
+
+    <h3>Part 1: Bare Rearrangements</h3>
+    <p>Solve for the given variable in each formula. Show every step on paper.</p>
+    <div id="mixed-part1-list"></div>
+
+    <h3 style="margin-top:28px;">Part 2: Error Analysis</h3>
+    <p>Identify the mistake in the work shown below and provide the correct rearrangement.</p>
+    <div id="mixed-part2-list"></div>
+
+    <h3 style="margin-top:28px;">Part 3: Word Problems</h3>
+    <p>For each scenario, identify the formula, solve for the needed variable, and substitute. Enter your final numeric answer below.</p>
+    <div id="mixed-part3-list"></div>
+  </div>
+
+  <!-- TAB 4: READINESS CHECK -->
+  <div id="readiness" class="panel">
+    <div class="section-title">Exit Ticket: Literal Equations Readiness Check</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Answer all four items, then click Submit Exit Ticket. This is the last step before you print your progress - go back to the Student Name box at the top of the page, type your name, and click Print My Progress.
+    </div>
+
+    <form id="exit-form" onsubmit="submitExitTicket(event)">
+      <div class="form-group">
+        <label>1. Solve \(d = rt\) for \(t\).</label>
+        <input type="text" id="exit-1" class="form-control-lg" style="max-width:200px;" placeholder="t =">
+      </div>
+      <div class="form-group">
+        <label>2. Solve \(A = P + Prt\) for \(P\).</label>
+        <input type="text" id="exit-2" class="form-control-lg" style="max-width:220px;" placeholder="P =">
+      </div>
+      <div class="form-group">
+        <label>3. In your own words, explain the "treat it like a number" rule for solving literal equations.</label>
+        <textarea id="exit-explain" class="form-control-lg" rows="3" placeholder="Explain the rule..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>4. Which part of solving literal equations still feels the most confusing, and what will you review before your test?</label>
+        <textarea id="exit-reflect" class="form-control-lg" rows="3" placeholder="Reflect on your learning..."></textarea>
+      </div>
+      <button type="submit" class="btn-lg">Submit Exit Ticket</button>
+    </form>
+    <div id="exit-feedback" class="feedback-msg"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  function normalizeExpr(s) {
+    return String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, '');
+  }
+
+  // ==========================================
+  // TAB 1: FULL REVIEW
+  // ==========================================
+  function checkFundQ1() {
+    const explain = document.getElementById('fund-q1').value.trim();
+    const fb = document.getElementById('fund-q1-feedback');
+    if (explain.length <= 5) { LessonCheck.incomplete(fb, "Write your explanation before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'fund-q1', label: 'Check Your Understanding 1: treat it like a number', answer: explain, section: '1. Full Review' });
+  }
+
+  function checkFundQ2() {
+    const val = document.getElementById('fund-q2').value;
+    const fb = document.getElementById('fund-q2-feedback');
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking."); return; }
+    const correct = LessonCheck.numericMatch(val, 6, 0.01);
+    LessonCheck.check('fund-q2', correct, fb, {
+      correct: 'Correct! Both give \\(x = 6\\) - they\'re the same equation with the letters replaced by numbers.',
+      retry: "Not quite yet. Solve 2x+7=19 first (subtract 7, divide by 2), then substitute the same numbers into x=(y-b)/m.",
+      reveal: 'Both give \\(x = 6\\) - they\'re the same equation with the letters replaced by numbers.'
+    }, { label: 'Check Your Understanding 2: numeric vs. literal x', answer: val, section: '1. Full Review' });
+  }
+
+  const guidedProblems = [
+    {
+      title: "1. One Appearance: Solve \\(d = rt\\) for \\(t\\)",
+      chunks: [
+        { label: "Goal", text: "Isolate \\(t\\)." },
+        { label: "Step", text: "\\(t\\) is multiplied by \\(r\\). Divide both sides by \\(r\\) (the inverse of multiplying by \\(r\\))." },
+        { label: "Solution", text: "\\(t = \\dfrac{d}{r}\\)" }
+      ]
+    },
+    {
+      title: "2. One Appearance: Solve \\(A = lw\\) for \\(w\\)",
+      chunks: [
+        { label: "Goal", text: "Isolate \\(w\\)." },
+        { label: "Step", text: "Divide both sides by \\(l\\)." },
+        { label: "Solution", text: "\\(w = \\dfrac{A}{l}\\)" }
+      ]
+    },
+    {
+      title: "3. Multi-Step: Solve \\(P = 2l + 2w\\) for \\(l\\)",
+      chunks: [
+        { label: "Step 1", text: "Subtract \\(2w\\) from both sides to move the constant term off the variable term: \\(P - 2w = 2l\\)." },
+        { label: "Step 2", text: "Divide both sides by 2." },
+        { label: "Solution", text: "\\(l = \\dfrac{P-2w}{2}\\)" }
+      ]
+    },
+    {
+      title: "4. Multi-Step: Solve \\(F = \\dfrac95C + 32\\) for \\(C\\)",
+      chunks: [
+        { label: "Step 1", text: "Subtract 32 from both sides: \\(F - 32 = \\dfrac95C\\)." },
+        { label: "Step 2", text: "Multiply both sides by \\(\\dfrac59\\) (the inverse of multiplying by \\(\\dfrac95\\))." },
+        { label: "Solution", text: "\\(C = \\dfrac59(F-32)\\)" }
+      ]
+    },
+    {
+      title: "5. Factoring: Solve \\(A = P + Prt\\) for \\(P\\)",
+      chunks: [
+        { label: "Step 1", text: "\\(P\\) appears in both terms on the right - there's no single inverse operation yet." },
+        { label: "Step 2", text: "Factor \\(P\\) out of the right side: \\(A = P(1+rt)\\)." },
+        { label: "Step 3", text: "Divide both sides by \\((1+rt)\\)." },
+        { label: "Solution", text: "\\(P = \\dfrac{A}{1+rt}\\)" }
+      ]
+    }
+  ];
+
+  function renderGuidedSteps() {
+    const html = guidedProblems.map((p, i) => `
+      <div class="step-box" style="margin-top:16px;">
+        <h3 style="margin-top:0; color:var(--primary);">${p.title}</h3>
+        <button class="btn-lg" onclick="revealGuidedStep(${i})">Reveal Next Step</button>
+        <button class="btn-secondary" onclick="resetGuidedStep(${i})">Reset</button>
+        <div id="guided-${i}-chunks" style="margin-top:14px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('guided-steps-container').innerHTML = html;
+  }
+
+  const guidedStepCount = {};
+  function renderGuidedChunks(i) {
+    const p = guidedProblems[i];
+    const count = guidedStepCount[i] || 0;
+    const html = p.chunks.slice(0, count).map((c, idx) => {
+      const isSolution = idx === p.chunks.length - 1;
+      return `<div class="step-item visible" style="margin-top:10px; ${isSolution ? 'font-weight:800; color:var(--primary);' : ''}"><strong>${c.label}:</strong> ${c.text}</div>`;
+    }).join('');
+    document.getElementById(`guided-${i}-chunks`).innerHTML = html;
+    triggerMathJax();
+  }
+  function revealGuidedStep(i) {
+    const p = guidedProblems[i];
+    guidedStepCount[i] = Math.min((guidedStepCount[i] || 0) + 1, p.chunks.length);
+    renderGuidedChunks(i);
+  }
+  function resetGuidedStep(i) {
+    guidedStepCount[i] = 0;
+    renderGuidedChunks(i);
+  }
+
+  function checkGuidedCritical() {
+    const explain = document.getElementById('guided-critical').value.trim();
+    const fb = document.getElementById('guided-critical-feedback');
+    if (explain.length <= 5) { LessonCheck.incomplete(fb, "Write your explanation before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'guided-critical', label: 'Critical Thinking: why factoring is required for P in A=P+Prt', answer: explain, section: '1. Full Review' });
+  }
+
+  // ==========================================
+  // TAB 2: ERROR ANALYSIS REVIEW (checked, 2 tries)
+  // ==========================================
+  const erroranalysisProblems = [
+    { title: "1. Cylinder Volume", eq: "\\(V = \\pi r^2 h\\), solve for \\(h\\)", wrong: "\\(h = V - \\pi r^2\\)", target: "h", accepted: ["v/(pir^2)"], displayAnswer: "\\dfrac{V}{\\pi r^2}" },
+    { title: "2. Slope-Intercept", eq: "\\(y = mx + b\\), solve for \\(m\\)", wrong: "\\(m = y - b\\)", target: "m", accepted: ["(y-b)/x"], displayAnswer: "\\dfrac{y-b}{x}" },
+    { title: "3. Surface Area", eq: "\\(S = 2lw + 2lh + 2wh\\), solve for \\(l\\)", wrong: "\\(l = S - 2wh - 2w - 2h\\)", target: "l", accepted: ["(s-2wh)/(2w+2h)"], displayAnswer: "\\dfrac{S-2wh}{2w+2h}" },
+    { title: "4. Simple Interest", eq: "\\(I = Prt\\), solve for \\(t\\)", wrong: "\\(t = I - Pr\\)", target: "t", accepted: ["i/(pr)", "i/pr"], displayAnswer: "\\dfrac{I}{Pr}" }
+  ];
+
+  function renderErrorAnalysis() {
+    const html = erroranalysisProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${p.title}.</strong> ${p.eq}<br>
+        <span style="color:#475569;">Student's result: ${p.wrong}</span>
+        <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <label style="font-weight:700;">\\(${p.target} = \\)</label>
+          <input type="text" id="ea-${i}-answer" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="expression">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkErrorAnalysis(${i})">Check</button>
+        </div>
+        <div id="ea-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('erroranalysis-list').innerHTML = html;
+    erroranalysisProblems.forEach((p, i) => LessonProgress.preRegister(`ea-${i}`, `Error Analysis Review: ${p.title}`, '2. Error Analysis Review'));
+    triggerMathJax();
+  }
+
+  function checkErrorAnalysis(idx) {
+    const p = erroranalysisProblems[idx];
+    const answer = document.getElementById(`ea-${idx}-answer`).value;
+    const fb = document.getElementById(`ea-${idx}-feedback`);
+    if (!answer.trim()) { LessonCheck.incomplete(fb, "Enter the correct rearrangement before checking."); return; }
+    const correct = p.accepted.includes(normalizeExpr(answer));
+    LessonCheck.check(`ea-${idx}`, correct, fb, {
+      correct: `Correct! \\(${p.target} = ${p.displayAnswer}\\)`,
+      retry: "Not quite yet. Look again at which operation the student skipped. Try again.",
+      reveal: `Here's the correct rearrangement: \\(${p.target} = ${p.displayAnswer}\\)`
+    }, { label: `Error Analysis Review: ${p.title}`, answer, section: '2. Error Analysis Review' });
+  }
+
+  // ==========================================
+  // TAB 3: MIXED PRACTICE (submit-only - REQUIRED)
+  // ==========================================
+  const mixedPart1 = [
+    { q: "\\(V = lwh\\), solve for \\(w\\).", target: "w", accepted: ["v/(lh)", "v/lh"], displayAnswer: "\\dfrac{V}{lh}", label: "Mixed 1: V=lwh solve for w" },
+    { q: "\\(y = mx + b\\), solve for \\(m\\).", target: "m", accepted: ["(y-b)/x"], displayAnswer: "\\dfrac{y-b}{x}", label: "Mixed 2: y=mx+b solve for m" },
+    { q: "\\(2a + 3b = 18\\), solve for \\(b\\).", target: "b", accepted: ["(18-2a)/3"], displayAnswer: "\\dfrac{18-2a}{3}", label: "Mixed 3: 2a+3b=18 solve for b" },
+    { q: "\\(A = \\dfrac12bh\\), solve for \\(h\\).", target: "h", accepted: ["2a/b", "(2a)/b"], displayAnswer: "\\dfrac{2A}{b}", label: "Mixed 4: A=(1/2)bh solve for h" }
+  ];
+
+  function renderSubmitSymList(containerId, problems, keyPrefix, section) {
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <label style="font-weight:700;">\\(${p.target} = \\)</label>
+          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="expression">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkSubmitSym('${keyPrefix}', ${i})">Submit</button>
+        </div>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    submitSymRegistry[keyPrefix] = { problems, section };
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, p.label, section));
+    triggerMathJax();
+  }
+  const submitSymRegistry = {};
+  function checkSubmitSym(keyPrefix, idx) {
+    const cfg = submitSymRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter an expression before submitting - this won't count as an attempt yet."); return; }
+    const correct = p.accepted.includes(normalizeExpr(val));
+    LessonCheck.submit(fb, { key: `${keyPrefix}-${idx}`, label: p.label, answer: val, section: cfg.section, correct });
+  }
+
+  const mixedPart2 = [
+    { q: "\\(P = 2l + 2w\\), solve for \\(w\\). Student's result: \\(w = P - 2l\\). What is the correct rearrangement?", target: "w", accepted: ["(p-2l)/2"], label: "Mixed 5: error analysis P=2l+2w for w" },
+    { q: "\\(A = P + Prt\\), solve for \\(r\\). Student's result: \\(r = \\dfrac{A}{Pt}\\) (they forgot to subtract \\(P\\) first). What is the correct rearrangement?", target: "r", accepted: ["(a-p)/(pt)"], label: "Mixed 6: error analysis A=P+Prt for r" }
+  ];
+
+  const mixedPart3 = [
+    { q: "A rectangular room has an area of \\(180\\) square feet and a length of \\(15\\) feet. What is its width?", a: 12, label: "Mixed 7: room width" },
+    { q: "Convert \\(25\\)&deg;C to Fahrenheit.", a: 77, label: "Mixed 8: 25C to F" },
+    { q: "A train travels at \\(75\\) mph for \\(3.5\\) hours. How far does it travel?", a: 262.5, label: "Mixed 9: train distance" },
+    { q: "An account earns \\(\\$96\\) in interest on a \\(\\$600\\) principal at a rate of \\(4\\%\\). How many years was it invested?", a: 4, label: "Mixed 10: years invested" }
+  ];
+
+  function renderMixedPart3() {
+    const html = mixedPart3.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <input type="text" id="mp3-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkMixedPart3(${i})">Submit</button>
+        </div>
+        <div id="mp3-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('mixed-part3-list').innerHTML = html;
+    mixedPart3.forEach((p, i) => LessonProgress.preRegister(`mp3-${i}`, p.label, '3. Mixed Practice'));
+    triggerMathJax();
+  }
+
+  function checkMixedPart3(idx) {
+    const p = mixedPart3[idx];
+    const val = document.getElementById(`mp3-${idx}-input`).value;
+    const fb = document.getElementById(`mp3-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting - this won't count as an attempt yet."); return; }
+    const correct = LessonCheck.numericMatch(val, p.a, 0.05);
+    LessonCheck.submit(fb, { key: `mp3-${idx}`, label: p.label, answer: val, section: '3. Mixed Practice', correct });
+  }
+
+  // ==========================================
+  // TAB 4: READINESS CHECK
+  // ==========================================
+  function submitExitTicket(e) {
+    e.preventDefault();
+    const a1 = document.getElementById('exit-1').value;
+    const a2 = document.getElementById('exit-2').value;
+    const exp = document.getElementById('exit-explain').value.trim();
+    const ref = document.getElementById('exit-reflect').value.trim();
+    const fb = document.getElementById('exit-feedback');
+
+    if (!a1.trim() || !a2.trim() || exp.length <= 5 || ref.length <= 5) {
+      LessonCheck.incomplete(fb, "Fill in both answers and both explanation boxes before submitting.");
+      return;
+    }
+
+    const a1ok = ['d/r'].includes(normalizeExpr(a1));
+    const a2ok = ['a/(1+rt)'].includes(normalizeExpr(a2));
+    LessonCheck.submit(fb, { key: 'exit-ticket', label: 'Exit Ticket: solve d=rt for t and A=P+Prt for P', answer: `t=${a1}, P=${a2}`, section: '4. Readiness Check', correct: a1ok && a2ok }, "Exit Ticket submitted and logged successfully!");
+    LessonProgress.recordText('Exit Ticket: treat it like a number explanation', exp, '4. Readiness Check');
+    LessonProgress.recordText('Exit Ticket: metacognition reflection', ref, '4. Readiness Check');
+  }
+
+  // Initial render
+  renderGuidedSteps();
+  renderErrorAnalysis();
+  renderSubmitSymList('mixed-part1-list', mixedPart1, 'mp1', '3. Mixed Practice');
+  renderSubmitSymList('mixed-part2-list', mixedPart2, 'mp2', '3. Mixed Practice');
+  renderMixedPart3();
+  LessonProgress.preRegister('exit-ticket', 'Exit Ticket: solve d=rt for t and A=P+Prt for P', '4. Readiness Check');
+</script>
+<div id="print-report"></div>
+</body>
+</html>

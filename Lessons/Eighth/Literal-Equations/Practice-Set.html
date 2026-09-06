@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Literal Equations - Practice Set</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <style>
+    .slider-row { margin-bottom: 16px; }
+    .slider-row label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      margin-bottom: 4px;
+      font-size: 0.95rem;
+    }
+    .slider-row output { color: var(--primary); font-weight: 900; }
+    .slider-row input[type="range"] { width: 100%; }
+    .live-card {
+      background: #ffffff;
+      border: 3px solid var(--primary-light);
+      border-radius: 16px;
+      padding: 20px 22px;
+      margin: 16px 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .live-card h4 { margin: 0 0 10px 0; color: var(--primary); }
+    .live-given {
+      background: #eff6ff;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 1.02rem;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Algebra I &middot; Literal Equations</span>
+    <h1>Practice Set</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Algebra I - Literal Equations - Practice Set')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Tabs 1-3 ask you to rearrange a formula and type the resulting expression for the target variable (for example, typing <code>A/w</code> if you solved \(A=lw\) for \(l\)). Tab 4 uses live sliders - solve by hand, then type a number to check it. Each item gives you up to <strong>2 tries</strong>. When you're done, type your name above and click <strong>Print My Progress</strong>. <strong>Calculators are allowed</strong> this year in Eighth Grade.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('warmup')">1. One Appearance</button>
+    <button class="tab-btn" onclick="switchTab('multistep')">2. Multi-Step</button>
+    <button class="tab-btn" onclick="switchTab('factoring')">3. Distributing &amp; Factoring</button>
+    <button class="tab-btn" onclick="switchTab('livecheck')">4. Live Number Check</button>
+    <button class="tab-btn" onclick="switchTab('detective')">5. Error Analysis</button>
+  </nav>
+
+  <!-- TAB 1: ONE APPEARANCE -->
+  <div id="warmup" class="panel active">
+    <div class="section-title">Solving for a Variable That Appears Once</div>
+    <div class="explainer-box">
+      Type only the expression for the target variable - not "x =", just what goes on the other side. For a fraction, use a slash: type <code>d/t</code> for \(\dfrac{d}{t}\).
+    </div>
+    <div id="warmup-list"></div>
+  </div>
+
+  <!-- TAB 2: MULTI-STEP -->
+  <div id="multistep" class="panel">
+    <div class="section-title">Multi-Step Literal Equations</div>
+    <div class="explainer-box">
+      These need an addition or subtraction step before you divide. Use parentheses in your answer wherever the whole numerator (or denominator) needs to be grouped, e.g. <code>(P-2w)/2</code>.
+    </div>
+    <div id="multistep-list"></div>
+  </div>
+
+  <!-- TAB 3: DISTRIBUTING & FACTORING -->
+  <div id="factoring" class="panel">
+    <div class="section-title">Distributing &amp; Factoring</div>
+    <div class="explainer-box">
+      In each of these, the target variable appears more than once. Factor it out before you divide.
+    </div>
+    <div id="factoring-list"></div>
+  </div>
+
+  <!-- TAB 4: LIVE NUMBER CHECK -->
+  <div id="livecheck" class="panel">
+    <div class="section-title">Live Number Check</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Drag each slider to set the given values, solve for the missing variable on paper using the formula shown, then type your numeric answer and check it against the live calculator.
+    </div>
+
+    <div class="live-card">
+      <h4>Rectangle: \(A = lw\), solve for \(l\)</h4>
+      <div class="slider-row">
+        <label>Area (\(A\)) <output id="lc1-A-out">80</output></label>
+        <input type="range" id="lc1-A" min="20" max="200" step="4" value="80" oninput="updateLc1()">
+      </div>
+      <div class="slider-row">
+        <label>Width (\(w\)) <output id="lc1-w-out">8</output></label>
+        <input type="range" id="lc1-w" min="2" max="15" step="1" value="8" oninput="updateLc1()">
+      </div>
+      <div class="live-given" id="lc1-given"></div>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <label style="font-weight:700;">Your answer for \(l\):</label>
+        <input type="text" id="lc1-input" class="form-control-lg" style="max-width:140px; display:inline-block;">
+        <button class="btn-lg" onclick="checkLc1()">Check</button>
+      </div>
+      <div id="lc1-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="live-card">
+      <h4>Simple Interest: \(I = Prt\), solve for \(r\)</h4>
+      <div class="slider-row">
+        <label>Interest earned (\(I\)) <output id="lc2-I-out">120</output></label>
+        <input type="range" id="lc2-I" min="30" max="400" step="10" value="120" oninput="updateLc2()">
+      </div>
+      <div class="slider-row">
+        <label>Principal (\(P\)) <output id="lc2-P-out">1000</output></label>
+        <input type="range" id="lc2-P" min="200" max="2000" step="100" value="1000" oninput="updateLc2()">
+      </div>
+      <div class="slider-row">
+        <label>Time in years (\(t\)) <output id="lc2-t-out">3</output></label>
+        <input type="range" id="lc2-t" min="1" max="8" step="1" value="3" oninput="updateLc2()">
+      </div>
+      <div class="live-given" id="lc2-given"></div>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <label style="font-weight:700;">Your answer for \(r\) (as a percent):</label>
+        <input type="text" id="lc2-input" class="form-control-lg" style="max-width:140px; display:inline-block;">
+        <button class="btn-lg" onclick="checkLc2()">Check</button>
+      </div>
+      <div id="lc2-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="live-card">
+      <h4>Distance/Rate/Time: \(d = rt\), solve for \(r\)</h4>
+      <div class="slider-row">
+        <label>Distance (\(d\)) <output id="lc3-d-out">150</output></label>
+        <input type="range" id="lc3-d" min="20" max="500" step="10" value="150" oninput="updateLc3()">
+      </div>
+      <div class="slider-row">
+        <label>Time (\(t\)) <output id="lc3-t-out">3</output></label>
+        <input type="range" id="lc3-t" min="1" max="10" step="0.5" value="3" oninput="updateLc3()">
+      </div>
+      <div class="live-given" id="lc3-given"></div>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <label style="font-weight:700;">Your answer for \(r\):</label>
+        <input type="text" id="lc3-input" class="form-control-lg" style="max-width:140px; display:inline-block;">
+        <button class="btn-lg" onclick="checkLc3()">Check</button>
+      </div>
+      <div id="lc3-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="live-card">
+      <h4>Perimeter: \(P = 2l + 2w\), solve for \(w\)</h4>
+      <div class="slider-row">
+        <label>Perimeter (\(P\)) <output id="lc4-P-out">60</output></label>
+        <input type="range" id="lc4-P" min="40" max="120" step="2" value="60" oninput="updateLc4()">
+      </div>
+      <div class="slider-row">
+        <label>Length (\(l\)) <output id="lc4-l-out">8</output></label>
+        <input type="range" id="lc4-l" min="1" max="10" step="1" value="8" oninput="updateLc4()">
+      </div>
+      <div class="live-given" id="lc4-given"></div>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <label style="font-weight:700;">Your answer for \(w\):</label>
+        <input type="text" id="lc4-input" class="form-control-lg" style="max-width:140px; display:inline-block;">
+        <button class="btn-lg" onclick="checkLc4()">Check</button>
+      </div>
+      <div id="lc4-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 5: ERROR ANALYSIS -->
+  <div id="detective" class="panel">
+    <div class="section-title">Error Analysis: Spot the Mistake</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Each problem shows a formula, the variable a student solved for, and their (incorrect) result. Explain what they did wrong, then type the correct rearrangement.
+    </div>
+    <div id="ea-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  function normalizeExpr(s) {
+    return String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, '');
+  }
+
+  // ==========================================
+  // REUSABLE SYMBOLIC-ANSWER LIST
+  // ==========================================
+  const symRegistry = {};
+
+  function renderSymList(containerId, problems, keyPrefix, section) {
+    symRegistry[keyPrefix] = { problems, section };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <label style="font-weight:700;">\\(${p.target} = \\)</label>
+          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="expression">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkSymItem('${keyPrefix}', ${i})">Check</button>
+        </div>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, `${p.label}`, section));
+    triggerMathJax();
+  }
+
+  function checkSymItem(keyPrefix, idx) {
+    const cfg = symRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an expression before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = p.accepted.includes(normalizeExpr(val));
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! \\(${p.target} = ${p.displayAnswer}\\)`,
+      retry: p.hint || "Not quite yet. Recheck which operation undoes which, and try again.",
+      reveal: `Here's the correct rearrangement: \\(${p.target} = ${p.displayAnswer}\\)`
+    }, { label: p.label, answer: val, section: cfg.section });
+  }
+
+  // ==========================================
+  // TAB 1: ONE APPEARANCE
+  // ==========================================
+  const warmupProblems = [
+    { q: "\\(d = rt\\), solve for \\(r\\).", target: "r", accepted: ["d/t"], displayAnswer: "\\dfrac{d}{t}", label: "Solve d=rt for r" },
+    { q: "\\(d = rt\\), solve for \\(t\\).", target: "t", accepted: ["d/r"], displayAnswer: "\\dfrac{d}{r}", label: "Solve d=rt for t" },
+    { q: "\\(A = lw\\), solve for \\(l\\).", target: "l", accepted: ["a/w"], displayAnswer: "\\dfrac{A}{w}", label: "Solve A=lw for l" },
+    { q: "\\(A = lw\\), solve for \\(w\\).", target: "w", accepted: ["a/l"], displayAnswer: "\\dfrac{A}{l}", label: "Solve A=lw for w" },
+    { q: "\\(I = Prt\\), solve for \\(P\\).", target: "P", accepted: ["i/(rt)", "i/rt"], displayAnswer: "\\dfrac{I}{rt}", label: "Solve I=Prt for P" },
+    { q: "\\(I = Prt\\), solve for \\(t\\).", target: "t", accepted: ["i/(pr)", "i/pr"], displayAnswer: "\\dfrac{I}{Pr}", label: "Solve I=Prt for t" }
+  ];
+
+  // ==========================================
+  // TAB 2: MULTI-STEP
+  // ==========================================
+  const multistepProblems = [
+    { q: "\\(P = 2l + 2w\\), solve for \\(l\\).", target: "l", accepted: ["(p-2w)/2"], displayAnswer: "\\dfrac{P-2w}{2}", label: "Solve P=2l+2w for l" },
+    { q: "\\(P = 2l + 2w\\), solve for \\(w\\).", target: "w", accepted: ["(p-2l)/2"], displayAnswer: "\\dfrac{P-2l}{2}", label: "Solve P=2l+2w for w" },
+    { q: "\\(F = \\dfrac{9}{5}C + 32\\), solve for \\(C\\).", target: "C", accepted: ["(5/9)(f-32)", "5/9(f-32)", "5(f-32)/9", "(5(f-32))/9"], displayAnswer: "\\dfrac{5}{9}(F-32)", label: "Solve F=(9/5)C+32 for C" },
+    { q: "\\(y = mx + b\\), solve for \\(x\\).", target: "x", accepted: ["(y-b)/m"], displayAnswer: "\\dfrac{y-b}{m}", label: "Solve y=mx+b for x" },
+    { q: "\\(y = mx + b\\), solve for \\(b\\).", target: "b", accepted: ["y-mx"], displayAnswer: "y-mx", label: "Solve y=mx+b for b" },
+    { q: "\\(4x - 2y = 10\\), solve for \\(y\\).", target: "y", accepted: ["2x-5", "(4x-10)/2"], displayAnswer: "2x-5", label: "Solve 4x-2y=10 for y", hint: "Not quite yet. Get the y-term alone first, then divide by its coefficient - watch the negative sign. Try again." }
+  ];
+
+  // ==========================================
+  // TAB 3: DISTRIBUTING & FACTORING
+  // ==========================================
+  const factoringProblems = [
+    { q: "\\(A = P + Prt\\), solve for \\(P\\).", target: "P", accepted: ["a/(1+rt)"], displayAnswer: "\\dfrac{A}{1+rt}", label: "Solve A=P+Prt for P", hint: "Not quite yet. P appears twice - factor it out of the right side before dividing. Try again." },
+    { q: "\\(S = 2lw + 2lh + 2wh\\), solve for \\(h\\).", target: "h", accepted: ["(s-2lw)/(2l+2w)"], displayAnswer: "\\dfrac{S-2lw}{2l+2w}", label: "Solve S=2lw+2lh+2wh for h", hint: "Not quite yet. Move the term without h to the other side first, then factor h out of what's left. Try again." },
+    { q: "\\(L = a + (n-1)d\\), solve for \\(n\\).", target: "n", accepted: ["(l-a)/d+1", "(l-a+d)/d"], displayAnswer: "\\dfrac{L-a}{d}+1", label: "Solve L=a+(n-1)d for n" },
+    { q: "\\(ax + bx = c\\), solve for \\(x\\).", target: "x", accepted: ["c/(a+b)"], displayAnswer: "\\dfrac{c}{a+b}", label: "Solve ax+bx=c for x", hint: "Not quite yet. x is in both terms on the left - factor it out first. Try again." },
+    { q: "\\(S = \\dfrac{n}{2}(a + l)\\), solve for \\(a\\).", target: "a", accepted: ["(2s/n)-l", "2s/n-l", "(2s-nl)/n"], displayAnswer: "\\dfrac{2S}{n}-l", label: "Solve S=(n/2)(a+l) for a", hint: "Not quite yet. Undo the division by n first (multiply both sides by 2/n), then undo the addition. Try again." },
+    { q: "\\(P = a + b + c\\), solve for \\(b\\).", target: "b", accepted: ["p-a-c"], displayAnswer: "P-a-c", label: "Solve P=a+b+c for b" }
+  ];
+
+  // ==========================================
+  // TAB 4: LIVE NUMBER CHECK
+  // ==========================================
+  function round2(n) { return Math.round(n * 100) / 100; }
+
+  function updateLc1() {
+    const A = parseFloat(document.getElementById('lc1-A').value);
+    const w = parseFloat(document.getElementById('lc1-w').value);
+    document.getElementById('lc1-A-out').textContent = A;
+    document.getElementById('lc1-w-out').textContent = w;
+    document.getElementById('lc1-given').innerHTML = `Given: \\(A = ${A}\\), \\(w = ${w}\\). Find \\(l = \\dfrac{A}{w}\\).`;
+    triggerMathJax();
+  }
+
+  function checkLc1() {
+    const A = parseFloat(document.getElementById('lc1-A').value);
+    const w = parseFloat(document.getElementById('lc1-w').value);
+    const target = A / w;
+    const val = document.getElementById('lc1-input').value;
+    const fb = document.getElementById('lc1-feedback');
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking."); return; }
+    const correct = LessonCheck.numericMatch(val, target, 0.05);
+    LessonCheck.check('lc1', correct, fb, {
+      correct: `Correct! \\(l = ${A} \\div ${w} = ${round2(target)}\\)`,
+      retry: "Not quite yet. Divide the area by the width. Try again.",
+      reveal: `\\(l = ${A} \\div ${w} = ${round2(target)}\\)`
+    }, { label: `Live Check: A=${A}, w=${w}, find l`, answer: val, section: '4. Live Number Check' });
+  }
+
+  function updateLc2() {
+    const I = parseFloat(document.getElementById('lc2-I').value);
+    const P = parseFloat(document.getElementById('lc2-P').value);
+    const t = parseFloat(document.getElementById('lc2-t').value);
+    document.getElementById('lc2-I-out').textContent = I;
+    document.getElementById('lc2-P-out').textContent = P;
+    document.getElementById('lc2-t-out').textContent = t;
+    document.getElementById('lc2-given').innerHTML = `Given: \\(I = \\$${I}\\), \\(P = \\$${P}\\), \\(t = ${t}\\) years. Find \\(r = \\dfrac{I}{Pt}\\) (as a percent).`;
+    triggerMathJax();
+  }
+
+  function checkLc2() {
+    const I = parseFloat(document.getElementById('lc2-I').value);
+    const P = parseFloat(document.getElementById('lc2-P').value);
+    const t = parseFloat(document.getElementById('lc2-t').value);
+    const target = (I / (P * t)) * 100;
+    const val = document.getElementById('lc2-input').value;
+    const fb = document.getElementById('lc2-feedback');
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking."); return; }
+    const correct = LessonCheck.numericMatch(val, target, 0.1);
+    LessonCheck.check('lc2', correct, fb, {
+      correct: `Correct! \\(r = ${I} \\div (${P} \\times ${t}) = ${round2(target)}\\%\\)`,
+      retry: "Not quite yet. Divide I by the product of P and t, then convert to a percent. Try again.",
+      reveal: `\\(r = ${I} \\div (${P} \\times ${t}) = ${round2(target)}\\%\\)`
+    }, { label: `Live Check: I=${I}, P=${P}, t=${t}, find r`, answer: val, section: '4. Live Number Check' });
+  }
+
+  function updateLc3() {
+    const d = parseFloat(document.getElementById('lc3-d').value);
+    const t = parseFloat(document.getElementById('lc3-t').value);
+    document.getElementById('lc3-d-out').textContent = d;
+    document.getElementById('lc3-t-out').textContent = t;
+    document.getElementById('lc3-given').innerHTML = `Given: \\(d = ${d}\\) miles, \\(t = ${t}\\) hours. Find \\(r = \\dfrac{d}{t}\\).`;
+    triggerMathJax();
+  }
+
+  function checkLc3() {
+    const d = parseFloat(document.getElementById('lc3-d').value);
+    const t = parseFloat(document.getElementById('lc3-t').value);
+    const target = d / t;
+    const val = document.getElementById('lc3-input').value;
+    const fb = document.getElementById('lc3-feedback');
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking."); return; }
+    const correct = LessonCheck.numericMatch(val, target, 0.05);
+    LessonCheck.check('lc3', correct, fb, {
+      correct: `Correct! \\(r = ${d} \\div ${t} = ${round2(target)}\\) mph`,
+      retry: "Not quite yet. Divide distance by time. Try again.",
+      reveal: `\\(r = ${d} \\div ${t} = ${round2(target)}\\) mph`
+    }, { label: `Live Check: d=${d}, t=${t}, find r`, answer: val, section: '4. Live Number Check' });
+  }
+
+  function updateLc4() {
+    const P = parseFloat(document.getElementById('lc4-P').value);
+    const l = parseFloat(document.getElementById('lc4-l').value);
+    document.getElementById('lc4-P-out').textContent = P;
+    document.getElementById('lc4-l-out').textContent = l;
+    document.getElementById('lc4-given').innerHTML = `Given: \\(P = ${P}\\), \\(l = ${l}\\). Find \\(w = \\dfrac{P-2l}{2}\\).`;
+    triggerMathJax();
+  }
+
+  function checkLc4() {
+    const P = parseFloat(document.getElementById('lc4-P').value);
+    const l = parseFloat(document.getElementById('lc4-l').value);
+    const target = (P - 2 * l) / 2;
+    const val = document.getElementById('lc4-input').value;
+    const fb = document.getElementById('lc4-feedback');
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking."); return; }
+    const correct = LessonCheck.numericMatch(val, target, 0.05);
+    LessonCheck.check('lc4', correct, fb, {
+      correct: `Correct! \\(w = (${P} - 2 \\times ${l}) \\div 2 = ${round2(target)}\\)`,
+      retry: "Not quite yet. Subtract 2l from P first, then divide by 2. Try again.",
+      reveal: `\\(w = (${P} - 2 \\times ${l}) \\div 2 = ${round2(target)}\\)`
+    }, { label: `Live Check: P=${P}, l=${l}, find w`, answer: val, section: '4. Live Number Check' });
+  }
+
+  // ==========================================
+  // TAB 5: ERROR ANALYSIS
+  // ==========================================
+  const errorItems = [
+    {
+      eq: "\\(P = 2l + 2w\\), solve for \\(l\\)",
+      wrong: "\\(l = P - 2w\\)",
+      accepted: ["(p-2w)/2"],
+      displayAnswer: "\\dfrac{P-2w}{2}",
+      target: "l"
+    },
+    {
+      eq: "\\(A = P + Prt\\), solve for \\(P\\)",
+      wrong: "\\(P = A - Prt\\) <span style=\"color:#64748b;\">(still has \\(P\\) on the right - it's not actually isolated)</span>",
+      accepted: ["a/(1+rt)"],
+      displayAnswer: "\\dfrac{A}{1+rt}",
+      target: "P"
+    },
+    {
+      eq: "\\(d = rt\\), solve for \\(r\\)",
+      wrong: "\\(r = d - t\\)",
+      accepted: ["d/t"],
+      displayAnswer: "\\dfrac{d}{t}",
+      target: "r"
+    },
+    {
+      eq: "\\(y = mx + b\\), solve for \\(x\\)",
+      wrong: "\\(x = y - b - m\\)",
+      accepted: ["(y-b)/m"],
+      displayAnswer: "\\dfrac{y-b}{m}",
+      target: "x"
+    },
+    {
+      eq: "\\(S = 2lw + 2lh + 2wh\\), solve for \\(h\\)",
+      wrong: "\\(h = S - 2lw - 2l - 2w\\)",
+      accepted: ["(s-2lw)/(2l+2w)"],
+      displayAnswer: "\\dfrac{S-2lw}{2l+2w}",
+      target: "h"
+    }
+  ];
+
+  function renderErrorAnalysis() {
+    const html = errorItems.map((p, i) => `
+      <div class="step-box" style="margin-top:14px;">
+        <p><strong>Problem ${i + 1}:</strong> ${p.eq}</p>
+        <p><strong>Student's result:</strong> ${p.wrong}</p>
+        <div class="form-group">
+          <label>What did the student do wrong?</label>
+          <textarea id="ea-${i}-explain" class="form-control-lg" rows="2" placeholder="Describe the mistake..."></textarea>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <label style="font-weight:700;">\\(${p.target} = \\)</label>
+          <input type="text" id="ea-${i}-answer" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="expression">
+          <button class="btn-lg" onclick="checkErrorAnalysis(${i})">Check</button>
+        </div>
+        <div id="ea-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('ea-list').innerHTML = html;
+    errorItems.forEach((p, i) => LessonProgress.preRegister(`ea-${i}`, `Error Analysis #${i + 1}: ${p.eq.replace(/\\\(|\\\)/g, '')}`, '5. Error Analysis'));
+    triggerMathJax();
+  }
+
+  function checkErrorAnalysis(idx) {
+    const p = errorItems[idx];
+    const explain = document.getElementById(`ea-${idx}-explain`).value.trim();
+    const answer = document.getElementById(`ea-${idx}-answer`).value;
+    const fb = document.getElementById(`ea-${idx}-feedback`);
+    if (explain.length <= 5 || !answer.trim()) {
+      LessonCheck.incomplete(fb, "Explain the mistake and give the correct rearrangement before checking.");
+      return;
+    }
+    const correct = p.accepted.includes(normalizeExpr(answer));
+    LessonCheck.check(`ea-${idx}`, correct, fb, {
+      correct: `Correct! \\(${p.target} = ${p.displayAnswer}\\)`,
+      retry: "Not quite yet. Look again at which operation the student skipped or misapplied. Try again.",
+      reveal: `Here's the correct rearrangement: \\(${p.target} = ${p.displayAnswer}\\)`
+    }, { label: `Error Analysis #${idx + 1}: ${p.eq.replace(/\\\(|\\\)/g, '')}`, answer: `${explain} | ${p.target}=${answer}`, section: '5. Error Analysis' });
+  }
+
+  // Initial render
+  renderSymList('warmup-list', warmupProblems, 'wu', '1. One Appearance');
+  renderSymList('multistep-list', multistepProblems, 'ms', '2. Multi-Step');
+  renderSymList('factoring-list', factoringProblems, 'fc', '3. Distributing & Factoring');
+  updateLc1(); updateLc2(); updateLc3(); updateLc4();
+  renderErrorAnalysis();
+</script>
+<div id="print-report"></div>
+</body>
+</html>
