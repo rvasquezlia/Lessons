@@ -58,16 +58,17 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Every problem on this page is a <strong>word problem</strong> - read carefully to decide which operation (or operations) it needs, watching for keywords like "total," "difference," or "product." Work through the tabs in any order: estimate first by rounding, then calculate the exact answer, then type it in and check. When you finish, type your name above and click <strong>Print My Progress</strong>.
+    Every problem on this page is a <strong>word problem</strong> - read carefully to decide which operation (or operations) it needs, watching for keywords like "total," "difference," "product," or "split evenly." Work through the tabs in any order: estimate first by rounding, then calculate the exact answer, then type it in and check. When you finish, type your name above and click <strong>Print My Progress</strong>.
   </div>
 
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('guided')">1. Guided Practice</button>
     <button class="tab-btn" onclick="switchTab('mixed')">2. Mixed Word Problems</button>
-    <button class="tab-btn" onclick="switchTab('realworld')">3. Real-World Applications</button>
-    <button class="tab-btn" onclick="switchTab('careers')">4. Career Connections</button>
-    <button class="tab-btn" onclick="switchTab('financial')">5. Financial Literacy</button>
-    <button class="tab-btn" onclick="switchTab('challenge')">6. Challenge Tier</button>
+    <button class="tab-btn" onclick="switchTab('division')">3. Division Word Problems</button>
+    <button class="tab-btn" onclick="switchTab('realworld')">4. Real-World Applications</button>
+    <button class="tab-btn" onclick="switchTab('careers')">5. Career Connections</button>
+    <button class="tab-btn" onclick="switchTab('financial')">6. Financial Literacy</button>
+    <button class="tab-btn" onclick="switchTab('challenge')">7. Challenge Tier</button>
   </nav>
 
   <!-- PANEL 1: GUIDED PRACTICE -->
@@ -90,7 +91,25 @@
     <div id="mixed-list"></div>
   </div>
 
-  <!-- PANEL 3: REAL-WORLD APPLICATIONS -->
+  <!-- PANEL 3: DIVISION WORD PROBLEMS -->
+  <div id="division" class="panel">
+    <div class="section-title">Division Word Problems</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Every problem here is division - splitting something evenly, finding a unit price or unit rate, or figuring out how many equal shares fit into a total. Watch for whether the divisor is already a whole number or needs shifting, and round money to the nearest cent unless a problem says otherwise.
+    </div>
+
+    <div class="set-heading">Splitting Costs Evenly</div>
+    <div id="div-split-list"></div>
+    <div class="set-heading">Unit Price &amp; Unit Rate</div>
+    <div id="div-unitrate-list"></div>
+    <div class="set-heading">Equal Shares</div>
+    <div id="div-shares-list"></div>
+    <div class="set-heading">Money &amp; Rounding</div>
+    <div id="div-rounding-list"></div>
+  </div>
+
+  <!-- PANEL 4: REAL-WORLD APPLICATIONS -->
   <div id="realworld" class="panel">
     <div class="section-title">Real-World Applications</div>
     <div class="howto-box">
@@ -103,7 +122,7 @@
     <div id="realworld-b-list"></div>
   </div>
 
-  <!-- PANEL 4: CAREER CONNECTIONS -->
+  <!-- PANEL 5: CAREER CONNECTIONS -->
   <div id="careers" class="panel">
     <div class="section-title">Career Connections: Decimal Precision on the Job</div>
     <div class="howto-box">
@@ -116,7 +135,7 @@
     <div id="career-stations"></div>
   </div>
 
-  <!-- PANEL 5: FINANCIAL LITERACY -->
+  <!-- PANEL 6: FINANCIAL LITERACY -->
   <div id="financial" class="panel">
     <div class="section-title">Financial Literacy</div>
     <div class="howto-box">
@@ -156,7 +175,7 @@
     </div>
   </div>
 
-  <!-- PANEL 6: CHALLENGE TIER -->
+  <!-- PANEL 7: CHALLENGE TIER -->
   <div id="challenge" class="panel">
     <div class="section-title">Challenge Tier: Multi-Step Word Problems</div>
     <div class="howto-box">
@@ -258,6 +277,37 @@
   renderCheckList('mixed-list', mixedProblems, 'mixed', '2. Mixed Word Problems');
 
   // ==========================================
+  // TAB 3: DIVISION WORD PROBLEMS
+  // ==========================================
+  const divSplit = [
+    { q: "Four friends split a \\(\\$58.00\\) dinner bill evenly. How much does each person pay?", a: 14.50, tol: 0.02 },
+    { q: "A \\(\\$96.00\\) hotel room is split evenly among \\(6\\) people for one night. How much does each person owe?", a: 16.00, tol: 0.05 },
+    { q: "A bake sale raises \\(\\$45.60\\), split evenly among \\(8\\) club members for supplies reimbursement. How much does each member get?", a: 5.70, tol: 0.02 }
+  ];
+  const divUnitRate = [
+    { q: "A \\(3.5\\) lb bag of rice costs \\(\\$6.30\\). What is the price per pound?", a: 1.80, tol: 0.02 },
+    { q: "A car travels \\(175.5\\) miles on \\(6.5\\) gallons of gas. What is its fuel economy in miles per gallon?", a: 27, tol: 0.2, aText: "27 mpg" },
+    { q: "A runner completes a \\(12.5\\) km race in \\(1.25\\) hours. What is her average speed in kilometers per hour?", a: 10, tol: 0.2, aText: "10 km/h" }
+  ];
+  const divShares = [
+    { q: "A \\(16.8\\) m roll of fabric is cut into \\(4\\) equal pieces for a class project. How long is each piece?", a: 4.2, tol: 0.05, aText: "4.2 m" },
+    { q: "\\(36.75\\) liters of paint are divided evenly among \\(3\\) art classes. How many liters does each class get?", a: 12.25, tol: 0.05, aText: "12.25 L" },
+    { q: "A baker has \\(9.6\\) kg of cookie dough and uses \\(0.4\\) kg for each batch. How many batches can she make?", a: 24, tol: 0.2, aText: "24 batches" }
+  ];
+  const divRounding = [
+    { q: "A \\(\\$67.00\\) gift card is used to buy \\(8\\) identical notebooks. Round to the nearest cent: what is the most each notebook can cost?", a: 8.38, tol: 0.005 },
+    { q: "A \\(\\$50.00\\) pizza order is split evenly among \\(3\\) friends. Round to the nearest cent: how much does each friend owe?", a: 16.67, tol: 0.005 }
+  ];
+  checkListRegistry['divsplit'] = { problems: divSplit, section: '3. Division Word Problems' };
+  checkListRegistry['divunitrate'] = { problems: divUnitRate, section: '3. Division Word Problems' };
+  checkListRegistry['divshares'] = { problems: divShares, section: '3. Division Word Problems' };
+  checkListRegistry['divrounding'] = { problems: divRounding, section: '3. Division Word Problems' };
+  renderCheckList('div-split-list', divSplit, 'divsplit', '3. Division Word Problems');
+  renderCheckList('div-unitrate-list', divUnitRate, 'divunitrate', '3. Division Word Problems');
+  renderCheckList('div-shares-list', divShares, 'divshares', '3. Division Word Problems');
+  renderCheckList('div-rounding-list', divRounding, 'divrounding', '3. Division Word Problems');
+
+  // ==========================================
   // TAB 3: REAL-WORLD APPLICATIONS
   // ==========================================
   const realworldA = [
@@ -285,10 +335,10 @@
     { q: "A runner's water bottle held \\(24.5\\) ounces. After a long run, the amount decreased by \\(18.75\\) ounces. How many ounces remain?", a: 5.75, tol: 0.02, aText: "5.75 oz" },
     { q: "A local shop sells craft ribbon for \\(\\$2.15\\) per yard. A student buys \\(4.5\\) yards. What is the product of the price and the length?", a: 9.675, tol: 0.02 }
   ];
-  checkListRegistry['rwa'] = { problems: realworldA, section: '3. Real-World Applications' };
-  checkListRegistry['rwb'] = { problems: realworldB, section: '3. Real-World Applications' };
-  renderCheckList('realworld-a-list', realworldA, 'rwa', '3. Real-World Applications');
-  renderCheckList('realworld-b-list', realworldB, 'rwb', '3. Real-World Applications');
+  checkListRegistry['rwa'] = { problems: realworldA, section: '4. Real-World Applications' };
+  checkListRegistry['rwb'] = { problems: realworldB, section: '4. Real-World Applications' };
+  renderCheckList('realworld-a-list', realworldA, 'rwa', '4. Real-World Applications');
+  renderCheckList('realworld-b-list', realworldB, 'rwb', '4. Real-World Applications');
 
   // ==========================================
   // TAB 4: CAREER CONNECTIONS (station cards)
@@ -387,7 +437,7 @@
     document.getElementById('career-stations').innerHTML = html;
     Object.keys(careerGroups).forEach((key) => {
       const g = careerGroups[key];
-      g.problems.forEach((p, i) => LessonProgress.preRegister(`career-${key}-${i}`, `${g.name} #${i + 1}`, '4. Career Connections'));
+      g.problems.forEach((p, i) => LessonProgress.preRegister(`career-${key}-${i}`, `${g.name} #${i + 1}`, '5. Career Connections'));
       TeacherPrint.registerAnswerList('career-stations', g.problems.map((p, i) => ({ inputId: `career-${key}-${i}-input`, answerText: p.aText || String(p.a) })));
     });
   }
@@ -402,7 +452,7 @@
       LessonCheck.incomplete(fb, "Enter your answer before submitting.");
       return;
     }
-    LessonCheck.submit(fb, { key: `career-${key}-${idx}`, label: `${g.name} #${idx + 1}`, answer: val, section: '4. Career Connections', correct: LessonCheck.numericMatch(val, p.a, p.tol) });
+    LessonCheck.submit(fb, { key: `career-${key}-${idx}`, label: `${g.name} #${idx + 1}`, answer: val, section: '5. Career Connections', correct: LessonCheck.numericMatch(val, p.a, p.tol) });
   }
 
   // ==========================================
@@ -417,9 +467,9 @@
       LessonCheck.incomplete(fb, "Fill in the subtotal, total, and change before submitting.");
       return;
     }
-    LessonCheck.submit(fb, { key: 'fin-literacy', label: 'Financial Literacy: subtotal / total / change', answer: `A=$${a}, B=$${b}, C=$${c}`, section: '5. Financial Literacy', correct: LessonCheck.numericMatch(a, 24.09, 0.02) && LessonCheck.numericMatch(b, 25.77, 0.02) && LessonCheck.numericMatch(c, 24.23, 0.02) });
+    LessonCheck.submit(fb, { key: 'fin-literacy', label: 'Financial Literacy: subtotal / total / change', answer: `A=$${a}, B=$${b}, C=$${c}`, section: '6. Financial Literacy', correct: LessonCheck.numericMatch(a, 24.09, 0.02) && LessonCheck.numericMatch(b, 25.77, 0.02) && LessonCheck.numericMatch(c, 24.23, 0.02) });
   }
-  LessonProgress.preRegister('fin-literacy', 'Financial Literacy: subtotal / total / change', '5. Financial Literacy');
+  LessonProgress.preRegister('fin-literacy', 'Financial Literacy: subtotal / total / change', '6. Financial Literacy');
 
   function checkGardenChallenge() {
     const cost = document.getElementById('garden-cost').value;
@@ -429,9 +479,9 @@
       LessonCheck.incomplete(fb, "Fill in the total cost and write your explanation before submitting.");
       return;
     }
-    LessonCheck.submit(fb, { key: 'garden-challenge', label: 'Garden Seed Cost Challenge', answer: `$${cost}`, section: '5. Financial Literacy', correct: LessonCheck.numericMatch(cost, 26.40, 0.05) });
+    LessonCheck.submit(fb, { key: 'garden-challenge', label: 'Garden Seed Cost Challenge', answer: `$${cost}`, section: '6. Financial Literacy', correct: LessonCheck.numericMatch(cost, 26.40, 0.05) });
   }
-  LessonProgress.preRegister('garden-challenge', 'Garden Seed Cost Challenge', '5. Financial Literacy');
+  LessonProgress.preRegister('garden-challenge', 'Garden Seed Cost Challenge', '6. Financial Literacy');
 
   // ==========================================
   // TAB 6: CHALLENGE TIER
@@ -450,8 +500,8 @@
     { q: "A charity raised \\(\\$145.60\\) on day 1, then \\(1.5\\) times that amount on day 2. What was the two-day total?", a: 364.00, tol: 0.1 },
     { q: "A charity splits \\(\\$39.36\\) in raised funds evenly among 8 local families. How much does each family receive?", a: 4.92, tol: 0.02 }
   ];
-  checkListRegistry['challenge'] = { problems: challengeProblems, section: '6. Challenge Tier' };
-  renderCheckList('challenge-list', challengeProblems, 'challenge', '6. Challenge Tier');
+  checkListRegistry['challenge'] = { problems: challengeProblems, section: '7. Challenge Tier' };
+  renderCheckList('challenge-list', challengeProblems, 'challenge', '7. Challenge Tier');
 </script>
 <div id="print-report"></div>
 </body>

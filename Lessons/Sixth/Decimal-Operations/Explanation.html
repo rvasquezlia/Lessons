@@ -26,6 +26,24 @@
 
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <style>
+    /* Long-division bracket, used only on the Division tab - a lighter-weight
+       visual than the algo-table grid, since a division bracket doesn't line
+       up column-by-column the way addition/subtraction/multiplication do. */
+    .longdiv {
+      display: inline-flex;
+      align-items: flex-end;
+      font-family: 'Montserrat', monospace;
+      font-weight: 800;
+      font-size: 1.7rem;
+      color: var(--primary);
+      margin: 14px 0;
+    }
+    .longdiv-divisor { padding: 0 10px 6px 0; }
+    .longdiv-right { border-left: 4px solid var(--primary); padding-left: 10px; }
+    .longdiv-quotient { border-bottom: 4px solid var(--primary); padding: 0 6px 6px 6px; min-height: 1.3em; min-width: 90px; }
+    .longdiv-dividend { padding: 6px 6px 0 6px; }
+  </style>
 </head>
 <body>
 
@@ -41,15 +59,16 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    This page walks through every algorithm you need for Decimal Operations, one step at a time. Go tab by tab, left to right: place value &amp; rounding, addition &amp; subtraction, multiplication, word problem strategy, then whiteboard modeling. Click each carousel's <strong>Next Step</strong> button to watch a worked example unfold piece by piece - nothing here gets submitted or graded except the whiteboard suite. Once the steps make sense, you're ready for independent practice.
+    This page walks through every algorithm you need for Decimal Operations, one step at a time. Go tab by tab, left to right: place value &amp; rounding, addition &amp; subtraction, multiplication, division, word problem strategy, then whiteboard modeling. Click each carousel's <strong>Next Step</strong> button to watch a worked example unfold piece by piece - nothing here gets submitted or graded except the whiteboard suite. Once the steps make sense, you're ready for independent practice.
   </div>
 
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('pv-foundations')">1. Place Value &amp; Rounding</button>
     <button class="tab-btn" onclick="switchTab('addition-proof')">2. Addition &amp; Subtraction</button>
     <button class="tab-btn" onclick="switchTab('multiplication-proof')">3. Multiplication</button>
-    <button class="tab-btn" onclick="switchTab('wordproblem-strategy')">4. Word Problem Strategy</button>
-    <button class="tab-btn" onclick="switchTab('whiteboard')">5. Whiteboard Modeling</button>
+    <button class="tab-btn" onclick="switchTab('division-proof')">4. Division</button>
+    <button class="tab-btn" onclick="switchTab('wordproblem-strategy')">5. Word Problem Strategy</button>
+    <button class="tab-btn" onclick="switchTab('whiteboard')">6. Whiteboard Modeling</button>
   </nav>
 
   <!-- PANEL 1: PLACE VALUE & ROUNDING FOUNDATIONS -->
@@ -329,7 +348,52 @@
     </div>
   </div>
 
-  <!-- PANEL 4: WORD PROBLEM STRATEGY -->
+  <!-- PANEL 4: DIVISION -->
+  <div id="division-proof" class="panel">
+    <div class="section-title">Division: Whole Numbers, Decimals, and Rounding</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read the rule, then copy the notebook box into your notebook. Work through all four examples in the carousel - they cover the four situations you'll actually run into: dividing by a whole number, dividing by a decimal, dividing a decimal by a decimal, and a money problem where the division never ends and you have to decide where to round.
+    </div>
+
+    <div class="explainer-box">
+      <strong>Division Rule:</strong> if the divisor (the number you're dividing by) is already a whole number, divide as usual and place the decimal point in the quotient directly above the decimal point in the dividend. If the divisor is a decimal, multiply <em>both</em> the divisor and the dividend by the same power of \(10\) - shifting both decimal points the same number of places right - until the divisor becomes a whole number. That doesn't change the answer, since you're scaling both numbers by the same amount, the same way \(\frac{6}{2}\) and \(\frac{60}{20}\) are equal.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
+      <p style="margin:0 0 10px 0;"><strong>Rule #3 for Division:</strong> make the divisor a whole number before you divide.</p>
+      <ol>
+        <li><strong>Check the divisor.</strong> If it's already a whole number, skip to step 3.</li>
+        <li><strong>If the divisor is a decimal,</strong> count its decimal places, then move the decimal point that many places right in <em>both</em> the divisor and the dividend (add zeros to the dividend if you run out of digits).</li>
+        <li><strong>Divide as you would with whole numbers.</strong> Once you reach the decimal point in the dividend, place a decimal point in the quotient directly above it, then keep dividing.</li>
+        <li><strong>If the division doesn't terminate,</strong> carry it a few extra places and round to a sensible place value for the situation - the nearest cent for money, for example.</li>
+      </ol>
+      <p style="margin:12px 0 0 0; font-size:0.95rem; color:#78350f;"><em>Vocabulary check:</em> in \(45 \div 1.5 = 30\), \(45\) is the <strong>dividend</strong>, \(1.5\) is the <strong>divisor</strong>, and \(30\) is the <strong>quotient</strong>.</p>
+    </div>
+
+    <h3>Guided Example Carousel: Step-by-Step Division</h3>
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="div-prev-btn" onclick="changeDivEx(-1)">&larr; Previous Example</button>
+        <div style="text-align:center;">
+          <span id="div-ex-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Exercise 1 of 4</span>
+          <div class="carousel-indicators" id="div-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="div-next-btn" onclick="changeDivEx(1)">Next Example &rarr;</button>
+      </div>
+
+      <div id="div-carousel-content" style="min-height: 340px;"></div>
+
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextDivExStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetDivExStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 5: WORD PROBLEM STRATEGY -->
   <div id="wordproblem-strategy" class="panel">
     <div class="section-title">Word Problem Strategy: Estimate, Then Solve</div>
     <div class="howto-box">
@@ -338,7 +402,7 @@
     </div>
 
     <div class="explainer-box">
-      Every word problem below follows the same two-step routine: <strong>estimate first</strong> by rounding, then <strong>calculate the exact answer</strong> and compare it to your estimate. If your exact answer isn't close to your estimate, go back and check your work. Not sure which operation a problem needs? Review the Keyword Clues tab on the Vocabulary &amp; Literacy page.
+      Every word problem below follows the same two-step routine: <strong>estimate first</strong> by rounding, then <strong>calculate the exact answer</strong> and compare it to your estimate. If your exact answer isn't close to your estimate, go back and check your work. Not sure which operation a problem needs? Look for a keyword: total/sum/combined means add, difference/remaining means subtract, product/times means multiply, and split evenly/per/quotient means divide.
     </div>
 
     <div class="carousel-card">
@@ -360,7 +424,7 @@
     </div>
   </div>
 
-  <!-- PANEL 5: WHITEBOARD MODELING -->
+  <!-- PANEL 6: WHITEBOARD MODELING -->
   <div id="whiteboard" class="panel">
     <div class="section-title">Whiteboard Modeling (Teacher-Led Demonstration)</div>
     <div class="howto-box">
@@ -1042,6 +1106,126 @@
   renderMultCarousel();
 
   // ==========================================
+  // DIVISION CAROUSEL DATA & LOGIC
+  // ==========================================
+  let currentDivEx = 0;
+  let currentDivExStep = 1;
+
+  function longDiv(divisor, dividend) {
+    return `<div class="longdiv"><div class="longdiv-divisor">${divisor}</div><div class="longdiv-right"><div class="longdiv-quotient">&nbsp;</div><div class="longdiv-dividend">${dividend}</div></div></div>`;
+  }
+
+  const divExamples = [
+    {
+      title: "Exercise 1: Decimal \\(\\div\\) Whole Number (\\(7.2 \\div 4\\))",
+      desc: "The divisor is already a whole number - divide right away, no shifting needed.",
+      maxSteps: 3,
+      render: (step) => `
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(7.2 \\div 4 \\approx 8 \\div 4 = 2\\)</p>
+        ${longDiv("4", "7.2")}
+        <p style="text-align:center; font-weight:bold;">
+          ${step === 1 ? 'Step 1: The divisor (\\(4\\)) is already a whole number, so we can divide right away.' : ''}
+          ${step === 2 ? 'Step 2: \\(4\\) goes into \\(7\\) one time (\\(4 \\times 1 = 4\\)), remainder \\(3\\). Bring down the tenths digit to make \\(32\\) tenths, and place the decimal point in the quotient directly above the decimal point in \\(7.2\\): quotient so far, \\(1.\\)' : ''}
+          ${step === 3 ? 'Step 3: \\(4\\) goes into \\(32\\) (tenths) eight times (\\(4 \\times 8 = 32\\)), remainder \\(0\\). Quotient = \\(\\mathbf{1.8}\\). Check: \\(4 \\times 1.8 = 7.2\\).' : ''}
+        </p>
+      `
+    },
+    {
+      title: "Exercise 2: Whole Number \\(\\div\\) Decimal (\\(45 \\div 1.5\\))",
+      desc: "Shift the decimal point in the divisor to make it a whole number, then shift the dividend's decimal point the same number of places.",
+      maxSteps: 4,
+      render: (step) => `
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(45 \\div 1.5 \\approx 45 \\div 2 = 22.5\\)</p>
+        ${step < 2 ? longDiv("1.5", "45") : longDiv("15", "450")}
+        <p style="text-align:center; font-weight:bold;">
+          ${step === 1 ? 'Step 1: The divisor (\\(1.5\\)) is not a whole number - it has \\(1\\) decimal place.' : ''}
+          ${step === 2 ? 'Step 2: Multiply both the divisor and the dividend by \\(10\\) (shift both decimal points \\(1\\) place right): \\(1.5 \\rightarrow 15\\) and \\(45 \\rightarrow 450\\). This does not change the answer - both numbers were scaled by the same amount.' : ''}
+          ${step === 3 ? 'Step 3: Divide the whole numbers: \\(450 \\div 15 = 30\\) (\\(15 \\times 30 = 450\\)).' : ''}
+          ${step === 4 ? 'Step 4: Quotient = \\(\\mathbf{30}\\). Check: \\(1.5 \\times 30 = 45\\). Our answer is a bit higher than the \\(22.5\\) estimate - that tracks, since rounding \\(1.5\\) up to \\(2\\) for the estimate made the estimated divisor bigger, and dividing by a bigger number gives a smaller result.' : ''}
+        </p>
+      `
+    },
+    {
+      title: "Exercise 3: Decimal \\(\\div\\) Decimal (\\(3.75 \\div 0.25\\))",
+      desc: "Same shifting rule, just with two decimals: move both decimal points the same number of places until the divisor is whole.",
+      maxSteps: 4,
+      render: (step) => `
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(4 \\div 0.25 = 16\\) (a quarter fits into \\(4\\) sixteen times)</p>
+        ${step < 2 ? longDiv("0.25", "3.75") : longDiv("25", "375")}
+        <p style="text-align:center; font-weight:bold;">
+          ${step === 1 ? 'Step 1: The divisor (\\(0.25\\)) has \\(2\\) decimal places.' : ''}
+          ${step === 2 ? 'Step 2: Multiply both numbers by \\(100\\) (shift both decimal points \\(2\\) places right): \\(0.25 \\rightarrow 25\\) and \\(3.75 \\rightarrow 375\\).' : ''}
+          ${step === 3 ? 'Step 3: Divide the whole numbers: \\(375 \\div 25 = 15\\) (\\(25 \\times 15 = 375\\)).' : ''}
+          ${step === 4 ? 'Step 4: Quotient = \\(\\mathbf{15}\\). Check: \\(0.25 \\times 15 = 3.75\\). Reasonable check: a quarter fits into \\(4\\) sixteen times, so it should fit into \\(3.75\\) (a little less than \\(4\\)) about \\(15\\) times - that matches.' : ''}
+        </p>
+      `
+    },
+    {
+      title: "Exercise 4: Money &amp; Rounding (\\(\\$47.50 \\div 6\\))",
+      desc: "The divisor is already whole, but this quotient never ends - decide where to round.",
+      maxSteps: 4,
+      render: (step) => `
+        <p style="text-align:center;"><strong>Estimate Check:</strong> \\(\\$47.50 \\div 6 \\approx \\$48 \\div 6 = \\$8\\)</p>
+        ${longDiv("6", "47.50")}
+        <p style="text-align:center; font-weight:bold;">
+          ${step === 1 ? 'Step 1: The divisor (\\(6\\)) is already a whole number - divide right away, no shifting needed.' : ''}
+          ${step === 2 ? 'Step 2: \\(6\\) goes into \\(47\\) seven times (\\(6 \\times 7 = 42\\)), remainder \\(5\\). Place the decimal point in the quotient, then bring down the tenths digit to make \\(55\\).' : ''}
+          ${step === 3 ? 'Step 3: \\(6\\) goes into \\(55\\) nine times (\\(6 \\times 9 = 54\\)), remainder \\(1\\). Bring down a zero to make \\(10\\); \\(6\\) goes into \\(10\\) once (\\(6 \\times 1 = 6\\)), remainder \\(4\\). Bring down another zero and this remainder repeats - the decimal never ends: \\(7.9166\\ldots\\)' : ''}
+          ${step === 4 ? 'Step 4: Since this is money, round to the nearest cent. The thousandths digit is \\(6\\), which is \\(5\\) or greater, so round the hundredths digit up: \\(7.9166\\ldots \\rightarrow \\mathbf{\\$7.92}\\) per person.' : ''}
+        </p>
+      `
+    }
+  ];
+
+  function renderDivCarousel() {
+    const ex = divExamples[currentDivEx];
+    document.getElementById('div-ex-title').innerText = ex.title;
+
+    const dotsContainer = document.getElementById('div-dots');
+    dotsContainer.innerHTML = divExamples.map((_, i) =>
+      `<div class="dot ${i === currentDivEx ? 'active' : ''}" onclick="jumpToDivEx(${i})"></div>`
+    ).join('');
+
+    document.getElementById('div-carousel-content').innerHTML = `
+      <p style="text-align:center; color:#475569;">${ex.desc}</p>
+      ${ex.render(currentDivExStep)}
+    `;
+
+    document.getElementById('div-prev-btn').disabled = currentDivEx === 0;
+    document.getElementById('div-next-btn').disabled = currentDivEx === divExamples.length - 1;
+
+    triggerMathJax();
+  }
+
+  function changeDivEx(dir) {
+    currentDivEx = Math.max(0, Math.min(divExamples.length - 1, currentDivEx + dir));
+    currentDivExStep = 1;
+    renderDivCarousel();
+  }
+  function jumpToDivEx(idx) {
+    currentDivEx = idx;
+    currentDivExStep = 1;
+    renderDivCarousel();
+  }
+  function nextDivExStep() {
+    if (currentDivExStep < divExamples[currentDivEx].maxSteps) {
+      currentDivExStep++;
+      renderDivCarousel();
+    }
+  }
+  function resetDivExStep() {
+    currentDivExStep = 1;
+    renderDivCarousel();
+  }
+  function showDivExFullyWorked(i) {
+    currentDivEx = i;
+    currentDivExStep = divExamples[i].maxSteps;
+    renderDivCarousel();
+  }
+  TeacherPrint.registerCarousel('div-carousel-content', divExamples.length, showDivExFullyWorked);
+  renderDivCarousel();
+
+  // ==========================================
   // WORD PROBLEM REVEAL LOGIC (add / mult guided problems)
   // ==========================================
   function revealAddStep() {
@@ -1429,7 +1613,7 @@
         && u0 === prob.ans[0] && u1 === prob.ans[1] && u2 === prob.ans[2] && u3 === prob.ans[3]
         && Number(decPlaces) === prob.decimalPlaces;
 
-      LessonCheck.submit(fb, { key: `wb-${currentWBProb}`, label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${p1_0}${p1_1}${p1_2}${p1_3} / ${p2_0}${p2_1}${p2_2}${p2_3} / ${u0}${u1}${u2}${u3}, ${decPlaces} decimal places`, section: '5. Whiteboard Modeling', correct });
+      LessonCheck.submit(fb, { key: `wb-${currentWBProb}`, label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${p1_0}${p1_1}${p1_2}${p1_3} / ${p2_0}${p2_1}${p2_2}${p2_3} / ${u0}${u1}${u2}${u3}, ${decPlaces} decimal places`, section: '6. Whiteboard Modeling', correct });
     } else {
       const u0 = document.getElementById('wb-i0').value;
       const u1 = document.getElementById('wb-i1').value;
@@ -1443,7 +1627,7 @@
 
       const correct = u0 === prob.ans[0] && u1 === prob.ans[1] && u2 === prob.ans[2] && u3 === prob.ans[3];
 
-      LessonCheck.submit(fb, { key: `wb-${currentWBProb}`, label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${u0}${u1}${u2}${u3}`, section: '5. Whiteboard Modeling', correct });
+      LessonCheck.submit(fb, { key: `wb-${currentWBProb}`, label: `Whiteboard: ${prob.title.replace(/\\\(|\\\)/g, '')}`, answer: `${u0}${u1}${u2}${u3}`, section: '6. Whiteboard Modeling', correct });
     }
   }
 

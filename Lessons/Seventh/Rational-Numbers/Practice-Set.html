@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Rational Numbers - Practice Set</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Rational Numbers - Practice Set</span>
+    <h1>Practice Set: Fractions, Decimals &amp; the Number System</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Pre-Algebra 7 - Rational Numbers Practice Set')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Pure computation here - no word problems. Work through the 6 tabs in whatever order your teacher assigns. Solve each problem in your notebook first, then type your final answer and check it. You get <strong>2 tries</strong> per problem; miss twice and the correct answer is shown. For fraction answers, type them like <code>3/5</code> (no spaces, already simplified). When you finish, type your name above and click <strong>Print My Progress</strong>.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('classify')">1. Classify &amp; Simplify</button>
+    <button class="tab-btn" onclick="switchTab('fractodec')">2. Fractions to Decimals</button>
+    <button class="tab-btn" onclick="switchTab('dectofrac')">3. Decimals to Fractions</button>
+    <button class="tab-btn" onclick="switchTab('compare')">4. Compare &amp; Order</button>
+    <button class="tab-btn" onclick="switchTab('fracops')">5. Fraction Operations</button>
+    <button class="tab-btn" onclick="switchTab('decops')">6. Decimal Operations</button>
+  </nav>
+
+  <div id="classify" class="panel active">
+    <div class="section-title">Classify &amp; Simplify</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      For 1-4, type "yes" or "no". For 5-8, simplify the fraction to lowest terms and type it as, for example, <code>2/3</code>.
+    </div>
+    <div id="classify-list"></div>
+  </div>
+
+  <div id="fractodec" class="panel">
+    <div class="section-title">Fractions to Decimals</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Divide to convert each fraction to a decimal. If it repeats, round to the nearest thousandth (3 digits after the decimal point).
+    </div>
+    <div id="fractodec-list"></div>
+  </div>
+
+  <div id="dectofrac" class="panel">
+    <div class="section-title">Decimals to Fractions</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Convert each decimal to a fraction in simplest form, typed like <code>3/5</code>.
+    </div>
+    <div id="dectofrac-list"></div>
+  </div>
+
+  <div id="compare" class="panel">
+    <div class="section-title">Compare &amp; Order</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Convert both values to the same form, then type <code>&lt;</code>, <code>&gt;</code>, or <code>=</code>.
+    </div>
+    <div id="compare-list"></div>
+  </div>
+
+  <div id="fracops" class="panel">
+    <div class="section-title">Fraction Operations (Review)</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Add, subtract, multiply, or divide as shown. Give your answer as a fraction in simplest form, like <code>5/12</code>.
+    </div>
+    <div id="fracops-list"></div>
+  </div>
+
+  <div id="decops" class="panel">
+    <div class="section-title">Decimal Operations (Review)</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Line up decimal points for add/subtract, and count decimal places for multiply/divide, just like in Explanation.
+    </div>
+    <div id="decops-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  function normalizeFrac(s) {
+    return String(s || '').toLowerCase().replace(/\s+/g, '');
+  }
+
+  // ==========================================
+  // REUSABLE SINGLE-FIELD PRACTICE LIST (check mode: 2 tries then reveal)
+  // problems: { q, a (number) | accepted (array of strings), tol, hint, displayAnswer, label }
+  // ==========================================
+  const listRegistry = {};
+
+  function renderPracticeList(containerId, problems, keyPrefix, section) {
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkPractice('${keyPrefix}', ${i})">Check</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, `${section} #${i + 1}: ${p.label || p.q.replace(/\\\(|\\\)/g, '')}`, section));
+  }
+
+  function checkPractice(keyPrefix, idx) {
+    const cfg = listRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const raw = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet."); return; }
+    let correct;
+    if (p.a !== undefined) {
+      correct = LessonCheck.numericMatch(raw, p.a, p.tol !== undefined ? p.tol : 0.001);
+    } else {
+      correct = (p.accepted || []).includes(normalizeFrac(raw));
+    }
+    const answerText = p.displayAnswer || (p.a !== undefined ? String(p.a) : (p.accepted ? p.accepted[0] : ''));
+    const label = `${cfg.section} #${idx + 1}: ${p.label || p.q.replace(/\\\(|\\\)/g, '')}`;
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! Answer: <strong>${answerText}</strong>`,
+      retry: p.hint || "Not quite yet. Review the rule and try again.",
+      reveal: `Here's the correct answer: <strong>${answerText}</strong>`
+    }, { label, answer: raw, section: cfg.section });
+  }
+
+  function setup(containerId, problems, keyPrefix, section) {
+    listRegistry[keyPrefix] = { problems, section };
+    renderPracticeList(containerId, problems, keyPrefix, section);
+  }
+
+  // ==========================================
+  // TAB 1: CLASSIFY & SIMPLIFY
+  // ==========================================
+  const classifyProblems = [
+    { q: "Is 7 a rational number?", accepted: ["yes"], displayAnswer: "yes", label: "Is 7 rational?" },
+    { q: "Is -12 a rational number?", accepted: ["yes"], displayAnswer: "yes", label: "Is -12 rational?" },
+    { q: "Is 0.454545... (repeating) a rational number?", accepted: ["yes"], displayAnswer: "yes", label: "Is 0.454545... rational?" },
+    { q: "Is \\(\\pi = 3.14159265\\ldots\\) a rational number?", accepted: ["no"], displayAnswer: "no", label: "Is π rational?" },
+    { q: "Simplify \\(\\dfrac{8}{12}\\)", accepted: ["2/3"], displayAnswer: "2/3", label: "Simplify 8/12" },
+    { q: "Simplify \\(\\dfrac{15}{20}\\)", accepted: ["3/4"], displayAnswer: "3/4", label: "Simplify 15/20" },
+    { q: "Simplify \\(\\dfrac{9}{24}\\)", accepted: ["3/8"], displayAnswer: "3/8", label: "Simplify 9/24" },
+    { q: "Simplify \\(\\dfrac{18}{45}\\)", accepted: ["2/5"], displayAnswer: "2/5", label: "Simplify 18/45" }
+  ];
+  setup('classify-list', classifyProblems, 'cl', '1. Classify & Simplify');
+
+  // ==========================================
+  // TAB 2: FRACTIONS TO DECIMALS
+  // ==========================================
+  const fracToDecProblems = [
+    { q: "\\(\\dfrac{1}{2}\\)", a: 0.5, label: "1/2" },
+    { q: "\\(\\dfrac{3}{8}\\)", a: 0.375, label: "3/8" },
+    { q: "\\(\\dfrac{2}{5}\\)", a: 0.4, label: "2/5" },
+    { q: "\\(\\dfrac{1}{4}\\)", a: 0.25, label: "1/4" },
+    { q: "\\(\\dfrac{1}{3}\\) (round to the nearest thousandth)", a: 0.333, tol: 0.0015, label: "1/3" },
+    { q: "\\(\\dfrac{5}{6}\\) (round to the nearest thousandth)", a: 0.833, tol: 0.0015, label: "5/6" },
+    { q: "\\(\\dfrac{7}{8}\\)", a: 0.875, label: "7/8" },
+    { q: "\\(\\dfrac{2}{9}\\) (round to the nearest thousandth)", a: 0.222, tol: 0.0015, label: "2/9" }
+  ];
+  setup('fractodec-list', fracToDecProblems, 'f2d', '2. Fractions to Decimals');
+
+  // ==========================================
+  // TAB 3: DECIMALS TO FRACTIONS
+  // ==========================================
+  const decToFracProblems = [
+    { q: "\\(0.5\\)", accepted: ["1/2"], displayAnswer: "1/2", label: "0.5" },
+    { q: "\\(0.75\\)", accepted: ["3/4"], displayAnswer: "3/4", label: "0.75" },
+    { q: "\\(0.6\\)", accepted: ["3/5"], displayAnswer: "3/5", label: "0.6" },
+    { q: "\\(0.125\\)", accepted: ["1/8"], displayAnswer: "1/8", label: "0.125" },
+    { q: "\\(0.35\\)", accepted: ["7/20"], displayAnswer: "7/20", label: "0.35" },
+    { q: "\\(0.08\\)", accepted: ["2/25"], displayAnswer: "2/25", label: "0.08" },
+    { q: "\\(0.45\\)", accepted: ["9/20"], displayAnswer: "9/20", label: "0.45" },
+    { q: "\\(0.16\\)", accepted: ["4/25"], displayAnswer: "4/25", label: "0.16" }
+  ];
+  setup('dectofrac-list', decToFracProblems, 'd2f', '3. Decimals to Fractions');
+
+  // ==========================================
+  // TAB 4: COMPARE & ORDER
+  // ==========================================
+  const compareProblems = [
+    { q: "\\(\\dfrac{3}{4}\\) ___ \\(0.7\\) (enter <, >, or =)", accepted: [">"], displayAnswer: ">", label: "3/4 ___ 0.7" },
+    { q: "\\(0.6\\) ___ \\(\\dfrac{5}{8}\\) (enter <, >, or =)", accepted: ["<"], displayAnswer: "<", label: "0.6 ___ 5/8" },
+    { q: "\\(-\\dfrac{1}{2}\\) ___ \\(-0.4\\) (enter <, >, or =)", accepted: ["<"], displayAnswer: "<", label: "-1/2 ___ -0.4" },
+    { q: "\\(\\dfrac{2}{3}\\) ___ \\(0.67\\) (enter <, >, or =)", accepted: ["<"], displayAnswer: "<", label: "2/3 ___ 0.67" },
+    { q: "\\(-0.75\\) ___ \\(-\\dfrac{3}{4}\\) (enter <, >, or =)", accepted: ["="], displayAnswer: "=", label: "-0.75 ___ -3/4" },
+    { q: "\\(\\dfrac{7}{8}\\) ___ \\(0.8\\) (enter <, >, or =)", accepted: [">"], displayAnswer: ">", label: "7/8 ___ 0.8" },
+    { q: "\\(-\\dfrac{2}{5}\\) ___ \\(-0.5\\) (enter <, >, or =)", accepted: [">"], displayAnswer: ">", label: "-2/5 ___ -0.5" },
+    { q: "\\(\\dfrac{9}{10}\\) ___ \\(0.91\\) (enter <, >, or =)", accepted: ["<"], displayAnswer: "<", label: "9/10 ___ 0.91" }
+  ];
+  setup('compare-list', compareProblems, 'cmp', '4. Compare & Order');
+
+  // ==========================================
+  // TAB 5: FRACTION OPERATIONS (REVIEW)
+  // ==========================================
+  const fracOpsProblems = [
+    { q: "\\(\\dfrac{1}{4} + \\dfrac{1}{6}\\)", accepted: ["5/12"], displayAnswer: "5/12", label: "1/4 + 1/6" },
+    { q: "\\(\\dfrac{5}{6} - \\dfrac{1}{4}\\)", accepted: ["7/12"], displayAnswer: "7/12", label: "5/6 - 1/4" },
+    { q: "\\(\\dfrac{2}{3} \\times \\dfrac{3}{4}\\)", accepted: ["1/2"], displayAnswer: "1/2", label: "2/3 x 3/4" },
+    { q: "\\(\\dfrac{2}{5} \\div \\dfrac{3}{4}\\)", accepted: ["8/15"], displayAnswer: "8/15", label: "2/5 ÷ 3/4" },
+    { q: "\\(\\dfrac{1}{2} + \\dfrac{2}{3}\\)", accepted: ["7/6"], displayAnswer: "7/6", label: "1/2 + 2/3" },
+    { q: "\\(\\dfrac{3}{5} - \\dfrac{1}{10}\\)", accepted: ["1/2"], displayAnswer: "1/2", label: "3/5 - 1/10" },
+    { q: "\\(\\dfrac{3}{4} \\times \\dfrac{4}{9}\\)", accepted: ["1/3"], displayAnswer: "1/3", label: "3/4 x 4/9" },
+    { q: "\\(\\dfrac{5}{8} \\div \\dfrac{5}{6}\\)", accepted: ["3/4"], displayAnswer: "3/4", label: "5/8 ÷ 5/6" }
+  ];
+  setup('fracops-list', fracOpsProblems, 'fo', '5. Fraction Operations');
+
+  // ==========================================
+  // TAB 6: DECIMAL OPERATIONS (REVIEW)
+  // ==========================================
+  const decOpsProblems = [
+    { q: "\\(4.7 + 2.35\\)", a: 7.05, label: "4.7 + 2.35" },
+    { q: "\\(8.2 - 3.65\\)", a: 4.55, label: "8.2 - 3.65" },
+    { q: "\\(2.4 \\times 1.5\\)", a: 3.6, label: "2.4 x 1.5" },
+    { q: "\\(6.25 \\div 0.5\\)", a: 12.5, label: "6.25 ÷ 0.5" },
+    { q: "\\(5.6 + 3.75\\)", a: 9.35, label: "5.6 + 3.75" },
+    { q: "\\(10 - 4.35\\)", a: 5.65, label: "10 - 4.35" },
+    { q: "\\(0.6 \\times 0.5\\)", a: 0.3, label: "0.6 x 0.5" },
+    { q: "\\(3.6 \\div 1.2\\)", a: 3, label: "3.6 ÷ 1.2" }
+  ];
+  setup('decops-list', decOpsProblems, 'do', '6. Decimal Operations');
+</script>
+<div id="print-report"></div>
+</body>
+</html>

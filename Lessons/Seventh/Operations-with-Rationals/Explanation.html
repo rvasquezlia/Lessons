@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Operations with Rational Numbers - Explanation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Operations with Rational Numbers - Explanation</span>
+    <h1>Explanation: Applying the Sign Rules to Fractions &amp; Decimals</h1>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    You already know the same-sign/different-sign rules from Integers, and you already know how to add, subtract, multiply, and divide plain fractions and decimals. This page is about putting those two skills together. Go through the 5 tabs in order. For each carousel, read the example, then click <strong>Next Step</strong> to reveal the solution one step at a time. Copy every notebook box into your math notebook. <strong>Calculators are not allowed this quarter.</strong>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('addsubfrac')">1. Add/Subtract Fractions</button>
+    <button class="tab-btn" onclick="switchTab('addsubdec')">2. Add/Subtract Decimals</button>
+    <button class="tab-btn" onclick="switchTab('muldiv')">3. Multiply &amp; Divide</button>
+    <button class="tab-btn" onclick="switchTab('convert')">4. Switching Forms Mid-Problem</button>
+    <button class="tab-btn" onclick="switchTab('multistep')">5. Multi-Step &amp; Order of Operations</button>
+  </nav>
+
+  <!-- TAB 1: ADD/SUBTRACT FRACTIONS -->
+  <div id="addsubfrac" class="panel active">
+    <div class="section-title">Adding &amp; Subtracting Signed Fractions</div>
+    <div class="explainer-box">
+      The sign rule doesn't change: <strong>same signs</strong> &rarr; add the absolute values and keep the common sign; <strong>different signs</strong> &rarr; subtract the smaller absolute value from the larger and keep the sign of the number with the larger absolute value. The only new step is that the numbers are fractions, so before you can add or subtract, you need a <strong>common denominator</strong>.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">1. Add/Subtract Fractions - COPY INTO NOTEBOOK</div>
+      <ul>
+        <li><strong>Step 1:</strong> If subtracting, use Keep-Change-Change to rewrite it as addition.</li>
+        <li><strong>Step 2:</strong> Rewrite both fractions over their least common denominator (LCD).</li>
+        <li><strong>Step 3:</strong> Apply the same-sign / different-sign rule to the numerators, just like you would with integers.</li>
+        <li><strong>Step 4:</strong> Simplify to lowest terms if possible.</li>
+      </ul>
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="asf-prev-btn" onclick="changeAsf(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="asf-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="asf-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="asf-next-btn" onclick="changeAsf(1)">Next &rarr;</button>
+      </div>
+      <div id="asf-content" style="min-height: 160px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextAsfStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetAsfStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: ADD/SUBTRACT DECIMALS -->
+  <div id="addsubdec" class="panel">
+    <div class="section-title">Adding &amp; Subtracting Signed Decimals</div>
+    <div class="explainer-box">
+      Same rule again: <strong>same signs</strong> &rarr; add and keep the sign; <strong>different signs</strong> &rarr; subtract and keep the sign of the larger absolute value. With decimals, the setup step is lining up the <strong>place value</strong> (the decimal points), the same way you would for a plain decimal problem - then apply the integer sign rule to decide the final sign.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">2. Add/Subtract Decimals - COPY INTO NOTEBOOK</div>
+      <ul>
+        <li><strong>Step 1:</strong> If subtracting, use Keep-Change-Change to rewrite it as addition.</li>
+        <li><strong>Step 2:</strong> Line up the decimal points, adding placeholder zeros so both numbers have the same number of decimal places.</li>
+        <li><strong>Step 3:</strong> Apply the same-sign / different-sign rule to decide both the digits and the final sign.</li>
+      </ul>
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="asd-prev-btn" onclick="changeAsd(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="asd-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="asd-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="asd-next-btn" onclick="changeAsd(1)">Next &rarr;</button>
+      </div>
+      <div id="asd-content" style="min-height: 160px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextAsdStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetAsdStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: MULTIPLY & DIVIDE -->
+  <div id="muldiv" class="panel">
+    <div class="section-title">Multiplying &amp; Dividing Rational Numbers</div>
+    <div class="explainer-box">
+      <strong>Same signs &rarr; positive. Different signs &rarr; negative.</strong> This is the exact same rule from Integers, and it applies no matter what form the numbers are in. For fractions, multiply straight across (numerator &times; numerator, denominator &times; denominator) and simplify. To divide fractions, use <strong>Keep-Change-Flip</strong>: keep the first fraction, change &divide; to &times;, flip the second fraction to its reciprocal. For decimals, multiply or divide as usual, then attach the sign the rule gives you.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">3. Multiply &amp; Divide Rational Numbers - COPY INTO NOTEBOOK</div>
+      <ul>
+        <li><strong>Same Signs = Positive:</strong> \(\left(-\frac{3}{4}\right) \times \left(-\frac{2}{5}\right) = \frac{6}{20} = \frac{3}{10}\). \(-2.8 \times (-1.5) = 4.2\).</li>
+        <li><strong>Different Signs = Negative:</strong> \(-\frac{2}{3} \times \frac{5}{9} = -\frac{10}{27}\). \(12.6 \div (-3) = -4.2\).</li>
+        <li><strong>Dividing fractions:</strong> Keep-Change-Flip, then apply the sign rule to the result. \(\frac{5}{8} \div \left(-\frac{5}{6}\right) = \frac{5}{8} \times \left(-\frac{6}{5}\right) = -\frac{3}{4}\).</li>
+      </ul>
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="md-prev-btn" onclick="changeMd(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="md-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="md-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="md-next-btn" onclick="changeMd(1)">Next &rarr;</button>
+      </div>
+      <div id="md-content" style="min-height: 160px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextMdStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetMdStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: SWITCHING FORMS MID-PROBLEM -->
+  <div id="convert" class="panel">
+    <div class="section-title">Switching Between Fractions &amp; Decimals Mid-Problem</div>
+    <div class="explainer-box">
+      Sometimes a problem hands you one fraction and one decimal in the same expression. You don't need a special new rule for this - you just need to convert one form into the other <em>before</em> you apply the sign rule, so both numbers are in a form you can actually combine. Pick whichever direction makes the arithmetic easier: fractions like \(\frac{1}{2}, \frac{1}{4}, \frac{3}{4}\) convert to clean decimals, while a repeating decimal is often easier left as a fraction.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">4. Switching Forms - COPY INTO NOTEBOOK</div>
+      <ul>
+        <li><strong>Common fraction-decimal pairs to know by heart:</strong> \(\frac{1}{2}=0.5\), \(\frac{1}{4}=0.25\), \(\frac{3}{4}=0.75\), \(\frac{1}{8}=0.125\), \(\frac{1}{10}=0.1\), \(\frac{1}{5}=0.2\).</li>
+        <li><strong>Converting doesn't change the sign.</strong> \(-\frac{3}{8}\) and \(-0.375\) are the same negative number, just written two ways.</li>
+        <li><strong>Rule of thumb:</strong> convert to decimal when the fraction is one of the "clean" ones above; convert to fraction when the decimal repeats or the problem is otherwise built around fractions.</li>
+      </ul>
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="cv-prev-btn" onclick="changeCv(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="cv-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="cv-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="cv-next-btn" onclick="changeCv(1)">Next &rarr;</button>
+      </div>
+      <div id="cv-content" style="min-height: 160px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextCvStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetCvStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 5: MULTI-STEP & ORDER OF OPERATIONS -->
+  <div id="multistep" class="panel">
+    <div class="section-title">Multi-Step Expressions &amp; Order of Operations</div>
+    <div class="explainer-box">
+      Once you're combining several signed rational numbers in one expression, order of operations still runs the show: parentheses first, then multiplication and division left to right, then addition and subtraction left to right. Handle one operation at a time, decide its sign, and keep going - don't try to guess the final sign of the whole expression in your head.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">5. Multi-Step Strategy - COPY INTO NOTEBOOK</div>
+      <ul>
+        <li><strong>Step 1:</strong> Work inside any parentheses first.</li>
+        <li><strong>Step 2:</strong> Do all multiplication and division, left to right - converting forms first if that makes a step cleaner.</li>
+        <li><strong>Step 3:</strong> Finish with addition and subtraction, left to right, applying the same-sign/different-sign rule at each step.</li>
+      </ul>
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="ms-prev-btn" onclick="changeMs(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="ms-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="ms-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="ms-next-btn" onclick="changeMs(1)">Next &rarr;</button>
+      </div>
+      <div id="ms-content" style="min-height: 160px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextMsStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetMsStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // Generic carousel factory - each tab gets its own instance so state doesn't collide.
+  function makeCarousel(prefix, examples) {
+    let current = 0, step = 1;
+    function render() {
+      const ex = examples[current];
+      document.getElementById(`${prefix}-title`).innerText = `Example ${current + 1} of ${examples.length}`;
+      document.getElementById(`${prefix}-dots`).innerHTML = examples.map((_, i) =>
+        `<div class="dot ${i === current ? 'active' : ''}" onclick="${prefix}Jump(${i})"></div>`
+      ).join('');
+      let stepsHtml = '';
+      for (let i = 0; i < step; i++) stepsHtml += `<div class="step-item visible">${ex.steps[i]}</div>`;
+      document.getElementById(`${prefix}-content`).innerHTML = `<h3 style="color:var(--primary); margin-top:0;">${ex.title}</h3>${stepsHtml}`;
+      document.getElementById(`${prefix}-prev-btn`).disabled = current === 0;
+      document.getElementById(`${prefix}-next-btn`).disabled = current === examples.length - 1;
+      triggerMathJax();
+    }
+    function change(dir) { current = Math.max(0, Math.min(examples.length - 1, current + dir)); step = 1; render(); }
+    function jump(idx) { current = idx; step = 1; render(); }
+    function nextStep() { if (step < examples[current].maxSteps) { step++; render(); } }
+    function resetStep() { step = 1; render(); }
+    function showAt(i, includeAnswers) { current = i; step = examples[i].maxSteps; render(); }
+    window[`change${cap(prefix)}`] = change;
+    window[`${prefix}Jump`] = jump;
+    window[`next${cap(prefix)}Step`] = nextStep;
+    window[`reset${cap(prefix)}Step`] = resetStep;
+    render();
+    if (window.TeacherPrint) TeacherPrint.registerCarousel(`${prefix}-content`, examples.length, showAt);
+  }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  // ==========================================
+  // TAB 1: ADD/SUBTRACT FRACTIONS
+  // ==========================================
+  const asfExamples = [
+    {
+      title: "Example 1 (same signs): \\(-\\frac{3}{4} + \\left(-\\frac{1}{8}\\right)\\)",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1 - Find the LCD and rewrite each fraction:</strong> LCD of 4 and 8 is 8. \\(-\\frac{3}{4} = -\\frac{6}{8}\\)",
+        "<strong>Step 2 - Same signs, so add the absolute values:</strong> \\(\\frac{6}{8} + \\frac{1}{8} = \\frac{7}{8}\\)",
+        "<strong>Step 3 - Keep the common (negative) sign:</strong> \\(-\\frac{6}{8} + \\left(-\\frac{1}{8}\\right) = \\mathbf{-\\frac{7}{8}}\\)"
+      ]
+    },
+    {
+      title: "Example 2 (different signs): \\(-\\frac{5}{6} + \\frac{1}{3}\\)",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1 - Find the LCD and rewrite each fraction:</strong> LCD of 6 and 3 is 6. \\(\\frac{1}{3} = \\frac{2}{6}\\)",
+        "<strong>Step 2 - Different signs, so subtract the smaller absolute value from the larger:</strong> \\(\\frac{5}{6} - \\frac{2}{6} = \\frac{3}{6} = \\frac{1}{2}\\)",
+        "<strong>Step 3 - Keep the sign of the larger absolute value (\\(-\\frac{5}{6}\\)):</strong> \\(-\\frac{5}{6} + \\frac{2}{6} = \\mathbf{-\\frac{1}{2}}\\)"
+      ]
+    },
+    {
+      title: "Example 3 (temperature, subtraction): \\(-\\frac{1}{2} - \\frac{3}{4}\\)",
+      maxSteps: 3,
+      steps: [
+        "The temperature was \\(-\\frac{1}{2}\\)&deg;F and dropped another \\(\\frac{3}{4}\\)&deg;F. Rewrite the subtraction using Keep-Change-Change: \\(-\\frac{1}{2} - \\frac{3}{4} = -\\frac{1}{2} + \\left(-\\frac{3}{4}\\right)\\)",
+        "<strong>Find the LCD and rewrite:</strong> LCD of 2 and 4 is 4. \\(-\\frac{1}{2} = -\\frac{2}{4}\\)",
+        "<strong>Same signs, add and keep the sign:</strong> \\(-\\frac{2}{4} + \\left(-\\frac{3}{4}\\right) = -\\frac{5}{4} = \\mathbf{-1\\frac{1}{4}}\\)&deg;F"
+      ]
+    }
+  ];
+  makeCarousel('asf', asfExamples);
+
+  // ==========================================
+  // TAB 2: ADD/SUBTRACT DECIMALS
+  // ==========================================
+  const asdExamples = [
+    {
+      title: "Example 1 (same signs): \\(-2.5 + (-1.75)\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Same signs, so add the absolute values:</strong> \\(2.5 + 1.75 = 4.25\\)",
+        "<strong>Step 2 - Keep the common (negative) sign:</strong> \\(-2.5 + (-1.75) = \\mathbf{-4.25}\\)"
+      ]
+    },
+    {
+      title: "Example 2 (different signs): \\(3.6 + (-5.2)\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Different signs, so subtract the smaller absolute value from the larger:</strong> \\(5.2 - 3.6 = 1.6\\)",
+        "<strong>Step 2 - Keep the sign of the larger absolute value (\\(-5.2\\)):</strong> \\(3.6 + (-5.2) = \\mathbf{-1.6}\\)"
+      ]
+    },
+    {
+      title: "Example 3 (depth, subtraction): \\(-12.5 - 8.25\\)",
+      maxSteps: 3,
+      steps: [
+        "A research drone is at \\(-12.5\\) ft (below its launch pad) and descends another \\(8.25\\) ft. Rewrite with Keep-Change-Change: \\(-12.5 - 8.25 = -12.5 + (-8.25)\\)",
+        "<strong>Same signs, add the absolute values:</strong> \\(12.5 + 8.25 = 20.75\\)",
+        "<strong>Keep the negative sign:</strong> \\(-12.5 + (-8.25) = \\mathbf{-20.75}\\) ft"
+      ]
+    }
+  ];
+  makeCarousel('asd', asdExamples);
+
+  // ==========================================
+  // TAB 3: MULTIPLY & DIVIDE
+  // ==========================================
+  const mdExamples = [
+    {
+      title: "Example 1 (fractions, different signs): \\(-\\frac{2}{3} \\times \\frac{5}{9}\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Multiply straight across:</strong> \\(\\frac{2 \\times 5}{3 \\times 9} = \\frac{10}{27}\\) (already in lowest terms)",
+        "<strong>Step 2 - Different signs, so the product is negative:</strong> \\(-\\frac{2}{3} \\times \\frac{5}{9} = \\mathbf{-\\frac{10}{27}}\\)"
+      ]
+    },
+    {
+      title: "Example 2 (fractions, division): \\(-\\frac{3}{4} \\div \\left(-\\frac{2}{5}\\right)\\)",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1 - Keep-Change-Flip:</strong> keep \\(-\\frac{3}{4}\\), change \\(\\div\\) to \\(\\times\\), flip \\(-\\frac{2}{5}\\) to \\(-\\frac{5}{2}\\): \\(-\\frac{3}{4} \\times \\left(-\\frac{5}{2}\\right)\\)",
+        "<strong>Step 2 - Multiply straight across:</strong> \\(\\frac{3 \\times 5}{4 \\times 2} = \\frac{15}{8}\\)",
+        "<strong>Step 3 - Same signs, so the quotient is positive:</strong> \\(-\\frac{3}{4} \\div \\left(-\\frac{2}{5}\\right) = \\mathbf{\\frac{15}{8}} = 1\\frac{7}{8}\\)"
+      ]
+    },
+    {
+      title: "Example 3 (decimals, rate of change): \\(-4.8 \\div 3\\)",
+      maxSteps: 2,
+      steps: [
+        "A city's temperature dropped a total of \\(4.8\\)&deg;F over 3 hours at a constant rate. \\(-4.8 \\div 3\\): divide the absolute values: \\(4.8 \\div 3 = 1.6\\)",
+        "<strong>Different signs, so the quotient is negative:</strong> \\(-4.8 \\div 3 = \\mathbf{-1.6}\\)&deg;F per hour"
+      ]
+    }
+  ];
+  makeCarousel('md', mdExamples);
+
+  // ==========================================
+  // TAB 4: SWITCHING FORMS MID-PROBLEM
+  // ==========================================
+  const cvExamples = [
+    {
+      title: "Example 1: \\(0.5 + \\frac{1}{4}\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Convert the fraction to a decimal (or the decimal to a fraction) so both numbers match:</strong> \\(\\frac{1}{4} = 0.25\\)",
+        "<strong>Step 2 - Add using the decimal rule (same signs, both positive):</strong> \\(0.5 + 0.25 = \\mathbf{0.75}\\)"
+      ]
+    },
+    {
+      title: "Example 2: \\(-\\frac{3}{8} - 0.5\\)",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1 - Convert \\(-\\frac{3}{8}\\) to a decimal:</strong> \\(-\\frac{3}{8} = -0.375\\)",
+        "<strong>Step 2 - Rewrite the subtraction using Keep-Change-Change:</strong> \\(-0.375 - 0.5 = -0.375 + (-0.5)\\)",
+        "<strong>Step 3 - Same signs, add and keep the sign:</strong> \\(0.375 + 0.5 = 0.875\\), so the answer is \\(\\mathbf{-0.875}\\)"
+      ]
+    },
+    {
+      title: "Example 3 (temperature): \\(-\\frac{1}{2} + 0.75\\)",
+      maxSteps: 2,
+      steps: [
+        "The temperature was \\(-\\frac{1}{2}\\)&deg;F and rose \\(0.75\\)&deg;F. Convert \\(-\\frac{1}{2}\\) to a decimal: \\(-\\frac{1}{2} = -0.5\\)",
+        "<strong>Different signs, subtract and keep the sign of the larger absolute value (\\(0.75\\)):</strong> \\(0.75 - 0.5 = \\mathbf{0.25}\\)&deg;F"
+      ]
+    }
+  ];
+  makeCarousel('cv', cvExamples);
+
+  // ==========================================
+  // TAB 5: MULTI-STEP & ORDER OF OPERATIONS
+  // ==========================================
+  const msExamples = [
+    {
+      title: "Example 1 (fractions): \\(-\\frac{2}{3} + \\frac{1}{2} \\times \\left(-\\frac{4}{5}\\right)\\)",
+      maxSteps: 3,
+      steps: [
+        "<strong>Step 1 - Multiply first:</strong> \\(\\frac{1}{2} \\times \\left(-\\frac{4}{5}\\right) = -\\frac{4}{10} = -\\frac{2}{5}\\) (different signs, negative)",
+        "<strong>Step 2 - Now add, using the LCD of 3 and 5, which is 15:</strong> \\(-\\frac{2}{3} = -\\frac{10}{15}\\), \\(-\\frac{2}{5} = -\\frac{6}{15}\\)",
+        "<strong>Step 3 - Same signs, add and keep the sign:</strong> \\(-\\frac{10}{15} + \\left(-\\frac{6}{15}\\right) = -\\frac{16}{15} = \\mathbf{-1\\frac{1}{15}}\\)"
+      ]
+    },
+    {
+      title: "Example 2 (decimals): \\(-3.2 + 1.5 \\times (-2)\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Multiply first:</strong> \\(1.5 \\times (-2) = -3.0\\) (different signs, negative)",
+        "<strong>Step 2 - Now add (same signs, add and keep the sign):</strong> \\(-3.2 + (-3.0) = \\mathbf{-6.2}\\)"
+      ]
+    },
+    {
+      title: "Example 3 (banking, mixed forms): \\(-45.50 + 20.75 + \\left(10 \\times \\left(-\\frac{1}{4}\\right)\\right)\\)",
+      maxSteps: 3,
+      steps: [
+        "Malena's account starts at \\(-\\$45.50\\). She deposits \\(\\$20.75\\), then a fee equal to \\(\\frac{1}{4}\\) of \\(\\$10\\) is charged. <strong>Step 1 - Work the parentheses (and convert the fraction to a decimal):</strong> \\(10 \\times \\left(-\\frac{1}{4}\\right) = 10 \\times (-0.25) = -2.50\\)",
+        "<strong>Step 2 - Add the deposit (different signs):</strong> \\(-45.50 + 20.75 = -24.75\\)",
+        "<strong>Step 3 - Apply the fee (same signs, add and keep the sign):</strong> \\(-24.75 + (-2.50) = \\mathbf{-\\$27.25}\\)"
+      ]
+    }
+  ];
+  makeCarousel('ms', msExamples);
+</script>
+</body>
+</html>

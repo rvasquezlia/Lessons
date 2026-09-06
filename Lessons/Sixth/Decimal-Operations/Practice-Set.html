@@ -64,9 +64,10 @@
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('addsub')">1. Addition &amp; Subtraction</button>
     <button class="tab-btn" onclick="switchTab('multiply')">2. Multiplication</button>
-    <button class="tab-btn" onclick="switchTab('mixed')">3. Mixed: Estimate &amp; Exact</button>
-    <button class="tab-btn" onclick="switchTab('erroranalysis')">4. Error Analysis</button>
-    <button class="tab-btn" onclick="switchTab('challenge')">5. Challenge Tier</button>
+    <button class="tab-btn" onclick="switchTab('divide')">3. Division</button>
+    <button class="tab-btn" onclick="switchTab('mixed')">4. Mixed: Estimate &amp; Exact</button>
+    <button class="tab-btn" onclick="switchTab('erroranalysis')">5. Error Analysis</button>
+    <button class="tab-btn" onclick="switchTab('challenge')">6. Challenge Tier</button>
   </nav>
 
   <!-- PANEL 1: ADDITION & SUBTRACTION -->
@@ -101,17 +102,35 @@
     <div id="mult-c-list"></div>
   </div>
 
-  <!-- PANEL 3: MIXED ESTIMATE & EXACT -->
+  <!-- PANEL 3: DIVISION -->
+  <div id="divide" class="panel">
+    <div class="section-title">Division Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      If the divisor is already a whole number, divide right away. If it's a decimal, shift both the divisor's and the dividend's decimal points the same number of places right until the divisor is whole - then divide. Tier D asks you to round, so check what place value each problem wants before you answer.
+    </div>
+
+    <div class="tier-heading">Tier A: Decimal &divide; Whole Number</div>
+    <div id="div-a-list"></div>
+    <div class="tier-heading">Tier B: Whole Number &divide; Decimal</div>
+    <div id="div-b-list"></div>
+    <div class="tier-heading">Tier C: Decimal &divide; Decimal</div>
+    <div id="div-c-list"></div>
+    <div class="tier-heading">Tier D: Money, Measurement &amp; Rounding</div>
+    <div id="div-d-list"></div>
+  </div>
+
+  <!-- PANEL 4: MIXED ESTIMATE & EXACT -->
   <div id="mixed" class="panel">
     <div class="section-title">Mixed Practice: Estimate, Then Exact</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      These problems mix addition, subtraction, and multiplication in any order - you decide which algorithm each one needs. For each one, round to estimate first, then compute the exact answer. Fill in both boxes before checking.
+      These problems mix all four operations in any order - you decide which algorithm each one needs. For each one, round to estimate first, then compute the exact answer. Fill in both boxes before checking.
     </div>
     <div id="mixed-list"></div>
   </div>
 
-  <!-- PANEL 4: ERROR ANALYSIS -->
+  <!-- PANEL 5: ERROR ANALYSIS -->
   <div id="erroranalysis" class="panel">
     <div class="section-title">Error Analysis: Find the Mistake</div>
     <div class="howto-box">
@@ -136,12 +155,12 @@
     </div>
   </div>
 
-  <!-- PANEL 5: CHALLENGE TIER -->
+  <!-- PANEL 6: CHALLENGE TIER -->
   <div id="challenge" class="panel">
     <div class="section-title">Challenge Tier: One Level Harder</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      These are a step above the practice above - more decimal places, a missing-digit puzzle, and (since CCSS.6.NS.B.3 also calls for it) a first light touch of decimal division. Solve on paper first, then type your answer.
+      These are a step above the practice above - more decimal places, a missing-digit puzzle, and harder division. Solve on paper first, then type your answer.
     </div>
 
     <div class="challenge-box">
@@ -160,10 +179,7 @@
     <div class="tier-heading" style="margin-top:20px;">Multiplication Challenges</div>
     <div id="challenge-mult-list"></div>
 
-    <div class="notebook-box" style="margin-top:24px;">
-      <div class="notebook-header">A First Look at Decimal Division</div>
-      <p style="margin:0;">You haven't been formally taught decimal division yet, but you already know enough to try it: shift both numbers' decimal points the same number of places until the number you're dividing by is a whole number, then divide as usual.</p>
-    </div>
+    <div class="tier-heading" style="margin-top:24px;">Division Challenges</div>
     <div id="challenge-division-list"></div>
   </div>
 </div>
@@ -277,6 +293,42 @@
   renderCheckList('mult-c-list', multC, 'multc', '2. Multiplication');
 
   // ==========================================
+  // TAB 3: DIVISION
+  // ==========================================
+  const divA = [
+    { q: "\\(9.36 \\div 6\\)", a: 1.56, tol: 0.01 },
+    { q: "\\(15.75 \\div 3\\)", a: 5.25, tol: 0.01 },
+    { q: "\\(12.4 \\div 5\\)", a: 2.48, tol: 0.01 },
+    { q: "\\(8.28 \\div 4\\)", a: 2.07, tol: 0.01 }
+  ];
+  const divB = [
+    { q: "\\(18 \\div 0.6\\)", a: 30, tol: 0.1 },
+    { q: "\\(6 \\div 0.25\\)", a: 24, tol: 0.1 },
+    { q: "\\(20 \\div 0.4\\)", a: 50, tol: 0.1 },
+    { q: "\\(27 \\div 1.5\\)", a: 18, tol: 0.1 }
+  ];
+  const divC = [
+    { q: "\\(5.28 \\div 0.4\\)", a: 13.2, tol: 0.02 },
+    { q: "\\(0.144 \\div 0.12\\)", a: 1.2, tol: 0.02 },
+    { q: "\\(8.4 \\div 0.07\\)", a: 120, tol: 0.5 },
+    { q: "\\(2.94 \\div 0.6\\)", a: 4.9, tol: 0.02 }
+  ];
+  const divD = [
+    { q: "A \\$100.00 gift is split evenly among 3 friends. Round to the nearest cent: \\(100 \\div 3\\)", a: 33.33, tol: 0.005, label: "Split $100.00 among 3, nearest cent" },
+    { q: "A \\(25.6\\) m rope is cut into 3 equal pieces. Round to the nearest tenth: \\(25.6 \\div 3\\)", a: 8.5, tol: 0.05, label: "25.6 m rope into 3 pieces, nearest tenth" },
+    { q: "A \\$25.00 bill is split evenly among 6 people. Round to the nearest cent: \\(25 \\div 6\\)", a: 4.17, tol: 0.005, label: "Split $25.00 among 6, nearest cent" },
+    { q: "A \\(62.5\\) kg bag of rice is split into 4 equal bags. Round to the nearest hundredth: \\(62.5 \\div 4\\)", a: 15.63, tol: 0.005, label: "62.5 kg rice into 4 bags, nearest hundredth" }
+  ];
+  checkListRegistry['diva'] = { problems: divA, section: '3. Division', retry: "Not quite yet. The divisor is already a whole number - divide right away and place the decimal point directly above where it falls in the dividend." };
+  checkListRegistry['divb'] = { problems: divB, section: '3. Division', retry: "Not quite yet. Shift both the divisor's and dividend's decimal points right until the divisor is a whole number, then divide." };
+  checkListRegistry['divc'] = { problems: divC, section: '3. Division', retry: "Not quite yet. Count the divisor's decimal places, shift both numbers that many places right, then divide the whole numbers." };
+  checkListRegistry['divd'] = { problems: divD, section: '3. Division', retry: "Not quite yet. Divide first, then round to the place value the problem asks for - check the digit right after that place to decide whether to round up." };
+  renderCheckList('div-a-list', divA, 'diva', '3. Division');
+  renderCheckList('div-b-list', divB, 'divb', '3. Division');
+  renderCheckList('div-c-list', divC, 'divc', '3. Division');
+  renderCheckList('div-d-list', divD, 'divd', '3. Division');
+
+  // ==========================================
   // TAB 3: MIXED ESTIMATE & EXACT
   // ==========================================
   const mixedProblems = [
@@ -291,7 +343,11 @@
     { q: "\\(5.2 \\times 3.8\\)", a: 19.76, tol: 0.02 },
     { q: "\\(12.4 \\times 0.6\\)", a: 7.44, tol: 0.02 },
     { q: "\\(2.15 \\times 4.3\\)", a: 9.245, tol: 0.005 },
-    { q: "\\(0.85 \\times 9.2\\)", a: 7.82, tol: 0.01 }
+    { q: "\\(0.85 \\times 9.2\\)", a: 7.82, tol: 0.01 },
+    { q: "\\(8.4 \\div 4\\)", a: 2.1, tol: 0.01 },
+    { q: "\\(63 \\div 2.5\\)", a: 25.2, tol: 0.02 },
+    { q: "\\(6.24 \\div 0.6\\)", a: 10.4, tol: 0.02 },
+    { q: "\\(5.4 \\div 0.09\\)", a: 60, tol: 0.5 }
   ];
 
   function renderMixedList() {
@@ -307,7 +363,7 @@
       </div>
     `).join('');
     document.getElementById('mixed-list').innerHTML = html;
-    mixedProblems.forEach((p, i) => LessonProgress.preRegister(`mixed-${i}`, p.q.replace(/\\\(|\\\)/g, ''), '3. Mixed: Estimate & Exact'));
+    mixedProblems.forEach((p, i) => LessonProgress.preRegister(`mixed-${i}`, p.q.replace(/\\\(|\\\)/g, ''), '4. Mixed: Estimate & Exact'));
     TeacherPrint.registerAnswerList('mixed-list', mixedProblems.map((p, i) => ({ inputId: `mixed-${i}-exact`, answerText: String(p.a) })));
   }
   renderMixedList();
@@ -325,9 +381,9 @@
     const label = p.q.replace(/\\\(|\\\)/g, '');
     LessonCheck.check(`mixed-${idx}`, correct, fb, {
       correct: `Correct! ${p.q} \\(= \\mathbf{${p.a}}\\)`,
-      retry: "Not quite yet on the exact answer. Re-check your decimal alignment (or decimal-place count for multiplication), then try again.",
+      retry: "Not quite yet on the exact answer. Re-check your decimal alignment for add/subtract, your decimal-place count for multiplication, or your decimal shift for division, then try again.",
       reveal: `Here's the correct answer: ${p.q} \\(= \\mathbf{${p.a}}\\)`
-    }, { label, answer: `Est=${est}, Exact=${exact}`, section: '3. Mixed: Estimate & Exact' });
+    }, { label, answer: `Est=${est}, Exact=${exact}`, section: '4. Mixed: Estimate & Exact' });
   }
 
   // ==========================================
@@ -476,10 +532,10 @@
       LessonCheck.incomplete(fb, "Choose a verdict and enter the correct answer before submitting.");
       return;
     }
-    LessonCheck.submit(fb, { key: `ea-${idx}`, label: `Error Analysis: ${ex.problem.replace(/<[^>]+>/g, '').replace(/\\\(|\\\)/g, '')}`, answer: `Verdict: ${verdict}, Answer: ${val}`, section: '4. Error Analysis', correct: verdict === ex.verdict && LessonCheck.numericMatch(val, ex.correctValue, ex.tol) });
+    LessonCheck.submit(fb, { key: `ea-${idx}`, label: `Error Analysis: ${ex.problem.replace(/<[^>]+>/g, '').replace(/\\\(|\\\)/g, '')}`, answer: `Verdict: ${verdict}, Answer: ${val}`, section: '5. Error Analysis', correct: verdict === ex.verdict && LessonCheck.numericMatch(val, ex.correctValue, ex.tol) });
   }
 
-  errorExamples.forEach((ex, i) => LessonProgress.preRegister(`ea-${i}`, `Error Analysis: ${ex.problem.replace(/<[^>]+>/g, '').replace(/\\\(|\\\)/g, '')}`, '4. Error Analysis'));
+  errorExamples.forEach((ex, i) => LessonProgress.preRegister(`ea-${i}`, `Error Analysis: ${ex.problem.replace(/<[^>]+>/g, '').replace(/\\\(|\\\)/g, '')}`, '5. Error Analysis'));
   renderErrorCarousel();
 
   // ==========================================
@@ -493,9 +549,9 @@
       LessonCheck.incomplete(fb, "Fill in the missing digit and write your explanation before submitting.");
       return;
     }
-    LessonCheck.submit(fb, { key: 'challenge-x', label: 'Missing Digit Challenge: find X in 14.X5 + 3.20 = 17.65', answer: `X = ${x}`, section: '5. Challenge Tier', correct: x.trim() === '4' });
+    LessonCheck.submit(fb, { key: 'challenge-x', label: 'Missing Digit Challenge: find X in 14.X5 + 3.20 = 17.65', answer: `X = ${x}`, section: '6. Challenge Tier', correct: x.trim() === '4' });
   }
-  LessonProgress.preRegister('challenge-x', 'Missing Digit Challenge: find X in 14.X5 + 3.20 = 17.65', '5. Challenge Tier');
+  LessonProgress.preRegister('challenge-x', 'Missing Digit Challenge: find X in 14.X5 + 3.20 = 17.65', '6. Challenge Tier');
 
   const challengeMult = [
     { q: "Compute \\(124.5 \\times 0.036\\).", a: 4.482, tol: 0.002 },
@@ -505,15 +561,17 @@
     { q: "Compute \\(212.5 \\times 0.048\\).", a: 10.2, tol: 0.02 },
     { q: "Compute \\(3.6 \\times 125\\).", a: 450.0, tol: 0.5 }
   ];
-  checkListRegistry['chmult'] = { problems: challengeMult, section: '5. Challenge Tier', retry: "Not quite yet. Multiply as whole numbers, then carefully count the total decimal places in both factors." };
-  renderCheckList('challenge-mult-list', challengeMult, 'chmult', '5. Challenge Tier');
+  checkListRegistry['chmult'] = { problems: challengeMult, section: '6. Challenge Tier', retry: "Not quite yet. Multiply as whole numbers, then carefully count the total decimal places in both factors." };
+  renderCheckList('challenge-mult-list', challengeMult, 'chmult', '6. Challenge Tier');
 
   const challengeDivision = [
     { q: "Compute \\(54.72 \\div 6\\).", a: 9.12, tol: 0.02 },
-    { q: "Compute \\(9.6 \\div 0.8\\). (Hint: shift both decimal points 1 place right first.)", a: 12, tol: 0.05 }
+    { q: "Compute \\(9.6 \\div 0.8\\).", a: 12, tol: 0.05 },
+    { q: "Compute \\(0.056 \\div 0.008\\).", a: 7, tol: 0.1 },
+    { q: "A charity raises \\(\\$85.00\\) and splits it evenly among 7 local families. Round to the nearest cent.", a: 12.14, tol: 0.005 }
   ];
-  checkListRegistry['chdiv'] = { problems: challengeDivision, section: '5. Challenge Tier', retry: "Not quite yet. If dividing by a decimal, shift both decimal points right by the same number of places until you're dividing by a whole number, then divide." };
-  renderCheckList('challenge-division-list', challengeDivision, 'chdiv', '5. Challenge Tier');
+  checkListRegistry['chdiv'] = { problems: challengeDivision, section: '6. Challenge Tier', retry: "Not quite yet. If dividing by a decimal, shift both decimal points right by the same number of places until you're dividing by a whole number, then divide." };
+  renderCheckList('challenge-division-list', challengeDivision, 'chdiv', '6. Challenge Tier');
 </script>
 <div id="print-report"></div>
 </body>

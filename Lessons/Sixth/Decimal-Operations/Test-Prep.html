@@ -36,6 +36,20 @@
       margin: 24px 0 10px 0;
       display: inline-block;
     }
+    /* Long-division bracket, used only on the Review: Divide tab. */
+    .longdiv {
+      display: inline-flex;
+      align-items: flex-end;
+      font-family: 'Montserrat', monospace;
+      font-weight: 800;
+      font-size: 1.7rem;
+      color: var(--primary);
+      margin: 14px 0;
+    }
+    .longdiv-divisor { padding: 0 10px 6px 0; }
+    .longdiv-right { border-left: 4px solid var(--primary); padding-left: 10px; }
+    .longdiv-quotient { border-bottom: 4px solid var(--primary); padding: 0 6px 6px 6px; min-height: 1.3em; min-width: 90px; }
+    .longdiv-dividend { padding: 6px 6px 0 6px; }
   </style>
 </head>
 <body>
@@ -58,15 +72,16 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    This page reviews everything in Decimal Operations, then finishes with a <strong>Mixed Practice</strong> set styled like a real printed test. Work the tabs <strong>in order, left to right</strong>. Tabs 1-2 are guided review: step through the worked examples, then try the short practice (2 tries, with a reveal if you miss twice). Tab 3 is a quick concept check. Tab 4, <strong>Mixed Practice</strong>, works differently from every other tab on this site: you submit each answer <strong>once</strong> and it is simply recorded - there's no right/wrong shown on screen, because it's meant to be graded by your teacher from your printed report, just like a paper test. Finish with Tab 5's readiness reflection, then type your name above and click <strong>Print My Progress</strong>.
+    This page reviews everything in Decimal Operations, then finishes with a <strong>Mixed Practice</strong> set styled like a real printed test. Work the tabs <strong>in order, left to right</strong>. Tabs 1-3 are guided review: step through the worked examples, then try the short practice (2 tries, with a reveal if you miss twice). Tab 4 is a quick concept check. Tab 5, <strong>Mixed Practice</strong>, works differently from every other tab on this site: you submit each answer <strong>once</strong> and it is simply recorded - there's no right/wrong shown on screen, because it's meant to be graded by your teacher from your printed report, just like a paper test. Finish with Tab 6's readiness reflection, then type your name above and click <strong>Print My Progress</strong>.
   </div>
 
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('reviewaddsub')">1. Review: Add &amp; Subtract</button>
     <button class="tab-btn" onclick="switchTab('reviewmult')">2. Review: Multiply</button>
-    <button class="tab-btn" onclick="switchTab('conceptcheck')">3. Concept Check</button>
-    <button class="tab-btn" onclick="switchTab('mixedpractice')">4. Mixed Practice</button>
-    <button class="tab-btn" onclick="switchTab('readiness')">5. Readiness Check</button>
+    <button class="tab-btn" onclick="switchTab('reviewdiv')">3. Review: Divide</button>
+    <button class="tab-btn" onclick="switchTab('conceptcheck')">4. Concept Check</button>
+    <button class="tab-btn" onclick="switchTab('mixedpractice')">5. Mixed Practice</button>
+    <button class="tab-btn" onclick="switchTab('readiness')">6. Readiness Check</button>
   </nav>
 
   <!-- PANEL 1: REVIEW ADD & SUBTRACT -->
@@ -161,7 +176,51 @@
     </div>
   </div>
 
-  <!-- PANEL 3: CONCEPT CHECK -->
+  <!-- PANEL 3: REVIEW DIVIDE -->
+  <div id="reviewdiv" class="panel">
+    <div class="section-title">Full Review: Dividing Decimals</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read the rule box, then click through the worked division example step by step. Try the guided practice problem, then answer the Critical Thinking question.
+    </div>
+
+    <div class="explainer-box">
+      Dividing decimals uses the same long division you already know for whole numbers - the only new step is dealing with a decimal divisor. Once the divisor is a whole number, everything else works the way it always has.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The Rule</div>
+      <p style="margin:0;">If the divisor is already a whole number, divide right away and place the decimal point in the quotient directly above where it falls in the dividend. If the divisor is a decimal, multiply <strong>both</strong> the divisor and the dividend by the same power of \(10\) - shifting both decimal points the same number of places right - until the divisor is a whole number.</p>
+    </div>
+
+    <h3>Worked Example: \(4.5 \div 0.6\)</h3>
+    <div class="step-box">
+      <p style="text-align:center;"><strong>Estimate Check:</strong> \(4.5 \approx 5\), \(0.6 \approx 1\) &rarr; \(5 \div 1 = 5\)</p>
+      <div id="div-worked-content" style="min-height:220px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextDivWorkedStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetDivWorkedStep()">Reset Steps</button>
+      </div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:24px;">
+      <div class="notebook-header">Guided Practice</div>
+      <p style="margin:0;">Solve using the estimate-then-exact method above. You get up to <strong>2 tries</strong> per problem.</p>
+    </div>
+    <div id="div-guided-list"></div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Critical Thinking</h3>
+      <p>Explain why \(6 \div 0.5 = 12\) is <em>greater</em> than \(6\), even though division usually makes numbers smaller. Use the idea of "how many groups fit" in your explanation.</p>
+      <div class="form-group">
+        <textarea id="div-critical-explain" class="form-control-lg" rows="3" placeholder="Explain why dividing by a number less than 1 gives a bigger answer..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkDivCritical()">Submit My Work</button>
+      <div id="div-critical-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 4: CONCEPT CHECK -->
   <div id="conceptcheck" class="panel">
     <div class="section-title">Concept Check</div>
     <div class="howto-box">
@@ -171,7 +230,7 @@
     <div id="concept-list"></div>
   </div>
 
-  <!-- PANEL 4: MIXED PRACTICE (submit-only, printable worksheet style) -->
+  <!-- PANEL 5: MIXED PRACTICE (submit-only, printable worksheet style) -->
   <div id="mixedpractice" class="panel">
     <div class="section-title">Mixed Practice</div>
     <div class="howto-box">
@@ -211,7 +270,7 @@
     <div id="mp-more-wordproblems-list"></div>
   </div>
 
-  <!-- PANEL 5: READINESS CHECK -->
+  <!-- PANEL 6: READINESS CHECK -->
   <div id="readiness" class="panel">
     <div class="section-title">Readiness Check: Decimal Operations</div>
     <div class="howto-box">
@@ -482,13 +541,56 @@
   }
 
   // ==========================================
-  // TAB 3: CONCEPT CHECK
+  // TAB 3: WORKED DIVISION EXAMPLE
+  // ==========================================
+  function longDiv(divisor, dividend) {
+    return `<div class="longdiv"><div class="longdiv-divisor">${divisor}</div><div class="longdiv-right"><div class="longdiv-quotient">&nbsp;</div><div class="longdiv-dividend">${dividend}</div></div></div>`;
+  }
+
+  let divWorkedStep = 1;
+  const divWorkedMaxStep = 4;
+  function renderDivWorked() {
+    const step = divWorkedStep;
+    const html = `
+      ${step < 2 ? longDiv("0.6", "4.5") : longDiv("6", "45")}
+      <p style="text-align:center; font-weight:bold;">
+        ${step === 1 ? 'Step 1: The divisor (\\(0.6\\)) has \\(1\\) decimal place.' : ''}
+        ${step === 2 ? 'Step 2: Multiply both numbers by \\(10\\) (shift both decimal points \\(1\\) place right): \\(0.6 \\rightarrow 6\\) and \\(4.5 \\rightarrow 45\\).' : ''}
+        ${step === 3 ? 'Step 3: Divide the whole numbers: \\(45 \\div 6 = 7.5\\) (\\(6 \\times 7 = 42\\), remainder \\(3\\); \\(3 \\div 6 = 0.5\\)).' : ''}
+        ${step === 4 ? 'Step 4: Quotient = \\(\\mathbf{7.5}\\). Check: \\(0.6 \\times 7.5 = 4.5\\). Compare to the estimate of \\(5\\) - close, so this is reasonable.' : ''}
+      </p>
+    `;
+    document.getElementById('div-worked-content').innerHTML = html;
+    triggerMathJax();
+  }
+  function nextDivWorkedStep() { if (divWorkedStep < divWorkedMaxStep) { divWorkedStep++; renderDivWorked(); } }
+  function resetDivWorkedStep() { divWorkedStep = 1; renderDivWorked(); }
+  renderDivWorked();
+
+  const divGuidedProblems = [{ q: "\\(3.6 \\div 0.4\\)", a: 9, tol: 0.02 }];
+  estExactRegistry['divguided'] = { problems: divGuidedProblems, section: '3. Review: Divide' };
+  renderEstExactList('div-guided-list', divGuidedProblems, 'divguided', '3. Review: Divide');
+
+  function checkDivCritical() {
+    const explain = document.getElementById('div-critical-explain').value.trim();
+    const fb = document.getElementById('div-critical-feedback');
+    if (explain.length <= 5) {
+      LessonCheck.incomplete(fb, "Write your explanation before submitting.");
+      return;
+    }
+    LessonCheck.submit(fb, { key: 'div-critical', label: 'Critical Thinking: why is 6 ÷ 0.5 = 12 greater than 6?', answer: explain, section: '3. Review: Divide' });
+  }
+
+  // ==========================================
+  // TAB 4: CONCEPT CHECK
   // ==========================================
   const conceptItems = [
     { q: "True or False: When adding decimals, you should line up the digits on the right edge, the same way you would for whole numbers.", type: "tf", correctVal: "false", explain: "False - line up the decimal points, not the right edge, so tenths stay under tenths and hundredths under hundredths." },
     { q: "True or False: When multiplying decimals, you count the total number of decimal places in both factors to place the decimal point in the product.", type: "tf", correctVal: "true", explain: "True - multiplication doesn't need the decimal points lined up first; you multiply as whole numbers, then place the decimal based on the total count." },
     { q: "Round \\(7.253\\) to the nearest hundredth.", type: "text", correctVal: "7.25", tol: 0.001, explain: "The thousandths digit is 3, which is less than 5, so the hundredths digit stays the same: \\(7.25\\)." },
-    { q: "How many decimal places should the product of \\(0.45 \\times 1.3\\) have?", type: "text", correctVal: "3", tol: 0.5, explain: "\\(0.45\\) has 2 decimal places and \\(1.3\\) has 1, so the product needs \\(2 + 1 = 3\\) decimal places." }
+    { q: "How many decimal places should the product of \\(0.45 \\times 1.3\\) have?", type: "text", correctVal: "3", tol: 0.5, explain: "\\(0.45\\) has 2 decimal places and \\(1.3\\) has 1, so the product needs \\(2 + 1 = 3\\) decimal places." },
+    { q: "True or False: When dividing by a decimal, you only need to move the decimal point in the dividend, not the divisor.", type: "tf", correctVal: "false", explain: "False - you have to shift both decimal points the same number of places, so the divisor becomes a whole number." },
+    { q: "In \\(3.75 \\div 0.25\\), after shifting both decimal points \\(2\\) places right, what does the divisor become?", type: "text", correctVal: "25", tol: 0.5, explain: "\\(0.25\\) shifted \\(2\\) places right is \\(25\\) - now a whole number, so you can divide normally." }
   ];
 
   function renderConceptList() {
@@ -505,7 +607,7 @@
       </div>
     `).join('');
     document.getElementById('concept-list').innerHTML = html;
-    conceptItems.forEach((item, i) => LessonProgress.preRegister(`concept-${i}`, item.q.replace(/\\\(|\\\)/g, ''), '3. Concept Check'));
+    conceptItems.forEach((item, i) => LessonProgress.preRegister(`concept-${i}`, item.q.replace(/\\\(|\\\)/g, ''), '4. Concept Check'));
   }
   renderConceptList();
 
@@ -522,11 +624,11 @@
       correct: `Correct! ${item.explain}`,
       retry: "Not quite yet. Review the rule and try again.",
       reveal: item.explain
-    }, { label: item.q.replace(/\\\(|\\\)/g, ''), answer: val, section: '3. Concept Check' });
+    }, { label: item.q.replace(/\\\(|\\\)/g, ''), answer: val, section: '4. Concept Check' });
   }
 
   // ==========================================
-  // TAB 4: MIXED PRACTICE (submit-only for every item)
+  // TAB 5: MIXED PRACTICE (submit-only for every item)
   // ==========================================
   function renderSubmitList(containerId, problems, keyPrefix, section) {
     const html = problems.map((p, i) => `
@@ -597,7 +699,9 @@
     { q: "\\(60.02 - 24.5\\)", a: 35.52, tol: 0.02 },
     { q: "\\(12.4 \\times 0.6\\)", a: 7.44, tol: 0.05 },
     { q: "\\(2.15 \\times 4.3\\)", a: 9.245, tol: 0.02 },
-    { q: "\\(0.85 \\times 9.2\\)", a: 7.82, tol: 0.05 }
+    { q: "\\(0.85 \\times 9.2\\)", a: 7.82, tol: 0.05 },
+    { q: "\\(8.4 \\div 0.7\\)", a: 12, tol: 0.1 },
+    { q: "\\(5.4 \\div 6\\)", a: 0.9, tol: 0.02 }
   ];
   submitListRegistry['mpmc'] = { problems: mpMoreComputation, section: 'Mixed Practice - More Computation' };
   renderSubmitList('mp-more-computation-list', mpMoreComputation, 'mpmc', 'Mixed Practice - More Computation');
@@ -607,13 +711,14 @@
     { q: "On Monday, a construction crew laid \\(12.45\\) meters of concrete. On Tuesday, the length increased by \\(9.8\\) meters. What is the sum of the concrete laid over both days?", a: 22.25, tol: 0.05, aText: "22.25 m" },
     { q: "A baker uses \\(0.75\\) cups of sugar for one batch. If the baker makes twice that amount, then adds an additional \\(1.25\\) cups for a cake, what is the total amount of sugar used?", a: 2.75, tol: 0.05, aText: "2.75 cups" },
     { q: "A runner's water bottle held \\(24.5\\) ounces. After a long run, the amount decreased by \\(18.75\\) ounces. How many ounces remain?", a: 5.75, tol: 0.05, aText: "5.75 oz" },
-    { q: "A local shop sells craft ribbon for \\(\\$2.15\\) per yard. A student buys \\(4.5\\) yards. What is the total cost?", a: 9.675, tol: 0.05 }
+    { q: "A local shop sells craft ribbon for \\(\\$2.15\\) per yard. A student buys \\(4.5\\) yards. What is the total cost?", a: 9.675, tol: 0.05 },
+    { q: "A \\(\\$63.00\\) club fund is split evenly among \\(4\\) members for supplies. How much does each member get?", a: 15.75, tol: 0.05 }
   ];
   submitListRegistry['mpmw'] = { problems: mpMoreWordProblems, section: 'Mixed Practice - More Word Problems' };
   renderSubmitList('mp-more-wordproblems-list', mpMoreWordProblems, 'mpmw', 'Mixed Practice - More Word Problems');
 
   // ==========================================
-  // TAB 5: READINESS CHECK
+  // TAB 6: READINESS CHECK
   // ==========================================
   LessonProgress.preRegister('readiness', 'Readiness Check: sum, product, and reflections', '5. Readiness Check');
 

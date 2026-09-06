@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Literal Equations - Teacher's Guide</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <style>
+    .pacing-table td:nth-child(2), .pacing-table th:nth-child(2) { text-align: center; white-space: nowrap; }
+    .answer-section-heading {
+      background: var(--primary);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 28px 0 12px 0;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .challenge-section-heading {
+      background: #b45309;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 28px 0 12px 0;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .solution-toggle > summary {
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--primary);
+      padding: 4px 0;
+    }
+    a.btn-lg {
+      display: inline-block;
+      text-decoration: none;
+      margin: 4px 0 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Algebra I &middot; Literal Equations</span>
+    <h1>Teacher's Guide</h1>
+    <p class="subtitle">Topic Overview, Pacing, Digital Answer Keys, Printables, and Challenge Bank</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">This page is for you, not students</strong>
+    It is not linked from the student pages and has no student-facing print button. Use the tabs below for the topic-at-a-glance and suggested pacing, complete digital answer keys for every student-facing page, printable materials with their answer keys, and a bank of harder challenge problems for early finishers.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('overview')">1. Overview &amp; Pacing</button>
+    <button class="tab-btn" onclick="switchTab('keys1')">2. Answer Keys: Explanation &amp; Practice</button>
+    <button class="tab-btn" onclick="switchTab('keys2')">3. Answer Keys: Word Problems &amp; Test Prep</button>
+    <button class="tab-btn" onclick="switchTab('printables')">4. Printables &amp; Key</button>
+    <button class="tab-btn" onclick="switchTab('challenge')">5. Challenge Bank</button>
+  </nav>
+
+  <!-- PANEL 1: OVERVIEW & PACING -->
+  <div id="overview" class="panel active">
+    <div class="section-title">Topic Overview: Literal Equations</div>
+
+    <div class="explainer-box">
+      <strong>Literal equations</strong> are equations and formulas with more than one variable - \(A=lw\), \(d=rt\), \(F=\frac95C+32\), \(I=Prt\). The skill is solving for one specified variable in terms of the others, treating every other letter exactly as you'd treat a number. This is the single biggest conceptual hurdle in the topic: many students expect a numeric answer and freeze when the "answer" is an expression full of letters. Every page in this topic is built to confront that misconception head-on rather than paper over it with drill.
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Section</th><th>Purpose</th><th>Suggested Time</th></tr></thead>
+      <tbody>
+        <tr><td>Vocabulary &amp; Literacy</td><td>Glossary of literal-equation terms plus the real formulas this topic uses; practice naming which letter to solve for.</td><td>~20 min, before instruction begins</td></tr>
+        <tr><td>Explanation</td><td>Direct instruction, built around the numeric-vs-literal parallel, in a deliberate sequence: one appearance, then multi-step, then factoring. Includes four live interactive tools.</td><td>~55-70 min, in one or two sittings</td></tr>
+        <tr><td>Practice Set</td><td>Symbolic-answer rearranging practice across the same three tiers, plus a slider-driven live number check and error analysis.</td><td>~60-90 min, can span several days</td></tr>
+        <tr><td>Word Problems</td><td>Every item a real scenario - geometry, science and measurement, finance, and two rounds of mixed/challenge problems.</td><td>~45-60 min</td></tr>
+        <tr><td>Test Prep</td><td>Full review, an error-analysis checkpoint, a submit-only Mixed Practice (printable-worksheet style), and a readiness reflection.</td><td>~45 min, the day before the assessment</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Topic Objectives</div>
+      <ul>
+        <li>Recognize a literal equation as an equation with more than one variable, and connect solving it to the numeric equations students already know.</li>
+        <li>Solve a literal equation for a specified variable when that variable appears exactly once.</li>
+        <li>Solve a literal equation for a specified variable when doing so requires an addition/subtraction step before the final division.</li>
+        <li>Solve a literal equation for a specified variable that appears more than once, by factoring it out.</li>
+        <li>Apply literal equations to real geometry, science, and finance formulas, and verify a rearrangement by substituting numbers into both forms.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Standards &amp; Objectives</div>
+      <p style="margin:0 0 8px 0;"><strong>HSA.CED.A.4</strong> (rearrange formulas to solve for a quantity of interest), <strong>HSA.REI.A.1</strong> (explain each solving step) &amp; <strong>MP.1, MP.2, MP.7</strong> (look for and make use of structure).</p>
+      <p style="margin:0;"><strong>Multidisciplinary connections:</strong> Geometry (perimeter, area, surface area, volume formulas); Physical Science (temperature conversion, Ohm's Law, kinematics); Personal Finance (simple interest); Mathematical Modeling (slope-intercept form, arithmetic sequences).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Common Misconceptions to Watch For</div>
+      <ul style="margin-bottom:0;">
+        <li>Expecting a numeric answer instead of an expression - "I can't solve this, there's no number" is the single most common thing you'll hear. The Explanation page's opening tab is built specifically to head this off.</li>
+        <li>Trying to combine letters that aren't like terms, such as adding \(m\) and \(b\) in \(y=mx+b\).</li>
+        <li>Attempting to isolate a variable that appears more than once without factoring first - see the Explanation page's Tab 4 and the Practice Set's Error Analysis tab.</li>
+        <li>Dropping a needed pair of parentheses in the final answer (writing \(\frac{P-2l}2\) as \(P-\frac{2l}2\) or similar), which silently changes the value.</li>
+        <li>Sign errors when the target variable's coefficient is negative or when dividing a difference by a negative number.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Materials Needed</div>
+      <ul>
+        <li><strong>Vocabulary &amp; Literacy, Explanation:</strong> one device per student; no printed materials required.</li>
+        <li><strong>Practice Set:</strong> printed Error Analysis and Formula Rearrangement cards optional for small-group work (see Printables); one device per student.</li>
+        <li><strong>Word Problems:</strong> one device per student; no printed materials required.</li>
+        <li><strong>Test Prep:</strong> printed Mixed Practice / assessment (Printables tab), plus devices for the review tabs and closing reflection.</li>
+        <li><strong>Throughout:</strong> printer or "print to PDF" access so students can submit their Print My Progress page to Google Classroom.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Suggested Pacing Across a Week</div>
+      <table class="data-table pacing-table">
+        <thead><tr><th>Day</th><th>Suggested Section(s)</th><th>What happens</th></tr></thead>
+        <tbody>
+          <tr><td>Day 1</td><td>Vocabulary &amp; Literacy, then Explanation Tabs 1-2</td><td>Build the vocabulary base, then model the numeric/literal parallel and one-appearance rearranging with the Rectangle and Distance/Rate/Time tools.</td></tr>
+          <tr><td>Day 2</td><td>Explanation Tabs 3-5</td><td>Multi-step rearranging with the live temperature converter, then distributing/factoring, then the simple-interest calculator.</td></tr>
+          <tr><td>Day 3</td><td>Practice Set (Tabs 1-3)</td><td>One-appearance, multi-step, and factoring rearranging practice.</td></tr>
+          <tr><td>Day 4</td><td>Practice Set (Tabs 4-5), then Word Problems</td><td>Live Number Check and Error Analysis, then as many Word Problems tabs as time allows.</td></tr>
+          <tr><td>Day 5</td><td>Test Prep, then the assessment</td><td>Full Review and Error Analysis Review in class; Mixed Practice can be completed digitally or from the printed Test Prep worksheet as your actual graded assessment.</td></tr>
+        </tbody>
+      </table>
+      <p style="margin:10px 0 0 0; font-size:0.9rem; color:#64748b;">This is a starting script, not a rule - compress or stretch sections to fit your schedule and class pace.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Differentiated Instruction &amp; Additional IXL Practice</div>
+      <p style="margin:0 0 10px 0;">Not required daily assignments - use these for targeted reinforcement, extension, or support based on observed skill gaps.</p>
+      <p style="margin:0 0 6px 0;"><strong>Literal equations support &amp; extension:</strong> solving for a variable (one-step), solving for a variable (multi-step), rearranging formulas with the variable of interest on both sides.</p>
+      <p style="margin:0 0 6px 0;"><strong>Prerequisite skills</strong> (needed before this topic): properties of equality, the distributive property, combining like terms, and solving multi-step numeric equations - all covered in the Solving Linear Equations topic. Send any student who is guessing rather than reasoning through a rearrangement back to that topic's Explanation page first.</p>
+      <p style="margin:0;"><strong>Suggested pathway:</strong> Solving Linear Equations (full topic) &rarr; Vocabulary &amp; Literacy (this topic) &rarr; Explanation Tabs 1-2 &rarr; Explanation Tabs 3-5 &rarr; Practice Set &rarr; Word Problems &rarr; Test Prep.</p>
+    </div>
+  </div>
+
+  <!-- PANEL 2: ANSWER KEYS - EXPLANATION & PRACTICE SET -->
+  <div id="keys1" class="panel">
+    <div class="section-title">Digital Answer Key: Explanation &amp; Practice Set</div>
+    <p>Matches the answers already built into each page's worked examples, widgets, and Check My Work logic.</p>
+
+    <div class="answer-section-heading">Explanation - Worked Examples</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Tab 1: \(2x+3=11\)</td><td>\(\mathbf{x=4}\) (and \(x=\frac{y-b}{m}\) with \(y=11,m=2,b=3\) also gives \(\mathbf{4}\))</td></tr>
+        <tr><td>Tab 2: \(A=lw\) solve for \(l\)</td><td>\(l=\dfrac{A}{w}\)</td></tr>
+        <tr><td>Tab 2: \(d=rt\) solve for \(t\) / for \(r\)</td><td>\(t=\dfrac{d}{r}\) &nbsp;/&nbsp; \(r=\dfrac{d}{t}\)</td></tr>
+        <tr><td>Tab 3: \(P=2l+2w\) solve for \(w\)</td><td>\(w=\dfrac{P-2l}{2}\)</td></tr>
+        <tr><td>Tab 3: \(F=\frac95C+32\) solve for \(C\)</td><td>\(C=\dfrac59(F-32)\)</td></tr>
+        <tr><td>Tab 4: \(A=P+Prt\) solve for \(P\)</td><td>\(P=\dfrac{A}{1+rt}\)</td></tr>
+        <tr><td>Tab 4: \(S=2lw+2lh+2wh\) solve for \(h\)</td><td>\(h=\dfrac{S-2lw}{2l+2w}\)</td></tr>
+        <tr><td>Tab 4: \(L=a+(n-1)d\) solve for \(n\)</td><td>\(n=\dfrac{L-a}{d}+1\)</td></tr>
+        <tr><td>Tab 5: \(I=Prt\) solve for \(P\) / \(r\) / \(t\)</td><td>\(P=\dfrac{I}{rt}\), \(r=\dfrac{I}{Pt}\), \(t=\dfrac{I}{Pr}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Explanation - Interactive Widgets (reference values)</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Rectangle tool defaults</td><td>\(l=8, w=6 \rightarrow A=48, P=28\); rearranged \(l=48\div6=8\) always matches the slider</td></tr>
+        <tr><td>Distance/Rate/Time defaults</td><td>\(d=240, r=60 \rightarrow t=4\); switching modes recomputes whichever variable is selected</td></tr>
+        <tr><td>Fahrenheit &harr; Celsius defaults</td><td>\(68°F = 20°C\); also check \(-40°F=-40°C\) (the crossover point) and \(98.6°F\approx37°C\) (body temperature)</td></tr>
+        <tr><td>Simple Interest defaults</td><td>\(P=1000, r=5\%, t=3 \rightarrow I=150\); every mode is internally consistent with the others</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Practice Set: One Appearance</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(d=rt\) solve for \(r\)</td><td>\(r=d/t\)</td></tr>
+        <tr><td>2. \(d=rt\) solve for \(t\)</td><td>\(t=d/r\)</td></tr>
+        <tr><td>3. \(A=lw\) solve for \(l\)</td><td>\(l=A/w\)</td></tr>
+        <tr><td>4. \(A=lw\) solve for \(w\)</td><td>\(w=A/l\)</td></tr>
+        <tr><td>5. \(I=Prt\) solve for \(P\)</td><td>\(P=I/(rt)\)</td></tr>
+        <tr><td>6. \(I=Prt\) solve for \(t\)</td><td>\(t=I/(Pr)\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Practice Set: Multi-Step</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(P=2l+2w\) solve for \(l\)</td><td>\(l=(P-2w)/2\)</td></tr>
+        <tr><td>2. \(P=2l+2w\) solve for \(w\)</td><td>\(w=(P-2l)/2\)</td></tr>
+        <tr><td>3. \(F=\frac95C+32\) solve for \(C\)</td><td>\(C=\frac59(F-32)\)</td></tr>
+        <tr><td>4. \(y=mx+b\) solve for \(x\)</td><td>\(x=(y-b)/m\)</td></tr>
+        <tr><td>5. \(y=mx+b\) solve for \(b\)</td><td>\(b=y-mx\)</td></tr>
+        <tr><td>6. \(4x-2y=10\) solve for \(y\)</td><td>\(y=2x-5\) (equivalently \((4x-10)/2\))</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Practice Set: Distributing &amp; Factoring</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(A=P+Prt\) solve for \(P\)</td><td>\(P=A/(1+rt)\)</td></tr>
+        <tr><td>2. \(S=2lw+2lh+2wh\) solve for \(h\)</td><td>\(h=(S-2lw)/(2l+2w)\)</td></tr>
+        <tr><td>3. \(L=a+(n-1)d\) solve for \(n\)</td><td>\(n=(L-a)/d+1\)</td></tr>
+        <tr><td>4. \(ax+bx=c\) solve for \(x\)</td><td>\(x=c/(a+b)\)</td></tr>
+        <tr><td>5. \(S=\frac{n}{2}(a+l)\) solve for \(a\)</td><td>\(a=2S/n-l\)</td></tr>
+        <tr><td>6. \(P=a+b+c\) solve for \(b\)</td><td>\(b=P-a-c\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Practice Set: Live Number Check</div>
+    <p>These four items use sliders instead of fixed numbers, so there is no single answer key value - the page computes the correct target value live from whatever the student sets the sliders to, and grades against that. The formulas are: \(l=A/w\); \(r=I/(Pt)\times100\%\); \(r=d/t\); \(w=(P-2l)/2\).</p>
+
+    <div class="answer-section-heading">Practice Set: Error Analysis</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(P=2l+2w\) for \(l\) (wrong: \(l=P-2w\))</td><td>Missed dividing by 2. Correct: \(l=(P-2w)/2\)</td></tr>
+        <tr><td>2. \(A=P+Prt\) for \(P\) (wrong: \(P=A-Prt\))</td><td>\(P\) still appears on the right - not truly isolated. Correct: \(P=A/(1+rt)\)</td></tr>
+        <tr><td>3. \(d=rt\) for \(r\) (wrong: \(r=d-t\))</td><td>Used subtraction instead of division. Correct: \(r=d/t\)</td></tr>
+        <tr><td>4. \(y=mx+b\) for \(x\) (wrong: \(x=y-b-m\))</td><td>Subtracted \(m\) instead of dividing by it. Correct: \(x=(y-b)/m\)</td></tr>
+        <tr><td>5. \(S=2lw+2lh+2wh\) for \(h\) (wrong: \(h=S-2lw-2l-2w\))</td><td>Didn't factor \(h\) out before dividing. Correct: \(h=(S-2lw)/(2l+2w)\)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 3: ANSWER KEYS - WORD PROBLEMS & TEST PREP -->
+  <div id="keys2" class="panel">
+    <div class="section-title">Digital Answer Key: Word Problems &amp; Test Prep</div>
+
+    <div class="answer-section-heading">Word Problems: Geometry</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Garden length (A=96, w=8)</td><td>12 feet</td></tr>
+        <tr><td>Field width (P=360, l=110)</td><td>70 yards</td></tr>
+        <tr><td>Tank height (V=942, r=5, \(\pi\approx3.14\))</td><td>12 feet</td></tr>
+        <tr><td>Box height (S=148, l=6, w=5)</td><td>4 inches</td></tr>
+        <tr><td>Backyard width (A=210, l=15)</td><td>14 meters</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Word Problems: Science &amp; Measurement</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Boiling point in F</td><td>212&deg;F</td></tr>
+        <tr><td>Patient temperature in C</td><td>38.5&deg;C</td></tr>
+        <tr><td>Car average speed</td><td>60 mph</td></tr>
+        <tr><td>Sound distance in 6s</td><td>2058 meters</td></tr>
+        <tr><td>Cyclist trip time</td><td>7 hours</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Word Problems: Finance</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Mia's interest earned</td><td>$160</td></tr>
+        <tr><td>Diego's interest rate</td><td>5%</td></tr>
+        <tr><td>Years invested</td><td>5 years</td></tr>
+        <tr><td>Original principal from A=$1,325</td><td>$1,000</td></tr>
+        <tr><td>Investment comparison</td><td>A earns $120, B earns $108 - A earns $12 more</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Word Problems: More &amp; Challenge</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Line: find x</td><td>x = 5</td></tr>
+        <tr><td>Moving company hours</td><td>4 hours</td></tr>
+        <tr><td>Triangle third side</td><td>15 feet</td></tr>
+        <tr><td>Sequence term number</td><td>10th term</td></tr>
+        <tr><td>Cone cup height</td><td>6 cm</td></tr>
+        <tr><td>Challenge: prism height</td><td>6 inches</td></tr>
+        <tr><td>Challenge: series last term</td><td>26</td></tr>
+        <tr><td>Challenge: principal from A=$2,600</td><td>$2,000</td></tr>
+        <tr><td>Challenge: initial velocity</td><td>18 m/s</td></tr>
+        <tr><td>Challenge: can height</td><td>10 cm</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Test Prep: Full Review</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Check Your Understanding 2</td><td>\(x=6\) both ways</td></tr>
+        <tr><td>Guided 1: \(d=rt\) for \(t\)</td><td>\(t=d/r\)</td></tr>
+        <tr><td>Guided 2: \(A=lw\) for \(w\)</td><td>\(w=A/l\)</td></tr>
+        <tr><td>Guided 3: \(P=2l+2w\) for \(l\)</td><td>\(l=(P-2w)/2\)</td></tr>
+        <tr><td>Guided 4: \(F=\frac95C+32\) for \(C\)</td><td>\(C=\frac59(F-32)\)</td></tr>
+        <tr><td>Guided 5: \(A=P+Prt\) for \(P\)</td><td>\(P=A/(1+rt)\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Test Prep: Error Analysis Review</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(V=\pi r^2h\) for \(h\)</td><td>\(h=V/(\pi r^2)\)</td></tr>
+        <tr><td>2. \(y=mx+b\) for \(m\)</td><td>\(m=(y-b)/x\)</td></tr>
+        <tr><td>3. \(S=2lw+2lh+2wh\) for \(l\)</td><td>\(l=(S-2wh)/(2w+2h)\)</td></tr>
+        <tr><td>4. \(I=Prt\) for \(t\)</td><td>\(t=I/(Pr)\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Test Prep: Mixed Practice (submit-only)</div>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Part 1: Bare Rearrangements</th></tr></thead>
+      <tbody>
+        <tr><td>1. \(V=lwh\) for \(w\)</td><td>\(w=V/(lh)\)</td></tr>
+        <tr><td>2. \(y=mx+b\) for \(m\)</td><td>\(m=(y-b)/x\)</td></tr>
+        <tr><td>3. \(2a+3b=18\) for \(b\)</td><td>\(b=(18-2a)/3\)</td></tr>
+        <tr><td>4. \(A=\frac12bh\) for \(h\)</td><td>\(h=2A/b\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Part 2: Error Analysis</th></tr></thead>
+      <tbody>
+        <tr><td>5. \(P=2l+2w\) for \(w\)</td><td>\(w=(P-2l)/2\)</td></tr>
+        <tr><td>6. \(A=P+Prt\) for \(r\)</td><td>\(r=(A-P)/(Pt)\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Part 3: Word Problems</th></tr></thead>
+      <tbody>
+        <tr><td>7. Room width</td><td>12 feet</td></tr>
+        <tr><td>8. 25&deg;C to F</td><td>77&deg;F</td></tr>
+        <tr><td>9. Train distance</td><td>262.5 miles</td></tr>
+        <tr><td>10. Years invested</td><td>4 years</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Test Prep: Readiness Check</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(d=rt\) for \(t\)</td><td>\(t=d/r\)</td></tr>
+        <tr><td>2. \(A=P+Prt\) for \(P\)</td><td>\(P=A/(1+rt)\)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 4: PRINTABLES & KEY -->
+  <div id="printables" class="panel">
+    <div class="section-title">Printables &amp; Answer Key</div>
+    <p>All printables below are original material written for this topic.</p>
+
+    <div class="answer-section-heading">Test Prep: Printable Worksheet</div>
+    <div class="flag-box" style="background:#fff1f2; border:3px solid #fb7185; border-left:10px solid #e11d48; border-radius:12px; padding:20px 24px; margin:20px 0;">
+      <h4 style="margin-top:0; color:#be123c;">Keep this confidential from students</h4>
+      <p style="margin:0;">This printable mirrors the Test Prep page's Mixed Practice tab and can double as a paper assessment. Do not link or share this Teacher's Guide page with students.</p>
+    </div>
+    <a class="btn-lg" href="printables/Test-Prep-Printable.html" target="_blank" rel="noopener">Printables: Test Prep Worksheet &amp; Assessment</a>
+
+    <div class="answer-section-heading">Formula Reference Sheet</div>
+    <a class="btn-lg" href="printables/Reference-Sheet-Printable.html" target="_blank" rel="noopener">Printables: Formula Reference &amp; Practice Sheet</a>
+    <p>A one-page reference of every formula used in this topic, plus a short rearranging practice set - good as a take-home study aid or a during-test reference for students with accommodations.</p>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Practice Set Answer Key</th></tr></thead>
+      <tbody>
+        <tr><td>1. \(C=2\pi r\) solve for \(r\)</td><td>\(r=C/(2\pi)\)</td></tr>
+        <tr><td>2. \(V=\pi r^2h\) solve for \(h\)</td><td>\(h=V/(\pi r^2)\)</td></tr>
+        <tr><td>3. \(d=rt\) solve for \(r\)</td><td>\(r=d/t\)</td></tr>
+        <tr><td>4. \(I=Prt\) solve for \(t\)</td><td>\(t=I/(Pr)\)</td></tr>
+        <tr><td>5. \(P=2l+2w\) solve for \(l\)</td><td>\(l=(P-2w)/2\)</td></tr>
+        <tr><td>6. \(y=mx+b\) solve for \(x\)</td><td>\(x=(y-b)/m\)</td></tr>
+        <tr><td>7. \(L=a+(n-1)d\) solve for \(d\)</td><td>\(d=(L-a)/(n-1)\)</td></tr>
+        <tr><td>8. \(A=P+Prt\) solve for \(P\)</td><td>\(P=A/(1+rt)\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-section-heading">Practice Set: Error Analysis Cards</div>
+    <a class="btn-lg" href="printables/Error-Detective-Printable.html" target="_blank" rel="noopener">Print This Card</a>
+    <p>Matches the Practice Set's Tab 5 - see the Error Analysis answer table in Tab 2 above for the key.</p>
+
+    <div class="answer-section-heading">Practice Set: Formula Rearrangement Cards</div>
+    <a class="btn-lg" href="printables/Formula-Cards-Printable.html" target="_blank" rel="noopener">Print These Cards</a>
+    <p>Small-group rearranging practice, one formula per card. See the One Appearance / Multi-Step / Distributing &amp; Factoring answer tables in Tab 2 above.</p>
+
+    <div class="answer-section-heading">Word Problems: Strategy Challenge Cards</div>
+    <a class="btn-lg" href="printables/Strategy-Challenge-Printable.html" target="_blank" rel="noopener">Print These Cards</a>
+    <p>Group cards for the geometry, science, and finance word-problem categories - see the Word Problems answer tables in Tab 3 above.</p>
+  </div>
+
+  <!-- PANEL 5: CHALLENGE BANK -->
+  <div id="challenge" class="panel">
+    <div class="section-title">Challenge Bank: One Level Harder</div>
+    <p>Extra problems for early finishers or homework extension, using formulas not otherwise seen on the student pages. Click a problem to reveal its full solution.</p>
+    <a class="btn-lg" href="printables/Challenge-Bank-Printable.html" target="_blank" rel="noopener">Printables: Challenge Bank (no solutions shown)</a>
+
+    <div class="challenge-section-heading">Explanation-Tier Challenges</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Ohm's Law: \(V = IR\). Solve for \(R\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(R\) is multiplied by \(I\). Divide both sides by \(I\): \(R = \mathbf{\dfrac{V}{I}}\). Check: if \(V=120\), \(I=8\), then \(R=15\) and \(8 \times 15 = 120\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> Solve \(2(x+y) = z\) for \(y\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Distribute: \(2x+2y=z\). Subtract \(2x\): \(2y=z-2x\). Divide by 2: \(y = \mathbf{\dfrac{z-2x}{2}}\). Check: if \(x=3, z=20\), then \(y=7\) and \(2(3+7)=20\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> The average of two numbers is \(m = \dfrac{a+b}{2}\). Solve for \(b\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Multiply both sides by 2: \(2m = a+b\). Subtract \(a\): \(b = \mathbf{2m-a}\). Check: if \(a=5, m=12\), then \(b=19\) and \(\dfrac{5+19}{2}=12\).</p>
+      </details>
+    </div>
+
+    <div class="challenge-section-heading">Practice-Set-Tier Challenges</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Solve \(3x+2y=12\) for \(y\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Subtract \(3x\): \(2y=12-3x\). Divide by 2: \(y = \mathbf{\dfrac{12-3x}{2}}\). Check: if \(x=2\), \(y=3\) and \(3(2)+2(3)=12\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> Kinetic energy: \(KE = \frac12mv^2\). Solve for \(m\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Multiply both sides by 2: \(2KE = mv^2\). Divide by \(v^2\): \(m = \mathbf{\dfrac{2KE}{v^2}}\). Check: if \(KE=90, v=6\), then \(m=5\) and \(\frac12(5)(36)=90\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> Solve \(ax-b=cx+d\) for \(x\) (the target variable is on both sides).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Collect the \(x\)-terms: subtract \(cx\) from both sides and add \(b\) to both sides: \(ax-cx=d+b\). Factor \(x\) out: \(x(a-c)=b+d\). Divide by \((a-c)\): \(x = \mathbf{\dfrac{b+d}{a-c}}\). Check: if \(a=5,c=2,b=3,d=9\), then \(x=4\), and \(5(4)-3=17=2(4)+9\).</p>
+      </details>
+    </div>
+
+    <div class="challenge-section-heading">Word-Problems-Tier Challenges</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> The average of three test scores is \(m=\dfrac{a+b+c}{3}\). Two scores are 82 and 91, and the average is 88. What was the third score?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Solve for \(c\): \(c=3m-a-b\). \(c = 3(88)-82-91 = 264-173 = \mathbf{91}\). Check: \((82+91+91)/3=88\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> Ohm's Law: \(V=IR\). A circuit has a voltage of 240 V and a resistance of 60 &Omega;. What is the current?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(I = V/R = 240/60 = \mathbf{4}\) amps.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> A ball's velocity while decelerating under gravity follows \(v=v_0-gt\), with \(g=9.8\) m/s\(^2\). If the ball's velocity is \(0\) m/s after \(2\) seconds, what was its initial velocity \(v_0\)?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Solve for \(v_0\): \(v_0=v+gt\). \(v_0 = 0+9.8(2) = \mathbf{19.6}\) m/s.</p>
+      </details>
+    </div>
+
+    <div class="challenge-section-heading">Test-Prep Enrichment for Early Finishers</div>
+    <p style="font-size:0.9rem; color:#64748b;"><em>These are original problems, unrelated to the graded assessment, safe to hand out to students who finish early.</em></p>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Solve \(5x+3y=2x-y+20\) for \(y\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Collect y-terms: add \(y\) to both sides and subtract \(2x\) from both sides: \(3x+4y=20\) becomes... more directly: \(3y+y=2x-5x+20 \rightarrow 4y=-3x+20\). Divide by 4: \(y = \mathbf{\dfrac{20-3x}{4}}\). Check: if \(x=4\), \(y=2\), and \(5(4)+3(2)=26=2(4)-2+20\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> The thin-lens formula is \(\dfrac1a+\dfrac1b=\dfrac1f\). Solve for \(a\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Subtract \(\frac1b\) from both sides: \(\dfrac1a = \dfrac1f-\dfrac1b = \dfrac{b-f}{fb}\). Take the reciprocal of both sides: \(a = \mathbf{\dfrac{fb}{b-f}}\). Check: if \(f=6, b=12\), then \(a=12\), and \(\frac1{12}+\frac1{12}=\frac16\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> Two pipes filling a tank together follow \(\dfrac{x}{a}+\dfrac{x}{b}=1\), where \(x\) is the time to fill it together. Solve for \(x\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Multiply every term by \(ab\) to clear denominators: \(bx+ax=ab\). Factor \(x\) out: \(x(a+b)=ab\). Divide by \((a+b)\): \(x = \mathbf{\dfrac{ab}{a+b}}\). Check: if \(a=3,b=6\), then \(x=2\), and \(\frac23+\frac13=1\).</p>
+      </details>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+</script>
+</body>
+</html>

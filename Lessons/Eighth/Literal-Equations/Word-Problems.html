@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Literal Equations - Word Problems</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Algebra I &middot; Literal Equations</span>
+    <h1>Word Problems</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Algebra I - Literal Equations - Word Problems')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Every item here is a real scenario built on a formula. First identify which formula applies and which letter you need, then rearrange and solve - your final answer is a number, not an expression. Most items are checked on screen with up to 2 tries; a few ask for a written recommendation and are simply recorded for your teacher to review from your printed report. <strong>Calculators are allowed</strong> this year in Eighth Grade.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('geometry')">1. Geometry</button>
+    <button class="tab-btn" onclick="switchTab('science')">2. Science &amp; Measurement</button>
+    <button class="tab-btn" onclick="switchTab('finance')">3. Finance</button>
+    <button class="tab-btn" onclick="switchTab('more')">4. More Word Problems</button>
+    <button class="tab-btn" onclick="switchTab('challenge')">5. Challenge Word Problems</button>
+  </nav>
+
+  <!-- TAB 1: GEOMETRY -->
+  <div id="geometry" class="panel active">
+    <div class="section-title">Geometry Formulas</div>
+    <div class="explainer-box">
+      Name the formula, name the letter you need, rearrange, then plug in.
+    </div>
+    <div id="geometry-list"></div>
+  </div>
+
+  <!-- TAB 2: SCIENCE & MEASUREMENT -->
+  <div id="science" class="panel">
+    <div class="section-title">Science &amp; Measurement</div>
+    <div class="explainer-box">
+      Temperature and motion formulas both rearrange the same way as any other literal equation.
+    </div>
+    <div id="science-list"></div>
+  </div>
+
+  <!-- TAB 3: FINANCE -->
+  <div id="finance" class="panel">
+    <div class="section-title">Finance: Simple Interest</div>
+    <div class="explainer-box">
+      \(I = Prt\) and \(A = P + Prt\) show up constantly in banking and loans - being able to solve either one for any letter is a real financial-literacy skill.
+    </div>
+    <div id="finance-list"></div>
+
+    <div class="step-box" style="margin-top:20px;">
+      <h3 style="margin-top:0; color:var(--primary);">Comparing Two Investments</h3>
+      <p>Investment A: \(\$500\) at \(4\%\) simple interest for \(6\) years. Investment B: \(\$600\) at \(3\%\) simple interest for \(6\) years.</p>
+      <p><strong>Task:</strong> find the interest earned by each investment, then say which one earns more and by how much.</p>
+      <div class="form-group">
+        <label>Interest earned by Investment A:</label>
+        <input type="text" id="fin-a" class="form-control-lg" style="max-width:160px;" placeholder="$">
+      </div>
+      <div class="form-group">
+        <label>Interest earned by Investment B:</label>
+        <input type="text" id="fin-b" class="form-control-lg" style="max-width:160px;" placeholder="$">
+      </div>
+      <div class="form-group">
+        <label>Which investment earns more, and by how much?</label>
+        <textarea id="fin-explain" class="form-control-lg" rows="2" placeholder="Investment ... earns more by..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkFinCompare()">Submit My Work</button>
+      <div id="fin-compare-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: MORE WORD PROBLEMS -->
+  <div id="more" class="panel">
+    <div class="section-title">More Word Problems</div>
+    <div class="explainer-box">
+      Slope-intercept form, cost models, sequences, and cones - the same rearranging skill applies no matter what the letters are named.
+    </div>
+    <div id="more-list"></div>
+  </div>
+
+  <!-- TAB 5: CHALLENGE WORD PROBLEMS -->
+  <div id="challenge" class="panel">
+    <div class="section-title">Challenge Word Problems</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      These need an extra step - usually factoring, or a formula with two terms that both contain your target letter. Take your time setting each one up.
+    </div>
+    <div id="challenge-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // REUSABLE NUMERIC WORD-PROBLEM LIST
+  // ==========================================
+  const wpRegistry = {};
+
+  function renderWpList(containerId, problems, keyPrefix, section) {
+    wpRegistry[keyPrefix] = { problems, section };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkWpItem('${keyPrefix}', ${i})">Check</button>
+        </div>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, p.label, section));
+    triggerMathJax();
+  }
+
+  function checkWpItem(keyPrefix, idx) {
+    const cfg = wpRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
+    const correct = LessonCheck.numericMatch(val, p.a, p.tol || 0.05);
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! ${p.answerText || p.a}`,
+      retry: p.hint || "Not quite yet. Identify the formula, solve for the right letter, then substitute. Try again.",
+      reveal: `Here's the correct answer: ${p.answerText || p.a}`
+    }, { label: p.label, answer: val, section: cfg.section });
+  }
+
+  // ==========================================
+  // TAB 1: GEOMETRY
+  // ==========================================
+  const geometryProblems = [
+    { q: "A rectangular garden has an area of \\(96\\) square feet and a width of \\(8\\) feet. What is its length?", a: 12, answerText: "12 feet", label: "Garden length (A=96, w=8)" },
+    { q: "A rectangular soccer field has a perimeter of \\(360\\) yards and a length of \\(110\\) yards. What is its width?", a: 70, answerText: "70 yards", label: "Field width (P=360, l=110)" },
+    { q: "A cylindrical water tank has a volume of \\(942\\) cubic feet and a radius of \\(5\\) feet. Using \\(V=\\pi r^2h\\) and \\(\\pi \\approx 3.14\\), what is its height?", a: 12, answerText: "12 feet", label: "Tank height (V=942, r=5)" },
+    { q: "A rectangular prism-shaped box has a surface area of \\(148\\) square inches, a length of \\(6\\) inches, and a width of \\(5\\) inches. What is its height?", a: 4, answerText: "4 inches", label: "Box height (S=148, l=6, w=5)" },
+    { q: "The Smiths' rectangular backyard has an area of \\(210\\) square meters and a length of \\(15\\) meters. What is the width?", a: 14, answerText: "14 meters", label: "Backyard width (A=210, l=15)" }
+  ];
+
+  // ==========================================
+  // TAB 2: SCIENCE & MEASUREMENT
+  // ==========================================
+  const scienceProblems = [
+    { q: "Water boils at \\(100\\)&deg;C. What is that in Fahrenheit?", a: 212, answerText: "212&deg;F", label: "Boiling point in F" },
+    { q: "A patient's temperature reads \\(101.3\\)&deg;F. What is that in Celsius, to the nearest tenth?", a: 38.5, answerText: "38.5&deg;C", label: "Patient temperature in C" },
+    { q: "A car travels \\(270\\) miles in \\(4.5\\) hours. What is its average speed?", a: 60, answerText: "60 mph", label: "Car average speed" },
+    { q: "Sound travels at approximately \\(343\\) meters per second. How far does sound travel in \\(6\\) seconds?", a: 2058, answerText: "2058 meters", label: "Sound distance in 6s" },
+    { q: "A cyclist wants to travel \\(84\\) miles at a planned speed of \\(12\\) mph. How many hours will the trip take?", a: 7, answerText: "7 hours", label: "Cyclist trip time" }
+  ];
+
+  // ==========================================
+  // TAB 3: FINANCE
+  // ==========================================
+  const financeProblems = [
+    { q: "Mia invests \\(\\$800\\) at a simple interest rate of \\(4\\%\\) per year. How much interest will she earn in \\(5\\) years?", a: 160, answerText: "$160", label: "Mia's interest earned" },
+    { q: "Diego earned \\(\\$180\\) in interest on a \\(\\$1{,}200\\) investment over \\(3\\) years. What was the interest rate?", a: 5, answerText: "5%", label: "Diego's interest rate", tol: 0.1 },
+    { q: "An account earned \\(\\$250\\) in interest at a rate of \\(5\\%\\), starting with a \\(\\$1{,}000\\) principal. How many years was the money invested?", a: 5, answerText: "5 years", label: "Years invested" },
+    { q: "The total amount owed after simple interest is \\(\\$1{,}325\\), at a rate of \\(6.5\\%\\) over \\(5\\) years. What was the original principal?", a: 1000, answerText: "$1,000", label: "Original principal from A", hint: "Not quite yet. Use A=P+Prt - factor P out of the right side first. Try again." }
+  ];
+
+  function checkFinCompare() {
+    const a = document.getElementById('fin-a').value;
+    const b = document.getElementById('fin-b').value;
+    const explain = document.getElementById('fin-explain').value.trim();
+    const fb = document.getElementById('fin-compare-feedback');
+    if (!a.trim() || !b.trim() || explain.length <= 5) {
+      LessonCheck.incomplete(fb, "Enter both interest amounts and your comparison before submitting.");
+      return;
+    }
+    const correct = LessonCheck.numericMatch(a, 120, 0.5) && LessonCheck.numericMatch(b, 108, 0.5);
+    LessonCheck.submit(fb, { key: 'fin-compare', label: 'Comparing Investments A and B', answer: `A=$${a}, B=$${b}`, section: '3. Finance', correct });
+  }
+
+  // ==========================================
+  // TAB 4: MORE WORD PROBLEMS
+  // ==========================================
+  const moreProblems = [
+    { q: "A line has a slope of \\(3\\) and a y-intercept of \\(-4\\). A point on the line has a y-value of \\(11\\). What is its x-value?", a: 5, answerText: "x = 5", label: "Line: find x" },
+    { q: "A moving company's total cost follows \\(y = 45x + 60\\), where \\(x\\) is hours worked. If a job costs \\(\\$240\\) total, how many hours did it take?", a: 4, answerText: "4 hours", label: "Moving company hours" },
+    { q: "A triangular garden has a perimeter of \\(42\\) feet. Two sides measure \\(15\\) feet and \\(12\\) feet. What is the length of the third side?", a: 15, answerText: "15 feet", label: "Triangle third side" },
+    { q: "An arithmetic sequence has a first term of \\(4\\) and a common difference of \\(6\\). Using \\(L = a + (n-1)d\\), which term number equals \\(58\\)?", a: 10, answerText: "the 10th term", label: "Sequence term number" },
+    { q: "A cone-shaped paper cup has a volume of \\(100.48\\) cubic centimeters and a radius of \\(4\\) cm. Using \\(V=\\frac13\\pi r^2h\\) and \\(\\pi \\approx 3.14\\), what is its height?", a: 6, answerText: "6 cm", label: "Cone cup height" }
+  ];
+
+  // ==========================================
+  // TAB 5: CHALLENGE WORD PROBLEMS
+  // ==========================================
+  const challengeProblems = [
+    { q: "A rectangular prism has a surface area of \\(214\\) square inches, a length of \\(7\\) inches, and a width of \\(5\\) inches. Find its height.", a: 6, answerText: "6 inches", label: "Challenge: prism height" },
+    { q: "The sum of the first \\(n\\) terms of an arithmetic series is \\(S = \\dfrac{n}{2}(a + l)\\). A series has \\(12\\) terms, a first term of \\(3\\), and a sum of \\(174\\). What is the last term \\(l\\)?", a: 26, answerText: "26", label: "Challenge: series last term" },
+    { q: "The total amount in an account after simple interest is \\(\\$2{,}600\\), at a rate of \\(6\\%\\) over \\(5\\) years. What was the original principal?", a: 2000, answerText: "$2,000", label: "Challenge: principal from A" },
+    { q: "A physics formula for velocity is \\(v = v_0 + at\\). A rock reaches a velocity of \\(45\\) m/s after \\(9\\) seconds of constant acceleration \\(a = 3\\) m/s\\(^2\\). What was its initial velocity \\(v_0\\)?", a: 18, answerText: "18 m/s", label: "Challenge: initial velocity" },
+    { q: "A cylindrical can's total surface area is \\(S = 2\\pi r^2 + 2\\pi rh\\). If \\(S = 471\\) cm\\(^2\\), \\(r = 5\\) cm, and \\(\\pi \\approx 3.14\\), find \\(h\\).", a: 10, answerText: "10 cm", label: "Challenge: can height", hint: "Not quite yet. Move the r-squared term to the other side first, then divide by 2πr. Try again." }
+  ];
+
+  // Initial render
+  renderWpList('geometry-list', geometryProblems, 'geo', '1. Geometry');
+  renderWpList('science-list', scienceProblems, 'sci', '2. Science & Measurement');
+  renderWpList('finance-list', financeProblems, 'fin', '3. Finance');
+  renderWpList('more-list', moreProblems, 'mor', '4. More Word Problems');
+  renderWpList('challenge-list', challengeProblems, 'chl', '5. Challenge Word Problems');
+  LessonProgress.preRegister('fin-compare', 'Comparing Investments A and B', '3. Finance');
+</script>
+<div id="print-report"></div>
+</body>
+</html>

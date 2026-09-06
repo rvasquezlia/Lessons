@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Rational Numbers - Vocabulary &amp; Literacy</title>
+
+  <!-- Montserrat Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+
+  <style>
+    .glossary-term {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 10px;
+      padding: 14px 20px;
+      margin-bottom: 14px;
+    }
+    .glossary-term .term-name { font-weight: 900; color: var(--primary); font-size: 1.1rem; }
+    .glossary-term .term-def { margin: 6px 0 0 0; }
+    .match-row { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap; }
+    .match-row strong { min-width: 260px; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Rational Numbers - Vocabulary &amp; Literacy</span>
+    <h1>Vocabulary &amp; Literacy: Understanding Rational Numbers</h1>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Work through the three tabs in order: the number system vocabulary, a quick review of terms from fraction and decimal operations, and the language used to compare and order numbers. Copy every glossary box into your notebook. There's no Print My Progress button on this page - the short checks are just for you, so use them to see what's solid before the next lesson.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('numvocab')">1. Number System Vocabulary</button>
+    <button class="tab-btn" onclick="switchTab('opvocab')">2. Operation Vocabulary (Review)</button>
+    <button class="tab-btn" onclick="switchTab('comparewords')">3. Comparing &amp; Ordering Language</button>
+  </nav>
+
+  <!-- TAB 1: NUMBER SYSTEM VOCABULARY -->
+  <div id="numvocab" class="panel active">
+    <div class="section-title">Number System Vocabulary</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read and copy each term into your notebook. Then try the 3 quick checks at the bottom - you get 2 tries per question before the answer is shown.
+    </div>
+
+    <div class="glossary-term">
+      <div class="term-name">Rational Number</div>
+      <p class="term-def">Any number that can be written as a fraction \(\dfrac{a}{b}\), where \(a\) and \(b\) are integers and \(b \neq 0\). This includes whole numbers, integers, fractions, and every terminating or repeating decimal.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Irrational Number</div>
+      <p class="term-def">A number that cannot be written as a fraction of integers. Its decimal form goes on forever without ever settling into a repeating pattern. \(\pi\) and \(\sqrt{2}\) are irrational.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Terminating Decimal</div>
+      <p class="term-def">A decimal that ends - it has a finite number of digits after the decimal point. \(0.75\) and \(0.5\) are terminating decimals.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Repeating Decimal</div>
+      <p class="term-def">A decimal in which one or more digits repeat forever. Written with a bar over the part that repeats: \(0.333\ldots = 0.\overline{3}\), and \(0.8333\ldots = 0.8\overline{3}\) (only the 3 repeats).</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Numerator &amp; Denominator</div>
+      <p class="term-def">In a fraction \(\dfrac{a}{b}\), \(a\) is the <strong>numerator</strong> (how many parts you have) and \(b\) is the <strong>denominator</strong> (how many equal parts make up the whole).</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Equivalent Fractions</div>
+      <p class="term-def">Fractions that name the same value even though they look different, like \(\dfrac{1}{2}\) and \(\dfrac{2}{4}\).</p>
+    </div>
+
+    <div class="explainer-box">
+      <strong>Where Rational Numbers Live:</strong> every whole number and integer is rational (write it over 1), and so is every fraction, terminating decimal, and repeating decimal. Irrational numbers are the only numbers left out.
+      <div id="numbersystem-diagram" style="margin-top:14px; display:flex; gap:16px; flex-wrap:wrap; justify-content:center;">
+        <div style="border:3px solid var(--primary); border-radius:14px; padding:18px; background:#eff6ff; min-width:220px;">
+          <div style="font-weight:900; color:var(--primary); text-align:center; margin-bottom:10px;">RATIONAL NUMBERS</div>
+          <div style="border:3px solid var(--primary-light); border-radius:12px; padding:14px; background:#dbeafe;">
+            <div style="font-weight:800; color:var(--primary); text-align:center; font-size:0.9rem; margin-bottom:8px;">Integers (..., -2, -1, 0, 1, 2, ...)</div>
+            <div style="border:3px solid var(--accent); border-radius:10px; padding:10px; background:#fef3c7; text-align:center; font-weight:700; font-size:0.85rem;">Whole Numbers (0, 1, 2, ...)</div>
+          </div>
+          <p style="text-align:center; font-size:0.8rem; color:#475569; margin:10px 0 0 0;">...plus every fraction, terminating decimal, and repeating decimal.</p>
+        </div>
+        <div style="border:3px dashed #94a3b8; border-radius:14px; padding:18px; background:#f8fafc; min-width:180px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+          <div style="font-weight:900; color:#475569; text-align:center; margin-bottom:8px;">IRRATIONAL NUMBERS</div>
+          <p style="text-align:center; font-size:0.8rem; color:#475569; margin:0;">\(\pi,\ \sqrt{2},\ \sqrt{3}, \ldots\)<br>never a fraction of integers</p>
+        </div>
+      </div>
+      <div id="rational-numberline" style="margin-top:16px;"></div>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Quick Check</div>
+      <p style="margin:0;">Use the vocabulary above to answer these three questions.</p>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>1.</strong> Is \(-8\) a rational number? Type "yes" or "no".
+      <div style="margin-top:10px;">
+        <input type="text" id="nv-0-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="yes or no">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkNumVocab(0)">Check</button>
+      </div>
+      <div id="nv-0-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>2.</strong> Is \(0.454545\ldots\) (repeating) a rational number? Type "yes" or "no".
+      <div style="margin-top:10px;">
+        <input type="text" id="nv-1-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="yes or no">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkNumVocab(1)">Check</button>
+      </div>
+      <div id="nv-1-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>3.</strong> Which digit repeats in \(0.6666\ldots\)? Type just the digit.
+      <div style="margin-top:10px;">
+        <input type="text" id="nv-2-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkNumVocab(2)">Check</button>
+      </div>
+      <div id="nv-2-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: OPERATION VOCABULARY (REVIEW) -->
+  <div id="opvocab" class="panel">
+    <div class="section-title">Operation Vocabulary: A Quick Review</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      You learned these terms in earlier grades - this is a refresher, not new material. Copy them into your notebook, then try the matching check.
+    </div>
+
+    <div class="glossary-term">
+      <div class="term-name">Reciprocal</div>
+      <p class="term-def">Flip a fraction upside down - the numerator and denominator swap places. The reciprocal of \(\dfrac{3}{4}\) is \(\dfrac{4}{3}\). Dividing by a fraction means multiplying by its reciprocal.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Common Denominator (LCD)</div>
+      <p class="term-def">A shared denominator that lets you add or subtract fractions with different denominators. The <strong>least</strong> common denominator (LCD) is the smallest one that works.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Simplest Form (Lowest Terms)</div>
+      <p class="term-def">A fraction where the numerator and denominator have no common factor left to cancel, other than 1. \(\dfrac{2}{3}\) is in simplest form; \(\dfrac{4}{6}\) is not.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Decimal Point Alignment</div>
+      <p class="term-def">Lining up the decimal points of two numbers, place value by place value, before you add or subtract them - the habit that keeps decimal arithmetic from going wrong.</p>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Match the Term to the Situation</h3>
+      <p>For each situation, choose the term that describes it.</p>
+      <div class="match-row"><strong>Flipping a fraction upside down</strong>
+        <select id="ov-0" class="form-control-lg" style="max-width:220px;"><option value="">Choose...</option><option value="Reciprocal">Reciprocal</option><option value="LCD">Common Denominator</option><option value="Simplest">Simplest Form</option><option value="Align">Decimal Alignment</option></select>
+      </div>
+      <div class="match-row"><strong>The smallest shared denominator for two fractions</strong>
+        <select id="ov-1" class="form-control-lg" style="max-width:220px;"><option value="">Choose...</option><option value="Reciprocal">Reciprocal</option><option value="LCD">Common Denominator</option><option value="Simplest">Simplest Form</option><option value="Align">Decimal Alignment</option></select>
+      </div>
+      <div class="match-row"><strong>A fraction with nothing left to cancel</strong>
+        <select id="ov-2" class="form-control-lg" style="max-width:220px;"><option value="">Choose...</option><option value="Reciprocal">Reciprocal</option><option value="LCD">Common Denominator</option><option value="Simplest">Simplest Form</option><option value="Align">Decimal Alignment</option></select>
+      </div>
+      <div class="match-row"><strong>Lining up place values before adding decimals</strong>
+        <select id="ov-3" class="form-control-lg" style="max-width:220px;"><option value="">Choose...</option><option value="Reciprocal">Reciprocal</option><option value="LCD">Common Denominator</option><option value="Simplest">Simplest Form</option><option value="Align">Decimal Alignment</option></select>
+      </div>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkOpVocab()">Check My Matches</button>
+      <div id="ov-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: COMPARING & ORDERING LANGUAGE -->
+  <div id="comparewords" class="panel">
+    <div class="section-title">Comparing &amp; Ordering Language</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Word problems about rational numbers often hide an inequality inside ordinary phrasing. Read each phrase carefully - "at least" and "at most" are not the same thing.
+    </div>
+
+    <div class="explainer-box">
+      <strong>at least</strong> = greater than or equal to (\(\geq\)) &nbsp;&middot;&nbsp; <strong>at most</strong> / <strong>no more than</strong> = less than or equal to (\(\leq\)) &nbsp;&middot;&nbsp; <strong>between</strong> = strictly greater than one value and less than the other.
+      <div id="between-numberline" style="margin-top:12px;"></div>
+      <p style="text-align:center; color:#64748b; font-size:0.85rem; margin:4px 0 0 0;">"Between \(-2\) and \(3\)" means anywhere in that stretch of the number line - not including the endpoints.</p>
+    </div>
+
+    <div class="step-box">
+      <p><strong>1.</strong> A shipping label says a package weighs "at least 2.5 kg." The weight is:<br>
+      A. exactly 2.5 kg&nbsp;&nbsp; B. greater than or equal to 2.5 kg&nbsp;&nbsp; C. less than 2.5 kg&nbsp;&nbsp; D. less than or equal to 2.5 kg</p>
+      <select id="cw-0" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkCompareWords(0)">Check</button>
+      <div id="cw-0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;">
+      <p><strong>2.</strong> A recipe says to use "no more than \(\frac{3}{4}\) cup of sugar." The amount used is:<br>
+      A. exactly \(\frac{3}{4}\) cup&nbsp;&nbsp; B. greater than \(\frac{3}{4}\) cup&nbsp;&nbsp; C. less than or equal to \(\frac{3}{4}\) cup&nbsp;&nbsp; D. greater than or equal to \(\frac{3}{4}\) cup</p>
+      <select id="cw-1" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkCompareWords(1)">Check</button>
+      <div id="cw-1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;">
+      <p><strong>3.</strong> A pool's water temperature stayed "between 0.5&deg;C and 2&deg;C" all week. Which temperature could NOT have occurred that week?<br>
+      A. \(1.2^\circ\text{C}\)&nbsp;&nbsp; B. \(0.5^\circ\text{C}\)&nbsp;&nbsp; C. \(1.9^\circ\text{C}\)&nbsp;&nbsp; D. \(0.8^\circ\text{C}\)</p>
+      <select id="cw-2" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkCompareWords(2)">Check</button>
+      <div id="cw-2-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="challenge-box" style="margin-top:24px;">
+      <h3 style="margin-top:0; color:#b45309;">Critical Thinking</h3>
+      <p>Give a number that is at least \(0.5\) but less than \(1\). Then explain how you know it fits both conditions.</p>
+      <textarea id="rn-critical" class="form-control-lg" rows="3" placeholder="My number is... It fits because..."></textarea>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkRNCritical()">Submit My Work</button>
+      <div id="rn-critical-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // TAB 1: NUMBER SYSTEM VOCABULARY
+  // ==========================================
+  renderNumberLine('rational-numberline', {
+    min: -2, max: 2, step: 1,
+    points: [
+      { value: -1.5, label: '-3/2', color: '#1e3a8a' },
+      { value: 0.75, label: '3/4', color: '#15803d' },
+      { value: 1.5, label: '1.5', color: '#d97706' }
+    ]
+  });
+  renderNumberLine('between-numberline', {
+    min: -5, max: 5, step: 1,
+    arrows: [{ from: -2, to: 3, label: 'between -2 and 3', color: '#15803d', row: 0 }]
+  });
+
+  const numVocabProblems = [
+    { q: "Is -8 rational?", type: "text", a: "yes" },
+    { q: "Is 0.454545... rational?", type: "text", a: "yes" },
+    { q: "Repeating digit in 0.6666...", type: "text", a: "6" }
+  ];
+
+  function checkNumVocab(idx) {
+    const p = numVocabProblems[idx];
+    const raw = document.getElementById(`nv-${idx}-input`).value;
+    const fb = document.getElementById(`nv-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet."); return; }
+    const correct = raw.trim().toLowerCase() === p.a;
+    LessonCheck.check(`nv-${idx}`, correct, fb, {
+      correct: `Correct! Answer: <strong>${p.a}</strong>`,
+      retry: "Not quite yet. Check the definition above and try again.",
+      reveal: `Here's the correct answer: <strong>${p.a}</strong>`
+    });
+  }
+
+  // ==========================================
+  // TAB 2: OPERATION VOCABULARY MATCH
+  // ==========================================
+  function checkOpVocab() {
+    const vals = ['ov-0', 'ov-1', 'ov-2', 'ov-3'].map(id => document.getElementById(id).value);
+    const fb = document.getElementById('ov-feedback');
+    if (vals.some(v => !v)) { LessonCheck.incomplete(fb, "Choose a term for all four situations before checking."); return; }
+    const expected = ['Reciprocal', 'LCD', 'Simplest', 'Align'];
+    const correct = vals.every((v, i) => v === expected[i]);
+    LessonCheck.check('ov-match', correct, fb, {
+      correct: "Correct! Flip -> Reciprocal, Smallest shared denominator -> Common Denominator, Nothing left to cancel -> Simplest Form, Lining up place values -> Decimal Alignment.",
+      retry: "Some of these aren't matched yet. Review the glossary boxes above and try again.",
+      reveal: "Flip -> Reciprocal, Smallest shared denominator -> Common Denominator, Nothing left to cancel -> Simplest Form, Lining up place values -> Decimal Alignment."
+    });
+  }
+
+  // ==========================================
+  // TAB 3: COMPARING & ORDERING LANGUAGE
+  // ==========================================
+  const compareWordsAnswers = { 0: "B", 1: "C", 2: "D" };
+  function checkCompareWords(idx) {
+    const raw = document.getElementById(`cw-${idx}`).value;
+    const fb = document.getElementById(`cw-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Choose an answer before checking."); return; }
+    const expected = compareWordsAnswers[idx];
+    const correct = raw.trim().toUpperCase() === expected;
+    LessonCheck.check(`cw-${idx}`, correct, fb, {
+      correct: "Correct!",
+      retry: "Not quite yet. Review what the phrase means and try again.",
+      reveal: `The correct answer is <strong>${expected}</strong>.`
+    });
+  }
+
+  function checkRNCritical() {
+    const explain = document.getElementById('rn-critical').value.trim();
+    const fb = document.getElementById('rn-critical-feedback');
+    if (explain.length <= 5) { LessonCheck.incomplete(fb, "Write your answer before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'rn-critical', label: 'Critical Thinking: a number at least 0.5 but less than 1', answer: explain });
+  }
+</script>
+</body>
+</html>
