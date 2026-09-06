@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Rational Numbers - Explanation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Rational Numbers - Explanation</span>
+    <h1>Explanation: Fractions, Decimals &amp; the Number System</h1>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Every rule you need for this topic is here, broken into steps with fully worked examples. Go through the 6 tabs in order. For each carousel, read the example, then click <strong>Next Step</strong> to reveal the solution one step at a time instead of jumping ahead. Copy every notebook box into your math notebook - once these are solid, you're ready to solve problems on your own. Tabs 5 and 6 are a review of skills from earlier grades, not new material.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('numbersystem')">1. What Is a Rational Number?</button>
+    <button class="tab-btn" onclick="switchTab('fractodecimal')">2. Fractions to Decimals</button>
+    <button class="tab-btn" onclick="switchTab('decimaltofrac')">3. Decimals to Fractions</button>
+    <button class="tab-btn" onclick="switchTab('compareorder')">4. Compare &amp; Order</button>
+    <button class="tab-btn" onclick="switchTab('fractionops')">5. Fraction Operations (Review)</button>
+    <button class="tab-btn" onclick="switchTab('decimalops')">6. Decimal Operations (Review)</button>
+  </nav>
+
+  <!-- TAB 1: WHAT IS A RATIONAL NUMBER? -->
+  <div id="numbersystem" class="panel active">
+    <div class="section-title">What Is a Rational Number?</div>
+    <div class="explainer-box">
+      A <strong>rational number</strong> is any number you can write as a fraction \(\dfrac{a}{b}\), where \(a\) and \(b\) are integers and \(b \neq 0\). That covers more than fractions that "look like" fractions - every integer, every terminating decimal, and every repeating decimal is rational too, because each one can be rewritten as a ratio of integers.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Natural (Counting) Numbers:</strong> \(1, 2, 3, \ldots\)</li>
+        <li><strong>Whole Numbers:</strong> \(0, 1, 2, 3, \ldots\)</li>
+        <li><strong>Integers:</strong> \(\ldots, -2, -1, 0, 1, 2, \ldots\)</li>
+        <li><strong>Rational Numbers:</strong> any number that fits \(\dfrac{a}{b}\) - includes all integers, plus every fraction and every terminating or repeating decimal.</li>
+        <li><strong>Irrational Numbers:</strong> everything left over - decimals that never terminate and never repeat, like \(\pi\) and \(\sqrt{2}\).</li>
+      </ul>
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="rn-prev-btn" onclick="changeRn(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="rn-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="rn-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="rn-next-btn" onclick="changeRn(1)">Next &rarr;</button>
+      </div>
+      <div id="rn-content" style="min-height: 160px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextRnStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetRnStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: FRACTIONS TO DECIMALS -->
+  <div id="fractodecimal" class="panel">
+    <div class="section-title">Converting Fractions to Decimals</div>
+    <div class="explainer-box">
+      To write a fraction as a decimal, <strong>divide the numerator by the denominator.</strong> Some divisions end exactly - a <strong>terminating decimal</strong>. Others never end and settle into a pattern - a <strong>repeating decimal</strong>, marked with a bar over the digits that repeat.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO NOTEBOOK</div>
+      <p style="margin:0;">Fraction &rarr; decimal: divide numerator &divide; denominator. If, in lowest terms, the denominator's only prime factors are 2 and/or 5, the decimal terminates. Any other denominator produces a repeating decimal.</p>
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="f2d-prev-btn" onclick="changeF2d(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="f2d-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="f2d-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="f2d-next-btn" onclick="changeF2d(1)">Next &rarr;</button>
+      </div>
+      <div id="f2d-content" style="min-height: 160px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextF2dStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetF2dStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: DECIMALS TO FRACTIONS -->
+  <div id="decimaltofrac" class="panel">
+    <div class="section-title">Converting Decimals to Fractions</div>
+    <div class="explainer-box">
+      To write a terminating decimal as a fraction, use <strong>place value.</strong> The last digit tells you the denominator: tenths &rarr; 10, hundredths &rarr; 100, thousandths &rarr; 1000. Then simplify.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO NOTEBOOK</div>
+      <p style="margin:0;">Decimal &rarr; fraction: write the digits after the decimal point over the matching place value (10, 100, 1000, ...), then divide numerator and denominator by their greatest common factor. Repeating decimals are rational too, but converting them back to a fraction algebraically is a technique you'll learn in a later course.</p>
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="d2f-prev-btn" onclick="changeD2f(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="d2f-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="d2f-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="d2f-next-btn" onclick="changeD2f(1)">Next &rarr;</button>
+      </div>
+      <div id="d2f-content" style="min-height: 160px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextD2fStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetD2fStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: COMPARE & ORDER -->
+  <div id="compareorder" class="panel">
+    <div class="section-title">Comparing &amp; Ordering Rational Numbers</div>
+    <div class="explainer-box">
+      To compare rational numbers in different forms, convert them all to the <strong>same form</strong> - decimals are usually the fastest - then plot them on a number line. Just like with integers, whichever value sits farther to the right is greater.
+    </div>
+
+    <div class="explainer-box">
+      <strong>Visualizing: \(\dfrac{3}{4}\) vs. \(0.7\)</strong>
+      <div id="compare-numberline" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="cmp-prev-btn" onclick="changeCmp(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="cmp-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="cmp-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="cmp-next-btn" onclick="changeCmp(1)">Next &rarr;</button>
+      </div>
+      <div id="cmp-content" style="min-height: 160px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextCmpStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetCmpStep()">Reset Steps</button>
+      </div>
+    </div>
+
+    <div class="explainer-box" style="margin-top:24px;">
+      <strong>Ordering \(-1.5,\ \dfrac{3}{4},\ -2,\ 0.2\) from least to greatest</strong>
+      <div id="order-numberline" style="margin-top:10px;"></div>
+      <p style="text-align:center; color:#64748b; font-size:0.85rem; margin:6px 0 0 0;">Reading left to right: \(-2,\ -1.5,\ 0.2,\ \dfrac{3}{4}\).</p>
+    </div>
+  </div>
+
+  <!-- TAB 5: FRACTION OPERATIONS (REVIEW) -->
+  <div id="fractionops" class="panel">
+    <div class="section-title">Fraction Operations: A Review</div>
+    <div class="explainer-box">
+      You already learned to add, subtract, multiply, and divide fractions in earlier grades. This is a refresher to sharpen the toolkit you already have, not new instruction.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO NOTEBOOK</div>
+      <ul>
+        <li><strong>Add / Subtract:</strong> rewrite both fractions with a common denominator (the LCD), then add or subtract the numerators and keep the denominator. Simplify.</li>
+        <li><strong>Multiply:</strong> multiply the numerators together and the denominators together. Simplify (cancel common factors first if it's easier).</li>
+        <li><strong>Divide:</strong> keep the first fraction, change the sign to multiplication, and flip the second fraction to its reciprocal - "Keep-Change-Flip." Then multiply as usual.</li>
+      </ul>
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="fop-prev-btn" onclick="changeFop(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="fop-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 4</span>
+          <div class="carousel-indicators" id="fop-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="fop-next-btn" onclick="changeFop(1)">Next &rarr;</button>
+      </div>
+      <div id="fop-content" style="min-height: 160px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextFopStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetFopStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 6: DECIMAL OPERATIONS (REVIEW) -->
+  <div id="decimalops" class="panel">
+    <div class="section-title">Decimal Operations: A Review</div>
+    <div class="explainer-box">
+      Same idea as whole-number arithmetic, plus one habit: keep track of the decimal point. This is a refresher of skills from earlier grades.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO NOTEBOOK</div>
+      <ul>
+        <li><strong>Add / Subtract:</strong> line up the decimal points (write in extra zeros if needed), then add or subtract as usual.</li>
+        <li><strong>Multiply:</strong> multiply as if both numbers were whole, then count the total decimal places in both factors and place the decimal point that many spots from the right.</li>
+        <li><strong>Divide:</strong> if the divisor has a decimal, move its decimal point to make it a whole number, and move the dividend's decimal point the same number of places. Then divide as usual.</li>
+      </ul>
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="dop-prev-btn" onclick="changeDop(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="dop-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 4</span>
+          <div class="carousel-indicators" id="dop-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="dop-next-btn" onclick="changeDop(1)">Next &rarr;</button>
+      </div>
+      <div id="dop-content" style="min-height: 160px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextDopStep()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetDopStep()">Reset Steps</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // Generic carousel factory - each tab gets its own instance so state doesn't collide.
+  function makeCarousel(prefix, examples) {
+    let current = 0, step = 1;
+    function render() {
+      const ex = examples[current];
+      document.getElementById(`${prefix}-title`).innerText = `Example ${current + 1} of ${examples.length}`;
+      document.getElementById(`${prefix}-dots`).innerHTML = examples.map((_, i) =>
+        `<div class="dot ${i === current ? 'active' : ''}" onclick="${prefix}Jump(${i})"></div>`
+      ).join('');
+      let stepsHtml = '';
+      for (let i = 0; i < step; i++) stepsHtml += `<div class="step-item visible">${ex.steps[i]}</div>`;
+      document.getElementById(`${prefix}-content`).innerHTML = `<h3 style="color:var(--primary); margin-top:0;">${ex.title}</h3>${stepsHtml}`;
+      document.getElementById(`${prefix}-prev-btn`).disabled = current === 0;
+      document.getElementById(`${prefix}-next-btn`).disabled = current === examples.length - 1;
+      triggerMathJax();
+    }
+    function change(dir) { current = Math.max(0, Math.min(examples.length - 1, current + dir)); step = 1; render(); }
+    function jump(idx) { current = idx; step = 1; render(); }
+    function nextStep() { if (step < examples[current].maxSteps) { step++; render(); } }
+    function resetStep() { step = 1; render(); }
+    function showAt(i, includeAnswers) { current = i; step = examples[i].maxSteps; render(); }
+    window[`change${cap(prefix)}`] = change;
+    window[`${prefix}Jump`] = jump;
+    window[`next${cap(prefix)}Step`] = nextStep;
+    window[`reset${cap(prefix)}Step`] = resetStep;
+    render();
+    if (window.TeacherPrint) TeacherPrint.registerCarousel(`${prefix}-content`, examples.length, showAt);
+  }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  // ==========================================
+  // TAB 1: WHAT IS A RATIONAL NUMBER?
+  // ==========================================
+  const rnExamples = [
+    {
+      title: "Example 1 - Is \\(-7\\) rational?",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Try to write it as a fraction of integers:</strong> \\(-7 = \\dfrac{-7}{1}\\).",
+        "<strong>Step 2 - It fits \\(\\frac{a}{b}\\) with integers and \\(b \\neq 0\\):</strong> \\(-7\\) is rational. Every integer is rational."
+      ]
+    },
+    {
+      title: "Example 2 - Is \\(0.6\\) rational?",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Write the terminating decimal using place value:</strong> \\(0.6 = \\dfrac{6}{10}\\).",
+        "<strong>Step 2 - This simplifies to \\(\\dfrac{3}{5}\\), a fraction of integers:</strong> \\(0.6\\) is rational."
+      ]
+    },
+    {
+      title: "Example 3 - Is \\(\\pi\\) rational?",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Look at its decimal form:</strong> \\(\\pi = 3.14159265\\ldots\\) - the digits never end and never settle into a repeating block.",
+        "<strong>Step 2 - Since \\(\\pi\\) cannot be written as a fraction of integers:</strong> it is <strong>irrational</strong>, not rational."
+      ]
+    }
+  ];
+  makeCarousel('rn', rnExamples);
+
+  // ==========================================
+  // TAB 2: FRACTIONS TO DECIMALS
+  // ==========================================
+  const f2dExamples = [
+    {
+      title: "Example 1 (terminating): \\(\\dfrac{3}{4}\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Divide numerator by denominator:</strong> \\(3 \\div 4\\). Add a decimal point and a zero: \\(30 \\div 4 = 7\\) remainder \\(2\\).",
+        "<strong>Step 2 - Bring down another zero:</strong> \\(20 \\div 4 = 5\\) remainder \\(0\\) - the division ends exactly. \\(\\dfrac{3}{4} = \\mathbf{0.75}\\)."
+      ]
+    },
+    {
+      title: "Example 2 (repeating): \\(\\dfrac{1}{3}\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Divide:</strong> \\(1 \\div 3\\). Add a decimal point and zeros: \\(10 \\div 3 = 3\\) remainder \\(1\\).",
+        "<strong>Step 2 - The remainder (1) is back where it started,</strong> so the \\(3\\) repeats forever: \\(\\dfrac{1}{3} = 0.333\\ldots = \\mathbf{0.\\overline{3}}\\)."
+      ]
+    },
+    {
+      title: "Example 3 (partly repeating): \\(\\dfrac{5}{6}\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Divide:</strong> \\(5 \\div 6\\). \\(50 \\div 6 = 8\\) remainder \\(2\\).",
+        "<strong>Step 2 - Bring down a zero:</strong> \\(20 \\div 6 = 3\\) remainder \\(2\\) - that remainder repeats, so only the \\(3\\) repeats: \\(\\dfrac{5}{6} = 0.8333\\ldots = \\mathbf{0.8\\overline{3}}\\)."
+      ]
+    }
+  ];
+  makeCarousel('f2d', f2dExamples);
+
+  // ==========================================
+  // TAB 3: DECIMALS TO FRACTIONS
+  // ==========================================
+  const d2fExamples = [
+    {
+      title: "Example 1: \\(0.8\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - One digit after the decimal point means tenths:</strong> \\(0.8 = \\dfrac{8}{10}\\).",
+        "<strong>Step 2 - Simplify by dividing both by their GCF, 2:</strong> \\(\\dfrac{8}{10} = \\mathbf{\\dfrac{4}{5}}\\)."
+      ]
+    },
+    {
+      title: "Example 2: \\(0.25\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Two digits after the decimal point means hundredths:</strong> \\(0.25 = \\dfrac{25}{100}\\).",
+        "<strong>Step 2 - Simplify by dividing both by their GCF, 25:</strong> \\(\\dfrac{25}{100} = \\mathbf{\\dfrac{1}{4}}\\)."
+      ]
+    },
+    {
+      title: "Example 3 (mixed number): \\(1.125\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Separate the whole number, then convert the decimal part (thousandths):</strong> \\(1.125 = 1 + \\dfrac{125}{1000}\\).",
+        "<strong>Step 2 - Simplify \\(\\dfrac{125}{1000}\\) by their GCF, 125, to get \\(\\dfrac{1}{8}\\):</strong> \\(1.125 = 1 + \\dfrac{1}{8} = \\mathbf{\\dfrac{9}{8}}\\) (or \\(1\\dfrac{1}{8}\\))."
+      ]
+    }
+  ];
+  makeCarousel('d2f', d2fExamples);
+
+  // ==========================================
+  // TAB 4: COMPARE & ORDER
+  // ==========================================
+  renderNumberLine('compare-numberline', {
+    min: 0, max: 1, step: 0.25,
+    points: [{ value: 0.75, label: '3/4 = 0.75', color: '#1e3a8a' }, { value: 0.7, label: '0.7', color: '#d97706' }]
+  });
+  renderNumberLine('order-numberline', {
+    min: -2.5, max: 1, step: 0.5,
+    points: [
+      { value: -2, label: '-2', color: '#1e3a8a' },
+      { value: -1.5, label: '-1.5', color: '#1e3a8a' },
+      { value: 0.2, label: '0.2', color: '#15803d' },
+      { value: 0.75, label: '3/4', color: '#d97706' }
+    ]
+  });
+
+  const cmpExamples = [
+    {
+      title: "Example 1: Compare \\(\\dfrac{3}{4}\\) and \\(0.7\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Convert to the same form:</strong> \\(\\dfrac{3}{4} = 0.75\\) (divide \\(3\\) by \\(4\\)).",
+        "<strong>Step 2 - Compare the decimals:</strong> \\(0.75 > 0.7\\), so \\(\\mathbf{\\dfrac{3}{4} > 0.7}\\)."
+      ]
+    },
+    {
+      title: "Example 2: Order \\(-1.5,\\ \\dfrac{3}{4},\\ -2,\\ 0.2\\) from least to greatest",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Convert everything to decimals:</strong> \\(-1.5,\\ 0.75,\\ -2,\\ 0.2\\).",
+        "<strong>Step 2 - Plot them on a number line and read left to right:</strong> \\(\\mathbf{-2,\\ -1.5,\\ 0.2,\\ \\dfrac{3}{4}}\\)."
+      ]
+    },
+    {
+      title: "Example 3: Compare \\(-\\dfrac{2}{3}\\) and \\(-0.7\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Convert \\(-\\dfrac{2}{3}\\) to a decimal:</strong> \\(-\\dfrac{2}{3} = -0.6666\\ldots\\) (repeating).",
+        "<strong>Step 2 - \\(-0.6666\\ldots\\) sits to the right of \\(-0.7\\) (closer to zero):</strong> \\(\\mathbf{-\\dfrac{2}{3} > -0.7}\\)."
+      ]
+    }
+  ];
+  makeCarousel('cmp', cmpExamples);
+
+  // ==========================================
+  // TAB 5: FRACTION OPERATIONS (REVIEW)
+  // ==========================================
+  const fopExamples = [
+    {
+      title: "Example 1 (add): \\(\\dfrac{1}{4} + \\dfrac{1}{6}\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Find the LCD of 4 and 6 (LCD = 12), and rewrite each fraction:</strong> \\(\\dfrac{1}{4} = \\dfrac{3}{12}\\), \\(\\dfrac{1}{6} = \\dfrac{2}{12}\\).",
+        "<strong>Step 2 - Add the numerators, keep the denominator:</strong> \\(\\dfrac{3}{12} + \\dfrac{2}{12} = \\mathbf{\\dfrac{5}{12}}\\)."
+      ]
+    },
+    {
+      title: "Example 2 (subtract): \\(\\dfrac{5}{6} - \\dfrac{1}{4}\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Find the LCD of 6 and 4 (LCD = 12), and rewrite each fraction:</strong> \\(\\dfrac{5}{6} = \\dfrac{10}{12}\\), \\(\\dfrac{1}{4} = \\dfrac{3}{12}\\).",
+        "<strong>Step 2 - Subtract the numerators:</strong> \\(\\dfrac{10}{12} - \\dfrac{3}{12} = \\mathbf{\\dfrac{7}{12}}\\)."
+      ]
+    },
+    {
+      title: "Example 3 (multiply): \\(\\dfrac{2}{3} \\times \\dfrac{3}{4}\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Multiply straight across:</strong> numerators \\(2 \\times 3 = 6\\), denominators \\(3 \\times 4 = 12\\).",
+        "<strong>Step 2 - Simplify:</strong> \\(\\dfrac{6}{12} = \\mathbf{\\dfrac{1}{2}}\\)."
+      ]
+    },
+    {
+      title: "Example 4 (divide): \\(\\dfrac{2}{5} \\div \\dfrac{3}{4}\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Keep-Change-Flip: keep \\(\\dfrac{2}{5}\\), change to multiplication, flip \\(\\dfrac{3}{4}\\) to its reciprocal:</strong> \\(\\dfrac{2}{5} \\times \\dfrac{4}{3}\\).",
+        "<strong>Step 2 - Multiply straight across:</strong> \\(\\dfrac{2 \\times 4}{5 \\times 3} = \\mathbf{\\dfrac{8}{15}}\\) (already in simplest form)."
+      ]
+    }
+  ];
+  makeCarousel('fop', fopExamples);
+
+  // ==========================================
+  // TAB 6: DECIMAL OPERATIONS (REVIEW)
+  // ==========================================
+  const dopExamples = [
+    {
+      title: "Example 1 (add): \\(4.7 + 2.35\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Line up the decimal points, writing \\(4.7\\) as \\(4.70\\):</strong> \\(4.70 + 2.35\\).",
+        "<strong>Step 2 - Add each column:</strong> \\(4.70 + 2.35 = \\mathbf{7.05}\\)."
+      ]
+    },
+    {
+      title: "Example 2 (subtract): \\(8.2 - 3.65\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Line up the decimal points, writing \\(8.2\\) as \\(8.20\\):</strong> \\(8.20 - 3.65\\).",
+        "<strong>Step 2 - Subtract each column, borrowing as needed:</strong> \\(8.20 - 3.65 = \\mathbf{4.55}\\)."
+      ]
+    },
+    {
+      title: "Example 3 (multiply): \\(2.4 \\times 1.5\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Multiply as if both were whole numbers:</strong> \\(24 \\times 15 = 360\\).",
+        "<strong>Step 2 - Count the decimal places in both factors (\\(1 + 1 = 2\\)) and place the point 2 spots from the right:</strong> \\(3.60 = \\mathbf{3.6}\\)."
+      ]
+    },
+    {
+      title: "Example 4 (divide): \\(6.25 \\div 0.5\\)",
+      maxSteps: 2,
+      steps: [
+        "<strong>Step 1 - Move the divisor's decimal point to make it a whole number (\\(0.5 \\to 5\\)), moving the dividend's point the same number of places (\\(6.25 \\to 62.5\\)):</strong>",
+        "<strong>Step 2 - Divide normally:</strong> \\(62.5 \\div 5 = \\mathbf{12.5}\\)."
+      ]
+    }
+  ];
+  makeCarousel('dop', dopExamples);
+</script>
+</body>
+</html>

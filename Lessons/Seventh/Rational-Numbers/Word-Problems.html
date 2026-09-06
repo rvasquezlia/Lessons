@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Rational Numbers - Word Problems</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Rational Numbers - Word Problems</span>
+    <h1>Word Problems: Rational Numbers in Real Life</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Pre-Algebra 7 - Rational Numbers Word Problems')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Every item here is a word problem involving fractions, decimals, or both. Decide what the problem is asking, convert forms if you need to, and compute with the rules you already know. This is quiz-style - you submit each answer once, and your teacher reviews it from your printed progress report rather than on screen. Finish all 3 tabs, then type your name above and click <strong>Print My Progress</strong>.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('convertcompare')">1. Converting &amp; Comparing</button>
+    <button class="tab-btn" onclick="switchTab('operations')">2. Operations in Context</button>
+    <button class="tab-btn" onclick="switchTab('mixed')">3. Mixed &amp; Multi-Step</button>
+  </nav>
+
+  <!-- TAB 1: CONVERTING & COMPARING -->
+  <div id="convertcompare" class="panel active">
+    <div class="section-title">Converting &amp; Comparing in Context</div>
+    <div id="cc-list"></div>
+
+    <div class="step-box" style="margin-top:24px;">
+      <h3 style="margin-top:0; color:var(--primary);">Ordering Distances (reflection)</h3>
+      <p>Four hikers reported these distances remaining to the summit, in miles: \(2.5\), \(2\dfrac{1}{4}\), \(2.75\), and \(2\dfrac{1}{10}\).</p>
+      <p><strong>Task:</strong> list the four distances in order from least to greatest.</p>
+      <div class="form-group">
+        <label>Order (least to greatest):</label>
+        <input type="text" id="hike-order" class="form-control-lg" style="max-width:400px;" placeholder="e.g. 2 1/10, 2 1/4, 2.5, 2.75">
+      </div>
+      <button class="btn-lg" onclick="checkHikeOrder()">Submit</button>
+      <div id="hike-order-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: OPERATIONS IN CONTEXT -->
+  <div id="operations" class="panel">
+    <div class="section-title">Fraction &amp; Decimal Operations in Context</div>
+    <div id="op-list"></div>
+  </div>
+
+  <!-- TAB 3: MIXED & MULTI-STEP -->
+  <div id="mixed" class="panel">
+    <div class="section-title">Mixed &amp; Multi-Step Word Problems</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      A few of these bring back negative numbers from Integers - read carefully and keep track of direction (rise vs. drop, warmer vs. colder).
+    </div>
+    <div id="mixed-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // REUSABLE SINGLE-FIELD WORD PROBLEM LIST (submit mode - quiz-style)
+  // ==========================================
+  function renderList(containerId, problems, keyPrefix, section) {
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px;">
+          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkItem('${keyPrefix}', ${i})">Submit</button>
+        </div>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, `${section} #${i + 1}: ${p.label}`, section));
+  }
+
+  const listRegistry = {};
+
+  function normalizeAns(s) {
+    return String(s || '').toLowerCase().replace(/\s+/g, '');
+  }
+
+  function checkItem(keyPrefix, idx) {
+    const cfg = listRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const raw = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
+    let correct;
+    if (p.a !== undefined) {
+      correct = LessonCheck.numericMatch(raw, p.a, p.tol !== undefined ? p.tol : 0.01);
+    } else if (p.accepted) {
+      correct = p.accepted.includes(normalizeAns(raw));
+    } else {
+      correct = undefined; // open-ended, no auto-grade - shows as "Submitted" on the report
+    }
+    LessonCheck.submit(fb, { key: `${keyPrefix}-${idx}`, label: `${cfg.section} #${idx + 1}: ${p.label}`, answer: raw, section: cfg.section, correct });
+  }
+
+  function setup(containerId, problems, keyPrefix, section) {
+    listRegistry[keyPrefix] = { problems, section };
+    renderList(containerId, problems, keyPrefix, section);
+  }
+
+  // ==========================================
+  // TAB 1: CONVERTING & COMPARING
+  // ==========================================
+  const ccProblems = [
+    { q: "A recipe calls for \\(\\dfrac{3}{4}\\) cup of sugar. Write this amount as a decimal.", a: 0.75, label: "Recipe sugar as a decimal" },
+    { q: "Sam's batting average is \\(0.325\\). Write this as a fraction in lowest terms.", accepted: ["13/40"], label: "Batting average as a fraction" },
+    { q: "One board measures \\(\\dfrac{5}{8}\\) inch thick; another measures \\(0.6\\) inch thick. Enter the thickness of the thicker board as a decimal.", a: 0.625, label: "Thicker board" },
+    { q: "A pitcher threw strikes on \\(\\dfrac{2}{5}\\) of his pitches yesterday, and on \\(0.36\\) of his pitches today. On which day was his strike fraction higher - type \"yesterday\" or \"today\".", accepted: ["yesterday"], label: "Higher strike fraction" }
+  ];
+  setup('cc-list', ccProblems, 'cc', '1. Converting & Comparing');
+
+  function checkHikeOrder() {
+    const raw = document.getElementById('hike-order').value.trim();
+    const fb = document.getElementById('hike-order-feedback');
+    if (!raw) { LessonCheck.incomplete(fb, "Enter your ordered list before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'hike-order', label: '1. Converting & Comparing: order hiking distances', answer: raw, section: '1. Converting & Comparing' });
+  }
+  LessonProgress.preRegister('hike-order', '1. Converting & Comparing: order hiking distances', '1. Converting & Comparing');
+
+  // ==========================================
+  // TAB 2: OPERATIONS IN CONTEXT
+  // ==========================================
+  const opProblems = [
+    { q: "A recipe needs \\(\\dfrac{2}{3}\\) cup of flour for one batch. How much flour (in cups) is needed for 3 batches?", a: 2, label: "Flour for 3 batches" },
+    { q: "Maria has \\(\\dfrac{3}{4}\\) yard of ribbon and uses \\(\\dfrac{1}{3}\\) yard for a bow. How much ribbon (as a fraction of a yard) does she have left?", accepted: ["5/12"], label: "Ribbon left" },
+    { q: "A pizza is cut into 8 equal slices. If \\(\\dfrac{5}{8}\\) of the pizza is eaten, what fraction is left?", accepted: ["3/8"], label: "Pizza left" },
+    { q: "A carpenter has a board \\(6.5\\) feet long and cuts off a piece \\(2.75\\) feet long. How long (in feet) is the remaining piece?", a: 3.75, label: "Remaining board length" },
+    { q: "Gas costs \\(\\$3.20\\) per gallon. How much will \\(8.5\\) gallons cost?", a: 27.20, label: "Cost of 8.5 gallons of gas" },
+    { q: "A ribbon \\(7.5\\) meters long is cut into pieces \\(0.75\\) meter long each. How many pieces can be cut?", a: 10, label: "Ribbon pieces" },
+    { q: "Four friends equally share \\(\\dfrac{2}{3}\\) of a pizza. What fraction of the whole pizza does each friend get?", accepted: ["1/6"], label: "Each friend's pizza share" },
+    { q: "A recipe needs \\(\\dfrac{3}{2}\\) cups of milk, but Ben wants to make half the recipe. How much milk (as a fraction of a cup) does he need?", accepted: ["3/4"], label: "Ben's milk amount" }
+  ];
+  setup('op-list', opProblems, 'op', '2. Operations in Context');
+
+  // ==========================================
+  // TAB 3: MIXED & MULTI-STEP
+  // ==========================================
+  const mixedProblems = [
+    { q: "The temperature changed from \\(-2.5^\\circ\\text{C}\\) to \\(-0.75^\\circ\\text{C}\\) overnight. By how many degrees did it rise?", a: 1.75, label: "Overnight temperature rise" },
+    { q: "A stock price started at \\(\\$45.50\\), dropped \\(\\dfrac{3}{4}\\) of a dollar, then rose \\(\\$1.25\\). What is the final price?", a: 46.00, label: "Final stock price" },
+    { q: "Which is colder: \\(-\\dfrac{3}{4}^\\circ\\text{C}\\) or \\(-0.8^\\circ\\text{C}\\)? Enter the colder temperature as a decimal.", a: -0.8, label: "Colder temperature" },
+    { q: "A submarine's depth changes from \\(-12.4\\) m to \\(-8.9\\) m. Express the change as a positive number of meters risen.", a: 3.5, label: "Submarine rise" },
+    { q: "Order from least to greatest: \\(-1.5,\\ \\dfrac{3}{4},\\ -2,\\ 0.2\\).", accepted: ["-2,-1.5,0.2,3/4"], label: "Order four rational numbers" },
+    { q: "A runner's time improved from \\(12.75\\) minutes to \\(12\\dfrac{1}{2}\\) minutes. By how much did her time decrease?", a: 0.25, label: "Runner's time decrease" },
+    { q: "A container holds \\(\\dfrac{3}{4}\\) gallon of paint. Ana uses \\(0.4\\) gallon on one wall and \\(\\dfrac{1}{8}\\) gallon on another. How much paint (in gallons, as a decimal) remains?", a: 0.225, label: "Paint remaining" }
+  ];
+  setup('mixed-list', mixedProblems, 'mx', '3. Mixed & Multi-Step');
+</script>
+<div id="print-report"></div>
+</body>
+</html>
