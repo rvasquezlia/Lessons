@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Operations with Rational Numbers - Vocabulary &amp; Literacy</title>
+
+  <!-- Montserrat Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+
+  <style>
+    .glossary-term {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 10px;
+      padding: 14px 20px;
+      margin-bottom: 14px;
+    }
+    .glossary-term .term-name { font-weight: 900; color: var(--primary); font-size: 1.1rem; }
+    .glossary-term .term-def { margin: 6px 0 0 0; }
+    .match-row { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap; }
+    .match-row strong { min-width: 300px; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Operations with Rational Numbers - Vocabulary &amp; Literacy</span>
+    <h1>Vocabulary &amp; Literacy: Signed Fractions &amp; Decimals</h1>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    You already know what a rational number is and how to compute with plain fractions and decimals - this page is about the words you need for the next step: applying the same positive/negative rules from Integers to fractions and decimals. Work through the three tabs in order. Copy every glossary box into your notebook. There's no Print My Progress button here - the short checks are just for you, so use them to see what's solid before the next lesson. <strong>When you type an answer that comes out to a fraction, enter it as a decimal</strong> (round to the nearest hundredth if it doesn't divide evenly).
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('refresher')">1. Quick Refresher: Key Terms</button>
+    <button class="tab-btn" onclick="switchTab('signvocab')">2. Sign-Rule Vocabulary</button>
+    <button class="tab-btn" onclick="switchTab('cluewords')">3. Word-Problem Clue Words</button>
+  </nav>
+
+  <!-- TAB 1: QUICK REFRESHER -->
+  <div id="refresher" class="panel active">
+    <div class="section-title">Quick Refresher: Terms You'll Lean On</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      This is a fast reminder, not a full re-teach - you covered fraction/decimal basics in the last topic. Read and copy each term, then try the 3 quick checks at the bottom - you get 2 tries per question before the answer is shown.
+    </div>
+
+    <div class="glossary-term">
+      <div class="term-name">Numerator</div>
+      <p class="term-def">The top number in a fraction - it tells you how many parts you have. In \(\frac{3}{4}\), the numerator is \(3\).</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Denominator</div>
+      <p class="term-def">The bottom number in a fraction - it tells you how many equal parts something is divided into. In \(\frac{3}{4}\), the denominator is \(4\).</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Reciprocal (Multiplicative Inverse)</div>
+      <p class="term-def">Flip a fraction's numerator and denominator. The reciprocal of \(\frac{2}{5}\) is \(\frac{5}{2}\); the reciprocal of a whole number \(n\) is \(\frac{1}{n}\). Flipping a fraction never changes its sign - the reciprocal of \(-\frac{2}{5}\) is \(-\frac{5}{2}\).</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Least Common Denominator (LCD)</div>
+      <p class="term-def">The smallest number that both denominators divide into evenly. Rewriting two fractions over their LCD turns them into equivalent fractions you can actually add or subtract.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Equivalent Forms</div>
+      <p class="term-def">A fraction and a decimal that name the exact same value, like \(\frac{1}{2} = 0.5\) or \(\frac{3}{4} = 0.75\). Switching from one form to the other never changes a number's value or its sign - it just makes one particular computation easier.</p>
+    </div>
+
+    <div class="explainer-box">
+      <strong>Opposites Still Work the Same Way for Rational Numbers:</strong> \(-\frac{3}{4}\) and \(\frac{3}{4}\) are exactly \(\frac{3}{4}\) of a unit from zero, just on opposite sides - the same idea as \(-4\) and \(4\) from Integers, just with a fraction instead of a whole number.
+      <div id="opposites-numberline" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Quick Check</div>
+      <p style="margin:0;">Use the vocabulary above to answer these three questions.</p>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>1.</strong> In the fraction \(-\frac{5}{8}\), what is the denominator?
+      <div style="margin-top:10px;">
+        <input type="text" id="qr-0-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkRefresher(0)">Check</button>
+      </div>
+      <div id="qr-0-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>2.</strong> What is the reciprocal of \(-\frac{3}{7}\)? Type it as a fraction, like <code>-7/3</code>.
+      <div style="margin-top:10px;">
+        <input type="text" id="qr-1-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkRefresher(1)">Check</button>
+      </div>
+      <div id="qr-1-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+    <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+      <strong>3.</strong> What is the least common denominator of \(\frac{2}{3}\) and \(\frac{3}{4}\)?
+      <div style="margin-top:10px;">
+        <input type="text" id="qr-2-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkRefresher(2)">Check</button>
+      </div>
+      <div id="qr-2-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: SIGN-RULE VOCABULARY -->
+  <div id="signvocab" class="panel">
+    <div class="section-title">Sign-Rule Vocabulary: Naming the Strategies</div>
+
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Same Signs and Different Signs worked for integers, and they work exactly the same way for fractions and decimals - a sign is a sign, no matter what form the number is in. These are the strategy names you'll use for the rest of this topic. Copy them, then try the matching check.
+    </div>
+
+    <div class="glossary-term">
+      <div class="term-name">Same Signs / Different Signs</div>
+      <p class="term-def">Shorthand for whether two rational numbers are both positive, both negative (<strong>same signs</strong>), or one of each (<strong>different signs</strong>) - still the very first thing you check before adding, subtracting, multiplying, or dividing, whether the numbers are fractions, decimals, or a mix of both.</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Keep-Change-Change</div>
+      <p class="term-def">The same subtraction strategy from Integers: <strong>keep</strong> the first number, <strong>change</strong> subtraction to addition, <strong>change</strong> the sign of the second number. Works identically on fractions and decimals: \(-\frac{3}{4} - \left(-\frac{1}{2}\right) \rightarrow -\frac{3}{4} + \frac{1}{2}\).</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Keep-Change-Flip</div>
+      <p class="term-def">The strategy for dividing fractions: <strong>keep</strong> the first fraction, <strong>change</strong> division to multiplication, <strong>flip</strong> (take the reciprocal of) the second fraction. \(-\frac{2}{3} \div \frac{4}{5} \rightarrow -\frac{2}{3} \times \frac{5}{4}\).</p>
+    </div>
+    <div class="glossary-term">
+      <div class="term-name">Simplify / Lowest Terms</div>
+      <p class="term-def">Dividing a fraction's numerator and denominator by their greatest common factor so no smaller whole numbers can divide both. \(\frac{6}{8}\) simplifies to \(\frac{3}{4}\); a sign out front stays exactly where it is while you simplify.</p>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Match the Strategy to Its Job</h3>
+      <p>For each job below, choose the strategy name that matches it.</p>
+      <div class="match-row"><strong>Rewriting subtraction as adding the opposite &rarr;</strong>
+        <select id="sv-0" class="form-control-lg" style="max-width:280px;">
+          <option value="">Choose...</option>
+          <option value="kcc">Keep-Change-Change</option>
+          <option value="kcf">Keep-Change-Flip</option>
+          <option value="lcd">Least Common Denominator (LCD)</option>
+          <option value="ssr">Same Signs Rule</option>
+        </select>
+      </div>
+      <div class="match-row"><strong>Rewriting division as multiplying by the reciprocal &rarr;</strong>
+        <select id="sv-1" class="form-control-lg" style="max-width:280px;">
+          <option value="">Choose...</option>
+          <option value="kcc">Keep-Change-Change</option>
+          <option value="kcf">Keep-Change-Flip</option>
+          <option value="lcd">Least Common Denominator (LCD)</option>
+          <option value="ssr">Same Signs Rule</option>
+        </select>
+      </div>
+      <div class="match-row"><strong>Rewriting two fractions so they share one denominator &rarr;</strong>
+        <select id="sv-2" class="form-control-lg" style="max-width:280px;">
+          <option value="">Choose...</option>
+          <option value="kcc">Keep-Change-Change</option>
+          <option value="kcf">Keep-Change-Flip</option>
+          <option value="lcd">Least Common Denominator (LCD)</option>
+          <option value="ssr">Same Signs Rule</option>
+        </select>
+      </div>
+      <div class="match-row"><strong>Deciding a product or quotient is positive because both numbers matched &rarr;</strong>
+        <select id="sv-3" class="form-control-lg" style="max-width:280px;">
+          <option value="">Choose...</option>
+          <option value="kcc">Keep-Change-Change</option>
+          <option value="kcf">Keep-Change-Flip</option>
+          <option value="lcd">Least Common Denominator (LCD)</option>
+          <option value="ssr">Same Signs Rule</option>
+        </select>
+      </div>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkSignVocab()">Check My Matches</button>
+      <div id="sv-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: WORD-PROBLEM CLUE WORDS -->
+  <div id="cluewords" class="panel">
+    <div class="section-title">Rational Number Literacy: Reading Word Problems</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      The same clue words from Integers still apply - they just now describe fractional and decimal amounts too. Sort the words, then practice translating phrases into signed fractions and decimals.
+    </div>
+
+    <div class="explainer-box">
+      <strong>Positive (+):</strong> gains, increases, or positions above a reference point - now possibly a fraction or decimal amount, like a rise of \(0.6\) inch or a gain of \(2\frac{1}{2}\) points.<br>
+      <strong>Negative (-):</strong> losses, decreases, or positions below a reference point - a drop of \(\frac{3}{4}\)&deg; or a withdrawal of \(\$15.40\).
+    </div>
+
+    <h3>Part 1: Categorizing Clue Words</h3>
+    <p>Sort each word by whether it represents a positive or negative change.</p>
+    <div id="cluewords-list"></div>
+    <div style="text-align:center; margin-top:14px;">
+      <button class="btn-lg" onclick="checkClueWords()">Check My Sorting</button>
+    </div>
+    <div id="cluewords-feedback" class="feedback-msg" style="margin-top:14px;"></div>
+
+    <h3 style="margin-top:28px;">Part 2: Multiplication and Division Clue Words</h3>
+    <p>Sort each clue word by the operation it most often represents.</p>
+    <div id="opmatch-list"></div>
+    <div style="text-align:center; margin-top:14px;">
+      <button class="btn-lg" onclick="checkOpMatch()">Check My Matches</button>
+    </div>
+    <div id="opmatch-feedback" class="feedback-msg" style="margin-top:14px;"></div>
+
+    <h3 style="margin-top:28px;">Part 3: Translating Phrases Into Signed Numbers</h3>
+    <p>Write the signed number (as a decimal) that represents each phrase.</p>
+    <div id="translate-list"></div>
+
+    <h3 style="margin-top:28px;">Part 4: Real-World Entries (Write the Signed Number)</h3>
+    <p>Same skill, longer list - read each entry and write the signed decimal it represents. This is quiz-style: submit once.</p>
+    <div id="realworld-list"></div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Critical Thinking</h3>
+      <p>Why do you have to line up decimal points (or find a common denominator) before adding or subtracting two signed rational numbers? What could go wrong with your final sign if you skipped that step?</p>
+      <textarea id="vocab-critical" class="form-control-lg" rows="3" placeholder="Explain your reasoning..."></textarea>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkVocabCritical()">Submit My Work</button>
+      <div id="vocab-critical-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // TAB 1: QUICK REFRESHER
+  // ==========================================
+  renderNumberLine('opposites-numberline', {
+    min: -2, max: 2, step: 1,
+    points: [{ value: -0.75, label: '-3/4', color: '#1e3a8a' }, { value: 0.75, label: '3/4', color: '#1e3a8a' }],
+    arrows: [{ from: 0, to: -0.75, label: '3/4 unit', color: '#d97706', row: 0 }, { from: 0, to: 0.75, label: '3/4 unit', color: '#d97706', row: 0 }]
+  });
+
+  const refresherProblems = [
+    { q: "Denominator of -5/8", type: "number", a: 8, tol: 0.001 },
+    { q: "Reciprocal of -3/7", type: "text", accepted: ["-7/3"] },
+    { q: "LCD of 2/3 and 3/4", type: "number", a: 12, tol: 0.001 }
+  ];
+
+  function checkRefresher(idx) {
+    const p = refresherProblems[idx];
+    const raw = document.getElementById(`qr-${idx}-input`).value;
+    const fb = document.getElementById(`qr-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet."); return; }
+    const correct = p.type === "number" ? LessonCheck.numericMatch(raw, p.a, p.tol) : p.accepted.includes(raw.trim().replace(/\s+/g, ''));
+    const displayAnswer = p.type === "number" ? p.a : p.accepted[0];
+    LessonCheck.check(`qr-${idx}`, correct, fb, {
+      correct: `Correct! Answer: <strong>${displayAnswer}</strong>`,
+      retry: "Not quite yet. Review the glossary box above and try again.",
+      reveal: `Here's the correct answer: <strong>${displayAnswer}</strong>`
+    });
+  }
+
+  // ==========================================
+  // TAB 2: SIGN-RULE VOCABULARY MATCH
+  // ==========================================
+  function checkSignVocab() {
+    const vals = ['sv-0', 'sv-1', 'sv-2', 'sv-3'].map(id => document.getElementById(id).value);
+    const fb = document.getElementById('sv-feedback');
+    if (vals.some(v => !v)) { LessonCheck.incomplete(fb, "Choose a strategy for all four jobs before checking."); return; }
+    const expected = ['kcc', 'kcf', 'lcd', 'ssr'];
+    const correct = vals.every((v, i) => v === expected[i]);
+    LessonCheck.check('sv-match', correct, fb, {
+      correct: "Correct! Keep-Change-Change rewrites subtraction, Keep-Change-Flip rewrites division, LCD lines up denominators, and the Same Signs Rule decides the sign of a product or quotient.",
+      retry: "Some of these aren't matched yet. Review the glossary boxes above and try again.",
+      reveal: "Rewriting subtraction &rarr; Keep-Change-Change. Rewriting division &rarr; Keep-Change-Flip. Sharing one denominator &rarr; LCD. Matching-sign product/quotient &rarr; Same Signs Rule."
+    });
+  }
+
+  // ==========================================
+  // TAB 3: CLUE WORDS
+  // ==========================================
+  const clueWords = [
+    { word: "Gain", sign: "pos" }, { word: "Increase", sign: "pos" }, { word: "Rise", sign: "pos" }, { word: "Credit", sign: "pos" }, { word: "Deposit", sign: "pos" }, { word: "Profit", sign: "pos" },
+    { word: "Loss", sign: "neg" }, { word: "Decrease", sign: "neg" }, { word: "Drop", sign: "neg" }, { word: "Debit", sign: "neg" }, { word: "Withdrawal", sign: "neg" }, { word: "Deficit", sign: "neg" }
+  ];
+
+  function renderClueWords() {
+    const html = clueWords.map((item, i) => `
+      <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap;">
+        <strong style="min-width:200px;">${i + 1}. "${item.word}"</strong>
+        <select id="cw-${i}" class="form-control-lg" style="max-width:200px;">
+          <option value="">Select...</option>
+          <option value="pos">Positive (+)</option>
+          <option value="neg">Negative (-)</option>
+        </select>
+      </div>
+    `).join('');
+    document.getElementById('cluewords-list').innerHTML = html;
+  }
+  renderClueWords();
+
+  function checkClueWords() {
+    const fb = document.getElementById('cluewords-feedback');
+    let allFilled = true, allCorrect = true;
+    clueWords.forEach((item, i) => {
+      const val = document.getElementById(`cw-${i}`).value;
+      if (!val) allFilled = false;
+      else if (val !== item.sign) allCorrect = false;
+    });
+    if (!allFilled) { LessonCheck.incomplete(fb, "Choose positive or negative for every word before checking."); return; }
+    LessonCheck.check('cluewords', allCorrect, fb, {
+      correct: 'Correct! Every word is sorted correctly.',
+      retry: 'Some words are sorted incorrectly. Review: Positive = Gain, Increase, Rise, Credit, Deposit, Profit. Negative = Loss, Decrease, Drop, Debit, Withdrawal, Deficit.',
+      reveal: 'Correct sorting: Positive (+) = Gain, Increase, Rise, Credit, Deposit, Profit. Negative (-) = Loss, Decrease, Drop, Debit, Withdrawal, Deficit.'
+    });
+  }
+
+  const opMatchWords = [
+    { word: "per", op: "mult" }, { word: "each", op: "mult" }, { word: "rate", op: "mult" }, { word: "split evenly", op: "div" }, { word: "average", op: "div" }, { word: "divided among", op: "div" }
+  ];
+
+  function renderOpMatch() {
+    const html = opMatchWords.map((item, i) => `
+      <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap;">
+        <strong style="min-width:200px;">${i + 1}. "${item.word}"</strong>
+        <select id="om-${i}" class="form-control-lg" style="max-width:220px;">
+          <option value="">Select...</option>
+          <option value="mult">Multiplication (&times;)</option>
+          <option value="div">Division (&divide;)</option>
+        </select>
+      </div>
+    `).join('');
+    document.getElementById('opmatch-list').innerHTML = html;
+  }
+  renderOpMatch();
+
+  function checkOpMatch() {
+    const fb = document.getElementById('opmatch-feedback');
+    let allFilled = true, allCorrect = true;
+    opMatchWords.forEach((item, i) => {
+      const val = document.getElementById(`om-${i}`).value;
+      if (!val) allFilled = false;
+      else if (val !== item.op) allCorrect = false;
+    });
+    if (!allFilled) { LessonCheck.incomplete(fb, "Choose an operation for every word before checking."); return; }
+    LessonCheck.check('opmatch', allCorrect, fb, {
+      correct: 'Correct! Every clue word matches the right operation.',
+      retry: "Some matches aren't right yet. 'per', 'each', 'rate' point to multiplication; 'split evenly', 'average', 'divided among' point to division.",
+      reveal: "Correct matches: Multiplication = per, each, rate. Division = split evenly, average, divided among."
+    });
+  }
+
+  function renderSimpleList(containerId, problems, keyPrefix) {
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkTranslate('${keyPrefix}', ${i})">Check</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+  }
+
+  const translateProblems = [
+    { q: "A temperature drop of \\(\\frac{3}{4}\\) of a degree", a: -0.75 },
+    { q: "A hiker gains 12.5 feet in elevation", a: 12.5 },
+    { q: "A debt of \\$2 and \\(\\frac{1}{4}\\) dollars", a: -2.25 },
+    { q: "A stock rises \\$0.35", a: 0.35 },
+    { q: "A submarine's position is \\(\\frac{3}{8}\\) of a mile below the surface", a: -0.375 }
+  ];
+  renderSimpleList('translate-list', translateProblems, 'tr');
+
+  function checkTranslate(keyPrefix, idx) {
+    const p = translateProblems[idx];
+    const raw = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
+    const correct = LessonCheck.numericMatch(raw, p.a, 0.01);
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! Answer: <strong>${p.a}</strong>`,
+      retry: "Not quite yet. Which clue word tells you the sign? Try again.",
+      reveal: `Here's the correct answer: <strong>${p.a}</strong>`
+    });
+  }
+
+  const realworldProblems = [
+    { q: "A savings account shows a withdrawal of \\$15.40. Write the signed number for this transaction.", a: -15.4 },
+    { q: "A hiking trail's elevation change is a rise of \\(\\frac{3}{4}\\) mile. Write the signed number (as a decimal) for this change.", a: 0.75 },
+    { q: "A thermometer reading fell by \\(2\\frac{1}{2}\\) degrees. Write the signed number (as a decimal) for this change.", a: -2.5 },
+    { q: "A diver's position is 8.6 meters below the surface. Write the signed number for her position.", a: -8.6 },
+    { q: "A runner's split time was 0.3 seconds faster than her goal pace. Write the signed number representing this change in time (faster = a decrease).", a: -0.3 },
+    { q: "A bank account earned \\$0.75 in interest. Write the signed number for this transaction.", a: 0.75 }
+  ];
+
+  function renderRealworld() {
+    const html = realworldProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="rw-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkRealworld(${i})">Submit</button>
+        <div id="rw-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('realworld-list').innerHTML = html;
+  }
+  renderRealworld();
+
+  function checkRealworld(idx) {
+    const p = realworldProblems[idx];
+    const raw = document.getElementById(`rw-${idx}-input`).value;
+    const fb = document.getElementById(`rw-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
+    LessonCheck.submit(fb, { key: `rw-${idx}`, label: `Real-World Entry #${idx + 1}`, answer: raw, correct: LessonCheck.numericMatch(raw, p.a, 0.01) });
+  }
+
+  function checkVocabCritical() {
+    const explain = document.getElementById('vocab-critical').value.trim();
+    const fb = document.getElementById('vocab-critical-feedback');
+    if (explain.length <= 5) { LessonCheck.incomplete(fb, "Write your explanation before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'vocab-critical', label: 'Critical Thinking: why line up decimals / find an LCD before adding or subtracting?', answer: explain });
+  }
+</script>
+</body>
+</html>

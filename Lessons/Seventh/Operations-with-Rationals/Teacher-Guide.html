@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Operations with Rational Numbers - Teacher Guide</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <style>
+    .pacing-table td:nth-child(2), .pacing-table th:nth-child(2) { text-align: center; white-space: nowrap; }
+    .flag-box {
+      background: #fff1f2;
+      border: 3px solid #fb7185;
+      border-left: 10px solid #e11d48;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .flag-box h4 { margin-top: 0; color: #be123c; }
+    .answer-day-heading {
+      background: var(--primary);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 28px 0 12px 0;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .challenge-day-heading {
+      background: #b45309;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 28px 0 12px 0;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .solution-toggle > summary {
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--primary);
+      padding: 4px 0;
+    }
+    a.btn-lg {
+      display: inline-block;
+      text-decoration: none;
+      margin: 4px 0 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Operations with Rational Numbers - Teacher Guide</span>
+    <h1>Teacher Guide: Operations with Rational Numbers</h1>
+    <p class="subtitle">Pacing, Answer Keys, Printables &amp; Challenge Bank for All Six Sections</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">This page is for you, not students</strong>
+    Keep this link out of anything you share with your class - it has no student-facing print button. Use the tabs below for pacing and standards, a complete digital answer key for every section, and a bank of harder challenge problems for early finishers.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('overview')">1. Topic Overview &amp; Pacing</button>
+    <button class="tab-btn" onclick="switchTab('keys-practice')">2. Answer Keys: Explanation &amp; Practice Set</button>
+    <button class="tab-btn" onclick="switchTab('keys-wp')">3. Answer Keys: Word Problems</button>
+    <button class="tab-btn" onclick="switchTab('keys-testprep')">4. Answer Keys: Test Prep</button>
+    <button class="tab-btn" onclick="switchTab('paper')">5. Printables &amp; Challenge Bank</button>
+  </nav>
+
+  <!-- PANEL 1: TOPIC OVERVIEW & PACING -->
+  <div id="overview" class="panel active">
+    <div class="section-title">Topic Overview: Operations with Rational Numbers</div>
+
+    <div class="explainer-box">
+      <strong>Synthesis topic, following Integers and Rational Numbers.</strong> Students already have the same-sign/different-sign rules from Integers, and they already know how to compute with plain fractions and decimals from Rational Numbers. This topic is specifically the layer where those two skills meet: applying the integer sign rules to signed fractions and decimals, together, including converting between forms mid-problem when that makes a computation easier. It runs as six standalone pages - <strong>Vocabulary &amp; Literacy</strong>, <strong>Explanation</strong>, <strong>Practice Set</strong>, and <strong>Word Problems</strong> in roughly that order, then <strong>Test Prep</strong> to review before an assessment. The pages don't link to each other, so share each one directly - a Google Classroom post per page works well. <strong>Calculators are not permitted this quarter (Q1-Q2)</strong> - they return in Q3.
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Section</th><th>Suggested Time</th><th>Focus</th></tr></thead>
+      <tbody>
+        <tr><td>Vocabulary &amp; Literacy</td><td>~25-35 min</td><td>A quick refresher on numerator/denominator/reciprocal/LCD, then the sign-rule vocabulary (Same/Different Signs, Keep-Change-Change, Keep-Change-Flip) applied to fractions and decimals, plus real-world clue words.</td></tr>
+        <tr><td>Explanation</td><td>~1-2 class periods</td><td>Fully worked examples: add/subtract fractions, add/subtract decimals, multiply/divide both, switching forms mid-problem, and multi-step order-of-operations expressions.</td></tr>
+        <tr><td>Practice Set</td><td>~1-2 class periods</td><td>Computation-only practice, organized into 5 tabs by skill, up to 2 tries per problem with a reveal. Fraction answers are entered as decimals.</td></tr>
+        <tr><td>Word Problems</td><td>~1 class period</td><td>Real-world scenarios with fractional and decimal amounts (temperature, elevation/depth, rate of change, banking), submit-only with teacher review from the printed report.</td></tr>
+        <tr><td>Test Prep</td><td>~1 class period + assessment</td><td>Concept review, error analysis, a timed review quiz, and a submit-only Mixed Practice worksheet that doubles as a paper-equivalent assessment.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Standards &amp; Objectives</div>
+      <p style="margin:0 0 8px 0;"><strong>CCSS.Math.Content.7.NS.A.1, 7.NS.A.1a-d, 7.NS.A.2, 7.NS.A.2a-c, 7.NS.A.3</strong> &amp; <strong>MP.1, MP.2, MP.3, MP.5, MP.7, MP.8</strong>.</p>
+      <ul style="margin-bottom:0;">
+        <li>Add and subtract signed fractions and decimals using the same-sign/different-sign rules from Integers.</li>
+        <li>Multiply and divide signed fractions and decimals, including using Keep-Change-Flip for fraction division.</li>
+        <li>Convert between fraction and decimal form mid-problem to simplify a computation.</li>
+        <li>Evaluate multi-step expressions mixing several signed rational numbers, applying order of operations.</li>
+        <li>Apply these skills to real-world contexts: temperature, elevation/depth, rate of change, and banking.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Multidisciplinary Connections</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Geography &amp; Earth Science:</strong> elevation, depth, temperature change.</li>
+        <li><strong>Financial Literacy:</strong> bank balances, deposits/withdrawals/fees with cents and fractional shares.</li>
+        <li><strong>Physical Science:</strong> average rate of change (cooling rates, descent rates).</li>
+        <li><strong>Critical Thinking:</strong> error analysis, choosing the more efficient number form for a given step.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Materials Needed</div>
+      <ul>
+        <li>One device per student for all six pages.</li>
+        <li>Printer or "print to PDF" access so students can submit their Print My Progress page (from Practice Set, Word Problems, and Test Prep) to Google Classroom.</li>
+        <li>Printed or shared-via-Classroom copies of the Timed Review Quiz (see Printables tab) for small-group review during Test Prep.</li>
+        <li>Printed Mixed Practice (Printables tab) if you prefer a paper-only assessment instead of, or alongside, the digital submit-only tab.</li>
+        <li><strong>No calculators this quarter.</strong></li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Common Misconceptions to Watch For</div>
+      <ul style="margin-bottom:0;">
+        <li>Adding or subtracting fractions without a common denominator first.</li>
+        <li>Assuming a same-sign product or quotient is negative just because both numbers are fractions or decimals less than 1 in absolute value.</li>
+        <li>Dividing fractions by multiplying straight across instead of flipping the second fraction (skipping Keep-Change-Flip).</li>
+        <li>Converting a fraction to a decimal (or vice versa) incorrectly, which then carries an error through the rest of a multi-step problem.</li>
+        <li>Losing track of the sign when several operations are chained together in one expression.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Differentiation &amp; Additional IXL Practice</div>
+      <p style="margin:0 0 10px 0;">Not required assignments - use these for targeted reinforcement, extension, or support based on observed skill gaps.</p>
+      <p style="margin:0 0 6px 0;"><strong>Add/subtract fractions support/extension:</strong> add/subtract fractions with unlike denominators, signed fraction word problems.</p>
+      <p style="margin:0 0 6px 0;"><strong>Add/subtract decimals support/extension:</strong> add/subtract signed decimals, decimal word problems.</p>
+      <p style="margin:0 0 6px 0;"><strong>Multiply/divide support/extension:</strong> multiply/divide signed fractions and decimals, dividing fractions with Keep-Change-Flip.</p>
+      <p style="margin:0;"><strong>Combined review:</strong> mixed operations with rational numbers, converting between fractions and decimals.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Suggested Metacognition Prompts</div>
+      <ul style="margin-bottom:0;">
+        <li>"When you see a fraction and a decimal in the same problem, how do you decide which form to convert into?"</li>
+        <li>"How is deciding the sign of a fraction product the same as deciding the sign of an integer product? How is it different?"</li>
+        <li>"Which step in a multi-step rational-number problem do you find easiest to lose track of, and what could you do to catch that mistake?"</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PANEL 2: ANSWER KEYS - EXPLANATION & PRACTICE SET -->
+  <div id="keys-practice" class="panel">
+    <div class="section-title">Answer Keys: Explanation &amp; Practice Set</div>
+    <p>Explanation's carousels are fully worked examples with the final answer shown in each last step - nothing further to key. Practice Set's answers, tab by tab, follow below. Fraction answers are stored as exact decimals in the digital check (tolerance &plusmn;0.01), shown here as both a fraction and a rounded decimal.</p>
+
+    <div class="answer-day-heading">Tab 1: Add/Subtract Fractions</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(-\frac{1}{2}+\left(-\frac{1}{3}\right)\)</td><td>\(\mathbf{-\frac{5}{6} \approx -0.83}\)</td></tr>
+        <tr><td>2. \(\frac{3}{4}+\left(-\frac{1}{8}\right)\)</td><td>\(\mathbf{\frac{5}{8} = 0.625}\)</td></tr>
+        <tr><td>3. \(-\frac{2}{5}+\frac{3}{10}\)</td><td>\(\mathbf{-\frac{1}{10} = -0.1}\)</td></tr>
+        <tr><td>4. \(-\frac{3}{4}-\frac{1}{4}\)</td><td>\(\mathbf{-1}\)</td></tr>
+        <tr><td>5. \(\frac{5}{6}-\frac{4}{3}\)</td><td>\(\mathbf{-\frac{1}{2} = -0.5}\)</td></tr>
+        <tr><td>6. \(-\frac{1}{3}-\left(-\frac{5}{6}\right)\)</td><td>\(\mathbf{\frac{1}{2} = 0.5}\)</td></tr>
+        <tr><td>7. \(-\frac{7}{8}+\frac{3}{8}\)</td><td>\(\mathbf{-\frac{1}{2} = -0.5}\)</td></tr>
+        <tr><td>8. \(\frac{2}{3}+\left(-\frac{5}{6}\right)\)</td><td>\(\mathbf{-\frac{1}{6} \approx -0.17}\)</td></tr>
+        <tr><td>9. \(-\frac{5}{12}-\frac{1}{4}\)</td><td>\(\mathbf{-\frac{2}{3} \approx -0.67}\)</td></tr>
+        <tr><td>10. \(\frac{1}{2}-\left(-\frac{1}{6}\right)\)</td><td>\(\mathbf{\frac{2}{3} \approx 0.67}\)</td></tr>
+        <tr><td>11. \(-\frac{3}{5}+\left(-\frac{1}{10}\right)\)</td><td>\(\mathbf{-\frac{7}{10} = -0.7}\)</td></tr>
+        <tr><td>12. \(-\frac{9}{10}-\left(-\frac{3}{5}\right)\)</td><td>\(\mathbf{-\frac{3}{10} = -0.3}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 2: Add/Subtract Decimals</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(-2.5+(-1.75)\)</td><td>\(\mathbf{-4.25}\)</td></tr>
+        <tr><td>2. \(3.6+(-5.2)\)</td><td>\(\mathbf{-1.6}\)</td></tr>
+        <tr><td>3. \(-0.8+0.35\)</td><td>\(\mathbf{-0.45}\)</td></tr>
+        <tr><td>4. \(-4.2-1.8\)</td><td>\(\mathbf{-6.0}\)</td></tr>
+        <tr><td>5. \(6.25-9.5\)</td><td>\(\mathbf{-3.25}\)</td></tr>
+        <tr><td>6. \(-3.15-(-4.65)\)</td><td>\(\mathbf{1.5}\)</td></tr>
+        <tr><td>7. \(0.45-0.9\)</td><td>\(\mathbf{-0.45}\)</td></tr>
+        <tr><td>8. \(-7.5+2.25\)</td><td>\(\mathbf{-5.25}\)</td></tr>
+        <tr><td>9. \(-1.125+(-2.875)\)</td><td>\(\mathbf{-4.0}\)</td></tr>
+        <tr><td>10. \(5.5-(-3.25)\)</td><td>\(\mathbf{8.75}\)</td></tr>
+        <tr><td>11. \(-0.6+(-0.75)\)</td><td>\(\mathbf{-1.35}\)</td></tr>
+        <tr><td>12. \(8.4-10.9\)</td><td>\(\mathbf{-2.5}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 3: Multiply/Divide Fractions</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(-\frac{2}{3}\times\frac{5}{9}\)</td><td>\(\mathbf{-\frac{10}{27} \approx -0.37}\)</td></tr>
+        <tr><td>2. \(-\frac{3}{4}\times\left(-\frac{2}{5}\right)\)</td><td>\(\mathbf{\frac{3}{10} = 0.3}\)</td></tr>
+        <tr><td>3. \(\frac{5}{8}\div\left(-\frac{5}{6}\right)\)</td><td>\(\mathbf{-\frac{3}{4} = -0.75}\)</td></tr>
+        <tr><td>4. \(-\frac{1}{2}\div\left(-\frac{3}{4}\right)\)</td><td>\(\mathbf{\frac{2}{3} \approx 0.67}\)</td></tr>
+        <tr><td>5. \(-\frac{7}{10}\times\frac{5}{14}\)</td><td>\(\mathbf{-\frac{1}{4} = -0.25}\)</td></tr>
+        <tr><td>6. \(\frac{2}{9}\div\left(-\frac{4}{3}\right)\)</td><td>\(\mathbf{-\frac{1}{6} \approx -0.17}\)</td></tr>
+        <tr><td>7. \(-\frac{3}{5}\times\left(-\frac{10}{9}\right)\)</td><td>\(\mathbf{\frac{2}{3} \approx 0.67}\)</td></tr>
+        <tr><td>8. \(-\frac{8}{15}\div\frac{4}{5}\)</td><td>\(\mathbf{-\frac{2}{3} \approx -0.67}\)</td></tr>
+        <tr><td>9. \(\frac{9}{16}\times\left(-\frac{4}{3}\right)\)</td><td>\(\mathbf{-\frac{3}{4} = -0.75}\)</td></tr>
+        <tr><td>10. \(-\frac{5}{6}\div\left(-\frac{5}{12}\right)\)</td><td>\(\mathbf{2}\)</td></tr>
+        <tr><td>11. \(-\frac{7}{8}\times\frac{2}{7}\)</td><td>\(\mathbf{-\frac{1}{4} = -0.25}\)</td></tr>
+        <tr><td>12. \(\frac{3}{10}\div\left(-\frac{9}{20}\right)\)</td><td>\(\mathbf{-\frac{2}{3} \approx -0.67}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 4: Multiply/Divide Decimals</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(-2.5\times4\)</td><td>\(\mathbf{-10}\)</td></tr>
+        <tr><td>2. \(-3.6\times(-2)\)</td><td>\(\mathbf{7.2}\)</td></tr>
+        <tr><td>3. \(-8.4\div2\)</td><td>\(\mathbf{-4.2}\)</td></tr>
+        <tr><td>4. \(-15.6\div(-4)\)</td><td>\(\mathbf{3.9}\)</td></tr>
+        <tr><td>5. \(0.5\times(-6.2)\)</td><td>\(\mathbf{-3.1}\)</td></tr>
+        <tr><td>6. \(-0.75\times(-0.8)\)</td><td>\(\mathbf{0.6}\)</td></tr>
+        <tr><td>7. \(12.6\div(-3)\)</td><td>\(\mathbf{-4.2}\)</td></tr>
+        <tr><td>8. \(-9.6\div(-1.2)\)</td><td>\(\mathbf{8}\)</td></tr>
+        <tr><td>9. \(-1.4\times2.5\)</td><td>\(\mathbf{-3.5}\)</td></tr>
+        <tr><td>10. \(-18\div2.5\)</td><td>\(\mathbf{-7.2}\)</td></tr>
+        <tr><td>11. \(3.2\times(-0.25)\)</td><td>\(\mathbf{-0.8}\)</td></tr>
+        <tr><td>12. \(-6.75\div(-4.5)\)</td><td>\(\mathbf{1.5}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 5: Mixed &amp; Order of Operations</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(-\frac{1}{2}+0.75\)</td><td>\(\mathbf{0.25}\)</td></tr>
+        <tr><td>2. \(0.4-\frac{3}{4}\)</td><td>\(\mathbf{-0.35}\)</td></tr>
+        <tr><td>3. \(-\frac{3}{5}\times2+0.5\)</td><td>\(\mathbf{-0.7}\)</td></tr>
+        <tr><td>4. \(-2.4\div\left(-\frac{3}{5}\right)\)</td><td>\(\mathbf{4}\)</td></tr>
+        <tr><td>5. \(\left(\frac{1}{4}+0.5\right)\times(-4)\)</td><td>\(\mathbf{-3}\)</td></tr>
+        <tr><td>6. \(-0.5-\frac{1}{4}\times4\)</td><td>\(\mathbf{-1.5}\)</td></tr>
+        <tr><td>7. \(-\frac{3}{4}+(-0.5)\)</td><td>\(\mathbf{-1.25}\)</td></tr>
+        <tr><td>8. \(2.5\times\left(-\frac{1}{5}\right)-0.3\)</td><td>\(\mathbf{-0.8}\)</td></tr>
+        <tr><td>9. \(-\frac{7}{8}\div0.25\)</td><td>\(\mathbf{-3.5}\)</td></tr>
+        <tr><td>10. \((-1.2+0.75)\times(-2)\)</td><td>\(\mathbf{0.9}\)</td></tr>
+        <tr><td>11. \(-0.6\times\left(-\frac{5}{3}\right)+(-0.4)\)</td><td>\(\mathbf{0.6}\)</td></tr>
+        <tr><td>12. \(-\frac{3}{4}+\left(-\frac{1}{2}\right)\times0.4\)</td><td>\(\mathbf{-0.95}\)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 3: ANSWER KEYS - WORD PROBLEMS -->
+  <div id="keys-wp" class="panel">
+    <div class="section-title">Answer Keys: Word Problems</div>
+
+    <div class="answer-day-heading">Tab 1: Addition &amp; Subtraction</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Temperature: -3/4&deg;F rises 2 1/4&deg;F</td><td>\(\mathbf{1.5}\)&deg;F</td></tr>
+        <tr><td>2. Sarah's bank: -$45.25, deposits $60.50</td><td>\(\mathbf{\$15.25}\)</td></tr>
+        <tr><td>3. Diver: -18.5 ft, descends 6.75 ft more</td><td>\(\mathbf{-25.25}\) ft</td></tr>
+        <tr><td>4. Balance $32.40, withdraws $50.75</td><td>\(\mathbf{-\$18.35}\)</td></tr>
+        <tr><td>5. Temperature -2.5&deg;C, drops 1 3/4&deg;C more</td><td>\(\mathbf{-4.25}\)&deg;C</td></tr>
+        <tr><td>6. Trail 245.6 ft, descends 89.25 ft</td><td>\(\mathbf{156.35}\) ft</td></tr>
+        <tr><td>7. Temperature -5/8&deg;F rises 3/8&deg;F</td><td>\(\mathbf{-0.25}\)&deg;F</td></tr>
+        <tr><td>8. Marcus owes $12.75, earns $20.00</td><td>\(\mathbf{\$7.25}\)</td></tr>
+        <tr><td>Bank Balance (multi-step): -62.50, +45.75, +15, -10.25</td><td>\(\mathbf{-\$12.00}\)</td></tr>
+        <tr><td>Temperature (multi-step): sunrise -1.5, +4.75, -2.25</td><td>afternoon \(\mathbf{3.25}\)&deg;C, night \(\mathbf{1.0}\)&deg;C</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 2: Multiplication &amp; Division</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Bank fee $2.50/month &times; 6</td><td>\(\mathbf{-\$15.00}\)</td></tr>
+        <tr><td>2. Temp drop 7.5&deg; over 5 hr</td><td>\(\mathbf{-1.5}\)/hr</td></tr>
+        <tr><td>3. Four friends split a $37 debt</td><td>\(\mathbf{-\$9.25}\) each</td></tr>
+        <tr><td>4. Chemical cooling 3/4&deg;C every 10 min &times; 4</td><td>\(\mathbf{-3}\)&deg;C total</td></tr>
+        <tr><td>5. Hiking -18.75 m over 1/4 hr</td><td>\(\mathbf{-75}\) m/hr</td></tr>
+        <tr><td>Elevation Rate (multi-step): -56.25 m over 7.5 min, then 4 more min</td><td>rate \(\mathbf{-7.5}\) m/min, additional \(\mathbf{-30}\) m</td></tr>
+        <tr><td>Recipe Cost: 6 substitutions at -$0.75 each</td><td>\(\mathbf{-\$4.50}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 3: Mixed &amp; Multi-Step</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Diver -12 m, then -1/4 of 12 m more, then +5 m</td><td>\(\mathbf{-10}\) m</td></tr>
+        <tr><td>2. Company -$1,200 Q1, recovers 3/4 in Q2</td><td>\(\mathbf{-\$300}\)</td></tr>
+        <tr><td>3. Balloon 850.5 ft to 662.25 ft over 15 min</td><td>\(\mathbf{-12.55}\) ft/min</td></tr>
+        <tr><td>4. Malena: -32.50, +37.50, -19.80, -4.25</td><td>\(\mathbf{-\$19.05}\)</td></tr>
+        <tr><td>5. Balloon 3/4 km, descends 0.9 km</td><td>\(\mathbf{-0.15}\) km</td></tr>
+        <tr><td>6. Stock $52.40, drops 1/4 of value, +$8.60</td><td>\(\mathbf{\$47.90}\)</td></tr>
+        <tr><td>7. Submarine 1/3 of 90 ft descent, then +12.5 ft</td><td>\(\mathbf{-17.5}\) ft</td></tr>
+        <tr><td>8. Fundraiser -$125.60, recovers half day 2</td><td>\(\mathbf{-\$62.80}\)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 4: ANSWER KEYS - TEST PREP -->
+  <div id="keys-testprep" class="panel">
+    <div class="section-title">Answer Keys: Test Prep</div>
+
+    <div class="answer-day-heading">Tab 1: Concept Review</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>A. \(-\frac{3}{4}+\frac{1}{2}\)</td><td>\(\mathbf{-0.25}\)</td></tr>
+        <tr><td>B. \(-2.5\times1.4\)</td><td>\(\mathbf{-3.5}\)</td></tr>
+        <tr><td>C. \(-\frac{7}{10}+\frac{3}{5}\)</td><td>\(\mathbf{-0.1}\)</td></tr>
+        <tr><td>D. \(-14.4\div1.2\)</td><td>\(\mathbf{-12}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 2: Error Analysis</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(-\frac{3}{4}+\left(-\frac{1}{8}\right)=-\frac{4}{12}\)</td><td>Find the LCD first: \(\mathbf{-\frac{7}{8} = -0.875}\)</td></tr>
+        <tr><td>2. \(-2.6-1.4=-1.2\)</td><td>Same signs, add and keep sign: \(\mathbf{-4.0}\)</td></tr>
+        <tr><td>3. \(-\frac{5}{6}\times\left(-\frac{2}{3}\right)=-\frac{5}{9}\)</td><td>Same signs = positive: \(\mathbf{\frac{5}{9} \approx 0.56}\)</td></tr>
+        <tr><td>4. \(-9.6\div(-1.2)=-8\)</td><td>Same signs = positive: \(\mathbf{8}\)</td></tr>
+        <tr><td>5. \(0.5\div\frac{1}{4}=0.125\)</td><td>Keep-Change-Flip: \(\mathbf{2}\)</td></tr>
+        <tr><td>Audit: Marco's \(-2.5-3.5=-1\)</td><td>Incorrect - correct value is \(\mathbf{-6.0}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 3: Timed Review Quiz</div>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Set A - Sign Rules &amp; Concepts</th></tr></thead>
+      <tbody>
+        <tr><td>1. \(-\frac{3}{8}+\left(-\frac{1}{4}\right)\)</td><td><strong>B</strong> - \(-\frac{5}{8}\)</td></tr>
+        <tr><td>2. Select all TRUE statements</td><td>Statements 1, 3, 4, 5 (0-indexed: 0, 2, 3, 4)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Set B - Add &amp; Subtract Rational Numbers</th></tr></thead>
+      <tbody>
+        <tr><td>3. \(-\frac{1}{3}+\left(-\frac{1}{6}\right)\)</td><td>\(\mathbf{-0.5}\)</td></tr>
+        <tr><td>4. \(4.25-6.75\)</td><td>\(\mathbf{-2.5}\)</td></tr>
+        <tr><td>5. First step of \(-\frac{7}{8}-\left(-\frac{3}{4}\right)\)</td><td><strong>B</strong> - \(-\frac{7}{8}+\frac{3}{4}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Set C - Multiply &amp; Divide Rational Numbers</th></tr></thead>
+      <tbody>
+        <tr><td>6. \(-\frac{2}{5}\div\left(-\frac{4}{15}\right)\)</td><td>\(\mathbf{1.5}\)</td></tr>
+        <tr><td>7. \(-3.5\times(-2.4)\)</td><td>\(\mathbf{8.4}\)</td></tr>
+        <tr><td>8. \(-0.8\div0.2\)</td><td><strong>A</strong> - \(-4\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Set D - Converting Forms &amp; Multi-Step</th></tr></thead>
+      <tbody>
+        <tr><td>9. \(-\frac{1}{2}+0.3\times(-2)\)</td><td>\(\mathbf{-1.1}\)</td></tr>
+        <tr><td>10. \(-\frac{3}{4}\)&deg;C rises 1.15&deg;C</td><td>\(\mathbf{0.4}\)&deg;C</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Tab 4: Mixed Practice (submit-only, 100 points)</div>
+    <p style="font-size:0.9rem; color:#64748b;"><em>Matches the paper Mixed Practice printable exactly.</em></p>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Problem</th><th>Answer</th><th>Points</th></tr></thead>
+      <tbody>
+        <tr><td colspan="4"><strong>Add/Subtract Fractions (20 pts)</strong></td></tr>
+        <tr><td>1</td><td>\(-\frac{2}{3}+\left(-\frac{1}{6}\right)\)</td><td>\(\mathbf{-\frac{5}{6} \approx -0.83}\)</td><td>5</td></tr>
+        <tr><td>2</td><td>\(\frac{3}{8}-\frac{5}{6}\)</td><td>\(\mathbf{-\frac{11}{24} \approx -0.46}\)</td><td>5</td></tr>
+        <tr><td>3</td><td>\(-\frac{5}{12}+\frac{3}{4}\)</td><td>\(\mathbf{\frac{1}{3} \approx 0.33}\)</td><td>5</td></tr>
+        <tr><td>4</td><td>\(-\frac{7}{9}-\left(-\frac{2}{3}\right)\)</td><td>\(\mathbf{-\frac{1}{9} \approx -0.11}\)</td><td>5</td></tr>
+        <tr><td colspan="4"><strong>Add/Subtract Decimals (20 pts)</strong></td></tr>
+        <tr><td>5</td><td>\(-4.6+(-2.35)\)</td><td>\(\mathbf{-6.95}\)</td><td>5</td></tr>
+        <tr><td>6</td><td>\(8.2-11.75\)</td><td>\(\mathbf{-3.55}\)</td><td>5</td></tr>
+        <tr><td>7</td><td>\(-0.45-(-0.9)\)</td><td>\(\mathbf{0.45}\)</td><td>5</td></tr>
+        <tr><td>8</td><td>\(-13.6+5.25\)</td><td>\(\mathbf{-8.35}\)</td><td>5</td></tr>
+        <tr><td colspan="4"><strong>Multiply/Divide Rational Numbers (20 pts)</strong></td></tr>
+        <tr><td>9</td><td>\(-\frac{5}{6}\times\frac{3}{10}\)</td><td>\(\mathbf{-\frac{1}{4} = -0.25}\)</td><td>5</td></tr>
+        <tr><td>10</td><td>\(-2.8\times(-1.5)\)</td><td>\(\mathbf{4.2}\)</td><td>5</td></tr>
+        <tr><td>11</td><td>\(\frac{7}{8}\div\left(-\frac{7}{16}\right)\)</td><td>\(\mathbf{-2}\)</td><td>5</td></tr>
+        <tr><td>12</td><td>\(-15.6\div(-2.4)\)</td><td>\(\mathbf{6.5}\)</td><td>5</td></tr>
+        <tr><td colspan="4"><strong>Switching Forms (10 pts)</strong></td></tr>
+        <tr><td>13</td><td>\(0.75+\left(-\frac{1}{3}\right)\)</td><td>\(\mathbf{\frac{5}{12} \approx 0.42}\)</td><td>5</td></tr>
+        <tr><td>14</td><td>\(-\frac{5}{8}+0.125\)</td><td>\(\mathbf{-0.5}\)</td><td>5</td></tr>
+        <tr><td colspan="4"><strong>Word Problems (24 pts)</strong></td></tr>
+        <tr><td>15</td><td>Diver -24 ft, rises 3/4 of the way up</td><td>\(\mathbf{-6}\) ft</td><td>8</td></tr>
+        <tr><td>16</td><td>Temperature -2.5&deg;F rises 3 3/4&deg;F</td><td>\(\mathbf{1.25}\)&deg;F</td><td>8</td></tr>
+        <tr><td>17</td><td>Grocery budget -$18.60, recovers half</td><td>\(\mathbf{-\$9.30}\)</td><td>8</td></tr>
+        <tr><td colspan="4"><strong>Multi-Step (6 pts)</strong></td></tr>
+        <tr><td>18</td><td>\(-\frac{3}{4}\times0.8+\left(-\frac{1}{2}\right)\)</td><td>\(\mathbf{-1.1}\)</td><td>6</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 5: PRINTABLES & CHALLENGE BANK -->
+  <div id="paper" class="panel">
+    <div class="section-title">Printables &amp; Challenge Bank</div>
+    <p>The Mixed Practice printable and the Timed Review Quiz printable are the paper-equivalent versions of Test Prep's digital tabs. The Challenge Bank is original material aligned to this topic.</p>
+
+    <div class="flag-box">
+      <h4>Keep the Mixed Practice printable confidential from students</h4>
+      <p style="margin:0;">The Mixed Practice tab and printable function as this topic's graded assessment. Do not link or share this Teacher Guide page with students.</p>
+    </div>
+
+    <a class="btn-lg" href="printables/Mixed-Practice-Printable.html" target="_blank" rel="noopener">Printables: Mixed Practice (Test Prep Assessment)</a>
+    <p>See the Digital Answer Key tab above (Tab 4) for the full item-by-item key.</p>
+
+    <div class="answer-day-heading">Timed Review Quiz</div>
+    <a class="btn-lg" href="printables/Timed-Review-Quiz-Printable.html" target="_blank" rel="noopener">Printables: Timed Review Quiz</a>
+    <p>See the Digital Answer Key tab above (Tab 4, Timed Review Quiz) for the full item-by-item key.</p>
+
+    <div class="answer-day-heading">Challenge Bank: One Level Harder</div>
+    <p>Extra problems for early finishers or homework extension at any point in this topic. Each is a step above Practice Set/Word Problems difficulty - triple operations, missing-number puzzles, or multi-step real-world scenarios mixing fractions and decimals. Click a problem to reveal its full solution.</p>
+    <a class="btn-lg" href="printables/Challenge-Bank-Printable.html" target="_blank" rel="noopener">Printables: Challenge Bank (no solutions shown)</a>
+
+    <div class="challenge-day-heading">Add &amp; Subtract Rational Numbers - Harder Tier</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Evaluate \(-\frac{5}{6}+\frac{3}{4}-\left(-\frac{1}{3}\right)\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>LCD of 6, 4, 3 is 12: \(-\frac{10}{12}+\frac{9}{12}+\frac{4}{12}\). Add left to right: \(-\frac{10}{12}+\frac{9}{12}=-\frac{1}{12}\); \(-\frac{1}{12}+\frac{4}{12}=\mathbf{\frac{3}{12}=\frac{1}{4}}=0.25\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> Evaluate \(-6.4+2.75-(-1.9)\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(-6.4+2.75=-3.65\). \(-3.65-(-1.9)=-3.65+1.9=\mathbf{-1.75}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> A diver at \(-14.25\) ft rises \(\frac{1}{2}\) of \(9\) ft, then descends \(3.5\) ft. What is her final depth?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(\frac{1}{2}\times9=4.5\). \(-14.25+4.5=-9.75\). \(-9.75-3.5=\mathbf{-13.25}\) ft.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> Find the missing number: \(-\frac{3}{4}+\underline{\hspace{1cm}}=\frac{1}{2}\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(\frac{1}{2}-\left(-\frac{3}{4}\right)=\frac{1}{2}+\frac{3}{4}=\frac{2}{4}+\frac{3}{4}=\mathbf{\frac{5}{4}=1.25}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> Which has the greater value: \(-\frac{7}{8}\) or \(-0.9\)?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(-\frac{7}{8}=-0.875\). Since \(-0.875>-0.9\) (it's closer to zero), \(\mathbf{-\frac{7}{8}}\) is greater.</p>
+      </details>
+    </div>
+
+    <div class="challenge-day-heading">Multiply &amp; Divide Rational Numbers - Harder Tier</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Evaluate \(-\frac{2}{3}\times\frac{9}{10}\div\left(-\frac{3}{5}\right)\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(-\frac{2}{3}\times\frac{9}{10}=-\frac{18}{30}=-\frac{3}{5}\) (different signs, negative). \(-\frac{3}{5}\div\left(-\frac{3}{5}\right)=-\frac{3}{5}\times\left(-\frac{5}{3}\right)=\mathbf{1}\) (same signs, positive).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> Evaluate \(-4.5\times2\div(-0.9)\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(-4.5\times2=-9\) (different signs, negative). \(-9\div(-0.9)=\mathbf{10}\) (same signs, positive).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> A tide gauge shows the water level dropping \(\frac{3}{8}\) inch every 15 minutes for 2 hours (8 fifteen-minute intervals). What is the total change?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(-\frac{3}{8}\times8=\mathbf{-3}\) in.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> Find two numbers whose product is \(-2.4\) and whose sum is \(-0.8\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Try factor pairs of \(2.4\) with opposite signs: \(-2\) and \(1.2\) give \((-2)(1.2)=-2.4\) and \(-2+1.2=-0.8\). The numbers are \(\mathbf{-2}\) and \(\mathbf{1.2}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> Evaluate \(\left(-\frac{1}{2}\right)^2 \times (-8)\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(\left(-\frac{1}{2}\right)^2=\frac{1}{4}\) (squaring a negative gives a positive). \(\frac{1}{4}\times(-8)=\mathbf{-2}\).</p>
+      </details>
+    </div>
+
+    <div class="challenge-day-heading">Converting Forms &amp; Multi-Step - Harder Tier</div>
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Evaluate \(0.6+\frac{1}{3}\times(-1.5)\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(\frac{1}{3}\times(-1.5)=-0.5\). \(0.6+(-0.5)=\mathbf{0.1}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> Evaluate \(\left(\frac{3}{4}-1.2\right)\div\left(-\frac{3}{10}\right)\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(\frac{3}{4}-1.2=0.75-1.2=-0.45\). \(-0.45\div(-0.3)=\mathbf{1.5}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> A stock's value is \(\$36.50\). It drops by \(\frac{1}{5}\) of its value, then rises \(\$2.10\). What is its new value?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(\frac{1}{5}\times36.50=7.30\). \(36.50-7.30=29.20\). \(29.20+2.10=\mathbf{\$31.30}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> Evaluate \(-\frac{5}{8}+0.75\times\left(-\frac{2}{3}\right)\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(0.75\times\left(-\frac{2}{3}\right)=-0.5\). \(-\frac{5}{8}=-0.625\). \(-0.625+(-0.5)=\mathbf{-1.125}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> A submarine at \(-45.5\) m rises \(\frac{1}{4}\) of the distance to the surface (treat the surface as \(0\)), then descends \(3.25\) m. What is its final depth?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(\frac{1}{4}\times45.5=11.375\). \(-45.5+11.375=-34.125\). \(-34.125-3.25=\mathbf{-37.375}\) m.</p>
+      </details>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+</script>
+</body>
+</html>

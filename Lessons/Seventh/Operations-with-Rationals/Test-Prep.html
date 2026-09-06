@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7: Operations with Rational Numbers - Test Prep</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Operations with Rational Numbers - Test Prep</span>
+    <h1>Test Prep: Operations with Rational Numbers</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Pre-Algebra 7 - Operations with Rational Numbers Test Prep')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    This page reviews the whole topic before your assessment. Work the tabs <strong>in order, left to right</strong>. Tabs 1-3 are review - reference material, error analysis, and a full practice quiz - with two tries and a reveal if you miss twice. Tab 4, <strong>Mixed Practice</strong>, is a printable-style worksheet: you submit each answer once and it stays hidden on screen, since your teacher grades it from your printed report just like a paper test. Whenever your answer is a fraction, enter it as a decimal (round to the nearest hundredth if it doesn't divide evenly). Finish, then type your name above and click <strong>Print My Progress</strong>. <strong>Calculators are not allowed this quarter.</strong>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('concepts')">1. Concept Review</button>
+    <button class="tab-btn" onclick="switchTab('errors')">2. Error Analysis</button>
+    <button class="tab-btn" onclick="switchTab('quickcheck')">3. Timed Review Quiz</button>
+    <button class="tab-btn" onclick="switchTab('mixedpractice')">4. Mixed Practice</button>
+  </nav>
+
+  <!-- TAB 1: CONCEPT REVIEW -->
+  <div id="concepts" class="panel active">
+    <div class="section-title">Concept Review: Every Rule in One Place</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Skim the reference boxes below. If a rule feels shaky, review your notebook copy of the worked examples before you continue. Then answer the 4 Check Your Understanding problems.
+    </div>
+
+    <p>Rational numbers are any numbers that can be written as a fraction of integers - this includes every fraction and every terminating or repeating decimal, positive or negative. The same-sign/different-sign rules from Integers apply exactly the same way here, no matter which form the numbers take.</p>
+
+    <div class="notebook-box">
+      <div class="notebook-header">1. Add/Subtract Rules</div>
+      <ul>
+        <li><strong>Same Signs:</strong> Add the absolute values and keep the common sign. \(-\frac{3}{4}+\left(-\frac{1}{8}\right)=-\frac{7}{8}\) &nbsp;&nbsp; \(-2.5+(-1.75)=-4.25\)</li>
+        <li><strong>Different Signs:</strong> Subtract the smaller absolute value from the larger. Keep the sign of the number with the larger absolute value. \(-\frac{5}{6}+\frac{1}{3}=-\frac{1}{2}\) &nbsp;&nbsp; \(3.6+(-5.2)=-1.6\)</li>
+        <li><strong>Fractions:</strong> find a common denominator first. <strong>Decimals:</strong> line up the decimal points first.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">2. Multiply &amp; Divide Sign Laws</div>
+      <ul>
+        <li><strong>Same Signs = Positive:</strong> \(\left(-\frac{3}{4}\right)\times\left(-\frac{2}{5}\right)=\frac{3}{10}\) &nbsp;&nbsp; \(-2.8\times(-1.5)=4.2\)</li>
+        <li><strong>Different Signs = Negative:</strong> \(-\frac{2}{3}\times\frac{5}{9}=-\frac{10}{27}\) &nbsp;&nbsp; \(12.6\div(-3)=-4.2\)</li>
+        <li><strong>Dividing fractions:</strong> Keep-Change-Flip, then apply the sign rule.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">3. Switching Forms &amp; Multi-Step Expressions</div>
+      <p style="margin:0 0 8px 0;">Convert a fraction to a decimal (or a decimal to a fraction) before combining it with a number in the other form. Converting never changes a number's value or sign - it only changes what it looks like.</p>
+      <p style="margin:0;">In multi-step expressions, order of operations still applies: parentheses first, then multiplication/division left to right, then addition/subtraction left to right.</p>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Check Your Understanding</h3>
+      <p>Use the rules above to solve these four problems. Enter fraction answers as decimals.</p>
+      <div id="cu-list"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: ERROR ANALYSIS -->
+  <div id="errors" class="panel">
+    <div class="section-title">Error Analysis: Spot the Mistake</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Even strong students make mistakes like these. For each problem, name the specific error, the correct rule, and the right answer. This tab is quiz-style - you submit once, and your work is reviewed from your printed report rather than revealed on screen.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Common Misconceptions to Watch For</div>
+      <ul style="margin-bottom:0;">
+        <li>Adding or subtracting fractions without a common denominator - the numerators can't combine until the denominators match.</li>
+        <li>Forgetting that same signs give a <em>positive</em> product or quotient, even when both numbers are fractions or decimals less than 1.</li>
+        <li>Dividing fractions by multiplying without flipping the second fraction first (skipping Keep-Change-Flip).</li>
+        <li>Converting a fraction to a decimal incorrectly and carrying that error through the rest of the problem.</li>
+      </ul>
+    </div>
+
+    <div id="errors-list"></div>
+
+    <div class="challenge-box" style="margin-top:20px;">
+      <p style="margin-top:0;">Marco says \(-2.5 - 3.5 = -1\), reasoning that \(3.5-2.5=1\) and the answer is negative. Is he correct?</p>
+      <select id="audit-choice" class="form-control-lg" style="max-width:260px;">
+        <option value="">Select...</option>
+        <option value="correct">He's correct</option>
+        <option value="incorrect">He's incorrect</option>
+      </select>
+      <button class="btn-lg" style="margin-top:14px;" onclick="checkAudit()">Submit</button>
+      <div id="audit-feedback" class="feedback-msg"></div>
+    </div>
+    <div class="explainer-box" id="audit-explain" style="display:none; margin-top:22px;">
+      Marco treated this as a different-signs problem, but it isn't one - both numbers being combined are negative once you rewrite the subtraction. Using Keep-Change-Change: \(-2.5 - 3.5 \rightarrow -2.5 + (-3.5)\). Now the signs <em>are</em> the same, so add the absolute values and keep the negative sign: \(2.5 + 3.5 = 6.0\), giving <strong>\(-6.0\)</strong>.
+    </div>
+  </div>
+
+  <!-- TAB 3: TIMED REVIEW QUIZ -->
+  <div id="quickcheck" class="panel">
+    <div class="section-title">Timed Review Quiz</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Solve each problem in your notebook, then type your answer and check it - two tries per problem. Enter fraction answers as decimals.
+    </div>
+
+    <div class="notebook-box"><div class="notebook-header">Set A: Sign Rules &amp; Concepts</div></div>
+    <div class="step-box">
+      <p><strong>1.</strong> Which expression correctly applies "same signs, add and keep the sign"?<br>
+      A. \(-\frac{3}{8}+\left(-\frac{1}{4}\right)=-\frac{1}{8}\)&nbsp;&nbsp; B. \(-\frac{3}{8}+\left(-\frac{1}{4}\right)=-\frac{5}{8}\)&nbsp;&nbsp; C. \(-\frac{3}{8}+\left(-\frac{1}{4}\right)=\frac{5}{8}\)&nbsp;&nbsp; D. \(-\frac{3}{8}+\left(-\frac{1}{4}\right)=\frac{1}{8}\)</p>
+      <select id="qc-a0" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('a', 0)">Check</button>
+      <div id="qc-a0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;">
+      <p><strong>2.</strong> Select all statements that are TRUE.</p>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc-a1-cb0"> Same signs give a positive product or quotient.</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc-a1-cb1"> A negative number divided by a negative number is negative.</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc-a1-cb2"> \(-0.6 \times 0.6\) is negative.</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc-a1-cb3"> Two negative fractions multiplied together give a positive product.</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc-a1-cb4"> \(-\frac{3}{4} \div \frac{3}{4} = -1\)</label>
+      <label style="display:block; margin:4px 0;"><input type="checkbox" id="qc-a1-cb5"> \(0.5 \times (-0.5)\) is positive.</label>
+      <button class="btn-lg" style="margin-top:6px;" onclick="checkQCMulti('a1', [0,2,3,4], 6)">Check</button>
+      <div id="qc-a1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:24px;"><div class="notebook-header">Set B: Add &amp; Subtract Rational Numbers</div></div>
+    <div class="step-box">
+      <p><strong>3.</strong> \(-\frac{1}{3}+\left(-\frac{1}{6}\right)=\) ? (enter as a decimal)</p>
+      <input type="text" id="qc-b0" class="form-control-lg" style="max-width:200px;" placeholder="Answer">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('b', 0)">Check</button>
+      <div id="qc-b0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;">
+      <p><strong>4.</strong> \(4.25 - 6.75 = \) ?</p>
+      <input type="text" id="qc-b1" class="form-control-lg" style="max-width:200px;" placeholder="Answer">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('b', 1)">Check</button>
+      <div id="qc-b1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;">
+      <p><strong>5.</strong> Which shows the correct first step for \(-\frac{7}{8}-\left(-\frac{3}{4}\right)\) using Keep-Change-Change?<br>
+      A. \(-\frac{7}{8}-\frac{3}{4}\)&nbsp;&nbsp; B. \(-\frac{7}{8}+\frac{3}{4}\)&nbsp;&nbsp; C. \(\frac{7}{8}+\frac{3}{4}\)&nbsp;&nbsp; D. \(-\frac{7}{8}+\left(-\frac{3}{4}\right)\)</p>
+      <select id="qc-b2" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('b', 2)">Check</button>
+      <div id="qc-b2-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:24px;"><div class="notebook-header">Set C: Multiply &amp; Divide Rational Numbers</div></div>
+    <div class="step-box">
+      <p><strong>6.</strong> \(-\frac{2}{5}\div\left(-\frac{4}{15}\right)=\) ? (enter as a decimal)</p>
+      <input type="text" id="qc-c0" class="form-control-lg" style="max-width:200px;" placeholder="Answer">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('c', 0)">Check</button>
+      <div id="qc-c0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;">
+      <p><strong>7.</strong> \(-3.5\times(-2.4)=\) ?</p>
+      <input type="text" id="qc-c1" class="form-control-lg" style="max-width:200px;" placeholder="Answer">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('c', 1)">Check</button>
+      <div id="qc-c1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;">
+      <p><strong>8.</strong> \(-0.8\div0.2=\) ?<br>
+      A. \(-4\)&nbsp;&nbsp; B. \(4\)&nbsp;&nbsp; C. \(-0.4\)&nbsp;&nbsp; D. \(0.4\)</p>
+      <select id="qc-c2" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('c', 2)">Check</button>
+      <div id="qc-c2-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:24px;"><div class="notebook-header">Set D: Converting Forms &amp; Multi-Step</div></div>
+    <div class="step-box">
+      <p><strong>9.</strong> Evaluate \(-\frac{1}{2}+0.3\times(-2)\).</p>
+      <input type="text" id="qc-d0" class="form-control-lg" style="max-width:200px;" placeholder="Answer">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('d', 0)">Check</button>
+      <div id="qc-d0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;">
+      <p><strong>10.</strong> A weather station recorded a temperature of \(-\frac{3}{4}\)&deg;C. It then rose \(1.15\)&deg;C. What is the new temperature (as a decimal)?</p>
+      <input type="text" id="qc-d1" class="form-control-lg" style="max-width:200px;" placeholder="&deg;C">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('d', 1)">Check</button>
+      <div id="qc-d1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: MIXED PRACTICE (submit-only, no reveal) -->
+  <div id="mixedpractice" class="panel">
+    <div class="section-title">Mixed Practice: Printable Worksheet</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      This worksheet covers every skill in the topic. Solve each item in your notebook, type your final answer, and click Submit. <strong>Your answer is recorded but not checked on screen</strong> - your teacher grades it from your printed progress report, exactly like a paper test.
+    </div>
+    <div id="mp-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // TAB 1: CONCEPT REVIEW
+  // ==========================================
+  const cuProblems = [
+    { q: "Problem A: \\(-\\frac{3}{4}+\\frac{1}{2}=\\) ?", a: -0.25, hint: "Convert to a common denominator: -3/4 + 2/4." },
+    { q: "Problem B: \\(-2.5\\times1.4=\\) ?", a: -3.5, hint: "Different signs give a negative product." },
+    { q: "Problem C: \\(-\\frac{7}{10}+\\frac{3}{5}=\\) ?", a: -0.1, hint: "Convert 3/5 to 6/10, then use the different-signs rule." },
+    { q: "Problem D: \\(-14.4\\div1.2=\\) ?", a: -12, hint: "Different signs give a negative quotient." }
+  ];
+  function renderCU() {
+    const html = cuProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="cu-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkCU(${i})">Check</button>
+        <div id="cu-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('cu-list').innerHTML = html;
+    cuProblems.forEach((p, i) => LessonProgress.preRegister(`cu-${i}`, `1. Concept Review #${i + 1}`, '1. Concept Review'));
+  }
+  renderCU();
+  function checkCU(idx) {
+    const p = cuProblems[idx];
+    const raw = document.getElementById(`cu-${idx}-input`).value;
+    const fb = document.getElementById(`cu-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
+    const correct = LessonCheck.numericMatch(raw, p.a, 0.01);
+    LessonCheck.check(`cu-${idx}`, correct, fb, {
+      correct: `Correct! Answer: \\(\\mathbf{${p.a}}\\)`,
+      retry: p.hint,
+      reveal: `Here's the correct answer: \\(\\mathbf{${p.a}}\\)`
+    }, { label: `1. Concept Review #${idx + 1}`, answer: raw, section: '1. Concept Review' });
+  }
+
+  // ==========================================
+  // TAB 2: ERROR ANALYSIS
+  // ==========================================
+  const errorAnalysisProblems = [
+    { student: "\\(-\\frac{3}{4}+\\left(-\\frac{1}{8}\\right)=-\\frac{4}{12}\\)", rule: "Never add straight across the denominators - find the LCD (8) first: -3/4 = -6/8, then add and keep the common sign: -6/8 + (-1/8) = -7/8.", correctAnswer: "-0.875" },
+    { student: "\\(-2.6-1.4=-1.2\\)", rule: "Keep-Change-Change: -2.6 - 1.4 becomes -2.6 + (-1.4), which is same signs, not different signs.", correctAnswer: "-4.0" },
+    { student: "\\(-\\frac{5}{6}\\times\\left(-\\frac{2}{3}\\right)=-\\frac{5}{9}\\)", rule: "Same Signs in multiplication always give a Positive product.", correctAnswer: "0.5556" },
+    { student: "\\(-9.6\\div(-1.2)=-8\\)", rule: "Same Signs in division always give a Positive quotient.", correctAnswer: "8" },
+    { student: "\\(0.5\\div\\frac{1}{4}=0.125\\)", rule: "Dividing by a fraction means multiplying by its reciprocal (Keep-Change-Flip): 0.5 x 4, not 0.5 x 1/4.", correctAnswer: "2" }
+  ];
+  function renderErrorAnalysis() {
+    const html = errorAnalysisProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>Problem ${i + 1}.</strong> Student work: ${p.student}
+        <div style="margin-top:10px;">
+          <label style="font-weight:700; font-size:0.95rem; display:block; margin-bottom:6px;">Identify the error and name the correct rule:</label>
+          <textarea id="ea-${i}-explain" class="form-control-lg" rows="2" placeholder="What did the student do wrong?"></textarea>
+        </div>
+        <div style="margin-top:10px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <label style="font-weight:700; font-size:0.95rem;">Correct Answer (as a decimal): <input type="text" id="ea-${i}-answer" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="Correct value"></label>
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkErrorAnalysis(${i})">Submit</button>
+        </div>
+        <div id="ea-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('errors-list').innerHTML = html;
+    errorAnalysisProblems.forEach((p, i) => LessonProgress.preRegister(`ea-${i}`, `2. Error Analysis #${i + 1}: ${p.student.replace(/\\\(|\\\)/g, '')}`, '2. Error Analysis'));
+  }
+  renderErrorAnalysis();
+  function checkErrorAnalysis(idx) {
+    const p = errorAnalysisProblems[idx];
+    const explain = document.getElementById(`ea-${idx}-explain`).value.trim();
+    const answer = document.getElementById(`ea-${idx}-answer`).value;
+    const fb = document.getElementById(`ea-${idx}-feedback`);
+    if (explain.length <= 5 || !answer.trim()) { LessonCheck.incomplete(fb, "Explain the error and give the correct answer before submitting."); return; }
+    const correct = LessonCheck.numericMatch(answer, parseFloat(p.correctAnswer), 0.01);
+    LessonCheck.submit(fb, { key: `ea-${idx}`, label: `2. Error Analysis #${idx + 1}: ${p.student.replace(/\\\(|\\\)/g, '')}`, answer: `${explain} | Correct answer given: ${answer}`, section: '2. Error Analysis', correct });
+  }
+
+  LessonProgress.preRegister('audit', "2. Error Analysis: is Marco's -2.5-3.5=-1 correct?", '2. Error Analysis');
+  function checkAudit() {
+    const val = document.getElementById('audit-choice').value;
+    const fb = document.getElementById('audit-feedback');
+    if (!val) { LessonCheck.incomplete(fb, "Choose an answer before submitting."); return; }
+    LessonCheck.submit(fb, {
+      key: 'audit',
+      label: "2. Error Analysis: is Marco's -2.5-3.5=-1 correct?",
+      answer: val === 'incorrect' ? "He's incorrect" : "He's correct",
+      section: '2. Error Analysis',
+      correct: val === 'incorrect'
+    });
+    document.getElementById('audit-explain').style.display = 'block';
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // TAB 3: TIMED REVIEW QUIZ
+  // ==========================================
+  const qcAnswers = {
+    a: { 0: "B" },
+    b: { 0: -0.5, 1: -2.5, 2: "B" },
+    c: { 0: 1.5, 1: 8.4, 2: "A" },
+    d: { 0: -1.1, 1: 0.4 }
+  };
+  function checkQC(set, idx) {
+    const id = `qc-${set}${idx}`;
+    const raw = document.getElementById(id).value;
+    const fb = document.getElementById(`${id}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
+    const expected = qcAnswers[set][idx];
+    const correct = typeof expected === "number" ? LessonCheck.numericMatch(raw, expected, 0.01) : raw.trim().toUpperCase() === expected;
+    LessonCheck.check(id, correct, fb, {
+      correct: "Correct!",
+      retry: "Not quite yet. Review the problem and try again.",
+      reveal: `The correct answer is \\(\\mathbf{${expected}}\\).`
+    }, { label: `3. Timed Review Quiz: ${id}`, answer: raw, section: '3. Timed Review Quiz' });
+  }
+  function checkQCMulti(name, correctSet, count) {
+    const fb = document.getElementById(`qc-${name}-feedback`);
+    const checked = [];
+    for (let i = 0; i < count; i++) checked.push(document.getElementById(`qc-${name}-cb${i}`).checked);
+    if (!checked.some(c => c)) { LessonCheck.incomplete(fb, "Check at least one box before submitting."); return; }
+    const correct = checked.every((c, i) => c === correctSet.includes(i));
+    const answer = checked.map((c, i) => c ? i + 1 : null).filter(x => x).join(', ') || '(none selected)';
+    LessonCheck.check(`qc-${name}`, correct, fb, {
+      correct: "Correct!",
+      retry: "Not quite yet. Review and try again.",
+      reveal: `Correct choices: ${correctSet.map(i => i + 1).join(', ')}.`
+    }, { label: `3. Timed Review Quiz: ${name}`, answer, section: '3. Timed Review Quiz' });
+  }
+  ['a0','a1','b0','b1','b2','c0','c1','c2','d0','d1'].forEach(id => LessonProgress.preRegister(`qc-${id}`, `3. Timed Review Quiz: ${id}`, '3. Timed Review Quiz'));
+
+  // ==========================================
+  // TAB 4: MIXED PRACTICE (submit-only, no reveal - LessonCheck.submit only)
+  // ==========================================
+  const mpProblems = [
+    { q: "\\(-\\frac{2}{3}+\\left(-\\frac{1}{6}\\right)\\)", a: -0.833333, label: "-2/3 + (-1/6)" },
+    { q: "\\(\\frac{3}{8}-\\frac{5}{6}\\)", a: -0.458333, label: "3/8 - 5/6" },
+    { q: "\\(-\\frac{5}{12}+\\frac{3}{4}\\)", a: 0.333333, label: "-5/12 + 3/4" },
+    { q: "\\(-\\frac{7}{9}-\\left(-\\frac{2}{3}\\right)\\)", a: -0.111111, label: "-7/9 - (-2/3)" },
+    { q: "\\(-4.6+(-2.35)\\)", a: -6.95, label: "-4.6 + (-2.35)" },
+    { q: "\\(8.2-11.75\\)", a: -3.55, label: "8.2 - 11.75" },
+    { q: "\\(-0.45-(-0.9)\\)", a: 0.45, label: "-0.45 - (-0.9)" },
+    { q: "\\(-13.6+5.25\\)", a: -8.35, label: "-13.6 + 5.25" },
+    { q: "\\(-\\frac{5}{6}\\times\\frac{3}{10}\\)", a: -0.25, label: "-5/6 x 3/10" },
+    { q: "\\(-2.8\\times(-1.5)\\)", a: 4.2, label: "-2.8 x (-1.5)" },
+    { q: "\\(\\frac{7}{8}\\div\\left(-\\frac{7}{16}\\right)\\)", a: -2, label: "7/8 / (-7/16)" },
+    { q: "\\(-15.6\\div(-2.4)\\)", a: 6.5, label: "-15.6 / (-2.4)" },
+    { q: "\\(0.75+\\left(-\\frac{1}{3}\\right)\\)", a: 0.416667, label: "0.75 + (-1/3)" },
+    { q: "\\(-\\frac{5}{8}+0.125\\)", a: -0.5, label: "-5/8 + 0.125" },
+    { q: "Word Problem: A diver at \\(-24\\) ft rises \\(\\frac{3}{4}\\) of the way to the surface. What is her new depth?", a: -6, label: "Diver's new depth (3/4 of the way up)" },
+    { q: "Word Problem: The temperature was \\(-2.5\\)&deg;F and rose \\(3\\frac{3}{4}\\)&deg;F. What is the new temperature?", a: 1.25, label: "New temperature after rise" },
+    { q: "Word Problem: A family's grocery budget changed by \\(-\\$18.60\\) one week, then recovered half that amount the next week. What is the net change after two weeks?", a: -9.3, label: "Grocery budget net change" },
+    { q: "Multi-Step: Evaluate \\(-\\frac{3}{4}\\times0.8+\\left(-\\frac{1}{2}\\right)\\).", a: -1.1, label: "Order of operations: -3/4 x 0.8 + (-1/2)" }
+  ];
+  function renderMP() {
+    const html = mpProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px;">
+          <input type="text" id="mp-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkMP(${i})">Submit</button>
+        </div>
+        <div id="mp-${i}-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('mp-list').innerHTML = html;
+    mpProblems.forEach((p, i) => LessonProgress.preRegister(`mp-${i}`, `4. Mixed Practice #${i + 1}: ${p.label}`, '4. Mixed Practice'));
+  }
+  renderMP();
+  function checkMP(idx) {
+    const p = mpProblems[idx];
+    const raw = document.getElementById(`mp-${idx}-input`).value;
+    const fb = document.getElementById(`mp-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
+    const correct = LessonCheck.numericMatch(raw, p.a, 0.01);
+    // submit-only: recorded for the printed report, never revealed on screen.
+    LessonCheck.submit(fb, { key: `mp-${idx}`, label: `4. Mixed Practice #${idx + 1}: ${p.label}`, answer: raw, section: '4. Mixed Practice', correct });
+  }
+</script>
+<div id="print-report"></div>
+</body>
+</html>
