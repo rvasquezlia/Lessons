@@ -1115,6 +1115,14 @@
     return `<div class="longdiv"><div class="longdiv-divisor">${divisor}</div><div class="longdiv-right"><div class="longdiv-quotient">&nbsp;</div><div class="longdiv-dividend">${dividend}</div></div></div>`;
   }
 
+  // Renders an actual worked long-division bracket, built up row by row, as
+  // a MathJax \array - the same stacked quotient / subtract / bring-down
+  // layout students write on paper, instead of the empty divisor|dividend
+  // shell longDiv() draws before any digit has been worked out.
+  function longDivArray(rows) {
+    return `\\[ \\begin{array}{r} ${rows.join(' \\\\ ')} \\end{array} \\]`;
+  }
+
   const divExamples = [
     {
       title: "Exercise 1: Decimal \\(\\div\\) Whole Number (\\(7.2 \\div 4\\))",
@@ -1122,7 +1130,12 @@
       maxSteps: 3,
       render: (step) => `
         <p style="text-align:center;"><strong>Estimate Check:</strong> \\(7.2 \\div 4 \\approx 8 \\div 4 = 2\\)</p>
-        ${longDiv("4", "7.2")}
+        ${longDivArray([
+          ...(step >= 2 ? [step >= 3 ? '1.8' : '1.\\phantom{8}'] : []),
+          '4\\overline{)7.2}',
+          ...(step >= 2 ? ['-4\\phantom{.2}', '\\hline', '3.2'] : []),
+          ...(step >= 3 ? ['-3.2', '\\hline', '0'] : [])
+        ])}
         <p style="text-align:center; font-weight:bold;">
           ${step === 1 ? 'Step 1: The divisor (\\(4\\)) is already a whole number, so we can divide right away.' : ''}
           ${step === 2 ? 'Step 2: \\(4\\) goes into \\(7\\) one time (\\(4 \\times 1 = 4\\)), remainder \\(3\\). Bring down the tenths digit to make \\(32\\) tenths, and place the decimal point in the quotient directly above the decimal point in \\(7.2\\): quotient so far, \\(1.\\)' : ''}
@@ -1136,12 +1149,22 @@
       maxSteps: 4,
       render: (step) => `
         <p style="text-align:center;"><strong>Estimate Check:</strong> \\(45 \\div 1.5 \\approx 45 \\div 2 = 22.5\\)</p>
-        ${step < 2 ? longDiv("1.5", "45") : longDiv("15", "450")}
+        ${step < 3
+          ? longDiv(step < 2 ? "1.5" : "15", step < 2 ? "45" : "450")
+          : longDivArray([
+              '30',
+              '15\\overline{)450}',
+              '-45\\phantom{0}',
+              '\\hline',
+              '00',
+              ...(step >= 4 ? ['-0\\phantom{0}', '\\hline', '0'] : [])
+            ])
+        }
         <p style="text-align:center; font-weight:bold;">
           ${step === 1 ? 'Step 1: The divisor (\\(1.5\\)) is not a whole number - it has \\(1\\) decimal place.' : ''}
           ${step === 2 ? 'Step 2: Multiply both the divisor and the dividend by \\(10\\) (shift both decimal points \\(1\\) place right): \\(1.5 \\rightarrow 15\\) and \\(45 \\rightarrow 450\\). This does not change the answer - both numbers were scaled by the same amount.' : ''}
-          ${step === 3 ? 'Step 3: Divide the whole numbers: \\(450 \\div 15 = 30\\) (\\(15 \\times 30 = 450\\)).' : ''}
-          ${step === 4 ? 'Step 4: Quotient = \\(\\mathbf{30}\\). Check: \\(1.5 \\times 30 = 45\\). Our answer is a bit higher than the \\(22.5\\) estimate - that tracks, since rounding \\(1.5\\) up to \\(2\\) for the estimate made the estimated divisor bigger, and dividing by a bigger number gives a smaller result.' : ''}
+          ${step === 3 ? 'Step 3: Divide the whole numbers: \\(15\\) goes into \\(45\\) three times (\\(15 \\times 3 = 45\\)), remainder \\(0\\); bring down the last \\(0\\).' : ''}
+          ${step === 4 ? 'Step 4: \\(15\\) goes into \\(0\\) zero times, remainder \\(0\\). Quotient = \\(\\mathbf{30}\\). Check: \\(1.5 \\times 30 = 45\\). Our answer is a bit higher than the \\(22.5\\) estimate - that tracks, since rounding \\(1.5\\) up to \\(2\\) for the estimate made the estimated divisor bigger, and dividing by a bigger number gives a smaller result.' : ''}
         </p>
       `
     },
@@ -1151,12 +1174,22 @@
       maxSteps: 4,
       render: (step) => `
         <p style="text-align:center;"><strong>Estimate Check:</strong> \\(4 \\div 0.25 = 16\\) (a quarter fits into \\(4\\) sixteen times)</p>
-        ${step < 2 ? longDiv("0.25", "3.75") : longDiv("25", "375")}
+        ${step < 3
+          ? longDiv(step < 2 ? "0.25" : "25", step < 2 ? "3.75" : "375")
+          : longDivArray([
+              step >= 4 ? '15' : '1\\phantom{5}',
+              '25\\overline{)375}',
+              '-25\\phantom{5}',
+              '\\hline',
+              '125',
+              ...(step >= 4 ? ['-125', '\\hline', '0'] : [])
+            ])
+        }
         <p style="text-align:center; font-weight:bold;">
           ${step === 1 ? 'Step 1: The divisor (\\(0.25\\)) has \\(2\\) decimal places.' : ''}
           ${step === 2 ? 'Step 2: Multiply both numbers by \\(100\\) (shift both decimal points \\(2\\) places right): \\(0.25 \\rightarrow 25\\) and \\(3.75 \\rightarrow 375\\).' : ''}
-          ${step === 3 ? 'Step 3: Divide the whole numbers: \\(375 \\div 25 = 15\\) (\\(25 \\times 15 = 375\\)).' : ''}
-          ${step === 4 ? 'Step 4: Quotient = \\(\\mathbf{15}\\). Check: \\(0.25 \\times 15 = 3.75\\). Reasonable check: a quarter fits into \\(4\\) sixteen times, so it should fit into \\(3.75\\) (a little less than \\(4\\)) about \\(15\\) times - that matches.' : ''}
+          ${step === 3 ? 'Step 3: \\(25\\) goes into \\(37\\) one time (\\(25 \\times 1 = 25\\)), remainder \\(12\\); bring down the \\(5\\) to make \\(125\\).' : ''}
+          ${step === 4 ? 'Step 4: \\(25\\) goes into \\(125\\) five times (\\(25 \\times 5 = 125\\)), remainder \\(0\\). Quotient = \\(\\mathbf{15}\\). Check: \\(0.25 \\times 15 = 3.75\\). Reasonable check: a quarter fits into \\(4\\) sixteen times, so it should fit into \\(3.75\\) (a little less than \\(4\\)) about \\(15\\) times - that matches.' : ''}
         </p>
       `
     },
@@ -1166,7 +1199,12 @@
       maxSteps: 4,
       render: (step) => `
         <p style="text-align:center;"><strong>Estimate Check:</strong> \\(\\$47.50 \\div 6 \\approx \\$48 \\div 6 = \\$8\\)</p>
-        ${longDiv("6", "47.50")}
+        ${longDivArray([
+          step === 1 ? '\\phantom{7.9166\\ldots}' : (step === 2 ? '7.\\phantom{9166\\ldots}' : (step === 3 ? '7.91\\ldots' : '7.9166\\ldots \\approx 7.92')),
+          '6\\overline{)47.500}',
+          ...(step >= 2 ? ['-42\\phantom{.500}', '\\hline', step >= 3 ? '5.50' : '5.5'] : []),
+          ...(step >= 3 ? ['-5.4\\phantom{0}', '\\hline', '0.10', '-0.06', '\\hline', '0.04\\ldots'] : [])
+        ])}
         <p style="text-align:center; font-weight:bold;">
           ${step === 1 ? 'Step 1: The divisor (\\(6\\)) is already a whole number - divide right away, no shifting needed.' : ''}
           ${step === 2 ? 'Step 2: \\(6\\) goes into \\(47\\) seven times (\\(6 \\times 7 = 42\\)), remainder \\(5\\). Place the decimal point in the quotient, then bring down the tenths digit to make \\(55\\).' : ''}
