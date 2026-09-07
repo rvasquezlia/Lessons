@@ -59,7 +59,7 @@
       <div class="notebook-header">1. Add/Subtract Fractions - COPY INTO NOTEBOOK</div>
       <ul>
         <li><strong>Step 1:</strong> If subtracting, use Keep-Change-Change to rewrite it as addition.</li>
-        <li><strong>Step 2:</strong> Rewrite both fractions over their least common denominator (LCD).</li>
+        <li><strong>Step 2 (Butterfly Method):</strong> cross-multiply each numerator by the other fraction's denominator to get the two "wing" values, and multiply the denominators straight down the middle for the new denominator.</li>
         <li><strong>Step 3:</strong> Apply the same-sign / different-sign rule to the numerators, just like you would with integers.</li>
         <li><strong>Step 4:</strong> Simplify to lowest terms if possible.</li>
       </ul>
@@ -268,18 +268,18 @@
       title: "Example 1 (same signs): \\(-\\frac{3}{4} + \\left(-\\frac{1}{8}\\right)\\)",
       maxSteps: 3,
       steps: [
-        "<strong>Step 1 - Find the LCD and rewrite each fraction:</strong> LCD of 4 and 8 is 8. \\(-\\frac{3}{4} = -\\frac{6}{8}\\)",
-        "<strong>Step 2 - Same signs, so add the absolute values:</strong> \\(\\frac{6}{8} + \\frac{1}{8} = \\frac{7}{8}\\)",
-        "<strong>Step 3 - Keep the common (negative) sign:</strong> \\(-\\frac{6}{8} + \\left(-\\frac{1}{8}\\right) = \\mathbf{-\\frac{7}{8}}\\)"
+        "<strong>Step 1 - Draw the butterfly wings (cross-multiply the absolute values):</strong> \\(3 \\times 8 = 24\\) and \\(4 \\times 1 = 4\\). Multiply the denominators straight down the middle: \\(4 \\times 8 = 32\\).",
+        "<strong>Step 2 - Same signs, so add the wing values:</strong> \\(24 + 4 = 28\\), giving \\(\\frac{28}{32}\\).",
+        "<strong>Step 3 - Keep the common (negative) sign and simplify:</strong> \\(-\\frac{28}{32} = \\mathbf{-\\frac{7}{8}}\\) (divide by the GCF, \\(4\\))"
       ]
     },
     {
       title: "Example 2 (different signs): \\(-\\frac{5}{6} + \\frac{1}{3}\\)",
       maxSteps: 3,
       steps: [
-        "<strong>Step 1 - Find the LCD and rewrite each fraction:</strong> LCD of 6 and 3 is 6. \\(\\frac{1}{3} = \\frac{2}{6}\\)",
-        "<strong>Step 2 - Different signs, so subtract the smaller absolute value from the larger:</strong> \\(\\frac{5}{6} - \\frac{2}{6} = \\frac{3}{6} = \\frac{1}{2}\\)",
-        "<strong>Step 3 - Keep the sign of the larger absolute value (\\(-\\frac{5}{6}\\)):</strong> \\(-\\frac{5}{6} + \\frac{2}{6} = \\mathbf{-\\frac{1}{2}}\\)"
+        "<strong>Step 1 - Draw the butterfly wings (cross-multiply the absolute values):</strong> \\(5 \\times 3 = 15\\) and \\(6 \\times 1 = 6\\). Multiply the denominators straight down the middle: \\(6 \\times 3 = 18\\).",
+        "<strong>Step 2 - Different signs, so subtract the smaller wing value from the larger:</strong> \\(15 - 6 = 9\\), giving \\(\\frac{9}{18}\\).",
+        "<strong>Step 3 - Keep the sign of the larger absolute value (\\(-\\frac{5}{6}\\)) and simplify:</strong> \\(-\\frac{9}{18} = \\mathbf{-\\frac{1}{2}}\\) (divide by the GCF, \\(9\\))"
       ]
     },
     {
@@ -287,8 +287,8 @@
       maxSteps: 3,
       steps: [
         "The temperature was \\(-\\frac{1}{2}\\)&deg;F and dropped another \\(\\frac{3}{4}\\)&deg;F. Rewrite the subtraction using Keep-Change-Change: \\(-\\frac{1}{2} - \\frac{3}{4} = -\\frac{1}{2} + \\left(-\\frac{3}{4}\\right)\\)",
-        "<strong>Find the LCD and rewrite:</strong> LCD of 2 and 4 is 4. \\(-\\frac{1}{2} = -\\frac{2}{4}\\)",
-        "<strong>Same signs, add and keep the sign:</strong> \\(-\\frac{2}{4} + \\left(-\\frac{3}{4}\\right) = -\\frac{5}{4} = \\mathbf{-1\\frac{1}{4}}\\)&deg;F"
+        "<strong>Draw the butterfly wings:</strong> \\(1 \\times 4 = 4\\) and \\(2 \\times 3 = 6\\). Multiply the denominators straight down the middle: \\(2 \\times 4 = 8\\).",
+        "<strong>Same signs, add the wing values, keep the sign, and simplify:</strong> \\(4 + 6 = 10\\), so \\(-\\frac{10}{8} = -\\frac{5}{4} = \\mathbf{-1\\frac{1}{4}}\\)&deg;F (divide by the GCF, \\(2\\))"
       ]
     }
   ];
@@ -399,7 +399,7 @@
       maxSteps: 3,
       steps: [
         "<strong>Step 1 - Multiply first:</strong> \\(\\frac{1}{2} \\times \\left(-\\frac{4}{5}\\right) = -\\frac{4}{10} = -\\frac{2}{5}\\) (different signs, negative)",
-        "<strong>Step 2 - Now add, using the LCD of 3 and 5, which is 15:</strong> \\(-\\frac{2}{3} = -\\frac{10}{15}\\), \\(-\\frac{2}{5} = -\\frac{6}{15}\\)",
+        "<strong>Step 2 - Now add using the butterfly method (cross-multiply):</strong> \\(2 \\times 5 = 10\\) and \\(3 \\times 2 = 6\\); denominators straight down the middle: \\(3 \\times 5 = 15\\).",
         "<strong>Step 3 - Same signs, add and keep the sign:</strong> \\(-\\frac{10}{15} + \\left(-\\frac{6}{15}\\right) = -\\frac{16}{15} = \\mathbf{-1\\frac{1}{15}}\\)"
       ]
     },
