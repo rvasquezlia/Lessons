@@ -187,7 +187,7 @@
     <div class="notebook-box">
       <div class="notebook-header">COPY INTO NOTEBOOK</div>
       <ul>
-        <li><strong>Add / Subtract:</strong> rewrite both fractions with a common denominator (the LCD), then add or subtract the numerators and keep the denominator. Simplify.</li>
+        <li><strong>Add / Subtract (Butterfly Method):</strong> cross-multiply each numerator by the other fraction's denominator to get the two "wing" values, and multiply the denominators straight down the middle for the new denominator. Add (or subtract) the wing values, in order, for the new numerator. Simplify.</li>
         <li><strong>Multiply:</strong> multiply the numerators together and the denominators together. Simplify (cancel common factors first if it's easier).</li>
         <li><strong>Divide:</strong> keep the first fraction, change the sign to multiplication, and flip the second fraction to its reciprocal - "Keep-Change-Flip." Then multiply as usual.</li>
       </ul>
@@ -433,18 +433,20 @@
   const fopExamples = [
     {
       title: "Example 1 (add): \\(\\dfrac{1}{4} + \\dfrac{1}{6}\\)",
-      maxSteps: 2,
+      maxSteps: 3,
       steps: [
-        "<strong>Step 1 - Find the LCD of 4 and 6 (LCD = 12), and rewrite each fraction:</strong> \\(\\dfrac{1}{4} = \\dfrac{3}{12}\\), \\(\\dfrac{1}{6} = \\dfrac{2}{12}\\).",
-        "<strong>Step 2 - Add the numerators, keep the denominator:</strong> \\(\\dfrac{3}{12} + \\dfrac{2}{12} = \\mathbf{\\dfrac{5}{12}}\\)."
+        "<strong>Step 1 - Draw the butterfly wings (cross-multiply):</strong> \\(1 \\times 6 = 6\\) and \\(4 \\times 1 = 4\\). Multiply straight down the middle for the new denominator: \\(4 \\times 6 = 24\\).",
+        "<strong>Step 2 - This is addition, so add the wing values for the new numerator:</strong> \\(6 + 4 = 10\\), giving \\(\\dfrac{10}{24}\\).",
+        "<strong>Step 3 - Simplify</strong> by dividing both by their GCF, \\(2\\): \\(\\dfrac{10}{24} = \\mathbf{\\dfrac{5}{12}}\\)."
       ]
     },
     {
       title: "Example 2 (subtract): \\(\\dfrac{5}{6} - \\dfrac{1}{4}\\)",
-      maxSteps: 2,
+      maxSteps: 3,
       steps: [
-        "<strong>Step 1 - Find the LCD of 6 and 4 (LCD = 12), and rewrite each fraction:</strong> \\(\\dfrac{5}{6} = \\dfrac{10}{12}\\), \\(\\dfrac{1}{4} = \\dfrac{3}{12}\\).",
-        "<strong>Step 2 - Subtract the numerators:</strong> \\(\\dfrac{10}{12} - \\dfrac{3}{12} = \\mathbf{\\dfrac{7}{12}}\\)."
+        "<strong>Step 1 - Draw the butterfly wings (cross-multiply):</strong> \\(5 \\times 4 = 20\\) and \\(6 \\times 1 = 6\\). Multiply straight down the middle for the new denominator: \\(6 \\times 4 = 24\\).",
+        "<strong>Step 2 - This is subtraction, so subtract the wing values in the same order as the fractions:</strong> \\(20 - 6 = 14\\), giving \\(\\dfrac{14}{24}\\).",
+        "<strong>Step 3 - Simplify</strong> by dividing both by their GCF, \\(2\\): \\(\\dfrac{14}{24} = \\mathbf{\\dfrac{7}{12}}\\)."
       ]
     },
     {

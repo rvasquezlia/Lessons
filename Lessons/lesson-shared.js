@@ -196,9 +196,21 @@ const LessonCheck = (() => {
 // ==========================================
 // Renders a horizontal number line into the element with id `containerId`.
 // opts: { min, max, step (tick spacing, default 1),
-//         points: [{value, label, color}],
-//         arrows: [{from, to, label, color, row}] } - `row` (0, 1, 2...)
-//         stacks an arrow's arc higher so it doesn't overlap arrows on row 0.
+//         points: [{value, label, color}] - plotted dots, auto-staggers
+//           labels vertically when two points sit too close together to
+//           print their labels side by side without overlapping,
+//         arrows: [{from, to, label, color, row}] - a curved, arrowed path
+//           from one value to another. Use this ONLY to show movement/a
+//           jump along the line (e.g. "+5" or "-3" in integer addition).
+//           `row` (0, 1, 2...) stacks an arrow's arc higher so it doesn't
+//           overlap arrows on row 0,
+//         ranges: [{from, to, fromOpen, toOpen, label, color, row}] - a
+//           solution-set graph in the standard inequality-graphing style:
+//           a straight, bold segment (or a ray, if `from`/`to` is omitted)
+//           with an open circle (fromOpen/toOpen: true) or filled circle
+//           (false) at each finite endpoint. Use this for "at least",
+//           "at most", and "between" style ranges - NOT the curved arrow,
+//           which reads as motion rather than a static set of values. }
 // Pure inline SVG - prints correctly (no CSS background-image reliance) and
 // needs no external charting library or CDN script.
 function renderNumberLine(containerId, opts) {
@@ -206,14 +218,34 @@ function renderNumberLine(containerId, opts) {
   if (!el) return;
   const min = opts.min, max = opts.max, step = opts.step || 1;
   const arrows = opts.arrows || [];
+  const ranges = opts.ranges || [];
   const points = opts.points || [];
-  const maxRow = arrows.reduce((m, a) => Math.max(m, a.row || 0), 0);
+  const maxRow = Math.max(
+    arrows.reduce((m, a) => Math.max(m, a.row || 0), 0),
+    ranges.reduce((m, r) => Math.max(m, r.row || 0), 0)
+  );
   const width = 600;
-  const height = 90 + maxRow * 30;
   const marginX = 26;
-  const lineY = height - 32;
   const usableWidth = width - marginX * 2;
   const xFor = (v) => marginX + ((v - min) / (max - min)) * usableWidth;
+
+  // Stagger point labels that would otherwise sit too close on the x-axis
+  // to print without overlapping (e.g. 0.7 and 0.75 on a 0-1 line) - push
+  // every other close label up onto a second, higher row.
+  const labelMinGap = 50;
+  const sortedByX = points.map((p, i) => ({ p, i, x: xFor(p.value) })).sort((a, b) => a.x - b.x);
+  const labelLevel = new Array(points.length).fill(0);
+  let prevX = null, prevLevel = 0;
+  sortedByX.forEach((entry) => {
+    const level = (prevX !== null && (entry.x - prevX) < labelMinGap && prevLevel === 0) ? 1 : 0;
+    labelLevel[entry.i] = level;
+    prevX = entry.x;
+    prevLevel = level;
+  });
+  const hasStaggeredLabels = labelLevel.some((l) => l > 0);
+
+  const height = 90 + maxRow * 30 + (hasStaggeredLabels ? 16 : 0);
+  const lineY = height - 32;
 
   let defs = '';
   let body = `<line x1="${marginX}" y1="${lineY}" x2="${width - marginX}" y2="${lineY}" stroke="#1e3a8a" stroke-width="2"/>`;
@@ -238,12 +270,49 @@ function renderNumberLine(containerId, opts) {
     }
   });
 
-  points.forEach((p) => {
+  // Ranges: graphed the way inequalities are graphed on paper - a straight
+  // bold segment (or a ray, when an end is left unbounded) with an open or
+  // filled circle marking each finite endpoint.
+  ranges.forEach((r, i) => {
+    const rowY = lineY - 22 - (r.row || 0) * 26;
+    const color = r.color || '#15803d';
+    const hasFrom = r.from !== null && r.from !== undefined && isFinite(r.from);
+    const hasTo = r.to !== null && r.to !== undefined && isFinite(r.to);
+    const x1 = hasFrom ? xFor(r.from) : marginX - 8;
+    const x2 = hasTo ? xFor(r.to) : (width - marginX + 8);
+    let markerStart = '', markerEnd = '';
+
+    if (!hasFrom) {
+      const mId = `nl-ray-l-${containerId}-${i}`;
+      defs += `<marker id="${mId}" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" refX="11" refY="7" orient="auto"><path d="M14,0 L0,7 L14,14 Z" fill="${color}"/></marker>`;
+      markerStart = ` marker-start="url(#${mId})"`;
+    }
+    if (!hasTo) {
+      const mId = `nl-ray-r-${containerId}-${i}`;
+      defs += `<marker id="${mId}" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" refX="3" refY="7" orient="auto"><path d="M0,0 L14,7 L0,14 Z" fill="${color}"/></marker>`;
+      markerEnd = ` marker-end="url(#${mId})"`;
+    }
+
+    body += `<line x1="${x1}" y1="${rowY}" x2="${x2}" y2="${rowY}" stroke="${color}" stroke-width="5" stroke-linecap="butt"${markerStart}${markerEnd}/>`;
+    if (hasFrom) {
+      body += `<circle cx="${x1}" cy="${rowY}" r="6.5" fill="${r.fromOpen ? '#ffffff' : color}" stroke="${color}" stroke-width="3"/>`;
+    }
+    if (hasTo) {
+      body += `<circle cx="${x2}" cy="${rowY}" r="6.5" fill="${r.toOpen ? '#ffffff' : color}" stroke="${color}" stroke-width="3"/>`;
+    }
+    if (r.label) {
+      const labelX = hasFrom && hasTo ? (x1 + x2) / 2 : (hasFrom ? x1 : x2);
+      body += `<text x="${labelX}" y="${rowY - 12}" text-anchor="middle" font-size="12" fill="${color}" font-weight="700" font-family="Montserrat, sans-serif">${r.label}</text>`;
+    }
+  });
+
+  points.forEach((p, i) => {
     const x = xFor(p.value);
     const color = p.color || '#1e3a8a';
+    const y = lineY - (labelLevel[i] ? 28 : 12);
     body += `<circle cx="${x}" cy="${lineY}" r="5" fill="${color}"/>`;
     if (p.label) {
-      body += `<text x="${x}" y="${lineY - 12}" text-anchor="middle" font-size="12" fill="${color}" font-weight="700" font-family="Montserrat, sans-serif">${p.label}</text>`;
+      body += `<text x="${x}" y="${y}" text-anchor="middle" font-size="12" fill="${color}" font-weight="700" font-family="Montserrat, sans-serif">${p.label}</text>`;
     }
   });
 
