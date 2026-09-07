@@ -26,24 +26,6 @@
 
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
-  <style>
-    /* Long-division bracket, used only on the Division tab - a lighter-weight
-       visual than the algo-table grid, since a division bracket doesn't line
-       up column-by-column the way addition/subtraction/multiplication do. */
-    .longdiv {
-      display: inline-flex;
-      align-items: flex-end;
-      font-family: 'Montserrat', monospace;
-      font-weight: 800;
-      font-size: 1.7rem;
-      color: var(--primary);
-      margin: 14px 0;
-    }
-    .longdiv-divisor { padding: 0 10px 6px 0; }
-    .longdiv-right { border-left: 4px solid var(--primary); padding-left: 10px; }
-    .longdiv-quotient { border-bottom: 4px solid var(--primary); padding: 0 6px 6px 6px; min-height: 1.3em; min-width: 90px; }
-    .longdiv-dividend { padding: 6px 6px 0 6px; }
-  </style>
 </head>
 <body>
 
@@ -1111,14 +1093,9 @@
   let currentDivEx = 0;
   let currentDivExStep = 1;
 
-  function longDiv(divisor, dividend) {
-    return `<div class="longdiv"><div class="longdiv-divisor">${divisor}</div><div class="longdiv-right"><div class="longdiv-quotient">&nbsp;</div><div class="longdiv-dividend">${dividend}</div></div></div>`;
-  }
-
   // Renders an actual worked long-division bracket, built up row by row, as
   // a MathJax \array - the same stacked quotient / subtract / bring-down
-  // layout students write on paper, instead of the empty divisor|dividend
-  // shell longDiv() draws before any digit has been worked out.
+  // layout students write on paper.
   function longDivArray(rows) {
     return `\\[ \\begin{array}{r} ${rows.join(' \\\\ ')} \\end{array} \\]`;
   }
@@ -1149,17 +1126,18 @@
       maxSteps: 4,
       render: (step) => `
         <p style="text-align:center;"><strong>Estimate Check:</strong> \\(45 \\div 1.5 \\approx 45 \\div 2 = 22.5\\)</p>
-        ${step < 3
-          ? longDiv(step < 2 ? "1.5" : "15", step < 2 ? "45" : "450")
-          : longDivArray([
-              '30',
-              '15\\overline{)450}',
-              '-45\\phantom{0}',
-              '\\hline',
-              '00',
-              ...(step >= 4 ? ['-0\\phantom{0}', '\\hline', '0'] : [])
-            ])
-        }
+        ${longDivArray(
+          step < 2 ? ['1.5\\overline{)45}'] :
+          step < 3 ? ['15\\overline{)450}'] :
+          [
+            step >= 4 ? '30' : '3\\phantom{0}',
+            '15\\overline{)450}',
+            '-45\\phantom{0}',
+            '\\hline',
+            '00',
+            ...(step >= 4 ? ['-0\\phantom{0}', '\\hline', '0'] : [])
+          ]
+        )}
         <p style="text-align:center; font-weight:bold;">
           ${step === 1 ? 'Step 1: The divisor (\\(1.5\\)) is not a whole number - it has \\(1\\) decimal place.' : ''}
           ${step === 2 ? 'Step 2: Multiply both the divisor and the dividend by \\(10\\) (shift both decimal points \\(1\\) place right): \\(1.5 \\rightarrow 15\\) and \\(45 \\rightarrow 450\\). This does not change the answer - both numbers were scaled by the same amount.' : ''}
@@ -1174,17 +1152,18 @@
       maxSteps: 4,
       render: (step) => `
         <p style="text-align:center;"><strong>Estimate Check:</strong> \\(4 \\div 0.25 = 16\\) (a quarter fits into \\(4\\) sixteen times)</p>
-        ${step < 3
-          ? longDiv(step < 2 ? "0.25" : "25", step < 2 ? "3.75" : "375")
-          : longDivArray([
-              step >= 4 ? '15' : '1\\phantom{5}',
-              '25\\overline{)375}',
-              '-25\\phantom{5}',
-              '\\hline',
-              '125',
-              ...(step >= 4 ? ['-125', '\\hline', '0'] : [])
-            ])
-        }
+        ${longDivArray(
+          step < 2 ? ['0.25\\overline{)3.75}'] :
+          step < 3 ? ['25\\overline{)375}'] :
+          [
+            step >= 4 ? '15' : '1\\phantom{5}',
+            '25\\overline{)375}',
+            '-25\\phantom{5}',
+            '\\hline',
+            '125',
+            ...(step >= 4 ? ['-125', '\\hline', '0'] : [])
+          ]
+        )}
         <p style="text-align:center; font-weight:bold;">
           ${step === 1 ? 'Step 1: The divisor (\\(0.25\\)) has \\(2\\) decimal places.' : ''}
           ${step === 2 ? 'Step 2: Multiply both numbers by \\(100\\) (shift both decimal points \\(2\\) places right): \\(0.25 \\rightarrow 25\\) and \\(3.75 \\rightarrow 375\\).' : ''}
@@ -1217,7 +1196,7 @@
 
   function renderDivCarousel() {
     const ex = divExamples[currentDivEx];
-    document.getElementById('div-ex-title').innerText = ex.title;
+    document.getElementById('div-ex-title').innerHTML = ex.title;
 
     const dotsContainer = document.getElementById('div-dots');
     dotsContainer.innerHTML = divExamples.map((_, i) =>
