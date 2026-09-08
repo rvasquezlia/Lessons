@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Literal Equations - Guided Solving Ladder</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <style>
+    /* ===== Question-ladder worked examples ===== */
+    .ladder {
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 12px;
+      padding: 18px 22px;
+      margin: 16px 0;
+    }
+    .ladder-formula {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+    .ladder-round {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+    }
+    .ladder-round-label {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .qa { display: flex; flex-wrap: wrap; gap: 6px; padding: 3px 0; }
+    .qa .q { font-weight: 700; color: #334155; }
+    .qa .a { font-weight: 800; color: var(--primary); }
+    .ladder-eq {
+      background: #eff6ff;
+      border: 2px solid var(--primary-light);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin: 10px 0;
+      font-size: 1.05rem;
+      text-align: center;
+    }
+    .ladder-result {
+      font-weight: 900;
+      color: var(--primary);
+      font-size: 1.15rem;
+      text-align: center;
+      margin: 4px 0 2px 0;
+    }
+    .ladder-check {
+      font-size: 0.92rem;
+      color: #334155;
+      text-align: center;
+      margin-top: 4px;
+    }
+    .ladder-check strong { color: var(--success); }
+    .type-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-radius: 20px;
+      padding: 3px 12px;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+    .type-tag.onestep { background: #dcfce7; color: #15803d; }
+    .type-tag.multistep { background: #dbeafe; color: #1d4ed8; }
+    .type-tag.factor { background: #fef3c7; color: #92400e; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Algebra I &middot; Literal Equations &middot; Extra Practice</span>
+    <h1>Guided Solving Ladder</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Algebra I - Literal Equations - Guided Solving Ladder')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    This is a supplemental page - it is not part of the six required sections and does not count toward the graded lesson. Every worked example below walks through the <strong>same four-question ladder</strong> every time you take a step, and repeats the ladder as many times as needed until the target variable is completely alone. Read the ladder out loud to yourself before you try the exercises at the bottom. When you're done with the exercises, type your name above and click <strong>Print My Progress</strong> if your teacher wants proof of practice. <strong>Calculators are allowed</strong> this year in Eighth Grade.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('method')">1. The Question Ladder</button>
+    <button class="tab-btn" onclick="switchTab('examples')">2. Ten Worked Examples</button>
+    <button class="tab-btn" onclick="switchTab('exercises')">3. Exercises (15)</button>
+  </nav>
+
+  <!-- TAB 1: METHOD -->
+  <div id="method" class="panel active">
+    <div class="section-title">The Question Ladder</div>
+    <div class="explainer-box">
+      Every time you take a step toward isolating a variable, ask yourself the <strong>same four questions</strong>, in this order. Keep climbing the ladder - repeating the four questions for a new obstruction - until the last question's answer is "yes."
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The Four Questions (repeat as many times as needed)</div>
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Question</th><th>What it's asking</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>What's the variable I need to isolate?</td><td>Name the target letter. It doesn't change round to round.</td></tr>
+          <tr><td>2</td><td>What is obstructing me from doing so?</td><td>Name whatever is attached to the target variable right now.</td></tr>
+          <tr><td>3</td><td>What is it doing?</td><td>Name the operation - adding, subtracting, multiplying, or dividing.</td></tr>
+          <tr><td>4</td><td>What's the inverse operation to remove it?</td><td>Name the opposite operation, then apply it to <strong>both</strong> sides.</td></tr>
+        </tbody>
+      </table>
+      <p style="margin:12px 0 0 0;">Apply question 4's answer to both sides, simplify, and then ask: <strong>"Is the variable now isolated?"</strong> If not, the whole ladder repeats on whatever is obstructing it next.</p>
+    </div>
+
+    <div class="explainer-box">
+      <strong>One extra question, for formulas where the target variable shows up more than once:</strong> if you can't answer question 2 with a single obstruction because the variable is attached to two or more terms, stop and ask instead - <em>"Can one inverse operation remove all of these at once?"</em> The answer is no, so the move is to <strong>factor the variable out</strong> of every term it appears in first. That turns the sum into a product, and now the variable appears exactly once - multiplied by everything in the parentheses - so the ladder above finishes the job.
+    </div>
+  </div>
+
+  <!-- TAB 2: TEN WORKED EXAMPLES -->
+  <div id="examples" class="panel">
+    <div class="section-title">Ten Worked Examples</div>
+    <div class="explainer-box">
+      Examples 1-3 take one trip up the ladder (one step, one appearance). Examples 4-7 take two trips up the ladder (multi-step, one appearance). Examples 8-10 need the factoring question first, because the target variable appears more than once.
+    </div>
+
+    <!-- EXAMPLE 1 -->
+    <div class="ladder">
+      <div class="ladder-formula">1. \(A = bh\), solve for \(h\) <span class="type-tag onestep">One Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(h\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(b\)</span></div>
+        <div class="qa"><span class="q">What is \(b\) doing?</span><span class="a">Multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{A}{b} = \dfrac{bh}{b}\)</div>
+      <div class="ladder-result">\(h = \dfrac{A}{b}\)</div>
+      <div class="ladder-check">Is \(h\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <!-- EXAMPLE 2 -->
+    <div class="ladder">
+      <div class="ladder-formula">2. \(C = 2\pi r\), solve for \(r\) <span class="type-tag onestep">One Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(r\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(2\pi\)</span></div>
+        <div class="qa"><span class="q">What is \(2\pi\) doing?</span><span class="a">Multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{C}{2\pi} = \dfrac{2\pi r}{2\pi}\)</div>
+      <div class="ladder-result">\(r = \dfrac{C}{2\pi}\)</div>
+      <div class="ladder-check">Is \(r\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <!-- EXAMPLE 3 -->
+    <div class="ladder">
+      <div class="ladder-formula">3. \(V = lwh\), solve for \(l\) <span class="type-tag onestep">One Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(l\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(wh\)</span></div>
+        <div class="qa"><span class="q">What is \(wh\) doing?</span><span class="a">Multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{V}{wh} = \dfrac{lwh}{wh}\)</div>
+      <div class="ladder-result">\(l = \dfrac{V}{wh}\)</div>
+      <div class="ladder-check">Is \(l\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <!-- EXAMPLE 4 -->
+    <div class="ladder">
+      <div class="ladder-formula">4. \(y = mx + b\), solve for \(x\) <span class="type-tag multistep">Multi-Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(x\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(b\) adding, and \(m\) multiplying</span></div>
+        <div class="qa"><span class="q">What's the first obstruction to undo?</span><span class="a">\(b\) adding</span></div>
+        <div class="qa"><span class="q">What is \(b\) doing?</span><span class="a">Adding</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Subtraction</span></div>
+      </div>
+      <div class="ladder-eq">\(y - b = mx + b - b\)</div>
+      <div class="ladder-result">\(y - b = mx\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? No - keep going.</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2 (Now,)</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(x\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(m\)</span></div>
+        <div class="qa"><span class="q">What is \(m\) doing?</span><span class="a">Multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{y-b}{m} = \dfrac{mx}{m}\)</div>
+      <div class="ladder-result">\(x = \dfrac{y-b}{m}\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <!-- EXAMPLE 5 -->
+    <div class="ladder">
+      <div class="ladder-formula">5. \(ax + by = c\), solve for \(b\) <span class="type-tag multistep">Multi-Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(b\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(ax\) adding, and \(y\) multiplying</span></div>
+        <div class="qa"><span class="q">What's the first obstruction to undo?</span><span class="a">\(ax\) adding</span></div>
+        <div class="qa"><span class="q">What is \(ax\) doing?</span><span class="a">Adding</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Subtraction</span></div>
+      </div>
+      <div class="ladder-eq">\(ax - ax + by = c - ax\)</div>
+      <div class="ladder-result">\(by = c - ax\)</div>
+      <div class="ladder-check">Is \(b\) now isolated? No - keep going.</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2 (Now,)</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(b\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(y\)</span></div>
+        <div class="qa"><span class="q">What is \(y\) doing?</span><span class="a">Multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{by}{y} = \dfrac{c-ax}{y}\)</div>
+      <div class="ladder-result">\(b = \dfrac{c-ax}{y}\)</div>
+      <div class="ladder-check">Is \(b\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <!-- EXAMPLE 6 -->
+    <div class="ladder">
+      <div class="ladder-formula">6. \(P = 2l + 2w\), solve for \(w\) <span class="type-tag multistep">Multi-Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(w\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(2l\) adding, and \(2\) multiplying</span></div>
+        <div class="qa"><span class="q">What's the first obstruction to undo?</span><span class="a">\(2l\) adding</span></div>
+        <div class="qa"><span class="q">What is \(2l\) doing?</span><span class="a">Adding</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Subtraction</span></div>
+      </div>
+      <div class="ladder-eq">\(P - 2l = 2l - 2l + 2w\)</div>
+      <div class="ladder-result">\(P - 2l = 2w\)</div>
+      <div class="ladder-check">Is \(w\) now isolated? No - keep going.</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2 (Now,)</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(w\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(2\)</span></div>
+        <div class="qa"><span class="q">What is \(2\) doing?</span><span class="a">Multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{P-2l}{2} = \dfrac{2w}{2}\)</div>
+      <div class="ladder-result">\(w = \dfrac{P-2l}{2}\)</div>
+      <div class="ladder-check">Is \(w\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <!-- EXAMPLE 7 -->
+    <div class="ladder">
+      <div class="ladder-formula">7. \(F = \dfrac{9}{5}C + 32\), solve for \(C\) <span class="type-tag multistep">Multi-Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(C\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(32\) adding, and \(\dfrac{9}{5}\) multiplying</span></div>
+        <div class="qa"><span class="q">What's the first obstruction to undo?</span><span class="a">\(32\) adding</span></div>
+        <div class="qa"><span class="q">What is \(32\) doing?</span><span class="a">Adding</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Subtraction</span></div>
+      </div>
+      <div class="ladder-eq">\(F - 32 = \dfrac{9}{5}C + 32 - 32\)</div>
+      <div class="ladder-result">\(F - 32 = \dfrac{9}{5}C\)</div>
+      <div class="ladder-check">Is \(C\) now isolated? No - keep going.</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2 (Now,)</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(C\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(\dfrac{9}{5}\)</span></div>
+        <div class="qa"><span class="q">What is \(\dfrac{9}{5}\) doing?</span><span class="a">Multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Multiplying by its reciprocal, \(\dfrac{5}{9}\)</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{5}{9}(F - 32) = \dfrac{5}{9}\cdot\dfrac{9}{5}C\)</div>
+      <div class="ladder-result">\(C = \dfrac{5}{9}(F - 32)\)</div>
+      <div class="ladder-check">Is \(C\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <!-- EXAMPLE 8 -->
+    <div class="ladder">
+      <div class="ladder-formula">8. \(A = P + Prt\), solve for \(P\) <span class="type-tag factor">Factoring</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1 - Factoring Question</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(P\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(P\) appears in <strong>two</strong> terms: \(P\) and \(Prt\)</span></div>
+        <div class="qa"><span class="q">Can one inverse operation remove both at once?</span><span class="a">No</span></div>
+        <div class="qa"><span class="q">What do I do instead?</span><span class="a">Factor \(P\) out of the right side</span></div>
+      </div>
+      <div class="ladder-eq">\(A = P(1 + rt)\)</div>
+      <div class="ladder-check">Is \(P\) now isolated? No, but it now appears only once - keep going.</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2 (Now,)</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(P\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\((1+rt)\)</span></div>
+        <div class="qa"><span class="q">What is \((1+rt)\) doing?</span><span class="a">Multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{A}{1+rt} = \dfrac{P(1+rt)}{1+rt}\)</div>
+      <div class="ladder-result">\(P = \dfrac{A}{1+rt}\)</div>
+      <div class="ladder-check">Is \(P\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <!-- EXAMPLE 9 -->
+    <div class="ladder">
+      <div class="ladder-formula">9. \(S = 2lw + 2lh + 2wh\), solve for \(h\) <span class="type-tag factor">Factoring</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(h\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(2lw\) adding (no \(h\) in it), plus \(2lh\) and \(2wh\) (both have \(h\))</span></div>
+        <div class="qa"><span class="q">What's the first obstruction to undo?</span><span class="a">\(2lw\) adding, since it has no \(h\) in it at all</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Subtraction</span></div>
+      </div>
+      <div class="ladder-eq">\(S - 2lw = 2lh + 2wh\)</div>
+      <div class="ladder-check">Is \(h\) now isolated? No - keep going.</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2 - Factoring Question</div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(h\) still appears in <strong>two</strong> terms: \(2lh\) and \(2wh\)</span></div>
+        <div class="qa"><span class="q">Can one inverse operation remove both at once?</span><span class="a">No</span></div>
+        <div class="qa"><span class="q">What do I do instead?</span><span class="a">Factor \(h\) out of the right side</span></div>
+      </div>
+      <div class="ladder-eq">\(S - 2lw = h(2l + 2w)\)</div>
+      <div class="ladder-check">Is \(h\) now isolated? No, but it now appears only once - keep going.</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 3 (Now,)</div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\((2l+2w)\)</span></div>
+        <div class="qa"><span class="q">What is \((2l+2w)\) doing?</span><span class="a">Multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{S-2lw}{2l+2w} = \dfrac{h(2l+2w)}{2l+2w}\)</div>
+      <div class="ladder-result">\(h = \dfrac{S-2lw}{2l+2w}\)</div>
+      <div class="ladder-check">Is \(h\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <!-- EXAMPLE 10 -->
+    <div class="ladder">
+      <div class="ladder-formula">10. \(ax + bx = c\), solve for \(x\) <span class="type-tag factor">Factoring</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1 - Factoring Question</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(x\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(x\) appears in <strong>two</strong> terms: \(ax\) and \(bx\)</span></div>
+        <div class="qa"><span class="q">Can one inverse operation remove both at once?</span><span class="a">No</span></div>
+        <div class="qa"><span class="q">What do I do instead?</span><span class="a">Factor \(x\) out of the left side</span></div>
+      </div>
+      <div class="ladder-eq">\(x(a+b) = c\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? No, but it now appears only once - keep going.</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2 (Now,)</div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\((a+b)\)</span></div>
+        <div class="qa"><span class="q">What is \((a+b)\) doing?</span><span class="a">Multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{x(a+b)}{a+b} = \dfrac{c}{a+b}\)</div>
+      <div class="ladder-result">\(x = \dfrac{c}{a+b}\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? <strong>Yes.</strong></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: EXERCISES -->
+  <div id="exercises" class="panel">
+    <div class="section-title">Exercise Battery (15 Problems)</div>
+    <div class="explainer-box">
+      Work each problem on paper using the Question Ladder from Tab 1, then type only the expression for the target variable - not "x =", just what goes on the other side. For a fraction, use a slash: type <code>d/t</code> for \(\dfrac{d}{t}\). Each item gives you up to <strong>2 tries</strong> before showing the correct rearrangement.
+    </div>
+    <div id="ladder-ex-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  function normalizeExpr(s) {
+    return String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, '');
+  }
+
+  // ==========================================
+  // EXERCISE BATTERY (15 problems: one-step, multi-step, factoring)
+  // ==========================================
+  const ladderExercises = [
+    { q: "\\(A = bh\\), solve for \\(b\\).", target: "b", accepted: ["a/h"], displayAnswer: "\\dfrac{A}{h}", label: "Solve A=bh for b" },
+    { q: "\\(C = 2\\pi r\\), solve for \\(r\\).", target: "r", accepted: ["c/(2pi)", "c/2pi"], displayAnswer: "\\dfrac{C}{2\\pi}", label: "Solve C=2\\pi r for r" },
+    { q: "\\(V = lwh\\), solve for \\(w\\).", target: "w", accepted: ["v/(lh)", "v/lh"], displayAnswer: "\\dfrac{V}{lh}", label: "Solve V=lwh for w" },
+    { q: "\\(d = rt\\), solve for \\(t\\).", target: "t", accepted: ["d/r"], displayAnswer: "\\dfrac{d}{r}", label: "Solve d=rt for t" },
+    { q: "\\(y = mx + b\\), solve for \\(m\\).", target: "m", accepted: ["(y-b)/x"], displayAnswer: "\\dfrac{y-b}{x}", label: "Solve y=mx+b for m" },
+    { q: "\\(P = 2l + 2w\\), solve for \\(l\\).", target: "l", accepted: ["(p-2w)/2"], displayAnswer: "\\dfrac{P-2w}{2}", label: "Solve P=2l+2w for l" },
+    { q: "\\(F = \\dfrac{9}{5}C + 32\\), solve for \\(C\\).", target: "C", accepted: ["(5/9)(f-32)", "5/9(f-32)", "5(f-32)/9", "(5(f-32))/9"], displayAnswer: "\\dfrac{5}{9}(F-32)", label: "Solve F=(9/5)C+32 for C" },
+    { q: "\\(ax + by = c\\), solve for \\(y\\).", target: "y", accepted: ["(c-ax)/b"], displayAnswer: "\\dfrac{c-ax}{b}", label: "Solve ax+by=c for y" },
+    { q: "\\(2x - 5y = 20\\), solve for \\(x\\).", target: "x", accepted: ["(20+5y)/2", "(5y+20)/2", "10+2.5y", "10+(5/2)y"], displayAnswer: "\\dfrac{20+5y}{2}", label: "Solve 2x-5y=20 for x", hint: "Not quite yet. Move the y-term to the other side first, then divide by the coefficient of x. Try again." },
+    { q: "\\(z = \\dfrac{x - \\mu}{\\sigma}\\), solve for \\(x\\).", target: "x", accepted: ["z*sigma+mu", "zsigma+mu", "sigma*z+mu", "z\\sigma+\\mu"], displayAnswer: "z\\sigma + \\mu", label: "Solve z=(x-mu)/sigma for x", hint: "Not quite yet. Undo the division first (multiply both sides by \\(\\sigma\\)), then undo the subtraction. Try again." },
+    { q: "\\(A = P + Prt\\), solve for \\(r\\).", target: "r", accepted: ["(a-p)/(pt)"], displayAnswer: "\\dfrac{A-P}{Pt}", label: "Solve A=P+Prt for r", hint: "Not quite yet. This one does NOT need factoring - r only appears once, inside Prt. Isolate the Prt term first, then divide by Pt. Try again." },
+    { q: "\\(S = 2lw + 2lh + 2wh\\), solve for \\(l\\).", target: "l", accepted: ["(s-2wh)/(2w+2h)"], displayAnswer: "\\dfrac{S-2wh}{2w+2h}", label: "Solve S=2lw+2lh+2wh for l", hint: "Not quite yet. Move the term without l to the other side, then factor l out of what's left before dividing. Try again." },
+    { q: "\\(ax - bx = c\\), solve for \\(x\\).", target: "x", accepted: ["c/(a-b)"], displayAnswer: "\\dfrac{c}{a-b}", label: "Solve ax-bx=c for x", hint: "Not quite yet. x is in both terms on the left - factor it out first, then divide. Try again." },
+    { q: "\\(S = \\dfrac{n}{2}(a + l)\\), solve for \\(l\\).", target: "l", accepted: ["(2s/n)-a", "2s/n-a", "(2s-na)/n"], displayAnswer: "\\dfrac{2S}{n}-a", label: "Solve S=(n/2)(a+l) for l", hint: "Not quite yet. Undo the multiplication by n/2 first (multiply both sides by 2/n), then undo the addition. Try again." },
+    { q: "\\(L = a + (n-1)d\\), solve for \\(d\\).", target: "d", accepted: ["(l-a)/(n-1)"], displayAnswer: "\\dfrac{L-a}{n-1}", label: "Solve L=a+(n-1)d for d", hint: "Not quite yet. Subtract a first, then divide by the whole quantity (n-1) - it's a single obstruction, not two. Try again." }
+  ];
+
+  function renderLadderExercises() {
+    const html = ladderExercises.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <label style="font-weight:700;">\\(${p.target} = \\)</label>
+          <input type="text" id="lex-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="expression">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkLadderExercise(${i})">Check</button>
+        </div>
+        <div id="lex-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('ladder-ex-list').innerHTML = html;
+    ladderExercises.forEach((p, i) => LessonProgress.preRegister(`lex-${i}`, p.label, '3. Exercises'));
+    triggerMathJax();
+  }
+
+  function checkLadderExercise(idx) {
+    const p = ladderExercises[idx];
+    const val = document.getElementById(`lex-${idx}-input`).value;
+    const fb = document.getElementById(`lex-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an expression before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = p.accepted.includes(normalizeExpr(val));
+    LessonCheck.check(`lex-${idx}`, correct, fb, {
+      correct: `Correct! \\(${p.target} = ${p.displayAnswer}\\)`,
+      retry: p.hint || "Not quite yet. Walk back through the Question Ladder and try again.",
+      reveal: `Here's the correct rearrangement: \\(${p.target} = ${p.displayAnswer}\\)`
+    }, { label: p.label, answer: val, section: '3. Exercises' });
+  }
+
+  renderLadderExercises();
+</script>
+<div id="print-report"></div>
+</body>
+</html>
