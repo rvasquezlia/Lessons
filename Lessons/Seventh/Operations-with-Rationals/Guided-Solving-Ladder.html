@@ -102,6 +102,134 @@
       font-size: 0.98rem;
       line-height: 1.6;
     }
+
+    /* ===== Long division block (matches the Sixth-grade bracket style) ===== */
+    .div-block { text-align: center; margin: 14px 0; font-size: 1.05rem; }
+
+    /* ===== Two-column layout for short worked-example steps ===== */
+    .example-steps.cols-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 28px;
+    }
+    .example-steps.cols-2 li { border-bottom: none; padding: 10px 0; }
+    .example-steps.cols-2 li:nth-child(odd) { border-right: 1px dashed #e2e8f0; padding-right: 20px; }
+    .example-steps.cols-2 li:nth-child(even) { padding-left: 20px; }
+    @media (max-width: 700px) {
+      .example-steps.cols-2 { display: block; }
+      .example-steps.cols-2 li { border-bottom: 1px dashed #e2e8f0 !important; border-right: none !important; padding: 12px 0 !important; }
+      .example-steps.cols-2 li:last-child { border-bottom: none !important; }
+    }
+
+    /* ===== Q&A process table: replaces long numbered step lists for sign-rule examples ===== */
+    .qa-table { width: 100%; border-collapse: collapse; margin: 14px 0; }
+    .qa-table tr { border-bottom: 1px dashed #e2e8f0; }
+    .qa-table tr:last-child { border-bottom: none; }
+    .qa-table td { padding: 9px 0; vertical-align: top; }
+    .qa-q { font-weight: 700; color: var(--primary); width: 46%; padding-right: 14px !important; }
+    .qa-a { color: #1e293b; }
+    @media (max-width: 700px) {
+      .qa-table, .qa-table tbody, .qa-table tr, .qa-table td { display: block; width: 100%; }
+      .qa-q { padding-right: 0 !important; padding-bottom: 2px !important; }
+      .qa-a { padding-top: 0 !important; padding-bottom: 8px !important; }
+    }
+    .pill {
+      display: inline-block;
+      font-weight: 800;
+      padding: 2px 12px;
+      border-radius: 20px;
+      font-size: 0.92rem;
+    }
+    .pill-add   { background: #cffafe; color: #0e7490; }
+    .pill-sub   { background: #fef3c7; color: #92400e; }
+    .pill-same  { background: #dcfce7; color: #15803d; }
+    .pill-diff  { background: #fee2e2; color: #b91c1c; }
+
+    /* ===== Keep-Change-Change rewrite box (violet - a rewrite, not a result) ===== */
+    .kcc-box {
+      background: #ede9fe;
+      border: 2px solid #7c3aed;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin: 12px 0;
+    }
+    .kcc-box .box-label { color: #6d28d9; }
+    .kcc-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+    .kcc-chip {
+      background: #fff;
+      border: 2px solid #7c3aed;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-weight: 700;
+      color: #5b21b6;
+      font-size: 0.95rem;
+    }
+    .kcc-arrow { text-align: center; margin-top: 8px; font-weight: 700; color: #6d28d9; }
+
+    /* ===== Resolve box: shows the arithmetic for THIS step - never the same green as the final answer ===== */
+    .box-label {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-weight: 800;
+      margin-bottom: 5px;
+      opacity: 0.85;
+    }
+    .resolve-box {
+      border-radius: 10px;
+      padding: 10px 16px;
+      margin: 10px 0;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+    .resolve-box.add     { background: #cffafe; border: 2px solid #0891b2; color: #0e7490; }
+    .resolve-box.sub     { background: #fef3c7; border: 2px solid #d97706; color: #92400e; }
+    .resolve-box.convert { background: #fce7f3; border: 2px solid #a21caf; color: #86198f; }
+
+    /* ===== Running value: a combined result mid-problem - deliberately NOT green so it's never mistaken for the final answer ===== */
+    .running-box {
+      background: #e0e7ff;
+      border: 2px solid #4338ca;
+      border-radius: 10px;
+      padding: 10px 16px;
+      margin: 10px 0;
+      text-align: center;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: #3730a3;
+    }
+
+    /* ===== Expression focus: box the pair being combined right now, gray out the rest ===== */
+    .expr-focus {
+      text-align: center;
+      margin: 16px 0 4px 0;
+      font-size: 1.15rem;
+      line-height: 2.4;
+    }
+    .expr-chip { display: inline-block; padding: 6px 4px; color: #94a3b8; }
+    .expr-chip.active {
+      color: #0f172a;
+      border: 2px solid var(--primary-light);
+      border-radius: 8px;
+      padding: 6px 14px;
+      background: #eff6ff;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.22);
+    }
+    .expr-caption {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--primary-light);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin: 0 0 14px 0;
+    }
+
+    .color-key { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 10px; font-size: 0.92rem; }
+    .color-key span { display: inline-flex; align-items: center; gap: 6px; }
+    .color-key i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; flex-shrink: 0; }
   </style>
 </head>
 <body>
@@ -165,31 +293,36 @@
     <!-- EXAMPLE 1: FRACTION TO DECIMAL -->
     <div class="example-card">
       <div class="example-title">Example 1: Convert a Fraction to a Decimal - \(\dfrac{5}{12}\) <span class="type-tag convert">Conversion</span></div>
-      <ol class="example-steps">
-        <li>
-          <div class="step-row"><span class="step-num">1</span><span class="step-text">To convert a fraction to a decimal, divide the numerator by the denominator.</span></div>
-          <div class="step-math">\(5 \div 12\)</div>
-        </li>
-        <li>
-          <div class="step-row"><span class="step-num">2</span><span class="step-text">12 goes into 50 four times (\(4 \times 12 = 48\)), leaving a remainder of 2. Bring down a zero to make 20.</span></div>
-          <div class="step-math">\(50 \div 12 = 4\), remainder \(2\)</div>
-        </li>
-        <li>
-          <div class="step-row"><span class="step-num">3</span><span class="step-text">12 goes into 20 once (\(1 \times 12 = 12\)), leaving a remainder of 8. Bring down a zero to make 80.</span></div>
-          <div class="step-math">\(20 \div 12 = 1\), remainder \(8\)</div>
-        </li>
-        <li>
-          <div class="step-row"><span class="step-num">4</span><span class="step-text">12 goes into 80 six times (\(6 \times 12 = 72\)), leaving a remainder of 8 again - the <strong>same</strong> remainder as before, so from here the digit 6 repeats forever.</span></div>
-          <div class="step-math">\(80 \div 12 = 6\), remainder \(8\) (repeats)</div>
-        </li>
-      </ol>
+      <p class="step-text" style="margin:0 0 4px 0;">To convert a fraction to a decimal, divide the numerator by the denominator - set it up as the <strong>same long division</strong> you used in 6th grade, adding zeros after the decimal point as needed.</p>
+      <div class="div-block">
+        \[ \begin{array}{r}
+        0.41\overline{6} \\
+        12\overline{)5.0000} \\
+        -0\phantom{.0000} \\
+        \hline
+        50 \\
+        -48\phantom{00} \\
+        \hline
+        20 \\
+        -12\phantom{00} \\
+        \hline
+        80 \\
+        -72\phantom{0} \\
+        \hline
+        80 \\
+        -72\phantom{0} \\
+        \hline
+        8
+        \end{array} \]
+      </div>
+      <p class="step-text" style="margin:0;">Bring down a zero and keep dividing by 12 at each step. Watch the remainders on the right: <strong>8</strong> shows up twice in a row, which means the division will never reach a remainder of 0 - it just keeps repeating the same steps forever. Since the remainder repeated, the quotient digit that produced it (<strong>6</strong>) repeats forever too, so we mark it with a bar on top.</p>
       <div class="example-final">\(\dfrac{5}{12} = 0.41\overline{6}\) - a repeating decimal</div>
     </div>
 
     <!-- EXAMPLE 2: DECIMAL TO FRACTION -->
     <div class="example-card">
       <div class="example-title">Example 2: Convert a Decimal to a Fraction - \(0.65\) <span class="type-tag convert">Conversion</span></div>
-      <ol class="example-steps">
+      <ol class="example-steps cols-2">
         <li>
           <div class="step-row"><span class="step-num">1</span><span class="step-text">\(0.65\) has two decimal places, so it belongs over the hundredths place value: denominator 100.</span></div>
           <div class="step-math">\(0.65 = \dfrac{65}{100}\)</div>
@@ -205,7 +338,7 @@
     <!-- EXAMPLE 3: CLASSIFY RATIONAL -->
     <div class="example-card">
       <div class="example-title">Example 3: Classify a Repeating Decimal - Is \(0.41\overline{6}\) rational or irrational? <span class="type-tag classify">Classify</span></div>
-      <ol class="example-steps">
+      <ol class="example-steps cols-2">
         <li>
           <div class="step-row"><span class="step-num">1</span><span class="step-text">A number is rational whenever it can be written as a fraction of two integers - and any decimal that terminates or repeats can always be rewritten that way.</span></div>
         </li>
@@ -219,7 +352,7 @@
     <!-- EXAMPLE 4: CLASSIFY IRRATIONAL -->
     <div class="example-card">
       <div class="example-title">Example 4: Classify a Non-Repeating Decimal - Is \(\pi = 3.14159265\ldots\) rational or irrational? <span class="type-tag classify">Classify</span></div>
-      <ol class="example-steps">
+      <ol class="example-steps cols-2">
         <li>
           <div class="step-row"><span class="step-num">1</span><span class="step-text">Look at the decimal digits of \(\pi\): they never end, and no matter how far you calculate, they never settle into a repeating block.</span></div>
         </li>
@@ -235,13 +368,13 @@
   <div id="operations" class="panel">
     <div class="section-title">How to Add or Subtract Signed Numbers</div>
     <div class="explainer-box">
-      One process, three checks, every time - for integers, decimals, and fractions alike.
+      One process, three checks, every time - for integers, decimals, and fractions alike. Ask yourself the same questions in the same order, no matter what the numbers look like.
     </div>
 
     <div class="notebook-box">
-      <div class="notebook-header">Same-Sign / Different-Sign Method</div>
+      <div class="notebook-header">Same-Sign / Different-Sign Method - Ask Yourself These Questions</div>
       <table class="data-table">
-        <thead><tr><th>Check</th><th>What to do</th></tr></thead>
+        <thead><tr><th>Ask...</th><th>Then...</th></tr></thead>
         <tbody>
           <tr><td>Is it addition or subtraction?</td><td><strong>Addition</strong> &rarr; go straight to the next check. <strong>Subtraction</strong> &rarr; Keep-Change-Change first: keep the first number, change the operation to addition, change the second number's sign to its opposite. Now it's addition.</td></tr>
           <tr><td>Are the signs the same or different?</td><td>Compare the sign of the two numbers now being added.</td></tr>
@@ -261,72 +394,90 @@
       </ol>
     </div>
 
+    <div class="quick-note">
+      <strong>Color key for the worked examples below:</strong> every colored box is a <em>process</em> box - work you do along the way. The <strong>green box is the only one that's the actual answer.</strong> If a box isn't green, treat its number as a helper value, not your final response.
+      <div class="color-key">
+        <span><i style="background:#7c3aed;"></i> Violet = rewriting with Keep-Change-Change</span>
+        <span><i style="background:#a21caf;"></i> Pink = converting or building a common form</span>
+        <span><i style="background:#0891b2;"></i> Teal = resolving an addition (same signs)</span>
+        <span><i style="background:#d97706;"></i> Amber = resolving a subtraction (different signs)</span>
+        <span><i style="background:#4338ca;"></i> Indigo = running value mid-problem (not final yet)</span>
+        <span><i style="background:#15803d;"></i> Green = the final answer</span>
+      </div>
+    </div>
+
     <!-- OP EXAMPLE 1: INTEGERS SAME SIGN -->
     <div class="example-card">
       <div class="example-title">Example 1: Adding Integers, Same Sign - \(-16 + (-9)\) <span class="type-tag addsub">Addition</span></div>
-      <ol class="example-steps">
-        <li>
-          <div class="step-row"><span class="step-num">1</span><span class="step-text">Both numbers are negative, so the signs are the <strong>same</strong> - add the absolute values and keep the common sign.</span></div>
-          <div class="step-math">\(16 + 9 = 25\)</div>
-        </li>
-      </ol>
+      <table class="qa-table">
+        <tr><td class="qa-q">Is this addition or subtraction?</td><td class="qa-a">Addition <span class="pill pill-add">already addition</span> - nothing to rewrite.</td></tr>
+        <tr><td class="qa-q">Do the two numbers have the same sign or different signs?</td><td class="qa-a"><span class="pill pill-same">Same</span> - both numbers are negative.</td></tr>
+        <tr><td class="qa-q">What do I do with the numbers?</td><td class="qa-a">Add the absolute values.</td></tr>
+      </table>
+      <div class="resolve-box add"><span class="box-label">Resolving</span>\(16 + 9 = 25\)</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Which sign does the answer keep?</td><td class="qa-a">The common sign - negative.</td></tr>
+      </table>
       <div class="example-final">\(-16 + (-9) = -25\)</div>
     </div>
 
     <!-- OP EXAMPLE 2: DECIMAL SUBTRACTION KCC -->
     <div class="example-card">
       <div class="example-title">Example 2: Subtracting Decimals - \(-9.3 - (-4.7)\) <span class="type-tag addsub">Subtraction</span></div>
-      <ol class="example-steps">
-        <li>
-          <div class="step-row"><span class="step-num">1</span><span class="step-text">This is subtraction, so rewrite it as addition first using Keep-Change-Change: keep \(-9.3\), change subtraction to addition, and change \(-4.7\) to \(+4.7\).</span></div>
-          <div class="step-math">\(-9.3 - (-4.7) = -9.3 + 4.7\)</div>
-        </li>
-        <li>
-          <div class="step-row"><span class="step-num">2</span><span class="step-text">Now it's addition with <strong>different</strong> signs, so subtract the smaller absolute value from the larger.</span></div>
-          <div class="step-math">\(9.3 - 4.7 = 4.6\)</div>
-        </li>
-        <li>
-          <div class="step-row"><span class="step-num">3</span><span class="step-text">The number with the greater absolute value is \(-9.3\), so the answer is negative.</span></div>
-        </li>
-      </ol>
-      <div class="example-final">\(-9.3 + 4.7 = -4.6\)</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Is this addition or subtraction?</td><td class="qa-a"><span class="pill pill-sub">Subtraction</span> - apply Keep-Change-Change before doing anything else.</td></tr>
+      </table>
+      <div class="kcc-box">
+        <span class="box-label">Keep-Change-Change</span>
+        <div class="kcc-chips">
+          <span class="kcc-chip">Keep \(-9.3\)</span>
+          <span class="kcc-chip">Change \(-\) to \(+\)</span>
+          <span class="kcc-chip">Change \(-4.7\) to \(+4.7\)</span>
+        </div>
+        <div class="kcc-arrow">\(-9.3 - (-4.7) \;\rightarrow\; -9.3 + 4.7\)</div>
+      </div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Now: same signs or different signs?</td><td class="qa-a"><span class="pill pill-diff">Different</span></td></tr>
+        <tr><td class="qa-q">What do I do with the numbers?</td><td class="qa-a">Subtract the smaller absolute value from the larger.</td></tr>
+      </table>
+      <div class="resolve-box sub"><span class="box-label">Resolving - difference of the absolute values (this is not the final answer yet)</span>\(9.3 - 4.7 = 4.6\)</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Which number has the greater absolute value?</td><td class="qa-a">\(-9.3\), so the answer is negative.</td></tr>
+      </table>
+      <div class="example-final">\(-9.3 - (-4.7) = -4.6\)</div>
     </div>
 
     <!-- OP EXAMPLE 3: FRACTIONS BUTTERFLY -->
     <div class="example-card">
       <div class="example-title">Example 3: Adding Signed Fractions (Butterfly Method) - \(-\dfrac{3}{5} + \left(-\dfrac{1}{10}\right)\) <span class="type-tag addsub">Addition</span></div>
-      <ol class="example-steps">
-        <li>
-          <div class="step-row"><span class="step-num">1</span><span class="step-text">Cross-multiply each numerator by the other fraction's denominator to get the two wings.</span></div>
-          <div class="step-math">\(3 \times 10 = 30\) and \(5 \times 1 = 5\)</div>
-        </li>
-        <li>
-          <div class="step-row"><span class="step-num">2</span><span class="step-text">Multiply the denominators straight down the middle for the new denominator.</span></div>
-          <div class="step-math">\(5 \times 10 = 50 \;\Rightarrow\; -\dfrac{30}{50} + \left(-\dfrac{5}{50}\right)\)</div>
-        </li>
-        <li>
-          <div class="step-row"><span class="step-num">3</span><span class="step-text">Same signs, so add the wings and keep the common sign.</span></div>
-          <div class="step-math">\(30 + 5 = 35 \;\Rightarrow\; -\dfrac{35}{50}\)</div>
-        </li>
-        <li>
-          <div class="step-row"><span class="step-num">4</span><span class="step-text">Simplify by dividing by the GCF, 5.</span></div>
-        </li>
-      </ol>
+      <table class="qa-table">
+        <tr><td class="qa-q">Is this addition or subtraction?</td><td class="qa-a">Addition <span class="pill pill-add">already addition</span> - nothing to rewrite.</td></tr>
+        <tr><td class="qa-q">Do the fractions have the same denominator?</td><td class="qa-a">No - build a common one with the Butterfly Method first.</td></tr>
+      </table>
+      <div class="resolve-box convert"><span class="box-label">Building the wings</span>\(3 \times 10 = 30\) and \(5 \times 1 = 5\); denominators straight down the middle: \(5 \times 10 = 50\) \(\;\Rightarrow\; -\dfrac{30}{50} + \left(-\dfrac{5}{50}\right)\)</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Do the wing values have the same sign or different signs?</td><td class="qa-a"><span class="pill pill-same">Same</span> - both negative.</td></tr>
+        <tr><td class="qa-q">What do I do with the numbers?</td><td class="qa-a">Add the wing values.</td></tr>
+      </table>
+      <div class="resolve-box add"><span class="box-label">Resolving</span>\(30 + 5 = 35 \;\Rightarrow\; -\dfrac{35}{50}\)</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Which sign does the answer keep?</td><td class="qa-a">The common sign - negative. Then simplify by the GCF, 5.</td></tr>
+      </table>
       <div class="example-final">\(-\dfrac{3}{5} + \left(-\dfrac{1}{10}\right) = -\dfrac{7}{10}\)</div>
     </div>
 
     <!-- OP EXAMPLE 4: DECIMAL DIFFERENT SIGN ADDITION -->
     <div class="example-card">
       <div class="example-title">Example 4: Adding Decimals, Different Signs - \(8.4 + (-13.1)\) <span class="type-tag addsub">Addition</span></div>
-      <ol class="example-steps">
-        <li>
-          <div class="step-row"><span class="step-num">1</span><span class="step-text">This is already addition, with different signs - subtract the smaller absolute value from the larger.</span></div>
-          <div class="step-math">\(13.1 - 8.4 = 4.7\)</div>
-        </li>
-        <li>
-          <div class="step-row"><span class="step-num">2</span><span class="step-text">The number with the greater absolute value is \(-13.1\), so the answer is negative.</span></div>
-        </li>
-      </ol>
+      <table class="qa-table">
+        <tr><td class="qa-q">Is this addition or subtraction?</td><td class="qa-a">Addition <span class="pill pill-add">already addition</span> - nothing to rewrite.</td></tr>
+        <tr><td class="qa-q">Same signs or different signs?</td><td class="qa-a"><span class="pill pill-diff">Different</span></td></tr>
+        <tr><td class="qa-q">What do I do with the numbers?</td><td class="qa-a">Subtract the smaller absolute value from the larger.</td></tr>
+      </table>
+      <div class="resolve-box sub"><span class="box-label">Resolving - difference of the absolute values</span>\(13.1 - 8.4 = 4.7\)</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Which number has the greater absolute value?</td><td class="qa-a">\(-13.1\), so the answer is negative.</td></tr>
+      </table>
       <div class="example-final">\(8.4 + (-13.1) = -4.7\)</div>
     </div>
 
@@ -351,85 +502,168 @@
     </div>
     <div class="notebook-box">
       <div class="notebook-header">Multi-Step Strategy</div>
-      <p style="margin:0;">Work two numbers at a time. Solve the first pair completely with the Same-Sign / Different-Sign Method, then treat that result as the new "first number" and repeat with the next one - the same process, just climbed more than once.</p>
+      <p style="margin:0 0 8px 0;">Work two numbers at a time. Solve the first pair completely with the Same-Sign / Different-Sign Method, then treat that result as the new "first number" and repeat with the next one - the same process, just climbed more than once.</p>
+      <p style="margin:0;">In the examples below, the pair currently being combined is <span class="expr-chip active" style="padding:2px 10px;">boxed</span> and the rest of the expression is <span class="expr-chip" style="padding:2px 4px;">grayed out</span> until it's its turn - so it's always clear which two numbers you're working on right now.</p>
     </div>
 
     <!-- MIX EXAMPLE 1: MIXED FORMS -->
     <div class="example-card">
       <div class="example-title">Example 1: Adding a Fraction and a Decimal - \(-\dfrac{5}{8} + 0.75\) <span class="type-tag addsub">Mixed Forms</span></div>
-      <ol class="example-steps">
-        <li>
-          <div class="step-row"><span class="step-num">1</span><span class="step-text">One number is a fraction and one is a decimal, so convert to match. \(-\dfrac{5}{8}\) has a denominator of 8 (only 2s) - a "friendly" denominator - so convert it to a decimal.</span></div>
-          <div class="step-math">\(-\dfrac{5}{8} = -0.625\)</div>
-        </li>
-        <li>
-          <div class="step-row"><span class="step-num">2</span><span class="step-text">Now both numbers are decimals with different signs - subtract the smaller absolute value from the larger.</span></div>
-          <div class="step-math">\(0.75 - 0.625 = 0.125\)</div>
-        </li>
-        <li>
-          <div class="step-row"><span class="step-num">3</span><span class="step-text">The number with the greater absolute value is \(0.75\), so the answer is positive.</span></div>
-        </li>
-      </ol>
+      <table class="qa-table">
+        <tr><td class="qa-q">Are both numbers in the same form?</td><td class="qa-a">No - one is a fraction, one is a decimal. \(-\dfrac{5}{8}\) has a denominator of 8 (only 2s) - a "friendly" denominator - so convert it to a decimal.</td></tr>
+      </table>
+      <div class="resolve-box convert"><span class="box-label">Converting</span>\(-\dfrac{5}{8} = -0.625\)</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Is this addition or subtraction?</td><td class="qa-a">Addition <span class="pill pill-add">already addition</span> - nothing to rewrite.</td></tr>
+        <tr><td class="qa-q">Same signs or different signs?</td><td class="qa-a"><span class="pill pill-diff">Different</span></td></tr>
+        <tr><td class="qa-q">What do I do with the numbers?</td><td class="qa-a">Subtract the smaller absolute value from the larger.</td></tr>
+      </table>
+      <div class="resolve-box sub"><span class="box-label">Resolving</span>\(0.75 - 0.625 = 0.125\)</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Which number has the greater absolute value?</td><td class="qa-a">\(0.75\), so the answer is positive.</td></tr>
+      </table>
       <div class="example-final">\(-\dfrac{5}{8} + 0.75 = 0.125\)</div>
     </div>
 
     <!-- MULTISTEP EXAMPLE -->
     <div class="example-card">
       <div class="example-title">Example 2: Three Terms, Multi-Step - \(15.6 - 8\dfrac{1}{4} + (-1.6)\) <span class="type-tag multistep">Multi-Step</span></div>
-      <ol class="example-steps">
-        <li>
-          <div class="step-row"><span class="step-num">1</span><span class="step-text">Convert the mixed number to a decimal first.</span></div>
-          <div class="step-math">\(8\dfrac{1}{4} = 8 + 0.25 = 8.25\)</div>
-        </li>
-        <li>
-          <div class="step-row"><span class="step-num">2</span><span class="step-text">Work the first two numbers: \(15.6 - 8.25\) is subtraction with different signs, so subtract. The answer is positive, since \(15.6\) has the greater absolute value.</span></div>
-          <div class="step-math">\(15.6 - 8.25 = 7.35\)</div>
-        </li>
-        <li>
-          <div class="step-row"><span class="step-num">3</span><span class="step-text">Now combine that result with the last number: \(7.35 + (-1.6)\) has different signs, so subtract. The answer is positive, since \(7.35\) has the greater absolute value.</span></div>
-          <div class="step-math">\(7.35 - 1.6 = 5.75\)</div>
-        </li>
-      </ol>
+      <table class="qa-table">
+        <tr><td class="qa-q">Are all the terms in the same form?</td><td class="qa-a">Not yet - convert the mixed number to a decimal first.</td></tr>
+      </table>
+      <div class="resolve-box convert"><span class="box-label">Converting</span>\(8\dfrac{1}{4} = 8 + 0.25 = 8.25\)</div>
+
+      <div class="expr-focus">
+        <span class="expr-chip active">\(15.6 - 8.25\)</span><span class="expr-chip">\(\,+ (-1.6)\)</span>
+      </div>
+      <div class="expr-caption">Working on this pair first</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Is this pair addition or subtraction?</td><td class="qa-a"><span class="pill pill-sub">Subtraction</span> - apply Keep-Change-Change.</td></tr>
+      </table>
+      <div class="kcc-box">
+        <span class="box-label">Keep-Change-Change</span>
+        <div class="kcc-chips">
+          <span class="kcc-chip">Keep \(15.6\)</span>
+          <span class="kcc-chip">Change \(-\) to \(+\)</span>
+          <span class="kcc-chip">Change \(8.25\) to \(-8.25\)</span>
+        </div>
+        <div class="kcc-arrow">\(15.6 - 8.25 \;\rightarrow\; 15.6 + (-8.25)\)</div>
+      </div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Same signs or different signs?</td><td class="qa-a"><span class="pill pill-diff">Different</span></td></tr>
+        <tr><td class="qa-q">What do I do with the numbers?</td><td class="qa-a">Subtract the smaller absolute value from the larger.</td></tr>
+      </table>
+      <div class="resolve-box sub"><span class="box-label">Resolving</span>\(15.6 - 8.25 = 7.35\)</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Which number has the greater absolute value?</td><td class="qa-a">\(15.6\), so this pair is positive.</td></tr>
+      </table>
+      <div class="running-box"><span class="box-label" style="color:#3730a3;">Running value - not the final answer yet</span>\(7.35\)</div>
+
+      <p class="step-text" style="margin:14px 0 0 0;">Rewrite the expression using that running value in place of the pair we just solved, then repeat with the next term.</p>
+      <div class="expr-focus">
+        <span class="expr-chip active">\(7.35 + (-1.6)\)</span>
+      </div>
+      <div class="expr-caption">Working on this pair now</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Is this pair addition or subtraction?</td><td class="qa-a">Addition <span class="pill pill-add">already addition</span> - nothing to rewrite.</td></tr>
+        <tr><td class="qa-q">Same signs or different signs?</td><td class="qa-a"><span class="pill pill-diff">Different</span></td></tr>
+        <tr><td class="qa-q">What do I do with the numbers?</td><td class="qa-a">Subtract the smaller absolute value from the larger.</td></tr>
+      </table>
+      <div class="resolve-box sub"><span class="box-label">Resolving</span>\(7.35 - 1.6 = 5.75\)</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Which number has the greater absolute value?</td><td class="qa-a">\(7.35\), so the answer is positive.</td></tr>
+      </table>
       <div class="example-final">\(15.6 - 8\dfrac{1}{4} + (-1.6) = 5.75\)</div>
     </div>
 
     <!-- WORD PROBLEM 1: TEMPERATURE -->
     <div class="example-card">
       <div class="example-title">Word Problem 1: Temperature - At sunrise it was \(-6.25\)&deg;C. By noon it rose \(9\dfrac{1}{2}\)&deg;C. During an evening storm it dropped \(4.8\)&deg;C. What was the final temperature? <span class="type-tag word">Word Problem</span></div>
-      <ol class="example-steps">
-        <li>
-          <div class="step-row"><span class="step-num">1</span><span class="step-text">Translate the words into an expression: start at \(-6.25\); "rose \(9\dfrac{1}{2}\)" means add \(9.5\); "dropped \(4.8\)" means subtract \(4.8\).</span></div>
-          <div class="step-math">\(-6.25 + 9.5 - 4.8\)</div>
-        </li>
-        <li>
-          <div class="step-row"><span class="step-num">2</span><span class="step-text">Combine the first two numbers: different signs, so subtract. Positive, since \(9.5\) has the greater absolute value.</span></div>
-          <div class="step-math">\(-6.25 + 9.5 = 3.25\)</div>
-        </li>
-        <li>
-          <div class="step-row"><span class="step-num">3</span><span class="step-text">Combine with the last number: \(3.25 - 4.8\) rewrites as \(3.25 + (-4.8)\), different signs, so subtract. Negative, since \(-4.8\) has the greater absolute value.</span></div>
-          <div class="step-math">\(4.8 - 3.25 = 1.55\)</div>
-        </li>
-      </ol>
+      <table class="qa-table">
+        <tr><td class="qa-q">How do I translate the words into an expression?</td><td class="qa-a">Start at \(-6.25\); "rose \(9\dfrac{1}{2}\)" means add \(9.5\); "dropped \(4.8\)" means subtract \(4.8\).</td></tr>
+      </table>
+      <div class="resolve-box convert"><span class="box-label">Translating</span>\(-6.25 + 9.5 - 4.8\)</div>
+
+      <div class="expr-focus">
+        <span class="expr-chip active">\(-6.25 + 9.5\)</span><span class="expr-chip">\(\,- 4.8\)</span>
+      </div>
+      <div class="expr-caption">Working on this pair first</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Is this pair addition or subtraction?</td><td class="qa-a">Addition <span class="pill pill-add">already addition</span> - nothing to rewrite.</td></tr>
+        <tr><td class="qa-q">Same signs or different signs?</td><td class="qa-a"><span class="pill pill-diff">Different</span></td></tr>
+        <tr><td class="qa-q">What do I do with the numbers?</td><td class="qa-a">Subtract the smaller absolute value from the larger.</td></tr>
+      </table>
+      <div class="resolve-box sub"><span class="box-label">Resolving</span>\(9.5 - 6.25 = 3.25\)</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Which number has the greater absolute value?</td><td class="qa-a">\(9.5\), so this pair is positive.</td></tr>
+      </table>
+      <div class="running-box"><span class="box-label" style="color:#3730a3;">Running value - not the final answer yet</span>\(3.25\)</div>
+
+      <p class="step-text" style="margin:14px 0 0 0;">Rewrite using that running value, then combine with the last term.</p>
+      <div class="expr-focus">
+        <span class="expr-chip active">\(3.25 - 4.8\)</span>
+      </div>
+      <div class="expr-caption">Working on this pair now</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Is this pair addition or subtraction?</td><td class="qa-a"><span class="pill pill-sub">Subtraction</span> - apply Keep-Change-Change.</td></tr>
+      </table>
+      <div class="kcc-box">
+        <span class="box-label">Keep-Change-Change</span>
+        <div class="kcc-chips">
+          <span class="kcc-chip">Keep \(3.25\)</span>
+          <span class="kcc-chip">Change \(-\) to \(+\)</span>
+          <span class="kcc-chip">Change \(4.8\) to \(-4.8\)</span>
+        </div>
+        <div class="kcc-arrow">\(3.25 - 4.8 \;\rightarrow\; 3.25 + (-4.8)\)</div>
+      </div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Same signs or different signs?</td><td class="qa-a"><span class="pill pill-diff">Different</span></td></tr>
+        <tr><td class="qa-q">What do I do with the numbers?</td><td class="qa-a">Subtract the smaller absolute value from the larger.</td></tr>
+      </table>
+      <div class="resolve-box sub"><span class="box-label">Resolving</span>\(4.8 - 3.25 = 1.55\)</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Which number has the greater absolute value?</td><td class="qa-a">\(-4.8\), so the answer is negative.</td></tr>
+      </table>
       <div class="example-final">Final temperature: \(-1.55\)&deg;C</div>
     </div>
 
     <!-- WORD PROBLEM 2: DEPTH -->
     <div class="example-card">
       <div class="example-title">Word Problem 2: Depth - A submarine at \(-18.6\) m descends another \(12\dfrac{3}{4}\) m, then ascends \(9.35\) m. What is its final depth? <span class="type-tag word">Word Problem</span></div>
-      <ol class="example-steps">
-        <li>
-          <div class="step-row"><span class="step-num">1</span><span class="step-text">Translate: start at \(-18.6\); "descends another \(12\dfrac{3}{4}\)" means add \(-12.75\) (descending makes it more negative); "ascends \(9.35\)" means add \(+9.35\).</span></div>
-          <div class="step-math">\(-18.6 + (-12.75) + 9.35\)</div>
-        </li>
-        <li>
-          <div class="step-row"><span class="step-num">2</span><span class="step-text">Combine the first two numbers: same signs (both negative), so add and keep the common sign.</span></div>
-          <div class="step-math">\(18.6 + 12.75 = 31.35 \;\Rightarrow\; -31.35\)</div>
-        </li>
-        <li>
-          <div class="step-row"><span class="step-num">3</span><span class="step-text">Combine with the last number: \(-31.35 + 9.35\) has different signs, so subtract. Negative, since \(-31.35\) has the greater absolute value.</span></div>
-          <div class="step-math">\(31.35 - 9.35 = 22.0\)</div>
-        </li>
-      </ol>
+      <table class="qa-table">
+        <tr><td class="qa-q">How do I translate the words into an expression?</td><td class="qa-a">Start at \(-18.6\); "descends another \(12\dfrac{3}{4}\)" means add \(-12.75\) (descending makes it more negative); "ascends \(9.35\)" means add \(+9.35\).</td></tr>
+      </table>
+      <div class="resolve-box convert"><span class="box-label">Translating</span>\(-18.6 + (-12.75) + 9.35\)</div>
+
+      <div class="expr-focus">
+        <span class="expr-chip active">\(-18.6 + (-12.75)\)</span><span class="expr-chip">\(\,+ 9.35\)</span>
+      </div>
+      <div class="expr-caption">Working on this pair first</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Is this pair addition or subtraction?</td><td class="qa-a">Addition <span class="pill pill-add">already addition</span> - nothing to rewrite.</td></tr>
+        <tr><td class="qa-q">Same signs or different signs?</td><td class="qa-a"><span class="pill pill-same">Same</span> - both negative.</td></tr>
+        <tr><td class="qa-q">What do I do with the numbers?</td><td class="qa-a">Add the absolute values.</td></tr>
+      </table>
+      <div class="resolve-box add"><span class="box-label">Resolving</span>\(18.6 + 12.75 = 31.35\)</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Which sign do I keep?</td><td class="qa-a">The common sign - negative.</td></tr>
+      </table>
+      <div class="running-box"><span class="box-label" style="color:#3730a3;">Running value - not the final answer yet</span>\(-31.35\)</div>
+
+      <p class="step-text" style="margin:14px 0 0 0;">Rewrite using that running value, then combine with the last term.</p>
+      <div class="expr-focus">
+        <span class="expr-chip active">\(-31.35 + 9.35\)</span>
+      </div>
+      <div class="expr-caption">Working on this pair now</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Is this pair addition or subtraction?</td><td class="qa-a">Addition <span class="pill pill-add">already addition</span> - nothing to rewrite.</td></tr>
+        <tr><td class="qa-q">Same signs or different signs?</td><td class="qa-a"><span class="pill pill-diff">Different</span></td></tr>
+        <tr><td class="qa-q">What do I do with the numbers?</td><td class="qa-a">Subtract the smaller absolute value from the larger.</td></tr>
+      </table>
+      <div class="resolve-box sub"><span class="box-label">Resolving</span>\(31.35 - 9.35 = 22.0\)</div>
+      <table class="qa-table">
+        <tr><td class="qa-q">Which number has the greater absolute value?</td><td class="qa-a">\(-31.35\), so the answer is negative.</td></tr>
+      </table>
       <div class="example-final">Final depth: \(-22\) m</div>
     </div>
   </div>
