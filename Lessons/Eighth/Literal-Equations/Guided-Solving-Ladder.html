@@ -30,13 +30,20 @@
       border-left: 8px solid var(--primary-light);
       border-radius: 12px;
       padding: 18px 22px;
-      margin: 16px 0;
+      margin: 36px 0;
+      box-shadow: 0 8px 20px rgba(15,23,42,0.10);
+      position: relative;
+    }
+    .ladder + .ladder {
+      margin-top: 40px;
     }
     .ladder-formula {
       font-size: 1.15rem;
       font-weight: 800;
       color: var(--primary);
       margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 2px dashed #cbd5e1;
     }
     .ladder-round {
       background: #ffffff;
@@ -122,6 +129,7 @@
     <button class="tab-btn active" onclick="switchTab('method')">1. The Question Ladder</button>
     <button class="tab-btn" onclick="switchTab('examples')">2. Ten Worked Examples</button>
     <button class="tab-btn" onclick="switchTab('exercises')">3. Exercises (15)</button>
+    <button class="tab-btn" onclick="switchTab('crosscurricular')">4. Formulas From Other Classes</button>
   </nav>
 
   <!-- TAB 1: METHOD -->
@@ -215,9 +223,9 @@
       </div>
       <div class="ladder-eq">\(y - b = mx + b - b\)</div>
       <div class="ladder-result">\(y - b = mx\)</div>
-      <div class="ladder-check">Is \(x\) now isolated? No - keep going.</div>
+      <div class="ladder-check">Is \(x\) now isolated? No. Keep going - see next step.</div>
       <div class="ladder-round">
-        <div class="ladder-round-label">Round 2 (Now,)</div>
+        <div class="ladder-round-label">Round 2</div>
         <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(x\)</span></div>
         <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(m\)</span></div>
         <div class="qa"><span class="q">What is \(m\) doing?</span><span class="a">Multiplying</span></div>
@@ -241,9 +249,9 @@
       </div>
       <div class="ladder-eq">\(ax - ax + by = c - ax\)</div>
       <div class="ladder-result">\(by = c - ax\)</div>
-      <div class="ladder-check">Is \(b\) now isolated? No - keep going.</div>
+      <div class="ladder-check">Is \(b\) now isolated? No. Keep going - see next step.</div>
       <div class="ladder-round">
-        <div class="ladder-round-label">Round 2 (Now,)</div>
+        <div class="ladder-round-label">Round 2</div>
         <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(b\)</span></div>
         <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(y\)</span></div>
         <div class="qa"><span class="q">What is \(y\) doing?</span><span class="a">Multiplying</span></div>
@@ -267,9 +275,9 @@
       </div>
       <div class="ladder-eq">\(P - 2l = 2l - 2l + 2w\)</div>
       <div class="ladder-result">\(P - 2l = 2w\)</div>
-      <div class="ladder-check">Is \(w\) now isolated? No - keep going.</div>
+      <div class="ladder-check">Is \(w\) now isolated? No. Keep going - see next step.</div>
       <div class="ladder-round">
-        <div class="ladder-round-label">Round 2 (Now,)</div>
+        <div class="ladder-round-label">Round 2</div>
         <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(w\)</span></div>
         <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(2\)</span></div>
         <div class="qa"><span class="q">What is \(2\) doing?</span><span class="a">Multiplying</span></div>
@@ -293,9 +301,9 @@
       </div>
       <div class="ladder-eq">\(F - 32 = \dfrac{9}{5}C + 32 - 32\)</div>
       <div class="ladder-result">\(F - 32 = \dfrac{9}{5}C\)</div>
-      <div class="ladder-check">Is \(C\) now isolated? No - keep going.</div>
+      <div class="ladder-check">Is \(C\) now isolated? No. Keep going - see next step.</div>
       <div class="ladder-round">
-        <div class="ladder-round-label">Round 2 (Now,)</div>
+        <div class="ladder-round-label">Round 2</div>
         <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(C\)</span></div>
         <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(\dfrac{9}{5}\)</span></div>
         <div class="qa"><span class="q">What is \(\dfrac{9}{5}\) doing?</span><span class="a">Multiplying</span></div>
@@ -317,9 +325,9 @@
         <div class="qa"><span class="q">What do I do instead?</span><span class="a">Factor \(P\) out of the right side</span></div>
       </div>
       <div class="ladder-eq">\(A = P(1 + rt)\)</div>
-      <div class="ladder-check">Is \(P\) now isolated? No, but it now appears only once - keep going.</div>
+      <div class="ladder-check">Is \(P\) now isolated? No, but it now appears only once. Keep going - see next step.</div>
       <div class="ladder-round">
-        <div class="ladder-round-label">Round 2 (Now,)</div>
+        <div class="ladder-round-label">Round 2</div>
         <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(P\)</span></div>
         <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\((1+rt)\)</span></div>
         <div class="qa"><span class="q">What is \((1+rt)\) doing?</span><span class="a">Multiplying</span></div>
@@ -340,8 +348,9 @@
         <div class="qa"><span class="q">What's the first obstruction to undo?</span><span class="a">\(2lw\) adding, since it has no \(h\) in it at all</span></div>
         <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Subtraction</span></div>
       </div>
-      <div class="ladder-eq">\(S - 2lw = 2lh + 2wh\)</div>
-      <div class="ladder-check">Is \(h\) now isolated? No - keep going.</div>
+      <div class="ladder-eq">\(S - 2lw = 2lw - 2lw + 2lh + 2wh\)</div>
+      <div class="ladder-result">\(S - 2lw = 2lh + 2wh\)</div>
+      <div class="ladder-check">Is \(h\) now isolated? No. Keep going - see next step.</div>
       <div class="ladder-round">
         <div class="ladder-round-label">Round 2 - Factoring Question</div>
         <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(h\) still appears in <strong>two</strong> terms: \(2lh\) and \(2wh\)</span></div>
@@ -349,9 +358,9 @@
         <div class="qa"><span class="q">What do I do instead?</span><span class="a">Factor \(h\) out of the right side</span></div>
       </div>
       <div class="ladder-eq">\(S - 2lw = h(2l + 2w)\)</div>
-      <div class="ladder-check">Is \(h\) now isolated? No, but it now appears only once - keep going.</div>
+      <div class="ladder-check">Is \(h\) now isolated? No, but it now appears only once. Keep going - see next step.</div>
       <div class="ladder-round">
-        <div class="ladder-round-label">Round 3 (Now,)</div>
+        <div class="ladder-round-label">Round 3</div>
         <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\((2l+2w)\)</span></div>
         <div class="qa"><span class="q">What is \((2l+2w)\) doing?</span><span class="a">Multiplying</span></div>
         <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
@@ -372,9 +381,9 @@
         <div class="qa"><span class="q">What do I do instead?</span><span class="a">Factor \(x\) out of the left side</span></div>
       </div>
       <div class="ladder-eq">\(x(a+b) = c\)</div>
-      <div class="ladder-check">Is \(x\) now isolated? No, but it now appears only once - keep going.</div>
+      <div class="ladder-check">Is \(x\) now isolated? No, but it now appears only once. Keep going - see next step.</div>
       <div class="ladder-round">
-        <div class="ladder-round-label">Round 2 (Now,)</div>
+        <div class="ladder-round-label">Round 2</div>
         <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\((a+b)\)</span></div>
         <div class="qa"><span class="q">What is \((a+b)\) doing?</span><span class="a">Multiplying</span></div>
         <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
@@ -391,7 +400,32 @@
     <div class="explainer-box">
       Work each problem on paper using the Question Ladder from Tab 1, then type only the expression for the target variable - not "x =", just what goes on the other side. For a fraction, use a slash: type <code>d/t</code> for \(\dfrac{d}{t}\). Each item gives you up to <strong>2 tries</strong> before showing the correct rearrangement.
     </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Typing Key: Greek Letters &amp; Symbols</div>
+      <p style="margin:0 0 10px 0;">Your keyboard can't type Greek letters, so spell them out instead. The answer checker reads these the same as the real symbol.</p>
+      <table class="data-table">
+        <thead><tr><th>Symbol</th><th>Type it as</th><th>Shows up in</th></tr></thead>
+        <tbody>
+          <tr><td>\(\pi\) (pi)</td><td><code>pi</code></td><td>Circle and cylinder formulas</td></tr>
+          <tr><td>\(\sigma\) (sigma)</td><td><code>sigma</code></td><td>Statistics: z-scores</td></tr>
+          <tr><td>\(\mu\) (mu)</td><td><code>mu</code></td><td>Statistics: z-scores</td></tr>
+          <tr><td>\(\theta\) (theta)</td><td><code>theta</code></td><td>Angles</td></tr>
+        </tbody>
+      </table>
+      <p style="margin:10px 0 0 0;">Everything else types normally: use <code>/</code> for a fraction bar, <code>^</code> for an exponent (e.g. <code>v^2</code> for \(v^2\)), and parentheses <code>( )</code> around anything that belongs together in a numerator or denominator.</p>
+    </div>
+
     <div id="ladder-ex-list"></div>
+  </div>
+
+  <!-- TAB 4: CROSS-CURRICULAR FORMULAS -->
+  <div id="crosscurricular" class="panel">
+    <div class="section-title">Formulas From Other Classes</div>
+    <div class="explainer-box">
+      Literal equations aren't just an Algebra I thing - you'll rearrange formulas exactly like this in Science, Geometry, and even Financial Math. Same Question Ladder, same four questions, just a different subject's letters. See the typing key on Tab 3 for how to type \(\pi\) and other symbols.
+    </div>
+    <div id="cross-ex-list"></div>
   </div>
 </div>
 
@@ -435,40 +469,66 @@
     { q: "\\(L = a + (n-1)d\\), solve for \\(d\\).", target: "d", accepted: ["(l-a)/(n-1)"], displayAnswer: "\\dfrac{L-a}{n-1}", label: "Solve L=a+(n-1)d for d", hint: "Not quite yet. Subtract a first, then divide by the whole quantity (n-1) - it's a single obstruction, not two. Try again." }
   ];
 
-  function renderLadderExercises() {
-    const html = ladderExercises.map((p, i) => `
+  // ==========================================
+  // CROSS-CURRICULAR FORMULAS (Tab 4: Physics, Chemistry, Geometry, Financial Math)
+  // ==========================================
+  const crossExercises = [
+    { q: "Physics - Newton's Second Law: \\(F = ma\\), solve for \\(a\\).", target: "a", accepted: ["f/m"], displayAnswer: "\\dfrac{F}{m}", label: "Solve F=ma for a" },
+    { q: "Physics - Work: \\(W = Fd\\), solve for \\(d\\).", target: "d", accepted: ["w/f"], displayAnswer: "\\dfrac{W}{F}", label: "Solve W=Fd for d" },
+    { q: "Physics - Ohm's Law: \\(V = IR\\), solve for \\(R\\).", target: "R", accepted: ["v/i"], displayAnswer: "\\dfrac{V}{I}", label: "Solve V=IR for R" },
+    { q: "Physics - Momentum: \\(p = mv\\), solve for \\(m\\).", target: "m", accepted: ["p/v"], displayAnswer: "\\dfrac{p}{v}", label: "Solve p=mv for m" },
+    { q: "Physics - Kinetic Energy: \\(KE = \\dfrac{1}{2}mv^2\\), solve for \\(m\\).", target: "m", accepted: ["2ke/v^2", "(2ke)/v^2", "2ke/(v^2)", "(2ke)/(v^2)"], displayAnswer: "\\dfrac{2KE}{v^2}", label: "Solve KE=(1/2)mv^2 for m", hint: "Not quite yet. Undo the multiplication by 1/2 and by v^2 together - divide both sides by (1/2)v^2, which is the same as multiplying by 2 and dividing by v^2. Try again." },
+    { q: "Chemistry - Ideal Gas Law: \\(PV = nRT\\), solve for \\(n\\).", target: "n", accepted: ["pv/(rt)", "pv/rt"], displayAnswer: "\\dfrac{PV}{RT}", label: "Solve PV=nRT for n" },
+    { q: "Chemistry - Ideal Gas Law: \\(PV = nRT\\), solve for \\(T\\).", target: "T", accepted: ["pv/(nr)", "pv/nr"], displayAnswer: "\\dfrac{PV}{nR}", label: "Solve PV=nRT for T" },
+    { q: "Chemistry - Density: \\(D = \\dfrac{m}{V}\\), solve for \\(m\\).", target: "m", accepted: ["dv"], displayAnswer: "DV", label: "Solve D=m/V for m", hint: "Not quite yet. D is a fraction with V in the denominator - undo the division by multiplying both sides by V. Try again." },
+    { q: "Chemistry - Density: \\(D = \\dfrac{m}{V}\\), solve for \\(V\\).", target: "V", accepted: ["m/d"], displayAnswer: "\\dfrac{m}{D}", label: "Solve D=m/V for V", hint: "Not quite yet. Multiply both sides by V first to clear the fraction, then divide by D. Try again." },
+    { q: "Geometry - Volume of a Cylinder: \\(V = \\pi r^2 h\\), solve for \\(h\\).", target: "h", accepted: ["v/(pir^2)", "v/(pi*r^2)", "v/(r^2pi)", "v/(r^2*pi)"], displayAnswer: "\\dfrac{V}{\\pi r^2}", label: "Solve V=\\pi r^2 h for h" },
+    { q: "Geometry - Standard Form of a Line: \\(Ax + By = C\\), solve for \\(y\\).", target: "y", accepted: ["(c-ax)/b"], displayAnswer: "\\dfrac{C-Ax}{B}", label: "Solve Ax+By=C for y", hint: "Not quite yet. Move the x-term to the other side first, then divide by B. Try again." },
+    { q: "Financial Math - Selling Price: \\(S = C + M\\) (cost plus markup), solve for \\(M\\).", target: "M", accepted: ["s-c"], displayAnswer: "S-C", label: "Solve S=C+M for M" }
+  ];
+
+  // ==========================================
+  // REUSABLE SYMBOLIC-ANSWER RENDERER (Tabs 3 & 4)
+  // ==========================================
+  const exRegistry = {};
+
+  function renderExerciseList(containerId, problems, keyPrefix, section) {
+    exRegistry[keyPrefix] = { problems, section };
+    const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
         <strong>${i + 1}.</strong> ${p.q}
         <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
           <label style="font-weight:700;">\\(${p.target} = \\)</label>
-          <input type="text" id="lex-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="expression">
-          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkLadderExercise(${i})">Check</button>
+          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="expression">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkExerciseItem('${keyPrefix}', ${i})">Check</button>
         </div>
-        <div id="lex-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
       </div>
     `).join('');
-    document.getElementById('ladder-ex-list').innerHTML = html;
-    ladderExercises.forEach((p, i) => LessonProgress.preRegister(`lex-${i}`, p.label, '3. Exercises'));
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, p.label, section));
     triggerMathJax();
   }
 
-  function checkLadderExercise(idx) {
-    const p = ladderExercises[idx];
-    const val = document.getElementById(`lex-${idx}-input`).value;
-    const fb = document.getElementById(`lex-${idx}-feedback`);
+  function checkExerciseItem(keyPrefix, idx) {
+    const cfg = exRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter an expression before checking - this won't count as an attempt yet.");
       return;
     }
     const correct = p.accepted.includes(normalizeExpr(val));
-    LessonCheck.check(`lex-${idx}`, correct, fb, {
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
       correct: `Correct! \\(${p.target} = ${p.displayAnswer}\\)`,
       retry: p.hint || "Not quite yet. Walk back through the Question Ladder and try again.",
       reveal: `Here's the correct rearrangement: \\(${p.target} = ${p.displayAnswer}\\)`
-    }, { label: p.label, answer: val, section: '3. Exercises' });
+    }, { label: p.label, answer: val, section: cfg.section });
   }
 
-  renderLadderExercises();
+  renderExerciseList('ladder-ex-list', ladderExercises, 'lex', '3. Exercises');
+  renderExerciseList('cross-ex-list', crossExercises, 'cross', '4. Formulas From Other Classes');
 </script>
 <div id="print-report"></div>
 </body>
