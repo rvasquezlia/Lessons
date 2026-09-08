@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pre-Algebra 7: Rational Numbers - Guided Solving Ladder</title>
+  <title>Pre-Algebra 7: Rational Numbers - Test 2 Study Guide</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,65 +23,60 @@
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <style>
-    /* ===== Question-ladder worked examples (same pattern as the Algebra I Literal Equations ladder page) ===== */
-    .ladder {
+    /* ===== Worked-example cards: numbered, explanatory steps (not a cramped Q&A grid) ===== */
+    .example-card {
       background: #f8fafc;
       border: 2px solid var(--border);
       border-left: 8px solid var(--primary-light);
       border-radius: 12px;
-      padding: 18px 22px;
-      margin: 36px 0;
+      padding: 20px 24px;
+      margin: 32px 0;
       box-shadow: 0 8px 20px rgba(15,23,42,0.10);
     }
-    .ladder-formula {
+    .example-title {
       font-size: 1.15rem;
       font-weight: 800;
       color: var(--primary);
-      margin-bottom: 12px;
-      padding-bottom: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
       border-bottom: 2px dashed #cbd5e1;
     }
-    .ladder-round {
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      border-radius: 10px;
-      padding: 12px 16px;
-      margin-bottom: 12px;
-    }
-    .ladder-round-label {
-      font-size: 0.78rem;
+    .example-steps { list-style: none; margin: 0; padding: 0; }
+    .example-steps li { padding: 12px 0; border-bottom: 1px dashed #e2e8f0; }
+    .example-steps li:last-child { border-bottom: none; padding-bottom: 4px; }
+    .step-row { display: flex; align-items: flex-start; gap: 10px; }
+    .step-num {
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      color: #fff;
       font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--accent);
-      margin-bottom: 6px;
+      font-size: 0.85rem;
+      margin-top: 1px;
     }
-    .qa { display: flex; flex-wrap: wrap; gap: 6px; padding: 3px 0; }
-    .qa .q { font-weight: 700; color: #334155; }
-    .qa .a { font-weight: 800; color: var(--primary); }
-    .ladder-eq {
+    .step-text { font-size: 1rem; line-height: 1.6; color: #1e293b; }
+    .step-math {
       background: #eff6ff;
       border: 2px solid var(--primary-light);
       border-radius: 8px;
-      padding: 10px 14px;
-      margin: 10px 0;
+      padding: 9px 14px;
+      margin: 10px 0 0 36px;
       font-size: 1.05rem;
       text-align: center;
     }
-    .ladder-result {
+    .example-final {
+      margin-top: 16px;
+      background: var(--success-bg);
+      border: 2px solid var(--success);
+      border-radius: 10px;
+      padding: 12px 18px;
+      text-align: center;
       font-weight: 900;
-      color: var(--primary);
+      color: var(--success);
       font-size: 1.15rem;
-      text-align: center;
-      margin: 4px 0 2px 0;
     }
-    .ladder-check {
-      font-size: 0.92rem;
-      color: #334155;
-      text-align: center;
-      margin-top: 4px;
-    }
-    .ladder-check strong { color: var(--success); }
     .type-tag {
       display: inline-block;
       font-size: 0.72rem;
@@ -94,9 +89,19 @@
       vertical-align: middle;
     }
     .type-tag.classify { background: #ccfbf1; color: #0f766e; }
-    .type-tag.addsub { background: #dcfce7; color: #15803d; }
-    .type-tag.multistep { background: #dbeafe; color: #1d4ed8; }
-    .type-tag.word { background: #ede9fe; color: #7c3aed; }
+    .type-tag.convert  { background: #fce7f3; color: #a21caf; }
+    .type-tag.addsub   { background: #dcfce7; color: #15803d; }
+    .type-tag.multistep{ background: #dbeafe; color: #1d4ed8; }
+    .type-tag.word     { background: #ede9fe; color: #7c3aed; }
+    .quick-note {
+      background: #fef3c7;
+      border: 2px solid #d97706;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin: 24px 0;
+      font-size: 0.98rem;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
@@ -107,69 +112,142 @@
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
       <span class="brand-name">Lincoln International Academy</span>
     </div>
-    <span class="badge">Pre-Algebra 7 &middot; Rational Numbers &middot; Test 2 Review</span>
-    <h1>Guided Solving Ladder</h1>
+    <span class="badge">Pre-Algebra 7 &middot; Rational Numbers &middot; Review &amp; Practice</span>
+    <h1>Test 2 Study Guide</h1>
   </header>
 
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Pre-Algebra 7 - Rational Numbers - Guided Solving Ladder')">Print My Progress</button>
+    <button class="btn-print" onclick="printProgressReport('Pre-Algebra 7 - Rational Numbers - Test 2 Study Guide')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    This is a supplemental review page for <strong>Test #2 (Lessons 1-6 &amp; 1-7: Understand, Add, and Subtract Rational Numbers)</strong> - it is not part of the six required sections and does not count toward the graded lesson. It's built to give you the practice we missed in class. Every worked example below uses the <strong>same question ladder</strong> every time - the same one your teacher used on the whiteboard. The numbers here are different from the actual test, but the moves are identical. <strong>Calculators are not allowed this quarter.</strong>
+    This is a supplemental review page for <strong>Test #2 (Lessons 1-6 &amp; 1-7: Understand, Add, and Subtract Rational Numbers)</strong> - it is not part of the six required sections and does not count toward the graded lesson. It's built to give you the practice we missed in class. Each tab below covers one group of skills: a quick reference card explaining the process, then worked examples showing every step written out, then (in Tab 4) practice problems of your own. The numbers here are different from the actual test, but the moves are identical. <strong>Calculators are not allowed this quarter.</strong>
   </div>
 
   <nav class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('method')">1. The Ladders</button>
-    <button class="tab-btn" onclick="switchTab('examples')">2. Ten Worked Examples</button>
-    <button class="tab-btn" onclick="switchTab('exercises')">3. Exercises (15)</button>
+    <button class="tab-btn active" onclick="switchTab('convert')">1. Conversion &amp; Classification</button>
+    <button class="tab-btn" onclick="switchTab('operations')">2. Operations</button>
+    <button class="tab-btn" onclick="switchTab('mixed')">3. Mixed &amp; Word Problems</button>
+    <button class="tab-btn" onclick="switchTab('exercises')">4. Practice Exercises</button>
   </nav>
 
-  <!-- TAB 1: METHOD -->
-  <div id="method" class="panel active">
-    <div class="section-title">The Operation Ladder (Addition &amp; Subtraction)</div>
+  <!-- TAB 1: CONVERSION & CLASSIFICATION -->
+  <div id="convert" class="panel active">
+    <div class="section-title">Converting Between Decimals &amp; Fractions</div>
     <div class="explainer-box">
-      One ladder, four questions, every time - for integers, decimals, and fractions alike. Ask them in order, out loud if it helps.
+      Fractions and decimals are two ways of writing the <strong>same</strong> number. You'll need to move between them constantly on this test, so both directions have to be automatic.
     </div>
 
     <div class="notebook-box">
-      <div class="notebook-header">The Operation Ladder</div>
-      <table class="data-table">
-        <thead><tr><th>#</th><th>Question</th><th>What to do</th></tr></thead>
-        <tbody>
-          <tr><td>1</td><td>What operation do I have?</td><td><strong>Addition</strong> &rarr; go straight to Question 2. <strong>Subtraction</strong> &rarr; Keep-Change-Change first: keep the first number, change the operation to addition, change the second number's sign to its opposite. Now it's addition - continue to Question 2.</td></tr>
-          <tr><td>2</td><td>How are the signs - same or different?</td><td>Compare the sign of the two numbers now being added.</td></tr>
-          <tr><td>3</td><td>What do I do with the numbers?</td><td><strong>Same signs:</strong> add the absolute values. <strong>Different signs:</strong> subtract the smaller absolute value from the larger.</td></tr>
-          <tr><td>4</td><td>What sign does the answer get?</td><td><strong>Same signs:</strong> keep the common sign. <strong>Different signs:</strong> keep the sign of whichever number has the <strong>greater absolute value</strong>.</td></tr>
-        </tbody>
-      </table>
-      <p style="margin:12px 0 0 0;"><strong>Multi-step problem?</strong> Just climb this same ladder more than once - solve the first two numbers completely, then run the whole ladder again on that result and the next number.</p>
-    </div>
-
-    <div class="notebook-box">
-      <div class="notebook-header">Quick Reminder: Converting Between Decimals &amp; Fractions</div>
+      <div class="notebook-header">The Two Conversions</div>
       <table class="data-table">
         <thead><tr><th>To convert...</th><th>Do this</th></tr></thead>
         <tbody>
           <tr><td>Fraction &rarr; decimal</td><td>Divide the numerator by the denominator (long division).</td></tr>
           <tr><td>Decimal &rarr; fraction</td><td>Write the digits over the matching place value - tenths &rarr; \(/10\), hundredths &rarr; \(/100\), thousandths &rarr; \(/1000\) - then simplify.</td></tr>
-          <tr><td>Mixed number &rarr; decimal</td><td>Convert only the fraction part to a decimal, then add it to the whole number: \(8\dfrac{1}{4} = 8 + 0.25 = 8.25\).</td></tr>
-          <tr><td>Mixed number &rarr; fraction</td><td>Multiply the whole number by the denominator, add the numerator, keep the same denominator: \(8\dfrac{1}{4} = \dfrac{8\times4+1}{4} = \dfrac{33}{4}\).</td></tr>
+          <tr><td>Mixed number &rarr; decimal</td><td>Convert only the fraction part, then add it to the whole number: \(8\dfrac{1}{4} = 8 + 0.25 = 8.25\).</td></tr>
         </tbody>
       </table>
     </div>
 
+    <div class="section-title" style="margin-top:32px;">Rational or Irrational? Divide It Out</div>
+    <div class="explainer-box">
+      You only need <strong>one tool</strong> to answer every classification question on the test: do the division, and look at what happens to the decimal.
+    </div>
     <div class="notebook-box">
-      <div class="notebook-header">Fractions or Decimals? Choosing a Form for Mixed Problems</div>
-      <p style="margin:0 0 10px 0;">When one number is a fraction and the other is a decimal, you can't add or subtract them yet - <strong>convert them to the same form first.</strong></p>
-      <ul style="margin-bottom:0;">
-        <li>Convert the <strong>fraction to a decimal</strong> when its denominator is "friendly" (only 2s and/or 5s: 2, 4, 5, 8, 10, 20, 25, 50, 100...) - it will divide out evenly.</li>
-        <li>Convert the <strong>decimal to a fraction</strong> when the decimal repeats, or when the rest of the problem is already in fractions.</li>
-        <li>Not sure which is easier? Either direction works - just pick one and stay consistent for the whole problem.</li>
-      </ul>
+      <div class="notebook-header">The Rule</div>
+      <p style="margin:0;">If the decimal <strong>terminates</strong> (the division stops, remainder becomes 0) <strong>or repeats</strong> (a block of digits comes back forever), the number is <strong>rational</strong>. If it goes on forever with <strong>no</strong> repeating pattern - like \(\pi = 3.14159265\ldots\) - it's <strong>irrational</strong>. Since this class doesn't use square roots, the only irrational numbers you'll see are non-repeating decimals like \(\pi\). Any number that starts as a fraction of two integers can only ever terminate or repeat when you divide it out, so it is <em>always</em> rational.</p>
+    </div>
+
+    <!-- EXAMPLE 1: FRACTION TO DECIMAL -->
+    <div class="example-card">
+      <div class="example-title">Example 1: Convert a Fraction to a Decimal - \(\dfrac{5}{12}\) <span class="type-tag convert">Conversion</span></div>
+      <ol class="example-steps">
+        <li>
+          <div class="step-row"><span class="step-num">1</span><span class="step-text">To convert a fraction to a decimal, divide the numerator by the denominator.</span></div>
+          <div class="step-math">\(5 \div 12\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">2</span><span class="step-text">12 goes into 50 four times (\(4 \times 12 = 48\)), leaving a remainder of 2. Bring down a zero to make 20.</span></div>
+          <div class="step-math">\(50 \div 12 = 4\), remainder \(2\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">3</span><span class="step-text">12 goes into 20 once (\(1 \times 12 = 12\)), leaving a remainder of 8. Bring down a zero to make 80.</span></div>
+          <div class="step-math">\(20 \div 12 = 1\), remainder \(8\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">4</span><span class="step-text">12 goes into 80 six times (\(6 \times 12 = 72\)), leaving a remainder of 8 again - the <strong>same</strong> remainder as before, so from here the digit 6 repeats forever.</span></div>
+          <div class="step-math">\(80 \div 12 = 6\), remainder \(8\) (repeats)</div>
+        </li>
+      </ol>
+      <div class="example-final">\(\dfrac{5}{12} = 0.41\overline{6}\) - a repeating decimal</div>
+    </div>
+
+    <!-- EXAMPLE 2: DECIMAL TO FRACTION -->
+    <div class="example-card">
+      <div class="example-title">Example 2: Convert a Decimal to a Fraction - \(0.65\) <span class="type-tag convert">Conversion</span></div>
+      <ol class="example-steps">
+        <li>
+          <div class="step-row"><span class="step-num">1</span><span class="step-text">\(0.65\) has two decimal places, so it belongs over the hundredths place value: denominator 100.</span></div>
+          <div class="step-math">\(0.65 = \dfrac{65}{100}\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">2</span><span class="step-text">Simplify by dividing the numerator and denominator by their GCF, 5.</span></div>
+          <div class="step-math">\(\dfrac{65 \div 5}{100 \div 5} = \dfrac{13}{20}\)</div>
+        </li>
+      </ol>
+      <div class="example-final">\(0.65 = \dfrac{13}{20}\)</div>
+    </div>
+
+    <!-- EXAMPLE 3: CLASSIFY RATIONAL -->
+    <div class="example-card">
+      <div class="example-title">Example 3: Classify a Repeating Decimal - Is \(0.41\overline{6}\) rational or irrational? <span class="type-tag classify">Classify</span></div>
+      <ol class="example-steps">
+        <li>
+          <div class="step-row"><span class="step-num">1</span><span class="step-text">A number is rational whenever it can be written as a fraction of two integers - and any decimal that terminates or repeats can always be rewritten that way.</span></div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">2</span><span class="step-text">\(0.41\overline{6}\) is repeating (the 6 repeats forever), so it fits that description - it's actually the very same number as \(\dfrac{5}{12}\) from Example 1.</span></div>
+        </li>
+      </ol>
+      <div class="example-final">Rational</div>
+    </div>
+
+    <!-- EXAMPLE 4: CLASSIFY IRRATIONAL -->
+    <div class="example-card">
+      <div class="example-title">Example 4: Classify a Non-Repeating Decimal - Is \(\pi = 3.14159265\ldots\) rational or irrational? <span class="type-tag classify">Classify</span></div>
+      <ol class="example-steps">
+        <li>
+          <div class="step-row"><span class="step-num">1</span><span class="step-text">Look at the decimal digits of \(\pi\): they never end, and no matter how far you calculate, they never settle into a repeating block.</span></div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">2</span><span class="step-text">Since \(\pi\) cannot be written as an exact fraction of two integers, it does not fit the definition of a rational number.</span></div>
+        </li>
+      </ol>
+      <div class="example-final">Irrational</div>
+    </div>
+  </div>
+
+  <!-- TAB 2: OPERATIONS -->
+  <div id="operations" class="panel">
+    <div class="section-title">How to Add or Subtract Signed Numbers</div>
+    <div class="explainer-box">
+      One process, three checks, every time - for integers, decimals, and fractions alike.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Same-Sign / Different-Sign Method</div>
+      <table class="data-table">
+        <thead><tr><th>Check</th><th>What to do</th></tr></thead>
+        <tbody>
+          <tr><td>Is it addition or subtraction?</td><td><strong>Addition</strong> &rarr; go straight to the next check. <strong>Subtraction</strong> &rarr; Keep-Change-Change first: keep the first number, change the operation to addition, change the second number's sign to its opposite. Now it's addition.</td></tr>
+          <tr><td>Are the signs the same or different?</td><td>Compare the sign of the two numbers now being added.</td></tr>
+          <tr><td>What do I do with the numbers, and what sign does the answer get?</td><td><strong>Same signs:</strong> add the absolute values, keep the common sign. <strong>Different signs:</strong> subtract the smaller absolute value from the larger, and keep the sign of whichever number has the <strong>greater absolute value</strong>.</td></tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="notebook-box">
@@ -178,259 +256,189 @@
         <li>If it's subtraction, rewrite it as addition first (Keep-Change-Change).</li>
         <li>Cross-multiply each numerator by the <strong>other</strong> fraction's denominator - these are the two "wings."</li>
         <li>Multiply the two denominators straight down the middle for the new denominator.</li>
-        <li>Apply the Operation Ladder to the two wing values - they're just two signed numbers now.</li>
+        <li>Apply the Same-Sign / Different-Sign Method to the two wing values - they're just two signed numbers now.</li>
         <li>Simplify the result to lowest terms.</li>
       </ol>
     </div>
 
-    <div class="section-title" style="margin-top:32px;">The Classify Ladder - Prove It By Dividing</div>
-    <div class="explainer-box">
-      You only need <strong>one tool</strong> to answer every classification question on the test: do the division, and look at what happens.
+    <!-- OP EXAMPLE 1: INTEGERS SAME SIGN -->
+    <div class="example-card">
+      <div class="example-title">Example 1: Adding Integers, Same Sign - \(-16 + (-9)\) <span class="type-tag addsub">Addition</span></div>
+      <ol class="example-steps">
+        <li>
+          <div class="step-row"><span class="step-num">1</span><span class="step-text">Both numbers are negative, so the signs are the <strong>same</strong> - add the absolute values and keep the common sign.</span></div>
+          <div class="step-math">\(16 + 9 = 25\)</div>
+        </li>
+      </ol>
+      <div class="example-final">\(-16 + (-9) = -25\)</div>
     </div>
 
+    <!-- OP EXAMPLE 2: DECIMAL SUBTRACTION KCC -->
+    <div class="example-card">
+      <div class="example-title">Example 2: Subtracting Decimals - \(-9.3 - (-4.7)\) <span class="type-tag addsub">Subtraction</span></div>
+      <ol class="example-steps">
+        <li>
+          <div class="step-row"><span class="step-num">1</span><span class="step-text">This is subtraction, so rewrite it as addition first using Keep-Change-Change: keep \(-9.3\), change subtraction to addition, and change \(-4.7\) to \(+4.7\).</span></div>
+          <div class="step-math">\(-9.3 - (-4.7) = -9.3 + 4.7\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">2</span><span class="step-text">Now it's addition with <strong>different</strong> signs, so subtract the smaller absolute value from the larger.</span></div>
+          <div class="step-math">\(9.3 - 4.7 = 4.6\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">3</span><span class="step-text">The number with the greater absolute value is \(-9.3\), so the answer is negative.</span></div>
+        </li>
+      </ol>
+      <div class="example-final">\(-9.3 + 4.7 = -4.6\)</div>
+    </div>
+
+    <!-- OP EXAMPLE 3: FRACTIONS BUTTERFLY -->
+    <div class="example-card">
+      <div class="example-title">Example 3: Adding Signed Fractions (Butterfly Method) - \(-\dfrac{3}{5} + \left(-\dfrac{1}{10}\right)\) <span class="type-tag addsub">Addition</span></div>
+      <ol class="example-steps">
+        <li>
+          <div class="step-row"><span class="step-num">1</span><span class="step-text">Cross-multiply each numerator by the other fraction's denominator to get the two wings.</span></div>
+          <div class="step-math">\(3 \times 10 = 30\) and \(5 \times 1 = 5\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">2</span><span class="step-text">Multiply the denominators straight down the middle for the new denominator.</span></div>
+          <div class="step-math">\(5 \times 10 = 50 \;\Rightarrow\; -\dfrac{30}{50} + \left(-\dfrac{5}{50}\right)\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">3</span><span class="step-text">Same signs, so add the wings and keep the common sign.</span></div>
+          <div class="step-math">\(30 + 5 = 35 \;\Rightarrow\; -\dfrac{35}{50}\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">4</span><span class="step-text">Simplify by dividing by the GCF, 5.</span></div>
+        </li>
+      </ol>
+      <div class="example-final">\(-\dfrac{3}{5} + \left(-\dfrac{1}{10}\right) = -\dfrac{7}{10}\)</div>
+    </div>
+
+    <!-- OP EXAMPLE 4: DECIMAL DIFFERENT SIGN ADDITION -->
+    <div class="example-card">
+      <div class="example-title">Example 4: Adding Decimals, Different Signs - \(8.4 + (-13.1)\) <span class="type-tag addsub">Addition</span></div>
+      <ol class="example-steps">
+        <li>
+          <div class="step-row"><span class="step-num">1</span><span class="step-text">This is already addition, with different signs - subtract the smaller absolute value from the larger.</span></div>
+          <div class="step-math">\(13.1 - 8.4 = 4.7\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">2</span><span class="step-text">The number with the greater absolute value is \(-13.1\), so the answer is negative.</span></div>
+        </li>
+      </ol>
+      <div class="example-final">\(8.4 + (-13.1) = -4.7\)</div>
+    </div>
+
+    <div class="quick-note">
+      <strong>Quick special case - subtracting a negative from zero:</strong> \(0 - (-13.25)\) rewrites (Keep-Change-Change) as \(0 + 13.25\), and adding zero never changes a number. So \(0 - (-13.25) = 13.25\). Any time you see "minus a negative," it becomes simple addition.
+    </div>
+  </div>
+
+  <!-- TAB 3: MIXED FORMS, MULTI-STEP & WORD PROBLEMS -->
+  <div id="mixed" class="panel">
+    <div class="section-title">Fractions or Decimals? Choosing a Form</div>
+    <div class="explainer-box">
+      When one number is a fraction and the other is a decimal, you can't add or subtract them yet - <strong>convert them to the same form first.</strong>
+    </div>
     <div class="notebook-box">
-      <div class="notebook-header">Rational or Irrational? Just Divide.</div>
-      <table class="data-table">
-        <thead><tr><th>#</th><th>Question</th><th>What to do</th></tr></thead>
-        <tbody>
-          <tr><td>1</td><td>Do I have a fraction?</td><td>Divide it out: numerator &divide; denominator (long division). If it's a square root, simplify it first (\(\sqrt{16}=4\)) and treat that result the same way.</td></tr>
-          <tr><td>2</td><td>Does the division terminate, or does it repeat?</td><td><strong>Terminates</strong> = the division stops, remainder becomes 0. <strong>Repeats</strong> = a block of digits comes back forever (mark it with a bar).</td></tr>
-          <tr><td>3</td><td>So - rational or irrational?</td><td><strong>Terminates OR repeats &rarr; RATIONAL.</strong> Goes on forever with <strong>no</strong> repeating pattern &rarr; <strong>IRRATIONAL.</strong></td></tr>
-        </tbody>
-      </table>
-      <p style="margin:12px 0 0 0;"><strong>Good news:</strong> if you started with a fraction of two integers, the division can only ever terminate or repeat - it is <em>always</em> rational. Irrational numbers (like \(\pi\) or \(\sqrt{2}\)) only show up when you can't write the number as a fraction to begin with.</p>
+      <div class="notebook-header">Deciding Which Way to Convert</div>
+      <ul style="margin-bottom:0;">
+        <li>Convert the <strong>fraction to a decimal</strong> when its denominator is "friendly" (only 2s and/or 5s: 2, 4, 5, 8, 10, 20, 25, 50, 100...) - it will divide out evenly.</li>
+        <li>Convert the <strong>decimal to a fraction</strong> when the decimal repeats, or when the rest of the problem is already in fractions.</li>
+        <li>Not sure which is easier? Either direction works - just pick one and stay consistent for the whole problem.</li>
+      </ul>
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">Multi-Step Strategy</div>
+      <p style="margin:0;">Work two numbers at a time. Solve the first pair completely with the Same-Sign / Different-Sign Method, then treat that result as the new "first number" and repeat with the next one - the same process, just climbed more than once.</p>
+    </div>
+
+    <!-- MIX EXAMPLE 1: MIXED FORMS -->
+    <div class="example-card">
+      <div class="example-title">Example 1: Adding a Fraction and a Decimal - \(-\dfrac{5}{8} + 0.75\) <span class="type-tag addsub">Mixed Forms</span></div>
+      <ol class="example-steps">
+        <li>
+          <div class="step-row"><span class="step-num">1</span><span class="step-text">One number is a fraction and one is a decimal, so convert to match. \(-\dfrac{5}{8}\) has a denominator of 8 (only 2s) - a "friendly" denominator - so convert it to a decimal.</span></div>
+          <div class="step-math">\(-\dfrac{5}{8} = -0.625\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">2</span><span class="step-text">Now both numbers are decimals with different signs - subtract the smaller absolute value from the larger.</span></div>
+          <div class="step-math">\(0.75 - 0.625 = 0.125\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">3</span><span class="step-text">The number with the greater absolute value is \(0.75\), so the answer is positive.</span></div>
+        </li>
+      </ol>
+      <div class="example-final">\(-\dfrac{5}{8} + 0.75 = 0.125\)</div>
+    </div>
+
+    <!-- MULTISTEP EXAMPLE -->
+    <div class="example-card">
+      <div class="example-title">Example 2: Three Terms, Multi-Step - \(15.6 - 8\dfrac{1}{4} + (-1.6)\) <span class="type-tag multistep">Multi-Step</span></div>
+      <ol class="example-steps">
+        <li>
+          <div class="step-row"><span class="step-num">1</span><span class="step-text">Convert the mixed number to a decimal first.</span></div>
+          <div class="step-math">\(8\dfrac{1}{4} = 8 + 0.25 = 8.25\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">2</span><span class="step-text">Work the first two numbers: \(15.6 - 8.25\) is subtraction with different signs, so subtract. The answer is positive, since \(15.6\) has the greater absolute value.</span></div>
+          <div class="step-math">\(15.6 - 8.25 = 7.35\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">3</span><span class="step-text">Now combine that result with the last number: \(7.35 + (-1.6)\) has different signs, so subtract. The answer is positive, since \(7.35\) has the greater absolute value.</span></div>
+          <div class="step-math">\(7.35 - 1.6 = 5.75\)</div>
+        </li>
+      </ol>
+      <div class="example-final">\(15.6 - 8\dfrac{1}{4} + (-1.6) = 5.75\)</div>
+    </div>
+
+    <!-- WORD PROBLEM 1: TEMPERATURE -->
+    <div class="example-card">
+      <div class="example-title">Word Problem 1: Temperature - At sunrise it was \(-6.25\)&deg;C. By noon it rose \(9\dfrac{1}{2}\)&deg;C. During an evening storm it dropped \(4.8\)&deg;C. What was the final temperature? <span class="type-tag word">Word Problem</span></div>
+      <ol class="example-steps">
+        <li>
+          <div class="step-row"><span class="step-num">1</span><span class="step-text">Translate the words into an expression: start at \(-6.25\); "rose \(9\dfrac{1}{2}\)" means add \(9.5\); "dropped \(4.8\)" means subtract \(4.8\).</span></div>
+          <div class="step-math">\(-6.25 + 9.5 - 4.8\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">2</span><span class="step-text">Combine the first two numbers: different signs, so subtract. Positive, since \(9.5\) has the greater absolute value.</span></div>
+          <div class="step-math">\(-6.25 + 9.5 = 3.25\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">3</span><span class="step-text">Combine with the last number: \(3.25 - 4.8\) rewrites as \(3.25 + (-4.8)\), different signs, so subtract. Negative, since \(-4.8\) has the greater absolute value.</span></div>
+          <div class="step-math">\(4.8 - 3.25 = 1.55\)</div>
+        </li>
+      </ol>
+      <div class="example-final">Final temperature: \(-1.55\)&deg;C</div>
+    </div>
+
+    <!-- WORD PROBLEM 2: DEPTH -->
+    <div class="example-card">
+      <div class="example-title">Word Problem 2: Depth - A submarine at \(-18.6\) m descends another \(12\dfrac{3}{4}\) m, then ascends \(9.35\) m. What is its final depth? <span class="type-tag word">Word Problem</span></div>
+      <ol class="example-steps">
+        <li>
+          <div class="step-row"><span class="step-num">1</span><span class="step-text">Translate: start at \(-18.6\); "descends another \(12\dfrac{3}{4}\)" means add \(-12.75\) (descending makes it more negative); "ascends \(9.35\)" means add \(+9.35\).</span></div>
+          <div class="step-math">\(-18.6 + (-12.75) + 9.35\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">2</span><span class="step-text">Combine the first two numbers: same signs (both negative), so add and keep the common sign.</span></div>
+          <div class="step-math">\(18.6 + 12.75 = 31.35 \;\Rightarrow\; -31.35\)</div>
+        </li>
+        <li>
+          <div class="step-row"><span class="step-num">3</span><span class="step-text">Combine with the last number: \(-31.35 + 9.35\) has different signs, so subtract. Negative, since \(-31.35\) has the greater absolute value.</span></div>
+          <div class="step-math">\(31.35 - 9.35 = 22.0\)</div>
+        </li>
+      </ol>
+      <div class="example-final">Final depth: \(-22\) m</div>
     </div>
   </div>
 
-  <!-- TAB 2: TEN WORKED EXAMPLES -->
-  <div id="examples" class="panel">
-    <div class="section-title">Ten Worked Examples (Test-Style)</div>
-    <div class="explainer-box">
-      These ten examples follow the <strong>same order and mix of question types</strong> as Test #2 - 3 classification/rewrite questions, 5 computations, and 2 word problems - just with different numbers, so you can practice the exact moves you'll need. Every one starts with the same first question: <strong>what operation do I have?</strong>
-    </div>
-
-    <!-- EXAMPLE 1 -->
-    <div class="ladder">
-      <div class="ladder-formula">1. Does \(\dfrac{5}{12}\) convert to a terminating or repeating decimal? Is it rational? <span class="type-tag classify">Classify - Divide It Out</span></div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 1 - Prove It By Dividing</div>
-        <div class="qa"><span class="q">What do I do first?</span><span class="a">Divide: \(5 \div 12\) (long division)</span></div>
-        <div class="qa"><span class="q">Step 1: \(50 \div 12\)?</span><span class="a">4, remainder 2 (bring down a 0 &rarr; 20)</span></div>
-        <div class="qa"><span class="q">Step 2: \(20 \div 12\)?</span><span class="a">1, remainder 8 (bring down a 0 &rarr; 80)</span></div>
-        <div class="qa"><span class="q">Step 3: \(80 \div 12\)?</span><span class="a">6, remainder 8 (bring down a 0 &rarr; 80 again - the remainder repeated!)</span></div>
-      </div>
-      <div class="ladder-eq">\(5 \div 12 = 0.41\overline{6}\)</div>
-      <div class="qa" style="justify-content:center; margin-top:6px;"><span class="q">Terminates or repeats?</span><span class="a">Repeats - remainder 8 keeps coming back, so the 6 repeats forever</span></div>
-      <div class="qa" style="justify-content:center;"><span class="q">Rational or irrational?</span><span class="a">Rational</span></div>
-      <div class="ladder-result">Repeating decimal &rarr; Rational</div>
-      <div class="ladder-check">Classified? <strong>Yes.</strong></div>
-    </div>
-
-    <!-- EXAMPLE 2 -->
-    <div class="ladder">
-      <div class="ladder-formula">2. Which addition expression is equivalent to \(-9.3 - (-4.7)\)? <span class="type-tag addsub">Subtraction, Decimals</span></div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 1 - Operation Ladder</div>
-        <div class="qa"><span class="q">What operation do I have?</span><span class="a">Subtraction</span></div>
-        <div class="qa"><span class="q">Keep-Change-Change:</span><span class="a">Keep \(-9.3\), change to addition, change \(-4.7\) to \(+4.7\)</span></div>
-      </div>
-      <div class="ladder-eq">\(-9.3 - (-4.7) = -9.3 + 4.7\)</div>
-      <div class="ladder-round">
-        <div class="qa"><span class="q">How are the signs now?</span><span class="a">Different</span></div>
-        <div class="qa"><span class="q">What do I do with the numbers?</span><span class="a">Subtract: \(9.3 - 4.7 = 4.6\)</span></div>
-        <div class="qa"><span class="q">What sign does the answer get?</span><span class="a">Negative (\(-9.3\) has the greater absolute value)</span></div>
-      </div>
-      <div class="ladder-result">\(-9.3 + 4.7 = -4.6\)</div>
-      <div class="ladder-check">Solved? <strong>Yes.</strong></div>
-    </div>
-
-    <!-- EXAMPLE 3 -->
-    <div class="ladder">
-      <div class="ladder-formula">3. Is \(\sqrt{16}\) rational or irrational? <span class="type-tag classify">Classify - Divide It Out</span></div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 1 - Prove It By Dividing</div>
-        <div class="qa"><span class="q">Can I simplify this first?</span><span class="a">Yes - \(\sqrt{16} = 4\)</span></div>
-        <div class="qa"><span class="q">Now divide it out (or is it already exact)?</span><span class="a">\(4 = 4 \div 1 = 4.0\) exactly - the division terminates immediately</span></div>
-        <div class="qa"><span class="q">Terminates or repeats?</span><span class="a">Terminates</span></div>
-        <div class="qa"><span class="q">Rational or irrational?</span><span class="a">Rational</span></div>
-      </div>
-      <div class="ladder-eq">\(\sqrt{16} = 4 = 4.0\)</div>
-      <div class="ladder-result">Rational</div>
-      <div class="ladder-check">Classified? <strong>Yes</strong> - don't be fooled by the radical sign; simplify first.</div>
-    </div>
-
-    <!-- EXAMPLE 4 -->
-    <div class="ladder">
-      <div class="ladder-formula">4. \(-\dfrac{5}{8} + 0.75\) <span class="type-tag addsub">Addition, Mixed Forms</span></div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 1 - Setup: Fractions or Decimals?</div>
-        <div class="qa"><span class="q">What operation do I have?</span><span class="a">Addition</span></div>
-        <div class="qa"><span class="q">Are both numbers in the same form?</span><span class="a">No - one's a fraction, one's a decimal</span></div>
-        <div class="qa"><span class="q">Fractions or decimals - which should I use?</span><span class="a">\(-\dfrac{5}{8}\) has a friendly denominator (8 = only 2s) - convert to decimal</span></div>
-        <div class="qa"><span class="q">Convert:</span><span class="a">\(-\dfrac{5}{8} = -0.625\)</span></div>
-      </div>
-      <div class="ladder-eq">\(-\dfrac{5}{8} + 0.75 = -0.625 + 0.75\)</div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 2 - Operation Ladder</div>
-        <div class="qa"><span class="q">How are the signs?</span><span class="a">Different</span></div>
-        <div class="qa"><span class="q">What do I do with the numbers?</span><span class="a">Subtract: \(0.75 - 0.625 = 0.125\)</span></div>
-        <div class="qa"><span class="q">What sign does the answer get?</span><span class="a">Positive (\(0.75\) has the greater absolute value)</span></div>
-      </div>
-      <div class="ladder-result">\(-0.625 + 0.75 = 0.125\)</div>
-      <div class="ladder-check">Solved? <strong>Yes.</strong></div>
-    </div>
-
-    <!-- EXAMPLE 5 -->
-    <div class="ladder">
-      <div class="ladder-formula">5. \(-18.2 - (-6.5)\) <span class="type-tag addsub">Subtraction, Decimals</span></div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 1 - Operation Ladder</div>
-        <div class="qa"><span class="q">What operation do I have?</span><span class="a">Subtraction</span></div>
-        <div class="qa"><span class="q">Keep-Change-Change:</span><span class="a">Keep \(-18.2\), change to addition, change \(-6.5\) to \(+6.5\)</span></div>
-      </div>
-      <div class="ladder-eq">\(-18.2 - (-6.5) = -18.2 + 6.5\)</div>
-      <div class="ladder-round">
-        <div class="qa"><span class="q">How are the signs now?</span><span class="a">Different</span></div>
-        <div class="qa"><span class="q">What do I do with the numbers?</span><span class="a">Subtract: \(18.2 - 6.5 = 11.7\)</span></div>
-        <div class="qa"><span class="q">What sign does the answer get?</span><span class="a">Negative (\(-18.2\) has the greater absolute value)</span></div>
-      </div>
-      <div class="ladder-result">\(-18.2 + 6.5 = -11.7\)</div>
-      <div class="ladder-check">Solved? <strong>Yes.</strong></div>
-    </div>
-
-    <!-- EXAMPLE 6 -->
-    <div class="ladder">
-      <div class="ladder-formula">6. \(-\dfrac{3}{5} + \left(-\dfrac{1}{10}\right)\) <span class="type-tag addsub">Addition, Fractions (Butterfly)</span></div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 1 - Setup: Butterfly Method</div>
-        <div class="qa"><span class="q">What operation do I have?</span><span class="a">Addition</span></div>
-        <div class="qa"><span class="q">Cross-multiply the numerators (the wings):</span><span class="a">\(3 \times 10 = 30\) and \(5 \times 1 = 5\)</span></div>
-        <div class="qa"><span class="q">Multiply the denominators straight down the middle:</span><span class="a">\(5 \times 10 = 50\)</span></div>
-      </div>
-      <div class="ladder-eq">\(-\dfrac{3}{5} + \left(-\dfrac{1}{10}\right) = -\dfrac{30}{50} + \left(-\dfrac{5}{50}\right)\)</div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 2 - Operation Ladder (on the wings)</div>
-        <div class="qa"><span class="q">How are the signs?</span><span class="a">Same (both negative)</span></div>
-        <div class="qa"><span class="q">What do I do with the numbers?</span><span class="a">Add the wings: \(30 + 5 = 35\)</span></div>
-        <div class="qa"><span class="q">What sign does the answer get?</span><span class="a">The common sign - negative</span></div>
-        <div class="qa"><span class="q">Can I simplify?</span><span class="a">Yes - divide by the GCF, 5</span></div>
-      </div>
-      <div class="ladder-result">\(-\dfrac{30}{50} + \left(-\dfrac{5}{50}\right) = -\dfrac{35}{50} = -\dfrac{7}{10}\)</div>
-      <div class="ladder-check">Solved? <strong>Yes.</strong></div>
-    </div>
-
-    <!-- EXAMPLE 7 -->
-    <div class="ladder">
-      <div class="ladder-formula">7. \(15.6 - 8\dfrac{1}{4} + (-1.6)\) <span class="type-tag multistep">Multi-Step</span></div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 1 - Setup: Convert the Mixed Number</div>
-        <div class="qa"><span class="q">Convert \(8\dfrac{1}{4}\) to a decimal.</span><span class="a">\(8 + 0.25 = 8.25\)</span></div>
-      </div>
-      <div class="ladder-eq">\(15.6 - 8.25 + (-1.6)\)</div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 2 - Operation Ladder (first pair)</div>
-        <div class="qa"><span class="q">What operation do I have?</span><span class="a">Subtraction: \(15.6 - 8.25\)</span></div>
-        <div class="qa"><span class="q">Keep-Change-Change:</span><span class="a">\(15.6 + (-8.25)\)</span></div>
-        <div class="qa"><span class="q">How are the signs?</span><span class="a">Different</span></div>
-        <div class="qa"><span class="q">What do I do with the numbers?</span><span class="a">Subtract: \(15.6 - 8.25 = 7.35\)</span></div>
-        <div class="qa"><span class="q">What sign?</span><span class="a">Positive (\(15.6\) has the greater absolute value)</span></div>
-      </div>
-      <div class="ladder-eq">\(15.6 + (-8.25) = 7.35\)</div>
-      <div class="ladder-check">Fully solved? No - the \(+(-1.6)\) is still waiting. Keep going - see next step.</div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 3 - Operation Ladder (second pair)</div>
-        <div class="qa"><span class="q">What operation do I have now?</span><span class="a">Addition: \(7.35 + (-1.6)\)</span></div>
-        <div class="qa"><span class="q">How are the signs?</span><span class="a">Different</span></div>
-        <div class="qa"><span class="q">What do I do with the numbers?</span><span class="a">Subtract: \(7.35 - 1.6 = 5.75\)</span></div>
-        <div class="qa"><span class="q">What sign?</span><span class="a">Positive (\(7.35\) has the greater absolute value)</span></div>
-      </div>
-      <div class="ladder-result">\(7.35 + (-1.6) = 5.75\)</div>
-      <div class="ladder-check">Fully solved? <strong>Yes.</strong></div>
-    </div>
-
-    <!-- EXAMPLE 8 -->
-    <div class="ladder">
-      <div class="ladder-formula">8. \(0 - (-13.25)\) <span class="type-tag addsub">Special Case: Zero</span></div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 1 - Operation Ladder</div>
-        <div class="qa"><span class="q">What operation do I have?</span><span class="a">Subtraction</span></div>
-        <div class="qa"><span class="q">Keep-Change-Change:</span><span class="a">Keep \(0\), change to addition, change \(-13.25\) to \(+13.25\)</span></div>
-      </div>
-      <div class="ladder-eq">\(0 - (-13.25) = 0 + 13.25\)</div>
-      <div class="ladder-round">
-        <div class="qa"><span class="q">What is 0 plus any number?</span><span class="a">That same number, unchanged</span></div>
-      </div>
-      <div class="ladder-result">\(0 + 13.25 = 13.25\)</div>
-      <div class="ladder-check">Solved? <strong>Yes.</strong></div>
-    </div>
-
-    <!-- EXAMPLE 9 -->
-    <div class="ladder">
-      <div class="ladder-formula">9. Word Problem: At sunrise, the temperature was \(-6.25\)&deg;C. By noon it rose \(9\dfrac{1}{2}\)&deg;C. During an evening storm it dropped \(4.8\)&deg;C. What was the final temperature? <span class="type-tag word">Word Problem</span></div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 1 - Translate to an Expression</div>
-        <div class="qa"><span class="q">What's the starting value?</span><span class="a">\(-6.25\)</span></div>
-        <div class="qa"><span class="q">"Rose \(9\dfrac{1}{2}\)" means?</span><span class="a">Add \(9.5\) (\(9+0.5=9.5\))</span></div>
-        <div class="qa"><span class="q">"Dropped \(4.8\)" means?</span><span class="a">Subtract \(4.8\)</span></div>
-      </div>
-      <div class="ladder-eq">\(-6.25 + 9.5 - 4.8\)</div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 2 - Operation Ladder (first pair)</div>
-        <div class="qa"><span class="q">What operation do I have?</span><span class="a">Addition: \(-6.25 + 9.5\)</span></div>
-        <div class="qa"><span class="q">How are the signs?</span><span class="a">Different</span></div>
-        <div class="qa"><span class="q">What do I do with the numbers?</span><span class="a">Subtract: \(9.5 - 6.25 = 3.25\)</span></div>
-        <div class="qa"><span class="q">What sign?</span><span class="a">Positive (\(9.5\) has the greater absolute value)</span></div>
-      </div>
-      <div class="ladder-eq">\(-6.25 + 9.5 = 3.25\)</div>
-      <div class="ladder-check">Fully solved? No - still need to subtract \(4.8\). Keep going - see next step.</div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 3 - Operation Ladder (second pair)</div>
-        <div class="qa"><span class="q">What operation do I have?</span><span class="a">Subtraction: \(3.25 - 4.8\)</span></div>
-        <div class="qa"><span class="q">Keep-Change-Change:</span><span class="a">\(3.25 + (-4.8)\)</span></div>
-        <div class="qa"><span class="q">How are the signs?</span><span class="a">Different</span></div>
-        <div class="qa"><span class="q">What do I do with the numbers?</span><span class="a">Subtract: \(4.8 - 3.25 = 1.55\)</span></div>
-        <div class="qa"><span class="q">What sign?</span><span class="a">Negative (\(-4.8\) has the greater absolute value)</span></div>
-      </div>
-      <div class="ladder-result">Final temperature: \(-1.55\)&deg;C</div>
-      <div class="ladder-check">Fully solved? <strong>Yes.</strong></div>
-    </div>
-
-    <!-- EXAMPLE 10 -->
-    <div class="ladder">
-      <div class="ladder-formula">10. Word Problem: A submarine is at a depth of \(-18.6\) m. It descends another \(12\dfrac{3}{4}\) m to inspect a wreck, then ascends \(9.35\) m toward the surface. What is the submarine's final depth? <span class="type-tag word">Word Problem</span></div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 1 - Translate to an Expression</div>
-        <div class="qa"><span class="q">What's the starting value?</span><span class="a">\(-18.6\)</span></div>
-        <div class="qa"><span class="q">"Descends another \(12\dfrac{3}{4}\)" means?</span><span class="a">Add \(-12.75\) (\(12+0.75=12.75\); descending makes it more negative)</span></div>
-        <div class="qa"><span class="q">"Ascends \(9.35\)" means?</span><span class="a">Add \(+9.35\)</span></div>
-      </div>
-      <div class="ladder-eq">\(-18.6 + (-12.75) + 9.35\)</div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 2 - Operation Ladder (first pair)</div>
-        <div class="qa"><span class="q">What operation do I have?</span><span class="a">Addition: \(-18.6 + (-12.75)\)</span></div>
-        <div class="qa"><span class="q">How are the signs?</span><span class="a">Same (both negative)</span></div>
-        <div class="qa"><span class="q">What do I do with the numbers?</span><span class="a">Add: \(18.6 + 12.75 = 31.35\)</span></div>
-        <div class="qa"><span class="q">What sign?</span><span class="a">The common sign - negative</span></div>
-      </div>
-      <div class="ladder-eq">\(-18.6 + (-12.75) = -31.35\)</div>
-      <div class="ladder-check">Fully solved? No - still need to add \(9.35\). Keep going - see next step.</div>
-      <div class="ladder-round">
-        <div class="ladder-round-label">Round 3 - Operation Ladder (second pair)</div>
-        <div class="qa"><span class="q">What operation do I have?</span><span class="a">Addition: \(-31.35 + 9.35\)</span></div>
-        <div class="qa"><span class="q">How are the signs?</span><span class="a">Different</span></div>
-        <div class="qa"><span class="q">What do I do with the numbers?</span><span class="a">Subtract: \(31.35 - 9.35 = 22.0\)</span></div>
-        <div class="qa"><span class="q">What sign?</span><span class="a">Negative (\(-31.35\) has the greater absolute value)</span></div>
-      </div>
-      <div class="ladder-result">Final depth: \(-22\) m</div>
-      <div class="ladder-check">Fully solved? <strong>Yes.</strong></div>
-    </div>
-  </div>
-
-  <!-- TAB 3: EXERCISES -->
+  <!-- TAB 4: PRACTICE EXERCISES -->
   <div id="exercises" class="panel">
-    <div class="section-title">Exercise Battery (15 Problems)</div>
+    <div class="section-title">Practice Exercises</div>
     <div class="explainer-box">
-      Work each problem on paper using the ladders from Tab 1, then type your answer. Fraction answers should be in simplest form, like <code>-5/8</code>. Each item gives you up to <strong>2 tries</strong> before showing the correct answer.
+      Work each problem on paper using the reference cards and worked examples from Tabs 1-3, then type your answer. Fraction answers should be in simplest form, like <code>-5/8</code>. Each item gives you up to <strong>2 tries</strong> before showing the correct answer.
     </div>
 
     <div class="notebook-box">
@@ -443,7 +451,7 @@
           <tr><td>An equivalent addition expression for \(-6.4 - 2.9\)</td><td><code>-6.4+(-2.9)</code></td></tr>
         </tbody>
       </table>
-      <p style="margin:10px 0 0 0;">Multiple choice questions use a dropdown - just pick A, B, C, or D. Remember: <strong>Butterfly Method</strong> for fraction &plusmn; fraction, <strong>decide fractions-or-decimals</strong> for mixed-form problems, and <strong>divide it out</strong> to classify a number - see Tab 1 for all three.</p>
+      <p style="margin:10px 0 0 0;">Multiple choice questions use a dropdown - just pick A, B, C, or D.</p>
     </div>
 
     <div id="ladder-ex-list"></div>
@@ -470,53 +478,72 @@
   }
 
   // ==========================================
-  // EXERCISE BATTERY (15 problems: classify, addition/subtraction, multi-step, word problems)
+  // PRACTICE EXERCISES - grouped into 3 sets that match Tabs 1-3
   // ==========================================
   const ladderExercises = [
+    // ---- Set A: Conversion & Classification ----
     {
-      type: 'mc',
+      set: 'A', type: 'mc',
       q: "Which fraction converts to a <strong>terminating</strong> decimal?<br>A. \\(\\dfrac{5}{6}\\)&nbsp;&nbsp; B. \\(\\dfrac{3}{16}\\)&nbsp;&nbsp; C. \\(\\dfrac{7}{9}\\)&nbsp;&nbsp; D. \\(\\dfrac{2}{11}\\)",
       answer: "B",
       label: "Classify: terminating decimal",
       hint: "Not quite yet. Divide each one out - the division that stops (remainder becomes 0) is the terminating one. Try again."
     },
     {
-      type: 'mc',
+      set: 'A', type: 'mc',
       q: "Which decimal represents an <strong>irrational</strong> number?<br>A. \\(0.454545\\ldots\\)&nbsp;&nbsp; B. \\(7.3\\)&nbsp;&nbsp; C. \\(0.101001000100001\\ldots\\) (the pattern never repeats)&nbsp;&nbsp; D. \\(0.6\\)",
       answer: "C",
       label: "Classify: irrational decimal",
       hint: "Not quite yet. Rational decimals either terminate or settle into a repeating block - look for the one that does neither. Try again."
     },
+    { set: 'A', type: 'text', q: "Convert \\(\\dfrac{3}{8}\\) to a decimal.", a: 0.375, label: "3/8 to decimal", hint: "Not quite yet. Divide the numerator by the denominator: 3 ÷ 8. Try again." },
+    { set: 'A', type: 'text', q: "Convert \\(0.65\\) to a fraction in simplest form.", accepted: ["13/20"], displayAnswer: "13/20", label: "0.65 to fraction", hint: "Not quite yet. Write 0.65 as 65/100 (hundredths), then simplify by the GCF. Try again." },
+
+    // ---- Set B: Operations ----
     {
-      type: 'text',
+      set: 'B', type: 'text',
       q: "Write the equivalent addition expression for \\(-6.4 - 2.9\\) (use Keep-Change-Change).",
       accepted: ["-6.4+(-2.9)", "-6.4+-2.9"],
       displayAnswer: "-6.4 + (-2.9)",
       label: "Rewrite -6.4-2.9 as addition"
     },
-    { type: 'text', q: "\\(-14 + (-9) = \\) ?", a: -23, label: "-14 + (-9)" },
-    { type: 'text', q: "\\(23 + (-31) = \\) ?", a: -8, label: "23 + (-31)" },
-    { type: 'text', q: "\\(-12 - 15 = \\) ?", a: -27, label: "-12 - 15", hint: "Not quite yet. What operation do you have? Rewrite as -12 + (-15) with Keep-Change-Change first. Try again." },
-    { type: 'text', q: "\\(-4.25 + (-3.6) = \\) ?", a: -7.85, label: "-4.25 + (-3.6)" },
-    { type: 'text', q: "\\(-22.5 - (-9.75) = \\) ?", a: -12.75, label: "-22.5 - (-9.75)", hint: "Not quite yet. What operation do you have? Rewrite as -22.5 + 9.75 first, then run the Operation Ladder. Try again." },
-    { type: 'text', q: "\\(-\\dfrac{7}{8} + \\dfrac{1}{4} = \\) ?", accepted: ["-5/8"], displayAnswer: "-5/8", label: "-7/8 + 1/4", hint: "Not quite yet. Use the Butterfly Method: cross-multiply the numerators, multiply the denominators down the middle, then apply the Operation Ladder to the wings. Try again." },
-    { type: 'text', q: "\\(\\dfrac{2}{3} - \\dfrac{5}{6} = \\) ?", accepted: ["-1/6"], displayAnswer: "-1/6", label: "2/3 - 5/6", hint: "Not quite yet. What operation do you have? Rewrite as addition first (Keep-Change-Change), then use the Butterfly Method. Try again." },
-    { type: 'text', q: "\\(-0.4 + \\dfrac{3}{5} = \\) ? (answer as a decimal)", a: 0.2, label: "-0.4 + 3/5", hint: "Not quite yet. Decide: fractions or decimals? 3/5 has a friendly denominator, so convert it to a decimal first. Try again." },
-    { type: 'text', q: "Multi-Step: \\(-8.5 + 3\\dfrac{1}{4} - (-2.75) = \\) ?", a: -2.5, label: "-8.5 + 3(1/4) - (-2.75)", hint: "Not quite yet. Convert the mixed number to a decimal, rewrite the subtraction, then climb the Operation Ladder twice. Try again." },
-    { type: 'text', q: "Multi-Step: \\(6 - 9.4 + \\left(-\\dfrac{1}{2}\\right) = \\) ?", a: -3.9, label: "6 - 9.4 + (-1/2)", hint: "Not quite yet. What operation comes first? Rewrite the subtraction as addition, then work left to right. Try again." },
-    { type: 'text', q: "Word Problem: A hiker starts at an elevation of \\(-120.5\\) m. She climbs \\(85\\dfrac{3}{4}\\) m, then descends \\(15.25\\) m into a valley. What is her final elevation?", a: -50, label: "Hiker's final elevation", hint: "Not quite yet. Translate each phrase into a signed number, then apply the Operation Ladder step by step. Try again." },
-    { type: 'text', q: "Word Problem: A bank account starts at \\(-\\$45.60\\). A deposit of \\(\\$22.35\\) is made, then a fee equal to \\(\\dfrac{1}{4}\\) of \\(\\$18\\) is charged. What is the final balance?", a: -27.75, label: "Bank account final balance", hint: "Not quite yet. Find the fee amount first (1/4 of 18), then add the deposit and subtract the fee in order. Try again." }
+    { set: 'B', type: 'text', q: "\\(-14 + (-9) = \\) ?", a: -23, label: "-14 + (-9)" },
+    { set: 'B', type: 'text', q: "\\(23 + (-31) = \\) ?", a: -8, label: "23 + (-31)" },
+    { set: 'B', type: 'text', q: "\\(-12 - 15 = \\) ?", a: -27, label: "-12 - 15", hint: "Not quite yet. Is this addition or subtraction? Rewrite as -12 + (-15) with Keep-Change-Change first. Try again." },
+    { set: 'B', type: 'text', q: "\\(-4.25 + (-3.6) = \\) ?", a: -7.85, label: "-4.25 + (-3.6)" },
+    { set: 'B', type: 'text', q: "\\(-22.5 - (-9.75) = \\) ?", a: -12.75, label: "-22.5 - (-9.75)", hint: "Not quite yet. Rewrite as -22.5 + 9.75 first, then apply the Same-Sign / Different-Sign Method. Try again." },
+    { set: 'B', type: 'text', q: "\\(-\\dfrac{7}{8} + \\dfrac{1}{4} = \\) ?", accepted: ["-5/8"], displayAnswer: "-5/8", label: "-7/8 + 1/4", hint: "Not quite yet. Use the Butterfly Method: cross-multiply the numerators, multiply the denominators down the middle, then combine the wings. Try again." },
+    { set: 'B', type: 'text', q: "\\(\\dfrac{2}{3} - \\dfrac{5}{6} = \\) ?", accepted: ["-1/6"], displayAnswer: "-1/6", label: "2/3 - 5/6", hint: "Not quite yet. Rewrite as addition first (Keep-Change-Change), then use the Butterfly Method. Try again." },
+
+    // ---- Set C: Mixed Forms, Multi-Step & Word Problems ----
+    { set: 'C', type: 'text', q: "\\(-0.4 + \\dfrac{3}{5} = \\) ? (answer as a decimal)", a: 0.2, label: "-0.4 + 3/5", hint: "Not quite yet. Decide: fractions or decimals? 3/5 has a friendly denominator, so convert it to a decimal first. Try again." },
+    { set: 'C', type: 'text', q: "Multi-Step: \\(-8.5 + 3\\dfrac{1}{4} - (-2.75) = \\) ?", a: -2.5, label: "-8.5 + 3(1/4) - (-2.75)", hint: "Not quite yet. Convert the mixed number to a decimal, rewrite the subtraction, then work two numbers at a time. Try again." },
+    { set: 'C', type: 'text', q: "Multi-Step: \\(6 - 9.4 + \\left(-\\dfrac{1}{2}\\right) = \\) ?", a: -3.9, label: "6 - 9.4 + (-1/2)", hint: "Not quite yet. What operation comes first? Rewrite the subtraction as addition, then work left to right. Try again." },
+    { set: 'C', type: 'text', q: "Word Problem: A hiker starts at an elevation of \\(-120.5\\) m. She climbs \\(85\\dfrac{3}{4}\\) m, then descends \\(15.25\\) m into a valley. What is her final elevation?", a: -50, label: "Hiker's final elevation", hint: "Not quite yet. Translate each phrase into a signed number, then work two numbers at a time. Try again." },
+    { set: 'C', type: 'text', q: "Word Problem: A bank account starts at \\(-\\$45.60\\). A deposit of \\(\\$22.35\\) is made, then a fee equal to \\(\\dfrac{1}{4}\\) of \\(\\$18\\) is charged. What is the final balance?", a: -27.75, label: "Bank account final balance", hint: "Not quite yet. Find the fee amount first (1/4 of 18), then add the deposit and subtract the fee in order. Try again." }
   ];
 
+  const SET_LABELS = {
+    A: "Set A: Conversion &amp; Classification",
+    B: "Set B: Operations (Addition &amp; Subtraction)",
+    C: "Set C: Mixed Forms, Multi-Step &amp; Word Problems"
+  };
+
   function renderLadderExercises() {
-    const html = ladderExercises.map((p, i) => {
+    let html = '';
+    let currentSet = null;
+    ladderExercises.forEach((p, i) => {
+      if (p.set !== currentSet) {
+        currentSet = p.set;
+        html += `<div class="notebook-box" style="margin-top:24px;"><div class="notebook-header">${SET_LABELS[currentSet]}</div></div>`;
+      }
       const inputHtml = p.type === 'mc'
         ? `<select id="lex-${i}-input" class="form-control-lg" style="max-width:150px; display:inline-block;">
              <option value="">Choose...</option>
              <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
            </select>`
         : `<input type="text" id="lex-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="answer">`;
-      return `
+      html += `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
         <strong>${i + 1}.</strong> ${p.q}
         <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
@@ -526,9 +553,9 @@
         <div id="lex-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
       </div>
     `;
-    }).join('');
+    });
     document.getElementById('ladder-ex-list').innerHTML = html;
-    ladderExercises.forEach((p, i) => LessonProgress.preRegister(`lex-${i}`, p.label, '3. Exercises'));
+    ladderExercises.forEach((p, i) => LessonProgress.preRegister(`lex-${i}`, p.label, '4. Practice Exercises'));
     triggerMathJax();
   }
 
@@ -554,9 +581,9 @@
     }
     LessonCheck.check(`lex-${idx}`, correct, fb, {
       correct: `Correct! Answer: <strong>${displayAnswer}</strong>`,
-      retry: p.hint || "Not quite yet. Walk back through the ladder and try again.",
+      retry: p.hint || "Not quite yet. Review the process and try again.",
       reveal: `Here's the correct answer: <strong>${displayAnswer}</strong>`
-    }, { label: p.label, answer: val, section: '3. Exercises' });
+    }, { label: p.label, answer: val, section: '4. Practice Exercises' });
   }
 
   renderLadderExercises();
