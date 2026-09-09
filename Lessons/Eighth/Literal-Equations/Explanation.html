@@ -169,83 +169,65 @@
   <div id="foundations" class="panel active">
     <div class="section-title">Same Toolkit, New Look</div>
     <div class="explainer-box">
-      You already know how to solve \(2x + 3 = 11\). A literal equation like \(y = mx + b\) uses the <strong>exact same moves</strong> - subtract, then divide - the only difference is that the numbers around \(x\) have been replaced with letters. Every worked example in this topic - here and on the Guided Solving Ladder supplement - climbs the same <strong>Question Ladder</strong>: ask the same four questions, in the same order, every time you take a step.
+      A literal equation like \(y = mx + b\) solves with the <strong>same moves</strong> as \(2x+3=11\) - the numbers around \(x\) are just replaced with letters.
     </div>
 
     <div class="notebook-box">
-      <div class="notebook-header">The Four Questions (repeat as many times as needed)</div>
-      <table class="data-table">
-        <thead><tr><th>#</th><th>Question</th><th>What it's asking</th></tr></thead>
-        <tbody>
-          <tr><td>1</td><td>What's the variable I need to isolate?</td><td>Name the target letter. It doesn't change round to round.</td></tr>
-          <tr><td>2</td><td>What is obstructing me from doing so?</td><td>Name whatever is attached to the target variable right now.</td></tr>
-          <tr><td>3</td><td>What is it doing?</td><td>Name the operation - adding, subtracting, multiplying, or dividing.</td></tr>
-          <tr><td>4</td><td>What's the inverse operation to remove it?</td><td>Name the opposite operation, then apply it to <strong>both</strong> sides.</td></tr>
-        </tbody>
-      </table>
-      <p style="margin:12px 0 0 0;">Apply question 4's answer to both sides, simplify, and then ask: <strong>"Is the variable now isolated?"</strong> If not, the whole ladder repeats on whatever is obstructing it next.</p>
-    </div>
-
-    <div class="explainer-box">
-      See the two side by side first, then watch the literal side climb the ladder one question at a time below.
+      <div class="notebook-header">The Question Ladder</div>
+      <ul style="margin-bottom:0;">
+        <li>What's the variable?</li>
+        <li>What's obstructing it?</li>
+        <li>What's it doing?</li>
+        <li>What's the inverse? Apply to <strong>both</strong> sides.</li>
+      </ul>
+      <p style="margin:10px 0 0 0;">Repeat until isolated.</p>
     </div>
 
     <div class="side-by-side">
       <div class="solve-col numeric">
         <h4>Numeric: solve for \(x\)</h4>
         <div class="solve-step">\(2x + 3 = 11\)</div>
-        <div class="solve-step">Subtract 3 from both sides: \(2x = 8\)</div>
-        <div class="solve-step">Divide both sides by 2: \(x = 4\)</div>
+        <div class="solve-step">Subtract 3: \(2x = 8\)</div>
+        <div class="solve-step">Divide by 2: \(x = 4\)</div>
       </div>
       <div class="solve-col literal">
         <h4>Literal: solve for \(x\)</h4>
         <div class="solve-step">\(y = mx + b\)</div>
-        <div class="solve-step">Subtract \(b\) from both sides: \(y - b = mx\)</div>
-        <div class="solve-step">Divide both sides by \(m\): \(x = \dfrac{y-b}{m}\)</div>
+        <div class="solve-step">Subtract \(b\): \(y - b = mx\)</div>
+        <div class="solve-step">Divide by \(m\): \(x = \dfrac{y-b}{m}\)</div>
       </div>
     </div>
 
     <div class="ladder">
-      <div class="ladder-formula">Climbing the Ladder: \(y = mx + b\), solve for \(x\) <span class="type-tag multistep">Multi-Step</span></div>
+      <div class="ladder-formula">\(y = mx + b\), solve for \(x\) <span class="type-tag multistep">Multi-Step</span></div>
       <div class="ladder-round">
         <div class="ladder-round-label">Round 1</div>
-        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(x\)</span></div>
-        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(b\) adding, and \(m\) multiplying</span></div>
-        <div class="qa"><span class="q">What's the first obstruction to undo?</span><span class="a">\(b\) adding</span></div>
-        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Subtraction</span></div>
+        <div class="qa"><span class="q">Obstructing \(x\)?</span><span class="a">\(b\) adding, \(m\) multiplying</span></div>
+        <div class="qa"><span class="q">Undo first?</span><span class="a">Subtract \(b\)</span></div>
       </div>
-      <div class="ladder-eq">\(y - b = mx + b - b\)</div>
       <div class="ladder-result">\(y - b = mx\)</div>
-      <div class="ladder-check">Is \(x\) now isolated? No. Keep going - see next round.</div>
       <div class="ladder-round">
         <div class="ladder-round-label">Round 2</div>
-        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(m\)</span></div>
-        <div class="qa"><span class="q">What is \(m\) doing?</span><span class="a">Multiplying</span></div>
-        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
+        <div class="qa"><span class="q">Obstructing \(x\)?</span><span class="a">\(m\), multiplying</span></div>
+        <div class="qa"><span class="q">Inverse?</span><span class="a">Divide by \(m\)</span></div>
       </div>
-      <div class="ladder-eq">\(\dfrac{y-b}{m} = \dfrac{mx}{m}\)</div>
       <div class="ladder-result">\(x = \dfrac{y-b}{m}\)</div>
-      <div class="ladder-check">Is \(x\) now isolated? <strong>Yes.</strong></div>
-    </div>
-
-    <div class="notebook-box">
-      <div class="notebook-header">Prove It's the Same Answer</div>
-      <p style="margin:0;">Plug \(y=11\), \(m=2\), \(b=3\) into the literal answer: \(x = \dfrac{11-3}{2} = \dfrac{8}{2} = 4\). Same \(x\) as the numeric problem, because it's the same equation - \(2x+3=11\) is just \(y=mx+b\) with the letters replaced by these particular numbers.</p>
+      <div class="ladder-check">Check: \(y{=}11,m{=}2,b{=}3 \Rightarrow x=\frac{8}{2}=4\). Matches!</div>
     </div>
 
     <div class="explainer-box">
-      <strong>The misconception to drop right now:</strong> the other letters are not the answer, and they are not "in the way." Treat every letter you're <em>not</em> solving for exactly like you'd treat a number - move it with the same properties of equality, and never try to combine it with a letter it doesn't match (you can't add \(m\) and \(b\), any more than you could add an apple and an orange). Once you stop looking for "the number" and start looking for "the target letter alone," literal equations are just equations you already know how to solve.
+      <strong>Treat every other letter like a number.</strong> Never combine \(m\) and \(b\) - they're not like terms, any more than an apple and an orange.
     </div>
 
     <div class="notebook-box">
-      <div class="notebook-header">Quick Refresher: Inverse Operations</div>
+      <div class="notebook-header">Inverse Operations</div>
       <table class="data-table">
-        <thead><tr><th>If the equation shows...</th><th>Inverse</th><th>Action to take on BOTH sides</th></tr></thead>
+        <thead><tr><th>Shows...</th><th>Undo with...</th></tr></thead>
         <tbody>
-          <tr><td>Addition (\(+\,b\))</td><td>&harr;</td><td>Subtract \(b\)</td></tr>
-          <tr><td>Subtraction (\(-\,b\))</td><td>&harr;</td><td>Add \(b\)</td></tr>
-          <tr><td>Multiplication (\(mx\))</td><td>&harr;</td><td>Divide by \(m\)</td></tr>
-          <tr><td>Division (\(\dfrac{x}{a}\))</td><td>&harr;</td><td>Multiply by \(a\)</td></tr>
+          <tr><td>\(+\,b\)</td><td>Subtract \(b\)</td></tr>
+          <tr><td>\(-\,b\)</td><td>Add \(b\)</td></tr>
+          <tr><td>\(mx\)</td><td>Divide by \(m\)</td></tr>
+          <tr><td>\(\dfrac{x}{a}\)</td><td>Multiply by \(a\)</td></tr>
         </tbody>
       </table>
     </div>
@@ -255,26 +237,18 @@
   <div id="oneappearance" class="panel">
     <div class="section-title">Solving for a Variable That Appears Once</div>
     <div class="explainer-box">
-      Start with the easiest case: the letter you want shows up exactly once. Isolate it the same way you would in a two-step numeric equation - there's just nothing to combine, since every other letter already stands alone.
+      The easiest case: your letter shows up exactly once. Isolate it - nothing to combine.
     </div>
 
-    <h3 style="color:var(--primary);">Worked Example: Area of a Rectangle</h3>
     <div class="ladder">
       <div class="ladder-formula">\(A = lw\), solve for \(l\) <span class="type-tag onestep">One Step</span></div>
       <div class="ladder-round">
         <div class="ladder-round-label">Round 1</div>
-        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(l\)</span></div>
-        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(w\)</span></div>
-        <div class="qa"><span class="q">What is \(w\) doing?</span><span class="a">Multiplying</span></div>
-        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
+        <div class="qa"><span class="q">Obstructing \(l\)?</span><span class="a">\(w\), multiplying</span></div>
+        <div class="qa"><span class="q">Inverse?</span><span class="a">Divide by \(w\)</span></div>
       </div>
-      <div class="ladder-eq">\(\dfrac{A}{w} = \dfrac{lw}{w}\)</div>
       <div class="ladder-result">\(l = \dfrac{A}{w}\)</div>
-      <div class="ladder-check">Is \(l\) now isolated? <strong>Yes.</strong></div>
-    </div>
-    <div class="notebook-box">
-      <div class="notebook-header">Check it with numbers</div>
-      <p style="margin:0;">If \(A = 48\) and \(w = 6\): \(l = \dfrac{48}{6} = 8\). Substitute back into the original: \(8 \times 6 = 48\) - both forms agree.</p>
+      <div class="ladder-check">Check: \(A{=}48,w{=}6 \Rightarrow l=8\); \(8\times6=48\).</div>
     </div>
 
     <div class="widget-card">
@@ -347,7 +321,7 @@
   <div id="multistep" class="panel">
     <div class="section-title">Multi-Step Literal Equations</div>
     <div class="explainer-box">
-      When your target letter has something added or subtracted <strong>and</strong> multiplied onto it, undo them in reverse order - exactly like a two-step numeric equation: addition/subtraction first, then multiplication/division.
+      Something added/subtracted <strong>and</strong> multiplied? Undo addition/subtraction first, then multiplication/division.
     </div>
 
     <h3 style="color:var(--primary);">Worked Example: Perimeter of a Rectangle</h3>
@@ -372,11 +346,7 @@
       </div>
       <div class="ladder-eq">\(\dfrac{P-2l}{2} = \dfrac{2w}{2}\)</div>
       <div class="ladder-result">\(w = \dfrac{P-2l}{2}\)</div>
-      <div class="ladder-check">Is \(w\) now isolated? <strong>Yes.</strong></div>
-    </div>
-    <div class="notebook-box">
-      <div class="notebook-header">Check it with numbers</div>
-      <p style="margin:0;">If \(P = 30\) and \(l = 8\): \(w = \dfrac{30 - 16}{2} = \dfrac{14}{2} = 7\). Check in the original: \(2(8) + 2(7) = 16 + 14 = 30\), which matches.</p>
+      <div class="ladder-check">Check: \(P{=}30,l{=}8 \Rightarrow w=7\); \(2(8)+2(7)=30\).</div>
     </div>
 
     <h3 style="color:var(--primary); margin-top:28px;">Worked Example: Temperature Conversion</h3>
@@ -429,7 +399,7 @@
   <div id="factoring" class="panel">
     <div class="section-title">Distributing &amp; Factoring to Solve for a Variable</div>
     <div class="explainer-box">
-      Sometimes your target letter appears in <strong>more than one term</strong>. When that happens, isolating it in one step isn't possible - you have to factor it out first, turning a sum into a product, before you can divide it away.
+      Target letter in <strong>more than one term</strong>? Factor it out first, then divide.
     </div>
 
     <h3 style="color:var(--primary);">Worked Example: Total Amount With Simple Interest</h3>
@@ -452,11 +422,7 @@
       </div>
       <div class="ladder-eq">\(\dfrac{A}{1+rt} = \dfrac{P(1+rt)}{1+rt}\)</div>
       <div class="ladder-result">\(P = \dfrac{A}{1+rt}\)</div>
-      <div class="ladder-check">Is \(P\) now isolated? <strong>Yes.</strong></div>
-    </div>
-    <div class="notebook-box">
-      <div class="notebook-header">Check it with numbers</div>
-      <p style="margin:0;">If \(A = 1150\), \(r = 0.05\), \(t = 3\): \(P = \dfrac{1150}{1 + (0.05)(3)} = \dfrac{1150}{1.15} = 1000\). Check in the original: \(1000 + 1000(0.05)(3) = 1000 + 150 = 1150\), which matches.</p>
+      <div class="ladder-check">Check: \(A{=}1150,r{=}0.05,t{=}3 \Rightarrow P=1000\); \(1000+1000(0.05)(3)=1150\).</div>
     </div>
 
     <h3 style="color:var(--primary); margin-top:28px;">Worked Example: Surface Area of a Rectangular Prism</h3>
@@ -488,11 +454,7 @@
       </div>
       <div class="ladder-eq">\(\dfrac{S-2lw}{2l+2w} = \dfrac{h(2l+2w)}{2l+2w}\)</div>
       <div class="ladder-result">\(h = \dfrac{S-2lw}{2l+2w}\)</div>
-      <div class="ladder-check">Is \(h\) now isolated? <strong>Yes.</strong></div>
-    </div>
-    <div class="notebook-box">
-      <div class="notebook-header">Check it with numbers</div>
-      <p style="margin:0;">If \(l = 4\), \(w = 3\), \(S = 94\): \(h = \dfrac{94 - 2(4)(3)}{2(4) + 2(3)} = \dfrac{94 - 24}{8 + 6} = \dfrac{70}{14} = 5\). Check in the original: \(2(4)(3) + 2(4)(5) + 2(3)(5) = 24 + 40 + 30 = 94\), which matches.</p>
+      <div class="ladder-check">Check: \(l{=}4,w{=}3,S{=}94 \Rightarrow h=5\); \(24+40+30=94\).</div>
     </div>
 
     <h3 style="color:var(--primary); margin-top:28px;">Worked Example: Arithmetic Sequences</h3>
@@ -524,11 +486,7 @@
       </div>
       <div class="ladder-eq">\(\dfrac{L-a}{d} + 1 = n - 1 + 1\)</div>
       <div class="ladder-result">\(n = \dfrac{L-a}{d} + 1\)</div>
-      <div class="ladder-check">Is \(n\) now isolated? <strong>Yes.</strong></div>
-    </div>
-    <div class="notebook-box">
-      <div class="notebook-header">Check it with numbers</div>
-      <p style="margin:0;">If \(L = 29\), \(a = 5\), \(d = 3\): \(n = \dfrac{29-5}{3} + 1 = \dfrac{24}{3} + 1 = 8 + 1 = 9\). Check in the original: \(5 + (9-1)(3) = 5 + 24 = 29\), which matches. Notice this one never needed the factoring question at all - \(n\) only appears once, inside the parentheses - so it's really a multi-step ladder wearing a factoring costume. Always ask "how many times does my target letter appear?" before assuming you need to factor.</p>
+      <div class="ladder-check">Check: \(L{=}29,a{=}5,d{=}3 \Rightarrow n=9\); \(5+(9-1)(3)=29\). No factoring needed - \(n\) appears once.</div>
     </div>
   </div>
 
@@ -536,7 +494,7 @@
   <div id="applications" class="panel">
     <div class="section-title">Worked Applications: Simple Interest</div>
     <div class="explainer-box">
-      One formula, four ways to use it. \(I = Prt\) has no addition or subtraction to undo, and every variable appears only once - so solving for any of the four letters is a single division.
+      \(I = Prt\): every letter appears once, so each solve is a single division.
     </div>
 
     <div class="ladder">
@@ -576,8 +534,12 @@
     </div>
 
     <div class="notebook-box" style="margin-top:24px;">
-      <div class="notebook-header">Why Checking by Substitution Works</div>
-      <p style="margin:0;">Every rearranged formula on this page was checked the same way: pick numbers for the letters you know, compute the target letter with your new formula, then plug <strong>everything</strong> back into the <strong>original</strong> formula. If both sides come out equal, your rearrangement is correct - this works because solving for a variable never changes which sets of numbers make the equation true, it only changes which letter is easiest to read the answer from.</p>
+      <div class="notebook-header">How to Check Any Rearrangement</div>
+      <ul style="margin-bottom:0;">
+        <li>Pick numbers for the letters you know.</li>
+        <li>Compute the target letter with your new formula.</li>
+        <li>Plug everything back into the <strong>original</strong> formula - both sides should match.</li>
+      </ul>
     </div>
   </div>
 </div>
