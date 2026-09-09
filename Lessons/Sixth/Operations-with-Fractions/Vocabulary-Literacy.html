@@ -113,14 +113,14 @@
         <div class="term-example">\(\frac{1}{3}\) and \(\frac{1}{4}\) have unlike denominators.</div>
       </div>
       <div class="term-card">
-        <span class="term-name">Common Denominator</span>
-        <p class="term-def">Any denominator that two or more fractions can both convert into.</p>
-        <div class="term-example">12 is a common denominator for \(\frac{1}{4}\) and \(\frac{1}{6}\).</div>
+        <span class="term-name">Butterfly Method</span>
+        <p class="term-def">A way to combine fractions with unlike denominators: cross-multiply for the wings, multiply the denominators for the new one.</p>
+        <div class="term-example">\(\frac{1}{4}+\frac{1}{6}\) &rarr; wings \(6\) and \(4\), new denominator \(24\).</div>
       </div>
       <div class="term-card">
-        <span class="term-name">Least Common Denominator (LCD)</span>
-        <p class="term-def">The smallest possible common denominator - the least common multiple of the denominators.</p>
-        <div class="term-example">The LCD of \(\frac{1}{4}\) and \(\frac{1}{6}\) is 12.</div>
+        <span class="term-name">Wings</span>
+        <p class="term-def">The two cross-products in the Butterfly Method - each numerator times the denominator across from it.</p>
+        <div class="term-example">For \(\frac{1}{4}+\frac{1}{6}\): \(1\times6=6\) and \(4\times1=4\).</div>
       </div>
       <div class="term-card">
         <span class="term-name">Equivalent Fractions</span>
@@ -204,7 +204,7 @@
         <div style="font-size:1.8rem; color:var(--primary); font-weight:900;">+</div>
         <div><div id="vb-unlike-2"></div><div class="bar-caption">\(\frac{1}{3}\)</div></div>
       </div>
-      <p style="margin:0 0 10px 0;">Halves and thirds are different-size pieces - you can't just add the numerators. Rename both with the LCD of 6 first:</p>
+      <p style="margin:0 0 10px 0;">Halves and thirds are different-size pieces - you can't just add the numerators. Rename both with the Butterfly Method first: wings \(1\times3=3\) and \(2\times1=2\); new denominator \(2\times3=6\).</p>
       <div class="bar-row">
         <div><div id="vb-renamed-1"></div><div class="bar-caption">\(\frac{3}{6}\)</div></div>
         <div style="font-size:1.8rem; color:var(--primary); font-weight:900;">+</div>
@@ -405,7 +405,7 @@
   // ==========================================
   const vocabQuiz = [
     { term: "Like Denominators", choices: ["Fractions whose denominators are the same", "Fractions whose numerators are the same", "Fractions that simplify to whole numbers"], correct: 0 },
-    { term: "Least Common Denominator (LCD)", choices: ["Any denominator two fractions share", "The smallest common denominator two fractions can both convert into", "The largest denominator in a problem"], correct: 1 },
+    { term: "Butterfly Method", choices: ["Simplifying a fraction by dividing out a common factor", "Cross-multiplying for the wings, then multiplying the denominators for the new one", "Converting a mixed number to an improper fraction"], correct: 1 },
     { term: "Improper Fraction", choices: ["A fraction that is not in simplest form", "A fraction whose numerator is greater than or equal to its denominator", "A fraction with a denominator of 1"], correct: 1 },
     { term: "Regroup (Fraction Subtraction)", choices: ["Simplifying a fraction after subtracting", "Borrowing 1 whole and rewriting it as an extra fraction when the fraction being subtracted is bigger", "Finding a common denominator before subtracting"], correct: 1 },
     { term: "Benchmark Fraction", choices: ["A fraction used to estimate before calculating exactly", "The final simplified answer to a problem", "A fraction with the same numerator and denominator"], correct: 0 },

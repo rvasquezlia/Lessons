@@ -110,7 +110,7 @@
     <div class="section-title">Full Review: Unlike Denominators &amp; Mixed Numbers</div>
     <div class="notebook-box">
       <div class="notebook-header">Rule Reminder</div>
-      <p style="margin:0;">Unlike denominators: find the LCD and rename both fractions first. Mixed numbers: combine whole numbers and fraction parts separately, regrouping when needed.</p>
+      <p style="margin:0;">Unlike denominators: Butterfly Method - cross-multiply for the wings, multiply the denominators for the new one. Mixed numbers: combine whole numbers and fraction parts separately, regrouping when needed.</p>
     </div>
 
     <h3>Worked Example 1: Unlike Denominators (\(\frac{1}{4} + \frac{1}{6}\))</h3>
@@ -326,9 +326,9 @@
     const step = ex3WorkedStep;
     document.getElementById('ex3-worked-content').innerHTML = `
       <div class="step-line" style="margin-top:0;">\\(\\frac{1}{4} + \\frac{1}{6}\\)</div>
-      ${step >= 1 ? `<p style="text-align:center;">Step 1: LCD of 4 and 6 is 12.</p>` : ''}
-      ${step >= 2 ? `<p style="text-align:center;">Step 2: Rename: \\(\\frac{1}{4} = \\frac{3}{12}\\) and \\(\\frac{1}{6} = \\frac{2}{12}\\).</p>` : ''}
-      ${step >= 3 ? `<p style="text-align:center;">Step 3: Add: \\(\\frac{3}{12} + \\frac{2}{12} = \\frac{5}{12}\\). Already simplest form.</p>` : ''}
+      ${step >= 1 ? `<p style="text-align:center;">Step 1: Same denominator? No - Butterfly Method. Wings: \\(1\\times6=6\\), \\(4\\times1=4\\); denom \\(4\\times6=24\\).</p>` : ''}
+      ${step >= 2 ? `<p style="text-align:center;">Step 2: Add the wings: \\(6+4=10\\), over the new denominator: \\(\\frac{10}{24}\\).</p>` : ''}
+      ${step >= 3 ? `<p style="text-align:center;">Step 3: Simplify: \\(\\frac{10}{24} \\rightarrow \\frac{5}{12}\\) (divide both by 2).</p>` : ''}
       ${step >= 3 ? `<div class="final-box">\\(\\frac{1}{4} + \\frac{1}{6} = \\mathbf{\\frac{5}{12}}\\)</div>` : ''}
     `;
     triggerMathJax();
@@ -374,7 +374,7 @@
   const conceptItems = [
     { q: "True or False: When fractions have unlike denominators, you can add the numerators and denominators straight across.", type: "tf", correctVal: "false", explain: "False - you must find a common denominator and rename both fractions before adding the numerators." },
     { q: "True or False: A mixed number can be converted to an improper fraction by multiplying the whole number by the denominator and adding the numerator.", type: "tf", correctVal: "true", explain: "True - that gives the new numerator, and the denominator stays the same." },
-    { q: "What is the LCD of \\(\\frac{1}{4}\\) and \\(\\frac{1}{10}\\)?", type: "fraction", correctVal: "20", explain: "Multiples of 4: 4, 8, 12, 16, 20. Multiples of 10: 10, 20. The LCD is 20." },
+    { q: "Using the Butterfly Method, what is the new denominator for \\(\\frac{1}{4} + \\frac{1}{10}\\)?", type: "fraction", correctVal: "40", explain: "Multiply the denominators straight down the middle: \\(4\\times10=40\\)." },
     { q: "True or False: When subtracting mixed numbers, if the fraction you're subtracting is bigger than the fraction you have, you must regroup 1 whole first.", type: "tf", correctVal: "true", explain: "True - regroup 1 whole from the whole-number part into an extra fraction before subtracting." },
     { q: "Simplify \\(\\frac{9}{12}\\) to simplest form.", type: "fraction", correctVal: "3/4", explain: "Both 9 and 12 divide evenly by 3: \\(\\frac{9}{12} = \\frac{3}{4}\\)." },
     { q: "True or False: \\(5 - \\frac{1}{4} = 4\\frac{1}{4}\\)", type: "tf", correctVal: "false", explain: "False - regroup 5 as \\(4\\frac{4}{4}\\) first: \\(4\\frac{4}{4} - \\frac{1}{4} = 4\\frac{3}{4}\\), not \\(4\\frac{1}{4}\\)." }

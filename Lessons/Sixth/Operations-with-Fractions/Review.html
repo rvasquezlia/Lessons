@@ -72,7 +72,7 @@
     <button class="tab-btn active" onclick="switchTab('why')">1. Why Review This?</button>
     <button class="tab-btn" onclick="switchTab('vocab')">2. Vocabulary</button>
     <button class="tab-btn" onclick="switchTab('equivalent')">3. Equivalent Fractions</button>
-    <button class="tab-btn" onclick="switchTab('lcd')">4. LCD &amp; Mixed Numbers</button>
+    <button class="tab-btn" onclick="switchTab('butterfly')">4. Butterfly Method &amp; Mixed Numbers</button>
     <button class="tab-btn" onclick="switchTab('practice')">5. Are You Ready?</button>
     <button class="tab-btn" onclick="switchTab('resources')">6. Resources</button>
   </nav>
@@ -91,7 +91,7 @@
       <div class="notebook-header">What This Page Covers</div>
       <ul style="margin-bottom:0;">
         <li><strong>Equivalent Fractions &amp; Simplest Form:</strong> renaming a fraction without changing its value, and reducing it all the way down.</li>
-        <li><strong>Common Denominators:</strong> finding the least common denominator (LCD) for two unlike fractions.</li>
+        <li><strong>The Butterfly Method:</strong> cross-multiplying to combine fractions with unlike denominators.</li>
         <li><strong>Mixed Numbers &amp; Improper Fractions:</strong> converting fluently between the two forms.</li>
         <li><strong>A short practice check</strong> so you know exactly what to brush up on before we begin.</li>
       </ul>
@@ -126,19 +126,14 @@
         <div class="glossary-example">\(\frac{6}{8}\) simplifies to \(\frac{3}{4}\)</div>
       </div>
       <div class="glossary-card">
-        <span class="glossary-term">Multiple</span>
-        <p class="glossary-def">The product of a number and any whole number.</p>
-        <div class="glossary-example">Multiples of 4: 4, 8, 12, 16, 20...</div>
+        <span class="glossary-term">Butterfly Method</span>
+        <p class="glossary-def">A way to combine fractions with unlike denominators: cross-multiply for the wings, multiply the denominators for the new one.</p>
+        <div class="glossary-example">\(\frac{1}{4}+\frac{1}{6}\): wings \(6\) and \(4\), new denominator \(24\)</div>
       </div>
       <div class="glossary-card">
-        <span class="glossary-term">Least Common Multiple (LCM)</span>
-        <p class="glossary-def">The smallest number that is a multiple of two or more numbers.</p>
-        <div class="glossary-example">LCM of 4 and 6 is 12</div>
-      </div>
-      <div class="glossary-card">
-        <span class="glossary-term">Least Common Denominator (LCD)</span>
-        <p class="glossary-def">The LCM of two fractions' denominators &ndash; the smallest denominator they can both convert into.</p>
-        <div class="glossary-example">LCD of \(\frac{1}{4}\) and \(\frac{1}{6}\) is 12</div>
+        <span class="glossary-term">Wings</span>
+        <p class="glossary-def">The two cross-products in the Butterfly Method &ndash; each numerator times the opposite denominator.</p>
+        <div class="glossary-example">For \(\frac{1}{4}+\frac{1}{6}\): \(1\times6=6\) and \(4\times1=4\)</div>
       </div>
       <div class="glossary-card">
         <span class="glossary-term">Like &amp; Unlike Denominators</span>
@@ -206,23 +201,23 @@
     </div>
   </div>
 
-  <!-- TAB 4: LCD & MIXED NUMBERS -->
-  <div id="lcd" class="panel">
-    <div class="section-title">Finding a Common Denominator &amp; Mixed Number Conversions</div>
+  <!-- TAB 4: BUTTERFLY METHOD & MIXED NUMBERS -->
+  <div id="butterfly" class="panel">
+    <div class="section-title">The Butterfly Method &amp; Mixed Number Conversions</div>
     <div class="explainer-box">
-      These are the two skills that make unlike-denominator and mixed-number problems possible. Both come back to multiples.
+      These are the two skills that make unlike-denominator and mixed-number problems possible.
     </div>
 
     <div class="notebook-box">
-      <div class="notebook-header">Finding the Least Common Denominator (LCD)</div>
+      <div class="notebook-header">The Butterfly Method</div>
       <ol style="margin:0;">
-        <li>List multiples of each denominator until you find one they share.</li>
-        <li>The smallest shared multiple is the LCD.</li>
-        <li>Convert each fraction to an equivalent fraction with that denominator.</li>
+        <li>Cross-multiply diagonally for the two <strong>wings</strong>: each numerator times the denominator across from it.</li>
+        <li>Multiply the two denominators straight down the middle for the new denominator.</li>
+        <li>Add or subtract the wings over that new denominator, then simplify.</li>
       </ol>
-      <p style="margin:10px 0 0 0;"><em>Example:</em> LCD of \(\frac{1}{4}\) and \(\frac{1}{6}\)?<br>
-      Multiples of 4: 4, 8, <strong>12</strong>, 16...&emsp;Multiples of 6: 6, <strong>12</strong>, 18...<br>
-      LCD = 12. So \(\frac{1}{4} = \frac{3}{12}\) and \(\frac{1}{6} = \frac{2}{12}\).</p>
+      <p style="margin:10px 0 0 0;"><em>Example:</em> \(\frac{1}{4} + \frac{1}{6}\)<br>
+      Wings: \(1\times6=6\) and \(4\times1=4\). New denominator: \(4\times6=24\).<br>
+      \(\dfrac{6+4}{24} = \dfrac{10}{24} \rightarrow \dfrac{5}{12}\).</p>
     </div>
 
     <div class="notebook-box">
@@ -249,8 +244,8 @@
     <h3 style="color:var(--primary);">Equivalent Fractions &amp; Simplest Form</h3>
     <div id="eq-practice-list"></div>
 
-    <h3 style="color:var(--primary); margin-top:24px;">Least Common Denominator</h3>
-    <div id="lcd-practice-list"></div>
+    <h3 style="color:var(--primary); margin-top:24px;">The Butterfly Method</h3>
+    <div id="butterfly-practice-list"></div>
 
     <h3 style="color:var(--primary); margin-top:24px;">Mixed Numbers &amp; Improper Fractions</h3>
     <div id="mixed-practice-list"></div>
@@ -265,7 +260,7 @@
       <ul class="ready-list">
         <li>Build an equivalent fraction by multiplying (or dividing) the numerator and denominator by the same number.</li>
         <li>Reduce a fraction to simplest form.</li>
-        <li>Find the least common denominator (LCD) of two fractions.</li>
+        <li>Use the Butterfly Method to combine fractions with unlike denominators.</li>
         <li>Convert a mixed number to an improper fraction, and back again.</li>
         <li>Tell like denominators from unlike denominators at a glance.</li>
       </ul>
@@ -275,7 +270,6 @@
       <h3 style="margin-top:0; color:#15803d;">Extra Practice, Any Time</h3>
       <ul>
         <li><a href="https://www.ixl.com/math/grade-5/equivalent-fractions" target="_blank" rel="noopener">Equivalent fractions</a> <span class="ixl-code">MKA</span></li>
-        <li><a href="https://www.ixl.com/math/grade-5/least-common-denominator" target="_blank" rel="noopener">Least common denominator</a> <span class="ixl-code">R7P</span></li>
         <li><a href="https://www.ixl.com/math/grade-5/estimate-sums-and-differences-of-fractions-using-benchmarks" target="_blank" rel="noopener">Estimate sums and differences of fractions using benchmarks</a> <span class="ixl-code">9JR</span></li>
         <li><a href="https://www.ixl.com/math/grade-5/estimate-sums-and-differences-of-mixed-numbers" target="_blank" rel="noopener">Estimate sums and differences of mixed numbers</a> <span class="ixl-code">HUJ</span></li>
       </ul>
@@ -371,13 +365,13 @@
   ];
   renderCheckList('eq-practice-list', eqPractice, 'eq', "Not quite yet. Multiply or divide the numerator AND denominator by the same number, then try again.");
 
-  const lcdPractice = [
-    { q: "What is the LCD of \\(\\frac{1}{3}\\) and \\(\\frac{1}{5}\\)?", accepted: ["15"], displayAnswer: "15" },
-    { q: "What is the LCD of \\(\\frac{1}{4}\\) and \\(\\frac{1}{6}\\)?", accepted: ["12"], displayAnswer: "12" },
-    { q: "What is the LCD of \\(\\frac{1}{2}\\) and \\(\\frac{1}{8}\\)?", accepted: ["8"], displayAnswer: "8" },
-    { q: "What is the LCD of \\(\\frac{1}{6}\\) and \\(\\frac{1}{9}\\)?", accepted: ["18"], displayAnswer: "18" }
+  const butterflyPractice = [
+    { q: "Using the Butterfly Method, what is the new denominator for \\(\\frac{1}{3} + \\frac{1}{5}\\)?", accepted: ["15"], displayAnswer: "15" },
+    { q: "Using the Butterfly Method, what is the new denominator for \\(\\frac{1}{2} + \\frac{1}{3}\\)?", accepted: ["6"], displayAnswer: "6" },
+    { q: "Using the Butterfly Method, what is the new denominator for \\(\\frac{1}{2} + \\frac{1}{8}\\)?", accepted: ["16"], displayAnswer: "16" },
+    { q: "Using the Butterfly Method, what is the new denominator for \\(\\frac{1}{6} - \\frac{1}{9}\\)?", accepted: ["54"], displayAnswer: "54" }
   ];
-  renderCheckList('lcd-practice-list', lcdPractice, 'lcd', "Not quite yet. List multiples of each denominator until you find the smallest one they share.");
+  renderCheckList('butterfly-practice-list', butterflyPractice, 'butterfly', "Not quite yet. Cross-multiply each numerator by the denominator across from it for the wings, then multiply the two denominators for the new one.");
 
   const mixedPractice = [
     { q: "Convert \\(3\\frac{2}{5}\\) to an improper fraction.", accepted: ["17/5"], displayAnswer: "\\(\\frac{17}{5}\\)" },
