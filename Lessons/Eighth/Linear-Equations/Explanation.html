@@ -37,7 +37,7 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Nothing here is graded - this page is examples only. Step through each carousel with the arrows and the Next Step button, working the problem yourself on paper before each step appears. Read the notebook boxes too; they carry the rules you'll need. <strong>Calculators are allowed</strong> this year in Eighth Grade.
+    Nothing here is graded - examples only. Every worked example climbs the same <strong>Question Ladder</strong>. <strong>Calculators are allowed</strong> this year.
   </div>
 
   <nav class="nav-tabs">
@@ -53,75 +53,116 @@
     <div class="section-title">Foundations: Properties of Equality &amp; Inverse Operations</div>
 
     <div class="notebook-box">
-      <div class="notebook-header">Before You Start: Integer Rules</div>
-      <p style="margin:0 0 10px 0;">Every equation below involves adding, subtracting, multiplying, or dividing negative numbers. If these rules are shaky, that's what will trip you up - not the algebra.</p>
+      <div class="notebook-header">Integer Rules You'll Need</div>
       <table class="data-table">
         <thead><tr><th>Operation</th><th>The Rule</th></tr></thead>
         <tbody>
-          <tr><td><strong>Addition</strong></td><td><strong>Same signs:</strong> add the absolute values and keep the sign. (\(-3+(-5)=-8\))<br><strong>Different signs:</strong> subtract the smaller absolute value from the larger, and keep the sign of the number with the larger absolute value. (\(-10+4=-6\))</td></tr>
-          <tr><td><strong>Subtraction</strong></td><td><strong>Add the opposite:</strong> flip the subtraction to addition and change the sign of the second number, then follow the addition rule above. (\(5-(-2)\) becomes \(5+2=7\))</td></tr>
-          <tr><td><strong>Multiplication &amp; Division</strong></td><td><strong>Same signs:</strong> the result is positive. <strong>Different signs:</strong> the result is negative.</td></tr>
+          <tr><td>Addition</td><td>Same signs: add, keep sign. Different signs: subtract, keep the larger's sign.</td></tr>
+          <tr><td>Subtraction</td><td>Add the opposite: \(5-(-2) \rightarrow 5+2=7\).</td></tr>
+          <tr><td>Multiply/Divide</td><td>Same signs &rarr; positive. Different signs &rarr; negative.</td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="explainer-box">
-      <strong>The Golden Rule of Equations:</strong> an equation is a balanced scale. Whatever you do to one side, you have to do to the other, or the two sides stop being equal. Every method on this page comes back to that one idea.
+      <strong>The Golden Rule:</strong> an equation is a balanced scale. Whatever you do to one side, do to the other.
     </div>
 
     <div class="notebook-box">
       <div class="notebook-header">Properties of Equality</div>
-      <p style="margin:0 0 10px 0;">These are the moves that are always legal - they're the reason you're allowed to add, subtract, multiply, or divide both sides of an equation without changing its solution.</p>
       <ul style="margin-bottom:0;">
-        <li><strong>Addition Property:</strong> if \(a = b\), then \(a + c = b + c\).</li>
-        <li><strong>Subtraction Property:</strong> if \(a = b\), then \(a - c = b - c\).</li>
-        <li><strong>Multiplication Property:</strong> if \(a = b\), then \(ac = bc\).</li>
-        <li><strong>Division Property:</strong> if \(a = b\) and \(c \neq 0\), then \(\frac{a}{c} = \frac{b}{c}\).</li>
+        <li>If \(a=b\), then \(a+c=b+c\).</li>
+        <li>If \(a=b\), then \(a-c=b-c\).</li>
+        <li>If \(a=b\), then \(ac=bc\).</li>
+        <li>If \(a=b\) and \(c\neq0\), then \(\frac{a}{c}=\frac{b}{c}\).</li>
       </ul>
     </div>
 
     <div class="notebook-box">
-      <div class="notebook-header">Inverse Operations</div>
-      <p style="margin:0 0 10px 0;">Solving an equation means undoing whatever's been done to the variable, one operation at a time, using the matching inverse on <strong>both</strong> sides.</p>
-      <table class="data-table">
-        <thead><tr><th>If the equation shows...</th><th>Inverse</th><th>Action to take on BOTH sides</th></tr></thead>
-        <tbody>
-          <tr><td>Addition (\(+5\))</td><td>&harr;</td><td>Subtract 5</td></tr>
-          <tr><td>Subtraction (\(-8\))</td><td>&harr;</td><td>Add 8</td></tr>
-          <tr><td>Multiplication (\(3x\))</td><td>&harr;</td><td>Divide by 3</td></tr>
-          <tr><td>Division (\(\frac{x}{4}\))</td><td>&harr;</td><td>Multiply by 4</td></tr>
-        </tbody>
-      </table>
+      <div class="notebook-header">The Question Ladder</div>
+      <ul style="margin-bottom:0;">
+        <li>What's the variable?</li>
+        <li>What's obstructing it?</li>
+        <li>What's it doing?</li>
+        <li>What's the inverse? Apply to <strong>both</strong> sides.</li>
+      </ul>
     </div>
 
-    <div class="notebook-box">
-      <div class="notebook-header">Worked Example: One Inverse Operation, Visualized</div>
-      <p style="margin:0 0 10px 0;">\(x + 9 = 15\). Subtract 9 from both sides and the \(+9\) is gone, leaving \(x = 6\). The number line shows the same move: start at 15, step back 9, and land on the solution.</p>
-      <div id="foundation-numberline"></div>
+    <div class="ladder">
+      <div class="ladder-formula">\(x + 9 = 15\) <span class="type-tag onestep">One Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">Obstructing \(x\)?</span><span class="a">\(9\), adding</span></div>
+        <div class="qa"><span class="q">Inverse?</span><span class="a">Subtract 9</span></div>
+      </div>
+      <div class="ladder-result">\(x = 6\)</div>
     </div>
+    <div id="foundation-numberline"></div>
   </div>
 
   <!-- TAB 2: VARIABLE ON ONE SIDE -->
   <div id="oneside" class="panel">
     <div class="section-title">Solving Equations With the Variable on One Side</div>
     <div class="explainer-box">
-      A linear equation with the variable on one side can always be solved by simplifying each side first (distribute, combine like terms), then using inverse operations in reverse order to isolate the variable.
+      Simplify each side first (distribute, combine like terms), then climb the ladder.
     </div>
 
-    <div class="carousel-card">
-      <div class="carousel-nav">
-        <button class="btn-nav" id="l12-prev-btn" onclick="changeL12(-1)">&larr; Previous</button>
-        <div style="text-align:center;">
-          <span id="l12-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 4</span>
-          <div class="carousel-indicators" id="l12-dots" style="justify-content:center; margin-top:6px;"></div>
-        </div>
-        <button class="btn-nav" id="l12-next-btn" onclick="changeL12(1)">Next &rarr;</button>
+    <div class="ladder">
+      <div class="ladder-formula">\(3(x + 2) = 21\) <span class="type-tag multistep">Multi-Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Simplify</div>
+        <div class="qa"><span class="q">Distribute</span><span class="a">\(3x + 6 = 21\)</span></div>
       </div>
-      <div id="l12-content" style="min-height: 220px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextL12Step()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetL12Step()">Reset Steps</button>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">Obstructing \(x\)?</span><span class="a">\(6\) adding, \(3\) multiplying</span></div>
+        <div class="qa"><span class="q">Undo first?</span><span class="a">Subtract 6</span></div>
       </div>
+      <div class="ladder-result">\(3x = 15\)</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2</div>
+        <div class="qa"><span class="q">Inverse?</span><span class="a">Divide by 3</span></div>
+      </div>
+      <div class="ladder-result">\(x = 5\)</div>
+    </div>
+
+    <div class="ladder">
+      <div class="ladder-formula">\(2(x - 3) + 4 = 10\) <span class="type-tag multistep">Multi-Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Simplify</div>
+        <div class="qa"><span class="q">Distribute &amp; combine</span><span class="a">\(2x - 2 = 10\)</span></div>
+      </div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">Obstructing \(x\)?</span><span class="a">\(2\) subtracting, \(2\) multiplying</span></div>
+        <div class="qa"><span class="q">Undo first?</span><span class="a">Add 2</span></div>
+      </div>
+      <div class="ladder-result">\(2x = 12\)</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2</div>
+        <div class="qa"><span class="q">Inverse?</span><span class="a">Divide by 2</span></div>
+      </div>
+      <div class="ladder-result">\(x = 6\)</div>
+    </div>
+
+    <div class="ladder">
+      <div class="ladder-formula">\(8x - 4(x - 6) + 8 = 44\) <span class="type-tag multistep">Multi-Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Simplify</div>
+        <div class="qa"><span class="q">Distribute \(-4\)</span><span class="a">\(8x - 4x + 24 + 8 = 44\)</span></div>
+        <div class="qa"><span class="q">Combine like terms</span><span class="a">\(4x + 32 = 44\)</span></div>
+      </div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">Obstructing \(x\)?</span><span class="a">\(32\) adding, \(4\) multiplying</span></div>
+        <div class="qa"><span class="q">Undo first?</span><span class="a">Subtract 32</span></div>
+      </div>
+      <div class="ladder-result">\(4x = 12\)</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2</div>
+        <div class="qa"><span class="q">Inverse?</span><span class="a">Divide by 4</span></div>
+      </div>
+      <div class="ladder-result">\(x = 3\)</div>
     </div>
   </div>
 
@@ -129,30 +170,59 @@
   <div id="bothsides" class="panel">
     <div class="section-title">Solving Equations With a Variable on Both Sides</div>
     <div class="explainer-box">
-      <strong>What changes?</strong> Your first move is no longer isolating the variable directly - it's collecting all variable terms onto one side first, using the same properties of equality as before. Everything after that works exactly like Tab 2.
+      Extra first move: collect all variable terms onto one side. Then it's Tab 2 again.
     </div>
 
-    <div class="carousel-card">
-      <div class="carousel-nav">
-        <button class="btn-nav" id="l13-prev-btn" onclick="changeL13(-1)">&larr; Previous</button>
-        <div style="text-align:center;">
-          <span id="l13-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 4</span>
-          <div class="carousel-indicators" id="l13-dots" style="justify-content:center; margin-top:6px;"></div>
-        </div>
-        <button class="btn-nav" id="l13-next-btn" onclick="changeL13(1)">Next &rarr;</button>
+    <div class="ladder">
+      <div class="ladder-formula">\(5x + 3 = 2x + 12\) <span class="type-tag multistep">Multi-Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Collect Variables</div>
+        <div class="qa"><span class="q">Variable on both sides?</span><span class="a">Subtract \(2x\)</span></div>
       </div>
-      <div id="l13-content" style="min-height: 220px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextL13Step()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetL13Step()">Reset Steps</button>
+      <div class="ladder-result">\(3x + 3 = 12\)</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">Obstructing \(x\)?</span><span class="a">\(3\) adding, \(3\) multiplying</span></div>
+        <div class="qa"><span class="q">Undo first?</span><span class="a">Subtract 3</span></div>
       </div>
+      <div class="ladder-result">\(3x = 9\)</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2</div>
+        <div class="qa"><span class="q">Inverse?</span><span class="a">Divide by 3</span></div>
+      </div>
+      <div class="ladder-result">\(x = 3\)</div>
+    </div>
+
+    <div class="ladder">
+      <div class="ladder-formula">\(4y - 7 + 2y = -3(y-1) - 1\) <span class="type-tag multistep">Multi-Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Simplify</div>
+        <div class="qa"><span class="q">Combine left, distribute right</span><span class="a">\(6y - 7 = -3y + 2\)</span></div>
+      </div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Collect Variables</div>
+        <div class="qa"><span class="q">Variable on both sides?</span><span class="a">Add \(3y\)</span></div>
+      </div>
+      <div class="ladder-result">\(9y - 7 = 2\)</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">Obstructing \(y\)?</span><span class="a">\(7\) subtracting, \(9\) multiplying</span></div>
+        <div class="qa"><span class="q">Undo first?</span><span class="a">Add 7</span></div>
+      </div>
+      <div class="ladder-result">\(9y = 9\)</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2</div>
+        <div class="qa"><span class="q">Inverse?</span><span class="a">Divide by 9</span></div>
+      </div>
+      <div class="ladder-result">\(y = 1\)</div>
     </div>
 
     <div class="notebook-box" style="margin-top:24px;">
       <div class="notebook-header">When the Variable Disappears</div>
-      <p style="margin:0 0 10px 0;">Sometimes collecting variable terms eliminates the variable entirely. What's left tells you the answer:</p>
-      <p style="margin:0 0 6px 0;">\(2(x+3) = 2x + 7 \;\rightarrow\; 2x + 6 = 2x + 7 \;\rightarrow\; 6 = 7\). A false statement means <strong>no solution</strong> - no value of \(x\) works.</p>
-      <p style="margin:0;">\(4(x+1) = 4x + 4 \;\rightarrow\; 4x + 4 = 4x + 4 \;\rightarrow\; 4 = 4\). A true statement means <strong>infinitely many solutions</strong> - every value of \(x\) works.</p>
+      <ul style="margin-bottom:0;">
+        <li>\(2(x+3)=2x+7 \rightarrow 6=7\) - false &rarr; <strong>no solution</strong>.</li>
+        <li>\(4(x+1)=4x+4 \rightarrow 4=4\) - true &rarr; <strong>infinitely many solutions</strong>.</li>
+      </ul>
     </div>
   </div>
 
@@ -160,26 +230,48 @@
   <div id="classify" class="panel">
     <div class="section-title">Classifying Solutions: One, None, or Infinitely Many?</div>
     <div class="explainer-box">
-      Simplify both sides completely first. A false statement like \(6 = 7\) means <strong>no solution</strong>. A true statement like \(4 = 4\) means <strong>infinitely many solutions</strong>. Anything else simplifies to exactly <strong>one solution</strong>.
+      Simplify both sides. False (\(6=7\)) &rarr; no solution. True (\(4=4\)) &rarr; infinitely many. Anything else &rarr; one solution.
     </div>
 
-    <div class="step-box">
-      <h3 style="margin-top:0; color:var(--primary);">Worked Example: One Solution</h3>
-      <button class="btn-lg" onclick="revealClassifyStep(0)">Reveal Next Step</button>
-      <button class="btn-secondary" onclick="resetClassifyStep(0)">Reset</button>
-      <div id="classify-0-chunks" style="margin-top:14px;"></div>
+    <div class="ladder">
+      <div class="ladder-formula">\(2x + 5 = 3x - 1\) <span class="type-tag onestep">One Solution</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">Variable on both sides?</span><span class="a">Subtract \(2x\)</span></div>
+      </div>
+      <div class="ladder-result">\(5 = x - 1\)</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2</div>
+        <div class="qa"><span class="q">Inverse?</span><span class="a">Add 1</span></div>
+      </div>
+      <div class="ladder-result">\(x = 6\)</div>
+      <div class="ladder-check">Variable didn't cancel &rarr; <strong>one solution</strong>.</div>
     </div>
-    <div class="step-box">
-      <h3 style="margin-top:0; color:var(--primary);">Worked Example: No Solution</h3>
-      <button class="btn-lg" onclick="revealClassifyStep(1)">Reveal Next Step</button>
-      <button class="btn-secondary" onclick="resetClassifyStep(1)">Reset</button>
-      <div id="classify-1-chunks" style="margin-top:14px;"></div>
+
+    <div class="ladder">
+      <div class="ladder-formula">\(2(x + 3) = 2x + 7\) <span class="type-tag factor">No Solution</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Simplify</div>
+        <div class="qa"><span class="q">Distribute</span><span class="a">\(2x + 6 = 2x + 7\)</span></div>
+      </div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Collect Variables</div>
+        <div class="qa"><span class="q">Subtract \(2x\)</span><span class="a">\(6 = 7\)</span></div>
+      </div>
+      <div class="ladder-check">False statement &rarr; <strong>no solution</strong>.</div>
     </div>
-    <div class="step-box">
-      <h3 style="margin-top:0; color:var(--primary);">Worked Example: Infinitely Many Solutions</h3>
-      <button class="btn-lg" onclick="revealClassifyStep(2)">Reveal Next Step</button>
-      <button class="btn-secondary" onclick="resetClassifyStep(2)">Reset</button>
-      <div id="classify-2-chunks" style="margin-top:14px;"></div>
+
+    <div class="ladder">
+      <div class="ladder-formula">\(4(x + 1) = 4x + 4\) <span class="type-tag factor">Infinitely Many</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Simplify</div>
+        <div class="qa"><span class="q">Distribute</span><span class="a">\(4x + 4 = 4x + 4\)</span></div>
+      </div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Collect Variables</div>
+        <div class="qa"><span class="q">Subtract \(4x\)</span><span class="a">\(4 = 4\)</span></div>
+      </div>
+      <div class="ladder-check">True statement &rarr; <strong>infinitely many solutions</strong>.</div>
     </div>
   </div>
 
@@ -188,39 +280,36 @@
     <div class="section-title">Worked Applications: Writing Equations From Words</div>
     <div class="notebook-box">
       <div class="notebook-header">The 4-Step Method</div>
-      <ol>
-        <li><strong>Define the Variable:</strong> choose a letter and state exactly what it represents.</li>
-        <li><strong>Write the Equation:</strong> use translation keywords to build your equation.</li>
-        <li><strong>Solve:</strong> use inverse operations to isolate the variable, performing the same operation on both sides.</li>
-        <li><strong>Interpret:</strong> write your final answer as a complete sentence with units.</li>
+      <ol style="margin-bottom:0;">
+        <li><strong>Define:</strong> choose a letter, state what it represents.</li>
+        <li><strong>Write the equation.</strong></li>
+        <li><strong>Solve</strong> with inverse operations.</li>
+        <li><strong>Interpret</strong> as a sentence with units.</li>
       </ol>
     </div>
 
     <div class="explainer-box">
-      <div style="font-weight:800; color:var(--primary); text-transform:uppercase; font-size:0.85rem; letter-spacing:0.03em; margin-bottom:10px;">Resolved Example 1: The Taxi Ride</div>
-      <p style="margin:0 0 10px 0;">A taxi ride costs a flat fee of \$5.00 plus \$2.00 per mile. If the total cost was \$17.00, how many miles was the ride?</p>
-      <p style="margin:0 0 6px 0;"><strong>1. Define Variable:</strong> Let \(m\) = the number of miles.</p>
-      <p style="margin:0 0 6px 0; text-align:center;"><strong>2. Equation:</strong> \[2m + 5 = 17\]</p>
-      <p style="margin:0 0 6px 0; text-align:center;"><strong>3. Solve:</strong> \[2m = 12 \rightarrow m = 6\]</p>
-      <p style="margin:0;"><strong>4. Interpret:</strong> The taxi ride was 6 miles long.</p>
+      <div style="font-weight:800; color:var(--primary); text-transform:uppercase; font-size:0.85rem; letter-spacing:0.03em; margin-bottom:10px;">Example 1: The Taxi Ride</div>
+      <p style="margin:0 0 10px 0;">Flat fee \$5.00 plus \$2.00/mile. Total cost \$17.00 - how many miles?</p>
+      <p style="margin:0 0 6px 0;"><strong>1. Define:</strong> \(m\) = miles.</p>
+      <p style="margin:0 0 6px 0; text-align:center;"><strong>2-3. Equation &amp; Solve:</strong> \[2m + 5 = 17 \rightarrow m = 6\]</p>
+      <p style="margin:0;"><strong>4. Interpret:</strong> The ride was 6 miles.</p>
     </div>
 
     <div class="explainer-box">
-      <div style="font-weight:800; color:var(--primary); text-transform:uppercase; font-size:0.85rem; letter-spacing:0.03em; margin-bottom:10px;">Resolved Example 2: Mixture Investigation</div>
-      <p style="margin:0 0 10px 0;">A chemistry lab needs to prepare 12 liters of a 30% acid solution by combining a 50% acid solution with a 20% acid solution.</p>
-      <p style="margin:0 0 6px 0;"><strong>1. Define Variable:</strong> Let \(x\) = liters of 50% solution, so \((12-x)\) = liters of 20% solution.</p>
-      <p style="margin:0 0 6px 0; text-align:center;"><strong>2. Equation:</strong> \[0.5x + 0.2(12-x) = 0.3(12)\]</p>
-      <p style="margin:0 0 6px 0; text-align:center;"><strong>3. Solve:</strong> \[0.5x + 2.4 - 0.2x = 3.6 \rightarrow 0.3x + 2.4 = 3.6 \rightarrow 0.3x = 1.2 \rightarrow x = 4\]</p>
-      <p style="margin:0;"><strong>4. Interpret:</strong> 4 liters of the 50% solution and 8 liters of the 20% solution are needed.</p>
+      <div style="font-weight:800; color:var(--primary); text-transform:uppercase; font-size:0.85rem; letter-spacing:0.03em; margin-bottom:10px;">Example 2: Mixture</div>
+      <p style="margin:0 0 10px 0;">Prepare 12 L of 30% acid by mixing 50% and 20% solutions.</p>
+      <p style="margin:0 0 6px 0;"><strong>1. Define:</strong> \(x\) = liters of 50%; \((12-x)\) = liters of 20%.</p>
+      <p style="margin:0 0 6px 0; text-align:center;"><strong>2-3. Equation &amp; Solve:</strong> \[0.5x + 0.2(12-x) = 3.6 \rightarrow x = 4\]</p>
+      <p style="margin:0;"><strong>4. Interpret:</strong> 4 L of 50% solution, 8 L of 20% solution.</p>
     </div>
 
     <div class="explainer-box">
-      <div style="font-weight:800; color:var(--primary); text-transform:uppercase; font-size:0.85rem; letter-spacing:0.03em; margin-bottom:10px;">Resolved Example 3: Work &amp; Time</div>
-      <p style="margin:0 0 10px 0;">Print Shop A's printer produces 5 pages per minute. Print Shop B's printer produces 8 pages per minute. Working at the same time, the two printers must produce a combined order of 260 pages.</p>
-      <p style="margin:0 0 6px 0;"><strong>1. Define Variable:</strong> Let \(x\) = minutes both printers run.</p>
-      <p style="margin:0 0 6px 0; text-align:center;"><strong>2. Equation:</strong> \[5x + 8x = 260\]</p>
-      <p style="margin:0 0 6px 0; text-align:center;"><strong>3. Solve:</strong> \[13x = 260 \rightarrow x = 20\]</p>
-      <p style="margin:0;"><strong>4. Interpret:</strong> Working together, the printers finish the order in 20 minutes.</p>
+      <div style="font-weight:800; color:var(--primary); text-transform:uppercase; font-size:0.85rem; letter-spacing:0.03em; margin-bottom:10px;">Example 3: Work &amp; Time</div>
+      <p style="margin:0 0 10px 0;">Printer A: 5 pages/min. Printer B: 8 pages/min. Together, 260 pages - how long?</p>
+      <p style="margin:0 0 6px 0;"><strong>1. Define:</strong> \(x\) = minutes.</p>
+      <p style="margin:0 0 6px 0; text-align:center;"><strong>2-3. Equation &amp; Solve:</strong> \[5x + 8x = 260 \rightarrow x = 20\]</p>
+      <p style="margin:0;"><strong>4. Interpret:</strong> 20 minutes together.</p>
     </div>
   </div>
 </div>
@@ -245,210 +334,6 @@
     points: [{ value: 15, label: 'start: 15', color: '#1e3a8a' }, { value: 6, label: 'x = 6', color: '#15803d' }],
     arrows: [{ from: 15, to: 6, label: '-9', color: '#d97706', row: 0 }]
   });
-
-  // ==========================================
-  // VARIABLE ON ONE SIDE CAROUSEL
-  // ==========================================
-  let currentL12 = 0;
-  let currentL12Step = 1;
-
-  const l12Examples = [
-    {
-      title: "Example 1: \\(3(x + 2) = 21\\)",
-      maxSteps: 3,
-      steps: [
-        "<strong>Step 1 - Distribute:</strong> \\(3x + 6 = 21\\)",
-        "<strong>Step 2 - Subtract 6 from both sides:</strong> \\(3x = 15\\)",
-        "<strong>Step 3 - Divide both sides by 3:</strong> \\(x = \\mathbf{5}\\)"
-      ]
-    },
-    {
-      title: "Example 2: \\(2(x - 3) + 4 = 10\\)",
-      maxSteps: 3,
-      steps: [
-        "<strong>Step 1 - Distribute:</strong> \\(2x - 6 + 4 = 10\\)",
-        "<strong>Step 2 - Combine like terms, then add 2 to both sides:</strong> \\(2x - 2 = 10 \\;\\rightarrow\\; 2x = 12\\)",
-        "<strong>Step 3 - Divide both sides by 2:</strong> \\(x = \\mathbf{6}\\)"
-      ]
-    },
-    {
-      title: "Example 3: \\(5(x - 2) + 3 = 23\\)",
-      maxSteps: 3,
-      steps: [
-        "<strong>Step 1 - Distribute:</strong> \\(5x - 10 + 3 = 23\\)",
-        "<strong>Step 2 - Combine like terms, then add 7 to both sides:</strong> \\(5x - 7 = 23 \\;\\rightarrow\\; 5x = 30\\)",
-        "<strong>Step 3 - Divide both sides by 5:</strong> \\(x = \\mathbf{6}\\)"
-      ]
-    },
-    {
-      title: "Example 4: \\(8x - 4(x - 6) + 8 = 44\\)",
-      maxSteps: 4,
-      steps: [
-        "<strong>Step 1 - Distribute the \\(-4\\):</strong> \\(8x - 4x + 24 + 8 = 44\\) <em>(Distributive Property)</em>",
-        "<strong>Step 2 - Combine like terms:</strong> \\(4x + 32 = 44\\) <em>(Simplify)</em>",
-        "<strong>Step 3 - Subtract 32 from both sides:</strong> \\(4x = 12\\) <em>(Subtraction Property of Equality)</em>",
-        "<strong>Step 4 - Divide both sides by 4:</strong> \\(x = \\mathbf{3}\\) <em>(Division Property of Equality)</em>"
-      ]
-    }
-  ];
-
-  function renderL12() {
-    const ex = l12Examples[currentL12];
-    document.getElementById('l12-title').innerText = `Example ${currentL12 + 1} of ${l12Examples.length}`;
-    document.getElementById('l12-dots').innerHTML = l12Examples.map((_, i) =>
-      `<div class="dot ${i === currentL12 ? 'active' : ''}" onclick="jumpL12(${i})"></div>`
-    ).join('');
-
-    let stepsHtml = '';
-    for (let i = 0; i < currentL12Step; i++) {
-      stepsHtml += `<div class="step-item visible">${ex.steps[i]}</div>`;
-    }
-    document.getElementById('l12-content').innerHTML = `<h3 style="color:var(--primary); margin-top:0;">${ex.title}</h3>${stepsHtml}`;
-
-    document.getElementById('l12-prev-btn').disabled = currentL12 === 0;
-    document.getElementById('l12-next-btn').disabled = currentL12 === l12Examples.length - 1;
-    triggerMathJax();
-  }
-
-  function changeL12(dir) {
-    currentL12 = Math.max(0, Math.min(l12Examples.length - 1, currentL12 + dir));
-    currentL12Step = 1;
-    renderL12();
-  }
-  function jumpL12(idx) { currentL12 = idx; currentL12Step = 1; renderL12(); }
-  function nextL12Step() {
-    if (currentL12Step < l12Examples[currentL12].maxSteps) { currentL12Step++; renderL12(); }
-  }
-  function resetL12Step() { currentL12Step = 1; renderL12(); }
-
-  // ==========================================
-  // VARIABLES ON BOTH SIDES CAROUSEL
-  // ==========================================
-  let currentL13 = 0;
-  let currentL13Step = 1;
-
-  const l13Examples = [
-    {
-      title: "Example 1: \\(5x + 3 = 2x + 12\\)",
-      maxSteps: 3,
-      steps: [
-        "<strong>Step 1 - Subtract \\(2x\\) from both sides</strong> to collect variable terms on the left: \\(3x + 3 = 12\\)",
-        "<strong>Step 2 - Subtract 3 from both sides:</strong> \\(3x = 9\\)",
-        "<strong>Step 3 - Divide both sides by 3:</strong> \\(x = \\mathbf{3}\\)"
-      ]
-    },
-    {
-      title: "Example 2: \\(7x - 4 = 3x + 16\\)",
-      maxSteps: 3,
-      steps: [
-        "<strong>Step 1 - Subtract \\(3x\\) from both sides:</strong> \\(4x - 4 = 16\\)",
-        "<strong>Step 2 - Add 4 to both sides:</strong> \\(4x = 20\\)",
-        "<strong>Step 3 - Divide both sides by 4:</strong> \\(x = \\mathbf{5}\\)"
-      ]
-    },
-    {
-      title: "Example 3: \\(9x - 2 = 4x + 23\\)",
-      maxSteps: 3,
-      steps: [
-        "<strong>Step 1 - Subtract \\(4x\\) from both sides:</strong> \\(5x - 2 = 23\\)",
-        "<strong>Step 2 - Add 2 to both sides:</strong> \\(5x = 25\\)",
-        "<strong>Step 3 - Divide both sides by 5:</strong> \\(x = \\mathbf{5}\\)"
-      ]
-    },
-    {
-      title: "Example 4: \\(4y - 7 + 2y = -3(y-1) - 1\\)",
-      maxSteps: 3,
-      steps: [
-        "<strong>Step 1 - Combine like terms on the left; distribute on the right:</strong> \\(6y - 7 = -3y + 3 - 1 \\;\\rightarrow\\; 6y - 7 = -3y + 2\\)",
-        "<strong>Step 2 - Add \\(3y\\) to both sides, then add 7 to both sides:</strong> \\(9y - 7 = 2 \\;\\rightarrow\\; 9y = 9\\)",
-        "<strong>Step 3 - Divide both sides by 9:</strong> \\(y = \\mathbf{1}\\)"
-      ]
-    }
-  ];
-
-  function renderL13() {
-    const ex = l13Examples[currentL13];
-    document.getElementById('l13-title').innerText = `Example ${currentL13 + 1} of ${l13Examples.length}`;
-    document.getElementById('l13-dots').innerHTML = l13Examples.map((_, i) =>
-      `<div class="dot ${i === currentL13 ? 'active' : ''}" onclick="jumpL13(${i})"></div>`
-    ).join('');
-
-    let stepsHtml = '';
-    for (let i = 0; i < currentL13Step; i++) {
-      stepsHtml += `<div class="step-item visible">${ex.steps[i]}</div>`;
-    }
-    document.getElementById('l13-content').innerHTML = `<h3 style="color:var(--primary); margin-top:0;">${ex.title}</h3>${stepsHtml}`;
-
-    document.getElementById('l13-prev-btn').disabled = currentL13 === 0;
-    document.getElementById('l13-next-btn').disabled = currentL13 === l13Examples.length - 1;
-    triggerMathJax();
-  }
-
-  function changeL13(dir) {
-    currentL13 = Math.max(0, Math.min(l13Examples.length - 1, currentL13 + dir));
-    currentL13Step = 1;
-    renderL13();
-  }
-  function jumpL13(idx) { currentL13 = idx; currentL13Step = 1; renderL13(); }
-  function nextL13Step() {
-    if (currentL13Step < l13Examples[currentL13].maxSteps) { currentL13Step++; renderL13(); }
-  }
-  function resetL13Step() { currentL13Step = 1; renderL13(); }
-
-  // ==========================================
-  // CLASSIFYING SOLUTIONS - STEP-REVEAL WORKED EXAMPLES
-  // ==========================================
-  const classifyExamples = [
-    {
-      chunks: [
-        { label: "Equation", text: "\\(2x + 5 = 3x - 1\\)" },
-        { label: "Step 1", text: "Subtract \\(2x\\) from both sides: \\(5 = x - 1\\)" },
-        { label: "Step 2", text: "Add 1 to both sides: \\(x = 6\\)" },
-        { label: "Conclusion", text: "The variable did not cancel, and we landed on exactly one value. This equation has <strong>one solution</strong>: \\(x = 6\\)." }
-      ]
-    },
-    {
-      chunks: [
-        { label: "Equation", text: "\\(2(x + 3) = 2x + 7\\)" },
-        { label: "Step 1", text: "Distribute the left side: \\(2x + 6 = 2x + 7\\)" },
-        { label: "Step 2", text: "Subtract \\(2x\\) from both sides: \\(6 = 7\\)" },
-        { label: "Conclusion", text: "The variable cancelled completely, leaving a <strong>false</strong> statement (\\(6 \\neq 7\\)). This equation has <strong>no solution</strong>." }
-      ]
-    },
-    {
-      chunks: [
-        { label: "Equation", text: "\\(4(x + 1) = 4x + 4\\)" },
-        { label: "Step 1", text: "Distribute the left side: \\(4x + 4 = 4x + 4\\)" },
-        { label: "Step 2", text: "Subtract \\(4x\\) from both sides: \\(4 = 4\\)" },
-        { label: "Conclusion", text: "The variable cancelled completely, leaving a <strong>true</strong> statement (\\(4 = 4\\)). This equation has <strong>infinitely many solutions</strong>." }
-      ]
-    }
-  ];
-
-  const classifyStepCount = {};
-  function renderClassifyChunks(i) {
-    const ex = classifyExamples[i];
-    const count = classifyStepCount[i] || 0;
-    const html = ex.chunks.slice(0, count).map((c, idx) => {
-      const isLast = idx === ex.chunks.length - 1;
-      return `<div class="step-item visible" style="margin-top:10px; ${isLast ? 'font-weight:800; color:var(--primary);' : ''}"><strong>${c.label}:</strong> ${c.text}</div>`;
-    }).join('');
-    document.getElementById(`classify-${i}-chunks`).innerHTML = html;
-    triggerMathJax();
-  }
-  function revealClassifyStep(i) {
-    const ex = classifyExamples[i];
-    classifyStepCount[i] = Math.min((classifyStepCount[i] || 0) + 1, ex.chunks.length);
-    renderClassifyChunks(i);
-  }
-  function resetClassifyStep(i) {
-    classifyStepCount[i] = 0;
-    renderClassifyChunks(i);
-  }
-
-  // Initial render
-  renderL12();
-  renderL13();
 </script>
 </body>
 </html>
