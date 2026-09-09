@@ -4,6 +4,7 @@ Maps every enVision Mathematics lesson we teach to its matching IXL skill (name 
 direct practice link), pulled from IXL's official skill-alignment guides. Use these
 when building a lesson resource so its activities can cite/link the right IXL skill.
 
+- [5th grade](5th/README.md) — enVision+ Mathematics (2027) - **prerequisite/previous-knowledge reference only**; we don't teach 5th grade, but 6th-grade (and up) lessons cite these codes for prior-knowledge review
 - [6th grade](6th/README.md) — enVision+ Mathematics (2027)
 - [7th grade, Accelerated](7th-Accelerated/README.md) — enVision+ Mathematics (2027), Accelerated Grade 7
 - [Algebra 1](Algebra-1/README.md) — enVision Mathematics (2024)
