@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Operations with Fractions - Review</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <style>
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .glossary-card {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .glossary-term { font-weight: 900; color: var(--primary); font-size: 1.1rem; margin-bottom: 6px; display: block; }
+    .glossary-def { margin: 0 0 8px 0; }
+    .glossary-example { background: #f1f5f9; border-radius: 6px; padding: 6px 10px; font-size: 0.92rem; color: #334155; }
+    .ready-list { list-style: none; margin: 12px 0 0 0; padding: 0; }
+    .ready-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: #ffffff; border: 2px solid var(--border); border-radius: 10px;
+      padding: 12px 16px; margin-bottom: 10px; font-weight: 600;
+    }
+    .ready-list li::before { content: "\2713"; color: var(--success); font-weight: 900; font-size: 1.2rem; }
+    .bar-row { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; align-items: center; margin: 16px 0; }
+    .bar-caption { text-align: center; font-weight: 800; color: var(--primary); margin-top: 4px; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Operations with Fractions &middot; Review</span>
+    <h1>Review: Fractions Before We Add &amp; Subtract</h1>
+    <p class="subtitle">Everything you need to remember before we start adding and subtracting fractions</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Nothing here is graded &ndash; this is a warm-up so old, shaky knowledge doesn't get in the way of new learning. Work through the tabs in order: vocabulary first, then equivalent fractions, then common denominators and mixed numbers, then a short practice check so you can see for yourself what's solid and what needs another look. Come back to any tab as often as you like, even after we've started the real lesson.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('why')">1. Why Review This?</button>
+    <button class="tab-btn" onclick="switchTab('vocab')">2. Vocabulary</button>
+    <button class="tab-btn" onclick="switchTab('equivalent')">3. Equivalent Fractions</button>
+    <button class="tab-btn" onclick="switchTab('lcd')">4. LCD &amp; Mixed Numbers</button>
+    <button class="tab-btn" onclick="switchTab('practice')">5. Are You Ready?</button>
+    <button class="tab-btn" onclick="switchTab('resources')">6. Resources</button>
+  </nav>
+
+  <!-- TAB 1: WHY REVIEW THIS -->
+  <div id="why" class="panel active">
+    <div class="section-title">Why We're Reviewing This First</div>
+    <div class="explainer-box">
+      Adding and subtracting fractions builds directly on skills you already learned: naming a fraction, finding equivalent fractions, and converting between mixed numbers and improper fractions. This review isn't new material &ndash; it's making sure that foundation is solid, because every add/subtract-fractions problem you're about to learn depends on it. If finding a common denominator or converting a mixed number still feels shaky, that's what will trip you up &ndash; not the addition or subtraction itself.
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">The Big Idea</div>
+      <p style="margin:0;">You can only add or subtract fractions when the pieces are the <strong>same size</strong> &ndash; that means the <strong>same denominator</strong>. Fifths can't combine with thirds any more than feet can combine with meters without converting first. Everything in this topic comes back to that one rule: get a common denominator, then add or subtract the numerators.</p>
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">What This Page Covers</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Equivalent Fractions &amp; Simplest Form:</strong> renaming a fraction without changing its value, and reducing it all the way down.</li>
+        <li><strong>Common Denominators:</strong> finding the least common denominator (LCD) for two unlike fractions.</li>
+        <li><strong>Mixed Numbers &amp; Improper Fractions:</strong> converting fluently between the two forms.</li>
+        <li><strong>A short practice check</strong> so you know exactly what to brush up on before we begin.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TAB 2: VOCABULARY -->
+  <div id="vocab" class="panel">
+    <div class="section-title">Vocabulary You Need</div>
+    <div class="explainer-box">
+      These words come up constantly, in this review and in the Operations with Fractions lesson itself. Read through them once, and come back any time a word trips you up.
+    </div>
+    <div class="glossary-grid">
+      <div class="glossary-card">
+        <span class="glossary-term">Numerator</span>
+        <p class="glossary-def">The top number in a fraction &ndash; how many equal parts you have.</p>
+        <div class="glossary-example">In \(\frac{3}{4}\), 3 is the numerator</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Denominator</span>
+        <p class="glossary-def">The bottom number in a fraction &ndash; how many equal parts the whole is split into.</p>
+        <div class="glossary-example">In \(\frac{3}{4}\), 4 is the denominator</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Equivalent Fractions</span>
+        <p class="glossary-def">Fractions that name the same amount, even though the numbers look different.</p>
+        <div class="glossary-example">\(\frac{1}{2} = \frac{2}{4} = \frac{3}{6}\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Simplest Form</span>
+        <p class="glossary-def">A fraction reduced as far as it can go &ndash; the numerator and denominator share no common factor except 1.</p>
+        <div class="glossary-example">\(\frac{6}{8}\) simplifies to \(\frac{3}{4}\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Multiple</span>
+        <p class="glossary-def">The product of a number and any whole number.</p>
+        <div class="glossary-example">Multiples of 4: 4, 8, 12, 16, 20...</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Least Common Multiple (LCM)</span>
+        <p class="glossary-def">The smallest number that is a multiple of two or more numbers.</p>
+        <div class="glossary-example">LCM of 4 and 6 is 12</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Least Common Denominator (LCD)</span>
+        <p class="glossary-def">The LCM of two fractions' denominators &ndash; the smallest denominator they can both convert into.</p>
+        <div class="glossary-example">LCD of \(\frac{1}{4}\) and \(\frac{1}{6}\) is 12</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Like &amp; Unlike Denominators</span>
+        <p class="glossary-def">Like denominators are the same; unlike denominators are different.</p>
+        <div class="glossary-example">\(\frac{2}{5}\) and \(\frac{3}{5}\) are like; \(\frac{2}{5}\) and \(\frac{3}{4}\) are unlike</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Mixed Number</span>
+        <p class="glossary-def">A whole number and a fraction written together.</p>
+        <div class="glossary-example">\(2\frac{1}{3}\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Improper Fraction</span>
+        <p class="glossary-def">A fraction whose numerator is greater than or equal to its denominator.</p>
+        <div class="glossary-example">\(\frac{7}{3}\) is the same amount as \(2\frac{1}{3}\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Benchmark Fraction</span>
+        <p class="glossary-def">A familiar fraction (like \(\frac{1}{2}\), \(\frac{1}{4}\), or \(1\)) used to estimate or compare other fractions.</p>
+        <div class="glossary-example">\(\frac{5}{9}\) is a little more than the benchmark \(\frac{1}{2}\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Sum &amp; Difference</span>
+        <p class="glossary-def">The answer to an addition problem (sum) or a subtraction problem (difference).</p>
+        <div class="glossary-example">\(\frac{1}{4}+\frac{1}{4}=\frac{2}{4}\): \(\frac{2}{4}\) is the sum</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: EQUIVALENT FRACTIONS -->
+  <div id="equivalent" class="panel">
+    <div class="section-title">Equivalent Fractions &amp; Simplest Form</div>
+    <div class="explainer-box">
+      Multiplying (or dividing) <strong>both</strong> the numerator and denominator by the <strong>same number</strong> renames a fraction without changing its value &ndash; you're just cutting the same amount into more (or fewer) pieces.
+    </div>
+
+    <div class="bar-row">
+      <div>
+        <div id="rev-eq-bar-1"></div>
+        <div class="bar-caption">\(\frac{1}{2}\)</div>
+      </div>
+      <div style="font-size:1.8rem; color:var(--primary); font-weight:900;">=</div>
+      <div>
+        <div id="rev-eq-bar-2"></div>
+        <div class="bar-caption">\(\frac{2}{4}\)</div>
+      </div>
+      <div style="font-size:1.8rem; color:var(--primary); font-weight:900;">=</div>
+      <div>
+        <div id="rev-eq-bar-3"></div>
+        <div class="bar-caption">\(\frac{4}{8}\)</div>
+      </div>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Building an Equivalent Fraction</div>
+      <p style="margin:0;">\[\frac{1}{2} = \frac{1 \times 4}{2 \times 4} = \frac{4}{8}\]</p>
+      <p style="margin:8px 0 0 0;">Same rule works backward to <strong>simplify</strong> a fraction: divide both numbers by a common factor.</p>
+      <p style="margin:8px 0 0 0;">\[\frac{6}{8} = \frac{6 \div 2}{8 \div 2} = \frac{3}{4}\]</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Simplest Form: How to Know You're Done</div>
+      <p style="margin:0;">A fraction is in simplest form when the <strong>only</strong> number that divides evenly into both the numerator and denominator is 1. If you can still find a common factor, keep dividing.</p>
+      <p style="margin:8px 0 0 0;"><em>Example:</em> \(\frac{12}{18}\) &rarr; both divide by 6 &rarr; \(\frac{2}{3}\). Nothing but 1 divides evenly into both 2 and 3, so \(\frac{2}{3}\) is simplest form.</p>
+    </div>
+  </div>
+
+  <!-- TAB 4: LCD & MIXED NUMBERS -->
+  <div id="lcd" class="panel">
+    <div class="section-title">Finding a Common Denominator &amp; Mixed Number Conversions</div>
+    <div class="explainer-box">
+      These are the two skills that make unlike-denominator and mixed-number problems possible. Both come back to multiples.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Finding the Least Common Denominator (LCD)</div>
+      <ol style="margin:0;">
+        <li>List multiples of each denominator until you find one they share.</li>
+        <li>The smallest shared multiple is the LCD.</li>
+        <li>Convert each fraction to an equivalent fraction with that denominator.</li>
+      </ol>
+      <p style="margin:10px 0 0 0;"><em>Example:</em> LCD of \(\frac{1}{4}\) and \(\frac{1}{6}\)?<br>
+      Multiples of 4: 4, 8, <strong>12</strong>, 16...&emsp;Multiples of 6: 6, <strong>12</strong>, 18...<br>
+      LCD = 12. So \(\frac{1}{4} = \frac{3}{12}\) and \(\frac{1}{6} = \frac{2}{12}\).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Mixed Number &rarr; Improper Fraction</div>
+      <p style="margin:0;"><strong>Multiply</strong> the whole number by the denominator, <strong>add</strong> the numerator, and keep the same denominator.</p>
+      <p style="margin:8px 0 0 0;">\[2\frac{1}{3} \;\rightarrow\; \frac{(2 \times 3) + 1}{3} = \frac{7}{3}\]</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Improper Fraction &rarr; Mixed Number</div>
+      <p style="margin:0;"><strong>Divide</strong> the numerator by the denominator. The quotient is the whole number; the remainder becomes the new numerator over the same denominator.</p>
+      <p style="margin:8px 0 0 0;">\[\frac{11}{4} \;\rightarrow\; 11 \div 4 = 2 \text{ remainder } 3 \;\rightarrow\; 2\frac{3}{4}\]</p>
+    </div>
+  </div>
+
+  <!-- TAB 5: ARE YOU READY? -->
+  <div id="practice" class="panel">
+    <div class="section-title">Practice: Are You Ready?</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Type your own answer first, then click Check. You get up to <strong>2 tries</strong> per problem before the correct answer is shown &ndash; this is here so you can find out for yourself what's solid, not to catch you out.
+    </div>
+
+    <h3 style="color:var(--primary);">Equivalent Fractions &amp; Simplest Form</h3>
+    <div id="eq-practice-list"></div>
+
+    <h3 style="color:var(--primary); margin-top:24px;">Least Common Denominator</h3>
+    <div id="lcd-practice-list"></div>
+
+    <h3 style="color:var(--primary); margin-top:24px;">Mixed Numbers &amp; Improper Fractions</h3>
+    <div id="mixed-practice-list"></div>
+  </div>
+
+  <!-- TAB 6: RESOURCES -->
+  <div id="resources" class="panel">
+    <div class="section-title">Resources &amp; Next Steps</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">You're Ready for Operations with Fractions When You Can...</div>
+      <ul class="ready-list">
+        <li>Build an equivalent fraction by multiplying (or dividing) the numerator and denominator by the same number.</li>
+        <li>Reduce a fraction to simplest form.</li>
+        <li>Find the least common denominator (LCD) of two fractions.</li>
+        <li>Convert a mixed number to an improper fraction, and back again.</li>
+        <li>Tell like denominators from unlike denominators at a glance.</li>
+      </ul>
+    </div>
+
+    <div class="ixl-box">
+      <h3 style="margin-top:0; color:#15803d;">Extra Practice, Any Time</h3>
+      <ul>
+        <li><a href="https://www.ixl.com/math/grade-5/equivalent-fractions" target="_blank" rel="noopener">Equivalent fractions</a> <span class="ixl-code">MKA</span></li>
+        <li><a href="https://www.ixl.com/math/grade-5/least-common-denominator" target="_blank" rel="noopener">Least common denominator</a> <span class="ixl-code">R7P</span></li>
+        <li><a href="https://www.ixl.com/math/grade-5/estimate-sums-and-differences-of-fractions-using-benchmarks" target="_blank" rel="noopener">Estimate sums and differences of fractions using benchmarks</a> <span class="ixl-code">9JR</span></li>
+        <li><a href="https://www.ixl.com/math/grade-5/estimate-sums-and-differences-of-mixed-numbers" target="_blank" rel="noopener">Estimate sums and differences of mixed numbers</a> <span class="ixl-code">HUJ</span></li>
+      </ul>
+    </div>
+
+    <div class="explainer-box" style="margin-top:24px;">
+      <strong>Next step:</strong> once you feel solid here, move on to the Operations with Fractions <strong>Explanation</strong> page from the Index &ndash; you'll use every one of these skills to combine like denominators, unlike denominators, mixed numbers, and whole numbers with fractions.
+    </div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // FRACTION BAR MODEL (simple inline SVG, no library)
+  // ==========================================
+  function fracBarSVG(num, den, color) {
+    color = color || '#2563eb';
+    const w = 260, h = 46;
+    const segW = w / den;
+    let rects = '';
+    for (let i = 0; i < den; i++) {
+      const filled = i < num;
+      rects += `<rect x="${(i * segW).toFixed(2)}" y="0" width="${segW.toFixed(2)}" height="${h}" fill="${filled ? color : '#ffffff'}" stroke="#1e293b" stroke-width="2"/>`;
+    }
+    return `<svg viewBox="0 0 ${w} ${h}" style="width:100%; max-width:260px; display:block; margin:0 auto;" role="img" aria-label="Fraction bar showing ${num} of ${den} parts shaded">${rects}</svg>`;
+  }
+  document.getElementById('rev-eq-bar-1').innerHTML = fracBarSVG(1, 2);
+  document.getElementById('rev-eq-bar-2').innerHTML = fracBarSVG(2, 4);
+  document.getElementById('rev-eq-bar-3').innerHTML = fracBarSVG(4, 8);
+
+  // ==========================================
+  // GENERIC CHECK-STYLE PRACTICE LIST (2 tries, then reveal)
+  // ==========================================
+  const checkListRegistry = {};
+
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:170px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    triggerMathJax();
+  }
+
+  function normFrac(s) {
+    return String(s || '').toLowerCase().replace(/\s+/g, '');
+  }
+
+  function checkListItem(keyPrefix, idx) {
+    const cfg = checkListRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = (p.accepted || [String(p.a)]).map(normFrac).includes(normFrac(val));
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! ${p.displayAnswer || ('The answer is ' + p.a + '.')}`,
+      retry: cfg.retry,
+      reveal: `Here's the correct answer: ${p.displayAnswer || p.a}`
+    });
+  }
+
+  // ==========================================
+  // TAB 5 DATA
+  // ==========================================
+  const eqPractice = [
+    { q: "Write an equivalent fraction for \\(\\frac{2}{3}\\) with a denominator of 9.", accepted: ["6/9"], displayAnswer: "\\(\\frac{6}{9}\\)" },
+    { q: "Simplify \\(\\frac{8}{12}\\) to simplest form.", accepted: ["2/3"], displayAnswer: "\\(\\frac{2}{3}\\)" },
+    { q: "Write an equivalent fraction for \\(\\frac{3}{5}\\) with a denominator of 20.", accepted: ["12/20"], displayAnswer: "\\(\\frac{12}{20}\\)" },
+    { q: "Simplify \\(\\frac{10}{15}\\) to simplest form.", accepted: ["2/3"], displayAnswer: "\\(\\frac{2}{3}\\)" }
+  ];
+  renderCheckList('eq-practice-list', eqPractice, 'eq', "Not quite yet. Multiply or divide the numerator AND denominator by the same number, then try again.");
+
+  const lcdPractice = [
+    { q: "What is the LCD of \\(\\frac{1}{3}\\) and \\(\\frac{1}{5}\\)?", accepted: ["15"], displayAnswer: "15" },
+    { q: "What is the LCD of \\(\\frac{1}{4}\\) and \\(\\frac{1}{6}\\)?", accepted: ["12"], displayAnswer: "12" },
+    { q: "What is the LCD of \\(\\frac{1}{2}\\) and \\(\\frac{1}{8}\\)?", accepted: ["8"], displayAnswer: "8" },
+    { q: "What is the LCD of \\(\\frac{1}{6}\\) and \\(\\frac{1}{9}\\)?", accepted: ["18"], displayAnswer: "18" }
+  ];
+  renderCheckList('lcd-practice-list', lcdPractice, 'lcd', "Not quite yet. List multiples of each denominator until you find the smallest one they share.");
+
+  const mixedPractice = [
+    { q: "Convert \\(3\\frac{2}{5}\\) to an improper fraction.", accepted: ["17/5"], displayAnswer: "\\(\\frac{17}{5}\\)" },
+    { q: "Convert \\(\\frac{13}{4}\\) to a mixed number.", accepted: ["3 1/4", "31/4", "3,1/4"], displayAnswer: "\\(3\\frac{1}{4}\\)" },
+    { q: "Convert \\(2\\frac{3}{7}\\) to an improper fraction.", accepted: ["17/7"], displayAnswer: "\\(\\frac{17}{7}\\)" },
+    { q: "Convert \\(\\frac{22}{6}\\) to a mixed number (simplest form).", accepted: ["3 2/3", "32/3", "3,2/3"], displayAnswer: "\\(3\\frac{2}{3}\\)" }
+  ];
+  renderCheckList('mixed-practice-list', mixedPractice, 'mixed', "Not quite yet. Remember: multiply the whole number by the denominator and add the numerator - or divide numerator by denominator to go the other way.");
+</script>
+</body>
+</html>

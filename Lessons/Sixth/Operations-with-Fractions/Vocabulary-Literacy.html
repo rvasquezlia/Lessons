@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Operations with Fractions - Vocabulary &amp; Literacy</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <style>
+    .term-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 18px 0;
+    }
+    .term-card {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .term-card .term-name { font-weight: 900; color: var(--primary); font-size: 1.1rem; margin-bottom: 6px; display: block; }
+    .term-card .term-def { margin: 0; }
+    .term-card .term-example { margin-top: 8px; font-size: 0.9rem; color: #78350f; background: #fffbeb; border-radius: 6px; padding: 6px 10px; }
+    .keyword-col-heading { font-weight: 800; color: white; padding: 8px 14px; border-radius: 8px; margin-bottom: 10px; display: inline-block; }
+    .kw-add { background: var(--success); }
+    .kw-sub { background: var(--error); }
+    .keyword-list { list-style:none; padding-left:0; margin:0 0 20px 0; }
+    .keyword-list li { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 8px; padding: 8px 14px; margin-bottom: 8px; font-weight: 600; }
+    .bar-row { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; align-items: center; margin: 16px 0; }
+    .bar-caption { text-align: center; font-weight: 800; color: var(--primary); margin-top: 4px; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Operations with Fractions &middot; Vocabulary &amp; Literacy</span>
+    <h1>Operations with Fractions: Vocabulary &amp; Literacy</h1>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    <ul style="margin:6px 0 0 0;">
+      <li>Every keyword and term you need for Operations with Fractions lives here, before the algorithms themselves.</li>
+      <li>Go tab by tab: Word Bank (copy into your notebook), fraction bar models, keyword clues, then the short check.</li>
+      <li>Nothing here prints a progress report - keep this page as your reference for whatever comes next.</li>
+    </ul>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('wordbank')">1. Word Bank</button>
+    <button class="tab-btn" onclick="switchTab('models')">2. Fraction Bar Models</button>
+    <button class="tab-btn" onclick="switchTab('keywords')">3. Keyword Clues</button>
+    <button class="tab-btn" onclick="switchTab('checkunderstanding')">4. Check Your Understanding</button>
+  </nav>
+
+  <!-- PANEL 1: WORD BANK -->
+  <div id="wordbank" class="panel active">
+    <div class="section-title">Word Bank: Operations with Fractions</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      <ul style="margin:6px 0 0 0;">
+        <li>Read every card below and copy the Word Bank into your math notebook.</li>
+        <li>You'll see these words again in Explanation, Practice Set, Word Problems, and Test Prep - knowing them now makes everything else easier.</li>
+      </ul>
+    </div>
+
+    <div class="explainer-box">
+      Adding and subtracting fractions is all about matching <strong>piece sizes</strong> - the denominator. Every term below connects back to that one idea.
+    </div>
+
+    <div class="term-grid">
+      <div class="term-card">
+        <span class="term-name">Numerator</span>
+        <p class="term-def">The top number in a fraction - how many equal parts you have.</p>
+        <div class="term-example">In \(\frac{5}{8}\), 5 is the numerator.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Denominator</span>
+        <p class="term-def">The bottom number in a fraction - how many equal parts the whole is split into.</p>
+        <div class="term-example">In \(\frac{5}{8}\), 8 is the denominator.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Like Denominators</span>
+        <p class="term-def">Fractions whose denominators are the same - ready to add or subtract right away.</p>
+        <div class="term-example">\(\frac{2}{7}\) and \(\frac{4}{7}\) have like denominators.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Unlike Denominators</span>
+        <p class="term-def">Fractions whose denominators are different - they need a common denominator before adding or subtracting.</p>
+        <div class="term-example">\(\frac{1}{3}\) and \(\frac{1}{4}\) have unlike denominators.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Common Denominator</span>
+        <p class="term-def">Any denominator that two or more fractions can both convert into.</p>
+        <div class="term-example">12 is a common denominator for \(\frac{1}{4}\) and \(\frac{1}{6}\).</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Least Common Denominator (LCD)</span>
+        <p class="term-def">The smallest possible common denominator - the least common multiple of the denominators.</p>
+        <div class="term-example">The LCD of \(\frac{1}{4}\) and \(\frac{1}{6}\) is 12.</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Equivalent Fractions</span>
+        <p class="term-def">Fractions that name the same amount, found by multiplying or dividing the numerator and denominator by the same number.</p>
+        <div class="term-example">\(\frac{1}{4} = \frac{3}{12}\)</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Simplify (Reduce)</span>
+        <p class="term-def">To rewrite a fraction in a smaller, equivalent form - all the way to simplest form when finishing a problem.</p>
+        <div class="term-example">\(\frac{6}{8}\) simplifies to \(\frac{3}{4}\).</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Mixed Number</span>
+        <p class="term-def">A whole number and a fraction written together.</p>
+        <div class="term-example">\(3\frac{2}{5}\)</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Improper Fraction</span>
+        <p class="term-def">A fraction whose numerator is greater than or equal to its denominator.</p>
+        <div class="term-example">\(\frac{17}{5}\) is the same amount as \(3\frac{2}{5}\).</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Regroup (Fraction Subtraction)</span>
+        <p class="term-def">When the fraction you're subtracting is bigger than the fraction you have, "borrow" 1 whole from the whole-number part and rewrite it as an extra fraction.</p>
+        <div class="term-example">\(5\frac{1}{4}\) regroups to \(4\frac{5}{4}\) before subtracting \(\frac{3}{4}\).</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Benchmark Fraction</span>
+        <p class="term-def">A familiar fraction like \(\frac{1}{2}\), \(\frac{1}{4}\), or \(1\), used to estimate a sum or difference before calculating exactly.</p>
+        <div class="term-example">\(\frac{5}{9} + \frac{4}{7}\) is close to \(\frac{1}{2} + \frac{1}{2} = 1\).</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Sum</span>
+        <p class="term-def">The answer to an addition problem.</p>
+        <div class="term-example">The sum of \(\frac{1}{4}\) and \(\frac{1}{4}\) is \(\frac{1}{2}\).</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Difference</span>
+        <p class="term-def">The answer to a subtraction problem.</p>
+        <div class="term-example">The difference between \(\frac{3}{4}\) and \(\frac{1}{4}\) is \(\frac{1}{2}\).</div>
+      </div>
+      <div class="term-card">
+        <span class="term-name">Reasonableness</span>
+        <p class="term-def">Whether an exact answer makes sense compared to an estimate using benchmark fractions.</p>
+        <div class="term-example">If your exact answer isn't close to your benchmark estimate, recheck your common denominator.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: FRACTION BAR MODELS -->
+  <div id="models" class="panel">
+    <div class="section-title">Fraction Bar Models in Action</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      <ul style="margin:6px 0 0 0;">
+        <li>Read each pair of bars below - they show why unlike denominators can't combine until they're renamed.</li>
+        <li>Nothing to submit here - this is background for the rest of the topic.</li>
+      </ul>
+    </div>
+
+    <div class="explainer-box">
+      A fraction bar model shows a whole cut into equal pieces, with some shaded to show the fraction. Same-size pieces (like denominators) can be counted together right away. Different-size pieces (unlike denominators) can't - which is exactly why we rename them first.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Like Denominators: Ready to Combine</div>
+      <div class="bar-row">
+        <div><div id="vb-like-1"></div><div class="bar-caption">\(\frac{2}{6}\)</div></div>
+        <div style="font-size:1.8rem; color:var(--primary); font-weight:900;">+</div>
+        <div><div id="vb-like-2"></div><div class="bar-caption">\(\frac{3}{6}\)</div></div>
+        <div style="font-size:1.8rem; color:var(--primary); font-weight:900;">=</div>
+        <div><div id="vb-like-3"></div><div class="bar-caption">\(\frac{5}{6}\)</div></div>
+      </div>
+      <p style="margin:0;">Same-size sixths - just count the shaded pieces: \(2 + 3 = 5\) sixths.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Unlike Denominators: Different-Size Pieces Can't Combine Yet</div>
+      <div class="bar-row">
+        <div><div id="vb-unlike-1"></div><div class="bar-caption">\(\frac{1}{2}\)</div></div>
+        <div style="font-size:1.8rem; color:var(--primary); font-weight:900;">+</div>
+        <div><div id="vb-unlike-2"></div><div class="bar-caption">\(\frac{1}{3}\)</div></div>
+      </div>
+      <p style="margin:0 0 10px 0;">Halves and thirds are different-size pieces - you can't just add the numerators. Rename both with the LCD of 6 first:</p>
+      <div class="bar-row">
+        <div><div id="vb-renamed-1"></div><div class="bar-caption">\(\frac{3}{6}\)</div></div>
+        <div style="font-size:1.8rem; color:var(--primary); font-weight:900;">+</div>
+        <div><div id="vb-renamed-2"></div><div class="bar-caption">\(\frac{2}{6}\)</div></div>
+        <div style="font-size:1.8rem; color:var(--primary); font-weight:900;">=</div>
+        <div><div id="vb-renamed-3"></div><div class="bar-caption">\(\frac{5}{6}\)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: KEYWORD CLUES -->
+  <div id="keywords" class="panel">
+    <div class="section-title">Keyword Clues for Word Problems</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      <ul style="margin:6px 0 0 0;">
+        <li>Copy the two keyword lists into your notebook - you'll use them for every word problem in this topic.</li>
+        <li>Sort the practice keywords, then translate the practice phrases below, checking your work as you go.</li>
+      </ul>
+    </div>
+
+    <div class="explainer-box">
+      Every word problem follows the same routine: <strong>estimate first</strong> with a benchmark fraction, then <strong>calculate the exact answer</strong> and compare. But first you need to know which operation the words are asking for - that's what these keywords are for.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
+      <div class="keyword-col-heading kw-add">Addition (+)</div>
+      <ul class="keyword-list">
+        <li>total, sum, combined, altogether, in all, increased by</li>
+      </ul>
+      <div class="keyword-col-heading kw-sub">Subtraction (&minus;)</div>
+      <ul class="keyword-list">
+        <li>difference, how much more, how much left, remaining, decreased by, less than (turns the order around!)</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The "Less Than" Turn-Around</div>
+      <ul style="margin:0;">
+        <li>"\(\frac{1}{4}\) less than \(\frac{3}{4}\)" means \(\frac{3}{4} - \frac{1}{4}\), not \(\frac{1}{4} - \frac{3}{4}\).</li>
+        <li>"Than" reverses the order - always write the second amount first when you see "less than."</li>
+      </ul>
+    </div>
+
+    <h3>Sort the Keywords</h3>
+    <div id="wordsort-list"></div>
+    <div style="text-align:center; margin-top:14px;">
+      <button class="btn-lg" onclick="checkWordSort()">Check My Sorting</button>
+    </div>
+    <div id="wordsort-feedback" class="feedback-msg" style="margin-top:14px;"></div>
+
+    <h3 style="margin-top:28px;">Translate Phrases Into Expressions</h3>
+    <p>Rewrite each word problem phrase as a numerical expression. You do not need to solve it yet - just translate the words.</p>
+    <div id="translate-list"></div>
+  </div>
+
+  <!-- PANEL 4: CHECK YOUR UNDERSTANDING -->
+  <div id="checkunderstanding" class="panel">
+    <div class="section-title">Check Your Understanding</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      <ul style="margin:6px 0 0 0;">
+        <li>Choose the correct definition for each term - <strong>2 tries</strong> per question.</li>
+        <li>After a second miss, the correct definition is shown and it locks.</li>
+        <li>Quick check only - it doesn't print a progress report.</li>
+      </ul>
+    </div>
+
+    <div id="vocab-quiz-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // FRACTION BAR MODEL (simple inline SVG, no library)
+  // ==========================================
+  function fracBarSVG(num, den, color) {
+    color = color || '#2563eb';
+    const w = 220, h = 42;
+    const segW = w / den;
+    let rects = '';
+    for (let i = 0; i < den; i++) {
+      const filled = i < num;
+      rects += `<rect x="${(i * segW).toFixed(2)}" y="0" width="${segW.toFixed(2)}" height="${h}" fill="${filled ? color : '#ffffff'}" stroke="#1e293b" stroke-width="2"/>`;
+    }
+    return `<svg viewBox="0 0 ${w} ${h}" style="width:100%; max-width:220px; display:block; margin:0 auto;" role="img" aria-label="Fraction bar showing ${num} of ${den} parts shaded">${rects}</svg>`;
+  }
+  document.getElementById('vb-like-1').innerHTML = fracBarSVG(2, 6);
+  document.getElementById('vb-like-2').innerHTML = fracBarSVG(3, 6, '#0891b2');
+  document.getElementById('vb-like-3').innerHTML = fracBarSVG(5, 6, '#15803d');
+  document.getElementById('vb-unlike-1').innerHTML = fracBarSVG(1, 2);
+  document.getElementById('vb-unlike-2').innerHTML = fracBarSVG(1, 3, '#0891b2');
+  document.getElementById('vb-renamed-1').innerHTML = fracBarSVG(3, 6);
+  document.getElementById('vb-renamed-2').innerHTML = fracBarSVG(2, 6, '#0891b2');
+  document.getElementById('vb-renamed-3').innerHTML = fracBarSVG(5, 6, '#15803d');
+
+  // ==========================================
+  // KEYWORD SORT
+  // ==========================================
+  const wordSortItems = [
+    { word: "sum", op: "add" }, { word: "total", op: "add" }, { word: "increased by", op: "add" }, { word: "altogether", op: "add" },
+    { word: "difference", op: "sub" }, { word: "less than", op: "sub" }, { word: "decreased by", op: "sub" }, { word: "how much left", op: "sub" }
+  ];
+
+  function renderWordSort() {
+    const html = wordSortItems.map((item, i) => `
+      <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap;">
+        <strong style="min-width:220px;">${i + 1}. "${item.word}"</strong>
+        <select id="wordsort-${i}" class="form-control-lg" style="max-width:220px;">
+          <option value="">Select an operation...</option>
+          <option value="add">Addition (+)</option>
+          <option value="sub">Subtraction (-)</option>
+        </select>
+      </div>
+    `).join('');
+    document.getElementById('wordsort-list').innerHTML = html;
+  }
+  renderWordSort();
+
+  function checkWordSort() {
+    const fb = document.getElementById('wordsort-feedback');
+    let allFilled = true;
+    let allCorrect = true;
+    wordSortItems.forEach((item, i) => {
+      const val = document.getElementById(`wordsort-${i}`).value;
+      if (!val) allFilled = false;
+      else if (val !== item.op) allCorrect = false;
+    });
+    if (!allFilled) {
+      LessonCheck.incomplete(fb, "Choose an operation for every keyword before checking.");
+      return;
+    }
+    LessonCheck.show(fb, allCorrect ? 'correct' : 'retry', {
+      correct: 'Correct! Every keyword is sorted into the right operation.',
+      retry: "Some keywords aren't sorted correctly yet. Review: sum/total/increased by/altogether = addition; difference/less than/decreased by/how much left = subtraction."
+    });
+  }
+
+  // ==========================================
+  // TRANSLATE PHRASES
+  // ==========================================
+  const translateItems = [
+    { phrase: "The sum of \\(\\frac{1}{4}\\) and \\(\\frac{5}{8}\\)", accepted: ["1/4+5/8", "5/8+1/4"], answer: "\\(\\frac{1}{4} + \\frac{5}{8}\\)" },
+    { phrase: "The difference between \\(\\frac{7}{8}\\) and \\(\\frac{1}{3}\\)", accepted: ["7/8-1/3"], answer: "\\(\\frac{7}{8} - \\frac{1}{3}\\)" },
+    { phrase: "\\(2\\frac{1}{2}\\) increased by \\(1\\frac{3}{4}\\)", accepted: ["21/2+13/4", "2 1/2+1 3/4"], answer: "\\(2\\frac{1}{2} + 1\\frac{3}{4}\\)" },
+    { phrase: "\\(\\frac{1}{3}\\) less than \\(\\frac{5}{6}\\)", accepted: ["5/6-1/3"], answer: "\\(\\frac{5}{6} - \\frac{1}{3}\\)" }
+  ];
+
+  function normalizeExpr(s) {
+    return String(s || '').toLowerCase().replace(/\s+/g, '');
+  }
+
+  function renderTranslateList() {
+    const html = translateItems.map((item, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${item.phrase}
+        <input type="text" id="translate-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="e.g. 1/4+5/8">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkTranslate(${i})">Check</button>
+        <div id="translate-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('translate-list').innerHTML = html;
+  }
+  renderTranslateList();
+
+  function checkTranslate(idx) {
+    const item = translateItems[idx];
+    const val = document.getElementById(`translate-${idx}-input`).value;
+    const fb = document.getElementById(`translate-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an expression before checking.");
+      return;
+    }
+    const correct = item.accepted.includes(normalizeExpr(val));
+    LessonCheck.show(fb, correct ? 'correct' : 'reveal', {
+      correct: `Correct! ${item.answer}`,
+      reveal: `The expression is ${item.answer}`
+    });
+  }
+
+  // ==========================================
+  // VOCABULARY QUIZ (Check Your Understanding)
+  // ==========================================
+  const vocabQuiz = [
+    { term: "Like Denominators", choices: ["Fractions whose denominators are the same", "Fractions whose numerators are the same", "Fractions that simplify to whole numbers"], correct: 0 },
+    { term: "Least Common Denominator (LCD)", choices: ["Any denominator two fractions share", "The smallest common denominator two fractions can both convert into", "The largest denominator in a problem"], correct: 1 },
+    { term: "Improper Fraction", choices: ["A fraction that is not in simplest form", "A fraction whose numerator is greater than or equal to its denominator", "A fraction with a denominator of 1"], correct: 1 },
+    { term: "Regroup (Fraction Subtraction)", choices: ["Simplifying a fraction after subtracting", "Borrowing 1 whole and rewriting it as an extra fraction when the fraction being subtracted is bigger", "Finding a common denominator before subtracting"], correct: 1 },
+    { term: "Benchmark Fraction", choices: ["A fraction used to estimate before calculating exactly", "The final simplified answer to a problem", "A fraction with the same numerator and denominator"], correct: 0 },
+    { term: "Mixed Number", choices: ["A fraction with two different denominators", "A whole number and a fraction written together", "A fraction that has been simplified"], correct: 1 }
+  ];
+
+  function renderVocabQuiz() {
+    const html = vocabQuiz.map((item, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}. What is the correct definition of "${item.term}"?</strong>
+        <div style="margin-top:10px;">
+          <select id="vocab-${i}" class="form-control-lg">
+            <option value="">Select a definition...</option>
+            ${item.choices.map((c, ci) => `<option value="${ci}">${c}</option>`).join('')}
+          </select>
+        </div>
+        <div style="margin-top:10px;">
+          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVocabQuiz(${i})">Check</button>
+        </div>
+        <div id="vocab-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('vocab-quiz-list').innerHTML = html;
+  }
+  renderVocabQuiz();
+
+  function checkVocabQuiz(idx) {
+    const item = vocabQuiz[idx];
+    const val = document.getElementById(`vocab-${idx}`).value;
+    const fb = document.getElementById(`vocab-${idx}-feedback`);
+    if (val === '') {
+      LessonCheck.incomplete(fb, "Choose a definition before checking.");
+      return;
+    }
+    const correct = Number(val) === item.correct;
+    LessonCheck.check(`vocab-${idx}`, correct, fb, {
+      correct: `Correct! "${item.term}" means: ${item.choices[item.correct]}`,
+      retry: "Not quite yet. Re-read the Word Bank tab and try again.",
+      reveal: `"${item.term}" means: ${item.choices[item.correct]}`
+    });
+  }
+</script>
+</body>
+</html>

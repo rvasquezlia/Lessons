@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Operations with Fractions - Word Problems</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <style>
+    .set-heading {
+      font-weight: 800;
+      color: white;
+      background: var(--primary-light);
+      padding: 8px 16px;
+      border-radius: 8px;
+      margin: 24px 0 10px 0;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Operations with Fractions &middot; Word Problems</span>
+    <h1>Operations with Fractions: Word Problems</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Math 6 - Operations with Fractions - Word Problems')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    <ul style="margin:6px 0 0 0;">
+      <li>Every problem is a <strong>word problem</strong> - decide whether it's asking you to add or subtract, watching for keywords like "total," "combined," "difference," or "how much is left."</li>
+      <li>Work the tabs in any order: estimate with a benchmark fraction first, then calculate the exact answer, then type it in and check.</li>
+      <li>Type answers as a fraction like <code>3/4</code> or a mixed number like <code>2 1/3</code>, always in <strong>simplest form</strong>.</li>
+      <li>When you finish, type your name above and click <strong>Print My Progress</strong>.</li>
+    </ul>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('guided')">1. Guided Practice</button>
+    <button class="tab-btn" onclick="switchTab('mixed')">2. Mixed Word Problems</button>
+    <button class="tab-btn" onclick="switchTab('realworld')">3. Real-World Applications</button>
+    <button class="tab-btn" onclick="switchTab('careers')">4. Career Connections</button>
+    <button class="tab-btn" onclick="switchTab('challenge')">5. Challenge Tier</button>
+  </nav>
+
+  <!-- PANEL 1: GUIDED PRACTICE -->
+  <div id="guided" class="panel active">
+    <div class="section-title">Guided Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      <ul style="margin:6px 0 0 0;">
+        <li>Start here. Copy each problem into your notebook and solve it there first.</li>
+        <li>Type just your final answer and check it - <strong>2 tries</strong> per problem.</li>
+      </ul>
+    </div>
+    <div id="guided-list"></div>
+  </div>
+
+  <!-- PANEL 2: MIXED WORD PROBLEMS -->
+  <div id="mixed" class="panel">
+    <div class="section-title">Mixed Word Problems</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      These 12 problems mix like denominators, unlike denominators, mixed numbers, and whole numbers plus fractions. Read each one carefully, decide what it's asking for, then solve and check.
+    </div>
+    <div id="mixed-list"></div>
+  </div>
+
+  <!-- PANEL 3: REAL-WORLD APPLICATIONS -->
+  <div id="realworld" class="panel">
+    <div class="section-title">Real-World Applications</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Two sets of real-world scenarios - cooking, surveys, travel, and construction. Same routine: estimate, then solve exactly.
+    </div>
+    <div class="set-heading">Set A</div>
+    <div id="realworld-a-list"></div>
+    <div class="set-heading">Set B</div>
+    <div id="realworld-b-list"></div>
+  </div>
+
+  <!-- PANEL 4: CAREER CONNECTIONS -->
+  <div id="careers" class="panel">
+    <div class="section-title">Career Connections: Fractions on the Job</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      <ul style="margin:6px 0 0 0;">
+        <li>Cooking, construction, and fashion design all depend on adding and subtracting fractional measurements correctly.</li>
+        <li>Every station below solves <strong>the same kind of fraction problems</strong> - just set in a different job.</li>
+        <li>Work through however many stations you'd like.</li>
+      </ul>
+    </div>
+    <div class="explainer-box">
+      A wrong fraction can mean a recipe that fails, a board cut too short, or a dress pattern that doesn't fit. Precision matters everywhere, not just in math class.
+    </div>
+    <div id="career-stations"></div>
+  </div>
+
+  <!-- PANEL 5: CHALLENGE TIER -->
+  <div id="challenge" class="panel">
+    <div class="section-title">Challenge Tier: Multi-Step Word Problems</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      These take more than one addition or subtraction step to solve - work them out fully on paper before typing your final answer.
+    </div>
+    <div id="challenge-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // Strips ALL whitespace so "2 1/3" and "2  1/3" both collapse to the same
+  // comparable string - accepted answers are stored pre-stripped the same way.
+  function normFracStrict(s) {
+    return String(s || '').toLowerCase().replace(/\s+/g, '');
+  }
+
+  // ==========================================
+  // GENERIC CHECK-STYLE WORD PROBLEM LIST (2 tries, then reveal)
+  // ==========================================
+  const checkListRegistry = {};
+
+  function renderCheckList(containerId, problems, keyPrefix, section) {
+    checkListRegistry[keyPrefix] = { problems, section };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px;">
+          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Your answer">
+          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
+        </div>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, p.label || `Problem ${i + 1}`, section));
+    TeacherPrint.registerAnswerList(containerId, problems.map((p, i) => ({ inputId: `${keyPrefix}-${i}-input`, answerText: p.displayAnswer })));
+    triggerMathJax();
+  }
+
+  function checkListItem(keyPrefix, idx) {
+    const cfg = checkListRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = p.accepted.map(normFracStrict).includes(normFracStrict(val));
+    const label = p.label || `Problem ${idx + 1}`;
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! The answer is \\(\\mathbf{${p.displayAnswer}}\\).`,
+      retry: "Not quite yet. Decide whether the problem needs addition or subtraction, find a common denominator if needed, then simplify your answer.",
+      reveal: `Here's the correct answer: \\(\\mathbf{${p.displayAnswer}}\\).`
+    }, { label, answer: val, section: cfg.section });
+  }
+
+  // ==========================================
+  // TAB 1: GUIDED PRACTICE
+  // ==========================================
+  const guidedProblems = [
+    { q: "Ella read \\(\\frac{2}{5}\\) of a book on Monday and \\(\\frac{1}{5}\\) of the book on Tuesday. What fraction of the book has she read in total?", accepted: ["3/5"], displayAnswer: "\\frac{3}{5}", label: "Book read Mon + Tue" },
+    { q: "A garden bed was \\(\\frac{7}{8}\\) full of soil. A gardener removes \\(\\frac{3}{8}\\) of the soil to make room for compost. What fraction of the bed is full now?", accepted: ["1/2", "4/8"], displayAnswer: "\\frac{1}{2}", label: "Garden bed soil remaining" },
+    { q: "Two ropes measure \\(\\frac{1}{3}\\) meter and \\(\\frac{1}{4}\\) meter. What is their combined length?", accepted: ["7/12"], displayAnswer: "\\frac{7}{12}", label: "Combined rope length" },
+    { q: "A tank was \\(\\frac{5}{6}\\) full. After some was used, it is \\(\\frac{1}{2}\\) full. What fraction of the tank was used?", accepted: ["1/3", "2/6"], displayAnswer: "\\frac{1}{3}", label: "Fraction of tank used" },
+    { q: "A hiker walked \\(2\\frac{1}{4}\\) miles, then walked \\(1\\frac{1}{2}\\) miles more. What is the total distance walked?", accepted: ["3 3/4"], displayAnswer: "3\\frac{3}{4}", label: "Total hiking distance" }
+  ];
+  renderCheckList('guided-list', guidedProblems, 'guided', '1. Guided Practice');
+
+  // ==========================================
+  // TAB 2: MIXED WORD PROBLEMS
+  // ==========================================
+  const mixedProblems = [
+    { q: "A wall is \\(\\frac{5}{9}\\) painted blue and \\(\\frac{2}{9}\\) painted green. What fraction of the wall is painted?", accepted: ["7/9"], displayAnswer: "\\frac{7}{9}", label: "Wall painted (blue + green)" },
+    { q: "A class spends \\(\\frac{7}{10}\\) hour on math and \\(\\frac{3}{10}\\) hour on reading before recess. How much time did that take in total?", accepted: ["1"], displayAnswer: "1", label: "Math + reading time" },
+    { q: "A jug has \\(\\frac{4}{5}\\) liter of juice. \\(\\frac{1}{5}\\) liter is poured out. How much juice remains?", accepted: ["3/5"], displayAnswer: "\\frac{3}{5}", label: "Juice remaining" },
+    { q: "A tailor uses \\(\\frac{1}{3}\\) yard of fabric for one patch and \\(\\frac{1}{6}\\) yard for another. How much fabric was used in total?", accepted: ["1/2", "3/6"], displayAnswer: "\\frac{1}{2}", label: "Fabric used (two patches)" },
+    { q: "A garden bed was \\(\\frac{5}{6}\\) planted. A storm destroyed the planting on \\(\\frac{1}{4}\\) of the bed. What fraction of the bed is still successfully planted?", accepted: ["7/12"], displayAnswer: "\\frac{7}{12}", label: "Garden still planted" },
+    { q: "A carpenter joins a board \\(2\\frac{1}{3}\\) ft long to another \\(1\\frac{1}{6}\\) ft long. What is the total length?", accepted: ["3 1/2", "3 3/6"], displayAnswer: "3\\frac{1}{2}", label: "Joined board length" },
+    { q: "A ribbon is \\(4\\frac{1}{5}\\) yards long. A crafter cuts off \\(1\\frac{3}{5}\\) yards. How much ribbon remains?", accepted: ["2 3/5"], displayAnswer: "2\\frac{3}{5}", label: "Ribbon remaining" },
+    { q: "A chef has 3 whole cakes. She sells \\(\\frac{2}{3}\\) of one cake to a customer. How much cake does she have left?", accepted: ["2 1/3"], displayAnswer: "2\\frac{1}{3}", label: "Cake remaining" },
+    { q: "A runner has already run 5 miles, then runs \\(\\frac{3}{4}\\) mile more. What is the total distance run?", accepted: ["5 3/4"], displayAnswer: "5\\frac{3}{4}", label: "Total distance run" },
+    { q: "Two wires measure \\(\\frac{9}{10}\\) meter and \\(\\frac{4}{5}\\) meter. What is the difference in their lengths?", accepted: ["1/10"], displayAnswer: "\\frac{1}{10}", label: "Wire length difference" },
+    { q: "Two bags of flour weigh \\(1\\frac{3}{4}\\) kg and \\(2\\frac{1}{2}\\) kg. What is their total weight?", accepted: ["4 1/4"], displayAnswer: "4\\frac{1}{4}", label: "Total flour weight" },
+    { q: "A pitcher was \\(\\frac{10}{12}\\) full of lemonade. \\(\\frac{4}{12}\\) was poured out. What fraction of the pitcher remains full?", accepted: ["1/2", "6/12"], displayAnswer: "\\frac{1}{2}", label: "Lemonade remaining" }
+  ];
+  renderCheckList('mixed-list', mixedProblems, 'mixed', '2. Mixed Word Problems');
+
+  // ==========================================
+  // TAB 3: REAL-WORLD APPLICATIONS
+  // ==========================================
+  const realworldA = [
+    { q: "A recipe needs \\(\\frac{3}{4}\\) cup of butter, but you've only added \\(\\frac{1}{2}\\) cup so far. How much more butter do you need?", accepted: ["1/4"], displayAnswer: "\\frac{1}{4}", label: "Butter still needed" },
+    { q: "A board is cut into pieces: one piece is \\(\\frac{5}{8}\\) of the board, another is \\(\\frac{1}{4}\\) of the board. What fraction of the board have the two pieces used together?", accepted: ["7/8"], displayAnswer: "\\frac{7}{8}", label: "Board used by two pieces" },
+    { q: "A survey shows \\(\\frac{3}{5}\\) of students like pizza best and a different \\(\\frac{1}{10}\\) of students like tacos best. What fraction of students chose one of these two foods?", accepted: ["7/10"], displayAnswer: "\\frac{7}{10}", label: "Pizza + tacos fraction" },
+    { q: "A pool is \\(\\frac{7}{8}\\) full. After some water evaporates, it is \\(\\frac{3}{4}\\) full. What fraction of the pool's water was lost?", accepted: ["1/8"], displayAnswer: "\\frac{1}{8}", label: "Pool water lost" }
+  ];
+  const realworldB = [
+    { q: "A cyclist rides \\(3\\frac{1}{2}\\) miles to school and \\(3\\frac{1}{2}\\) miles back home. What is the total distance ridden?", accepted: ["7"], displayAnswer: "7", label: "Total cycling distance" },
+    { q: "A movie is \\(2\\frac{1}{4}\\) hours long, and previews add \\(\\frac{1}{4}\\) hour before it starts. How much total time is spent in the theater?", accepted: ["2 1/2", "2 2/4"], displayAnswer: "2\\frac{1}{2}", label: "Total theater time" },
+    { q: "A carpenter has an 8 ft board and cuts off \\(2\\frac{3}{8}\\) ft. How much board remains?", accepted: ["5 5/8"], displayAnswer: "5\\frac{5}{8}", label: "Board remaining" },
+    { q: "Two hikers start \\(5\\frac{1}{6}\\) miles apart on a trail and walk toward each other, closing a combined \\(1\\frac{2}{3}\\) miles so far. How far apart are they now?", accepted: ["3 1/2", "3 3/6"], displayAnswer: "3\\frac{1}{2}", label: "Remaining distance between hikers" }
+  ];
+  renderCheckList('realworld-a-list', realworldA, 'rwa', '3. Real-World Applications');
+  renderCheckList('realworld-b-list', realworldB, 'rwb', '3. Real-World Applications');
+
+  // ==========================================
+  // TAB 4: CAREER CONNECTIONS
+  // ==========================================
+  const careerGroups = {
+    culinary: {
+      name: "Culinary Arts: Pastry Chef",
+      context: "Pastry chefs measure ingredients in fractions of a cup, teaspoon, and ounce - a wrong fraction can mean a recipe that fails.",
+      problems: [
+        { q: "A recipe calls for \\(\\frac{2}{3}\\) cup sugar and \\(\\frac{1}{4}\\) cup honey. How much sweetener in total?", accepted: ["11/12"], displayAnswer: "\\frac{11}{12}" },
+        { q: "A chef has \\(\\frac{7}{8}\\) cup of cream and uses \\(\\frac{1}{2}\\) cup in a sauce. How much cream is left?", accepted: ["3/8"], displayAnswer: "\\frac{3}{8}" }
+      ]
+    },
+    construction: {
+      name: "Construction &amp; Carpentry",
+      context: "Carpenters add and subtract fractional measurements constantly when cutting boards and pipes to length.",
+      problems: [
+        { q: "A carpenter joins two boards, \\(3\\frac{5}{8}\\) ft and \\(2\\frac{3}{4}\\) ft. What is the total length?", accepted: ["6 3/8"], displayAnswer: "6\\frac{3}{8}" },
+        { q: "A pipe is 6 ft long. A plumber cuts off \\(2\\frac{1}{3}\\) ft. How much pipe remains?", accepted: ["3 2/3"], displayAnswer: "3\\frac{2}{3}" }
+      ]
+    },
+    fashion: {
+      name: "Fashion &amp; Textile Design",
+      context: "Fashion designers add fabric measurements from multiple pattern pieces and subtract for trims and seams.",
+      problems: [
+        { q: "A dress pattern needs \\(1\\frac{1}{2}\\) yards of fabric for the bodice and \\(2\\frac{3}{4}\\) yards for the skirt. How much fabric is needed in total?", accepted: ["4 1/4"], displayAnswer: "4\\frac{1}{4}" },
+        { q: "A designer has 5 yards of fabric and uses \\(3\\frac{1}{4}\\) yards for a project. How much fabric is left?", accepted: ["1 3/4"], displayAnswer: "1\\frac{3}{4}" }
+      ]
+    }
+  };
+
+  function renderCareerStations() {
+    const html = Object.keys(careerGroups).map((key) => {
+      const g = careerGroups[key];
+      const itemsHtml = g.problems.map((p, i) => `
+        <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px;">
+          <strong>${i + 1}.</strong> ${p.q}
+          <div style="margin-top:10px; display:flex; gap:14px; flex-wrap:wrap; align-items:center;">
+            <input type="text" id="career-${key}-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+            <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkCareerItem('${key}', ${i})">Submit</button>
+          </div>
+          <div id="career-${key}-${i}-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+        </div>
+      `).join('');
+      return `
+        <div class="station-card">
+          <span class="station-label">${g.name}</span>
+          <p style="margin:8px 0 0 0;">${g.context}</p>
+          ${itemsHtml}
+        </div>
+      `;
+    }).join('');
+    document.getElementById('career-stations').innerHTML = html;
+    Object.keys(careerGroups).forEach((key) => {
+      const g = careerGroups[key];
+      g.problems.forEach((p, i) => LessonProgress.preRegister(`career-${key}-${i}`, `${g.name} #${i + 1}`, '4. Career Connections'));
+      TeacherPrint.registerAnswerList('career-stations', g.problems.map((p, i) => ({ inputId: `career-${key}-${i}-input`, answerText: p.displayAnswer })));
+    });
+    triggerMathJax();
+  }
+  renderCareerStations();
+
+  function checkCareerItem(key, idx) {
+    const g = careerGroups[key];
+    const p = g.problems[idx];
+    const val = document.getElementById(`career-${key}-${idx}-input`).value;
+    const fb = document.getElementById(`career-${key}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter your answer before submitting.");
+      return;
+    }
+    const correct = p.accepted.map(normFracStrict).includes(normFracStrict(val));
+    LessonCheck.submit(fb, { key: `career-${key}-${idx}`, label: `${g.name} #${idx + 1}`, answer: val, section: '4. Career Connections', correct },
+      correct ? `Correct! The answer is \\(\\mathbf{${p.displayAnswer}}\\).` : `Submitted. This will be reviewed from your printed progress report.`);
+  }
+
+  // ==========================================
+  // TAB 5: CHALLENGE TIER
+  // ==========================================
+  const challengeProblems = [
+    { q: "A baker uses \\(2\\frac{1}{4}\\) cups of flour for one batch of cookies, \\(1\\frac{5}{6}\\) cups for a second batch, and then \\(\\frac{3}{4}\\) cup for dusting the pan. How much flour was used in total?", accepted: ["4 5/6"], displayAnswer: "4\\frac{5}{6}", label: "Total flour used (3 steps)" },
+    { q: "A road trip covers \\(3\\frac{1}{2}\\) hours of driving, a \\(\\frac{1}{4}\\) hour rest stop, and then \\(2\\frac{2}{3}\\) more hours of driving. What is the total trip time?", accepted: ["6 5/12"], displayAnswer: "6\\frac{5}{12}", label: "Total road trip time" },
+    { q: "A tank starts with 8 gallons of water. \\(2\\frac{3}{5}\\) gallons are used in the morning and \\(1\\frac{7}{10}\\) gallons are used in the afternoon. How much water is left?", accepted: ["3 7/10"], displayAnswer: "3\\frac{7}{10}", label: "Water remaining after 2 uses" },
+    { q: "A seamstress has 6 yards of fabric. She uses \\(1\\frac{3}{8}\\) yards for a shirt and \\(2\\frac{1}{4}\\) yards for pants. How much fabric remains?", accepted: ["2 3/8"], displayAnswer: "2\\frac{3}{8}", label: "Fabric remaining after 2 projects" }
+  ];
+  renderCheckList('challenge-list', challengeProblems, 'challenge', '5. Challenge Tier');
+</script>
+<div id="print-report"></div>
+</body>
+</html>
