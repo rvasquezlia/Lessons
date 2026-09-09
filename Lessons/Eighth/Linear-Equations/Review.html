@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Solving Linear Equations - Review</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <style>
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .glossary-card {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .glossary-term { font-weight: 900; color: var(--primary); font-size: 1.1rem; margin-bottom: 6px; display: block; }
+    .glossary-def { margin: 0 0 8px 0; }
+    .glossary-example { background: #f1f5f9; border-radius: 6px; padding: 6px 10px; font-size: 0.92rem; color: #334155; }
+    .ready-list { list-style: none; margin: 12px 0 0 0; padding: 0; }
+    .ready-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: #ffffff; border: 2px solid var(--border); border-radius: 10px;
+      padding: 12px 16px; margin-bottom: 10px; font-weight: 600;
+    }
+    .ready-list li::before { content: "\2713"; color: var(--success); font-weight: 900; font-size: 1.2rem; }
+    .yn-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .yn-card { border-radius: 10px; padding: 14px 16px; text-align: center; font-size: 1.05rem; }
+    .yn-card.yes { background: var(--success-bg); border: 2px solid var(--success); }
+    .yn-card.no { background: var(--error-bg); border: 2px solid var(--error); }
+    .yn-card .yn-tag { display:block; font-weight:900; text-transform:uppercase; font-size:0.78rem; letter-spacing:0.05em; margin-bottom:6px; }
+    .yn-card.yes .yn-tag { color: var(--success); }
+    .yn-card.no .yn-tag { color: var(--error); }
+    .yn-why { display:block; font-size:0.85rem; color:#475569; margin-top:6px; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Solving Linear Equations &middot; Review</span>
+    <h1>Review: Expressions, Like Terms &amp; the Distributive Property</h1>
+    <p class="subtitle">Everything you need to remember before we start Solving Linear Equations</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Nothing here is graded &ndash; this is a warm-up, and it's an important one. Almost every mistake in solving equations traces back to <strong>simplifying</strong> &ndash; combining terms that shouldn't be combined, distributing incorrectly, or a sign error carried over from integer operations. Before you ever isolate a variable, you have to be able to simplify both sides of an equation without a mistake. Work through every tab here, even if it feels like review of review &ndash; this is the single most important prerequisite for the whole topic.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('why')">1. Why Review This?</button>
+    <button class="tab-btn" onclick="switchTab('vocab')">2. Vocabulary</button>
+    <button class="tab-btn" onclick="switchTab('liketerms')">3. Like Terms</button>
+    <button class="tab-btn" onclick="switchTab('distribute')">4. Distributive Property</button>
+    <button class="tab-btn" onclick="switchTab('integers')">5. Integer Rules Recap</button>
+    <button class="tab-btn" onclick="switchTab('practice')">6. Are You Ready?</button>
+    <button class="tab-btn" onclick="switchTab('resources')">7. Resources</button>
+  </nav>
+
+  <!-- TAB 1: WHY REVIEW THIS -->
+  <div id="why" class="panel active">
+    <div class="section-title">Why We're Reviewing This First</div>
+    <div class="explainer-box">
+      Solving a linear equation always happens in two phases: <strong>first simplify, then isolate.</strong> The "isolate" phase (inverse operations, properties of equality) is brand new and is what the Explanation page teaches. The "simplify" phase &ndash; combining like terms and distributing &ndash; is <strong>not</strong> new. It's a skill from previous grades that this topic assumes you already have. If you can't simplify \(3(2x+5)-4x\) into \(2x + 15\) confidently, the equation-solving itself will feel much harder than it actually is, because you'll be learning two skills at once instead of one.
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">The Big Idea</div>
+      <p style="margin:0;">An expression is like a sentence written in math. Just like you can't add "3 apples" and "2 oranges" and call the answer "5 apple-oranges," you can't combine every pair of terms in an expression &ndash; only ones that match. Learning to tell which terms match (and which only <em>look</em> like they should) is most of what this page covers.</p>
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">What This Page Covers</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Like Terms:</strong> identifying them, combining them, and &ndash; just as important &ndash; recognizing what can <em>never</em> be combined.</li>
+        <li><strong>The Distributive Property:</strong> multiplying a number into parentheses correctly, including with negative numbers.</li>
+        <li><strong>Integer Rules Recap:</strong> the sign rules from 7th grade, since every simplification step depends on them.</li>
+        <li><strong>A short practice check</strong> so you know exactly what to brush up on before we begin.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TAB 2: VOCABULARY -->
+  <div id="vocab" class="panel">
+    <div class="section-title">Vocabulary Quick Reference</div>
+    <div class="explainer-box">
+      A fast reference for the words used on this page. For the full glossary (including equation-solving vocabulary like <em>solution</em> and <em>inverse operations</em>) plus translation practice, see this topic's own <strong>Vocabulary &amp; Literacy</strong> page.
+    </div>
+    <div class="glossary-grid">
+      <div class="glossary-card">
+        <span class="glossary-term">Variable</span>
+        <p class="glossary-def">A letter that represents an unknown or changing number.</p>
+        <div class="glossary-example">The \(x\) in \(4x - 3\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Expression</span>
+        <p class="glossary-def">A combination of numbers, variables, and operations &ndash; with <strong>no equal sign</strong>.</p>
+        <div class="glossary-example">\(4x - 3\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Term</span>
+        <p class="glossary-def">A single number, variable, or product/quotient of numbers and variables, separated from other terms by \(+\) or \(-\).</p>
+        <div class="glossary-example">In \(4x + 7\), the terms are \(4x\) and \(7\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Coefficient</span>
+        <p class="glossary-def">The number multiplied by a variable in a term.</p>
+        <div class="glossary-example">In \(6x\), the coefficient is \(6\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Constant</span>
+        <p class="glossary-def">A term that is just a fixed number, with no variable attached.</p>
+        <div class="glossary-example">In \(3x + 9\), \(9\) is the constant</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Like Terms</span>
+        <p class="glossary-def">Terms with the exact same variable part (same letter, same exponent), so they can be combined.</p>
+        <div class="glossary-example">\(5x\) and \(-2x\) are like terms</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: LIKE TERMS -->
+  <div id="liketerms" class="panel">
+    <div class="section-title">Like Terms: What Can (and Cannot) Combine</div>
+    <div class="explainer-box">
+      <strong>Two terms are "like terms" only if their variable part matches exactly</strong> &ndash; same letter(s), same exponent(s). The coefficient (the number out front) never matters for this decision. If the variable part doesn't match exactly, the terms can <strong>never</strong> be combined, no matter how similar they look.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">How to Combine Like Terms</div>
+      <p style="margin:0;">Add or subtract the <strong>coefficients only</strong>, and keep the variable part exactly as it was. Think of it like counting objects: \(5x\) means "5 x's" and \(-2x\) means "negative 2 x's," so \(5x + (-2x) = 3x\) &ndash; "5 x's minus 2 x's leaves 3 x's."</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Yes, These Combine</div>
+      <div class="yn-grid">
+        <div class="yn-card yes"><span class="yn-tag">Combine</span>\(5x\) and \(-2x\)<span class="yn-why">Both are just "\(x\)" &ndash; same variable, same exponent (1)</span></div>
+        <div class="yn-card yes"><span class="yn-tag">Combine</span>\(7\) and \(-4\)<span class="yn-why">Both are plain numbers (constants)</span></div>
+        <div class="yn-card yes"><span class="yn-tag">Combine</span>\(3x^2\) and \(9x^2\)<span class="yn-why">Both are "\(x\) squared" &ndash; same variable, same exponent (2)</span></div>
+        <div class="yn-card yes"><span class="yn-tag">Combine</span>\(-6xy\) and \(2xy\)<span class="yn-why">Both have exactly the variable part "\(xy\)"</span></div>
+      </div>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">No, These Do NOT Combine &ndash; And Here's Why</div>
+      <div class="yn-grid">
+        <div class="yn-card no"><span class="yn-tag">Cannot Combine</span>\(5x\) and \(5x^2\)<span class="yn-why">Different exponents (1 vs. 2) &ndash; \(x\) and \(x^2\) are different quantities</span></div>
+        <div class="yn-card no"><span class="yn-tag">Cannot Combine</span>\(4x\) and \(4y\)<span class="yn-why">Different letters &ndash; \(x\) and \(y\) represent different unknowns</span></div>
+        <div class="yn-card no"><span class="yn-tag">Cannot Combine</span>\(3\) and \(3x\)<span class="yn-why">One is a constant, one has a variable &ndash; only combine matching variable parts</span></div>
+        <div class="yn-card no"><span class="yn-tag">Cannot Combine</span>\(2xy\) and \(2x\)<span class="yn-why">\(xy\) and \(x\) are different variable parts, even though both contain "\(x\)"</span></div>
+      </div>
+      <p style="margin:14px 0 0 0;"><strong>The takeaway:</strong> matching coefficients never matters, and a shared letter is never enough on its own. Only an <strong>exact</strong> match of the whole variable part (letters and exponents together) allows two terms to combine.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Combining Like Terms in a Longer Expression</div>
+      <p style="margin:0 0 10px 0;">Simplify \(7x + 3 - 2x + 9 - x\).</p>
+      <p style="margin:0 0 6px 0;"><strong>Step 1 &ndash; Sort the terms by type:</strong> \(x\)-terms: \(7x, -2x, -x\). Constants: \(3, 9\).</p>
+      <p style="margin:0 0 6px 0;"><strong>Step 2 &ndash; Combine each group:</strong> \(7x - 2x - x = 4x\). \(3 + 9 = 12\).</p>
+      <p style="margin:0;"><strong>Result:</strong> \(4x + 12\).</p>
+    </div>
+  </div>
+
+  <!-- TAB 4: DISTRIBUTIVE PROPERTY -->
+  <div id="distribute" class="panel">
+    <div class="section-title">The Distributive Property</div>
+    <div class="explainer-box">
+      When a number sits right outside a set of parentheses, it multiplies <strong>every single term</strong> inside &ndash; not just the first one. \[a(b + c) = ab + ac\]
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Positive Multiplier</div>
+      <p style="margin:0;">Simplify \(3(2x + 5)\). Multiply the 3 into both terms: \(3 \times 2x = 6x\), and \(3 \times 5 = 15\). Result: \(6x + 15\).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Negative Multiplier (Watch the Signs!)</div>
+      <p style="margin:0 0 8px 0;">Simplify \(-4(x - 6)\). This is the step students lose the most points on &ndash; the negative sign has to distribute too.</p>
+      <p style="margin:0;">\(-4 \times x = -4x\), and \(-4 \times (-6) = +24\) (different signs become negative, same signs become positive &ndash; here both are negative, so the result is positive). Result: \(-4x + 24\).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Distribute, Then Combine Like Terms</div>
+      <p style="margin:0 0 10px 0;">Simplify \(3(2x + 5) - 4x\) &ndash; the exact expression from the "Why Review This" tab.</p>
+      <p style="margin:0 0 6px 0;"><strong>Step 1 &ndash; Distribute:</strong> \(3(2x+5) = 6x + 15\), so the expression becomes \(6x + 15 - 4x\).</p>
+      <p style="margin:0 0 6px 0;"><strong>Step 2 &ndash; Combine like terms:</strong> \(6x - 4x = 2x\).</p>
+      <p style="margin:0;"><strong>Result:</strong> \(2x + 15\).</p>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Step-by-Step: A Harder Simplification</h3>
+      <p style="margin:0 0 10px 0;"><strong>Problem:</strong> \(8x - 4(x - 6) + 8\)</p>
+      <button class="btn-lg" onclick="revealDistStep()">Reveal Next Step</button>
+      <button class="btn-secondary" onclick="resetDistStep()">Reset</button>
+      <div id="dist-steps" style="margin-top:14px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 5: INTEGER RULES RECAP -->
+  <div id="integers" class="panel">
+    <div class="section-title">Integer Rules Recap</div>
+    <div class="explainer-box">
+      Every simplification above depends on adding, subtracting, multiplying, and dividing signed numbers correctly. This is the same table from Rational Numbers and Operations with Rational Numbers &ndash; still true, still essential.
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">The Rules</div>
+      <table class="data-table">
+        <thead><tr><th>Operation</th><th>The Rule</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Addition</strong></td><td><strong>Same signs:</strong> add the absolute values and keep the sign. (\(-3+(-5)=-8\))<br><strong>Different signs:</strong> subtract the smaller absolute value from the larger, and keep the sign of the number with the larger absolute value. (\(-10+4=-6\))</td></tr>
+          <tr><td><strong>Subtraction</strong></td><td><strong>Add the opposite:</strong> flip the subtraction to addition and change the sign of the second number. (\(5-(-2)\) becomes \(5+2=7\))</td></tr>
+          <tr><td><strong>Multiplication &amp; Division</strong></td><td><strong>Same signs:</strong> the result is positive. <strong>Different signs:</strong> the result is negative.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 6: ARE YOU READY? -->
+  <div id="practice" class="panel">
+    <div class="section-title">Practice: Are You Ready?</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Type your own answer first, then click Check. You get up to <strong>2 tries</strong> per problem before the correct answer is shown.
+    </div>
+
+    <h3 style="color:var(--primary);">Identify: Do These Combine?</h3>
+    <div id="identify-practice-list"></div>
+
+    <h3 style="color:var(--primary); margin-top:24px;">Combine Like Terms</h3>
+    <div id="combine-practice-list"></div>
+
+    <h3 style="color:var(--primary); margin-top:24px;">Distribute, Then Combine</h3>
+    <div id="distribute-practice-list"></div>
+  </div>
+
+  <!-- TAB 7: RESOURCES -->
+  <div id="resources" class="panel">
+    <div class="section-title">Resources &amp; Next Steps</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">You're Ready for Solving Linear Equations When You Can...</div>
+      <ul class="ready-list">
+        <li>Look at two terms and instantly say whether they're like terms, and explain why or why not.</li>
+        <li>Combine like terms in an expression with several terms mixed together.</li>
+        <li>Distribute a number (positive or negative) into parentheses without a sign error.</li>
+        <li>Simplify a multi-step expression that requires both distributing and combining like terms.</li>
+        <li>Apply the integer sign rules automatically, without stopping to think about them.</li>
+      </ul>
+    </div>
+
+    <div class="ixl-box">
+      <h3 style="margin-top:0; color:#15803d;">Extra Practice, Any Time</h3>
+      <ul>
+        <li>Identify like terms</li>
+        <li>Simplify expressions by combining like terms</li>
+        <li>Use the distributive property</li>
+        <li>Simplify expressions using the distributive property and combining like terms</li>
+      </ul>
+    </div>
+
+    <div class="explainer-box" style="margin-top:24px;">
+      <strong>Next step:</strong> once you feel solid here, move on to this topic's own <strong>Vocabulary &amp; Literacy</strong> page from the Index for the full equation-solving glossary, then the Explanation page &ndash; every worked example there starts exactly where this page leaves off.
+    </div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // DISTRIBUTE-AND-COMBINE STEP-REVEAL
+  // ==========================================
+  const distSteps = [
+    "<strong>Step 1 - Distribute the -4:</strong> \\(8x - 4x + 24 + 8\\)",
+    "<strong>Step 2 - Combine the x-terms:</strong> \\(8x - 4x = 4x\\)",
+    "<strong>Step 3 - Combine the constants:</strong> \\(24 + 8 = 32\\)",
+    "<strong>Result:</strong> \\(\\mathbf{4x + 32}\\)"
+  ];
+  let distStepCount = 0;
+  function renderDistSteps() {
+    const html = distSteps.slice(0, distStepCount).map(s => `<div class="step-item visible">${s}</div>`).join('');
+    document.getElementById('dist-steps').innerHTML = html;
+    triggerMathJax();
+  }
+  function revealDistStep() {
+    if (distStepCount < distSteps.length) { distStepCount++; renderDistSteps(); }
+  }
+  function resetDistStep() { distStepCount = 0; renderDistSteps(); }
+
+  // ==========================================
+  // GENERIC CHECK-STYLE PRACTICE LIST (2 tries, then reveal)
+  // ==========================================
+  const checkListRegistry = {};
+
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:190px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    triggerMathJax();
+  }
+
+  function checkListItem(keyPrefix, idx) {
+    const cfg = checkListRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const norm = (s) => String(s || '').toLowerCase().replace(/[\s,]/g, '');
+    const correct = p.numeric
+      ? LessonCheck.numericMatch(val, p.a, p.tol || 0.01)
+      : (p.accepted || [String(p.a)]).map(norm).includes(norm(val));
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! ${p.displayAnswer || ('The answer is ' + p.a + '.')}`,
+      retry: cfg.retry,
+      reveal: `Here's the correct answer: ${p.displayAnswer || p.a}`
+    });
+  }
+
+  const identifyPractice = [
+    { q: "Are \\(6x\\) and \\(-9x\\) like terms? Type yes or no.", accepted: ["yes"], displayAnswer: "Yes - both are just \\(x\\), same exponent." },
+    { q: "Are \\(4x\\) and \\(4x^2\\) like terms? Type yes or no.", accepted: ["no"], displayAnswer: "No - the exponents (1 and 2) don't match." },
+    { q: "Are \\(7\\) and \\(-2\\) like terms? Type yes or no.", accepted: ["yes"], displayAnswer: "Yes - both are constants." },
+    { q: "Are \\(3xy\\) and \\(3x\\) like terms? Type yes or no.", accepted: ["no"], displayAnswer: "No - \\(xy\\) and \\(x\\) are different variable parts." }
+  ];
+  renderCheckList('identify-practice-list', identifyPractice, 'identify', "Not quite yet. Compare the variable parts exactly - same letters, same exponents.");
+
+  const combinePractice = [
+    { q: "Simplify \\(5x + 3x\\).", accepted: ["8x"], displayAnswer: "\\(8x\\)" },
+    { q: "Simplify \\(9x - 2x + 4\\).", accepted: ["7x+4", "4+7x"], displayAnswer: "\\(7x + 4\\)" },
+    { q: "Simplify \\(6 + 2x - 5 - x\\).", accepted: ["x+1", "1+x"], displayAnswer: "\\(x + 1\\)" }
+  ];
+  renderCheckList('combine-practice-list', combinePractice, 'combine', "Not quite yet. Sort the terms into groups first (x-terms together, constants together), then combine each group.");
+
+  const distributePractice = [
+    { q: "Simplify \\(2(3x + 4)\\).", accepted: ["6x+8", "8+6x"], displayAnswer: "\\(6x + 8\\)" },
+    { q: "Simplify \\(-3(x - 5)\\).", accepted: ["-3x+15", "15-3x"], displayAnswer: "\\(-3x + 15\\)" },
+    { q: "Simplify \\(4(2x + 1) - 3x\\).", accepted: ["5x+4", "4+5x"], displayAnswer: "\\(5x + 4\\)" }
+  ];
+  renderCheckList('distribute-practice-list', distributePractice, 'distribute', "Not quite yet. Distribute into every term inside the parentheses first - watch the sign - then combine like terms.");
+</script>
+</body>
+</html>

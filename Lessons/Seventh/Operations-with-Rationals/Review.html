@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra: Operations with Rational Numbers - Review</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <style>
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .glossary-card {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .glossary-term { font-weight: 900; color: var(--primary); font-size: 1.1rem; margin-bottom: 6px; display: block; }
+    .glossary-def { margin: 0 0 8px 0; }
+    .glossary-example { background: #f1f5f9; border-radius: 6px; padding: 6px 10px; font-size: 0.92rem; color: #334155; }
+    .ready-list { list-style: none; margin: 12px 0 0 0; padding: 0; }
+    .ready-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: #ffffff; border: 2px solid var(--border); border-radius: 10px;
+      padding: 12px 16px; margin-bottom: 10px; font-weight: 600;
+    }
+    .ready-list li::before { content: "\2713"; color: var(--success); font-weight: 900; font-size: 1.2rem; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Operations with Rational Numbers &middot; Review</span>
+    <h1>Review: Converting Rationals &amp; Unlike Denominators</h1>
+    <p class="subtitle">Everything you need to remember before we start Operations with Rational Numbers</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Nothing here is graded &ndash; this is a warm-up. This topic asks you to add, subtract, multiply, and divide fractions and decimals that can be positive or negative. That means three earlier skills all need to be solid at once: telling a fraction from its decimal form, adding fractions that don't share a denominator, and the sign rules from Integers. Work through the tabs in order.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('why')">1. Why Review This?</button>
+    <button class="tab-btn" onclick="switchTab('vocab')">2. Vocabulary</button>
+    <button class="tab-btn" onclick="switchTab('convert')">3. Fraction &harr; Decimal Recap</button>
+    <button class="tab-btn" onclick="switchTab('unlike')">4. Unlike Denominators</button>
+    <button class="tab-btn" onclick="switchTab('practice')">5. Are You Ready?</button>
+    <button class="tab-btn" onclick="switchTab('resources')">6. Resources</button>
+  </nav>
+
+  <!-- TAB 1: WHY REVIEW THIS -->
+  <div id="why" class="panel active">
+    <div class="section-title">Why We're Reviewing This First</div>
+    <div class="explainer-box">
+      This topic combines everything from the last two units into one skill: computing with rational numbers that can be positive or negative, written as either fractions or decimals. Nothing here is brand-new math &ndash; it's your <strong>Rational Numbers</strong> conversions, your <strong>Integers</strong> sign rules, and one more piece that hasn't come up yet in this course: adding and subtracting fractions that don't already share a denominator.
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">Building on Rational Numbers &amp; Integers</div>
+      <p style="margin:0;">From <strong>Rational Numbers</strong>, you should already be able to tell whether a fraction converts to a terminating or repeating decimal, and convert between the two forms. From <strong>Integers</strong>, you should already know the same-signs/different-signs rules. If either feels shaky, this page has a fast recap of both &ndash; but for the full explanation, revisit those topics' own Review and Explanation pages.</p>
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">What This Page Covers</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Fraction &harr; Decimal Recap:</strong> converting quickly and confidently in both directions.</li>
+        <li><strong>Unlike Denominators:</strong> adding and subtracting fractions that don't already match &ndash; a skill this topic assumes you have.</li>
+        <li><strong>A short practice check</strong> so you know exactly what to brush up on before we begin.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TAB 2: VOCABULARY -->
+  <div id="vocab" class="panel">
+    <div class="section-title">Vocabulary You Need First</div>
+    <div class="explainer-box">
+      These are quick reminders from earlier topics. (Words like <em>reciprocal</em>, <em>keep-change-flip</em>, and <em>equivalent forms</em> are this topic's own vocabulary, so they're taught in its own <strong>Vocabulary &amp; Literacy</strong> page, not here.)
+    </div>
+    <div class="glossary-grid">
+      <div class="glossary-card">
+        <span class="glossary-term">Common Multiple</span>
+        <p class="glossary-def">A number that two or more numbers all divide into evenly.</p>
+        <div class="glossary-example">12 is a common multiple of 3 and 4</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Like Denominators</span>
+        <p class="glossary-def">Two or more fractions that already share the same denominator, so they're ready to add or subtract directly.</p>
+        <div class="glossary-example">\(\frac{2}{7}\) and \(\frac{5}{7}\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Unlike Denominators</span>
+        <p class="glossary-def">Fractions with different denominators &ndash; they must be rewritten with a common denominator before you can add or subtract them.</p>
+        <div class="glossary-example">\(\frac{1}{3}\) and \(\frac{1}{4}\)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: FRACTION-DECIMAL RECAP -->
+  <div id="convert" class="panel">
+    <div class="section-title">Fraction &harr; Decimal Recap</div>
+    <div class="explainer-box">
+      This topic mixes fractions and decimals in the same problem constantly, so switching between the two forms has to be fast and automatic.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Fraction &rarr; Decimal</div>
+      <p style="margin:0 0 8px 0;">Divide the numerator by the denominator.</p>
+      <p style="margin:0;">Example: \(\frac{3}{8}\). \(3 \div 8 = 0.375\) (terminates). \(\frac{2}{3}\). \(2 \div 3 = 0.6666\ldots = 0.\overline{6}\) (repeats).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Decimal &rarr; Fraction</div>
+      <p style="margin:0 0 8px 0;">Write the decimal digits over the matching place-value power of 10, then simplify.</p>
+      <p style="margin:0;">Example: \(0.35 = \frac{35}{100} = \frac{7}{20}\) (divide both by the GCF, 5).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Quick Reference: Common Conversions</div>
+      <table class="data-table">
+        <thead><tr><th>Fraction</th><th>Decimal</th></tr></thead>
+        <tbody>
+          <tr><td>\(\frac{1}{2}\)</td><td>0.5</td></tr>
+          <tr><td>\(\frac{1}{4}\)</td><td>0.25</td></tr>
+          <tr><td>\(\frac{3}{4}\)</td><td>0.75</td></tr>
+          <tr><td>\(\frac{1}{5}\)</td><td>0.2</td></tr>
+          <tr><td>\(\frac{1}{3}\)</td><td>\(0.\overline{3}\)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 4: UNLIKE DENOMINATORS -->
+  <div id="unlike" class="panel">
+    <div class="section-title">Adding &amp; Subtracting Fractions With Unlike Denominators</div>
+    <div class="explainer-box">
+      You can only add or subtract fractions once they share the <strong>same</strong> denominator &ndash; you're not allowed to combine "thirds" with "fourths" any more than you could combine 3 apples with 4 oranges and call it 7 of either.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The 3-Step Method</div>
+      <ol style="margin-bottom:0;">
+        <li><strong>Find a common denominator</strong> &ndash; a number both denominators divide into evenly (often their product, or their LCD if you know it).</li>
+        <li><strong>Rewrite each fraction</strong> as an equivalent fraction using that new denominator.</li>
+        <li><strong>Add or subtract the numerators only</strong> &ndash; the denominator stays the same.</li>
+      </ol>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example</div>
+      <p style="margin:0 0 8px 0;">\(\frac{1}{3} + \frac{1}{4}\). Common denominator: 12. \(\frac{1}{3} = \frac{4}{12}\), \(\frac{1}{4} = \frac{3}{12}\). Add numerators: \(\frac{4}{12} + \frac{3}{12} = \frac{7}{12}\).</p>
+      <p style="margin:0;">\(\frac{5}{6} - \frac{1}{2}\). Common denominator: 6. \(\frac{1}{2} = \frac{3}{6}\). Subtract: \(\frac{5}{6} - \frac{3}{6} = \frac{2}{6} = \frac{1}{3}\) (simplify at the end).</p>
+    </div>
+  </div>
+
+  <!-- TAB 5: ARE YOU READY? -->
+  <div id="practice" class="panel">
+    <div class="section-title">Practice: Are You Ready?</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Type your own answer first, then click Check. You get up to <strong>2 tries</strong> per problem before the correct answer is shown.
+    </div>
+
+    <h3 style="color:var(--primary);">Fraction &harr; Decimal</h3>
+    <div id="convert-practice-list"></div>
+
+    <h3 style="color:var(--primary); margin-top:24px;">Unlike Denominators</h3>
+    <div id="unlike-practice-list"></div>
+
+    <h3 style="color:var(--primary); margin-top:24px;">Sign Rules Recap</h3>
+    <div id="signs-practice-list"></div>
+  </div>
+
+  <!-- TAB 6: RESOURCES -->
+  <div id="resources" class="panel">
+    <div class="section-title">Resources &amp; Next Steps</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">You're Ready for Operations with Rational Numbers When You Can...</div>
+      <ul class="ready-list">
+        <li>Convert any fraction to a decimal, and recognize whether it terminates or repeats.</li>
+        <li>Convert a terminating decimal back to a fraction, in simplest form.</li>
+        <li>Find a common denominator and add or subtract fractions with unlike denominators.</li>
+        <li>Apply the same-signs/different-signs rules from Integers without hesitating.</li>
+      </ul>
+    </div>
+
+    <div class="ixl-box">
+      <h3 style="margin-top:0; color:#15803d;">Extra Practice, Any Time</h3>
+      <ul>
+        <li>Convert fractions to decimals</li>
+        <li>Convert decimals to fractions</li>
+        <li>Add and subtract fractions with unlike denominators</li>
+        <li>Integer sign rules for all four operations</li>
+      </ul>
+    </div>
+
+    <div class="explainer-box" style="margin-top:24px;">
+      <strong>Next step:</strong> once you feel solid here, move on to this topic's own <strong>Vocabulary &amp; Literacy</strong> page from the Index to meet Keep-Change-Flip and the other new strategies before the Explanation.
+    </div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // GENERIC CHECK-STYLE PRACTICE LIST (2 tries, then reveal)
+  // ==========================================
+  const checkListRegistry = {};
+
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:170px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    triggerMathJax();
+  }
+
+  function checkListItem(keyPrefix, idx) {
+    const cfg = checkListRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const norm = (s) => String(s || '').toLowerCase().replace(/[\s,]/g, '');
+    const correct = p.numeric
+      ? LessonCheck.numericMatch(val, p.a, p.tol || 0.01)
+      : (p.accepted || [String(p.a)]).map(norm).includes(norm(val));
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! ${p.displayAnswer || ('The answer is ' + p.a + '.')}`,
+      retry: cfg.retry,
+      reveal: `Here's the correct answer: ${p.displayAnswer || p.a}`
+    });
+  }
+
+  const convertPractice = [
+    { q: "Convert \\(\\frac{5}{8}\\) to a decimal.", a: 0.625, numeric: true, tol: 0.001 },
+    { q: "Convert \\(\\frac{1}{6}\\) to a decimal, rounded to 3 places.", a: 0.167, numeric: true, tol: 0.002 },
+    { q: "Convert \\(0.24\\) to a fraction in simplest form. Type as a/b.", accepted: ["6/25"], displayAnswer: "\\(\\frac{6}{25}\\)" }
+  ];
+  renderCheckList('convert-practice-list', convertPractice, 'convert', "Not quite yet. Divide the numerator by the denominator, or write the decimal over its place-value power of 10.");
+
+  const unlikePractice = [
+    { q: "\\(\\frac{1}{2} + \\frac{1}{5}\\). Type as a/b.", accepted: ["7/10"], displayAnswer: "\\(\\frac{7}{10}\\)" },
+    { q: "\\(\\frac{3}{4} - \\frac{1}{3}\\). Type as a/b.", accepted: ["5/12"], displayAnswer: "\\(\\frac{5}{12}\\)" },
+    { q: "\\(\\frac{2}{3} + \\frac{1}{6}\\). Type as a/b, simplified.", accepted: ["5/6"], displayAnswer: "\\(\\frac{5}{6}\\)" }
+  ];
+  renderCheckList('unlike-practice-list', unlikePractice, 'unlike', "Not quite yet. Find a common denominator first, rewrite both fractions, then combine only the numerators.");
+
+  const signsPractice = [
+    { q: "\\(-4.5 + (-2.3)\\)", a: -6.8, numeric: true, tol: 0.01 },
+    { q: "\\(-\\frac{1}{2} \\times \\frac{2}{3}\\). Type as a/b (include the sign).", accepted: ["-1/3"], displayAnswer: "\\(-\\frac{1}{3}\\)" }
+  ];
+  renderCheckList('signs-practice-list', signsPractice, 'signs', "Not quite yet. Ask yourself: same signs, or different signs? Then apply that rule.");
+</script>
+</body>
+</html>

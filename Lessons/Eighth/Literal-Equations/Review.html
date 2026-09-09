@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Literal Equations - Review</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <style>
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .glossary-card {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .glossary-term { font-weight: 900; color: var(--primary); font-size: 1.1rem; margin-bottom: 6px; display: block; }
+    .glossary-def { margin: 0 0 8px 0; }
+    .glossary-example { background: #f1f5f9; border-radius: 6px; padding: 6px 10px; font-size: 0.92rem; color: #334155; }
+    .ready-list { list-style: none; margin: 12px 0 0 0; padding: 0; }
+    .ready-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: #ffffff; border: 2px solid var(--border); border-radius: 10px;
+      padding: 12px 16px; margin-bottom: 10px; font-weight: 600;
+    }
+    .ready-list li::before { content: "\2713"; color: var(--success); font-weight: 900; font-size: 1.2rem; }
+    .side-by-side {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin: 16px 0;
+    }
+    @media (max-width: 700px) { .side-by-side { grid-template-columns: 1fr; } }
+    .sbs-card {
+      background: #f8fafc; border: 2px solid var(--border); border-radius: 10px; padding: 16px 18px;
+    }
+    .sbs-card h4 { margin: 0 0 10px 0; color: var(--primary); }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Literal Equations &middot; Review</span>
+    <h1>Review: Solving Equations, Recapped</h1>
+    <p class="subtitle">Everything you need to remember before we start Literal Equations</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Nothing here is graded &ndash; this is a warm-up. Literal Equations doesn't teach a new way to solve an equation &ndash; it takes the exact method from Solving Linear Equations and applies it to formulas with more than one letter. If you can solve \(2x + 5 = 17\) confidently, you're most of the way to solving \(P = 2l + 2w\) for \(l\). Work through the tabs in order.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('why')">1. Why Review This?</button>
+    <button class="tab-btn" onclick="switchTab('vocab')">2. Vocabulary</button>
+    <button class="tab-btn" onclick="switchTab('onetwo')">3. One- &amp; Two-Step Equations</button>
+    <button class="tab-btn" onclick="switchTab('multistep')">4. Multi-Step Equations</button>
+    <button class="tab-btn" onclick="switchTab('bridge')">5. From Numbers to Letters</button>
+    <button class="tab-btn" onclick="switchTab('practice')">6. Are You Ready?</button>
+    <button class="tab-btn" onclick="switchTab('resources')">7. Resources</button>
+  </nav>
+
+  <!-- TAB 1: WHY REVIEW THIS -->
+  <div id="why" class="panel active">
+    <div class="section-title">Why We're Reviewing This First</div>
+    <div class="explainer-box">
+      Every technique in Literal Equations is borrowed directly from <strong>Solving Linear Equations</strong>: inverse operations, the properties of equality, combining like terms, distributing. The only genuinely new idea is that some of the "numbers" floating around in the equation are actually other letters &ndash; and those letters just get treated the same way a number would be. If the numeric solving process isn't automatic yet, that's the gap this page closes.
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">The Big Idea</div>
+      <p style="margin:0;">Solving any equation is the same four-word process, every time: <strong>simplify, then isolate.</strong> Simplify each side first (distribute, combine like terms). Then use inverse operations, in reverse order, to peel away everything that isn't the variable you want &ndash; performing the same operation on both sides every time. That process doesn't change one bit in Literal Equations.</p>
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">What This Page Covers</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>One- &amp; Two-Step Equations:</strong> the core inverse-operations pattern.</li>
+        <li><strong>Multi-Step Equations:</strong> combining like terms and distributing before you isolate.</li>
+        <li><strong>From Numbers to Letters:</strong> a preview of what changes (almost nothing) when other terms are variables.</li>
+        <li><strong>A short practice check</strong> so you know exactly what to brush up on before we begin.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TAB 2: VOCABULARY -->
+  <div id="vocab" class="panel">
+    <div class="section-title">Vocabulary Quick Reference</div>
+    <div class="explainer-box">
+      A fast reminder of the equation-solving vocabulary from last topic. (Words like <em>literal equation</em>, <em>formula</em>, and <em>subject of the formula</em> are brand new this topic, so they're taught in this topic's own <strong>Vocabulary &amp; Literacy</strong> page, not here.)
+    </div>
+    <div class="glossary-grid">
+      <div class="glossary-card">
+        <span class="glossary-term">Properties of Equality</span>
+        <p class="glossary-def">Rules that let you add, subtract, multiply, or divide <strong>both sides</strong> of an equation by the same amount without changing its solution.</p>
+        <div class="glossary-example">If \(a = b\), then \(a + c = b + c\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Inverse Operations</span>
+        <p class="glossary-def">Opposite operations that "undo" each other.</p>
+        <div class="glossary-example">Addition &harr; Subtraction; Multiplication &harr; Division</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Isolate the Variable</span>
+        <p class="glossary-def">The goal of solving: use inverse operations until the variable stands alone on one side.</p>
+        <div class="glossary-example">\(3x = 15 \rightarrow x = 5\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Like Terms</span>
+        <p class="glossary-def">Terms with the exact same variable part - combine by adding/subtracting coefficients.</p>
+        <div class="glossary-example">\(5x\) and \(-2x\)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: ONE- & TWO-STEP EQUATIONS -->
+  <div id="onetwo" class="panel">
+    <div class="section-title">One- &amp; Two-Step Equations: The Core Pattern</div>
+    <div class="explainer-box">
+      Every equation-solving move follows the same rule: <strong>whatever you do to one side, you must do to the other.</strong> To undo an operation, apply its inverse to both sides.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Inverse Operations Table</div>
+      <table class="data-table">
+        <thead><tr><th>If the equation shows...</th><th>Inverse</th><th>Action on BOTH sides</th></tr></thead>
+        <tbody>
+          <tr><td>Addition (\(+5\))</td><td>&harr;</td><td>Subtract 5</td></tr>
+          <tr><td>Subtraction (\(-8\))</td><td>&harr;</td><td>Add 8</td></tr>
+          <tr><td>Multiplication (\(3x\))</td><td>&harr;</td><td>Divide by 3</td></tr>
+          <tr><td>Division (\(\frac{x}{4}\))</td><td>&harr;</td><td>Multiply by 4</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: One Step</div>
+      <p style="margin:0;">\(x + 9 = 15\). Subtract 9 from both sides: \(x = 6\).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Two Steps</div>
+      <p style="margin:0 0 6px 0;">\(3x + 4 = 19\). This equation shows multiplication AND addition happening to \(x\) - undo them in <strong>reverse</strong> order (addition/subtraction first, then multiplication/division).</p>
+      <p style="margin:0 0 6px 0;"><strong>Step 1 - Subtract 4 from both sides:</strong> \(3x = 15\)</p>
+      <p style="margin:0;"><strong>Step 2 - Divide both sides by 3:</strong> \(x = \mathbf{5}\)</p>
+    </div>
+  </div>
+
+  <!-- TAB 4: MULTI-STEP EQUATIONS -->
+  <div id="multistep" class="panel">
+    <div class="section-title">Multi-Step Equations: Simplify First</div>
+    <div class="explainer-box">
+      When an equation has parentheses or terms to combine, that's not a solving step yet - it's a <strong>simplifying</strong> step. Always simplify each side completely first, and only then start isolating the variable.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Distribute, Combine, Then Isolate</div>
+      <p style="margin:0 0 8px 0;">Solve \(3(x + 2) = 21\).</p>
+      <p style="margin:0 0 6px 0;"><strong>Step 1 - Distribute:</strong> \(3x + 6 = 21\)</p>
+      <p style="margin:0 0 6px 0;"><strong>Step 2 - Subtract 6 from both sides:</strong> \(3x = 15\)</p>
+      <p style="margin:0;"><strong>Step 3 - Divide both sides by 3:</strong> \(x = \mathbf{5}\)</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Variable on Both Sides</div>
+      <p style="margin:0 0 8px 0;">Solve \(5x + 3 = 2x + 12\). First collect the variable terms onto one side.</p>
+      <p style="margin:0 0 6px 0;"><strong>Step 1 - Subtract \(2x\) from both sides:</strong> \(3x + 3 = 12\)</p>
+      <p style="margin:0 0 6px 0;"><strong>Step 2 - Subtract 3 from both sides:</strong> \(3x = 9\)</p>
+      <p style="margin:0;"><strong>Step 3 - Divide both sides by 3:</strong> \(x = \mathbf{3}\)</p>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Step-by-Step: A Harder Equation</h3>
+      <p style="margin:0 0 10px 0;"><strong>Problem:</strong> \(4y - 7 + 2y = -3(y-1) - 1\)</p>
+      <button class="btn-lg" onclick="revealMsStep()">Reveal Next Step</button>
+      <button class="btn-secondary" onclick="resetMsStep()">Reset</button>
+      <div id="ms-steps" style="margin-top:14px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 5: FROM NUMBERS TO LETTERS -->
+  <div id="bridge" class="panel">
+    <div class="section-title">From Numbers to Letters: What Actually Changes</div>
+    <div class="explainer-box">
+      Here's the preview for Literal Equations: every step you just reviewed works <strong>identically</strong> when some of the "numbers" in the equation are replaced with other letters. You do the exact same inverse operations, in the exact same order, on both sides. The only difference is that your final answer is an expression instead of a single number.
+    </div>
+
+    <div class="side-by-side">
+      <div class="sbs-card">
+        <h4>Solving With Numbers (what you know)</h4>
+        <p style="margin:0 0 6px 0;">Solve for \(x\): \(ax = b\)... but with real numbers:</p>
+        <p style="margin:0 0 6px 0;">\(5x = 20\)</p>
+        <p style="margin:0;">Divide both sides by 5: \(x = \mathbf{4}\)</p>
+      </div>
+      <div class="sbs-card">
+        <h4>Solving With a Letter Instead (what's coming)</h4>
+        <p style="margin:0 0 6px 0;">Solve for \(x\): \(ax = b\)</p>
+        <p style="margin:0 0 6px 0;">The "5" is now the letter \(a\) - treat it exactly like a number.</p>
+        <p style="margin:0;">Divide both sides by \(a\): \(x = \mathbf{\dfrac{b}{a}}\)</p>
+      </div>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Same Process, Different-Looking Answer</div>
+      <p style="margin:0;">Notice the process was <strong>identical</strong> in both columns above - "divide both sides by whatever is multiplying \(x\)." The only difference is that when it's a letter instead of a number, you can't simplify the division any further, so the letter stays in the answer. That's really all Literal Equations adds.</p>
+    </div>
+  </div>
+
+  <!-- TAB 6: ARE YOU READY? -->
+  <div id="practice" class="panel">
+    <div class="section-title">Practice: Are You Ready?</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Type your own answer first, then click Check. You get up to <strong>2 tries</strong> per problem before the correct answer is shown.
+    </div>
+
+    <h3 style="color:var(--primary);">One- &amp; Two-Step Equations</h3>
+    <div id="onetwo-practice-list"></div>
+
+    <h3 style="color:var(--primary); margin-top:24px;">Multi-Step Equations</h3>
+    <div id="multistep-practice-list"></div>
+  </div>
+
+  <!-- TAB 7: RESOURCES -->
+  <div id="resources" class="panel">
+    <div class="section-title">Resources &amp; Next Steps</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">You're Ready for Literal Equations When You Can...</div>
+      <ul class="ready-list">
+        <li>Solve a one- or two-step equation using inverse operations, without hesitating on the order.</li>
+        <li>Simplify each side of an equation (distribute, combine like terms) before isolating the variable.</li>
+        <li>Solve an equation with the variable on both sides by collecting variable terms first.</li>
+        <li>Explain, in your own words, why treating a letter "like a number" makes sense when solving.</li>
+      </ul>
+    </div>
+
+    <div class="ixl-box">
+      <h3 style="margin-top:0; color:#15803d;">Extra Practice, Any Time</h3>
+      <ul>
+        <li>Solve one-step equations</li>
+        <li>Solve two-step equations</li>
+        <li>Solve multi-step equations</li>
+        <li>Solve equations with variables on both sides</li>
+      </ul>
+    </div>
+
+    <div class="explainer-box" style="margin-top:24px;">
+      <strong>Next step:</strong> once you feel solid here, move on to this topic's own <strong>Vocabulary &amp; Literacy</strong> page from the Index to meet formulas and "solve for a variable," then the Explanation and Guided Solving Ladder pages.
+    </div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // MULTI-STEP EQUATION STEP-REVEAL
+  // ==========================================
+  const msSteps = [
+    "<strong>Step 1 - Combine like terms on the left; distribute on the right:</strong> \\(6y - 7 = -3y + 3 - 1 \\;\\rightarrow\\; 6y - 7 = -3y + 2\\)",
+    "<strong>Step 2 - Add \\(3y\\) to both sides:</strong> \\(9y - 7 = 2\\)",
+    "<strong>Step 3 - Add 7 to both sides:</strong> \\(9y = 9\\)",
+    "<strong>Step 4 - Divide both sides by 9:</strong> \\(y = \\mathbf{1}\\)"
+  ];
+  let msStepCount = 0;
+  function renderMsSteps() {
+    const html = msSteps.slice(0, msStepCount).map(s => `<div class="step-item visible">${s}</div>`).join('');
+    document.getElementById('ms-steps').innerHTML = html;
+    triggerMathJax();
+  }
+  function revealMsStep() {
+    if (msStepCount < msSteps.length) { msStepCount++; renderMsSteps(); }
+  }
+  function resetMsStep() { msStepCount = 0; renderMsSteps(); }
+
+  // ==========================================
+  // GENERIC CHECK-STYLE PRACTICE LIST (2 tries, then reveal)
+  // ==========================================
+  const checkListRegistry = {};
+
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:170px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    triggerMathJax();
+  }
+
+  function checkListItem(keyPrefix, idx) {
+    const cfg = checkListRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = LessonCheck.numericMatch(val, p.a, p.tol || 0.01);
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! \\(x = ${p.a}\\)`,
+      retry: cfg.retry,
+      reveal: `Here's the correct answer: \\(x = ${p.a}\\)`
+    });
+  }
+
+  const onetwoPractice = [
+    { q: "Solve: \\(x - 8 = 13\\)", a: 21 },
+    { q: "Solve: \\(\\frac{x}{4} = -9\\)", a: -36 },
+    { q: "Solve: \\(2x - 5 = 11\\)", a: 8 },
+    { q: "Solve: \\(-4x + 7 = -9\\)", a: 4 }
+  ];
+  renderCheckList('onetwo-practice-list', onetwoPractice, 'onetwo', "Not quite yet. Identify what's being done to x, then undo it with the inverse operation on both sides.");
+
+  const multistepPractice = [
+    { q: "Solve: \\(3(x - 2) + 4 = 10\\)", a: 4 },
+    { q: "Solve: \\(7x - 4 = 3x + 16\\)", a: 5 },
+    { q: "Solve: \\(9x - 2 = 4x + 23\\)", a: 5 }
+  ];
+  renderCheckList('multistep-practice-list', multistepPractice, 'multistep', "Not quite yet. Simplify each side first (distribute, combine like terms), then isolate the variable.");
+</script>
+</body>
+</html>
