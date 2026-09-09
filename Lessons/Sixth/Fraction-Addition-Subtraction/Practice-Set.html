@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Fraction Addition &amp; Subtraction - Practice Set</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <style>
+    .tier-heading {
+      font-weight: 800;
+      color: white;
+      background: var(--primary-light);
+      padding: 8px 16px;
+      border-radius: 8px;
+      margin: 24px 0 10px 0;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Fraction Addition &amp; Subtraction &middot; Practice Set</span>
+    <h1>Fraction Addition &amp; Subtraction: Practice Set</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Math 6 - Fraction Addition &amp; Subtraction - Practice Set')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    <ul style="margin:6px 0 0 0;">
+      <li><strong>Computation only</strong> - no word problems (those are on the Word Problems page).</li>
+      <li>Work the tabs in any order - each groups problems by type and difficulty.</li>
+      <li>Type answers as a fraction like <code>3/4</code> or a mixed number like <code>2 1/3</code>, always in <strong>simplest form</strong>. Click Check - <strong>2 tries</strong> before the method is shown.</li>
+      <li>When you finish, type your name above and click <strong>Print My Progress</strong>.</li>
+    </ul>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('like')">1. Like Denominators</button>
+    <button class="tab-btn" onclick="switchTab('unlike')">2. Unlike Denominators</button>
+    <button class="tab-btn" onclick="switchTab('mixed')">3. Mixed Numbers</button>
+    <button class="tab-btn" onclick="switchTab('wholefrac')">4. Whole Number + Fraction</button>
+    <button class="tab-btn" onclick="switchTab('erroranalysis')">5. Error Analysis</button>
+    <button class="tab-btn" onclick="switchTab('challenge')">6. Challenge Tier</button>
+  </nav>
+
+  <!-- PANEL 1: LIKE DENOMINATORS -->
+  <div id="like" class="panel active">
+    <div class="section-title">Like Denominators Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Add or subtract the numerators, keep the denominator, and simplify (or convert to a mixed number if improper).
+    </div>
+
+    <div class="tier-heading">Tier A: Warm-Up</div>
+    <div id="like-a-list"></div>
+    <div class="tier-heading">Tier B: Simplify &amp; Improper Results</div>
+    <div id="like-b-list"></div>
+    <div class="tier-heading">Tier C: Larger Denominators</div>
+    <div id="like-c-list"></div>
+  </div>
+
+  <!-- PANEL 2: UNLIKE DENOMINATORS -->
+  <div id="unlike" class="panel">
+    <div class="section-title">Unlike Denominators Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Find the LCD, rename both fractions, then add or subtract the numerators. Simplify your final answer.
+    </div>
+
+    <div class="tier-heading">Tier A: Warm-Up</div>
+    <div id="unlike-a-list"></div>
+    <div class="tier-heading">Tier B: Building Fluency</div>
+    <div id="unlike-b-list"></div>
+    <div class="tier-heading">Tier C: Larger LCDs</div>
+    <div id="unlike-c-list"></div>
+  </div>
+
+  <!-- PANEL 3: MIXED NUMBERS -->
+  <div id="mixed" class="panel">
+    <div class="section-title">Mixed Numbers Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      <ul style="margin:6px 0 0 0;">
+        <li>Combine whole numbers and fraction parts separately.</li>
+        <li>Tier B: watch for a fraction sum that's improper - regroup it into the whole number.</li>
+        <li>Tier C: watch for a fraction being subtracted that's bigger than what you have - regroup a whole first.</li>
+      </ul>
+    </div>
+
+    <div class="tier-heading">Tier A: No Regrouping</div>
+    <div id="mixed-a-list"></div>
+    <div class="tier-heading">Tier B: Regroup When Adding</div>
+    <div id="mixed-b-list"></div>
+    <div class="tier-heading">Tier C: Regroup (Borrow) When Subtracting</div>
+    <div id="mixed-c-list"></div>
+  </div>
+
+  <!-- PANEL 4: WHOLE NUMBER + FRACTION -->
+  <div id="wholefrac" class="panel">
+    <div class="section-title">Whole Number + Fraction Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Adding just attaches the fraction. Subtracting a fraction from a whole number means regrouping 1 whole into a fraction first.
+    </div>
+
+    <div class="tier-heading">Tier A: Warm-Up</div>
+    <div id="wf-a-list"></div>
+    <div class="tier-heading">Tier B: Building Fluency</div>
+    <div id="wf-b-list"></div>
+  </div>
+
+  <!-- PANEL 5: ERROR ANALYSIS -->
+  <div id="erroranalysis" class="panel">
+    <div class="section-title">Error Analysis: Find the Mistake</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      <ul style="margin:6px 0 0 0;">
+        <li>Read the work shown, then pick "Correct" or "There's a mistake."</li>
+        <li>Type the correct answer and click Submit My Work.</li>
+        <li>Use the arrows or dots to move between problems.</li>
+        <li>Not every problem has an error - read carefully!</li>
+      </ul>
+    </div>
+
+    <div class="explainer-box">
+      For each problem below, act as the teacher: look at another student's work, decide whether it's correct, and if it isn't, fix it.
+    </div>
+
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="ea-prev-btn" onclick="changeErrorEx(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="ea-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Problem 1 of 6</span>
+          <div class="carousel-indicators" id="ea-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="ea-next-btn" onclick="changeErrorEx(1)">Next &rarr;</button>
+      </div>
+      <div id="ea-content" style="min-height: 240px;"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 6: CHALLENGE TIER -->
+  <div id="challenge" class="panel">
+    <div class="section-title">Challenge Tier: One Level Harder</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      <ul style="margin:6px 0 0 0;">
+        <li>Harder than the tiers above - larger LCDs, more regrouping.</li>
+        <li>Solve on paper first, then type your answer.</li>
+      </ul>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Missing Numerator Challenge</h3>
+      <p><strong>Find the missing numerator \(X\):</strong></p>
+      \[\frac{X}{6} + \frac{1}{6} = \frac{5}{6}\]
+      <div class="form-group">
+        <label>What is \(X\)? Explain your reasoning.</label>
+        <input type="text" id="challenge-x" class="form-control-lg" style="max-width:160px;" placeholder="X = ?">
+        <textarea id="challenge-x-explain" class="form-control-lg" rows="2" style="margin-top:10px;" placeholder="Explain your reasoning..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkXChallenge()">Submit My Work</button>
+      <div id="challenge-x-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="tier-heading" style="margin-top:20px;">Mixed Number Challenges</div>
+    <div id="challenge-mixed-list"></div>
+
+    <div class="tier-heading" style="margin-top:24px;">Larger LCD Challenges</div>
+    <div id="challenge-lcd-list"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // Strips ALL whitespace so "2 1/3" and "2  1/3" both collapse to the same
+  // comparable string - accepted answers are stored pre-stripped the same way.
+  function normFracStrict(s) {
+    return String(s || '').toLowerCase().replace(/\s+/g, '');
+  }
+
+  // ==========================================
+  // GENERIC CHECK-STYLE COMPUTATION LIST (2 tries, then reveal)
+  // ==========================================
+  const checkListRegistry = {};
+
+  function renderCheckList(containerId, problems, keyPrefix, section, retryMsg) {
+    checkListRegistry[keyPrefix] = { problems, section, retry: retryMsg };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:150px; display:inline-block;" placeholder="e.g. 2 1/3">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, `${p.label || p.q.replace(/\\\(|\\\)/g, '')}`, section));
+    TeacherPrint.registerAnswerList(containerId, problems.map((p, i) => ({ inputId: `${keyPrefix}-${i}-input`, answerText: p.displayAnswer })));
+    triggerMathJax();
+  }
+
+  function checkListItem(keyPrefix, idx) {
+    const cfg = checkListRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = p.accepted.map(normFracStrict).includes(normFracStrict(val));
+    const label = p.label || p.q.replace(/\\\(|\\\)/g, '');
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(= \\mathbf{${p.displayAnswer}}\\)`,
+      retry: cfg.retry,
+      reveal: `Here's the correct answer: ${p.q} \\(= \\mathbf{${p.displayAnswer}}\\)`
+    }, { label, answer: val, section: cfg.section });
+  }
+
+  // ==========================================
+  // TAB 1: LIKE DENOMINATORS
+  // ==========================================
+  const likeA = [
+    { q: "\\(\\frac{2}{7} + \\frac{3}{7}\\)", accepted: ["5/7"], displayAnswer: "\\frac{5}{7}" },
+    { q: "\\(\\frac{5}{9} - \\frac{2}{9}\\)", accepted: ["3/9", "1/3"], displayAnswer: "\\frac{1}{3}" },
+    { q: "\\(\\frac{1}{4} + \\frac{2}{4}\\)", accepted: ["3/4"], displayAnswer: "\\frac{3}{4}" },
+    { q: "\\(\\frac{7}{8} - \\frac{4}{8}\\)", accepted: ["3/8"], displayAnswer: "\\frac{3}{8}" }
+  ];
+  const likeB = [
+    { q: "\\(\\frac{4}{6} + \\frac{3}{6}\\)", accepted: ["1 1/6"], displayAnswer: "1\\frac{1}{6}" },
+    { q: "\\(\\frac{5}{12} + \\frac{7}{12}\\)", accepted: ["1", "12/12"], displayAnswer: "1" },
+    { q: "\\(\\frac{9}{10} - \\frac{3}{10}\\)", accepted: ["3/5", "6/10"], displayAnswer: "\\frac{3}{5}" },
+    { q: "\\(\\frac{8}{15} - \\frac{3}{15}\\)", accepted: ["1/3", "5/15"], displayAnswer: "\\frac{1}{3}" }
+  ];
+  const likeC = [
+    { q: "\\(\\frac{7}{16} + \\frac{9}{16}\\)", accepted: ["1", "16/16"], displayAnswer: "1" },
+    { q: "\\(\\frac{11}{20} - \\frac{7}{20}\\)", accepted: ["1/5", "4/20"], displayAnswer: "\\frac{1}{5}" },
+    { q: "\\(\\frac{13}{18} - \\frac{5}{18}\\)", accepted: ["4/9", "8/18"], displayAnswer: "\\frac{4}{9}" },
+    { q: "\\(\\frac{5}{14} + \\frac{9}{14}\\)", accepted: ["1", "14/14"], displayAnswer: "1" }
+  ];
+  renderCheckList('like-a-list', likeA, 'likea', '1. Like Denominators', "Not quite yet. Add or subtract only the numerators - keep the denominator the same, then simplify.");
+  renderCheckList('like-b-list', likeB, 'likeb', '1. Like Denominators', "Not quite yet. Remember to simplify, and convert an improper result to a mixed number.");
+  renderCheckList('like-c-list', likeC, 'likec', '1. Like Denominators', "Not quite yet. Combine the numerators first, then simplify by dividing out a common factor.");
+
+  // ==========================================
+  // TAB 2: UNLIKE DENOMINATORS
+  // ==========================================
+  const unlikeA = [
+    { q: "\\(\\frac{1}{2} + \\frac{1}{4}\\)", accepted: ["3/4"], displayAnswer: "\\frac{3}{4}" },
+    { q: "\\(\\frac{2}{3} - \\frac{1}{6}\\)", accepted: ["1/2", "3/6"], displayAnswer: "\\frac{1}{2}" },
+    { q: "\\(\\frac{1}{5} + \\frac{1}{2}\\)", accepted: ["7/10"], displayAnswer: "\\frac{7}{10}" },
+    { q: "\\(\\frac{3}{4} - \\frac{1}{2}\\)", accepted: ["1/4"], displayAnswer: "\\frac{1}{4}" }
+  ];
+  const unlikeB = [
+    { q: "\\(\\frac{1}{3} + \\frac{1}{6}\\)", accepted: ["1/2", "3/6"], displayAnswer: "\\frac{1}{2}" },
+    { q: "\\(\\frac{5}{6} - \\frac{3}{8}\\)", accepted: ["11/24"], displayAnswer: "\\frac{11}{24}" },
+    { q: "\\(\\frac{2}{5} + \\frac{3}{10}\\)", accepted: ["7/10"], displayAnswer: "\\frac{7}{10}" },
+    { q: "\\(\\frac{7}{9} - \\frac{1}{3}\\)", accepted: ["4/9"], displayAnswer: "\\frac{4}{9}" }
+  ];
+  const unlikeC = [
+    { q: "\\(\\frac{3}{4} + \\frac{5}{6}\\)", accepted: ["1 7/12"], displayAnswer: "1\\frac{7}{12}" },
+    { q: "\\(\\frac{7}{8} - \\frac{2}{3}\\)", accepted: ["5/24"], displayAnswer: "\\frac{5}{24}" },
+    { q: "\\(\\frac{4}{5} + \\frac{5}{6}\\)", accepted: ["1 19/30"], displayAnswer: "1\\frac{19}{30}" },
+    { q: "\\(\\frac{9}{10} - \\frac{2}{5}\\)", accepted: ["1/2", "5/10"], displayAnswer: "\\frac{1}{2}" }
+  ];
+  renderCheckList('unlike-a-list', unlikeA, 'unlikea', '2. Unlike Denominators', "Not quite yet. Find the LCD of both denominators, rename both fractions, then add or subtract.");
+  renderCheckList('unlike-b-list', unlikeB, 'unlikeb', '2. Unlike Denominators', "Not quite yet. Double-check your LCD and both renamed fractions before combining.");
+  renderCheckList('unlike-c-list', unlikeC, 'unlikec', '2. Unlike Denominators', "Not quite yet. These have larger LCDs - list multiples carefully, then rename and combine.");
+
+  // ==========================================
+  // TAB 3: MIXED NUMBERS
+  // ==========================================
+  const mixedA = [
+    { q: "\\(1\\frac{1}{4} + 2\\frac{1}{2}\\)", accepted: ["3 3/4"], displayAnswer: "3\\frac{3}{4}" },
+    { q: "\\(4\\frac{2}{3} - 1\\frac{1}{3}\\)", accepted: ["3 1/3"], displayAnswer: "3\\frac{1}{3}" },
+    { q: "\\(3\\frac{1}{6} + 1\\frac{1}{2}\\)", accepted: ["4 2/3", "4 4/6"], displayAnswer: "4\\frac{2}{3}" },
+    { q: "\\(5\\frac{3}{4} - 2\\frac{1}{4}\\)", accepted: ["3 1/2", "3 2/4"], displayAnswer: "3\\frac{1}{2}" }
+  ];
+  const mixedB = [
+    { q: "\\(2\\frac{3}{4} + 1\\frac{1}{2}\\)", accepted: ["4 1/4"], displayAnswer: "4\\frac{1}{4}" },
+    { q: "\\(1\\frac{5}{6} + 2\\frac{2}{3}\\)", accepted: ["4 1/2", "4 3/6"], displayAnswer: "4\\frac{1}{2}" },
+    { q: "\\(3\\frac{2}{3} + 2\\frac{5}{6}\\)", accepted: ["6 1/2", "6 3/6"], displayAnswer: "6\\frac{1}{2}" },
+    { q: "\\(4\\frac{3}{5} + 1\\frac{4}{5}\\)", accepted: ["6 2/5"], displayAnswer: "6\\frac{2}{5}" }
+  ];
+  const mixedC = [
+    { q: "\\(4\\frac{1}{4} - 1\\frac{3}{4}\\)", accepted: ["2 1/2", "2 2/4"], displayAnswer: "2\\frac{1}{2}" },
+    { q: "\\(6\\frac{1}{3} - 2\\frac{5}{6}\\)", accepted: ["3 1/2", "3 3/6"], displayAnswer: "3\\frac{1}{2}" },
+    { q: "\\(5\\frac{1}{6} - 1\\frac{1}{2}\\)", accepted: ["3 2/3", "3 4/6"], displayAnswer: "3\\frac{2}{3}" },
+    { q: "\\(7\\frac{1}{5} - 3\\frac{3}{10}\\)", accepted: ["3 9/10"], displayAnswer: "3\\frac{9}{10}" }
+  ];
+  renderCheckList('mixed-a-list', mixedA, 'mixeda', '3. Mixed Numbers', "Not quite yet. Combine whole numbers and fraction parts separately, then simplify.");
+  renderCheckList('mixed-b-list', mixedB, 'mixedb', '3. Mixed Numbers', "Not quite yet. The fraction parts add up to more than 1 whole here - regroup that extra whole into your total.");
+  renderCheckList('mixed-c-list', mixedC, 'mixedc', '3. Mixed Numbers', "Not quite yet. Compare the fraction parts first - if you're subtracting a bigger fraction, regroup 1 whole before subtracting.");
+
+  // ==========================================
+  // TAB 4: WHOLE NUMBER + FRACTION
+  // ==========================================
+  const wfA = [
+    { q: "\\(6 + \\frac{3}{7}\\)", accepted: ["6 3/7"], displayAnswer: "6\\frac{3}{7}" },
+    { q: "\\(9 - \\frac{2}{5}\\)", accepted: ["8 3/5"], displayAnswer: "8\\frac{3}{5}" },
+    { q: "\\(4\\frac{2}{9} + 3\\)", accepted: ["7 2/9"], displayAnswer: "7\\frac{2}{9}" },
+    { q: "\\(8 - \\frac{5}{6}\\)", accepted: ["7 1/6"], displayAnswer: "7\\frac{1}{6}" }
+  ];
+  const wfB = [
+    { q: "\\(10 - \\frac{7}{8}\\)", accepted: ["9 1/8"], displayAnswer: "9\\frac{1}{8}" },
+    { q: "\\(5\\frac{1}{3} - 2\\)", accepted: ["3 1/3"], displayAnswer: "3\\frac{1}{3}" },
+    { q: "\\(12 + \\frac{4}{11}\\)", accepted: ["12 4/11"], displayAnswer: "12\\frac{4}{11}" },
+    { q: "\\(15 - \\frac{9}{10}\\)", accepted: ["14 1/10"], displayAnswer: "14\\frac{1}{10}" }
+  ];
+  renderCheckList('wf-a-list', wfA, 'wfa', '4. Whole Number + Fraction', "Not quite yet. Adding just attaches the fraction. Subtracting means regrouping 1 whole into a fraction first.");
+  renderCheckList('wf-b-list', wfB, 'wfb', '4. Whole Number + Fraction', "Not quite yet. Regroup 1 whole as a fraction with the matching denominator before subtracting.");
+
+  // ==========================================
+  // TAB 5: ERROR ANALYSIS CAROUSEL
+  // ==========================================
+  let currentEA = 0;
+  const errorExamples = [
+    {
+      title: "1. Check the Work",
+      problem: "\\(\\frac{2}{5} + \\frac{1}{5}\\), and the student wrote:",
+      studentWork: `<p style="text-align:center; font-size:1.3rem; font-weight:700;">\\(\\frac{2}{5} + \\frac{1}{5} = \\frac{3}{5}\\)</p>`,
+      verdict: "correct",
+      correctAccepted: ["3/5"],
+      correctDisplay: "\\frac{3}{5}",
+      reveal: "There's actually no mistake here! \\(\\frac{2}{5} + \\frac{1}{5} = \\frac{3}{5}\\) is correct and already in simplest form."
+    },
+    {
+      title: "2. Check the Work",
+      problem: "\\(\\frac{1}{3} + \\frac{1}{4}\\), and the student wrote \\(\\frac{1}{3} + \\frac{1}{4} = \\frac{2}{7}\\)",
+      studentWork: "",
+      verdict: "error",
+      correctAccepted: ["7/12"],
+      correctDisplay: "\\frac{7}{12}",
+      reveal: "<strong>The mistake:</strong> the student added the numerators AND the denominators straight across. You can only add numerators once the denominators already match.<br><strong>Correct calculation:</strong> LCD of 3 and 4 is 12. \\(\\frac{1}{3} = \\frac{4}{12}\\) and \\(\\frac{1}{4} = \\frac{3}{12}\\), so \\(\\frac{4}{12} + \\frac{3}{12} = \\mathbf{\\frac{7}{12}}\\)."
+    },
+    {
+      title: "3. Check the Work",
+      problem: "\\(\\frac{5}{6} - \\frac{1}{6}\\), and the student wrote:",
+      studentWork: `<p style="text-align:center; font-size:1.3rem; font-weight:700;">\\(\\frac{5}{6} - \\frac{1}{6} = \\frac{4}{6}\\)</p>`,
+      verdict: "error",
+      correctAccepted: ["2/3", "4/6"],
+      correctDisplay: "\\frac{2}{3}",
+      reveal: "<strong>The mistake:</strong> the subtraction itself is correct, but the answer was left unsimplified. \\(\\frac{4}{6}\\) still has a common factor of 2.<br><strong>Correct final answer:</strong> \\(\\frac{4}{6} = \\mathbf{\\frac{2}{3}}\\)."
+    },
+    {
+      title: "4. Check the Work",
+      problem: "\\(3\\frac{1}{4} + 1\\frac{3}{4}\\), and the student wrote \\(3\\frac{1}{4} + 1\\frac{3}{4} = 4\\frac{4}{4}\\)",
+      studentWork: "",
+      verdict: "error",
+      correctAccepted: ["5"],
+      correctDisplay: "5",
+      reveal: "<strong>The mistake:</strong> the student stopped one step early. \\(\\frac{4}{4}\\) equals a whole 1, so it needs to be regrouped into the whole-number part.<br><strong>Correct final answer:</strong> \\(4\\frac{4}{4} = 4 + 1 = \\mathbf{5}\\)."
+    },
+    {
+      title: "5. Check the Work",
+      problem: "\\(5 - \\frac{2}{3}\\), and the student wrote \\(5 - \\frac{2}{3} = 3\\frac{1}{3}\\)",
+      studentWork: "",
+      verdict: "error",
+      correctAccepted: ["4 1/3"],
+      correctDisplay: "4\\frac{1}{3}",
+      reveal: "<strong>The mistake:</strong> the student subtracted \\(2\\) directly from the whole number \\(5\\) instead of regrouping first.<br><strong>Correct calculation:</strong> regroup \\(5 = 4\\frac{3}{3}\\), then subtract: \\(4\\frac{3}{3} - \\frac{2}{3} = \\mathbf{4\\frac{1}{3}}\\)."
+    },
+    {
+      title: "6. Check the Work",
+      problem: "\\(2\\frac{1}{4} + 3\\frac{1}{2}\\), and the student wrote:",
+      studentWork: `<p style="text-align:center; font-size:1.3rem; font-weight:700;">\\(2\\frac{1}{4} + 3\\frac{1}{2} = 5\\frac{3}{4}\\)</p>`,
+      verdict: "correct",
+      correctAccepted: ["5 3/4"],
+      correctDisplay: "5\\frac{3}{4}",
+      reveal: "There's actually no mistake here! LCD of 4 and 2 is 4: \\(2\\frac{1}{4} + 3\\frac{2}{4} = 5\\frac{3}{4}\\), which is correct."
+    }
+  ];
+
+  function renderErrorCarousel() {
+    const ex = errorExamples[currentEA];
+    document.getElementById('ea-title').innerText = `Problem ${currentEA + 1} of ${errorExamples.length}`;
+    document.getElementById('ea-dots').innerHTML = errorExamples.map((_, i) => `<div class="dot ${i === currentEA ? 'active' : ''}" onclick="jumpToErrorEx(${i})"></div>`).join('');
+    document.getElementById('ea-content').innerHTML = `
+      <h3 style="color:var(--primary); margin-top:0;">${ex.title}</h3>
+      <p><strong>The Problem:</strong> ${ex.problem}</p>
+      ${ex.studentWork || ''}
+      <div class="step-box" style="margin-top:16px;">
+        <p style="margin:0 0 10px 0;"><strong>Act as the teacher:</strong> is this correct? What is the correct answer?</p>
+        <div class="form-group">
+          <label>Is the student's work correct?</label>
+          <select id="ea-verdict-${currentEA}" class="form-control-lg" style="max-width:240px;">
+            <option value="">Select...</option>
+            <option value="correct">Correct, no mistake</option>
+            <option value="error">There's a mistake</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>What is the correct answer? (simplest form)</label>
+          <input type="text" id="ea-answer-${currentEA}" class="form-control-lg" style="max-width:200px;" placeholder="e.g. 2 1/3">
+        </div>
+        <button class="btn-lg" onclick="checkErrorAnalysis(${currentEA})">Submit My Work</button>
+        <div id="ea-feedback-${currentEA}" class="feedback-msg" style="margin-top:14px;"></div>
+      </div>
+    `;
+    document.getElementById('ea-prev-btn').disabled = currentEA === 0;
+    document.getElementById('ea-next-btn').disabled = currentEA === errorExamples.length - 1;
+    triggerMathJax();
+  }
+  function changeErrorEx(dir) { currentEA = Math.max(0, Math.min(errorExamples.length - 1, currentEA + dir)); renderErrorCarousel(); }
+  function jumpToErrorEx(idx) { currentEA = idx; renderErrorCarousel(); }
+  TeacherPrint.registerCarousel('ea-content', errorExamples.length, jumpToErrorEx);
+
+  function checkErrorAnalysis(idx) {
+    const ex = errorExamples[idx];
+    const verdict = document.getElementById(`ea-verdict-${idx}`).value;
+    const val = document.getElementById(`ea-answer-${idx}`).value;
+    const fb = document.getElementById(`ea-feedback-${idx}`);
+    if (!verdict || !val.trim()) {
+      LessonCheck.incomplete(fb, "Choose a verdict and enter the correct answer before submitting.");
+      return;
+    }
+    const correct = verdict === ex.verdict && ex.correctAccepted.map(normFracStrict).includes(normFracStrict(val));
+    LessonCheck.submit(fb, {
+      key: `ea-${idx}`,
+      label: `Error Analysis: ${ex.problem.replace(/<[^>]+>/g, '').replace(/\\\(|\\\)/g, '')}`,
+      answer: `Verdict: ${verdict}, Answer: ${val}`,
+      section: '5. Error Analysis',
+      correct
+    }, correct ? `Correct verdict and answer! ${ex.reveal}` : `Here's the full explanation: ${ex.reveal}`);
+  }
+  errorExamples.forEach((ex, i) => LessonProgress.preRegister(`ea-${i}`, `Error Analysis: ${ex.problem.replace(/<[^>]+>/g, '').replace(/\\\(|\\\)/g, '')}`, '5. Error Analysis'));
+  renderErrorCarousel();
+
+  // ==========================================
+  // TAB 6: CHALLENGE TIER
+  // ==========================================
+  function checkXChallenge() {
+    const x = document.getElementById('challenge-x').value;
+    const explain = document.getElementById('challenge-x-explain').value.trim();
+    const fb = document.getElementById('challenge-x-feedback');
+    if (!x.trim() || explain.length <= 5) {
+      LessonCheck.incomplete(fb, "Fill in the missing numerator and write your explanation before submitting.");
+      return;
+    }
+    LessonCheck.submit(fb, { key: 'challenge-x', label: 'Missing Numerator Challenge: find X in X/6 + 1/6 = 5/6', answer: `X = ${x}`, section: '6. Challenge Tier', correct: x.trim() === '4' });
+  }
+  LessonProgress.preRegister('challenge-x', 'Missing Numerator Challenge: find X in X/6 + 1/6 = 5/6', '6. Challenge Tier');
+
+  const challengeMixed = [
+    { q: "Compute \\(2\\frac{3}{8} + 1\\frac{5}{6}\\).", accepted: ["4 5/24"], displayAnswer: "4\\frac{5}{24}" },
+    { q: "Compute \\(6\\frac{1}{4} - 3\\frac{5}{8}\\).", accepted: ["2 5/8"], displayAnswer: "2\\frac{5}{8}" },
+    { q: "Compute \\(9 - \\frac{5}{12}\\).", accepted: ["8 7/12"], displayAnswer: "8\\frac{7}{12}" }
+  ];
+  renderCheckList('challenge-mixed-list', challengeMixed, 'chmixed', '6. Challenge Tier', "Not quite yet. Find a common denominator for the fraction parts first, then watch for regrouping.");
+
+  const challengeLCD = [
+    { q: "Compute \\(\\frac{7}{9} + \\frac{5}{6}\\).", accepted: ["1 11/18"], displayAnswer: "1\\frac{11}{18}" },
+    { q: "Compute \\(\\frac{11}{12} - \\frac{3}{8}\\).", accepted: ["13/24"], displayAnswer: "\\frac{13}{24}" },
+    { q: "Compute \\(\\frac{5}{8} + \\frac{7}{10}\\).", accepted: ["1 13/40"], displayAnswer: "1\\frac{13}{40}" }
+  ];
+  renderCheckList('challenge-lcd-list', challengeLCD, 'chlcd', '6. Challenge Tier', "Not quite yet. These have larger LCDs - list multiples carefully before renaming and combining.");
+</script>
+<div id="print-report"></div>
+</body>
+</html>

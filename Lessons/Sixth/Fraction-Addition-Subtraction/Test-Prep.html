@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Fraction Addition &amp; Subtraction - Test Prep</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <style>
+    .section-heading {
+      font-weight: 800;
+      color: white;
+      background: var(--primary-light);
+      padding: 8px 16px;
+      border-radius: 8px;
+      margin: 24px 0 10px 0;
+      display: inline-block;
+    }
+    .final-box {
+      margin-top: 16px; background: var(--success-bg); border: 2px solid var(--success);
+      border-radius: 10px; padding: 12px 18px; text-align: center; font-weight: 900;
+      color: var(--success); font-size: 1.15rem;
+    }
+    .step-line { text-align: center; font-weight: 700; margin: 10px 0; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Fraction Addition &amp; Subtraction &middot; Test Prep</span>
+    <h1>Fraction Addition &amp; Subtraction: Test Prep</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+    <button class="btn-print" onclick="printProgressReport('Math 6 - Fraction Addition &amp; Subtraction - Test Prep')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    <ul style="margin:6px 0 0 0;">
+      <li>Work the tabs in order: review, review, concept check, mixed practice, then the readiness check.</li>
+      <li>Type answers as a fraction like <code>3/4</code> or a mixed number like <code>2 1/3</code>, always in <strong>simplest form</strong>.</li>
+      <li>When you finish, type your name above and click <strong>Print My Progress</strong>.</li>
+    </ul>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('reviewlike')">1. Review: Like Denominators</button>
+    <button class="tab-btn" onclick="switchTab('reviewunlike')">2. Review: Unlike &amp; Mixed</button>
+    <button class="tab-btn" onclick="switchTab('conceptcheck')">3. Concept Check</button>
+    <button class="tab-btn" onclick="switchTab('mixedpractice')">4. Mixed Practice</button>
+    <button class="tab-btn" onclick="switchTab('readiness')">5. Readiness Check</button>
+  </nav>
+
+  <!-- PANEL 1: REVIEW - LIKE DENOMINATORS -->
+  <div id="reviewlike" class="panel active">
+    <div class="section-title">Full Review: Like Denominators</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Rule Reminder</div>
+      <p style="margin:0;">Same denominator: add or subtract only the numerators, keep the denominator, then simplify.</p>
+    </div>
+
+    <h3>Worked Example 1: Adding (\(\frac{3}{10} + \frac{4}{10}\))</h3>
+    <div class="step-box">
+      <div id="ex1-worked-content" style="min-height:120px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextEx1Step()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetEx1Step()">Reset Steps</button>
+      </div>
+    </div>
+
+    <h3>Worked Example 2: Subtracting (\(\frac{9}{11} - \frac{4}{11}\))</h3>
+    <div class="step-box">
+      <div id="ex2-worked-content" style="min-height:120px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextEx2Step()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetEx2Step()">Reset Steps</button>
+      </div>
+    </div>
+
+    <h3>Try It Yourself</h3>
+    <div id="tryitlike-list"></div>
+  </div>
+
+  <!-- PANEL 2: REVIEW - UNLIKE & MIXED -->
+  <div id="reviewunlike" class="panel">
+    <div class="section-title">Full Review: Unlike Denominators &amp; Mixed Numbers</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Rule Reminder</div>
+      <p style="margin:0;">Unlike denominators: find the LCD and rename both fractions first. Mixed numbers: combine whole numbers and fraction parts separately, regrouping when needed.</p>
+    </div>
+
+    <h3>Worked Example 1: Unlike Denominators (\(\frac{1}{4} + \frac{1}{6}\))</h3>
+    <div class="step-box">
+      <div id="ex3-worked-content" style="min-height:140px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextEx3Step()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetEx3Step()">Reset Steps</button>
+      </div>
+    </div>
+
+    <h3>Worked Example 2: Mixed Number Subtraction With Borrowing (\(3\frac{1}{5} - 1\frac{3}{5}\))</h3>
+    <div class="step-box">
+      <div id="ex4-worked-content" style="min-height:160px;"></div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" onclick="nextEx4Step()">Next Step &darr;</button>
+        <button class="btn-secondary" onclick="resetEx4Step()">Reset Steps</button>
+      </div>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Critical Thinking</h3>
+      <p>Why must fractions have the same denominator before you can add or subtract them, but that's not required before you multiply them?</p>
+      <textarea id="critical-explain" class="form-control-lg" rows="3" placeholder="Explain your reasoning..."></textarea>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkCritical()">Submit My Work</button>
+      <div id="critical-feedback" class="feedback-msg"></div>
+    </div>
+
+    <h3>Try It Yourself</h3>
+    <div id="tryitunlike-list"></div>
+  </div>
+
+  <!-- PANEL 3: CONCEPT CHECK -->
+  <div id="conceptcheck" class="panel">
+    <div class="section-title">Concept Check</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Quick true/false and short-answer questions about the rules themselves, not just computation. You get up to 2 tries per question.
+    </div>
+    <div id="concept-list"></div>
+  </div>
+
+  <!-- PANEL 4: MIXED PRACTICE (submit-only, printable worksheet style) -->
+  <div id="mixedpractice" class="panel">
+    <div class="section-title">Mixed Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab - read this carefully</strong>
+      This tab works like a <strong>real printed test</strong>: type your answer and click Submit <strong>once</strong>. Your answer is simply recorded - you will not be told if it's right or wrong on screen. Your teacher reviews every answer here from your printed progress report, the same way they would grade a paper test. Once you submit an item, it locks so it can't be quietly changed afterward.
+    </div>
+
+    <div class="section-heading">Section 1: Computation</div>
+    <div id="mp-section1-list"></div>
+
+    <div class="section-heading">Section 2: Word Problems</div>
+    <div id="mp-section2-list"></div>
+
+    <div class="challenge-box">
+      <span class="notebook-header" style="color:#b45309;">Extra Credit (optional)</span>
+      <p style="margin-top:10px;">A carpenter has a board that is \(8\) ft long. She cuts a piece \(2\frac{3}{4}\) ft for a shelf and another piece \(1\frac{1}{2}\) ft for a bracket.</p>
+      <div class="form-group">
+        <label>A. How much board remains after both cuts?</label>
+        <input type="text" id="mp-ec-a" class="form-control-lg" style="max-width:200px;" placeholder="ft remaining">
+      </div>
+      <div class="form-group">
+        <label>B. She then cuts one more piece, \(\frac{1}{2}\) ft, for trim. How much board remains after that cut?</label>
+        <input type="text" id="mp-ec-b" class="form-control-lg" style="max-width:200px;" placeholder="ft remaining">
+      </div>
+      <button class="btn-lg" onclick="submitExtraCredit()">Submit Extra Credit</button>
+      <div id="mp-ec-feedback" class="feedback-msg"></div>
+    </div>
+
+    <div class="section-heading">More Mixed Computation</div>
+    <div id="mp-more-computation-list"></div>
+
+    <div class="section-heading">More Word Problems</div>
+    <div id="mp-more-wordproblems-list"></div>
+  </div>
+
+  <!-- PANEL 5: READINESS CHECK -->
+  <div id="readiness" class="panel">
+    <div class="section-title">Readiness Check: Fraction Addition &amp; Subtraction</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Answer all four questions, then click Submit. This is the last step before you print your progress - go back to the Student Name box in the blue bar at the top of the page, type your name, and click Print My Progress.
+    </div>
+
+    <form id="exit-form" onsubmit="submitReadiness(event)">
+      <div class="form-group">
+        <label>1. Compute the exact sum: \(\frac{5}{6} + \frac{1}{4}\)</label>
+        <input type="text" id="exit-1" class="form-control-lg" placeholder="Enter exact sum">
+      </div>
+
+      <div class="form-group">
+        <label>2. Compute the exact difference: \(4\frac{1}{3} - 1\frac{5}{6}\)</label>
+        <input type="text" id="exit-2" class="form-control-lg" placeholder="Enter exact difference">
+      </div>
+
+      <div class="form-group">
+        <label>3. Why must fractions have the same denominator before you add or subtract them, but not before you multiply them?</label>
+        <textarea id="exit-explain" class="form-control-lg" rows="3" placeholder="Explain using fraction bar reasoning..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>4. How did using a benchmark fraction to estimate help you check your exact answers in this topic?</label>
+        <textarea id="exit-reflect" class="form-control-lg" rows="3" placeholder="How did estimating help you?"></textarea>
+      </div>
+
+      <button type="submit" class="btn-lg">Submit Readiness Check</button>
+    </form>
+    <div id="exit-feedback" class="feedback-msg"></div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // Strips ALL whitespace so "2 1/3" and "2  1/3" both collapse to the same
+  // comparable string - accepted answers are stored pre-stripped the same way.
+  function normFracStrict(s) {
+    return String(s || '').toLowerCase().replace(/\s+/g, '');
+  }
+
+  // ==========================================
+  // TAB 1: WORKED EXAMPLE 1 - ADDING LIKE DENOMINATORS
+  // ==========================================
+  let ex1WorkedStep = 1;
+  function renderEx1Worked() {
+    const step = ex1WorkedStep;
+    document.getElementById('ex1-worked-content').innerHTML = `
+      <div class="step-line" style="margin-top:0;">\\(\\frac{3}{10} + \\frac{4}{10}\\)</div>
+      ${step >= 1 ? `<p style="text-align:center;">Step 1: Same denominator - add the numerators: \\(3 + 4 = 7\\).</p>` : ''}
+      ${step >= 2 ? `<p style="text-align:center;">Step 2: Keep the denominator: \\(\\frac{7}{10}\\). Already in simplest form.</p>` : ''}
+      ${step >= 2 ? `<div class="final-box">\\(\\frac{3}{10} + \\frac{4}{10} = \\mathbf{\\frac{7}{10}}\\)</div>` : ''}
+    `;
+    triggerMathJax();
+  }
+  function nextEx1Step() { if (ex1WorkedStep < 2) { ex1WorkedStep++; renderEx1Worked(); } }
+  function resetEx1Step() { ex1WorkedStep = 1; renderEx1Worked(); }
+  renderEx1Worked();
+
+  // TAB 1: WORKED EXAMPLE 2 - SUBTRACTING LIKE DENOMINATORS
+  let ex2WorkedStep = 1;
+  function renderEx2Worked() {
+    const step = ex2WorkedStep;
+    document.getElementById('ex2-worked-content').innerHTML = `
+      <div class="step-line" style="margin-top:0;">\\(\\frac{9}{11} - \\frac{4}{11}\\)</div>
+      ${step >= 1 ? `<p style="text-align:center;">Step 1: Same denominator - subtract the numerators: \\(9 - 4 = 5\\).</p>` : ''}
+      ${step >= 2 ? `<p style="text-align:center;">Step 2: Keep the denominator: \\(\\frac{5}{11}\\). Already in simplest form.</p>` : ''}
+      ${step >= 2 ? `<div class="final-box">\\(\\frac{9}{11} - \\frac{4}{11} = \\mathbf{\\frac{5}{11}}\\)</div>` : ''}
+    `;
+    triggerMathJax();
+  }
+  function nextEx2Step() { if (ex2WorkedStep < 2) { ex2WorkedStep++; renderEx2Worked(); } }
+  function resetEx2Step() { ex2WorkedStep = 1; renderEx2Worked(); }
+  renderEx2Worked();
+
+  // ==========================================
+  // GENERIC CHECK-STYLE LIST (2 tries, then reveal) - used for "Try It Yourself"
+  // ==========================================
+  const checkListRegistry = {};
+  function renderCheckList(containerId, problems, keyPrefix, section) {
+    checkListRegistry[keyPrefix] = { problems, section };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:170px; display:inline-block;" placeholder="e.g. 2 1/3">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, p.label || p.q.replace(/\\\(|\\\)/g, ''), section));
+    triggerMathJax();
+  }
+  function checkListItem(keyPrefix, idx) {
+    const cfg = checkListRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = p.accepted.map(normFracStrict).includes(normFracStrict(val));
+    const label = p.label || p.q.replace(/\\\(|\\\)/g, '');
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(= \\mathbf{${p.displayAnswer}}\\)`,
+      retry: "Not quite yet. Recheck your denominators and simplify your final answer.",
+      reveal: `Here's the correct answer: ${p.q} \\(= \\mathbf{${p.displayAnswer}}\\)`
+    }, { label, answer: val, section: cfg.section });
+  }
+
+  const tryitLike = [{ q: "\\(\\frac{5}{9} + \\frac{2}{9}\\)", accepted: ["7/9"], displayAnswer: "\\frac{7}{9}" }];
+  renderCheckList('tryitlike-list', tryitLike, 'tryitlike', '1. Review: Like Denominators');
+
+  // ==========================================
+  // TAB 2: WORKED EXAMPLE 3 - UNLIKE DENOMINATORS
+  // ==========================================
+  let ex3WorkedStep = 1;
+  function renderEx3Worked() {
+    const step = ex3WorkedStep;
+    document.getElementById('ex3-worked-content').innerHTML = `
+      <div class="step-line" style="margin-top:0;">\\(\\frac{1}{4} + \\frac{1}{6}\\)</div>
+      ${step >= 1 ? `<p style="text-align:center;">Step 1: LCD of 4 and 6 is 12.</p>` : ''}
+      ${step >= 2 ? `<p style="text-align:center;">Step 2: Rename: \\(\\frac{1}{4} = \\frac{3}{12}\\) and \\(\\frac{1}{6} = \\frac{2}{12}\\).</p>` : ''}
+      ${step >= 3 ? `<p style="text-align:center;">Step 3: Add: \\(\\frac{3}{12} + \\frac{2}{12} = \\frac{5}{12}\\). Already simplest form.</p>` : ''}
+      ${step >= 3 ? `<div class="final-box">\\(\\frac{1}{4} + \\frac{1}{6} = \\mathbf{\\frac{5}{12}}\\)</div>` : ''}
+    `;
+    triggerMathJax();
+  }
+  function nextEx3Step() { if (ex3WorkedStep < 3) { ex3WorkedStep++; renderEx3Worked(); } }
+  function resetEx3Step() { ex3WorkedStep = 1; renderEx3Worked(); }
+  renderEx3Worked();
+
+  // TAB 2: WORKED EXAMPLE 4 - MIXED NUMBER SUBTRACTION WITH BORROWING
+  let ex4WorkedStep = 1;
+  function renderEx4Worked() {
+    const step = ex4WorkedStep;
+    document.getElementById('ex4-worked-content').innerHTML = `
+      <div class="step-line" style="margin-top:0;">\\(3\\frac{1}{5} - 1\\frac{3}{5}\\)</div>
+      ${step >= 1 ? `<p style="text-align:center;">Step 1: Same denominator, but \\(\\frac{1}{5} < \\frac{3}{5}\\) - regroup needed.</p>` : ''}
+      ${step >= 2 ? `<p style="text-align:center;">Step 2: Regroup 1 whole from 3 into fifths: \\(3\\frac{1}{5} = 2\\frac{5}{5} + \\frac{1}{5} = 2\\frac{6}{5}\\).</p>` : ''}
+      ${step >= 3 ? `<p style="text-align:center;">Step 3: Subtract: \\(2\\frac{6}{5} - 1\\frac{3}{5} = 1\\frac{3}{5}\\). Already simplest form.</p>` : ''}
+      ${step >= 3 ? `<div class="final-box">\\(3\\frac{1}{5} - 1\\frac{3}{5} = \\mathbf{1\\frac{3}{5}}\\)</div>` : ''}
+    `;
+    triggerMathJax();
+  }
+  function nextEx4Step() { if (ex4WorkedStep < 3) { ex4WorkedStep++; renderEx4Worked(); } }
+  function resetEx4Step() { ex4WorkedStep = 1; renderEx4Worked(); }
+  renderEx4Worked();
+
+  function checkCritical() {
+    const explain = document.getElementById('critical-explain').value.trim();
+    const fb = document.getElementById('critical-feedback');
+    if (explain.length <= 5) {
+      LessonCheck.incomplete(fb, "Write your explanation before submitting.");
+      return;
+    }
+    LessonCheck.submit(fb, { key: 'critical', label: 'Critical Thinking: why denominators must match for add/subtract but not multiply', answer: explain, section: '2. Review: Unlike & Mixed' });
+  }
+  LessonProgress.preRegister('critical', 'Critical Thinking: why denominators must match for add/subtract but not multiply', '2. Review: Unlike & Mixed');
+
+  const tryitUnlike = [{ q: "\\(2\\frac{1}{3} + 1\\frac{1}{6}\\)", accepted: ["3 1/2", "3 3/6"], displayAnswer: "3\\frac{1}{2}" }];
+  renderCheckList('tryitunlike-list', tryitUnlike, 'tryitunlike', '2. Review: Unlike & Mixed');
+
+  // ==========================================
+  // TAB 3: CONCEPT CHECK
+  // ==========================================
+  const conceptItems = [
+    { q: "True or False: When fractions have unlike denominators, you can add the numerators and denominators straight across.", type: "tf", correctVal: "false", explain: "False - you must find a common denominator and rename both fractions before adding the numerators." },
+    { q: "True or False: A mixed number can be converted to an improper fraction by multiplying the whole number by the denominator and adding the numerator.", type: "tf", correctVal: "true", explain: "True - that gives the new numerator, and the denominator stays the same." },
+    { q: "What is the LCD of \\(\\frac{1}{4}\\) and \\(\\frac{1}{10}\\)?", type: "fraction", correctVal: "20", explain: "Multiples of 4: 4, 8, 12, 16, 20. Multiples of 10: 10, 20. The LCD is 20." },
+    { q: "True or False: When subtracting mixed numbers, if the fraction you're subtracting is bigger than the fraction you have, you must regroup 1 whole first.", type: "tf", correctVal: "true", explain: "True - regroup 1 whole from the whole-number part into an extra fraction before subtracting." },
+    { q: "Simplify \\(\\frac{9}{12}\\) to simplest form.", type: "fraction", correctVal: "3/4", explain: "Both 9 and 12 divide evenly by 3: \\(\\frac{9}{12} = \\frac{3}{4}\\)." },
+    { q: "True or False: \\(5 - \\frac{1}{4} = 4\\frac{1}{4}\\)", type: "tf", correctVal: "false", explain: "False - regroup 5 as \\(4\\frac{4}{4}\\) first: \\(4\\frac{4}{4} - \\frac{1}{4} = 4\\frac{3}{4}\\), not \\(4\\frac{1}{4}\\)." }
+  ];
+
+  function renderConceptList() {
+    const html = conceptItems.map((item, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${item.q}
+        <div style="margin-top:10px;">
+          ${item.type === 'tf'
+            ? `<select id="concept-${i}" class="form-control-lg" style="max-width:160px;"><option value="">Select...</option><option value="true">True</option><option value="false">False</option></select>`
+            : `<input type="text" id="concept-${i}" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">`}
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem; margin-left:10px;" onclick="checkConceptItem(${i})">Check</button>
+        </div>
+        <div id="concept-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('concept-list').innerHTML = html;
+    conceptItems.forEach((item, i) => LessonProgress.preRegister(`concept-${i}`, item.q.replace(/\\\(|\\\)/g, ''), '3. Concept Check'));
+    triggerMathJax();
+  }
+  renderConceptList();
+
+  function checkConceptItem(idx) {
+    const item = conceptItems[idx];
+    const val = document.getElementById(`concept-${idx}`).value;
+    const fb = document.getElementById(`concept-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Choose or enter an answer before checking.");
+      return;
+    }
+    const correct = item.type === 'tf' ? val === item.correctVal : normFracStrict(val) === normFracStrict(item.correctVal);
+    LessonCheck.check(`concept-${idx}`, correct, fb, {
+      correct: `Correct! ${item.explain}`,
+      retry: "Not quite yet. Review the rule and try again.",
+      reveal: item.explain
+    }, { label: item.q.replace(/\\\(|\\\)/g, ''), answer: val, section: '3. Concept Check' });
+  }
+
+  // ==========================================
+  // TAB 4: MIXED PRACTICE (submit-only for every item)
+  // ==========================================
+  function renderSubmitList(containerId, problems, keyPrefix, section) {
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px;">
+          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Your answer">
+          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="submitListItem('${keyPrefix}', ${i})">Submit</button>
+        </div>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, p.label || p.q.replace(/\\\(|\\\)/g, ''), section));
+    triggerMathJax();
+  }
+
+  const submitListRegistry = {};
+
+  function submitListItem(keyPrefix, idx) {
+    const cfg = submitListRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter your answer before submitting.");
+      return;
+    }
+    const label = p.label || p.q.replace(/\\\(|\\\)/g, '');
+    const correct = p.accepted.map(normFracStrict).includes(normFracStrict(val));
+    LessonCheck.submit(fb, { key: `${keyPrefix}-${idx}`, label, answer: val, section: cfg.section, correct });
+  }
+
+  const mpSection1 = [
+    { q: "Add: \\(\\frac{3}{8} + \\frac{2}{8}\\)", accepted: ["5/8"] },
+    { q: "Subtract: \\(\\frac{7}{9} - \\frac{2}{9}\\)", accepted: ["5/9"] },
+    { q: "Add: \\(\\frac{1}{2} + \\frac{1}{3}\\)", accepted: ["5/6"] },
+    { q: "Subtract: \\(\\frac{5}{6} - \\frac{1}{4}\\)", accepted: ["7/12"] },
+    { q: "Add: \\(2\\frac{1}{4} + 1\\frac{1}{2}\\)", accepted: ["3 3/4"] },
+    { q: "Subtract: \\(4\\frac{1}{5} - 1\\frac{3}{5}\\)", accepted: ["2 3/5"] }
+  ];
+  const mpSection2 = [
+    { q: "A store sells fabric by the yard. A customer buys \\(\\frac{3}{4}\\) yard for one project and \\(\\frac{5}{8}\\) yard for another. How much fabric in total?", accepted: ["1 3/8"] },
+    { q: "A student has \\(\\frac{7}{8}\\) hour of homework time. After working, \\(\\frac{1}{2}\\) hour has passed. How much homework time is left?", accepted: ["3/8"] },
+    { q: "A recipe calls for \\(2\\frac{1}{2}\\) cups of flour for one batch and \\(1\\frac{3}{4}\\) cups for another batch. How much flour in total?", accepted: ["4 1/4"] },
+    { q: "A jug had 4 liters of water. \\(1\\frac{3}{5}\\) liters were used. How much water remains?", accepted: ["2 2/5"] }
+  ];
+  submitListRegistry['mp1'] = { problems: mpSection1, section: 'Mixed Practice - Section 1' };
+  submitListRegistry['mp2'] = { problems: mpSection2, section: 'Mixed Practice - Section 2' };
+  renderSubmitList('mp-section1-list', mpSection1, 'mp1', 'Mixed Practice - Section 1');
+  renderSubmitList('mp-section2-list', mpSection2, 'mp2', 'Mixed Practice - Section 2');
+
+  function submitExtraCredit() {
+    const a = document.getElementById('mp-ec-a').value;
+    const b = document.getElementById('mp-ec-b').value;
+    const fb = document.getElementById('mp-ec-feedback');
+    if (!a.trim() && !b.trim()) {
+      LessonCheck.incomplete(fb, "Fill in at least one part before submitting, or leave both blank to skip this optional problem.");
+      return;
+    }
+    const correct = normFracStrict(a) === normFracStrict('3 3/4') && normFracStrict(b) === normFracStrict('3 1/4');
+    LessonCheck.submit(fb, { key: 'mp-ec', label: 'Extra Credit: board cuts remaining length', answer: `A=${a}, B=${b}`, section: 'Mixed Practice - Extra Credit', correct });
+  }
+  LessonProgress.preRegister('mp-ec', 'Extra Credit: board cuts remaining length', 'Mixed Practice - Extra Credit');
+
+  const mpMoreComputation = [
+    { q: "\\(\\frac{4}{7} + \\frac{2}{7}\\)", accepted: ["6/7"] },
+    { q: "\\(\\frac{11}{12} - \\frac{5}{12}\\)", accepted: ["1/2", "6/12"] },
+    { q: "\\(\\frac{2}{5} + \\frac{1}{3}\\)", accepted: ["11/15"] },
+    { q: "\\(\\frac{7}{10} - \\frac{2}{5}\\)", accepted: ["3/10"] },
+    { q: "\\(3\\frac{2}{7} + 1\\frac{3}{7}\\)", accepted: ["4 5/7"] },
+    { q: "\\(5\\frac{1}{8} - 2\\frac{5}{8}\\)", accepted: ["2 1/2", "2 4/8"] },
+    { q: "\\(6 + \\frac{2}{9}\\)", accepted: ["6 2/9"] },
+    { q: "\\(9 - \\frac{7}{8}\\)", accepted: ["8 1/8"] }
+  ];
+  submitListRegistry['mpmc'] = { problems: mpMoreComputation, section: 'Mixed Practice - More Computation' };
+  renderSubmitList('mp-more-computation-list', mpMoreComputation, 'mpmc', 'Mixed Practice - More Computation');
+
+  const mpMoreWordProblems = [
+    { q: "A painter mixes \\(\\frac{2}{3}\\) gallon of blue paint with \\(\\frac{1}{6}\\) gallon of white paint. How much paint in total?", accepted: ["5/6"] },
+    { q: "A tank had \\(3\\frac{1}{2}\\) gallons of water. \\(1\\frac{3}{4}\\) gallons leaked out. How much water remains?", accepted: ["1 3/4"] },
+    { q: "A student's backpack weighs \\(4\\frac{1}{4}\\) pounds. She adds a \\(1\\frac{1}{2}\\) pound textbook. What is the total weight now?", accepted: ["5 3/4"] },
+    { q: "A pitcher is \\(\\frac{5}{6}\\) full. \\(\\frac{1}{3}\\) of the pitcher's capacity is poured into a glass. How much remains in the pitcher?", accepted: ["1/2", "3/6"] }
+  ];
+  submitListRegistry['mpmw'] = { problems: mpMoreWordProblems, section: 'Mixed Practice - More Word Problems' };
+  renderSubmitList('mp-more-wordproblems-list', mpMoreWordProblems, 'mpmw', 'Mixed Practice - More Word Problems');
+
+  // ==========================================
+  // TAB 5: READINESS CHECK
+  // ==========================================
+  LessonProgress.preRegister('readiness', 'Readiness Check: sum, difference, and reflections', '5. Readiness Check');
+
+  function submitReadiness(e) {
+    e.preventDefault();
+    const a1 = document.getElementById('exit-1').value;
+    const a2 = document.getElementById('exit-2').value;
+    const exp = document.getElementById('exit-explain').value.trim();
+    const ref = document.getElementById('exit-reflect').value.trim();
+    const fb = document.getElementById('exit-feedback');
+
+    if (!a1.trim() || !a2.trim() || exp.length <= 5 || ref.length <= 5) {
+      LessonCheck.incomplete(fb, "Fill in the sum, the difference, and both explanation boxes before submitting.");
+      return;
+    }
+
+    const correct = normFracStrict(a1) === normFracStrict('1 1/12') && normFracStrict(a2) === normFracStrict('2 1/2');
+    LessonCheck.submit(fb, { key: 'readiness', label: 'Readiness Check: sum, difference, and reflections', answer: `Sum=${a1}, Difference=${a2}`, section: '5. Readiness Check', correct }, "Readiness Check submitted and logged successfully!");
+    LessonProgress.recordText('Readiness Check: denominator matching explanation', exp, '5. Readiness Check');
+    LessonProgress.recordText('Readiness Check: estimation reflection', ref, '5. Readiness Check');
+  }
+</script>
+<div id="print-report"></div>
+</body>
+</html>

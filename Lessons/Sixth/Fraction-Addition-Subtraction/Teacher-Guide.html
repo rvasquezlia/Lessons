@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Fraction Addition &amp; Subtraction - Teacher's Guide</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <style>
+    .pacing-table td:nth-child(2), .pacing-table th:nth-child(2) { text-align: center; white-space: nowrap; }
+    .section-day-heading {
+      background: var(--primary);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 28px 0 12px 0;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .misconception-box {
+      background: #fff7ed;
+      border: 3px solid #fb923c;
+      border-left: 10px solid #c2410c;
+      border-radius: 12px;
+      padding: 18px 22px;
+      margin: 18px 0;
+    }
+    .misconception-box h4 { margin: 0 0 8px 0; color: #9a3412; }
+    .diff-box {
+      background: #eef2ff;
+      border: 2px solid #a5b4fc;
+      border-left: 8px solid #4338ca;
+      border-radius: 12px;
+      padding: 18px 22px;
+      margin: 16px 0;
+    }
+    .diff-box h4 { margin: 0 0 8px 0; color: #3730a3; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Fraction Addition &amp; Subtraction &middot; Teacher's Guide</span>
+    <h1>Teacher's Guide: Fraction Addition &amp; Subtraction</h1>
+    <p class="subtitle">Pacing, Full Answer Keys, Misconceptions &amp; Differentiation, and Teacher Resources</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">This page is for you, not students</strong>
+    <ul style="margin:6px 0 0 0;">
+      <li>Not linked from any student page - no student-facing print button.</li>
+      <li>Tabs below: suggested pacing, full answer keys (same structure as the student pages), misconceptions &amp; differentiation notes, and teacher resources.</li>
+    </ul>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('overview')">1. Overview &amp; Pacing</button>
+    <button class="tab-btn" onclick="switchTab('key-explanation')">2. Key: Explanation</button>
+    <button class="tab-btn" onclick="switchTab('key-practice')">3. Key: Practice Set</button>
+    <button class="tab-btn" onclick="switchTab('key-word')">4. Key: Word Problems</button>
+    <button class="tab-btn" onclick="switchTab('key-testprep')">5. Key: Test Prep</button>
+    <button class="tab-btn" onclick="switchTab('misconceptions')">6. Misconceptions &amp; Differentiation</button>
+    <button class="tab-btn" onclick="switchTab('resources')">7. Teacher Resources</button>
+  </nav>
+
+  <!-- PANEL 1: OVERVIEW & PACING -->
+  <div id="overview" class="panel active">
+    <div class="section-title">Topic Overview</div>
+
+    <div class="explainer-box">
+      <strong>Fraction Addition &amp; Subtraction</strong> covers adding and subtracting fractions with like denominators, unlike denominators, mixed numbers (including regrouping/borrowing), and whole numbers combined with fractions. Six standing pages instead of a Monday-Friday schedule - assign in order, or send a student a link to just the page they need. Use the pacing below as a starting point.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Why This Topic Sits Here</div>
+      <p style="margin:0;">The enVision+ 6th-grade scope jumps straight from decimal operations into <em>multiplying and dividing</em> fractions (Topic 1, Lessons 1-5 through 1-8), assuming addition and subtraction of fractions was mastered in 5th grade (enVision Grade 5, Topic 7). This standing topic fills that gap for any student who needs it re-taught, reinforced, or simply refreshed before the multiply/divide-fractions unit - use it as a bridge, a small-group re-teach, or a whole-class refresher depending on where your students are.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Topic Objectives</div>
+      <ul>
+        <li>Explain why fractions need a common denominator before they can be added or subtracted, using a fraction bar model.</li>
+        <li>Add and subtract fractions with like denominators, simplifying results and converting improper results to mixed numbers.</li>
+        <li>Find the least common denominator (LCD) of two fractions and rename them before adding or subtracting.</li>
+        <li>Add and subtract mixed numbers, regrouping (borrowing) a whole into a fraction when needed.</li>
+        <li>Add and subtract combinations of whole numbers and fractions, including regrouping a whole number into a fraction for subtraction.</li>
+        <li>Interpret contextual word problems to determine whether addition or subtraction is required, using a benchmark-fraction estimate to check reasonableness.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Standards</div>
+      <p style="margin:0;"><strong>CCSS.Math.Content.5.NF.A.1</strong> (add and subtract fractions with unlike denominators, including mixed numbers, by replacing with equivalent fractions) &amp; <strong>CCSS.Math.Content.5.NF.A.2</strong> (solve word problems involving addition and subtraction of fractions) &amp; <strong>MP1</strong> (Make Sense of Problems and Persevere in Solving Them) &amp; <strong>MP2</strong> (Reason Abstractly and Quantitatively).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Multidisciplinary Connections</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Culinary Arts:</strong> combining and adjusting recipe measurements (Word Problems: Career Connections - Culinary Arts).</li>
+        <li><strong>Construction &amp; Carpentry:</strong> cutting and joining fractional board and pipe lengths (Word Problems: Career Connections - Construction).</li>
+        <li><strong>Fashion &amp; Textile Design:</strong> combining fabric yardage across pattern pieces (Word Problems: Career Connections - Fashion Design).</li>
+        <li><strong>Physical Science &amp; Everyday Measurement:</strong> combining liquid volumes, distances, and weights (Word Problems: Real-World Applications).</li>
+        <li><strong>Digital Literacy:</strong> IXL adaptive practice (see Teacher Resources tab for skill codes).</li>
+      </ul>
+    </div>
+
+    <div class="section-title" style="margin-top:32px;">Suggested Pacing Across the Six Pages</div>
+    <p>Paces across roughly 5-6 periods (a mix of 45- and 90-minute blocks) - adjust freely, since nothing on the student pages is timed or locked to a specific day.</p>
+
+    <table class="data-table pacing-table">
+      <thead><tr><th>Session</th><th>Length</th><th>What to cover</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>45 min</td><td><strong>Review</strong> (all 6 tabs) - use this as a diagnostic. If most students breeze through "Are You Ready?", move quickly; if not, slow down here rather than in the main lesson.</td></tr>
+        <tr><td>2</td><td>45 min</td><td><strong>Vocabulary &amp; Literacy</strong> (all 4 tabs) + <strong>Explanation</strong> Tab 1 (Fraction Foundations). Have students copy the Word Bank into their notebooks.</td></tr>
+        <tr><td>3</td><td>45 min</td><td><strong>Explanation</strong> Tabs 2-3 (Like Denominators, Unlike Denominators) as direct instruction - model the carousels and extra guided examples on the projector.</td></tr>
+        <tr><td>4</td><td>90 min (double)</td><td><strong>Explanation</strong> Tabs 4-5 (Mixed Numbers, Whole Numbers + Fractions) - Tab 4 covers both regrouping directions (carrying on addition, borrowing on subtraction), so it's worth extra time rather than rushing.</td></tr>
+        <tr><td>5</td><td>90 min (double)</td><td><strong>Explanation</strong> Tabs 6-7 (Word Problem Strategy, Whiteboard Modeling) + begin <strong>Practice Set</strong> Tabs 1-4 (Like, Unlike, Mixed Numbers, Whole + Fraction) as guided/independent practice.</td></tr>
+        <tr><td>6</td><td>45 min</td><td>Finish <strong>Practice Set</strong> Tabs 5-6 (Error Analysis, Challenge Tier) + <strong>Word Problems</strong> Tabs 1-4 (Guided Practice through Career Connections) - Career Connections works well run as a jigsaw: assign each table one theme, then mix at the end.</td></tr>
+        <tr><td>7</td><td>45 min</td><td><strong>Word Problems</strong> Tab 5 (Challenge Tier) + <strong>Test Prep</strong> Tabs 1-3 (both Review tabs + Concept Check).</td></tr>
+        <tr><td>8</td><td>45 min</td><td><strong>Test Prep</strong> Tab 4, Mixed Practice, administered as a paper test day if desired - devices away except to confirm completion - then <strong>Test Prep</strong> Tab 5 (Readiness Check) as a whole-topic wrap-up. Students print their final progress report from any page they haven't already printed from.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Materials Needed</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Vocabulary &amp; Literacy / Explanation:</strong> a whiteboard/projector for modeling; one device per student (or pairs) for the interactive fraction bar models and carousels.</li>
+        <li><strong>Explanation Tab 7 (Whiteboard Modeling):</strong> works best whole-class at a physical whiteboard with student volunteers.</li>
+        <li><strong>Practice Set / Word Problems:</strong> one device per student.</li>
+        <li><strong>Word Problems: Career Connections:</strong> works well as a jigsaw - assign each table one theme (Culinary Arts, Construction, or Fashion Design) or let every student work all three independently on-screen.</li>
+        <li><strong>Test Prep Mixed Practice:</strong> the on-screen version is submit-only, so it works directly as a digital assessment, or read the problems aloud/project them for a paper test day.</li>
+        <li><strong>Throughout:</strong> printer or "print to PDF" access so students can submit their Print My Progress page to Google Classroom from Practice Set, Word Problems, or Test Prep.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PANEL 2: ANSWER KEY - EXPLANATION -->
+  <div id="key-explanation" class="panel">
+    <div class="section-title">Answer Key: Explanation</div>
+    <p>Every worked example on the Explanation page reaches these final answers - use this to check your own modeling on the projector, or a student's notebook copy.</p>
+
+    <div class="section-day-heading">Tab 2: Like Denominators</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Carousel 1: \(\frac{3}{8}+\frac{4}{8}\)</td><td>\(\mathbf{\frac{7}{8}}\)</td></tr>
+        <tr><td>Carousel 2: \(\frac{5}{6}-\frac{1}{6}\)</td><td>\(\mathbf{\frac{2}{3}}\)</td></tr>
+        <tr><td>Carousel 3: \(\frac{5}{6}+\frac{5}{6}\)</td><td>\(\mathbf{1\frac{2}{3}}\)</td></tr>
+        <tr><td>Extra 1: \(\frac{2}{9}+\frac{5}{9}\)</td><td>\(\mathbf{\frac{7}{9}}\)</td></tr>
+        <tr><td>Extra 2: \(\frac{7}{10}-\frac{3}{10}\)</td><td>\(\mathbf{\frac{2}{5}}\)</td></tr>
+        <tr><td>Word problem: pizza \(\frac{7}{8}-\frac{3}{8}\)</td><td>\(\mathbf{\frac{1}{2}}\) pizza left</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">Tab 3: Unlike Denominators</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Carousel 1: \(\frac{1}{3}+\frac{1}{4}\)</td><td>\(\mathbf{\frac{7}{12}}\)</td></tr>
+        <tr><td>Carousel 2: \(\frac{5}{6}-\frac{1}{4}\)</td><td>\(\mathbf{\frac{7}{12}}\)</td></tr>
+        <tr><td>Carousel 3: \(\frac{1}{2}+\frac{3}{8}\)</td><td>\(\mathbf{\frac{7}{8}}\)</td></tr>
+        <tr><td>Extra 1: \(\frac{2}{5}+\frac{1}{2}\)</td><td>\(\mathbf{\frac{9}{10}}\)</td></tr>
+        <tr><td>Extra 2: \(\frac{3}{4}-\frac{2}{5}\)</td><td>\(\mathbf{\frac{7}{20}}\)</td></tr>
+        <tr><td>Word problem: recipe flour \(\frac{2}{3}+\frac{1}{4}\)</td><td>\(\mathbf{\frac{11}{12}}\) cup</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">Tab 4: Mixed Numbers</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Carousel 1: \(2\frac{1}{5}+1\frac{2}{5}\)</td><td>\(\mathbf{3\frac{3}{5}}\)</td></tr>
+        <tr><td>Carousel 2: \(1\frac{3}{4}+2\frac{5}{6}\)</td><td>\(\mathbf{4\frac{7}{12}}\)</td></tr>
+        <tr><td>Carousel 3: \(5\frac{1}{4}-2\frac{3}{4}\)</td><td>\(\mathbf{2\frac{1}{2}}\)</td></tr>
+        <tr><td>Extra 1: \(3\frac{2}{3}+1\frac{5}{6}\)</td><td>\(\mathbf{5\frac{1}{2}}\)</td></tr>
+        <tr><td>Extra 2: \(4\frac{1}{6}-1\frac{1}{2}\)</td><td>\(\mathbf{2\frac{2}{3}}\)</td></tr>
+        <tr><td>Word problem: board \(6\frac{1}{4}-2\frac{3}{4}\)</td><td>\(\mathbf{3\frac{1}{2}}\) inches left</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">Tab 5: Whole Numbers + Fractions</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Carousel 1: \(4+\frac{2}{5}\)</td><td>\(\mathbf{4\frac{2}{5}}\)</td></tr>
+        <tr><td>Carousel 2: \(5-\frac{2}{3}\)</td><td>\(\mathbf{4\frac{1}{3}}\)</td></tr>
+        <tr><td>Carousel 3: \(3\frac{1}{4}+2\)</td><td>\(\mathbf{5\frac{1}{4}}\)</td></tr>
+        <tr><td>Extra: \(7-\frac{3}{8}\)</td><td>\(\mathbf{6\frac{5}{8}}\)</td></tr>
+        <tr><td>Word problem: pizza \(4-\frac{3}{4}\)</td><td>\(\mathbf{3\frac{1}{4}}\) pizzas left</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">Tab 6: Word Problem Strategy</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Baking sugar: \(\frac{3}{4}+\frac{1}{2}\)</td><td>\(\mathbf{1\frac{1}{4}}\) cups</td></tr>
+        <tr><td>2. Running distance: \(2\frac{1}{3}+1\frac{5}{6}\)</td><td>\(\mathbf{4\frac{1}{6}}\) miles</td></tr>
+        <tr><td>3. Ribbon: \(3\frac{1}{2}-1\frac{3}{4}\)</td><td>\(\mathbf{1\frac{3}{4}}\) yards left</td></tr>
+        <tr><td>4. Paint: \(5-\frac{2}{5}\)</td><td>\(\mathbf{4\frac{3}{5}}\) liters left</td></tr>
+        <tr><td>5. Boards: \(\frac{7}{8}-\frac{5}{6}\)</td><td>\(\mathbf{\frac{1}{24}}\) meter difference</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">Tab 7: Whiteboard Modeling</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Prob 1: \(\frac{3}{5}+\frac{1}{5}\)</td><td>\(\mathbf{\frac{4}{5}}\)</td></tr>
+        <tr><td>Prob 2: \(2\frac{1}{4}+1\frac{1}{2}\)</td><td>\(\mathbf{3\frac{3}{4}}\)</td></tr>
+        <tr><td>Prob 3: \(\frac{5}{6}-\frac{1}{3}\)</td><td>\(\mathbf{\frac{1}{2}}\)</td></tr>
+        <tr><td>Prob 4: \(6-2\frac{2}{3}\)</td><td>\(\mathbf{3\frac{1}{3}}\)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 3: ANSWER KEY - PRACTICE SET -->
+  <div id="key-practice" class="panel">
+    <div class="section-title">Answer Key: Practice Set</div>
+
+    <div class="section-day-heading">Tab 1: Like Denominators</div>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Tier A</th></tr></thead>
+      <tbody>
+        <tr><td>\(\frac{2}{7}+\frac{3}{7}\)</td><td>\(\mathbf{\frac{5}{7}}\)</td></tr>
+        <tr><td>\(\frac{5}{9}-\frac{2}{9}\)</td><td>\(\mathbf{\frac{1}{3}}\)</td></tr>
+        <tr><td>\(\frac{1}{4}+\frac{2}{4}\)</td><td>\(\mathbf{\frac{3}{4}}\)</td></tr>
+        <tr><td>\(\frac{7}{8}-\frac{4}{8}\)</td><td>\(\mathbf{\frac{3}{8}}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Tier B</th></tr></thead>
+      <tbody>
+        <tr><td>\(\frac{4}{6}+\frac{3}{6}\)</td><td>\(\mathbf{1\frac{1}{6}}\)</td></tr>
+        <tr><td>\(\frac{5}{12}+\frac{7}{12}\)</td><td>\(\mathbf{1}\)</td></tr>
+        <tr><td>\(\frac{9}{10}-\frac{3}{10}\)</td><td>\(\mathbf{\frac{3}{5}}\)</td></tr>
+        <tr><td>\(\frac{8}{15}-\frac{3}{15}\)</td><td>\(\mathbf{\frac{1}{3}}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Tier C</th></tr></thead>
+      <tbody>
+        <tr><td>\(\frac{7}{16}+\frac{9}{16}\)</td><td>\(\mathbf{1}\)</td></tr>
+        <tr><td>\(\frac{11}{20}-\frac{7}{20}\)</td><td>\(\mathbf{\frac{1}{5}}\)</td></tr>
+        <tr><td>\(\frac{13}{18}-\frac{5}{18}\)</td><td>\(\mathbf{\frac{4}{9}}\)</td></tr>
+        <tr><td>\(\frac{5}{14}+\frac{9}{14}\)</td><td>\(\mathbf{1}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">Tab 2: Unlike Denominators</div>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Tier A</th></tr></thead>
+      <tbody>
+        <tr><td>\(\frac{1}{2}+\frac{1}{4}\)</td><td>\(\mathbf{\frac{3}{4}}\)</td></tr>
+        <tr><td>\(\frac{2}{3}-\frac{1}{6}\)</td><td>\(\mathbf{\frac{1}{2}}\)</td></tr>
+        <tr><td>\(\frac{1}{5}+\frac{1}{2}\)</td><td>\(\mathbf{\frac{7}{10}}\)</td></tr>
+        <tr><td>\(\frac{3}{4}-\frac{1}{2}\)</td><td>\(\mathbf{\frac{1}{4}}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Tier B</th></tr></thead>
+      <tbody>
+        <tr><td>\(\frac{1}{3}+\frac{1}{6}\)</td><td>\(\mathbf{\frac{1}{2}}\)</td></tr>
+        <tr><td>\(\frac{5}{6}-\frac{3}{8}\)</td><td>\(\mathbf{\frac{11}{24}}\)</td></tr>
+        <tr><td>\(\frac{2}{5}+\frac{3}{10}\)</td><td>\(\mathbf{\frac{7}{10}}\)</td></tr>
+        <tr><td>\(\frac{7}{9}-\frac{1}{3}\)</td><td>\(\mathbf{\frac{4}{9}}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Tier C</th></tr></thead>
+      <tbody>
+        <tr><td>\(\frac{3}{4}+\frac{5}{6}\)</td><td>\(\mathbf{1\frac{7}{12}}\)</td></tr>
+        <tr><td>\(\frac{7}{8}-\frac{2}{3}\)</td><td>\(\mathbf{\frac{5}{24}}\)</td></tr>
+        <tr><td>\(\frac{4}{5}+\frac{5}{6}\)</td><td>\(\mathbf{1\frac{19}{30}}\)</td></tr>
+        <tr><td>\(\frac{9}{10}-\frac{2}{5}\)</td><td>\(\mathbf{\frac{1}{2}}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">Tab 3: Mixed Numbers</div>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Tier A: No Regrouping</th></tr></thead>
+      <tbody>
+        <tr><td>\(1\frac{1}{4}+2\frac{1}{2}\)</td><td>\(\mathbf{3\frac{3}{4}}\)</td></tr>
+        <tr><td>\(4\frac{2}{3}-1\frac{1}{3}\)</td><td>\(\mathbf{3\frac{1}{3}}\)</td></tr>
+        <tr><td>\(3\frac{1}{6}+1\frac{1}{2}\)</td><td>\(\mathbf{4\frac{2}{3}}\)</td></tr>
+        <tr><td>\(5\frac{3}{4}-2\frac{1}{4}\)</td><td>\(\mathbf{3\frac{1}{2}}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Tier B: Regroup When Adding</th></tr></thead>
+      <tbody>
+        <tr><td>\(2\frac{3}{4}+1\frac{1}{2}\)</td><td>\(\mathbf{4\frac{1}{4}}\)</td></tr>
+        <tr><td>\(1\frac{5}{6}+2\frac{2}{3}\)</td><td>\(\mathbf{4\frac{1}{2}}\)</td></tr>
+        <tr><td>\(3\frac{2}{3}+2\frac{5}{6}\)</td><td>\(\mathbf{6\frac{1}{2}}\)</td></tr>
+        <tr><td>\(4\frac{3}{5}+1\frac{4}{5}\)</td><td>\(\mathbf{6\frac{2}{5}}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Tier C: Regroup (Borrow) When Subtracting</th></tr></thead>
+      <tbody>
+        <tr><td>\(4\frac{1}{4}-1\frac{3}{4}\)</td><td>\(\mathbf{2\frac{1}{2}}\)</td></tr>
+        <tr><td>\(6\frac{1}{3}-2\frac{5}{6}\)</td><td>\(\mathbf{3\frac{1}{2}}\)</td></tr>
+        <tr><td>\(5\frac{1}{6}-1\frac{1}{2}\)</td><td>\(\mathbf{3\frac{2}{3}}\)</td></tr>
+        <tr><td>\(7\frac{1}{5}-3\frac{3}{10}\)</td><td>\(\mathbf{3\frac{9}{10}}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">Tab 4: Whole Number + Fraction</div>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Tier A</th></tr></thead>
+      <tbody>
+        <tr><td>\(6+\frac{3}{7}\)</td><td>\(\mathbf{6\frac{3}{7}}\)</td></tr>
+        <tr><td>\(9-\frac{2}{5}\)</td><td>\(\mathbf{8\frac{3}{5}}\)</td></tr>
+        <tr><td>\(4\frac{2}{9}+3\)</td><td>\(\mathbf{7\frac{2}{9}}\)</td></tr>
+        <tr><td>\(8-\frac{5}{6}\)</td><td>\(\mathbf{7\frac{1}{6}}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Tier B</th></tr></thead>
+      <tbody>
+        <tr><td>\(10-\frac{7}{8}\)</td><td>\(\mathbf{9\frac{1}{8}}\)</td></tr>
+        <tr><td>\(5\frac{1}{3}-2\)</td><td>\(\mathbf{3\frac{1}{3}}\)</td></tr>
+        <tr><td>\(12+\frac{4}{11}\)</td><td>\(\mathbf{12\frac{4}{11}}\)</td></tr>
+        <tr><td>\(15-\frac{9}{10}\)</td><td>\(\mathbf{14\frac{1}{10}}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">Tab 5: Error Analysis</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1: \(\frac{2}{5}+\frac{1}{5}\)</td><td>Correct, no mistake: \(\mathbf{\frac{3}{5}}\)</td></tr>
+        <tr><td>2: \(\frac{1}{3}+\frac{1}{4}\)</td><td>Mistake (added straight across); correct \(=\mathbf{\frac{7}{12}}\)</td></tr>
+        <tr><td>3: \(\frac{5}{6}-\frac{1}{6}\)</td><td>Mistake (left unsimplified at \(\frac{4}{6}\)); correct \(=\mathbf{\frac{2}{3}}\)</td></tr>
+        <tr><td>4: \(3\frac{1}{4}+1\frac{3}{4}\)</td><td>Mistake (stopped at \(4\frac{4}{4}\), didn't regroup); correct \(=\mathbf{5}\)</td></tr>
+        <tr><td>5: \(5-\frac{2}{3}\)</td><td>Mistake (subtracted 2 from the whole number directly); correct \(=\mathbf{4\frac{1}{3}}\)</td></tr>
+        <tr><td>6: \(2\frac{1}{4}+3\frac{1}{2}\)</td><td>Correct, no mistake: \(\mathbf{5\frac{3}{4}}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">Tab 6: Challenge Tier</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Missing Numerator Challenge: \(\frac{X}{6}+\frac{1}{6}=\frac{5}{6}\)</td><td>\(X = \mathbf{4}\)</td></tr>
+        <tr><td>\(2\frac{3}{8}+1\frac{5}{6}\)</td><td>\(\mathbf{4\frac{5}{24}}\)</td></tr>
+        <tr><td>\(6\frac{1}{4}-3\frac{5}{8}\)</td><td>\(\mathbf{2\frac{5}{8}}\)</td></tr>
+        <tr><td>\(9-\frac{5}{12}\)</td><td>\(\mathbf{8\frac{7}{12}}\)</td></tr>
+        <tr><td>\(\frac{7}{9}+\frac{5}{6}\)</td><td>\(\mathbf{1\frac{11}{18}}\)</td></tr>
+        <tr><td>\(\frac{11}{12}-\frac{3}{8}\)</td><td>\(\mathbf{\frac{13}{24}}\)</td></tr>
+        <tr><td>\(\frac{5}{8}+\frac{7}{10}\)</td><td>\(\mathbf{1\frac{13}{40}}\)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 4: ANSWER KEY - WORD PROBLEMS -->
+  <div id="key-word" class="panel">
+    <div class="section-title">Answer Key: Word Problems</div>
+
+    <div class="section-day-heading">Tab 1: Guided Practice</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Book read Mon + Tue</td><td>\(\mathbf{\frac{3}{5}}\)</td></tr>
+        <tr><td>2. Garden bed soil remaining</td><td>\(\mathbf{\frac{1}{2}}\)</td></tr>
+        <tr><td>3. Combined rope length</td><td>\(\mathbf{\frac{7}{12}}\)</td></tr>
+        <tr><td>4. Fraction of tank used</td><td>\(\mathbf{\frac{1}{3}}\)</td></tr>
+        <tr><td>5. Total hiking distance</td><td>\(\mathbf{3\frac{3}{4}}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">Tab 2: Mixed Word Problems</div>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Answer</th></tr></thead>
+      <tbody>
+        <tr><td>1. Wall painted</td><td>\(\mathbf{\frac{7}{9}}\)</td></tr>
+        <tr><td>2. Math + reading time</td><td>\(\mathbf{1}\)</td></tr>
+        <tr><td>3. Juice remaining</td><td>\(\mathbf{\frac{3}{5}}\)</td></tr>
+        <tr><td>4. Fabric used (2 patches)</td><td>\(\mathbf{\frac{1}{2}}\)</td></tr>
+        <tr><td>5. Garden still planted</td><td>\(\mathbf{\frac{7}{12}}\)</td></tr>
+        <tr><td>6. Joined board length</td><td>\(\mathbf{3\frac{1}{2}}\)</td></tr>
+        <tr><td>7. Ribbon remaining</td><td>\(\mathbf{2\frac{3}{5}}\)</td></tr>
+        <tr><td>8. Cake remaining</td><td>\(\mathbf{2\frac{1}{3}}\)</td></tr>
+        <tr><td>9. Total distance run</td><td>\(\mathbf{5\frac{3}{4}}\)</td></tr>
+        <tr><td>10. Wire length difference</td><td>\(\mathbf{\frac{1}{10}}\)</td></tr>
+        <tr><td>11. Total flour weight</td><td>\(\mathbf{4\frac{1}{4}}\)</td></tr>
+        <tr><td>12. Lemonade remaining</td><td>\(\mathbf{\frac{1}{2}}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">Tab 3: Real-World Applications</div>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Set A</th></tr></thead>
+      <tbody>
+        <tr><td>Butter still needed</td><td>\(\mathbf{\frac{1}{4}}\)</td></tr>
+        <tr><td>Board used by two pieces</td><td>\(\mathbf{\frac{7}{8}}\)</td></tr>
+        <tr><td>Pizza + tacos fraction</td><td>\(\mathbf{\frac{7}{10}}\)</td></tr>
+        <tr><td>Pool water lost</td><td>\(\mathbf{\frac{1}{8}}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Set B</th></tr></thead>
+      <tbody>
+        <tr><td>Total cycling distance</td><td>\(\mathbf{7}\)</td></tr>
+        <tr><td>Total theater time</td><td>\(\mathbf{2\frac{1}{2}}\)</td></tr>
+        <tr><td>Board remaining</td><td>\(\mathbf{5\frac{5}{8}}\)</td></tr>
+        <tr><td>Remaining distance between hikers</td><td>\(\mathbf{3\frac{1}{2}}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">Tab 4: Career Connections</div>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Culinary Arts</th></tr></thead>
+      <tbody>
+        <tr><td>Total sweetener: \(\frac{2}{3}+\frac{1}{4}\)</td><td>\(\mathbf{\frac{11}{12}}\)</td></tr>
+        <tr><td>Cream left: \(\frac{7}{8}-\frac{1}{2}\)</td><td>\(\mathbf{\frac{3}{8}}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Construction &amp; Carpentry</th></tr></thead>
+      <tbody>
+        <tr><td>Joined boards: \(3\frac{5}{8}+2\frac{3}{4}\)</td><td>\(\mathbf{6\frac{3}{8}}\)</td></tr>
+        <tr><td>Pipe left: \(6-2\frac{1}{3}\)</td><td>\(\mathbf{3\frac{2}{3}}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Fashion &amp; Textile Design</th></tr></thead>
+      <tbody>
+        <tr><td>Fabric needed: \(1\frac{1}{2}+2\frac{3}{4}\)</td><td>\(\mathbf{4\frac{1}{4}}\)</td></tr>
+        <tr><td>Fabric left: \(5-3\frac{1}{4}\)</td><td>\(\mathbf{1\frac{3}{4}}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">Tab 5: Challenge Tier</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Flour, 3 steps: \(2\frac{1}{4}+1\frac{5}{6}+\frac{3}{4}\)</td><td>\(\mathbf{4\frac{5}{6}}\)</td></tr>
+        <tr><td>2. Road trip time: \(3\frac{1}{2}+\frac{1}{4}+2\frac{2}{3}\)</td><td>\(\mathbf{6\frac{5}{12}}\)</td></tr>
+        <tr><td>3. Tank water: \(8-2\frac{3}{5}-1\frac{7}{10}\)</td><td>\(\mathbf{3\frac{7}{10}}\)</td></tr>
+        <tr><td>4. Fabric: \(6-1\frac{3}{8}-2\frac{1}{4}\)</td><td>\(\mathbf{2\frac{3}{8}}\)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 5: ANSWER KEY - TEST PREP -->
+  <div id="key-testprep" class="panel">
+    <div class="section-title">Answer Key: Test Prep</div>
+
+    <div class="section-day-heading">Tabs 1-2: Review Worked Examples &amp; Try It Yourself</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Ex 1: \(\frac{3}{10}+\frac{4}{10}\)</td><td>\(\mathbf{\frac{7}{10}}\)</td></tr>
+        <tr><td>Ex 2: \(\frac{9}{11}-\frac{4}{11}\)</td><td>\(\mathbf{\frac{5}{11}}\)</td></tr>
+        <tr><td>Try It (Like): \(\frac{5}{9}+\frac{2}{9}\)</td><td>\(\mathbf{\frac{7}{9}}\)</td></tr>
+        <tr><td>Ex 3: \(\frac{1}{4}+\frac{1}{6}\)</td><td>\(\mathbf{\frac{5}{12}}\)</td></tr>
+        <tr><td>Ex 4: \(3\frac{1}{5}-1\frac{3}{5}\)</td><td>\(\mathbf{1\frac{3}{5}}\)</td></tr>
+        <tr><td>Try It (Unlike/Mixed): \(2\frac{1}{3}+1\frac{1}{6}\)</td><td>\(\mathbf{3\frac{1}{2}}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">Tab 3: Concept Check</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. T/F: add numerators &amp; denominators straight across for unlike fractions</td><td><strong>False</strong></td></tr>
+        <tr><td>2. T/F: mixed &rarr; improper by multiply-add</td><td><strong>True</strong></td></tr>
+        <tr><td>3. LCD of \(\frac{1}{4}\) and \(\frac{1}{10}\)</td><td>\(\mathbf{20}\)</td></tr>
+        <tr><td>4. T/F: regroup before subtracting a bigger fraction</td><td><strong>True</strong></td></tr>
+        <tr><td>5. Simplify \(\frac{9}{12}\)</td><td>\(\mathbf{\frac{3}{4}}\)</td></tr>
+        <tr><td>6. T/F: \(5-\frac{1}{4}=4\frac{1}{4}\)</td><td><strong>False</strong> (correct: \(4\frac{3}{4}\))</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">Tab 4: Mixed Practice</div>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Section 1: Computation</th></tr></thead>
+      <tbody>
+        <tr><td>\(\frac{3}{8}+\frac{2}{8}\)</td><td>\(\mathbf{\frac{5}{8}}\)</td></tr>
+        <tr><td>\(\frac{7}{9}-\frac{2}{9}\)</td><td>\(\mathbf{\frac{5}{9}}\)</td></tr>
+        <tr><td>\(\frac{1}{2}+\frac{1}{3}\)</td><td>\(\mathbf{\frac{5}{6}}\)</td></tr>
+        <tr><td>\(\frac{5}{6}-\frac{1}{4}\)</td><td>\(\mathbf{\frac{7}{12}}\)</td></tr>
+        <tr><td>\(2\frac{1}{4}+1\frac{1}{2}\)</td><td>\(\mathbf{3\frac{3}{4}}\)</td></tr>
+        <tr><td>\(4\frac{1}{5}-1\frac{3}{5}\)</td><td>\(\mathbf{2\frac{3}{5}}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Section 2: Word Problems</th></tr></thead>
+      <tbody>
+        <tr><td>Fabric total: \(\frac{3}{4}+\frac{5}{8}\)</td><td>\(\mathbf{1\frac{3}{8}}\)</td></tr>
+        <tr><td>Homework left: \(\frac{7}{8}-\frac{1}{2}\)</td><td>\(\mathbf{\frac{3}{8}}\)</td></tr>
+        <tr><td>Flour total: \(2\frac{1}{2}+1\frac{3}{4}\)</td><td>\(\mathbf{4\frac{1}{4}}\)</td></tr>
+        <tr><td>Water left: \(4-1\frac{3}{5}\)</td><td>\(\mathbf{2\frac{2}{5}}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">Extra Credit: Board Cuts</th></tr></thead>
+      <tbody>
+        <tr><td>A. Remaining after 2 cuts: \(8-2\frac{3}{4}-1\frac{1}{2}\)</td><td>\(\mathbf{3\frac{3}{4}}\)</td></tr>
+        <tr><td>B. Remaining after trim cut too: \(3\frac{3}{4}-\frac{1}{2}\)</td><td>\(\mathbf{3\frac{1}{4}}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">More Mixed Computation</th></tr></thead>
+      <tbody>
+        <tr><td>\(\frac{4}{7}+\frac{2}{7}\)</td><td>\(\mathbf{\frac{6}{7}}\)</td></tr>
+        <tr><td>\(\frac{11}{12}-\frac{5}{12}\)</td><td>\(\mathbf{\frac{1}{2}}\)</td></tr>
+        <tr><td>\(\frac{2}{5}+\frac{1}{3}\)</td><td>\(\mathbf{\frac{11}{15}}\)</td></tr>
+        <tr><td>\(\frac{7}{10}-\frac{2}{5}\)</td><td>\(\mathbf{\frac{3}{10}}\)</td></tr>
+        <tr><td>\(3\frac{2}{7}+1\frac{3}{7}\)</td><td>\(\mathbf{4\frac{5}{7}}\)</td></tr>
+        <tr><td>\(5\frac{1}{8}-2\frac{5}{8}\)</td><td>\(\mathbf{2\frac{1}{2}}\)</td></tr>
+        <tr><td>\(6+\frac{2}{9}\)</td><td>\(\mathbf{6\frac{2}{9}}\)</td></tr>
+        <tr><td>\(9-\frac{7}{8}\)</td><td>\(\mathbf{8\frac{1}{8}}\)</td></tr>
+      </tbody>
+    </table>
+    <table class="data-table">
+      <thead><tr><th colspan="2">More Word Problems</th></tr></thead>
+      <tbody>
+        <tr><td>Paint total: \(\frac{2}{3}+\frac{1}{6}\)</td><td>\(\mathbf{\frac{5}{6}}\)</td></tr>
+        <tr><td>Tank water left: \(3\frac{1}{2}-1\frac{3}{4}\)</td><td>\(\mathbf{1\frac{3}{4}}\)</td></tr>
+        <tr><td>Backpack weight: \(4\frac{1}{4}+1\frac{1}{2}\)</td><td>\(\mathbf{5\frac{3}{4}}\)</td></tr>
+        <tr><td>Pitcher remaining: \(\frac{5}{6}-\frac{1}{3}\)</td><td>\(\mathbf{\frac{1}{2}}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">Tab 5: Readiness Check</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(\frac{5}{6}+\frac{1}{4}\)</td><td>\(\mathbf{1\frac{1}{12}}\)</td></tr>
+        <tr><td>2. \(4\frac{1}{3}-1\frac{5}{6}\)</td><td>\(\mathbf{2\frac{1}{2}}\)</td></tr>
+        <tr><td colspan="2">3 &amp; 4 are open-ended reflections - review from the printed progress report, not auto-graded.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 6: MISCONCEPTIONS & DIFFERENTIATION -->
+  <div id="misconceptions" class="panel">
+    <div class="section-title">Common Misconceptions</div>
+
+    <div class="misconception-box">
+      <h4>1. Adding numerators AND denominators straight across</h4>
+      <p style="margin:0;">The single most common error with unlike denominators: \(\frac{1}{3}+\frac{1}{4}\) becomes \(\frac{2}{7}\) (Practice Set &gt; Error Analysis #2; Test Prep &gt; Concept Check #1). <strong>Fix:</strong> constantly ask "are these the same size pieces?" before any numerator gets touched - the denominator names the piece size and never gets added.</p>
+    </div>
+    <div class="misconception-box">
+      <h4>2. Forgetting to simplify the final answer</h4>
+      <p style="margin:0;">A correctly computed \(\frac{4}{6}\) is often left unsimplified instead of reduced to \(\frac{2}{3}\) (Practice Set &gt; Error Analysis #3). <strong>Fix:</strong> make "can both numbers still be divided by something?" the very last question before calling a problem done.</p>
+    </div>
+    <div class="misconception-box">
+      <h4>3. Stopping before regrouping an improper fraction part</h4>
+      <p style="margin:0;">Students correctly reach a result like \(4\frac{4}{4}\) and stop there instead of recognizing \(\frac{4}{4}=1\) and carrying it into the whole number (Practice Set &gt; Error Analysis #4). <strong>Fix:</strong> always check whether the fraction part is \(\ge 1\) before calling an addition finished.</p>
+    </div>
+    <div class="misconception-box">
+      <h4>4. Subtracting a whole number's part directly instead of regrouping</h4>
+      <p style="margin:0;">In \(5-\frac{2}{3}\), students subtract \(2\) straight from \(5\) and tack the fraction on, getting \(3\frac{1}{3}\) instead of \(4\frac{1}{3}\) (Practice Set &gt; Error Analysis #5). <strong>Fix:</strong> a whole number has to be rewritten as (whole \(-1\)) plus a fraction equal to \(1\) before you can subtract any fraction from it.</p>
+    </div>
+    <div class="misconception-box">
+      <h4>5. Assuming every "find the error" problem has an error</h4>
+      <p style="margin:0;">Two of the six Error Analysis problems on Practice Set are actually correct. Students who assume every problem is broken invent errors that aren't there. <strong>Fix:</strong> require a full recompute before choosing a verdict.</p>
+    </div>
+    <div class="misconception-box">
+      <h4>6. Not regrouping before subtracting mixed numbers</h4>
+      <p style="margin:0;">In \(5\frac{1}{4}-2\frac{3}{4}\), students try to subtract \(\frac{3}{4}\) from \(\frac{1}{4}\) directly and either get a negative fraction or just flip the subtraction (Explanation &gt; Mixed Numbers, Carousel 3). <strong>Fix:</strong> compare the fraction parts <em>before</em> subtracting - if the one being subtracted is bigger, regroup first, every time.</p>
+    </div>
+    <div class="misconception-box">
+      <h4>7. Finding "a" common denominator instead of the least one</h4>
+      <p style="margin:0;">Multiplying the two denominators together always works, but it inflates the numbers unnecessarily and makes simplifying harder at the end (e.g. using 24 instead of 12 for \(\frac{1}{4}\) and \(\frac{1}{6}\)). <strong>Fix:</strong> this isn't wrong, but model listing multiples to find the smallest shared one - it keeps the numbers manageable.</p>
+    </div>
+    <div class="misconception-box">
+      <h4>8. Skipping the benchmark estimate and going straight to the algorithm</h4>
+      <p style="margin:0;">Without an estimate, a wrong LCD or a dropped regroup is invisible to the student. <strong>Fix:</strong> make the estimate step non-optional in Word Problem Strategy - "is this fraction closer to \(0\), \(\frac{1}{2}\), or \(1\)?" takes seconds and catches large errors immediately.</p>
+    </div>
+
+    <div class="section-title" style="margin-top:32px;">Differentiation Notes</div>
+
+    <div class="diff-box">
+      <h4>Below-Level Support</h4>
+      <ul style="margin-bottom:0;">
+        <li>Spend extra time on the Review page's Equivalent Fractions and LCD/Mixed Number tabs before moving to the main lesson - the whole topic depends on this foundation.</li>
+        <li>Use Explanation's Whiteboard Modeling tab for small-group or one-on-one re-teaching; it forces each part of the answer (whole, numerator, denominator) into its own labeled box.</li>
+        <li>On Practice Set, it's fine to stop at Tier A/B and skip Tier C and the Challenge Tier - the tiers are ordered by difficulty for exactly this reason.</li>
+        <li>Lean on the fraction bar model diagrams (Explanation Tab 1, Vocabulary &amp; Literacy Tab 2) - a visual of "why unlike pieces can't combine" often unlocks the abstract rule.</li>
+      </ul>
+    </div>
+    <div class="diff-box">
+      <h4>On-Level</h4>
+      <p style="margin:0;">The seven Explanation tabs in order cover the full standard. Encourage attempting the Challenge Tier even without finishing every regular tier first - early exposure to the harder framing helps.</p>
+    </div>
+    <div class="diff-box">
+      <h4>Above-Level / Extension</h4>
+      <ul style="margin-bottom:0;">
+        <li>Practice Set's and Word Problems' Challenge Tiers, which push regrouping and larger LCDs into multi-step reasoning.</li>
+        <li>Have an early finisher write their own Error Analysis problem (a full worked "solution" with a planted mistake) for a partner to diagnose - this requires deeper understanding than solving one.</li>
+        <li>Preview: ask what changes about the "same denominator" rule once you move to multiplying fractions (nothing needs to match!) - a natural bridge into the next enVision lesson.</li>
+      </ul>
+    </div>
+    <div class="diff-box">
+      <h4>English Language Learners</h4>
+      <ul style="margin-bottom:0;">
+        <li>The Word Bank (Vocabulary &amp; Literacy, Tab 1) doubles as a glossary - encourage keeping it open in a separate tab while working through Explanation and Practice Set.</li>
+        <li>The Keyword Clues tab color-codes addition vs. subtraction vocabulary so students can spot the pattern even before every word is familiar.</li>
+        <li>Allow a bilingual glossary or translation tool during Word Problems - the math content itself (the numbers and operations) is unaffected by translating the scenario text.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PANEL 7: TEACHER RESOURCES -->
+  <div id="resources" class="panel">
+    <div class="section-title">Teacher Resources</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">No Printables Yet</div>
+      <p style="margin:0;">This topic does not yet have a <code>printables/</code> folder (unlike Decimal Operations or the Seventh-grade topics). If paper copies are needed, the Practice Set, Word Problems, and Test Prep pages all print cleanly from the browser's own print function, or use each page's <strong>Print My Progress</strong> flow as a submission record instead.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">IXL Skill Alignment</div>
+      <p style="margin:0 0 10px 0;">This topic is not a distinct enVision+ 6th-grade lesson (6th grade jumps straight to multiplying/dividing fractions) - these codes come from the 5th-grade IXL alignment, Topic 7: Use Equivalent Fractions to Add and Subtract Fractions and Mixed Numbers.</p>
+      <ul style="margin-bottom:0;">
+        <li><a href="https://www.ixl.com/math/grade-5/equivalent-fractions" target="_blank" rel="noopener">Equivalent fractions</a> <span class="ixl-code">MKA</span></li>
+        <li><a href="https://www.ixl.com/math/grade-5/least-common-denominator" target="_blank" rel="noopener">Least common denominator</a> <span class="ixl-code">R7P</span></li>
+        <li><a href="https://www.ixl.com/math/grade-5/estimate-sums-and-differences-of-fractions-using-benchmarks" target="_blank" rel="noopener">Estimate sums and differences of fractions using benchmarks</a> <span class="ixl-code">9JR</span></li>
+        <li><a href="https://www.ixl.com/math/grade-5/add-fractions-with-unlike-denominators" target="_blank" rel="noopener">Add fractions with unlike denominators</a> <span class="ixl-code">D9N</span></li>
+        <li><a href="https://www.ixl.com/math/grade-5/subtract-fractions-with-unlike-denominators" target="_blank" rel="noopener">Subtract fractions with unlike denominators</a> <span class="ixl-code">VSP</span></li>
+        <li><a href="https://www.ixl.com/math/grade-5/estimate-sums-and-differences-of-mixed-numbers" target="_blank" rel="noopener">Estimate sums and differences of mixed numbers</a> <span class="ixl-code">HUJ</span></li>
+        <li><a href="https://www.ixl.com/math/grade-5/add-mixed-numbers-with-unlike-denominators" target="_blank" rel="noopener">Add mixed numbers with unlike denominators</a> <span class="ixl-code">FHD</span></li>
+        <li><a href="https://www.ixl.com/math/grade-5/subtract-mixed-numbers-with-unlike-denominators" target="_blank" rel="noopener">Subtract mixed numbers with unlike denominators</a> <span class="ixl-code">FAA</span></li>
+        <li><a href="https://www.ixl.com/math/grade-5/add-and-subtract-fractions-with-unlike-denominators-word-problems" target="_blank" rel="noopener">Add and subtract fractions with unlike denominators: word problems</a> <span class="ixl-code">TCD</span></li>
+        <li><a href="https://www.ixl.com/math/grade-5/add-and-subtract-mixed-numbers-word-problems" target="_blank" rel="noopener">Add and subtract mixed numbers: word problems</a> <span class="ixl-code">6BH</span></li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Where This Leads Next</div>
+      <p style="margin:0;">Once this topic is solid, the next enVision+ 6th-grade lessons are <strong>Lesson 1-5: Multiply Fractions</strong> and <strong>Lesson 1-6/1-7: Divide Fractions</strong> - notably, denominators no longer need to match for either operation, which is a great discussion point (see Above-Level / Extension notes) and a common source of confused overgeneralization if skipped.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+</script>
+</body>
+</html>
