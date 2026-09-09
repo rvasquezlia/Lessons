@@ -30,6 +30,7 @@
       /* One accent color per section, reused for its chip on every
          topic card so the same section always reads the same color
          no matter which grade or topic it belongs to. */
+      --c-review: #4338ca;     --c-review-bg: #e0e7ff;
       --c-vocab: #0f766e;      --c-vocab-bg: #ccfbf1;
       --c-explain: #1d4ed8;    --c-explain-bg: #dbeafe;
       --c-practice: #15803d;   --c-practice-bg: #dcfce7;
@@ -182,6 +183,7 @@
       transition: transform 0.12s ease, box-shadow 0.12s ease;
     }
     .section-link:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.12); }
+    .section-link.review   { background: var(--c-review-bg);   color: var(--c-review);   border-color: var(--c-review); }
     .section-link.vocab    { background: var(--c-vocab-bg);    color: var(--c-vocab);    border-color: var(--c-vocab); }
     .section-link.explain  { background: var(--c-explain-bg);  color: var(--c-explain);  border-color: var(--c-explain); }
     .section-link.practice { background: var(--c-practice-bg); color: var(--c-practice); border-color: var(--c-practice); }
@@ -250,6 +252,7 @@
    * "Coming soon" instead of a link.
    */
   const SECTIONS = [
+    { key: "review",   cls: "review",   label: "Review: Get Ready" },
     { key: "vocab",    cls: "vocab",    label: "Vocabulary &amp; Literacy" },
     { key: "explain",  cls: "explain",  label: "Explanation" },
     { key: "practice", cls: "practice", label: "Practice Set" },
@@ -267,6 +270,7 @@
           title: "Decimal Operations",
           summary: "Add, subtract, multiply, and divide decimals with the standard algorithms, then apply them to multi-step and real-world word problems.",
           base: "Sixth/Decimal-Operations/",
+          review: "Review.html",
           vocab: "Vocabulary-Literacy.html",
           explain: "Explanation.html",
           practice: "Practice-Set.html",
@@ -284,6 +288,7 @@
           title: "Integers: Opposites &amp; Operations",
           summary: "Relate integers and their opposites, then add, subtract, multiply, and divide integers with confidence.",
           base: "Seventh/Integers/",
+          review: "Review.html",
           vocab: "Vocabulary-Literacy.html",
           explain: "Explanation.html",
           practice: "Practice-Set.html",
@@ -295,6 +300,7 @@
           title: "Understanding Rational Numbers: Fractions &amp; Decimals",
           summary: "Classify rational numbers, convert fluently between fractions and decimals, and review fraction and decimal computation before combining them with integers.",
           base: "Seventh/Rational-Numbers/",
+          review: "Review.html",
           vocab: "Vocabulary-Literacy.html",
           explain: "Explanation.html",
           practice: "Practice-Set.html",
@@ -306,6 +312,7 @@
           title: "Operations with Rational Numbers",
           summary: "Add, subtract, multiply, and divide positive and negative fractions and decimals using the same sign rules that govern integers.",
           base: "Seventh/Operations-with-Rationals/",
+          review: "Review.html",
           vocab: "Vocabulary-Literacy.html",
           explain: "Explanation.html",
           practice: "Practice-Set.html",
@@ -323,6 +330,7 @@
           title: "Solving Linear Equations",
           summary: "Solve equations with variables on one and both sides, and classify solutions as one, none, or infinitely many.",
           base: "Eighth/Linear-Equations/",
+          review: "Review.html",
           vocab: "Vocabulary-Literacy.html",
           explain: "Explanation.html",
           practice: "Practice-Set.html",
@@ -334,6 +342,7 @@
           title: "Literal Equations",
           summary: "Solve equations and formulas for a specified variable, using interactive sliders and live models to see how each quantity depends on the others.",
           base: "Eighth/Literal-Equations/",
+          review: "Review.html",
           vocab: "Vocabulary-Literacy.html",
           explain: "Explanation.html",
           practice: "Practice-Set.html",

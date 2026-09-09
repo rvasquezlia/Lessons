@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra: Rational Numbers - Review</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <style>
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .glossary-card {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .glossary-term { font-weight: 900; color: var(--primary); font-size: 1.1rem; margin-bottom: 6px; display: block; }
+    .glossary-def { margin: 0 0 8px 0; }
+    .glossary-example { background: #f1f5f9; border-radius: 6px; padding: 6px 10px; font-size: 0.92rem; color: #334155; }
+    .ready-list { list-style: none; margin: 12px 0 0 0; padding: 0; }
+    .ready-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: #ffffff; border: 2px solid var(--border); border-radius: 10px;
+      padding: 12px 16px; margin-bottom: 10px; font-weight: 600;
+    }
+    .ready-list li::before { content: "\2713"; color: var(--success); font-weight: 900; font-size: 1.2rem; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Rational Numbers &middot; Review</span>
+    <h1>Review: Integer Sign Rules &amp; Fraction Mechanics</h1>
+    <p class="subtitle">Everything you need to remember before we start Rational Numbers</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Nothing here is graded &ndash; this is a warm-up. Rational Numbers is about classifying numbers and converting between fractions and decimals, and it leans hard on two skills from earlier: the sign rules you just learned in Integers, and fraction mechanics (simplifying, converting) from earlier grades. Work through the tabs in order, then use the practice tab honestly.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('why')">1. Why Review This?</button>
+    <button class="tab-btn" onclick="switchTab('vocab')">2. Vocabulary</button>
+    <button class="tab-btn" onclick="switchTab('signs')">3. Integer Sign Rules</button>
+    <button class="tab-btn" onclick="switchTab('fractions')">4. Fraction Mechanics</button>
+    <button class="tab-btn" onclick="switchTab('practice')">5. Are You Ready?</button>
+    <button class="tab-btn" onclick="switchTab('resources')">6. Resources</button>
+  </nav>
+
+  <!-- TAB 1: WHY REVIEW THIS -->
+  <div id="why" class="panel active">
+    <div class="section-title">Why We're Reviewing This First</div>
+    <div class="explainer-box">
+      Rational Numbers asks you to classify numbers and move fluently between fraction form and decimal form. Neither of those is possible without two things already in place: knowing the <strong>sign rules</strong> for positive and negative numbers (from the Integers topic), and being comfortable with basic <strong>fraction mechanics</strong> &ndash; simplifying a fraction, and converting between mixed numbers and improper fractions. Neither of those gets re-taught here from scratch, so this page makes sure both are ready to go.
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">Building on Integers</div>
+      <p style="margin:0;">The <strong>Integers</strong> topic taught you the sign rules for adding, subtracting, multiplying, and dividing. Rational Numbers uses those exact same rules &ndash; the only difference is that the numbers involved can now be fractions or decimals instead of whole numbers. If the sign rules aren't automatic yet, revisit the Integers <strong>Explanation</strong> page before continuing.</p>
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">What This Page Covers</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Integer Sign Rules:</strong> a fast recap of same-signs/different-signs for all four operations.</li>
+        <li><strong>Fraction Mechanics:</strong> simplifying fractions and converting between mixed numbers and improper fractions.</li>
+        <li><strong>A short practice check</strong> so you know exactly what to brush up on before we begin.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TAB 2: VOCABULARY -->
+  <div id="vocab" class="panel">
+    <div class="section-title">Vocabulary You Need First</div>
+    <div class="explainer-box">
+      These are mechanical, "how fractions are built" words from earlier grades. (Words like <em>rational number</em>, <em>terminating decimal</em>, and <em>reciprocal</em> are this topic's own new vocabulary, so they're taught in the Rational Numbers <strong>Vocabulary &amp; Literacy</strong> page, not here.)
+    </div>
+    <div class="glossary-grid">
+      <div class="glossary-card">
+        <span class="glossary-term">Proper Fraction</span>
+        <p class="glossary-def">A fraction where the numerator is smaller than the denominator &ndash; it's worth less than one whole.</p>
+        <div class="glossary-example">\(\frac{3}{4}\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Improper Fraction</span>
+        <p class="glossary-def">A fraction where the numerator is greater than or equal to the denominator &ndash; it's worth one whole or more.</p>
+        <div class="glossary-example">\(\frac{9}{4}\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Mixed Number</span>
+        <p class="glossary-def">A whole number and a proper fraction written together.</p>
+        <div class="glossary-example">\(2\frac{1}{4}\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Greatest Common Factor (GCF)</span>
+        <p class="glossary-def">The largest number that divides evenly into two or more numbers &ndash; used to simplify a fraction in one step.</p>
+        <div class="glossary-example">The GCF of 8 and 12 is 4</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: INTEGER SIGN RULES -->
+  <div id="signs" class="panel">
+    <div class="section-title">Integer Sign Rules: The Fast Recap</div>
+    <div class="explainer-box">
+      Before combining any two signed numbers, ask yourself one question: <strong>same signs, or different signs?</strong> That single question decides everything below, whether the numbers are whole numbers, fractions, or decimals.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The Rules</div>
+      <table class="data-table">
+        <thead><tr><th>Operation</th><th>The Rule</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Addition</strong></td><td><strong>Same signs:</strong> add the absolute values and keep the sign. (\(-3+(-5)=-8\))<br><strong>Different signs:</strong> subtract the smaller absolute value from the larger, and keep the sign of the number with the larger absolute value. (\(-10+4=-6\))</td></tr>
+          <tr><td><strong>Subtraction</strong></td><td><strong>Keep-Change-Change:</strong> keep the first number, change subtraction to addition, change the sign of the second number, then follow the addition rule above. (\(5-(-2)\) becomes \(5+2=7\))</td></tr>
+          <tr><td><strong>Multiplication &amp; Division</strong></td><td><strong>Same signs:</strong> the result is positive. <strong>Different signs:</strong> the result is negative.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Examples</div>
+      <p style="margin:0 0 6px 0;">\(-7 + (-4)\): same signs, add and keep the sign &rarr; \(-11\)</p>
+      <p style="margin:0 0 6px 0;">\(9 - (-3)\): keep-change-change &rarr; \(9 + 3 = 12\)</p>
+      <p style="margin:0 0 6px 0;">\((-6) \times (-5)\): same signs &rarr; positive &rarr; \(30\)</p>
+      <p style="margin:0;">\((-18) \div 3\): different signs &rarr; negative &rarr; \(-6\)</p>
+    </div>
+  </div>
+
+  <!-- TAB 4: FRACTION MECHANICS -->
+  <div id="fractions" class="panel">
+    <div class="section-title">Fraction Mechanics: Simplifying &amp; Converting</div>
+    <div class="explainer-box">
+      Rational Numbers will ask you to convert fractions and decimals back and forth constantly. Both of the skills below are things you'll do on nearly every problem, so they need to be automatic, not something you have to puzzle out each time.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Simplifying a Fraction</div>
+      <p style="margin:0 0 8px 0;">Find the GCF of the numerator and denominator, then divide both by it.</p>
+      <p style="margin:0;">Example: simplify \(\frac{18}{24}\). The GCF of 18 and 24 is 6. \(\frac{18 \div 6}{24 \div 6} = \frac{3}{4}\).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Improper Fraction &rarr; Mixed Number</div>
+      <p style="margin:0 0 8px 0;">Divide the numerator by the denominator. The whole-number quotient is the whole-number part; the remainder becomes the new numerator, over the same denominator.</p>
+      <p style="margin:0;">Example: \(\frac{17}{5}\). \(17 \div 5 = 3\) remainder \(2\), so \(\frac{17}{5} = 3\frac{2}{5}\).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Mixed Number &rarr; Improper Fraction</div>
+      <p style="margin:0 0 8px 0;">Multiply the whole number by the denominator, add the numerator, and place that total over the same denominator.</p>
+      <p style="margin:0;">Example: \(4\frac{2}{3}\). \(4 \times 3 = 12\), \(12 + 2 = 14\), so \(4\frac{2}{3} = \frac{14}{3}\).</p>
+    </div>
+  </div>
+
+  <!-- TAB 5: ARE YOU READY? -->
+  <div id="practice" class="panel">
+    <div class="section-title">Practice: Are You Ready?</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Type your own answer first, then click Check. You get up to <strong>2 tries</strong> per problem before the correct answer is shown.
+    </div>
+
+    <h3 style="color:var(--primary);">Integer Sign Rules</h3>
+    <div id="signs-practice-list"></div>
+
+    <h3 style="color:var(--primary); margin-top:24px;">Fraction Mechanics</h3>
+    <div id="fractions-practice-list"></div>
+  </div>
+
+  <!-- TAB 6: RESOURCES -->
+  <div id="resources" class="panel">
+    <div class="section-title">Resources &amp; Next Steps</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">You're Ready for Rational Numbers When You Can...</div>
+      <ul class="ready-list">
+        <li>Decide whether a sum, difference, product, or quotient of two signed numbers will be positive or negative before computing it.</li>
+        <li>Add, subtract, multiply, and divide integers correctly using the sign rules.</li>
+        <li>Simplify a fraction to lowest terms using the GCF.</li>
+        <li>Convert an improper fraction to a mixed number, and a mixed number to an improper fraction.</li>
+      </ul>
+    </div>
+
+    <div class="ixl-box">
+      <h3 style="margin-top:0; color:#15803d;">Extra Practice, Any Time</h3>
+      <ul>
+        <li>Integer addition and subtraction rules</li>
+        <li>Integer multiplication and division rules</li>
+        <li>Simplify fractions</li>
+        <li>Convert between improper fractions and mixed numbers</li>
+      </ul>
+    </div>
+
+    <div class="explainer-box" style="margin-top:24px;">
+      <strong>Next step:</strong> once you feel solid here, move on to the Rational Numbers <strong>Vocabulary &amp; Literacy</strong> page from the Index to meet this topic's own new vocabulary before the Explanation.
+    </div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // GENERIC CHECK-STYLE PRACTICE LIST (2 tries, then reveal)
+  // ==========================================
+  const checkListRegistry = {};
+
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:170px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    triggerMathJax();
+  }
+
+  function checkListItem(keyPrefix, idx) {
+    const cfg = checkListRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const norm = (s) => String(s || '').toLowerCase().replace(/[\s,]/g, '');
+    const correct = p.numeric
+      ? LessonCheck.numericMatch(val, p.a, p.tol || 0.01)
+      : (p.accepted || [String(p.a)]).map(norm).includes(norm(val));
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! ${p.displayAnswer || ('The answer is ' + p.a + '.')}`,
+      retry: cfg.retry,
+      reveal: `Here's the correct answer: ${p.displayAnswer || p.a}`
+    });
+  }
+
+  const signsPractice = [
+    { q: "\\(-8 + (-5)\\)", a: -13, numeric: true, tol: 0 },
+    { q: "\\(6 - (-9)\\)", a: 15, numeric: true, tol: 0 },
+    { q: "\\((-7) \\times 4\\)", a: -28, numeric: true, tol: 0 },
+    { q: "\\((-36) \\div (-9)\\)", a: 4, numeric: true, tol: 0 }
+  ];
+  renderCheckList('signs-practice-list', signsPractice, 'signs', "Not quite yet. Ask yourself: same signs, or different signs? Then apply that rule.");
+
+  const fractionsPractice = [
+    { q: "Simplify \\(\\frac{16}{20}\\) to lowest terms. Type as a/b.", accepted: ["4/5"], displayAnswer: "\\(\\frac{4}{5}\\)" },
+    { q: "Convert \\(\\frac{23}{6}\\) to a mixed number. Type as a b/c.", accepted: ["3 5/6", "35/6"], displayAnswer: "\\(3\\frac{5}{6}\\)" },
+    { q: "Convert \\(5\\frac{1}{2}\\) to an improper fraction. Type as a/b.", accepted: ["11/2"], displayAnswer: "\\(\\frac{11}{2}\\)" }
+  ];
+  renderCheckList('fractions-practice-list', fractionsPractice, 'fractions', "Not quite yet. Walk through the steps one at a time and try again.");
+</script>
+</body>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 6: Decimal Operations - Review</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <style>
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .glossary-card {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .glossary-term { font-weight: 900; color: var(--primary); font-size: 1.1rem; margin-bottom: 6px; display: block; }
+    .glossary-def { margin: 0 0 8px 0; }
+    .glossary-example { background: #f1f5f9; border-radius: 6px; padding: 6px 10px; font-size: 0.92rem; color: #334155; }
+    .ready-list { list-style: none; margin: 12px 0 0 0; padding: 0; }
+    .ready-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: #ffffff; border: 2px solid var(--border); border-radius: 10px;
+      padding: 12px 16px; margin-bottom: 10px; font-weight: 600;
+    }
+    .ready-list li::before { content: "\2713"; color: var(--success); font-weight: 900; font-size: 1.2rem; }
+    .pv-inspector {
+      background: #eff6ff; border: 2px solid var(--primary-light); border-radius: 10px;
+      padding: 14px 18px; margin-top: 4px; min-height: 30px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Decimal Operations &middot; Review</span>
+    <h1>Review: Place Value &amp; Whole-Number Operations</h1>
+    <p class="subtitle">Everything you need to remember before we start Decimal Operations</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Nothing here is graded &ndash; this is a warm-up so old, shaky knowledge doesn't get in the way of new learning. Work through the tabs in order: vocabulary first, then place value, then the four operations, then a short practice check so you can see for yourself what's solid and what needs another look. Come back to any tab as often as you like, even after we've started the real lesson.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('why')">1. Why Review This?</button>
+    <button class="tab-btn" onclick="switchTab('vocab')">2. Vocabulary</button>
+    <button class="tab-btn" onclick="switchTab('placevalue')">3. Place Value</button>
+    <button class="tab-btn" onclick="switchTab('operations')">4. Whole-Number Operations</button>
+    <button class="tab-btn" onclick="switchTab('practice')">5. Are You Ready?</button>
+    <button class="tab-btn" onclick="switchTab('resources')">6. Resources</button>
+  </nav>
+
+  <!-- TAB 1: WHY REVIEW THIS -->
+  <div id="why" class="panel active">
+    <div class="section-title">Why We're Reviewing This First</div>
+    <div class="explainer-box">
+      Decimal Operations is the very first topic of the year, so this review isn't about "old" material &ndash; it's about making sure the foundation underneath it is solid. Every decimal algorithm you're about to learn (adding, subtracting, multiplying, and dividing decimals) is the <strong>exact same</strong> whole-number algorithm you already know, with one extra rule for where the decimal point goes. If lining up numbers, carrying, borrowing, or the multiplication and division steps still feel shaky, that is what will trip you up &ndash; not decimals themselves.
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">The Big Idea</div>
+      <p style="margin:0;">A decimal number is just a way of writing a value that includes parts smaller than one whole, using the <strong>same base-ten place value system</strong> as whole numbers. If you understand what each digit in a whole number is worth, and you can add, subtract, multiply, and divide whole numbers confidently, you already have almost everything you need for decimals.</p>
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">What This Page Covers</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Place Value:</strong> what each digit in a number is worth, and how to compare numbers by their digits.</li>
+        <li><strong>Whole-Number Operations:</strong> the standard algorithms for addition, subtraction, multiplication, and division &ndash; the same steps you'll use with decimals.</li>
+        <li><strong>A short practice check</strong> so you know exactly what to brush up on before we begin.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TAB 2: VOCABULARY -->
+  <div id="vocab" class="panel">
+    <div class="section-title">Vocabulary You Need</div>
+    <div class="explainer-box">
+      These words come up constantly, in this review and in the Decimal Operations lesson itself. Read through them once, and come back any time a word trips you up.
+    </div>
+    <div class="glossary-grid">
+      <div class="glossary-card">
+        <span class="glossary-term">Digit</span>
+        <p class="glossary-def">One of the ten symbols (0&ndash;9) used to build numbers. A number can be made of many digits.</p>
+        <div class="glossary-example">In 4,829, the digits are 4, 8, 2, and 9</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Place Value</span>
+        <p class="glossary-def">The value a digit has because of its position in a number.</p>
+        <div class="glossary-example">In 583, the 5 is worth 500 because it's in the hundreds place</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Standard Form</span>
+        <p class="glossary-def">A number written the normal way, with digits.</p>
+        <div class="glossary-example">1,204</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Expanded Form</span>
+        <p class="glossary-def">A number written as the sum of the value of each digit.</p>
+        <div class="glossary-example">1,204 = 1,000 + 200 + 0 + 4</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Word Form</span>
+        <p class="glossary-def">A number written out in words.</p>
+        <div class="glossary-example">1,204 = one thousand, two hundred four</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Decimal Point</span>
+        <p class="glossary-def">The dot that separates the whole-number part of a number from the part that's less than one.</p>
+        <div class="glossary-example">In 3.75, everything left of the dot is whole, everything right is a fraction of one</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Regroup</span>
+        <p class="glossary-def">Trading 10 of one place value for 1 of the next place value up (or the reverse). Also called carrying (addition) or borrowing (subtraction).</p>
+        <div class="glossary-example">In 47 + 18, you regroup 10 ones into 1 ten</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Sum / Difference</span>
+        <p class="glossary-def">The answer to an addition problem (sum) or a subtraction problem (difference).</p>
+        <div class="glossary-example">9 + 5 = 14: 14 is the sum. 9 - 5 = 4: 4 is the difference</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Factor &amp; Product</span>
+        <p class="glossary-def">The numbers being multiplied are factors; the answer is the product.</p>
+        <div class="glossary-example">6 &times; 7 = 42: 6 and 7 are factors, 42 is the product</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Dividend, Divisor &amp; Quotient</span>
+        <p class="glossary-def">The number being split up is the dividend, the number you're dividing by is the divisor, and the answer is the quotient.</p>
+        <div class="glossary-example">20 &divide; 4 = 5: 20 is the dividend, 4 is the divisor, 5 is the quotient</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Remainder</span>
+        <p class="glossary-def">Whatever is left over after division when the dividend doesn't split evenly.</p>
+        <div class="glossary-example">17 &divide; 5 = 3 remainder 2</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Round / Rounding</span>
+        <p class="glossary-def">Replacing a number with a simpler, nearby number, based on a chosen place value.</p>
+        <div class="glossary-example">36 rounds to 40 (nearest ten)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: PLACE VALUE -->
+  <div id="placevalue" class="panel">
+    <div class="section-title">Place Value: What Each Digit Is Worth</div>
+    <div class="explainer-box">
+      Our number system is a <strong>base-ten place value system</strong>: each position (or "place") a digit sits in is worth ten times more than the place to its right. Click each column below to see what it's worth &ndash; then read the rule underneath.
+    </div>
+
+    <div class="pv-chart">
+      <div class="pv-column" onclick="inspectPV('hundreds')">
+        <div class="pv-title">Hundreds</div>
+        <div class="pv-val">100</div>
+        <div class="pv-money">$100 Bill</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('tens')">
+        <div class="pv-title">Tens</div>
+        <div class="pv-val">10</div>
+        <div class="pv-money">$10 Bill</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('ones')">
+        <div class="pv-title">Ones</div>
+        <div class="pv-val">1</div>
+        <div class="pv-money">$1 Bill</div>
+      </div>
+      <div class="pv-column" style="background:#fee2e2; border-color:#ef4444;" onclick="inspectPV('decimal')">
+        <div class="pv-title">Decimal</div>
+        <div class="pv-val">\(\cdot\)</div>
+        <div class="pv-money">ANCHOR</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('tenths')">
+        <div class="pv-title">Tenths</div>
+        <div class="pv-val">0.1</div>
+        <div class="pv-money">1 Dime</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('hundredths')">
+        <div class="pv-title">Hundredths</div>
+        <div class="pv-val">0.01</div>
+        <div class="pv-money">1 Penny</div>
+      </div>
+      <div class="pv-column" onclick="inspectPV('thousandths')">
+        <div class="pv-title">Thousandths</div>
+        <div class="pv-val">0.001</div>
+        <div class="pv-money">Metric/Sports</div>
+      </div>
+    </div>
+    <div class="pv-inspector" id="pv-inspector">Click any column above to see how it works.</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The Rule That Runs the Whole System</div>
+      <p style="margin:0;">Moving one place to the <strong>left</strong> multiplies the value by 10. Moving one place to the <strong>right</strong> divides the value by 10. This rule doesn't stop at the ones place &ndash; it keeps going right through the decimal point, which is exactly why decimals work the same way whole numbers do.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Reading a Number by Place Value</div>
+      <p style="margin:0 0 8px 0;">Take the number <strong>4,207.68</strong>. Break it apart digit by digit:</p>
+      <table class="data-table">
+        <thead><tr><th>Digit</th><th>Place</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>4</td><td>Thousands</td><td>4,000</td></tr>
+          <tr><td>2</td><td>Hundreds</td><td>200</td></tr>
+          <tr><td>0</td><td>Tens</td><td>0</td></tr>
+          <tr><td>7</td><td>Ones</td><td>7</td></tr>
+          <tr><td>6</td><td>Tenths</td><td>0.6</td></tr>
+          <tr><td>8</td><td>Hundredths</td><td>0.08</td></tr>
+        </tbody>
+      </table>
+      <p style="margin:10px 0 0 0;">Expanded form: \(4{,}000 + 200 + 0 + 7 + 0.6 + 0.08 = 4{,}207.68\)</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Comparing Numbers</div>
+      <p style="margin:0 0 10px 0;">To compare two numbers, line up the place values (imagine the decimal points stacked on top of each other) and compare digit by digit, starting from the <strong>largest</strong> place value. The first place where the digits differ decides which number is bigger.</p>
+      <p style="margin:0;">Example: compare 5.4 and 5.36. Line them up: \(5.40\) vs. \(5.36\). Ones match (5 = 5). Tenths: 4 &gt; 3. So \(5.4 > 5.36\) &ndash; even though 5.36 "looks longer," it's actually smaller.</p>
+    </div>
+  </div>
+
+  <!-- TAB 4: WHOLE-NUMBER OPERATIONS -->
+  <div id="operations" class="panel">
+    <div class="section-title">Whole-Number Operations: The Same Steps You'll Use With Decimals</div>
+    <div class="explainer-box">
+      Every algorithm below is one you've used before. Step through each one and make sure you can still explain <strong>why</strong> each step works, not just how to do it &ndash; that's what makes the decimal version easy later.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Addition: Line Up &amp; Carry</div>
+      <p style="margin:0 0 10px 0;">Line up digits by place value (ones under ones, tens under tens...). Add each column from right to left. If a column's sum is 10 or more, write the ones digit and <strong>carry</strong> the rest to the next column.</p>
+      <div class="div-block">
+        <table class="algo-table" style="margin:0 auto;">
+          <tr><td class="grid-cell" style="width:110px;">&nbsp;&nbsp;367</td></tr>
+          <tr><td class="grid-cell line-under" style="width:110px;">+ 258</td></tr>
+          <tr><td class="grid-cell" style="width:110px;">625</td></tr>
+        </table>
+      </div>
+      <p style="margin:10px 0 0 0;">7 + 8 = 15 &rarr; write 5, carry 1. 6 + 5 + 1(carried) = 12 &rarr; write 2, carry 1. 3 + 2 + 1(carried) = 6.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Subtraction: Line Up &amp; Borrow</div>
+      <p style="margin:0 0 10px 0;">Line up digits the same way. Subtract each column from right to left. If the top digit is smaller than the bottom digit, <strong>borrow</strong> 1 from the column to the left (which is worth 10 in the current column).</p>
+      <div class="div-block">
+        <table class="algo-table" style="margin:0 auto;">
+          <tr><td class="grid-cell" style="width:110px;">&nbsp;&nbsp;513</td></tr>
+          <tr><td class="grid-cell line-under" style="width:110px;">- 176</td></tr>
+          <tr><td class="grid-cell" style="width:110px;">337</td></tr>
+        </table>
+      </div>
+      <p style="margin:10px 0 0 0;">3 &minus; 6 needs a borrow: 13 &minus; 6 = 7 (the 1 becomes 0). 0 &minus; 7 needs a borrow: 10 &minus; 7 = 3 (the 5 becomes 4). 4 &minus; 1 = 3.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Multiplication: Multiply, Then Add Partial Products</div>
+      <p style="margin:0 0 10px 0;">Multiply the top number by each digit of the bottom number (right to left), shifting each new row one place left. Add all the partial products together.</p>
+      <p style="margin:0;">Example: \(24 \times 13\). \(24 \times 3 = 72\). \(24 \times 10 = 240\). \(72 + 240 = \mathbf{312}\).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Division: The Long Division Steps</div>
+      <p style="margin:0 0 10px 0;">Divide, Multiply, Subtract, Bring down &ndash; repeat. This same four-step rhythm is exactly what you'll use once a decimal point gets involved.</p>
+      <p style="margin:0;">Example: \(84 \div 4\). \(8 \div 4 = 2\); \(2 \times 4 = 8\); \(8 - 8 = 0\); bring down the 4. \(4 \div 4 = 1\). Quotient: \(\mathbf{21}\).</p>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Step-by-Step: A Harder Multiplication</h3>
+      <p style="margin:0 0 10px 0;"><strong>Problem:</strong> \(47 \times 26\)</p>
+      <button class="btn-lg" onclick="revealOpsStep()">Reveal Next Step</button>
+      <button class="btn-secondary" onclick="resetOpsStep()">Reset</button>
+      <div id="ops-steps" style="margin-top:14px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 5: ARE YOU READY? -->
+  <div id="practice" class="panel">
+    <div class="section-title">Practice: Are You Ready?</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Type your own answer first, then click Check. You get up to <strong>2 tries</strong> per problem before the correct answer is shown &ndash; this is here so you can find out for yourself what's solid, not to catch you out.
+    </div>
+
+    <h3 style="color:var(--primary);">Place Value</h3>
+    <div id="pv-practice-list"></div>
+
+    <h3 style="color:var(--primary); margin-top:24px;">Addition &amp; Subtraction</h3>
+    <div id="addsub-practice-list"></div>
+
+    <h3 style="color:var(--primary); margin-top:24px;">Multiplication &amp; Division</h3>
+    <div id="multdiv-practice-list"></div>
+  </div>
+
+  <!-- TAB 6: RESOURCES -->
+  <div id="resources" class="panel">
+    <div class="section-title">Resources &amp; Next Steps</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">You're Ready for Decimal Operations When You Can...</div>
+      <ul class="ready-list">
+        <li>Name the place value of any digit in a number, including digits after the decimal point.</li>
+        <li>Compare two numbers by lining up their place values.</li>
+        <li>Add and subtract multi-digit whole numbers, carrying and borrowing correctly.</li>
+        <li>Multiply a multi-digit number by a 2-digit number using partial products.</li>
+        <li>Divide using the long division steps: divide, multiply, subtract, bring down.</li>
+      </ul>
+    </div>
+
+    <div class="ixl-box">
+      <h3 style="margin-top:0; color:#15803d;">Extra Practice, Any Time</h3>
+      <ul>
+        <li>Place value: name the place</li>
+        <li>Convert between standard, expanded, and word form</li>
+        <li>Compare multi-digit numbers</li>
+        <li>Add and subtract whole numbers</li>
+        <li>Multiply by a 2-digit number</li>
+        <li>Divide multi-digit numbers</li>
+      </ul>
+    </div>
+
+    <div class="explainer-box" style="margin-top:24px;">
+      <strong>Next step:</strong> once you feel solid here, move on to the Decimal Operations <strong>Explanation</strong> page from the Index &ndash; the exact same steps you just practiced, now with a decimal point added in.
+    </div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // PLACE VALUE INSPECTOR
+  // ==========================================
+  const pvDetails = {
+    hundreds: "Hundreds: this digit is worth digit x 100. Two places left of the ones place.",
+    tens: "Tens: this digit is worth digit x 10. One place left of the ones place.",
+    ones: "Ones: this digit is worth digit x 1. The anchor place for whole numbers - directly to the left of the decimal point.",
+    decimal: "The decimal point separates whole numbers (left) from parts smaller than one (right). It never has a value itself - it's an anchor, like the corner of a see-saw.",
+    tenths: "Tenths: this digit is worth digit x 0.1 (one tenth of a whole). First place right of the decimal point.",
+    hundredths: "Hundredths: this digit is worth digit x 0.01 (one hundredth of a whole). Second place right of the decimal point.",
+    thousandths: "Thousandths: this digit is worth digit x 0.001 (one thousandth of a whole). Third place right of the decimal point."
+  };
+  function inspectPV(col) {
+    document.getElementById('pv-inspector').innerText = pvDetails[col];
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // MULTIPLICATION STEP-REVEAL
+  // ==========================================
+  const opsSteps = [
+    "<strong>Step 1 - Multiply by the ones digit (6):</strong> \\(47 \\times 6 = 282\\)",
+    "<strong>Step 2 - Multiply by the tens digit (2), shifted one place left:</strong> \\(47 \\times 20 = 940\\)",
+    "<strong>Step 3 - Add the partial products:</strong> \\(282 + 940 = \\mathbf{1{,}222}\\)"
+  ];
+  let opsStepCount = 0;
+  function renderOpsSteps() {
+    const html = opsSteps.slice(0, opsStepCount).map(s => `<div class="step-item visible">${s}</div>`).join('');
+    document.getElementById('ops-steps').innerHTML = html;
+    triggerMathJax();
+  }
+  function revealOpsStep() {
+    if (opsStepCount < opsSteps.length) { opsStepCount++; renderOpsSteps(); }
+  }
+  function resetOpsStep() { opsStepCount = 0; renderOpsSteps(); }
+
+  // ==========================================
+  // GENERIC CHECK-STYLE PRACTICE LIST (2 tries, then reveal)
+  // ==========================================
+  const checkListRegistry = {};
+
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:170px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    triggerMathJax();
+  }
+
+  function checkListItem(keyPrefix, idx) {
+    const cfg = checkListRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const norm = (s) => String(s || '').toLowerCase().replace(/[\s,]/g, '');
+    const correct = p.numeric
+      ? LessonCheck.numericMatch(val, p.a, p.tol || 0.01)
+      : (p.accepted || [String(p.a)]).map(norm).includes(norm(val));
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! ${p.displayAnswer || ('The answer is ' + p.a + '.')}`,
+      retry: cfg.retry,
+      reveal: `Here's the correct answer: ${p.displayAnswer || p.a}`
+    });
+  }
+
+  // ==========================================
+  // TAB 5 DATA: PLACE VALUE / ADD-SUB / MULT-DIV PRACTICE
+  // ==========================================
+  const pvPractice = [
+    { q: "In the number 6,482, what is the value of the digit 4?", a: 400, numeric: true, tol: 0 },
+    { q: "In the number 3.056, what is the value of the digit 5?", a: 0.05, numeric: true, tol: 0.001 },
+    { q: "Which is greater: 7.4 or 7.36? Type the larger number.", a: 7.4, numeric: true, tol: 0.001 },
+    { q: "Write 2,000 + 300 + 40 + 6 in standard form.", a: 2346, numeric: true, tol: 0 }
+  ];
+  renderCheckList('pv-practice-list', pvPractice, 'pv', "Not quite yet. Re-check which place value column that digit sits in, then try again.");
+
+  const addsubPractice = [
+    { q: "\\(468 + 275\\)", a: 743, numeric: true, tol: 0 },
+    { q: "\\(603 - 248\\)", a: 355, numeric: true, tol: 0 },
+    { q: "\\(1{,}045 + 987\\)", a: 2032, numeric: true, tol: 0 },
+    { q: "\\(3{,}200 - 1{,}465\\)", a: 1735, numeric: true, tol: 0 }
+  ];
+  renderCheckList('addsub-practice-list', addsubPractice, 'addsub', "Not quite yet. Line up your columns by place value, and double check every carry or borrow.");
+
+  const multdivPractice = [
+    { q: "\\(36 \\times 24\\)", a: 864, numeric: true, tol: 0 },
+    { q: "\\(147 \\times 6\\)", a: 882, numeric: true, tol: 0 },
+    { q: "\\(624 \\div 8\\)", a: 78, numeric: true, tol: 0 },
+    { q: "\\(455 \\div 5\\)", a: 91, numeric: true, tol: 0 }
+  ];
+  renderCheckList('multdiv-practice-list', multdivPractice, 'multdiv', "Not quite yet. Walk back through the steps one at a time - for multiplication, check each partial product; for division, check each divide-multiply-subtract-bring down cycle.");
+</script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra: Integers - Review</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <style>
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .glossary-card {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .glossary-term { font-weight: 900; color: var(--primary); font-size: 1.1rem; margin-bottom: 6px; display: block; }
+    .glossary-def { margin: 0 0 8px 0; }
+    .glossary-example { background: #f1f5f9; border-radius: 6px; padding: 6px 10px; font-size: 0.92rem; color: #334155; }
+    .ready-list { list-style: none; margin: 12px 0 0 0; padding: 0; }
+    .ready-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: #ffffff; border: 2px solid var(--border); border-radius: 10px;
+      padding: 12px 16px; margin-bottom: 10px; font-weight: 600;
+    }
+    .ready-list li::before { content: "\2713"; color: var(--success); font-weight: 900; font-size: 1.2rem; }
+    .context-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .context-card {
+      background: #fff; border: 2px solid var(--border); border-radius: 10px;
+      padding: 14px 16px; text-align: center;
+    }
+    .context-card .up { color: var(--success); font-weight: 800; }
+    .context-card .down { color: var(--error); font-weight: 800; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Integers &middot; Review</span>
+    <h1>Review: The Number Line &amp; Number Fluency</h1>
+    <p class="subtitle">Everything you need to remember before we start Integers</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Nothing here is graded &ndash; this is a warm-up. Integers is really about one new idea (numbers can go below zero) layered on top of skills you already have: reading a number line, and computing confidently. Work through the tabs in order, and use the practice tab honestly to see what needs another look before we start.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('why')">1. Why Review This?</button>
+    <button class="tab-btn" onclick="switchTab('vocab')">2. Vocabulary</button>
+    <button class="tab-btn" onclick="switchTab('numberline')">3. The Number Line</button>
+    <button class="tab-btn" onclick="switchTab('fluency')">4. Number Fluency Recap</button>
+    <button class="tab-btn" onclick="switchTab('practice')">5. Are You Ready?</button>
+    <button class="tab-btn" onclick="switchTab('resources')">6. Resources</button>
+  </nav>
+
+  <!-- TAB 1: WHY REVIEW THIS -->
+  <div id="why" class="panel active">
+    <div class="section-title">Why We're Reviewing This First</div>
+    <div class="explainer-box">
+      Integers takes the number line you already know and extends it in a direction you probably haven't worked with much yet: <strong>below zero</strong>. Almost every mistake students make with integers isn't really about negative numbers &ndash; it's about the number line itself (which way is "bigger"?) or about arithmetic facts (like \(8 + 5\) or \(12 - 7\)) not being automatic yet. This page makes sure both pieces are solid first.
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">Building on Decimal Operations</div>
+      <p style="margin:0;">Last unit's <strong>Decimal Operations</strong> topic built your addition, subtraction, multiplication, and division fluency. Integers doesn't replace those skills &ndash; it reuses them, just with numbers that can now be positive or negative. If any of that arithmetic still feels shaky, it's worth a quick trip back to the <strong>Decimal Operations Review</strong> page before continuing here.</p>
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">What This Page Covers</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>The Number Line:</strong> plotting and ordering numbers, and a first look at what lies to the left of zero.</li>
+        <li><strong>Number Fluency:</strong> a fast recap of whole-number and decimal computation.</li>
+        <li><strong>A short practice check</strong> so you know exactly what to brush up on before we begin.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TAB 2: VOCABULARY -->
+  <div id="vocab" class="panel">
+    <div class="section-title">Vocabulary You Need First</div>
+    <div class="explainer-box">
+      These are the words that describe the number line itself &ndash; the stage the whole Integers topic plays out on. (Words like <em>integer</em>, <em>opposite</em>, and <em>absolute value</em> are brand new this topic, so they're taught in the Integers <strong>Vocabulary &amp; Literacy</strong> page, not here.)
+    </div>
+    <div class="glossary-grid">
+      <div class="glossary-card">
+        <span class="glossary-term">Number Line</span>
+        <p class="glossary-def">A straight line where every point represents a number, in order from least to greatest as you move left to right.</p>
+        <div class="glossary-example">A ruler is a number line</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Origin</span>
+        <p class="glossary-def">The point labeled 0 on a number line &ndash; every other number's position is measured starting from here.</p>
+        <div class="glossary-example">0 is the origin</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Order / Compare</span>
+        <p class="glossary-def">Deciding which of two numbers is greater or less, usually written with the symbols \(<\) (less than) and \(>\) (greater than).</p>
+        <div class="glossary-example">\(3 < 8\), \(8 > 3\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Ascending / Descending</span>
+        <p class="glossary-def">Ascending means arranged from least to greatest. Descending means arranged from greatest to least.</p>
+        <div class="glossary-example">2, 5, 9 is ascending; 9, 5, 2 is descending</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: THE NUMBER LINE -->
+  <div id="numberline" class="panel">
+    <div class="section-title">The Number Line: What You Already Know</div>
+    <div class="explainer-box">
+      You've used number lines since elementary school for whole numbers. Every rule you already know still applies once we add negative numbers &ndash; <strong>numbers get bigger as you move right, and smaller as you move left</strong>. That single rule is the entire key to Integers.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">A Familiar Number Line</div>
+      <p style="margin:0 0 8px 0;">Here's a number line you already know how to read &ndash; whole numbers from 0 to 20, with a few points plotted.</p>
+      <div id="familiar-numberline"></div>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">A Sneak Peek: What's to the Left of Zero?</div>
+      <p style="margin:0 0 8px 0;">Every number line actually keeps going past zero &ndash; you just haven't needed that side yet. Real life already uses it constantly: a temperature can drop <strong>below</strong> zero, and an elevator can go <strong>below</strong> ground level.</p>
+      <div class="context-grid">
+        <div class="context-card"><span class="up">Above Sea Level</span><br>+120 m</div>
+        <div class="context-card"><span class="down">Below Sea Level</span><br>&minus;40 m</div>
+        <div class="context-card"><span class="up">Above Zero</span><br>+15&deg;C</div>
+        <div class="context-card"><span class="down">Below Zero</span><br>&minus;8&deg;C</div>
+        <div class="context-card"><span class="up">Money You Have</span><br>+$20</div>
+        <div class="context-card"><span class="down">Money You Owe</span><br>&minus;$20</div>
+      </div>
+      <p style="margin:12px 0 8px 0;">Extending the same number line to the left of zero:</p>
+      <div id="preview-numberline"></div>
+      <p style="margin:10px 0 0 0;">This is exactly what the Integers topic formalizes &ndash; giving that left side a name and a full set of rules.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Ordering Numbers</div>
+      <p style="margin:0;">To order numbers, picture them on the line: whichever number sits <strong>further right</strong> is greater, no matter how the numbers look written out. Order 14, 3, 27, 9 from least to greatest: \(3, 9, 14, 27\) &ndash; read straight off the number line, left to right.</p>
+    </div>
+  </div>
+
+  <!-- TAB 4: NUMBER FLUENCY RECAP -->
+  <div id="fluency" class="panel">
+    <div class="section-title">Number Fluency Recap: Whole Numbers &amp; Decimals</div>
+    <div class="explainer-box">
+      Every rule for adding, subtracting, multiplying, and dividing integers still asks you to do this exact arithmetic underneath. If \(9 + 6\) or \(3.4 \times 2\) takes real effort to compute, that effort will make the new integer rules feel much harder than they actually are.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Quick Recap: The Four Operations</div>
+      <table class="data-table">
+        <thead><tr><th>Operation</th><th>Reminder</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Addition</strong></td><td>Combine two amounts into a total.</td><td>\(24 + 18 = 42\)</td></tr>
+          <tr><td><strong>Subtraction</strong></td><td>Find the difference, or what's left after taking away.</td><td>\(50 - 27 = 23\)</td></tr>
+          <tr><td><strong>Multiplication</strong></td><td>Repeated addition of equal groups.</td><td>\(7 \times 6 = 42\)</td></tr>
+          <tr><td><strong>Division</strong></td><td>Splitting a total into equal groups.</td><td>\(72 \div 8 = 9\)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Decimal Reminder</div>
+      <p style="margin:0;">Line up decimal points to add or subtract. Multiply as whole numbers, then place the decimal by counting total decimal places. To divide by a decimal, shift both the divisor and dividend right until the divisor is a whole number. (Full detail lives on the Decimal Operations Review page if you need to rebuild any of this from scratch.)</p>
+    </div>
+  </div>
+
+  <!-- TAB 5: ARE YOU READY? -->
+  <div id="practice" class="panel">
+    <div class="section-title">Practice: Are You Ready?</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Type your own answer first, then click Check. You get up to <strong>2 tries</strong> per problem before the correct answer is shown.
+    </div>
+
+    <h3 style="color:var(--primary);">Number Line &amp; Ordering</h3>
+    <div id="nl-practice-list"></div>
+
+    <h3 style="color:var(--primary); margin-top:24px;">Whole-Number &amp; Decimal Fluency</h3>
+    <div id="fluency-practice-list"></div>
+  </div>
+
+  <!-- TAB 6: RESOURCES -->
+  <div id="resources" class="panel">
+    <div class="section-title">Resources &amp; Next Steps</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">You're Ready for Integers When You Can...</div>
+      <ul class="ready-list">
+        <li>Plot whole numbers on a number line and read one back correctly.</li>
+        <li>Order a list of numbers from least to greatest (and greatest to least).</li>
+        <li>Add and subtract whole numbers and decimals without a calculator.</li>
+        <li>Multiply and divide whole numbers and decimals confidently.</li>
+        <li>Explain, in your own words, what a real-life "opposite" pair looks like (above/below zero, credit/debt, up/down).</li>
+      </ul>
+    </div>
+
+    <div class="ixl-box">
+      <h3 style="margin-top:0; color:#15803d;">Extra Practice, Any Time</h3>
+      <ul>
+        <li>Graph numbers on a number line</li>
+        <li>Put numbers in order</li>
+        <li>Add and subtract whole numbers and decimals</li>
+        <li>Multiply and divide whole numbers and decimals</li>
+      </ul>
+    </div>
+
+    <div class="explainer-box" style="margin-top:24px;">
+      <strong>Next step:</strong> once you feel solid here, move on to the Integers <strong>Vocabulary &amp; Literacy</strong> page from the Index to meet the formal vocabulary (integer, opposite, absolute value) before the Explanation.
+    </div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  renderNumberLine('familiar-numberline', {
+    min: 0, max: 20, step: 2,
+    points: [
+      { value: 3, label: '3', color: '#1e3a8a' },
+      { value: 11, label: '11', color: '#1e3a8a' },
+      { value: 18, label: '18', color: '#1e3a8a' }
+    ]
+  });
+
+  renderNumberLine('preview-numberline', {
+    min: -10, max: 10, step: 2,
+    points: [
+      { value: 6, label: '+6', color: '#15803d' },
+      { value: -6, label: '-6', color: '#b91c1c' },
+      { value: 0, label: '0', color: '#1e3a8a' }
+    ]
+  });
+
+  // ==========================================
+  // GENERIC CHECK-STYLE PRACTICE LIST (2 tries, then reveal)
+  // ==========================================
+  const checkListRegistry = {};
+
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    triggerMathJax();
+  }
+
+  function checkListItem(keyPrefix, idx) {
+    const cfg = checkListRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const norm = (s) => String(s || '').toLowerCase().replace(/[\s,]/g, '');
+    const correct = p.numeric
+      ? LessonCheck.numericMatch(val, p.a, p.tol || 0.01)
+      : (p.accepted || [String(p.a)]).map(norm).includes(norm(val));
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! ${p.displayAnswer || ('The answer is ' + p.a + '.')}`,
+      retry: cfg.retry,
+      reveal: `Here's the correct answer: ${p.displayAnswer || p.a}`
+    });
+  }
+
+  const nlPractice = [
+    { q: "Order these from least to greatest: 17, 4, 22, 9. Type them separated by commas.", accepted: ["4,9,17,22"], displayAnswer: "4, 9, 17, 22" },
+    { q: "On a number line, is 30 to the left or right of 12?", accepted: ["right"], displayAnswer: "Right (30 is greater than 12)" },
+    { q: "Which is greater: 6.2 or 6.19? Type the larger number.", a: 6.2, numeric: true, tol: 0.001 }
+  ];
+  renderCheckList('nl-practice-list', nlPractice, 'nl', "Not quite yet. Picture both numbers on a number line - further right always means greater.");
+
+  const fluencyPractice = [
+    { q: "\\(38 + 47\\)", a: 85, numeric: true, tol: 0 },
+    { q: "\\(90 - 34\\)", a: 56, numeric: true, tol: 0 },
+    { q: "\\(12 \\times 8\\)", a: 96, numeric: true, tol: 0 },
+    { q: "\\(96 \\div 6\\)", a: 16, numeric: true, tol: 0 },
+    { q: "\\(14.5 + 6.75\\)", a: 21.25, numeric: true, tol: 0.01 },
+    { q: "\\(3.2 \\times 4\\)", a: 12.8, numeric: true, tol: 0.01 }
+  ];
+  renderCheckList('fluency-practice-list', fluencyPractice, 'fluency', "Not quite yet. Slow down and work through the standard algorithm one step at a time.");
+</script>
+</body>
+</html>
