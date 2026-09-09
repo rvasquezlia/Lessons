@@ -43,7 +43,7 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Work the tabs below <strong>in order, left to right</strong>. Tabs 1 and 2 are review: reference material and guided practice with two tries and a reveal if you miss twice. Tab 3, <strong>Mixed Practice</strong>, is a printable-worksheet style check - you submit each answer once and nothing is revealed on screen; your teacher grades it from your printed report, like a real test. Tab 4 is your final readiness reflection. When you finish, type your name above and click <strong>Print My Progress</strong>.
+    Work the tabs <strong>in order</strong>: 1-2 review (2 tries + reveal), 3 is a graded printable check (nothing revealed), 4 is your exit ticket. Then click <strong>Print My Progress</strong>.
   </div>
 
   <nav class="nav-tabs">
@@ -60,29 +60,29 @@
 
     <div class="notebook-box">
       <div class="notebook-header">The Core Idea</div>
-      <p style="margin:0;">A literal equation solves exactly like a numeric one - subtract/add, then multiply/divide, in reverse order. The only difference is that <strong>every letter you aren't solving for gets treated like a number</strong>: move it with the properties of equality, never combine it with a letter it doesn't match.</p>
+      <ul style="margin-bottom:0;">
+        <li>Solve like a numeric equation: subtract/add, then multiply/divide.</li>
+        <li>Every other letter? Treat it like a number.</li>
+      </ul>
     </div>
 
     <div class="notebook-box">
-      <div class="notebook-header">Climb the Same Question Ladder Every Time</div>
-      <table class="data-table">
-        <thead><tr><th>#</th><th>Question</th><th>What it's asking</th></tr></thead>
-        <tbody>
-          <tr><td>1</td><td>What's the variable I need to isolate?</td><td>Name the target letter. It doesn't change round to round.</td></tr>
-          <tr><td>2</td><td>What is obstructing me from doing so?</td><td>Name whatever is attached to the target variable right now.</td></tr>
-          <tr><td>3</td><td>What is it doing?</td><td>Name the operation - adding, subtracting, multiplying, or dividing.</td></tr>
-          <tr><td>4</td><td>What's the inverse operation to remove it?</td><td>Name the opposite operation, then apply it to <strong>both</strong> sides.</td></tr>
-        </tbody>
-      </table>
-      <p style="margin:12px 0 0 0;">If the target variable appears in more than one term, ask an extra question first - <em>"Can one inverse operation remove all of these at once?"</em> - and factor it out before climbing the ladder above.</p>
+      <div class="notebook-header">The Question Ladder</div>
+      <ul style="margin-bottom:8px;">
+        <li>What's the variable?</li>
+        <li>What's obstructing it?</li>
+        <li>What's it doing?</li>
+        <li>What's the inverse? Apply to <strong>both</strong> sides.</li>
+      </ul>
+      <p style="margin:0; font-size:0.92rem; color:#475569;">Variable in more than one term? Factor it out first.</p>
     </div>
 
     <table class="data-table">
       <thead><tr><th>If your target variable...</th><th>Do this</th></tr></thead>
       <tbody>
-        <tr><td>Appears once, multiplied or divided</td><td>Undo with one inverse operation.</td></tr>
-        <tr><td>Has something added or subtracted, too</td><td>Undo the addition/subtraction first, then the multiplication/division.</td></tr>
-        <tr><td>Appears more than once</td><td>Factor it out of every term it's in, then divide by what's left.</td></tr>
+        <tr><td>Appears once</td><td>One inverse operation.</td></tr>
+        <tr><td>Also added/subtracted</td><td>Undo +/- first, then &times;/&divide;.</td></tr>
+        <tr><td>Appears more than once</td><td>Factor out, then divide.</td></tr>
       </tbody>
     </table>
 
@@ -108,7 +108,7 @@
 
     <div class="challenge-box">
       <h3 style="margin-top:0; color:#b45309;">Critical Thinking</h3>
-      <p>Suppose you tried to solve \(A = P + Prt\) for \(P\) by dividing only the second term by \((rt)\), instead of factoring \(P\) out of the whole right side first. Would that give the same answer? Explain why factoring is required whenever the target variable appears in more than one term.</p>
+      <p>\(A = P + Prt\): why must you factor \(P\) out before dividing, instead of just dividing the \(Prt\) term by \((rt)\)?</p>
       <textarea id="guided-critical" class="form-control-lg" rows="3" placeholder="Explain your reasoning..."></textarea>
       <button class="btn-lg" style="margin-top:10px;" onclick="checkGuidedCritical()">Submit My Work</button>
       <div id="guided-critical-feedback" class="feedback-msg"></div>
@@ -120,7 +120,7 @@
     <div class="section-title">Error Analysis Review</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Each problem shows a formula, the variable a student solved for, and their (incorrect) result. Walk the Question Ladder yourself to find where they went wrong, then type the correct rearrangement. For an exponent, type <code>^</code> (like <code>r^2</code>); for \(\pi\), type <code>pi</code>. You get two tries.
+      Find the student's mistake, then type the correct rearrangement. Exponent: <code>^</code>. \(\pi\): type <code>pi</code>. Two tries.
     </div>
     <div id="erroranalysis-list"></div>
   </div>
@@ -130,7 +130,7 @@
     <div class="section-title">Mixed Practice</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      This is a graded check covering bare rearrangements, error analysis, and word problems. Show all your work on paper, then submit your final answer here. <strong>Nothing is revealed on screen</strong> - your teacher reviews everything from your printed report, exactly like a paper test.
+      Work on paper, submit once. <strong>Nothing is revealed</strong> - your teacher grades it from your printed report.
     </div>
 
     <h3>Part 1: Bare Rearrangements</h3>
@@ -151,7 +151,7 @@
     <div class="section-title">Exit Ticket: Literal Equations Readiness Check</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Answer all four items, then click Submit Exit Ticket. This is the last step before you print your progress - go back to the Student Name box at the top of the page, type your name, and click Print My Progress.
+      Answer all four, submit, then print your progress above.
     </div>
 
     <form id="exit-form" onsubmit="submitExitTicket(event)">
@@ -300,15 +300,33 @@
     const html = guidedProblems.map((p, i) => `
       <div class="ladder" style="margin-top:16px;">
         <div class="ladder-formula">${p.formula} <span class="type-tag ${p.tag.cls}">${p.tag.label}</span></div>
-        <button class="btn-lg" onclick="revealGuidedStep(${i})">Reveal Next Round</button>
-        <button class="btn-secondary" onclick="resetGuidedStep(${i})">Reset</button>
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <button class="btn-lg" id="guided-${i}-btn" onclick="revealGuidedStep(${i})">Reveal Round 1</button>
+          <button class="btn-secondary" onclick="resetGuidedStep(${i})">Reset</button>
+          <span id="guided-${i}-progress" style="font-weight:700; color:#64748b; font-size:0.9rem;"></span>
+        </div>
         <div id="guided-${i}-chunks" style="margin-top:14px;"></div>
       </div>
     `).join('');
     document.getElementById('guided-steps-container').innerHTML = html;
+    guidedProblems.forEach((_, i) => updateGuidedButton(i));
   }
 
   const guidedStepCount = {};
+  function updateGuidedButton(i) {
+    const p = guidedProblems[i];
+    const count = guidedStepCount[i] || 0;
+    const btn = document.getElementById(`guided-${i}-btn`);
+    const progress = document.getElementById(`guided-${i}-progress`);
+    if (count >= p.rounds.length) {
+      btn.textContent = 'All rounds shown';
+      btn.disabled = true;
+    } else {
+      btn.textContent = `Reveal Round ${count + 1} of ${p.rounds.length}`;
+      btn.disabled = false;
+    }
+    progress.textContent = count > 0 ? `Showing ${count} of ${p.rounds.length} rounds` : '';
+  }
   function renderGuidedChunks(i) {
     const p = guidedProblems[i];
     const count = guidedStepCount[i] || 0;
@@ -322,6 +340,7 @@
       ${r.check ? `<div class="ladder-check">${r.check}</div>` : ''}
     `).join('');
     document.getElementById(`guided-${i}-chunks`).innerHTML = html;
+    updateGuidedButton(i);
     triggerMathJax();
   }
   function revealGuidedStep(i) {
