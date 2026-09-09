@@ -202,17 +202,25 @@
       <div class="ladder-formula">\(y = mx + b\), solve for \(x\) <span class="type-tag multistep">Multi-Step</span></div>
       <div class="ladder-round">
         <div class="ladder-round-label">Round 1</div>
-        <div class="qa"><span class="q">Obstructing \(x\)?</span><span class="a">\(b\) adding, \(m\) multiplying</span></div>
-        <div class="qa"><span class="q">Undo first?</span><span class="a">Subtract \(b\)</span></div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(x\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(b\) adding, and \(m\) multiplying</span></div>
+        <div class="qa"><span class="q">What's the first obstruction to undo?</span><span class="a">\(b\) adding</span></div>
+        <div class="qa"><span class="q">What is \(b\) doing?</span><span class="a">Adding</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Subtraction</span></div>
       </div>
+      <div class="ladder-eq">\(y - b = mx + b - b\)</div>
       <div class="ladder-result">\(y - b = mx\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? No. Keep going - see next round.</div>
       <div class="ladder-round">
         <div class="ladder-round-label">Round 2</div>
-        <div class="qa"><span class="q">Obstructing \(x\)?</span><span class="a">\(m\), multiplying</span></div>
-        <div class="qa"><span class="q">Inverse?</span><span class="a">Divide by \(m\)</span></div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(x\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(m\)</span></div>
+        <div class="qa"><span class="q">What is \(m\) doing?</span><span class="a">Multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
       </div>
+      <div class="ladder-eq">\(\dfrac{y-b}{m} = \dfrac{mx}{m}\)</div>
       <div class="ladder-result">\(x = \dfrac{y-b}{m}\)</div>
-      <div class="ladder-check">Check: \(y{=}11,m{=}2,b{=}3 \Rightarrow x=\frac{8}{2}=4\). Matches!</div>
+      <div class="ladder-check">Is \(x\) now isolated? <strong>Yes.</strong> Check: \(y{=}11,m{=}2,b{=}3 \Rightarrow x=\frac{8}{2}=4\). Matches!</div>
     </div>
 
     <div class="explainer-box">
@@ -244,11 +252,14 @@
       <div class="ladder-formula">\(A = lw\), solve for \(l\) <span class="type-tag onestep">One Step</span></div>
       <div class="ladder-round">
         <div class="ladder-round-label">Round 1</div>
-        <div class="qa"><span class="q">Obstructing \(l\)?</span><span class="a">\(w\), multiplying</span></div>
-        <div class="qa"><span class="q">Inverse?</span><span class="a">Divide by \(w\)</span></div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(l\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(w\)</span></div>
+        <div class="qa"><span class="q">What is \(w\) doing?</span><span class="a">Multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
       </div>
+      <div class="ladder-eq">\(\dfrac{A}{w} = \dfrac{lw}{w}\)</div>
       <div class="ladder-result">\(l = \dfrac{A}{w}\)</div>
-      <div class="ladder-check">Check: \(A{=}48,w{=}6 \Rightarrow l=8\); \(8\times6=48\).</div>
+      <div class="ladder-check">Is \(l\) now isolated? <strong>Yes.</strong> Check: \(A{=}48,w{=}6 \Rightarrow l=8\); \(8\times6=48\).</div>
     </div>
 
     <div class="widget-card">
@@ -498,26 +509,45 @@
     </div>
 
     <div class="ladder">
-      <div class="ladder-formula">\(I = Prt\), solve for \(P\), \(r\), or \(t\) <span class="type-tag onestep">One Step</span></div>
+      <div class="ladder-formula">\(I = Prt\), solve for \(P\) <span class="type-tag onestep">One Step</span></div>
       <div class="ladder-round">
-        <div class="ladder-round-label">Solve for \(P\)</div>
-        <div class="qa"><span class="q">What is obstructing \(P\)?</span><span class="a">\(rt\), multiplying</span></div>
-        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Division</span></div>
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(P\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(rt\)</span></div>
+        <div class="qa"><span class="q">What is \(rt\) doing?</span><span class="a">Multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
       </div>
+      <div class="ladder-eq">\(\dfrac{I}{rt} = \dfrac{Prt}{rt}\)</div>
       <div class="ladder-result">\(P = \dfrac{I}{rt}\)</div>
+      <div class="ladder-check">Is \(P\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <div class="ladder">
+      <div class="ladder-formula">\(I = Prt\), solve for \(r\) <span class="type-tag onestep">One Step</span></div>
       <div class="ladder-round">
-        <div class="ladder-round-label">Solve for \(r\)</div>
-        <div class="qa"><span class="q">What is obstructing \(r\)?</span><span class="a">\(Pt\), multiplying</span></div>
-        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Division</span></div>
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(r\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(Pt\)</span></div>
+        <div class="qa"><span class="q">What is \(Pt\) doing?</span><span class="a">Multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
       </div>
+      <div class="ladder-eq">\(\dfrac{I}{Pt} = \dfrac{Prt}{Pt}\)</div>
       <div class="ladder-result">\(r = \dfrac{I}{Pt}\)</div>
+      <div class="ladder-check">Is \(r\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <div class="ladder">
+      <div class="ladder-formula">\(I = Prt\), solve for \(t\) <span class="type-tag onestep">One Step</span></div>
       <div class="ladder-round">
-        <div class="ladder-round-label">Solve for \(t\)</div>
-        <div class="qa"><span class="q">What is obstructing \(t\)?</span><span class="a">\(Pr\), multiplying</span></div>
-        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Division</span></div>
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(t\)</span></div>
+        <div class="qa"><span class="q">What is obstructing me from doing so?</span><span class="a">\(Pr\)</span></div>
+        <div class="qa"><span class="q">What is \(Pr\) doing?</span><span class="a">Multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation to remove it?</span><span class="a">Division</span></div>
       </div>
+      <div class="ladder-eq">\(\dfrac{I}{Pr} = \dfrac{Prt}{Pr}\)</div>
       <div class="ladder-result">\(t = \dfrac{I}{Pr}\)</div>
-      <div class="ladder-check">Solving for \(I\) needs no ladder at all - \(I = Prt\) is already the target letter alone on one side.</div>
+      <div class="ladder-check">Is \(t\) now isolated? <strong>Yes.</strong> Solving for \(I\) needs no ladder at all - \(I = Prt\) is already the target letter alone on one side.</div>
     </div>
 
     <div class="widget-card">
