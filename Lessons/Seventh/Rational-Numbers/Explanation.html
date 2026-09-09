@@ -37,7 +37,7 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Every rule you need for this topic is here, broken into steps with fully worked examples. Go through the 6 tabs in order. For each carousel, read the example, then click <strong>Next Step</strong> to reveal the solution one step at a time instead of jumping ahead. Copy every notebook box into your math notebook - once these are solid, you're ready to solve problems on your own. Tabs 5 and 6 are a review of skills from earlier grades, not new material.
+    Every worked example: <strong>math on the left</strong>, <strong>questions on the right</strong> - only the green box is the final answer. Tabs 5-6 review skills from earlier grades.
   </div>
 
   <nav class="nav-tabs">
@@ -53,17 +53,17 @@
   <div id="numbersystem" class="panel active">
     <div class="section-title">What Is a Rational Number?</div>
     <div class="explainer-box">
-      A <strong>rational number</strong> is any number you can write as a fraction \(\dfrac{a}{b}\), where \(a\) and \(b\) are integers and \(b \neq 0\). That covers more than fractions that "look like" fractions - every integer, every terminating decimal, and every repeating decimal is rational too, because each one can be rewritten as a ratio of integers.
+      A <strong>rational number</strong> is any number you can write as \(\dfrac{a}{b}\), with \(a,b\) integers and \(b \neq 0\).
     </div>
 
     <div class="notebook-box">
-      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
+      <div class="notebook-header">The Number System</div>
       <ul style="margin-bottom:0;">
-        <li><strong>Natural (Counting) Numbers:</strong> \(1, 2, 3, \ldots\)</li>
-        <li><strong>Whole Numbers:</strong> \(0, 1, 2, 3, \ldots\)</li>
-        <li><strong>Integers:</strong> \(\ldots, -2, -1, 0, 1, 2, \ldots\)</li>
-        <li><strong>Rational Numbers:</strong> any number that fits \(\dfrac{a}{b}\) - includes all integers, plus every fraction and every terminating or repeating decimal.</li>
-        <li><strong>Irrational Numbers:</strong> everything left over - decimals that never terminate and never repeat, like \(\pi\) and \(\sqrt{2}\).</li>
+        <li><strong>Natural:</strong> \(1,2,3,\ldots\)</li>
+        <li><strong>Whole:</strong> \(0,1,2,3,\ldots\)</li>
+        <li><strong>Integers:</strong> \(\ldots,-1,0,1,\ldots\)</li>
+        <li><strong>Rational:</strong> fits \(\frac{a}{b}\) - all integers, all terminating/repeating decimals.</li>
+        <li><strong>Irrational:</strong> never terminates, never repeats - \(\pi\), \(\sqrt2\).</li>
       </ul>
     </div>
 
@@ -77,23 +77,15 @@
         <button class="btn-nav" id="rn-next-btn" onclick="changeRn(1)">Next &rarr;</button>
       </div>
       <div id="rn-content" style="min-height: 160px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextRnStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetRnStep()">Reset Steps</button>
-      </div>
     </div>
   </div>
 
   <!-- TAB 2: FRACTIONS TO DECIMALS -->
   <div id="fractodecimal" class="panel">
     <div class="section-title">Converting Fractions to Decimals</div>
-    <div class="explainer-box">
-      To write a fraction as a decimal, <strong>divide the numerator by the denominator.</strong> Some divisions end exactly - a <strong>terminating decimal</strong>. Others never end and settle into a pattern - a <strong>repeating decimal</strong>, marked with a bar over the digits that repeat.
-    </div>
-
     <div class="notebook-box">
-      <div class="notebook-header">COPY INTO NOTEBOOK</div>
-      <p style="margin:0;">Fraction &rarr; decimal: divide numerator &divide; denominator. If, in lowest terms, the denominator's only prime factors are 2 and/or 5, the decimal terminates. Any other denominator produces a repeating decimal.</p>
+      <div class="notebook-header">The Rule</div>
+      <p style="margin:0;">Divide numerator &divide; denominator. Denominator's only prime factors 2 and/or 5 &rarr; terminates. Anything else &rarr; repeats.</p>
     </div>
 
     <div class="carousel-card">
@@ -106,23 +98,15 @@
         <button class="btn-nav" id="f2d-next-btn" onclick="changeF2d(1)">Next &rarr;</button>
       </div>
       <div id="f2d-content" style="min-height: 160px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextF2dStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetF2dStep()">Reset Steps</button>
-      </div>
     </div>
   </div>
 
   <!-- TAB 3: DECIMALS TO FRACTIONS -->
   <div id="decimaltofrac" class="panel">
     <div class="section-title">Converting Decimals to Fractions</div>
-    <div class="explainer-box">
-      To write a terminating decimal as a fraction, use <strong>place value.</strong> The last digit tells you the denominator: tenths &rarr; 10, hundredths &rarr; 100, thousandths &rarr; 1000. Then simplify.
-    </div>
-
     <div class="notebook-box">
-      <div class="notebook-header">COPY INTO NOTEBOOK</div>
-      <p style="margin:0;">Decimal &rarr; fraction: write the digits after the decimal point over the matching place value (10, 100, 1000, ...), then divide numerator and denominator by their greatest common factor. Repeating decimals are rational too, but converting them back to a fraction algebraically is a technique you'll learn in a later course.</p>
+      <div class="notebook-header">The Rule</div>
+      <p style="margin:0;">Write the digits over the matching place value (tenths &rarr; 10, hundredths &rarr; 100, thousandths &rarr; 1000), then simplify.</p>
     </div>
 
     <div class="carousel-card">
@@ -135,10 +119,6 @@
         <button class="btn-nav" id="d2f-next-btn" onclick="changeD2f(1)">Next &rarr;</button>
       </div>
       <div id="d2f-content" style="min-height: 160px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextD2fStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetD2fStep()">Reset Steps</button>
-      </div>
     </div>
   </div>
 
@@ -146,12 +126,7 @@
   <div id="compareorder" class="panel">
     <div class="section-title">Comparing &amp; Ordering Rational Numbers</div>
     <div class="explainer-box">
-      To compare rational numbers in different forms, convert them all to the <strong>same form</strong> - decimals are usually the fastest - then plot them on a number line. Just like with integers, whichever value sits farther to the right is greater.
-    </div>
-
-    <div class="explainer-box">
-      <strong>Visualizing: \(\dfrac{3}{4}\) vs. \(0.7\)</strong>
-      <div id="compare-numberline" style="margin-top:10px;"></div>
+      Convert to the <strong>same form</strong> (decimals are fastest), then plot on a number line - farther right is greater.
     </div>
 
     <div class="carousel-card">
@@ -164,32 +139,18 @@
         <button class="btn-nav" id="cmp-next-btn" onclick="changeCmp(1)">Next &rarr;</button>
       </div>
       <div id="cmp-content" style="min-height: 160px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextCmpStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetCmpStep()">Reset Steps</button>
-      </div>
-    </div>
-
-    <div class="explainer-box" style="margin-top:24px;">
-      <strong>Ordering \(-1.5,\ \dfrac{3}{4},\ -2,\ 0.2\) from least to greatest</strong>
-      <div id="order-numberline" style="margin-top:10px;"></div>
-      <p style="text-align:center; color:#64748b; font-size:0.85rem; margin:6px 0 0 0;">Reading left to right: \(-2,\ -1.5,\ 0.2,\ \dfrac{3}{4}\).</p>
     </div>
   </div>
 
   <!-- TAB 5: FRACTION OPERATIONS (REVIEW) -->
   <div id="fractionops" class="panel">
     <div class="section-title">Fraction Operations: A Review</div>
-    <div class="explainer-box">
-      You already learned to add, subtract, multiply, and divide fractions in earlier grades. This is a refresher to sharpen the toolkit you already have, not new instruction.
-    </div>
-
     <div class="notebook-box">
-      <div class="notebook-header">COPY INTO NOTEBOOK</div>
-      <ul>
-        <li><strong>Add / Subtract (Butterfly Method):</strong> cross-multiply each numerator by the other fraction's denominator to get the two "wing" values, and multiply the denominators straight down the middle for the new denominator. Add (or subtract) the wing values, in order, for the new numerator. Simplify.</li>
-        <li><strong>Multiply:</strong> multiply the numerators together and the denominators together. Simplify (cancel common factors first if it's easier).</li>
-        <li><strong>Divide:</strong> keep the first fraction, change the sign to multiplication, and flip the second fraction to its reciprocal - "Keep-Change-Flip." Then multiply as usual.</li>
+      <div class="notebook-header">The Rules</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Add/Subtract:</strong> Butterfly Method - cross-multiply for wings, multiply denominators down the middle.</li>
+        <li><strong>Multiply:</strong> straight across, then simplify.</li>
+        <li><strong>Divide:</strong> Keep-Change-Flip, then multiply.</li>
       </ul>
     </div>
 
@@ -203,26 +164,18 @@
         <button class="btn-nav" id="fop-next-btn" onclick="changeFop(1)">Next &rarr;</button>
       </div>
       <div id="fop-content" style="min-height: 160px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextFopStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetFopStep()">Reset Steps</button>
-      </div>
     </div>
   </div>
 
   <!-- TAB 6: DECIMAL OPERATIONS (REVIEW) -->
   <div id="decimalops" class="panel">
     <div class="section-title">Decimal Operations: A Review</div>
-    <div class="explainer-box">
-      Same idea as whole-number arithmetic, plus one habit: keep track of the decimal point. This is a refresher of skills from earlier grades.
-    </div>
-
     <div class="notebook-box">
-      <div class="notebook-header">COPY INTO NOTEBOOK</div>
-      <ul>
-        <li><strong>Add / Subtract:</strong> line up the decimal points (write in extra zeros if needed), then add or subtract as usual.</li>
-        <li><strong>Multiply:</strong> multiply as if both numbers were whole, then count the total decimal places in both factors and place the decimal point that many spots from the right.</li>
-        <li><strong>Divide:</strong> if the divisor has a decimal, move its decimal point to make it a whole number, and move the dividend's decimal point the same number of places. Then divide as usual.</li>
+      <div class="notebook-header">The Rules</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Add/Subtract:</strong> line up the decimal points.</li>
+        <li><strong>Multiply:</strong> multiply as whole numbers, count decimal places.</li>
+        <li><strong>Divide:</strong> move both decimal points to make the divisor whole.</li>
       </ul>
     </div>
 
@@ -236,10 +189,6 @@
         <button class="btn-nav" id="dop-next-btn" onclick="changeDop(1)">Next &rarr;</button>
       </div>
       <div id="dop-content" style="min-height: 160px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextDopStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetDopStep()">Reset Steps</button>
-      </div>
     </div>
   </div>
 </div>
@@ -259,31 +208,24 @@
     triggerMathJax();
   }
 
-  // Generic carousel factory - each tab gets its own instance so state doesn't collide.
   function makeCarousel(prefix, examples) {
-    let current = 0, step = 1;
+    let current = 0;
     function render() {
       const ex = examples[current];
       document.getElementById(`${prefix}-title`).innerText = `Example ${current + 1} of ${examples.length}`;
       document.getElementById(`${prefix}-dots`).innerHTML = examples.map((_, i) =>
         `<div class="dot ${i === current ? 'active' : ''}" onclick="${prefix}Jump(${i})"></div>`
       ).join('');
-      let stepsHtml = '';
-      for (let i = 0; i < step; i++) stepsHtml += `<div class="step-item visible">${ex.steps[i]}</div>`;
-      document.getElementById(`${prefix}-content`).innerHTML = `<h3 style="color:var(--primary); margin-top:0;">${ex.title}</h3>${stepsHtml}`;
+      document.getElementById(`${prefix}-content`).innerHTML = ex.html;
       document.getElementById(`${prefix}-prev-btn`).disabled = current === 0;
       document.getElementById(`${prefix}-next-btn`).disabled = current === examples.length - 1;
       triggerMathJax();
     }
-    function change(dir) { current = Math.max(0, Math.min(examples.length - 1, current + dir)); step = 1; render(); }
-    function jump(idx) { current = idx; step = 1; render(); }
-    function nextStep() { if (step < examples[current].maxSteps) { step++; render(); } }
-    function resetStep() { step = 1; render(); }
-    function showAt(i, includeAnswers) { current = i; step = examples[i].maxSteps; render(); }
+    function change(dir) { current = Math.max(0, Math.min(examples.length - 1, current + dir)); render(); }
+    function jump(idx) { current = idx; render(); }
+    function showAt(i) { current = i; render(); }
     window[`change${cap(prefix)}`] = change;
     window[`${prefix}Jump`] = jump;
-    window[`next${cap(prefix)}Step`] = nextStep;
-    window[`reset${cap(prefix)}Step`] = resetStep;
     render();
     if (window.TeacherPrint) TeacherPrint.registerCarousel(`${prefix}-content`, examples.length, showAt);
   }
@@ -294,28 +236,54 @@
   // ==========================================
   const rnExamples = [
     {
-      title: "Example 1 - Is \\(-7\\) rational?",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Try to write it as a fraction of integers:</strong> \\(-7 = \\dfrac{-7}{1}\\).",
-        "<strong>Step 2 - It fits \\(\\frac{a}{b}\\) with integers and \\(b \\neq 0\\):</strong> \\(-7\\) is rational. Every integer is rational."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Is \\(-7\\) rational?</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(-7\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Write as \\(\\frac{a}{b}\\)?</div><div class="qa-a">\\(\\dfrac{-7}{1}\\)</div></div>
+            <div class="qa-row"><div class="qa-q">Fits, \\(b \\neq 0\\)?</div><div class="qa-a">Yes</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">Rational</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Why?</div><div class="qa-a">Every integer is rational</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 2 - Is \\(0.6\\) rational?",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Write the terminating decimal using place value:</strong> \\(0.6 = \\dfrac{6}{10}\\).",
-        "<strong>Step 2 - This simplifies to \\(\\dfrac{3}{5}\\), a fraction of integers:</strong> \\(0.6\\) is rational."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Is \\(0.6\\) rational?</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(0.6\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Write using place value</div><div class="qa-a">\\(\\dfrac{6}{10}\\)</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Simplify</span>\\(\\dfrac{6}{10} = \\dfrac{3}{5}\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">Rational</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Why?</div><div class="qa-a">Fraction of integers</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 3 - Is \\(\\pi\\) rational?",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Look at its decimal form:</strong> \\(\\pi = 3.14159265\\ldots\\) - the digits never end and never settle into a repeating block.",
-        "<strong>Step 2 - Since \\(\\pi\\) cannot be written as a fraction of integers:</strong> it is <strong>irrational</strong>, not rational."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Is \\(\\pi\\) rational?</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(\\pi = 3.14159265\\ldots\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Terminates or repeats?</div><div class="qa-a">Neither - never ends, never repeats</div></div>
+            <div class="qa-row"><div class="qa-q">Fits \\(\\frac{a}{b}\\)?</div><div class="qa-a">No</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">Irrational</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Why?</div><div class="qa-a">Can't be written as a fraction of integers</div></div>
+          </div></div>
+        </div>`
     }
   ];
   makeCarousel('rn', rnExamples);
@@ -325,28 +293,61 @@
   // ==========================================
   const f2dExamples = [
     {
-      title: "Example 1 (terminating): \\(\\dfrac{3}{4}\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Divide numerator by denominator:</strong> \\(3 \\div 4\\). Add a decimal point and a zero: \\(30 \\div 4 = 7\\) remainder \\(2\\).",
-        "<strong>Step 2 - Bring down another zero:</strong> \\(20 \\div 4 = 5\\) remainder \\(0\\) - the division ends exactly. \\(\\dfrac{3}{4} = \\mathbf{0.75}\\)."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(\\dfrac{3}{4}\\) <span class="type-tag convert">Terminating</span></div>
+        <div class="flow-row">
+          <div class="flow-math">
+            <div class="div-block">\\[ \\begin{array}{r} 0.75 \\\\ 4\\overline{)3.00} \\\\ -28\\phantom{0} \\\\ \\hline 20 \\\\ -20 \\\\ \\hline 0 \\end{array} \\]</div>
+          </div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Divide</div><div class="qa-a">\\(3 \\div 4\\), adding zeros</div></div>
+            <div class="qa-row"><div class="qa-q">Does it terminate?</div><div class="qa-a">Yes - remainder hits 0</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\dfrac{3}{4} = 0.75\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Type?</div><div class="qa-a">Terminating decimal</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 2 (repeating): \\(\\dfrac{1}{3}\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Divide:</strong> \\(1 \\div 3\\). Add a decimal point and zeros: \\(10 \\div 3 = 3\\) remainder \\(1\\).",
-        "<strong>Step 2 - The remainder (1) is back where it started,</strong> so the \\(3\\) repeats forever: \\(\\dfrac{1}{3} = 0.333\\ldots = \\mathbf{0.\\overline{3}}\\)."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(\\dfrac{1}{3}\\) <span class="type-tag word">Repeating</span></div>
+        <div class="flow-row">
+          <div class="flow-math">
+            <div class="div-block">\\[ \\begin{array}{r} 0.333 \\\\ 3\\overline{)1.000} \\\\ -9\\phantom{00} \\\\ \\hline 10\\phantom{0} \\\\ -9\\phantom{0} \\\\ \\hline 10 \\end{array} \\]</div>
+          </div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Divide</div><div class="qa-a">\\(1 \\div 3\\)</div></div>
+            <div class="qa-row"><div class="qa-q">Remainder repeats?</div><div class="qa-a">Yes - remainder 1 keeps returning</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\dfrac{1}{3} = 0.\\overline{3}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Type?</div><div class="qa-a">Repeating decimal</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 3 (partly repeating): \\(\\dfrac{5}{6}\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Divide:</strong> \\(5 \\div 6\\). \\(50 \\div 6 = 8\\) remainder \\(2\\).",
-        "<strong>Step 2 - Bring down a zero:</strong> \\(20 \\div 6 = 3\\) remainder \\(2\\) - that remainder repeats, so only the \\(3\\) repeats: \\(\\dfrac{5}{6} = 0.8333\\ldots = \\mathbf{0.8\\overline{3}}\\)."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(\\dfrac{5}{6}\\) <span class="type-tag word">Partly Repeating</span></div>
+        <div class="flow-row">
+          <div class="flow-math">
+            <div class="div-block">\\[ \\begin{array}{r} 0.833 \\\\ 6\\overline{)5.000} \\\\ -48\\phantom{00} \\\\ \\hline 20\\phantom{0} \\\\ -18\\phantom{0} \\\\ \\hline 20 \\end{array} \\]</div>
+          </div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Divide</div><div class="qa-a">\\(5 \\div 6\\)</div></div>
+            <div class="qa-row"><div class="qa-q">Remainder repeats?</div><div class="qa-a">Yes - only the 3 repeats</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\dfrac{5}{6} = 0.8\\overline{3}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Type?</div><div class="qa-a">Partly repeating</div></div>
+          </div></div>
+        </div>`
     }
   ];
   makeCarousel('f2d', f2dExamples);
@@ -356,28 +357,52 @@
   // ==========================================
   const d2fExamples = [
     {
-      title: "Example 1: \\(0.8\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - One digit after the decimal point means tenths:</strong> \\(0.8 = \\dfrac{8}{10}\\).",
-        "<strong>Step 2 - Simplify by dividing both by their GCF, 2:</strong> \\(\\dfrac{8}{10} = \\mathbf{\\dfrac{4}{5}}\\)."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(0.8\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(0.8\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Place value?</div><div class="qa-a">1 digit - tenths</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Write it</span>\\(\\dfrac{8}{10}\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\dfrac{4}{5}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Simplify by GCF 2</div><div class="qa-a">\\(\\dfrac{8}{10} \\rightarrow \\dfrac{4}{5}\\)</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 2: \\(0.25\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Two digits after the decimal point means hundredths:</strong> \\(0.25 = \\dfrac{25}{100}\\).",
-        "<strong>Step 2 - Simplify by dividing both by their GCF, 25:</strong> \\(\\dfrac{25}{100} = \\mathbf{\\dfrac{1}{4}}\\)."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(0.25\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(0.25\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Place value?</div><div class="qa-a">2 digits - hundredths</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Write it</span>\\(\\dfrac{25}{100}\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\dfrac{1}{4}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Simplify by GCF 25</div><div class="qa-a">\\(\\dfrac{25}{100} \\rightarrow \\dfrac{1}{4}\\)</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 3 (mixed number): \\(1.125\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Separate the whole number, then convert the decimal part (thousandths):</strong> \\(1.125 = 1 + \\dfrac{125}{1000}\\).",
-        "<strong>Step 2 - Simplify \\(\\dfrac{125}{1000}\\) by their GCF, 125, to get \\(\\dfrac{1}{8}\\):</strong> \\(1.125 = 1 + \\dfrac{1}{8} = \\mathbf{\\dfrac{9}{8}}\\) (or \\(1\\dfrac{1}{8}\\))."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(1.125\\) <span class="type-tag word">Mixed Number</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(1.125\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Separate whole number</div><div class="qa-a">\\(1 + \\dfrac{125}{1000}\\)</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Simplify</span>\\(\\dfrac{125}{1000} \\rightarrow \\dfrac{1}{8}\\) (GCF 125)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(1\\dfrac{1}{8}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Combine</div><div class="qa-a">\\(1 + \\frac18\\)</div></div>
+          </div></div>
+        </div>`
     }
   ];
   makeCarousel('d2f', d2fExamples);
@@ -385,44 +410,54 @@
   // ==========================================
   // TAB 4: COMPARE & ORDER
   // ==========================================
-  renderNumberLine('compare-numberline', {
-    min: 0, max: 1, step: 0.25,
-    points: [{ value: 0.75, label: '3/4 = 0.75', color: '#1e3a8a' }, { value: 0.7, label: '0.7', color: '#d97706' }]
-  });
-  renderNumberLine('order-numberline', {
-    min: -2.5, max: 1, step: 0.5,
-    points: [
-      { value: -2, label: '-2', color: '#1e3a8a' },
-      { value: -1.5, label: '-1.5', color: '#1e3a8a' },
-      { value: 0.2, label: '0.2', color: '#15803d' },
-      { value: 0.75, label: '3/4', color: '#d97706' }
-    ]
-  });
-
   const cmpExamples = [
     {
-      title: "Example 1: Compare \\(\\dfrac{3}{4}\\) and \\(0.7\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Convert to the same form:</strong> \\(\\dfrac{3}{4} = 0.75\\) (divide \\(3\\) by \\(4\\)).",
-        "<strong>Step 2 - Compare the decimals:</strong> \\(0.75 > 0.7\\), so \\(\\mathbf{\\dfrac{3}{4} > 0.7}\\)."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Compare \\(\\dfrac{3}{4}\\) and \\(0.7\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(\\dfrac{3}{4}\\) ___ \\(0.7\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same form?</div><div class="qa-a">No - convert \\(\\frac34\\) to a decimal</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Converting</span>\\(\\dfrac34 = 0.75\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\dfrac34 > 0.7\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Compare</div><div class="qa-a">\\(0.75 > 0.7\\)</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 2: Order \\(-1.5,\\ \\dfrac{3}{4},\\ -2,\\ 0.2\\) from least to greatest",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Convert everything to decimals:</strong> \\(-1.5,\\ 0.75,\\ -2,\\ 0.2\\).",
-        "<strong>Step 2 - Plot them on a number line and read left to right:</strong> \\(\\mathbf{-2,\\ -1.5,\\ 0.2,\\ \\dfrac{3}{4}}\\)."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Order \\(-1.5, \\dfrac34, -2, 0.2\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(-1.5, \\dfrac34, -2, 0.2\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same form?</div><div class="qa-a">Convert all to decimals: \\(-1.5, 0.75, -2, 0.2\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(-2, -1.5, 0.2, \\dfrac34\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Plot &amp; read left to right</div><div class="qa-a">Least to greatest</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 3: Compare \\(-\\dfrac{2}{3}\\) and \\(-0.7\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Convert \\(-\\dfrac{2}{3}\\) to a decimal:</strong> \\(-\\dfrac{2}{3} = -0.6666\\ldots\\) (repeating).",
-        "<strong>Step 2 - \\(-0.6666\\ldots\\) sits to the right of \\(-0.7\\) (closer to zero):</strong> \\(\\mathbf{-\\dfrac{2}{3} > -0.7}\\)."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Compare \\(-\\dfrac23\\) and \\(-0.7\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(-\\dfrac23\\) ___ \\(-0.7\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same form?</div><div class="qa-a">No - convert \\(-\\frac23\\)</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Converting</span>\\(-\\dfrac23 = -0.6666\\ldots\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(-\\dfrac23 > -0.7\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which is farther right?</div><div class="qa-a">\\(-0.6666\\ldots\\) - closer to zero</div></div>
+          </div></div>
+        </div>`
     }
   ];
   makeCarousel('cmp', cmpExamples);
@@ -432,38 +467,68 @@
   // ==========================================
   const fopExamples = [
     {
-      title: "Example 1 (add): \\(\\dfrac{1}{4} + \\dfrac{1}{6}\\)",
-      maxSteps: 3,
-      steps: [
-        "<strong>Step 1 - Draw the butterfly wings (cross-multiply):</strong> \\(1 \\times 6 = 6\\) and \\(4 \\times 1 = 4\\). Multiply straight down the middle for the new denominator: \\(4 \\times 6 = 24\\).",
-        "<strong>Step 2 - This is addition, so add the wing values for the new numerator:</strong> \\(6 + 4 = 10\\), giving \\(\\dfrac{10}{24}\\).",
-        "<strong>Step 3 - Simplify</strong> by dividing both by their GCF, \\(2\\): \\(\\dfrac{10}{24} = \\mathbf{\\dfrac{5}{12}}\\)."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(\\dfrac14 + \\dfrac16\\) <span class="type-tag addsub">Add</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(\\dfrac14 + \\dfrac16\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same denominator?</div><div class="qa-a">No - Butterfly Method</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Wings</span>\\(1\\times6=6\\), \\(4\\times1=4\\); denom \\(4\\times6=24\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\dfrac{5}{12}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Add &amp; simplify</div><div class="qa-a">\\(\\dfrac{6+4}{24} = \\dfrac{10}{24} \\rightarrow \\dfrac{5}{12}\\)</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 2 (subtract): \\(\\dfrac{5}{6} - \\dfrac{1}{4}\\)",
-      maxSteps: 3,
-      steps: [
-        "<strong>Step 1 - Draw the butterfly wings (cross-multiply):</strong> \\(5 \\times 4 = 20\\) and \\(6 \\times 1 = 6\\). Multiply straight down the middle for the new denominator: \\(6 \\times 4 = 24\\).",
-        "<strong>Step 2 - This is subtraction, so subtract the wing values in the same order as the fractions:</strong> \\(20 - 6 = 14\\), giving \\(\\dfrac{14}{24}\\).",
-        "<strong>Step 3 - Simplify</strong> by dividing both by their GCF, \\(2\\): \\(\\dfrac{14}{24} = \\mathbf{\\dfrac{7}{12}}\\)."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(\\dfrac56 - \\dfrac14\\) <span class="type-tag addsub">Subtract</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(\\dfrac56 - \\dfrac14\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same denominator?</div><div class="qa-a">No - Butterfly Method</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Wings</span>\\(5\\times4=20\\), \\(6\\times1=6\\); denom \\(6\\times4=24\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\dfrac{7}{12}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Subtract &amp; simplify</div><div class="qa-a">\\(\\dfrac{20-6}{24} = \\dfrac{14}{24} \\rightarrow \\dfrac{7}{12}\\)</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 3 (multiply): \\(\\dfrac{2}{3} \\times \\dfrac{3}{4}\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Multiply straight across:</strong> numerators \\(2 \\times 3 = 6\\), denominators \\(3 \\times 4 = 12\\).",
-        "<strong>Step 2 - Simplify:</strong> \\(\\dfrac{6}{12} = \\mathbf{\\dfrac{1}{2}}\\)."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(\\dfrac23 \\times \\dfrac34\\) <span class="type-tag addsub">Multiply</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(\\dfrac23 \\times \\dfrac34\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">What do I do?</div><div class="qa-a">Multiply straight across</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Resolving</span>\\(\\dfrac{2\\times3}{3\\times4} = \\dfrac{6}{12}\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\dfrac12\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Simplify</div><div class="qa-a">\\(\\dfrac{6}{12} \\rightarrow \\dfrac12\\)</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 4 (divide): \\(\\dfrac{2}{5} \\div \\dfrac{3}{4}\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Keep-Change-Flip: keep \\(\\dfrac{2}{5}\\), change to multiplication, flip \\(\\dfrac{3}{4}\\) to its reciprocal:</strong> \\(\\dfrac{2}{5} \\times \\dfrac{4}{3}\\).",
-        "<strong>Step 2 - Multiply straight across:</strong> \\(\\dfrac{2 \\times 4}{5 \\times 3} = \\mathbf{\\dfrac{8}{15}}\\) (already in simplest form)."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(\\dfrac25 \\div \\dfrac34\\) <span class="type-tag addsub">Divide</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(\\dfrac25 \\div \\dfrac34\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Multiply or divide?</div><div class="qa-a">Divide - Keep-Change-Flip</div></div>
+          </div><div class="kcc-box"><span class="box-label">Keep-Change-Flip</span>\\(\\dfrac25 \\times \\dfrac43\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\dfrac{8}{15}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Multiply straight across</div><div class="qa-a">\\(\\dfrac{2\\times4}{5\\times3} = \\dfrac{8}{15}\\)</div></div>
+          </div></div>
+        </div>`
     }
   ];
   makeCarousel('fop', fopExamples);
@@ -473,36 +538,68 @@
   // ==========================================
   const dopExamples = [
     {
-      title: "Example 1 (add): \\(4.7 + 2.35\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Line up the decimal points, writing \\(4.7\\) as \\(4.70\\):</strong> \\(4.70 + 2.35\\).",
-        "<strong>Step 2 - Add each column:</strong> \\(4.70 + 2.35 = \\mathbf{7.05}\\)."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(4.7 + 2.35\\) <span class="type-tag addsub">Add</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(4.70 + 2.35\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Line up decimal points</div><div class="qa-a">Write \\(4.7\\) as \\(4.70\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(7.05\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Add each column</div><div class="qa-a">\\(4.70+2.35=7.05\\)</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 2 (subtract): \\(8.2 - 3.65\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Line up the decimal points, writing \\(8.2\\) as \\(8.20\\):</strong> \\(8.20 - 3.65\\).",
-        "<strong>Step 2 - Subtract each column, borrowing as needed:</strong> \\(8.20 - 3.65 = \\mathbf{4.55}\\)."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(8.2 - 3.65\\) <span class="type-tag addsub">Subtract</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(8.20 - 3.65\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Line up decimal points</div><div class="qa-a">Write \\(8.2\\) as \\(8.20\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(4.55\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Subtract, borrow as needed</div><div class="qa-a">\\(8.20-3.65=4.55\\)</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 3 (multiply): \\(2.4 \\times 1.5\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Multiply as if both were whole numbers:</strong> \\(24 \\times 15 = 360\\).",
-        "<strong>Step 2 - Count the decimal places in both factors (\\(1 + 1 = 2\\)) and place the point 2 spots from the right:</strong> \\(3.60 = \\mathbf{3.6}\\)."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(2.4 \\times 1.5\\) <span class="type-tag addsub">Multiply</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(24 \\times 15\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Multiply as whole numbers</div><div class="qa-a">\\(24\\times15=360\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(3.6\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Count decimal places</div><div class="qa-a">\\(1+1=2\\) places: \\(3.60\\)</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 4 (divide): \\(6.25 \\div 0.5\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Move the divisor's decimal point to make it a whole number (\\(0.5 \\to 5\\)), moving the dividend's point the same number of places (\\(6.25 \\to 62.5\\)):</strong>",
-        "<strong>Step 2 - Divide normally:</strong> \\(62.5 \\div 5 = \\mathbf{12.5}\\)."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(6.25 \\div 0.5\\) <span class="type-tag addsub">Divide</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(62.5 \\div 5\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Divisor has a decimal?</div><div class="qa-a">Move both points: \\(0.5\\to5\\), \\(6.25\\to62.5\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(12.5\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Divide normally</div><div class="qa-a">\\(62.5 \\div 5 = 12.5\\)</div></div>
+          </div></div>
+        </div>`
     }
   ];
   makeCarousel('dop', dopExamples);

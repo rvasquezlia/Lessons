@@ -37,7 +37,7 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Every rule you need for this topic is here, broken into steps with fully worked examples. Go through the 4 tabs in order. For each carousel, read the example, then click <strong>Next Step</strong> to reveal the solution one step at a time instead of jumping ahead. Copy every notebook box into your math notebook - once these are solid, you're ready to solve problems on your own. <strong>Calculators are not allowed this quarter.</strong>
+    Every worked example: <strong>math on the left</strong>, <strong>questions on the right</strong> - only the green box is the final answer. Use <strong>Previous / Next</strong> to browse examples. <strong>Calculators are not allowed this quarter.</strong>
   </div>
 
   <nav class="nav-tabs">
@@ -50,8 +50,14 @@
   <!-- TAB 1: OPPOSITES & ABSOLUTE VALUE -->
   <div id="opposites" class="panel active">
     <div class="section-title">Relating Integers to Their Opposites; Absolute Value</div>
-    <div class="explainer-box">
-      Every integer has an <strong>opposite</strong> the same distance from \(0\) but on the other side of the number line. The <strong>absolute value</strong> of a number is that distance - always \(0\) or positive, never negative. To compare two integers, the one farther to the <em>right</em> on the number line is always greater, even if it "looks smaller" without its sign.
+
+    <div class="notebook-box">
+      <div class="notebook-header">The Rules</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Opposite:</strong> flip the sign.</li>
+        <li><strong>Absolute value:</strong> drop the sign - always 0 or positive.</li>
+        <li><strong>Compare:</strong> farther right on the number line = greater, regardless of absolute value.</li>
+      </ul>
     </div>
 
     <div class="number-line-wrap" style="overflow-x:auto; margin: 16px 0;">
@@ -78,16 +84,7 @@
         <div style="width:34px; text-align:center; padding:8px 0; font-weight:700; border-right:1px solid #e2e8f0;">9</div>
         <div style="width:34px; text-align:center; padding:8px 0; font-weight:700;">10</div>
       </div>
-      <p style="text-align:center; color:#64748b; font-size:0.85rem; margin:6px 0 0 0;">\(-6\) and \(6\) are <strong>opposites</strong>: both \(6\) steps from \(0\), on opposite sides. \(0\) is its own opposite.</p>
-    </div>
-
-    <div class="notebook-box">
-      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
-      <ul style="margin-bottom:0;">
-        <li><strong>To find an opposite:</strong> flip the sign. The opposite of a positive number is negative, and the opposite of a negative number is positive.</li>
-        <li><strong>To find an absolute value:</strong> drop the sign - the answer is always \(0\) or positive, because it measures distance, not direction.</li>
-        <li><strong>To compare two integers:</strong> picture them on a number line. Whichever is farther right is greater, regardless of which has the bigger absolute value.</li>
-      </ul>
+      <p style="text-align:center; color:#64748b; font-size:0.85rem; margin:6px 0 0 0;">\(-6\) and \(6\) are opposites: both 6 steps from 0.</p>
     </div>
 
     <div class="carousel-card">
@@ -100,30 +97,23 @@
         <button class="btn-nav" id="opp-next-btn" onclick="changeOpp(1)">Next &rarr;</button>
       </div>
       <div id="opp-content" style="min-height: 160px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextOppStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetOppStep()">Reset Steps</button>
-      </div>
     </div>
   </div>
 
   <!-- TAB 2: ADD INTEGERS -->
   <div id="addition" class="panel">
     <div class="section-title">Adding Integers</div>
-    <div class="explainer-box">
-      <strong>Same signs:</strong> add the absolute values, keep the common sign. <strong>Different signs:</strong> subtract the smaller absolute value from the larger, and keep the sign of the number with the larger absolute value.
-    </div>
 
     <div class="notebook-box">
-      <div class="notebook-header">1. Addition Rules - COPY INTO NOTEBOOK</div>
-      <ul>
-        <li><strong>Same Signs:</strong> Add the absolute values and keep the common sign. \(5+3=8\) &nbsp;&nbsp; \(-5+(-3)=-8\)</li>
-        <li><strong>Different Signs:</strong> Subtract the smaller absolute value from the larger. Keep the sign of the number with the larger absolute value. \(-7+4=-3\) (subtract \(7-4=3\); keep negative because \(|-7|>|4|\)). \(10+(-2)=8\) (subtract \(10-2=8\); keep positive because \(|10|>|-2|\)).</li>
+      <div class="notebook-header">The Rule</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Same signs:</strong> add the absolute values, keep the common sign.</li>
+        <li><strong>Different signs:</strong> subtract the smaller from the larger, keep the sign of the larger.</li>
       </ul>
     </div>
 
     <div class="explainer-box">
-      <strong>Visualizing Addition: \(-3 + 5 = 2\)</strong> - starting at 0, move left 3 units, then right 5 units to land at 2.
+      <strong>\(-3 + 5 = 2\):</strong> from 0, move left 3, then right 5.
       <div id="addition-numberline" style="margin-top:10px;"></div>
     </div>
 
@@ -137,34 +127,24 @@
         <button class="btn-nav" id="add-next-btn" onclick="changeAdd(1)">Next &rarr;</button>
       </div>
       <div id="add-content" style="min-height: 160px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextAddStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetAddStep()">Reset Steps</button>
-      </div>
     </div>
   </div>
 
   <!-- TAB 3: SUBTRACT INTEGERS -->
   <div id="subtraction" class="panel">
     <div class="section-title">Subtracting Integers</div>
-    <div class="explainer-box">
-      <strong>Subtracting is adding the opposite:</strong> \(a - b = a + (-b)\). Rewrite the subtraction as addition of the opposite, then use the addition rules above.
-    </div>
 
     <div class="notebook-box">
-      <div class="notebook-header">2. Subtraction Rule: "Keep-Change-Change" - COPY INTO NOTEBOOK</div>
-      <p style="margin:0 0 10px 0;">To subtract an integer, add its opposite. Follow these three steps to rewrite the problem as addition:</p>
-      <ol>
-        <li>Keep the first number exactly as it is.</li>
-        <li>Change the subtraction sign to an addition sign.</li>
-        <li>Change the sign of the second number to its opposite.</li>
-      </ol>
-      <p style="margin:10px 0 0 0;"><em>Example:</em> \(4 - (-3)\): Keep the 4, Change \(-\) to \(+\), Change \(-3\) to \(3\) &rarr; \(4 + 3 = \mathbf{7}\).</p>
-      <p style="margin:6px 0 0 0;"><em>Example:</em> \(-2 - 5\): Keep \(-2\), Change \(-\) to \(+\), Change \(5\) to \(-5\) &rarr; \(-2 + (-5) = \mathbf{-7}\).</p>
+      <div class="notebook-header">Keep-Change-Change</div>
+      <ul style="margin-bottom:0;">
+        <li>Keep the first number.</li>
+        <li>Change subtraction to addition.</li>
+        <li>Change the second number's sign.</li>
+      </ul>
     </div>
 
     <div class="explainer-box">
-      <strong>Reading a Subtraction on the Number Line: \(-4 - 9 = -13\)</strong> - the arrow starts at \(-4\) and moves 9 units further left (in the negative direction).
+      <strong>\(-4 - 9 = -13\):</strong> arrow starts at \(-4\), moves 9 more left.
       <div id="subtraction-numberline" style="margin-top:10px;"></div>
     </div>
 
@@ -178,26 +158,16 @@
         <button class="btn-nav" id="sub-next-btn" onclick="changeSub(1)">Next &rarr;</button>
       </div>
       <div id="sub-content" style="min-height: 160px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextSubStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetSubStep()">Reset Steps</button>
-      </div>
     </div>
   </div>
 
   <!-- TAB 4: MULTIPLY & DIVIDE INTEGERS -->
   <div id="muldiv" class="panel">
     <div class="section-title">Multiplying and Dividing Integers</div>
-    <div class="explainer-box">
-      <strong>Same signs &rarr; positive.</strong> <strong>Different signs &rarr; negative.</strong> This rule holds for both multiplication and division - division "undoes" multiplication, so the sign rule is identical.
-    </div>
 
     <div class="notebook-box">
-      <div class="notebook-header">3. Multiplication &amp; Division Sign Laws - COPY INTO NOTEBOOK</div>
-      <ul>
-        <li><strong>Same Signs = Positive:</strong> \((+)\times(+)=(+)\), \((-)\times(-)=(+)\). Examples: \(6\times2=12\), \(-4\times(-3)=12\), \(-20\div(-5)=4\).</li>
-        <li><strong>Different Signs = Negative:</strong> \((+)\times(-)=(-)\), \((-)\times(+)=(-)\). Examples: \(8\times(-2)=-16\), \(-9\times3=-27\), \(15\div(-3)=-5\).</li>
-      </ul>
+      <div class="notebook-header">The Rule</div>
+      <p style="margin:0;">Same signs &rarr; positive. Different signs &rarr; negative. Same rule for both multiplication and division.</p>
     </div>
 
     <div class="carousel-card">
@@ -210,10 +180,6 @@
         <button class="btn-nav" id="md-next-btn" onclick="changeMd(1)">Next &rarr;</button>
       </div>
       <div id="md-content" style="min-height: 160px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextMdStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetMdStep()">Reset Steps</button>
-      </div>
     </div>
   </div>
 </div>
@@ -233,63 +199,85 @@
     triggerMathJax();
   }
 
-  // Generic carousel factory - each tab gets its own instance so state doesn't collide.
+  // Generic carousel factory - each example is a fully-shown flow-row card;
+  // Previous/Next just switch which example is on screen.
   function makeCarousel(prefix, examples) {
-    let current = 0, step = 1;
+    let current = 0;
     function render() {
       const ex = examples[current];
       document.getElementById(`${prefix}-title`).innerText = `Example ${current + 1} of ${examples.length}`;
       document.getElementById(`${prefix}-dots`).innerHTML = examples.map((_, i) =>
         `<div class="dot ${i === current ? 'active' : ''}" onclick="${prefix}Jump(${i})"></div>`
       ).join('');
-      let stepsHtml = '';
-      for (let i = 0; i < step; i++) stepsHtml += `<div class="step-item visible">${ex.steps[i]}</div>`;
-      document.getElementById(`${prefix}-content`).innerHTML = `<h3 style="color:var(--primary); margin-top:0;">${ex.title}</h3>${stepsHtml}`;
+      document.getElementById(`${prefix}-content`).innerHTML = ex.html;
       document.getElementById(`${prefix}-prev-btn`).disabled = current === 0;
       document.getElementById(`${prefix}-next-btn`).disabled = current === examples.length - 1;
       triggerMathJax();
     }
-    function change(dir) { current = Math.max(0, Math.min(examples.length - 1, current + dir)); step = 1; render(); }
-    function jump(idx) { current = idx; step = 1; render(); }
-    function nextStep() { if (step < examples[current].maxSteps) { step++; render(); } }
-    function resetStep() { step = 1; render(); }
-    function showAt(i, includeAnswers) { current = i; step = examples[i].maxSteps; render(); }
+    function change(dir) { current = Math.max(0, Math.min(examples.length - 1, current + dir)); render(); }
+    function jump(idx) { current = idx; render(); }
+    function showAt(i) { current = i; render(); }
     window[`change${cap(prefix)}`] = change;
     window[`${prefix}Jump`] = jump;
-    window[`next${cap(prefix)}Step`] = nextStep;
-    window[`reset${cap(prefix)}Step`] = resetStep;
     render();
     if (window.TeacherPrint) TeacherPrint.registerCarousel(`${prefix}-content`, examples.length, showAt);
   }
-  function cap(s) { return s === 'md' ? 'Md' : s.charAt(0).toUpperCase() + s.slice(1); }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
   // ==========================================
   // TAB 1: OPPOSITES & ABSOLUTE VALUE
   // ==========================================
   const oppExamples = [
     {
-      title: "Example 1 - Find the opposite of \\(-15\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Locate \\(-15\\) on the number line:</strong> it is 15 units to the left of 0.",
-        "<strong>Step 2 - Flip the sign to land the same distance on the other side:</strong> the opposite of \\(-15\\) is \\(\\mathbf{15}\\)."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Find the opposite of \\(-15\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(-15\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">How far from 0?</div><div class="qa-a">15 units, to the left</div></div>
+            <div class="qa-row"><div class="qa-q">What do I do?</div><div class="qa-a">Flip the sign</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">Opposite: \\(15\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same distance, other side?</div><div class="qa-a">Yes - 15 units to the right</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 2 - Find \\(|7|\\) and \\(|-7|\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Measure the distance from 0, ignoring direction:</strong> \\(7\\) is 7 units from 0, and \\(-7\\) is also 7 units from 0.",
-        "<strong>Step 2 - Absolute value is always non-negative:</strong> \\(|7| = \\mathbf{7}\\) and \\(|-7| = \\mathbf{7}\\) - same distance, same absolute value."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Find \\(|7|\\) and \\(|-7|\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(|7|\\) and \\(|-7|\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Distance from 0?</div><div class="qa-a">Both 7 units</div></div>
+            <div class="qa-row"><div class="qa-q">Absolute value sign?</div><div class="qa-a">Never negative</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(|7| = 7\\), \\(|-7| = 7\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same absolute value?</div><div class="qa-a">Yes - same distance</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 3 - Compare \\(-9\\) and \\(4\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Ignore which one \"looks bigger\" by absolute value:</strong> \\(|-9|=9\\) is bigger than \\(|4|=4\\), but that doesn't decide which integer is greater.",
-        "<strong>Step 2 - Picture the number line - farther right wins:</strong> \\(4\\) is to the right of \\(-9\\), so \\(4 > -9\\), even though \\(-9\\) has the larger absolute value."
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Compare \\(-9\\) and \\(4\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(-9\\) ___ \\(4\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Bigger absolute value?</div><div class="qa-a">\\(-9\\) (\\(9 > 4\\)) - doesn't decide it</div></div>
+            <div class="qa-row"><div class="qa-q">Farther right?</div><div class="qa-a">\\(4\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(4 > -9\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which wins?</div><div class="qa-a">Farther right, not larger absolute value</div></div>
+          </div></div>
+        </div>`
     }
   ];
   makeCarousel('opp', oppExamples);
@@ -305,28 +293,55 @@
 
   const addExamples = [
     {
-      title: "Example 1 (same signs): \\(-8 + (-5)\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Same signs, so add the absolute values:</strong> \\(8 + 5 = 13\\)",
-        "<strong>Step 2 - Keep the common (negative) sign:</strong> \\(-8 + (-5) = \\mathbf{-13}\\)"
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(-8 + (-5)\\) <span class="type-tag addsub">Same Signs</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(-8 + (-5)\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same or different signs?</div><div class="qa-a">Same - both negative</div></div>
+            <div class="qa-row"><div class="qa-q">What do I do?</div><div class="qa-a">Add the absolute values</div></div>
+          </div><div class="resolve-box add"><span class="box-label">Resolving</span>\\(8 + 5 = 13\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(-8 + (-5) = -13\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which sign?</div><div class="qa-a">The common sign - negative</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 2 (different signs): \\(-12 + 7\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Different signs, so subtract the smaller absolute value from the larger:</strong> \\(|{-12}| = 12\\), \\(|7| = 7\\), \\(12 - 7 = 5\\)",
-        "<strong>Step 2 - Keep the sign of the number with the larger absolute value (\\(-12\\)):</strong> \\(-12 + 7 = \\mathbf{-5}\\)"
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(-12 + 7\\) <span class="type-tag addsub">Different Signs</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(-12 + 7\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same or different signs?</div><div class="qa-a">Different</div></div>
+            <div class="qa-row"><div class="qa-q">What do I do?</div><div class="qa-a">Subtract smaller from larger</div></div>
+          </div><div class="resolve-box sub"><span class="box-label">Resolving</span>\\(12 - 7 = 5\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(-12 + 7 = -5\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which number has the greater absolute value?</div><div class="qa-a">\\(-12\\), so negative</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 3 (bank balance): \\(-45 + 120\\)",
-      maxSteps: 2,
-      steps: [
-        "A checking account is overdrawn by \\(\\$45\\) (balance \\(-45\\)). A deposit of \\(\\$120\\) is made.",
-        "<strong>Different signs:</strong> \\(120 - 45 = 75\\); keep the positive sign (\\(120\\) has the larger absolute value). New balance: \\(-45 + 120 = \\mathbf{\\$75}\\)"
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(-45 + 120\\) <span class="type-tag word">Bank Balance</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(-45 + 120\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same or different signs?</div><div class="qa-a">Different</div></div>
+            <div class="qa-row"><div class="qa-q">What do I do?</div><div class="qa-a">Subtract smaller from larger</div></div>
+          </div><div class="resolve-box add"><span class="box-label">Resolving</span>\\(120 - 45 = 75\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">New balance: \\(\\$75\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which sign?</div><div class="qa-a">\\(120\\) has the greater absolute value - positive</div></div>
+          </div></div>
+        </div>`
     }
   ];
   makeCarousel('add', addExamples);
@@ -341,28 +356,66 @@
 
   const subExamples = [
     {
-      title: "Example 1: \\(8 - 15\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Rewrite as adding the opposite:</strong> \\(8 - 15 = 8 + (-15)\\)",
-        "<strong>Step 2 - Add using the rule for different signs:</strong> \\(8 + (-15) = \\mathbf{-7}\\)"
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(8 - 15\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(8 - 15\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Add or subtract?</div><div class="qa-a">Subtraction - Keep-Change-Change</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(8 + (-15)\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same or different signs?</div><div class="qa-a">Different</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(8 - 15 = -7\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which sign?</div><div class="qa-a">\\(15\\) has the greater absolute value - negative</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 2: \\(-6 - (-10)\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Rewrite as adding the opposite of \\(-10\\), which is \\(10\\):</strong> \\(-6 - (-10) = -6 + 10\\)",
-        "<strong>Step 2 - Add using the rule for different signs:</strong> \\(-6 + 10 = \\mathbf{4}\\)"
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(-6 - (-10)\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(-6 - (-10)\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Add or subtract?</div><div class="qa-a">Subtraction - Keep-Change-Change</div></div>
+          </div>
+          <div class="kcc-box"><span class="box-label">Keep-Change-Change</span>
+            <div class="kcc-chips">
+              <span class="kcc-chip">Keep \\(-6\\)</span>
+              <span class="kcc-chip">Change \\(-\\) to \\(+\\)</span>
+              <span class="kcc-chip">Change \\(-10\\) to \\(10\\)</span>
+            </div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(-6 + 10 = 4\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same or different signs?</div><div class="qa-a">Different - \\(10\\) wins, positive</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 3 (elevation): \\(5895 - (-155)\\)",
-      maxSteps: 2,
-      steps: [
-        "A mountain peak is at \\(5{,}895\\) m elevation. A valley floor is at \\(-155\\) m (below sea level). Find the difference in elevation: \\(5895 - (-155)\\)",
-        "<strong>Rewrite as adding the opposite:</strong> \\(5895 - (-155) = 5895 + 155 = \\mathbf{6{,}050 \\text{ m}}\\)"
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(5895 - (-155)\\) <span class="type-tag word">Elevation</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(5895 - (-155)\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Add or subtract?</div><div class="qa-a">Subtraction - Keep-Change-Change</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">Difference: \\(6{,}050\\) m</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Rewrite &amp; add</div><div class="qa-a">\\(5895 + 155 = 6050\\)</div></div>
+          </div></div>
+        </div>`
     }
   ];
   makeCarousel('sub', subExamples);
@@ -372,28 +425,52 @@
   // ==========================================
   const mdExamples = [
     {
-      title: "Example 1 (different signs): \\(-6 \\times 7\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Multiply the absolute values:</strong> \\(6 \\times 7 = 42\\)",
-        "<strong>Step 2 - Different signs, so the product is negative:</strong> \\(-6 \\times 7 = \\mathbf{-42}\\)"
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(-6 \\times 7\\) <span class="type-tag addsub">Different Signs</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(-6 \\times 7\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same or different signs?</div><div class="qa-a">Different</div></div>
+          </div><div class="resolve-box sub"><span class="box-label">Resolving</span>\\(6 \\times 7 = 42\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(-6 \\times 7 = -42\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">What sign?</div><div class="qa-a">Different signs - negative</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 2 (same signs): \\(-8 \\times (-5)\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Multiply the absolute values:</strong> \\(8 \\times 5 = 40\\)",
-        "<strong>Step 2 - Same signs, so the product is positive:</strong> \\(-8 \\times (-5) = \\mathbf{40}\\)"
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(-8 \\times (-5)\\) <span class="type-tag addsub">Same Signs</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(-8 \\times (-5)\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same or different signs?</div><div class="qa-a">Same - both negative</div></div>
+          </div><div class="resolve-box add"><span class="box-label">Resolving</span>\\(8 \\times 5 = 40\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(-8 \\times (-5) = 40\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">What sign?</div><div class="qa-a">Same signs - positive</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Example 3 (division): \\(-45 \\div (-9)\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Divide the absolute values:</strong> \\(45 \\div 9 = 5\\)",
-        "<strong>Step 2 - Same signs, so the quotient is positive:</strong> \\(-45 \\div (-9) = \\mathbf{5}\\)"
-      ]
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(-45 \\div (-9)\\) <span class="type-tag addsub">Same Signs</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(-45 \\div (-9)\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same or different signs?</div><div class="qa-a">Same - both negative</div></div>
+          </div><div class="resolve-box add"><span class="box-label">Resolving</span>\\(45 \\div 9 = 5\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(-45 \\div (-9) = 5\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">What sign?</div><div class="qa-a">Same signs - positive</div></div>
+          </div></div>
+        </div>`
     }
   ];
   makeCarousel('md', mdExamples);

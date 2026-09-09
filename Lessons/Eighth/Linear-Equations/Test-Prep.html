@@ -43,7 +43,7 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Work the tabs below <strong>in order, left to right</strong>. Tabs 1 and 2 are review: reference material and guided practice with two tries and a reveal if you miss twice. Tab 3, <strong>Mixed Practice</strong>, is a printable-worksheet style check - you submit each answer once and nothing is revealed on screen; your teacher grades it from your printed report, like a real test. Tab 4 is your final readiness reflection. When you finish, type your name above and click <strong>Print My Progress</strong>.
+    Work the tabs <strong>in order</strong>: 1-2 review (2 tries + reveal), 3 is a graded printable check (nothing revealed), 4 is your exit ticket. Then click <strong>Print My Progress</strong>.
   </div>
 
   <nav class="nav-tabs">
@@ -59,32 +59,26 @@
     <p style="text-align:center; color:#64748b; font-size:0.95rem; margin-top:-10px;">CCSS.Math.Content.8.EE.C.7 &middot; HSA.CED.A.1, HSA.REI.A.1, HSA.REI.B.3</p>
 
     <div class="notebook-box">
-      <div class="notebook-header">Part 1: Integer Operation Laws (Sign Rules)</div>
-      <table class="data-table">
-        <thead><tr><th>Operation</th><th>The Rule</th></tr></thead>
-        <tbody>
-          <tr><td><strong>Addition</strong></td><td><strong>Same Signs:</strong> Add the absolute values and keep the sign. (\(-3+(-5)=-8\))<br><strong>Different Signs:</strong> Subtract the smaller absolute value from the larger; keep the sign of the number with the larger absolute value. (\(-10+4=-6\))</td></tr>
-          <tr><td><strong>Subtraction</strong></td><td><strong>Add the Opposite:</strong> Change the subtraction sign to addition and change the sign of the second number, then follow addition rules. (\(5-(-2)\) becomes \(5+2=7\))</td></tr>
-          <tr><td><strong>Multiplication &amp; Division</strong></td><td><strong>Same Signs:</strong> Always Positive. <strong>Different Signs:</strong> Always Negative.</td></tr>
-        </tbody>
-      </table>
+      <div class="notebook-header">Sign Rules</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Addition:</strong> same signs &rarr; add, keep sign. Different signs &rarr; subtract, keep the larger's sign.</li>
+        <li><strong>Subtraction:</strong> add the opposite: \(5-(-2) \rightarrow 5+2=7\).</li>
+        <li><strong>Multiply/Divide:</strong> same signs &rarr; positive. Different signs &rarr; negative.</li>
+      </ul>
     </div>
 
     <div class="explainer-box">
-      <strong>The Golden Rule of Equations:</strong> whatever you do to one side of the equation, you <strong>MUST</strong> do to the other side.
+      <strong>The Golden Rule:</strong> whatever you do to one side, you <strong>must</strong> do to the other.
     </div>
 
     <div class="notebook-box">
-      <div class="notebook-header">Part 2: Inverse Operations</div>
-      <table class="data-table">
-        <thead><tr><th>If the equation shows...</th><th>Inverse</th><th>Action to take on BOTH sides</th></tr></thead>
-        <tbody>
-          <tr><td>Addition (\(+5\))</td><td>&harr;</td><td>Subtract 5</td></tr>
-          <tr><td>Subtraction (\(-8\))</td><td>&harr;</td><td>Add 8</td></tr>
-          <tr><td>Multiplication (\(3x\))</td><td>&harr;</td><td>Divide by 3</td></tr>
-          <tr><td>Division (\(\frac{x}{4}\))</td><td>&harr;</td><td>Multiply by 4</td></tr>
-        </tbody>
-      </table>
+      <div class="notebook-header">The Question Ladder</div>
+      <ul style="margin-bottom:0;">
+        <li>What's the variable?</li>
+        <li>What's obstructing it?</li>
+        <li>What's it doing?</li>
+        <li>What's the inverse? Apply to <strong>both</strong> sides.</li>
+      </ul>
     </div>
 
     <div class="challenge-box">
@@ -105,8 +99,8 @@
     </div>
 
     <div class="notebook-box">
-      <div class="notebook-header">Remember the Classification Rules</div>
-      <p style="margin:0;">Simplify each side fully. A <strong>false</strong> statement (\(6=7\)) means <strong>no solution</strong>. A <strong>true</strong> statement (\(4=4\)) means <strong>infinitely many solutions</strong>. Anything else gives exactly <strong>one solution</strong>.</p>
+      <div class="notebook-header">Classification Rules</div>
+      <p style="margin:0;">False (\(6=7\)) &rarr; <strong>no solution</strong>. True (\(4=4\)) &rarr; <strong>infinitely many</strong>. Anything else &rarr; <strong>one solution</strong>.</p>
     </div>
 
     <h3 style="margin-top:24px;">Guided Practice: Step-by-Step Review</h3>
@@ -114,7 +108,7 @@
 
     <div class="challenge-box">
       <h3 style="margin-top:0; color:#b45309;">Critical Thinking</h3>
-      <p>If you had chosen to subtract \(5x\) from both sides instead of \(2x\) in the fifth problem above, would the final answer change? Explain why the Golden Rule ensures the result stays the same.</p>
+      <p>Problem 5: would subtracting \(5x\) instead of \(2x\) change the final answer? Why or why not?</p>
       <textarea id="guided-critical" class="form-control-lg" rows="3" placeholder="Explain your reasoning..."></textarea>
       <button class="btn-lg" style="margin-top:10px;" onclick="checkGuidedCritical()">Submit My Work</button>
       <div id="guided-critical-feedback" class="feedback-msg"></div>
@@ -126,7 +120,7 @@
     <div class="section-title">Error Analysis Review</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      A student has made a common algebraic error in each problem. Identify the specific mistake using math vocabulary, explain why it's incorrect, and solve correctly. You get two tries per problem.
+      Find the mistake, name it, then solve correctly. Two tries.
     </div>
     <div id="erroranalysis-list"></div>
   </div>
@@ -136,7 +130,7 @@
     <div class="section-title">Mixed Practice</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      This is a graded check covering integer operations, solving multi-step equations, error analysis, and word problem translation. Show all your work on paper for each problem, then submit your final answer here. <strong>Nothing is revealed on screen</strong> - your teacher reviews everything from your printed report, exactly like a paper test.
+      Work on paper, submit once. <strong>Nothing is revealed</strong> - your teacher grades it from your printed report.
     </div>
 
     <h3>Part 1: Bare Computation</h3>
@@ -157,7 +151,7 @@
     <div class="section-title">Exit Ticket: Linear Equations Readiness Check</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Answer all four questions, then click Submit Exit Ticket. This is the last step before you print your progress - go back to the Student Name box at the top of the page, type your name, and click Print My Progress.
+      Answer all four, submit, then print your progress above.
     </div>
 
     <form id="exit-form" onsubmit="submitExitTicket(event)">
@@ -270,80 +264,119 @@
 
   const guidedProblems = [
     {
-      title: "1. One-Step (Addition): Solve \\(x + 15 = -4\\)",
-      chunks: [
-        { label: "Goal", text: "Isolate \\(x\\)." },
-        { label: "Step", text: "Subtract 15 from both sides (the inverse of \\(+15\\))." },
-        { label: "Sign Rule", text: "On the right, we now have \\(-4 - 15\\). Rewrite it as adding the opposite: \\(-4 + (-15)\\). Since the signs are the same, add the absolute values and keep the negative sign." },
-        { label: "Solution", text: "\\(x = -19\\)" }
+      formula: "1. \\(x + 15 = -4\\)",
+      tag: { cls: "onestep", label: "One Step" },
+      rounds: [
+        { label: "Round 1", qas: [
+            ["Obstructing \\(x\\)?", "\\(15\\), adding"],
+            ["Inverse?", "Subtract 15"]
+          ], eq: "\\(-4 - 15 = -4 + (-15)\\)", result: "\\(x = -19\\)", check: "Same signs &rarr; add, keep negative." }
       ]
     },
     {
-      title: "2. One-Step (Division): Solve \\(-3x = 21\\)",
-      chunks: [
-        { label: "Goal", text: "Isolate \\(x\\)." },
-        { label: "Step", text: "Divide both sides by \\(-3\\) (the inverse of multiplying by \\(-3\\))." },
-        { label: "Sign Rule", text: "We are dividing a positive (\\(21\\)) by a negative (\\(-3\\)). Different signs give a negative quotient." },
-        { label: "Solution", text: "\\(x = -7\\)" }
+      formula: "2. \\(-3x = 21\\)",
+      tag: { cls: "onestep", label: "One Step" },
+      rounds: [
+        { label: "Round 1", qas: [
+            ["Obstructing \\(x\\)?", "\\(-3\\), multiplying"],
+            ["Inverse?", "Divide by \\(-3\\)"]
+          ], result: "\\(x = -7\\)", check: "Different signs &rarr; negative quotient." }
       ]
     },
     {
-      title: "3. Two-Step Equation: Solve \\(2x - 8 = -20\\)",
-      chunks: [
-        { label: "Step 1", text: "Add 8 to both sides to move the constant off the variable term." },
-        { label: "Sign Rule", text: "\\(-20 + 8\\) has different signs; subtract \\(8\\) from \\(20\\) and keep the negative sign, giving \\(-12\\)." },
-        { label: "Step 2", text: "Divide both sides by 2 (the inverse of multiplying by 2). A negative divided by a positive gives a negative." },
-        { label: "Solution", text: "\\(x = -6\\)" }
+      formula: "3. \\(2x - 8 = -20\\)",
+      tag: { cls: "multistep", label: "Two-Step" },
+      rounds: [
+        { label: "Round 1", qas: [
+            ["Obstructing \\(x\\)?", "\\(8\\) subtracting, \\(2\\) multiplying"],
+            ["Undo first?", "Add 8"]
+          ], eq: "\\(-20 + 8\\): different signs", result: "\\(2x = -12\\)", check: "Keep going - see next round." },
+        { label: "Round 2", qas: [
+            ["Inverse?", "Divide by 2"]
+          ], result: "\\(x = -6\\)", check: "Negative &divide; positive = negative." }
       ]
     },
     {
-      title: "4. Two-Step (Rational): Solve \\(\\frac{x}{-4} + 5 = 2\\)",
-      chunks: [
-        { label: "Step 1", text: "Subtract 5 from both sides." },
-        { label: "Sign Rule", text: "\\(2 - 5\\) becomes \\(2 + (-5) = -3\\)." },
-        { label: "Step 2", text: "Multiply both sides by \\(-4\\) (the inverse of dividing by \\(-4\\))." },
-        { label: "Sign Rule", text: "\\(-3 \\times -4\\): same signs give a positive product." },
-        { label: "Solution", text: "\\(x = 12\\)" }
+      formula: "4. \\(\\dfrac{x}{-4} + 5 = 2\\)",
+      tag: { cls: "multistep", label: "Two-Step" },
+      rounds: [
+        { label: "Round 1", qas: [
+            ["Obstructing \\(x\\)?", "\\(5\\) adding, \\(-4\\) dividing"],
+            ["Undo first?", "Subtract 5"]
+          ], eq: "\\(2 - 5 = 2 + (-5) = -3\\)", result: "\\(\\dfrac{x}{-4} = -3\\)", check: "Keep going - see next round." },
+        { label: "Round 2", qas: [
+            ["Inverse?", "Multiply by \\(-4\\)"]
+          ], eq: "\\(-3 \\times -4\\): same signs", result: "\\(x = 12\\)", check: "Same signs &rarr; positive." }
       ]
     },
     {
-      title: "5. Variables on Both Sides: Solve \\(5x + 10 = 2x - 11\\)",
-      chunks: [
-        { label: "Step 1", text: "Subtract \\(2x\\) from both sides to group the variable terms: \\(5x - 2x = 3x\\)." },
-        { label: "Step 2", text: "Subtract 10 from both sides to isolate the variable term." },
-        { label: "Sign Rule", text: "\\(-11 - 10\\) becomes \\(-11 + (-10) = -21\\)." },
-        { label: "Step 3", text: "Divide both sides by 3. Different signs give a negative." },
-        { label: "Solution", text: "\\(x = -7\\)" }
+      formula: "5. \\(5x + 10 = 2x - 11\\)",
+      tag: { cls: "multistep", label: "Multi-Step" },
+      rounds: [
+        { label: "Collect Variables", qas: [
+            ["Variable on both sides?", "Subtract \\(2x\\)"]
+          ], result: "\\(3x + 10 = -11\\)" },
+        { label: "Round 1", qas: [
+            ["Obstructing \\(x\\)?", "\\(10\\) adding, \\(3\\) multiplying"],
+            ["Undo first?", "Subtract 10"]
+          ], eq: "\\(-11 - 10 = -11 + (-10)\\): same signs", result: "\\(3x = -21\\)", check: "Keep going - see next round." },
+        { label: "Round 2", qas: [
+            ["Inverse?", "Divide by 3"]
+          ], result: "\\(x = -7\\)", check: "Different signs &rarr; negative." }
       ]
     }
   ];
 
   function renderGuidedSteps() {
     const html = guidedProblems.map((p, i) => `
-      <div class="step-box" style="margin-top:16px;">
-        <h3 style="margin-top:0; color:var(--primary);">${p.title}</h3>
-        <button class="btn-lg" onclick="revealGuidedStep(${i})">Reveal Next Step</button>
-        <button class="btn-secondary" onclick="resetGuidedStep(${i})">Reset</button>
+      <div class="ladder" style="margin-top:16px;">
+        <div class="ladder-formula">${p.formula} <span class="type-tag ${p.tag.cls}">${p.tag.label}</span></div>
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <button class="btn-lg" id="guided-${i}-btn" onclick="revealGuidedStep(${i})">Reveal Round 1</button>
+          <button class="btn-secondary" onclick="resetGuidedStep(${i})">Reset</button>
+          <span id="guided-${i}-progress" style="font-weight:700; color:#64748b; font-size:0.9rem;"></span>
+        </div>
         <div id="guided-${i}-chunks" style="margin-top:14px;"></div>
       </div>
     `).join('');
     document.getElementById('guided-steps-container').innerHTML = html;
+    guidedProblems.forEach((_, i) => updateGuidedButton(i));
   }
 
   const guidedStepCount = {};
+  function updateGuidedButton(i) {
+    const p = guidedProblems[i];
+    const count = guidedStepCount[i] || 0;
+    const btn = document.getElementById(`guided-${i}-btn`);
+    const progress = document.getElementById(`guided-${i}-progress`);
+    if (count >= p.rounds.length) {
+      btn.textContent = 'All rounds shown';
+      btn.disabled = true;
+    } else {
+      btn.textContent = `Reveal Round ${count + 1} of ${p.rounds.length}`;
+      btn.disabled = false;
+    }
+    progress.textContent = count > 0 ? `Showing ${count} of ${p.rounds.length} rounds` : '';
+  }
   function renderGuidedChunks(i) {
     const p = guidedProblems[i];
     const count = guidedStepCount[i] || 0;
-    const html = p.chunks.slice(0, count).map((c, idx) => {
-      const isSolution = idx === p.chunks.length - 1;
-      return `<div class="step-item visible" style="margin-top:10px; ${isSolution ? 'font-weight:800; color:var(--primary);' : ''}"><strong>${c.label}:</strong> ${c.text}</div>`;
-    }).join('');
+    const html = p.rounds.slice(0, count).map((r) => `
+      <div class="ladder-round">
+        <div class="ladder-round-label">${r.label}</div>
+        ${r.qas.map(([q, a]) => `<div class="qa"><span class="q">${q}</span><span class="a">${a}</span></div>`).join('')}
+      </div>
+      ${r.eq ? `<div class="ladder-eq">${r.eq}</div>` : ''}
+      ${r.result ? `<div class="ladder-result">${r.result}</div>` : ''}
+      ${r.check ? `<div class="ladder-check">${r.check}</div>` : ''}
+    `).join('');
     document.getElementById(`guided-${i}-chunks`).innerHTML = html;
+    updateGuidedButton(i);
     triggerMathJax();
   }
   function revealGuidedStep(i) {
     const p = guidedProblems[i];
-    guidedStepCount[i] = Math.min((guidedStepCount[i] || 0) + 1, p.chunks.length);
+    guidedStepCount[i] = Math.min((guidedStepCount[i] || 0) + 1, p.rounds.length);
     renderGuidedChunks(i);
   }
   function resetGuidedStep(i) {

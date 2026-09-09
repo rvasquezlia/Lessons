@@ -43,7 +43,7 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    This page reviews the whole topic before your assessment. Work the tabs <strong>in order, left to right</strong>. Tabs 1-3 are review - reference material, common mistakes, and a full practice quiz - with two tries and a reveal if you miss twice. Tab 4, <strong>Mixed Practice</strong>, is a printable-style worksheet: you submit each answer once and it stays hidden on screen, since your teacher grades it from your printed report just like a paper test. Finish, then type your name above and click <strong>Print My Progress</strong>. <strong>Calculators are not allowed this quarter.</strong>
+    Work tabs 1-3 in order (2 tries + reveal). Tab 4 is a graded printable check (nothing revealed). Then print your progress. <strong>Calculators are not allowed this quarter.</strong>
   </div>
 
   <nav class="nav-tabs">
@@ -58,31 +58,25 @@
     <div class="section-title">Concept Review: Every Rule in One Place</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Skim the reference boxes below. If a rule feels shaky, review your notebook copy of the worked examples before you continue. Then answer the 4 Check Your Understanding problems.
+      Skim the rules below, then answer the 4 Check Your Understanding problems.
     </div>
 
-    <p>Integers are whole numbers and their opposites (\(\dots, -3, -2, -1, 0, 1, 2, 3, \dots\)). This guide provides the essential rules for adding, subtracting, multiplying, and dividing integers.</p>
-
     <div class="notebook-box">
-      <div class="notebook-header">1. Addition Rules</div>
-      <ul>
-        <li><strong>Same Signs:</strong> Add the absolute values and keep the common sign. \(5+3=8\) &nbsp;&nbsp; \(-5+(-3)=-8\)</li>
-        <li><strong>Different Signs:</strong> Subtract the smaller absolute value from the larger. Keep the sign of the number with the larger absolute value. \(-7+4=-3\). \(10+(-2)=8\).</li>
+      <div class="notebook-header">1. Addition</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Same signs:</strong> add, keep the sign. \(-5+(-3)=-8\)</li>
+        <li><strong>Different signs:</strong> subtract, keep the larger's sign. \(-7+4=-3\)</li>
       </ul>
     </div>
 
     <div class="notebook-box">
-      <div class="notebook-header">2. Subtraction Rule: "Keep-Change-Change"</div>
-      <p style="margin:0 0 10px 0;">To subtract an integer, add its opposite: keep the first number, change subtraction to addition, change the sign of the second number.</p>
-      <p style="margin:0;"><em>Example:</em> \(4 - (-3) \rightarrow 4 + 3 = \mathbf{7}\). &nbsp;&nbsp; <em>Example:</em> \(-2 - 5 \rightarrow -2 + (-5) = \mathbf{-7}\).</p>
+      <div class="notebook-header">2. Subtraction: Keep-Change-Change</div>
+      <p style="margin:0;">Keep the first number, change subtraction to addition, change the second number's sign. \(4 - (-3) \rightarrow 4 + 3 = \mathbf{7}\)</p>
     </div>
 
     <div class="notebook-box">
-      <div class="notebook-header">3. Multiplication &amp; Division Sign Laws</div>
-      <ul>
-        <li><strong>Same Signs = Positive:</strong> \(6\times2=12\), \(-4\times(-3)=12\), \(-20\div(-5)=4\).</li>
-        <li><strong>Different Signs = Negative:</strong> \(8\times(-2)=-16\), \(-9\times3=-27\), \(15\div(-3)=-5\).</li>
-      </ul>
+      <div class="notebook-header">3. Multiply &amp; Divide</div>
+      <p style="margin:0;">Same signs &rarr; positive. Different signs &rarr; negative.</p>
     </div>
 
     <div class="challenge-box">
@@ -97,15 +91,15 @@
     <div class="section-title">Error Analysis: Spot the Mistake</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Even strong students make mistakes like these. For each problem, name the specific error, the correct rule, and the right answer. This tab is quiz-style - you submit once, and your work is reviewed from your printed report rather than revealed on screen.
+      Name the error, the correct rule, and the right answer. Submit once - reviewed from your printed report.
     </div>
 
     <div class="notebook-box">
       <div class="notebook-header">Common Misconceptions to Watch For</div>
       <ul style="margin-bottom:0;">
-        <li>Forgetting to flip the sign when subtracting a negative number (\(a - (-b) = a + b\), not \(a - b\)).</li>
-        <li>Assuming a sum of two integers is always positive or always negative - it depends on the signs <strong>and</strong> the absolute values.</li>
-        <li>Multiplying/dividing three or more negative integers: track the sign one pair at a time, don't guess from the total count.</li>
+        <li>Forgetting to flip the sign when subtracting a negative.</li>
+        <li>Assuming a sum is always positive or always negative - it depends on signs <strong>and</strong> absolute values.</li>
+        <li>3+ negative factors: track the sign one pair at a time.</li>
       </ul>
     </div>
 
@@ -121,8 +115,21 @@
       <button class="btn-lg" style="margin-top:14px;" onclick="checkAudit()">Submit</button>
       <div id="audit-feedback" class="feedback-msg"></div>
     </div>
-    <div class="explainer-box" id="audit-explain" style="display:none; margin-top:22px;">
-      Ana treated this as a same-signs problem, but it isn't one - there's no second negative to combine with. Using Keep-Change-Change: \(-10 - 4 \rightarrow -10 + (-4)\). Now the signs <em>are</em> the same, so add the absolute values and keep the negative sign: \(10 + 4 = 14\), giving <strong>\(-14\)</strong>.
+    <div id="audit-explain" style="display:none; margin-top:22px;">
+      <div class="flow-row">
+        <div class="flow-math"><span class="expr-chip active">\(-10 - 4\)</span></div>
+        <div class="flow-steps"><div class="qa-list">
+          <div class="qa-row"><div class="qa-q">Add or subtract?</div><div class="qa-a">Subtraction - Keep-Change-Change first. Ana skipped this.</div></div>
+        </div></div>
+      </div>
+      <div class="flow-connector"><span>&darr;</span></div>
+      <div class="flow-row">
+        <div class="flow-math final"><span class="expr-chip active">\(-10 + (-4) = -14\)</span></div>
+        <div class="flow-steps"><div class="qa-list">
+          <div class="qa-row"><div class="qa-q">Same or different signs?</div><div class="qa-a">Same - both negative, not "subtract and go negative"</div></div>
+          <div class="qa-row"><div class="qa-q">What do I do?</div><div class="qa-a">Add: \(10+4=14\), keep negative</div></div>
+        </div></div>
+      </div>
     </div>
   </div>
 
@@ -131,7 +138,7 @@
     <div class="section-title">Timed Review Quiz</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      These are the same items from the official Quick Check, now used as review. Solve each problem in your notebook, then type your answer and check it - two tries per problem.
+      Solve in your notebook, then type and check. Two tries per problem.
     </div>
 
     <div class="notebook-box"><div class="notebook-header">Set A: Opposites, Absolute Value &amp; Comparing</div></div>
@@ -236,7 +243,7 @@
     <div class="section-title">Mixed Practice: Printable Worksheet</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      This worksheet covers every skill in the topic. Solve each item in your notebook, type your final answer, and click Submit. <strong>Your answer is recorded but not checked on screen</strong> - your teacher grades it from your printed progress report, exactly like a paper test.
+      Solve on paper, submit once. <strong>Not checked on screen</strong> - graded from your printed report.
     </div>
     <div id="mp-list"></div>
   </div>
