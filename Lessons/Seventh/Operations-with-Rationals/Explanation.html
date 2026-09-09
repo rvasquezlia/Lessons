@@ -37,7 +37,7 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    You already know the same-sign/different-sign rules from Integers, and you already know how to add, subtract, multiply, and divide plain fractions and decimals. This page is about putting those two skills together. Go through the 5 tabs in order. For each carousel, read the example, then click <strong>Next Step</strong> to reveal the solution one step at a time. Copy every notebook box into your math notebook. <strong>Calculators are not allowed this quarter.</strong>
+    You already know the same-sign/different-sign rules from Integers, and you already know how to add, subtract, multiply, and divide plain fractions and decimals. This page is about putting those two skills together. Go through the 5 tabs in order. Every worked example asks the <strong>same short list of questions</strong> - is it addition or subtraction? same signs or different signs? what do I do with the numbers? - and shows the real math rewritten checkpoint by checkpoint alongside the answers to those questions. Use the <strong>Previous / Next</strong> buttons to browse the examples in each tab. Copy every notebook box into your math notebook. <strong>Calculators are not allowed this quarter.</strong>
   </div>
 
   <nav class="nav-tabs">
@@ -65,6 +65,17 @@
       </ul>
     </div>
 
+    <div class="quick-note" style="background: #fef3c7; border: 2px solid #d97706; border-radius: 10px; padding: 14px 18px; margin: 24px 0; font-size: 0.98rem; line-height: 1.6;">
+      <strong>How to read every worked example on this page:</strong> the <strong>left column is the real math</strong> - it starts with the given expression and is rewritten, checkpoint by checkpoint, all the way down to the final answer (the green box). The <strong>right column is the helper</strong> for each checkpoint - the questions you ask yourself and the process work that gets you to the next line on the left. Every colored box on the right is a <em>process</em> box, not an answer - <strong>only the green box on the left is the actual answer.</strong>
+      <div class="color-key">
+        <span><i style="background:#7c3aed;"></i> Violet = rewriting with Keep-Change-Change</span>
+        <span><i style="background:#a21caf;"></i> Pink = converting or building a common form</span>
+        <span><i style="background:#0891b2;"></i> Teal = resolving an addition (same signs)</span>
+        <span><i style="background:#d97706;"></i> Amber = resolving a subtraction (different signs)</span>
+        <span><i style="background:#15803d;"></i> Green = the final answer</span>
+      </div>
+    </div>
+
     <div class="carousel-card">
       <div class="carousel-nav">
         <button class="btn-nav" id="asf-prev-btn" onclick="changeAsf(-1)">&larr; Previous</button>
@@ -75,10 +86,6 @@
         <button class="btn-nav" id="asf-next-btn" onclick="changeAsf(1)">Next &rarr;</button>
       </div>
       <div id="asf-content" style="min-height: 160px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextAsfStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetAsfStep()">Reset Steps</button>
-      </div>
     </div>
   </div>
 
@@ -108,10 +115,6 @@
         <button class="btn-nav" id="asd-next-btn" onclick="changeAsd(1)">Next &rarr;</button>
       </div>
       <div id="asd-content" style="min-height: 160px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextAsdStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetAsdStep()">Reset Steps</button>
-      </div>
     </div>
   </div>
 
@@ -141,10 +144,6 @@
         <button class="btn-nav" id="md-next-btn" onclick="changeMd(1)">Next &rarr;</button>
       </div>
       <div id="md-content" style="min-height: 160px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextMdStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetMdStep()">Reset Steps</button>
-      </div>
     </div>
   </div>
 
@@ -174,10 +173,6 @@
         <button class="btn-nav" id="cv-next-btn" onclick="changeCv(1)">Next &rarr;</button>
       </div>
       <div id="cv-content" style="min-height: 160px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextCvStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetCvStep()">Reset Steps</button>
-      </div>
     </div>
   </div>
 
@@ -207,10 +202,6 @@
         <button class="btn-nav" id="ms-next-btn" onclick="changeMs(1)">Next &rarr;</button>
       </div>
       <div id="ms-content" style="min-height: 160px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextMsStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetMsStep()">Reset Steps</button>
-      </div>
     </div>
   </div>
 </div>
@@ -230,31 +221,28 @@
     triggerMathJax();
   }
 
-  // Generic carousel factory - each tab gets its own instance so state doesn't collide.
+  // Generic carousel factory - each tab gets its own instance so state doesn't
+  // collide. Every example's full worked example (all checkpoints, Q&A included)
+  // renders at once - Previous/Next just switch which example is shown, the
+  // same way the Guided Solving Ladder supplement always shows a full example.
   function makeCarousel(prefix, examples) {
-    let current = 0, step = 1;
+    let current = 0;
     function render() {
       const ex = examples[current];
       document.getElementById(`${prefix}-title`).innerText = `Example ${current + 1} of ${examples.length}`;
       document.getElementById(`${prefix}-dots`).innerHTML = examples.map((_, i) =>
         `<div class="dot ${i === current ? 'active' : ''}" onclick="${prefix}Jump(${i})"></div>`
       ).join('');
-      let stepsHtml = '';
-      for (let i = 0; i < step; i++) stepsHtml += `<div class="step-item visible">${ex.steps[i]}</div>`;
-      document.getElementById(`${prefix}-content`).innerHTML = `<h3 style="color:var(--primary); margin-top:0;">${ex.title}</h3>${stepsHtml}`;
+      document.getElementById(`${prefix}-content`).innerHTML = `<div class="example-card" style="margin:0; box-shadow:none;"><div class="example-title">${ex.title}</div>${ex.html}</div>`;
       document.getElementById(`${prefix}-prev-btn`).disabled = current === 0;
       document.getElementById(`${prefix}-next-btn`).disabled = current === examples.length - 1;
       triggerMathJax();
     }
-    function change(dir) { current = Math.max(0, Math.min(examples.length - 1, current + dir)); step = 1; render(); }
-    function jump(idx) { current = idx; step = 1; render(); }
-    function nextStep() { if (step < examples[current].maxSteps) { step++; render(); } }
-    function resetStep() { step = 1; render(); }
-    function showAt(i, includeAnswers) { current = i; step = examples[i].maxSteps; render(); }
+    function change(dir) { current = Math.max(0, Math.min(examples.length - 1, current + dir)); render(); }
+    function jump(idx) { current = idx; render(); }
+    function showAt(i) { current = i; render(); }
     window[`change${cap(prefix)}`] = change;
     window[`${prefix}Jump`] = jump;
-    window[`next${cap(prefix)}Step`] = nextStep;
-    window[`reset${cap(prefix)}Step`] = resetStep;
     render();
     if (window.TeacherPrint) TeacherPrint.registerCarousel(`${prefix}-content`, examples.length, showAt);
   }
@@ -266,30 +254,103 @@
   const asfExamples = [
     {
       title: "Example 1 (same signs): \\(-\\frac{3}{4} + \\left(-\\frac{1}{8}\\right)\\)",
-      maxSteps: 3,
-      steps: [
-        "<strong>Step 1 - Draw the butterfly wings (cross-multiply the absolute values):</strong> \\(3 \\times 8 = 24\\) and \\(4 \\times 1 = 4\\). Multiply the denominators straight down the middle: \\(4 \\times 8 = 32\\).",
-        "<strong>Step 2 - Same signs, so add the wing values:</strong> \\(24 + 4 = 28\\), giving \\(\\frac{28}{32}\\).",
-        "<strong>Step 3 - Keep the common (negative) sign and simplify:</strong> \\(-\\frac{28}{32} = \\mathbf{-\\frac{7}{8}}\\) (divide by the GCF, \\(4\\))"
-      ]
+      html: `
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{3}{4} + \\left(-\\dfrac{1}{8}\\right)\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Is this addition or subtraction?</div><div class="qa-a">Addition <span class="pill pill-add">already addition</span> - nothing to rewrite.</div></div>
+            <div class="qa-row"><div class="qa-q">Do the fractions have the same denominator?</div><div class="qa-a">No - build a common one with the Butterfly Method first.</div></div>
+          </div>
+          <div class="resolve-box convert"><span class="box-label">Building the wings</span>\\(3 \\times 8 = 24\\) and \\(4 \\times 1 = 4\\); denominators straight down the middle: \\(4 \\times 8 = 32\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{24}{32} + \\left(-\\dfrac{4}{32}\\right)\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Do the wing values have the same sign or different signs?</div><div class="qa-a"><span class="pill pill-same">Same</span> - both negative.</div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Add the wing values.</div></div>
+          </div>
+          <div class="resolve-box add"><span class="box-label">Resolving</span>\\(24 + 4 = 28\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{3}{4} + \\left(-\\dfrac{1}{8}\\right) = -\\dfrac{7}{8}\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which sign does the answer keep?</div><div class="qa-a">The common sign - negative: \\(-\\dfrac{28}{32}\\).</div></div>
+            <div class="qa-row"><div class="qa-q">Is it in simplest form?</div><div class="qa-a">No - divide both by the GCF, 4.</div></div>
+          </div></div>
+        </div>`
     },
     {
       title: "Example 2 (different signs): \\(-\\frac{5}{6} + \\frac{1}{3}\\)",
-      maxSteps: 3,
-      steps: [
-        "<strong>Step 1 - Draw the butterfly wings (cross-multiply the absolute values):</strong> \\(5 \\times 3 = 15\\) and \\(6 \\times 1 = 6\\). Multiply the denominators straight down the middle: \\(6 \\times 3 = 18\\).",
-        "<strong>Step 2 - Different signs, so subtract the smaller wing value from the larger:</strong> \\(15 - 6 = 9\\), giving \\(\\frac{9}{18}\\).",
-        "<strong>Step 3 - Keep the sign of the larger absolute value (\\(-\\frac{5}{6}\\)) and simplify:</strong> \\(-\\frac{9}{18} = \\mathbf{-\\frac{1}{2}}\\) (divide by the GCF, \\(9\\))"
-      ]
+      html: `
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{5}{6} + \\dfrac{1}{3}\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Is this addition or subtraction?</div><div class="qa-a">Addition <span class="pill pill-add">already addition</span> - nothing to rewrite.</div></div>
+            <div class="qa-row"><div class="qa-q">Do the fractions have the same denominator?</div><div class="qa-a">No - build a common one with the Butterfly Method first.</div></div>
+          </div>
+          <div class="resolve-box convert"><span class="box-label">Building the wings</span>\\(5 \\times 3 = 15\\) and \\(6 \\times 1 = 6\\); denominators straight down the middle: \\(6 \\times 3 = 18\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{15}{18} + \\dfrac{6}{18}\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Do the wing values have the same sign or different signs?</div><div class="qa-a"><span class="pill pill-diff">Different</span></div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Subtract the smaller wing value from the larger.</div></div>
+          </div>
+          <div class="resolve-box sub"><span class="box-label">Resolving</span>\\(15 - 6 = 9\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{5}{6} + \\dfrac{1}{3} = -\\dfrac{1}{2}\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which wing value has the greater absolute value?</div><div class="qa-a">\\(15\\) (from \\(-\\dfrac{5}{6}\\)), so the answer is negative: \\(-\\dfrac{9}{18}\\).</div></div>
+            <div class="qa-row"><div class="qa-q">Is it in simplest form?</div><div class="qa-a">No - divide both by the GCF, 9.</div></div>
+          </div></div>
+        </div>`
     },
     {
       title: "Example 3 (temperature, subtraction): \\(-\\frac{1}{2} - \\frac{3}{4}\\)",
-      maxSteps: 3,
-      steps: [
-        "The temperature was \\(-\\frac{1}{2}\\)&deg;F and dropped another \\(\\frac{3}{4}\\)&deg;F. Rewrite the subtraction using Keep-Change-Change: \\(-\\frac{1}{2} - \\frac{3}{4} = -\\frac{1}{2} + \\left(-\\frac{3}{4}\\right)\\)",
-        "<strong>Draw the butterfly wings:</strong> \\(1 \\times 4 = 4\\) and \\(2 \\times 3 = 6\\). Multiply the denominators straight down the middle: \\(2 \\times 4 = 8\\).",
-        "<strong>Same signs, add the wing values, keep the sign, and simplify:</strong> \\(4 + 6 = 10\\), so \\(-\\frac{10}{8} = -\\frac{5}{4} = \\mathbf{-1\\frac{1}{4}}\\)&deg;F (divide by the GCF, \\(2\\))"
-      ]
+      html: `
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{1}{2} - \\dfrac{3}{4}\\)</span></div><div class="expr-caption">-1/2&deg;F at dawn, drops another 3/4&deg;F</div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Is this addition or subtraction?</div><div class="qa-a"><span class="pill pill-sub">Subtraction</span> - apply Keep-Change-Change first.</div></div>
+          </div>
+          <div class="kcc-box"><span class="box-label">Keep-Change-Change</span>
+            <div class="kcc-chips">
+              <span class="kcc-chip">Keep \\(-\\dfrac{1}{2}\\)</span>
+              <span class="kcc-chip">Change \\(-\\) to \\(+\\)</span>
+              <span class="kcc-chip">Change \\(\\dfrac{3}{4}\\) to \\(-\\dfrac{3}{4}\\)</span>
+            </div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{1}{2} + \\left(-\\dfrac{3}{4}\\right)\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Do the fractions have the same denominator?</div><div class="qa-a">No - build a common one with the Butterfly Method.</div></div>
+          </div>
+          <div class="resolve-box convert"><span class="box-label">Building the wings</span>\\(1 \\times 4 = 4\\) and \\(2 \\times 3 = 6\\); denominators straight down the middle: \\(2 \\times 4 = 8\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{4}{8} + \\left(-\\dfrac{6}{8}\\right)\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-same">Same</span> - both negative.</div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Add the wing values.</div></div>
+          </div>
+          <div class="resolve-box add"><span class="box-label">Resolving</span>\\(4 + 6 = 10\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><div class="expr-focus"><span class="expr-chip active">Final temperature: \\(-1\\dfrac{1}{4}\\)&deg;F</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which sign does the answer keep?</div><div class="qa-a">The common sign - negative: \\(-\\dfrac{10}{8}\\).</div></div>
+            <div class="qa-row"><div class="qa-q">Is it in simplest form?</div><div class="qa-a">No - \\(-\\dfrac{10}{8} = -\\dfrac{5}{4} = -1\\dfrac{1}{4}\\) (divide by the GCF, 2).</div></div>
+          </div></div>
+        </div>`
     }
   ];
   makeCarousel('asf', asfExamples);
@@ -300,60 +361,156 @@
   const asdExamples = [
     {
       title: "Example 1 (same signs): \\(-2.5 + (-1.75)\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Same signs, so add the absolute values:</strong> \\(2.5 + 1.75 = 4.25\\)",
-        "<strong>Step 2 - Keep the common (negative) sign:</strong> \\(-2.5 + (-1.75) = \\mathbf{-4.25}\\)"
-      ]
+      html: `
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-2.5 + (-1.75)\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Is this addition or subtraction?</div><div class="qa-a">Addition <span class="pill pill-add">already addition</span> - nothing to rewrite.</div></div>
+            <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-same">Same</span> - both negative.</div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Add the absolute values.</div></div>
+          </div>
+          <div class="resolve-box add"><span class="box-label">Resolving</span>\\(2.5 + 1.75 = 4.25\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><div class="expr-focus"><span class="expr-chip active">\\(-2.5 + (-1.75) = -4.25\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which sign does the answer keep?</div><div class="qa-a">The common sign - negative.</div></div>
+          </div></div>
+        </div>`
     },
     {
       title: "Example 2 (different signs): \\(3.6 + (-5.2)\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Different signs, so subtract the smaller absolute value from the larger:</strong> \\(5.2 - 3.6 = 1.6\\)",
-        "<strong>Step 2 - Keep the sign of the larger absolute value (\\(-5.2\\)):</strong> \\(3.6 + (-5.2) = \\mathbf{-1.6}\\)"
-      ]
+      html: `
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(3.6 + (-5.2)\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Is this addition or subtraction?</div><div class="qa-a">Addition <span class="pill pill-add">already addition</span> - nothing to rewrite.</div></div>
+            <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-diff">Different</span></div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Subtract the smaller absolute value from the larger.</div></div>
+          </div>
+          <div class="resolve-box sub"><span class="box-label">Resolving</span>\\(5.2 - 3.6 = 1.6\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><div class="expr-focus"><span class="expr-chip active">\\(3.6 + (-5.2) = -1.6\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which number has the greater absolute value?</div><div class="qa-a">\\(-5.2\\), so the answer is negative.</div></div>
+          </div></div>
+        </div>`
     },
     {
       title: "Example 3 (depth, subtraction): \\(-12.5 - 8.25\\)",
-      maxSteps: 3,
-      steps: [
-        "A research drone is at \\(-12.5\\) ft (below its launch pad) and descends another \\(8.25\\) ft. Rewrite with Keep-Change-Change: \\(-12.5 - 8.25 = -12.5 + (-8.25)\\)",
-        "<strong>Same signs, add the absolute values:</strong> \\(12.5 + 8.25 = 20.75\\)",
-        "<strong>Keep the negative sign:</strong> \\(-12.5 + (-8.25) = \\mathbf{-20.75}\\) ft"
-      ]
+      html: `
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-12.5 - 8.25\\)</span></div><div class="expr-caption">Drone at -12.5 ft, descends another 8.25 ft</div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Is this addition or subtraction?</div><div class="qa-a"><span class="pill pill-sub">Subtraction</span> - apply Keep-Change-Change first.</div></div>
+          </div>
+          <div class="kcc-box"><span class="box-label">Keep-Change-Change</span>
+            <div class="kcc-chips">
+              <span class="kcc-chip">Keep \\(-12.5\\)</span>
+              <span class="kcc-chip">Change \\(-\\) to \\(+\\)</span>
+              <span class="kcc-chip">Change \\(8.25\\) to \\(-8.25\\)</span>
+            </div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-12.5 + (-8.25)\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-same">Same</span> - both negative.</div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Add the absolute values.</div></div>
+          </div>
+          <div class="resolve-box add"><span class="box-label">Resolving</span>\\(12.5 + 8.25 = 20.75\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><div class="expr-focus"><span class="expr-chip active">Final depth: \\(-20.75\\) ft</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which sign does the answer keep?</div><div class="qa-a">The common sign - negative.</div></div>
+          </div></div>
+        </div>`
     }
   ];
   makeCarousel('asd', asdExamples);
 
   // ==========================================
   // TAB 3: MULTIPLY & DIVIDE
+  // (color reuse: teal = same-signs resolution -> positive result;
+  //  amber = different-signs resolution -> negative result)
   // ==========================================
   const mdExamples = [
     {
       title: "Example 1 (fractions, different signs): \\(-\\frac{2}{3} \\times \\frac{5}{9}\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Multiply straight across:</strong> \\(\\frac{2 \\times 5}{3 \\times 9} = \\frac{10}{27}\\) (already in lowest terms)",
-        "<strong>Step 2 - Different signs, so the product is negative:</strong> \\(-\\frac{2}{3} \\times \\frac{5}{9} = \\mathbf{-\\frac{10}{27}}\\)"
-      ]
+      html: `
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{2}{3} \\times \\dfrac{5}{9}\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-diff">Different</span></div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Multiply straight across: numerator &times; numerator, denominator &times; denominator.</div></div>
+          </div>
+          <div class="resolve-box sub"><span class="box-label">Resolving</span>\\(\\dfrac{2 \\times 5}{3 \\times 9} = \\dfrac{10}{27}\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{2}{3} \\times \\dfrac{5}{9} = -\\dfrac{10}{27}\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">What sign does the product get?</div><div class="qa-a">Different signs - negative.</div></div>
+          </div></div>
+        </div>`
     },
     {
       title: "Example 2 (fractions, division): \\(-\\frac{3}{4} \\div \\left(-\\frac{2}{5}\\right)\\)",
-      maxSteps: 3,
-      steps: [
-        "<strong>Step 1 - Keep-Change-Flip:</strong> keep \\(-\\frac{3}{4}\\), change \\(\\div\\) to \\(\\times\\), flip \\(-\\frac{2}{5}\\) to \\(-\\frac{5}{2}\\): \\(-\\frac{3}{4} \\times \\left(-\\frac{5}{2}\\right)\\)",
-        "<strong>Step 2 - Multiply straight across:</strong> \\(\\frac{3 \\times 5}{4 \\times 2} = \\frac{15}{8}\\)",
-        "<strong>Step 3 - Same signs, so the quotient is positive:</strong> \\(-\\frac{3}{4} \\div \\left(-\\frac{2}{5}\\right) = \\mathbf{\\frac{15}{8}} = 1\\frac{7}{8}\\)"
-      ]
+      html: `
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{3}{4} \\div \\left(-\\dfrac{2}{5}\\right)\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Is this multiplication or division?</div><div class="qa-a"><span class="pill pill-sub">Division</span> - apply Keep-Change-Flip first.</div></div>
+          </div>
+          <div class="kcc-box"><span class="box-label">Keep-Change-Flip</span>
+            <div class="kcc-chips">
+              <span class="kcc-chip">Keep \\(-\\dfrac{3}{4}\\)</span>
+              <span class="kcc-chip">Change \\(\\div\\) to \\(\\times\\)</span>
+              <span class="kcc-chip">Flip \\(-\\dfrac{2}{5}\\) to \\(-\\dfrac{5}{2}\\)</span>
+            </div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{3}{4} \\times \\left(-\\dfrac{5}{2}\\right)\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-same">Same</span> - both negative.</div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Multiply straight across.</div></div>
+          </div>
+          <div class="resolve-box add"><span class="box-label">Resolving</span>\\(\\dfrac{3 \\times 5}{4 \\times 2} = \\dfrac{15}{8}\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{3}{4} \\div \\left(-\\dfrac{2}{5}\\right) = \\dfrac{15}{8} = 1\\dfrac{7}{8}\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">What sign does the quotient get?</div><div class="qa-a">Same signs - positive.</div></div>
+          </div></div>
+        </div>`
     },
     {
       title: "Example 3 (decimals, rate of change): \\(-4.8 \\div 3\\)",
-      maxSteps: 2,
-      steps: [
-        "A city's temperature dropped a total of \\(4.8\\)&deg;F over 3 hours at a constant rate. \\(-4.8 \\div 3\\): divide the absolute values: \\(4.8 \\div 3 = 1.6\\)",
-        "<strong>Different signs, so the quotient is negative:</strong> \\(-4.8 \\div 3 = \\mathbf{-1.6}\\)&deg;F per hour"
-      ]
+      html: `
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-4.8 \\div 3\\)</span></div><div class="expr-caption">City's temperature dropped 4.8&deg;F total over 3 hours</div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-diff">Different</span></div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Divide the absolute values.</div></div>
+          </div>
+          <div class="resolve-box sub"><span class="box-label">Resolving</span>\\(4.8 \\div 3 = 1.6\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><div class="expr-focus"><span class="expr-chip active">Rate: \\(-1.6\\)&deg;F per hour</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">What sign does the quotient get?</div><div class="qa-a">Different signs - negative.</div></div>
+          </div></div>
+        </div>`
     }
   ];
   makeCarousel('md', mdExamples);
@@ -364,28 +521,98 @@
   const cvExamples = [
     {
       title: "Example 1: \\(0.5 + \\frac{1}{4}\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Convert the fraction to a decimal (or the decimal to a fraction) so both numbers match:</strong> \\(\\frac{1}{4} = 0.25\\)",
-        "<strong>Step 2 - Add using the decimal rule (same signs, both positive):</strong> \\(0.5 + 0.25 = \\mathbf{0.75}\\)"
-      ]
+      html: `
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(0.5 + \\dfrac{1}{4}\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Are both numbers in the same form?</div><div class="qa-a">No - one is a decimal, one a fraction. \\(\\dfrac{1}{4}\\) has a "friendly" denominator, so convert it to a decimal.</div></div>
+          </div>
+          <div class="resolve-box convert"><span class="box-label">Converting</span>\\(\\dfrac{1}{4} = 0.25\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(0.5 + 0.25\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-same">Same</span> - both positive.</div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Add the absolute values.</div></div>
+          </div>
+          <div class="resolve-box add"><span class="box-label">Resolving</span>\\(0.5 + 0.25 = 0.75\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><div class="expr-focus"><span class="expr-chip active">\\(0.5 + \\dfrac{1}{4} = 0.75\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which sign does the answer keep?</div><div class="qa-a">The common sign - positive.</div></div>
+          </div></div>
+        </div>`
     },
     {
       title: "Example 2: \\(-\\frac{3}{8} - 0.5\\)",
-      maxSteps: 3,
-      steps: [
-        "<strong>Step 1 - Convert \\(-\\frac{3}{8}\\) to a decimal:</strong> \\(-\\frac{3}{8} = -0.375\\)",
-        "<strong>Step 2 - Rewrite the subtraction using Keep-Change-Change:</strong> \\(-0.375 - 0.5 = -0.375 + (-0.5)\\)",
-        "<strong>Step 3 - Same signs, add and keep the sign:</strong> \\(0.375 + 0.5 = 0.875\\), so the answer is \\(\\mathbf{-0.875}\\)"
-      ]
+      html: `
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{3}{8} - 0.5\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Are both numbers in the same form?</div><div class="qa-a">No - convert \\(-\\dfrac{3}{8}\\) to a decimal.</div></div>
+          </div>
+          <div class="resolve-box convert"><span class="box-label">Converting</span>\\(-\\dfrac{3}{8} = -0.375\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-0.375 - 0.5\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Is this addition or subtraction?</div><div class="qa-a"><span class="pill pill-sub">Subtraction</span> - apply Keep-Change-Change.</div></div>
+          </div>
+          <div class="kcc-box"><span class="box-label">Keep-Change-Change</span>
+            <div class="kcc-chips">
+              <span class="kcc-chip">Keep \\(-0.375\\)</span>
+              <span class="kcc-chip">Change \\(-\\) to \\(+\\)</span>
+              <span class="kcc-chip">Change \\(0.5\\) to \\(-0.5\\)</span>
+            </div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-0.375 + (-0.5)\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-same">Same</span> - both negative.</div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Add the absolute values.</div></div>
+          </div>
+          <div class="resolve-box add"><span class="box-label">Resolving</span>\\(0.375 + 0.5 = 0.875\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{3}{8} - 0.5 = -0.875\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which sign does the answer keep?</div><div class="qa-a">The common sign - negative.</div></div>
+          </div></div>
+        </div>`
     },
     {
       title: "Example 3 (temperature): \\(-\\frac{1}{2} + 0.75\\)",
-      maxSteps: 2,
-      steps: [
-        "The temperature was \\(-\\frac{1}{2}\\)&deg;F and rose \\(0.75\\)&deg;F. Convert \\(-\\frac{1}{2}\\) to a decimal: \\(-\\frac{1}{2} = -0.5\\)",
-        "<strong>Different signs, subtract and keep the sign of the larger absolute value (\\(0.75\\)):</strong> \\(0.75 - 0.5 = \\mathbf{0.25}\\)&deg;F"
-      ]
+      html: `
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{1}{2} + 0.75\\)</span></div><div class="expr-caption">Temperature was -1/2&deg;F, rose 0.75&deg;F</div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Are both numbers in the same form?</div><div class="qa-a">No - convert \\(-\\dfrac{1}{2}\\) to a decimal.</div></div>
+          </div>
+          <div class="resolve-box convert"><span class="box-label">Converting</span>\\(-\\dfrac{1}{2} = -0.5\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-0.5 + 0.75\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-diff">Different</span></div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Subtract the smaller absolute value from the larger.</div></div>
+          </div>
+          <div class="resolve-box sub"><span class="box-label">Resolving</span>\\(0.75 - 0.5 = 0.25\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><div class="expr-focus"><span class="expr-chip active">Final temperature: \\(0.25\\)&deg;F</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which number has the greater absolute value?</div><div class="qa-a">\\(0.75\\), so the answer is positive.</div></div>
+          </div></div>
+        </div>`
     }
   ];
   makeCarousel('cv', cvExamples);
@@ -396,29 +623,119 @@
   const msExamples = [
     {
       title: "Example 1 (fractions): \\(-\\frac{2}{3} + \\frac{1}{2} \\times \\left(-\\frac{4}{5}\\right)\\)",
-      maxSteps: 3,
-      steps: [
-        "<strong>Step 1 - Multiply first:</strong> \\(\\frac{1}{2} \\times \\left(-\\frac{4}{5}\\right) = -\\frac{4}{10} = -\\frac{2}{5}\\) (different signs, negative)",
-        "<strong>Step 2 - Now add using the butterfly method (cross-multiply):</strong> \\(2 \\times 5 = 10\\) and \\(3 \\times 2 = 6\\); denominators straight down the middle: \\(3 \\times 5 = 15\\).",
-        "<strong>Step 3 - Same signs, add and keep the sign:</strong> \\(-\\frac{10}{15} + \\left(-\\frac{6}{15}\\right) = -\\frac{16}{15} = \\mathbf{-1\\frac{1}{15}}\\)"
-      ]
+      html: `
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip">\\(-\\dfrac{2}{3} + \\)</span><span class="expr-chip active">\\(\\dfrac{1}{2} \\times \\left(-\\dfrac{4}{5}\\right)\\)</span></div><div class="expr-caption">Order of operations: multiplication first</div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-diff">Different</span></div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Multiply straight across.</div></div>
+          </div>
+          <div class="resolve-box sub"><span class="box-label">Resolving</span>\\(\\dfrac{1 \\times 4}{2 \\times 5} = \\dfrac{4}{10} = \\dfrac{2}{5}\\) (negative)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{2}{3} + \\left(-\\dfrac{2}{5}\\right)\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Do the fractions have the same denominator?</div><div class="qa-a">No - build a common one with the Butterfly Method.</div></div>
+          </div>
+          <div class="resolve-box convert"><span class="box-label">Building the wings</span>\\(2 \\times 5 = 10\\) and \\(3 \\times 2 = 6\\); denominators straight down the middle: \\(3 \\times 5 = 15\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{10}{15} + \\left(-\\dfrac{6}{15}\\right)\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-same">Same</span> - both negative.</div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Add the wing values.</div></div>
+          </div>
+          <div class="resolve-box add"><span class="box-label">Resolving</span>\\(10 + 6 = 16\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><div class="expr-focus"><span class="expr-chip active">\\(-\\dfrac{2}{3} + \\dfrac{1}{2} \\times \\left(-\\dfrac{4}{5}\\right) = -1\\dfrac{1}{15}\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which sign does the answer keep?</div><div class="qa-a">The common sign - negative: \\(-\\dfrac{16}{15} = -1\\dfrac{1}{15}\\).</div></div>
+          </div></div>
+        </div>`
     },
     {
       title: "Example 2 (decimals): \\(-3.2 + 1.5 \\times (-2)\\)",
-      maxSteps: 2,
-      steps: [
-        "<strong>Step 1 - Multiply first:</strong> \\(1.5 \\times (-2) = -3.0\\) (different signs, negative)",
-        "<strong>Step 2 - Now add (same signs, add and keep the sign):</strong> \\(-3.2 + (-3.0) = \\mathbf{-6.2}\\)"
-      ]
+      html: `
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip">\\(-3.2 + \\)</span><span class="expr-chip active">\\(1.5 \\times (-2)\\)</span></div><div class="expr-caption">Order of operations: multiplication first</div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-diff">Different</span></div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Multiply the absolute values.</div></div>
+          </div>
+          <div class="resolve-box sub"><span class="box-label">Resolving</span>\\(1.5 \\times 2 = 3.0\\) (negative)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-3.2 + (-3.0)\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-same">Same</span> - both negative.</div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Add the absolute values.</div></div>
+          </div>
+          <div class="resolve-box add"><span class="box-label">Resolving</span>\\(3.2 + 3.0 = 6.2\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><div class="expr-focus"><span class="expr-chip active">\\(-3.2 + 1.5 \\times (-2) = -6.2\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which sign does the answer keep?</div><div class="qa-a">The common sign - negative.</div></div>
+          </div></div>
+        </div>`
     },
     {
       title: "Example 3 (banking, mixed forms): \\(-45.50 + 20.75 + \\left(10 \\times \\left(-\\frac{1}{4}\\right)\\right)\\)",
-      maxSteps: 3,
-      steps: [
-        "Malena's account starts at \\(-\\$45.50\\). She deposits \\(\\$20.75\\), then a fee equal to \\(\\frac{1}{4}\\) of \\(\\$10\\) is charged. <strong>Step 1 - Work the parentheses (and convert the fraction to a decimal):</strong> \\(10 \\times \\left(-\\frac{1}{4}\\right) = 10 \\times (-0.25) = -2.50\\)",
-        "<strong>Step 2 - Add the deposit (different signs):</strong> \\(-45.50 + 20.75 = -24.75\\)",
-        "<strong>Step 3 - Apply the fee (same signs, add and keep the sign):</strong> \\(-24.75 + (-2.50) = \\mathbf{-\\$27.25}\\)"
-      ]
+      html: `
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip">\\(-45.50 + 20.75 + \\)</span><span class="expr-chip active">\\(\\left(10 \\times \\left(-\\dfrac{1}{4}\\right)\\right)\\)</span></div><div class="expr-caption">Parentheses first - convert the fraction to a decimal</div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Are both numbers in the same form?</div><div class="qa-a">No - convert \\(-\\dfrac{1}{4}\\) to a decimal.</div></div>
+          </div>
+          <div class="resolve-box convert"><span class="box-label">Converting</span>\\(-\\dfrac{1}{4} = -0.25\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip">\\(-45.50 + 20.75 + \\)</span><span class="expr-chip active">\\((10 \\times (-0.25))\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-diff">Different</span></div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Multiply the absolute values.</div></div>
+          </div>
+          <div class="resolve-box sub"><span class="box-label">Resolving - the fee</span>\\(10 \\times 0.25 = 2.50\\) (negative)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-45.50 + 20.75\\)</span><span class="expr-chip">\\(\\,+ (-2.50)\\)</span></div><div class="expr-caption">Working on this pair first</div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-diff">Different</span></div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Subtract the smaller absolute value from the larger.</div></div>
+          </div>
+          <div class="resolve-box sub"><span class="box-label">Resolving</span>\\(45.50 - 20.75 = 24.75\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math running"><div class="expr-focus"><span class="expr-chip active">\\(-24.75\\)</span><span class="expr-chip">\\(\\,+ (-2.50)\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which number has the greater absolute value?</div><div class="qa-a">\\(-45.50\\), so this pair is negative - a running value, not the final answer yet.</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\\(-24.75 + (-2.50)\\)</span></div><div class="expr-caption">Working on this pair now</div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-same">Same</span> - both negative.</div></div>
+            <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Add the absolute values.</div></div>
+          </div>
+          <div class="resolve-box add"><span class="box-label">Resolving</span>\\(24.75 + 2.50 = 27.25\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><div class="expr-focus"><span class="expr-chip active">Final balance: \\(-\\$27.25\\)</span></div></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which sign does the answer keep?</div><div class="qa-a">The common sign - negative.</div></div>
+          </div></div>
+        </div>`
     }
   ];
   makeCarousel('ms', msExamples);

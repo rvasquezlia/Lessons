@@ -858,3 +858,311 @@ button:disabled {
   font-size: 0.85rem;
   margin-left: 6px;
 }
+
+/* ================================================================
+   QUESTION LADDER - shared worked-example mechanism, originated on
+   the Literal Equations "Guided Solving Ladder" supplemental page.
+   Every step of solving asks the SAME fixed set of self-diagnostic
+   questions ("What's the variable? What's obstructing it? What's it
+   doing? What's the inverse?"), repeated round by round until the
+   target is isolated. Any indexed page teaching that same skill
+   should use these classes instead of a plain numbered step list, so
+   students recognize the identical rhythm everywhere it appears.
+   ================================================================ */
+.ladder {
+  background: #f8fafc;
+  border: 2px solid var(--border);
+  border-left: 8px solid var(--primary-light);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin: 36px 0;
+  box-shadow: 0 8px 20px rgba(15,23,42,0.10);
+  position: relative;
+}
+.ladder + .ladder { margin-top: 40px; }
+.ladder-formula {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 2px dashed #cbd5e1;
+}
+.ladder-round {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+.ladder-round-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.qa { display: flex; flex-wrap: wrap; gap: 6px; padding: 3px 0; }
+.qa .q { font-weight: 700; color: #334155; }
+.qa .a { font-weight: 800; color: var(--primary); }
+.ladder-eq {
+  background: #eff6ff;
+  border: 2px solid var(--primary-light);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 10px 0;
+  font-size: 1.05rem;
+  text-align: center;
+}
+.ladder-result {
+  font-weight: 900;
+  color: var(--primary);
+  font-size: 1.15rem;
+  text-align: center;
+  margin: 4px 0 2px 0;
+}
+.ladder-check {
+  font-size: 0.92rem;
+  color: #334155;
+  text-align: center;
+  margin-top: 4px;
+}
+.ladder-check strong { color: var(--success); }
+.type-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 20px;
+  padding: 3px 12px;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+.type-tag.onestep { background: #dcfce7; color: #15803d; }
+.type-tag.multistep { background: #dbeafe; color: #1d4ed8; }
+.type-tag.factor { background: #fef3c7; color: #92400e; }
+.type-tag.classify { background: #ccfbf1; color: #0f766e; }
+.type-tag.convert  { background: #fce7f3; color: #a21caf; }
+.type-tag.addsub   { background: #dcfce7; color: #15803d; }
+.type-tag.word     { background: #ede9fe; color: #7c3aed; }
+
+/* ================================================================
+   SIGNED-NUMBER FLOW - shared worked-example mechanism, originated
+   on the Operations with Rational Numbers "Test 2 Study Guide"
+   supplemental page. The real math (rewritten checkpoint by
+   checkpoint down to a final answer) sits on the left in
+   .flow-math; the self-diagnostic questions and process work that
+   justify each rewrite sit on the right in .flow-steps. Color always
+   distinguishes a mid-process rewrite/resolve step from the actual
+   final answer (only ever green), so a student can't mistake one for
+   the other.
+   ================================================================ */
+.example-card {
+  background: #f8fafc;
+  border: 2px solid var(--border);
+  border-left: 8px solid var(--primary-light);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 32px 0;
+  box-shadow: 0 8px 20px rgba(15,23,42,0.10);
+}
+.example-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 2px dashed #cbd5e1;
+}
+.example-final {
+  margin-top: 16px;
+  background: var(--success-bg);
+  border: 2px solid var(--success);
+  border-radius: 10px;
+  padding: 12px 18px;
+  text-align: center;
+  font-weight: 900;
+  color: var(--success);
+  font-size: 1.15rem;
+}
+.example-steps { list-style: none; margin: 0; padding: 0; }
+.example-steps li { padding: 12px 0; border-bottom: 1px dashed #e2e8f0; }
+.example-steps li:last-child { border-bottom: none; padding-bottom: 4px; }
+.example-steps.cols-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 28px;
+}
+.example-steps.cols-2 li { border-bottom: none; padding: 10px 0; }
+.example-steps.cols-2 li:nth-child(odd) { border-right: 1px dashed #e2e8f0; padding-right: 20px; }
+.example-steps.cols-2 li:nth-child(even) { padding-left: 20px; }
+@media (max-width: 700px) {
+  .example-steps.cols-2 { display: block; }
+  .example-steps.cols-2 li { border-bottom: 1px dashed #e2e8f0 !important; border-right: none !important; padding: 12px 0 !important; }
+  .example-steps.cols-2 li:last-child { border-bottom: none !important; }
+}
+.step-row { display: flex; align-items: flex-start; gap: 10px; }
+.step-num {
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  margin-top: 1px;
+}
+.step-text { font-size: 1rem; line-height: 1.6; color: #1e293b; }
+.step-math {
+  background: #eff6ff;
+  border: 2px solid var(--primary-light);
+  border-radius: 8px;
+  padding: 9px 14px;
+  margin: 10px 0 0 36px;
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+/* Long-division bracket block (matches the Sixth-grade algorithm style) */
+.div-block { text-align: center; margin: 14px 0; font-size: 1.05rem; }
+
+/* Q&A process list: the fixed self-diagnostic questions, asked in the same
+   order every time, that justify a step - not the math itself. */
+.qa-list { width: 100%; margin: 8px 0; }
+.qa-row { display: flex; flex-wrap: wrap; gap: 2px 14px; padding: 8px 0; border-bottom: 1px dashed #e2e8f0; }
+.qa-row:last-child { border-bottom: none; }
+.qa-q { flex: 1 1 150px; font-weight: 700; color: var(--primary); }
+.qa-a { flex: 1 1 150px; color: #1e293b; }
+
+/* Flow row: real math on the left, the Q&A that resolves it on the right */
+.flow-row { display: flex; gap: 16px; align-items: stretch; margin: 14px 0; }
+.flow-math {
+  flex: 0 0 34%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  background: #f1f5f9;
+  border: 2px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 14px 10px;
+}
+.flow-math .expr-focus { margin: 0; }
+.flow-math .expr-caption { margin: 8px 0 0 0; }
+.flow-math.final { background: var(--success-bg); border-color: var(--success); }
+.flow-math.final .expr-chip.active { border-color: var(--success); background: #fff; color: var(--success); font-weight: 800; }
+.flow-math.running { background: #e0e7ff; border-color: #4338ca; }
+.flow-math.running .expr-chip.active { border-color: #4338ca; background: #fff; color: #3730a3; font-weight: 800; }
+.flow-steps { flex: 1 1 0; min-width: 0; }
+@media (max-width: 720px) {
+  .flow-row { flex-direction: column; }
+  .flow-math { flex: none; }
+}
+.flow-connector { display: flex; margin: -6px 0; }
+.flow-connector span {
+  flex: 0 0 34%;
+  text-align: center;
+  font-size: 1.3rem;
+  color: #94a3b8;
+  line-height: 1;
+}
+@media (max-width: 720px) { .flow-connector span { flex: none; width: 100%; } }
+
+.pill {
+  display: inline-block;
+  font-weight: 800;
+  padding: 2px 12px;
+  border-radius: 20px;
+  font-size: 0.92rem;
+}
+.pill-add   { background: #cffafe; color: #0e7490; }
+.pill-sub   { background: #fef3c7; color: #92400e; }
+.pill-same  { background: #dcfce7; color: #15803d; }
+.pill-diff  { background: #fee2e2; color: #b91c1c; }
+
+/* Keep-Change-Change rewrite box (violet - a rewrite, not a result) */
+.kcc-box {
+  background: #ede9fe;
+  border: 2px solid #7c3aed;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 12px 0;
+}
+.kcc-box .box-label { color: #6d28d9; }
+.kcc-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.kcc-chip {
+  background: #fff;
+  border: 2px solid #7c3aed;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-weight: 700;
+  color: #5b21b6;
+  font-size: 0.95rem;
+}
+.kcc-arrow { text-align: center; margin-top: 8px; font-weight: 700; color: #6d28d9; }
+
+/* Resolve box: shows the arithmetic for THIS step - never the same green as the final answer */
+.box-label {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-weight: 800;
+  margin-bottom: 5px;
+  opacity: 0.85;
+}
+.resolve-box {
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin: 10px 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+.resolve-box.add     { background: #cffafe; border: 2px solid #0891b2; color: #0e7490; }
+.resolve-box.sub     { background: #fef3c7; border: 2px solid #d97706; color: #92400e; }
+.resolve-box.convert { background: #fce7f3; border: 2px solid #a21caf; color: #86198f; }
+
+/* Running value: a combined result mid-problem - deliberately NOT green so it's never mistaken for the final answer */
+.running-box {
+  background: #e0e7ff;
+  border: 2px solid #4338ca;
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin: 10px 0;
+  text-align: center;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: #3730a3;
+}
+
+/* Expression focus: box the pair being combined right now, gray out the rest */
+.expr-focus {
+  text-align: center;
+  margin: 16px 0 4px 0;
+  font-size: 1.15rem;
+  line-height: 2.4;
+}
+.expr-chip { display: inline-block; padding: 6px 4px; color: #94a3b8; }
+.expr-chip.active {
+  color: #0f172a;
+  border: 2px solid var(--primary-light);
+  border-radius: 8px;
+  padding: 6px 14px;
+  background: #eff6ff;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.22);
+}
+.expr-caption {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--primary-light);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin: 0 0 14px 0;
+}
+
+.color-key { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 10px; font-size: 0.92rem; }
+.color-key span { display: inline-flex; align-items: center; gap: 6px; }
+.color-key i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; flex-shrink: 0; }

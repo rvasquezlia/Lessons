@@ -63,6 +63,20 @@
       <p style="margin:0;">A literal equation solves exactly like a numeric one - subtract/add, then multiply/divide, in reverse order. The only difference is that <strong>every letter you aren't solving for gets treated like a number</strong>: move it with the properties of equality, never combine it with a letter it doesn't match.</p>
     </div>
 
+    <div class="notebook-box">
+      <div class="notebook-header">Climb the Same Question Ladder Every Time</div>
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Question</th><th>What it's asking</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>What's the variable I need to isolate?</td><td>Name the target letter. It doesn't change round to round.</td></tr>
+          <tr><td>2</td><td>What is obstructing me from doing so?</td><td>Name whatever is attached to the target variable right now.</td></tr>
+          <tr><td>3</td><td>What is it doing?</td><td>Name the operation - adding, subtracting, multiplying, or dividing.</td></tr>
+          <tr><td>4</td><td>What's the inverse operation to remove it?</td><td>Name the opposite operation, then apply it to <strong>both</strong> sides.</td></tr>
+        </tbody>
+      </table>
+      <p style="margin:12px 0 0 0;">If the target variable appears in more than one term, ask an extra question first - <em>"Can one inverse operation remove all of these at once?"</em> - and factor it out before climbing the ladder above.</p>
+    </div>
+
     <table class="data-table">
       <thead><tr><th>If your target variable...</th><th>Do this</th></tr></thead>
       <tbody>
@@ -106,7 +120,7 @@
     <div class="section-title">Error Analysis Review</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Each problem shows a formula, the variable a student solved for, and their (incorrect) result. Type the correct rearrangement. For an exponent, type <code>^</code> (like <code>r^2</code>); for \(\pi\), type <code>pi</code>. You get two tries.
+      Each problem shows a formula, the variable a student solved for, and their (incorrect) result. Walk the Question Ladder yourself to find where they went wrong, then type the correct rearrangement. For an exponent, type <code>^</code> (like <code>r^2</code>); for \(\pi\), type <code>pi</code>. You get two tries.
     </div>
     <div id="erroranalysis-list"></div>
   </div>
@@ -206,53 +220,87 @@
 
   const guidedProblems = [
     {
-      title: "1. One Appearance: Solve \\(d = rt\\) for \\(t\\)",
-      chunks: [
-        { label: "Goal", text: "Isolate \\(t\\)." },
-        { label: "Step", text: "\\(t\\) is multiplied by \\(r\\). Divide both sides by \\(r\\) (the inverse of multiplying by \\(r\\))." },
-        { label: "Solution", text: "\\(t = \\dfrac{d}{r}\\)" }
+      formula: "1. \\(d = rt\\), solve for \\(t\\)",
+      tag: { cls: "onestep", label: "One Step" },
+      rounds: [
+        { label: "Round 1", qas: [
+            ["What's the variable I need to isolate?", "\\(t\\)"],
+            ["What is obstructing me from doing so?", "\\(r\\)"],
+            ["What is \\(r\\) doing?", "Multiplying"],
+            ["What's the inverse operation to remove it?", "Division"]
+          ], eq: "\\(\\dfrac{d}{r} = \\dfrac{rt}{r}\\)", result: "\\(t = \\dfrac{d}{r}\\)", check: "Is \\(t\\) now isolated? <strong>Yes.</strong>" }
       ]
     },
     {
-      title: "2. One Appearance: Solve \\(A = lw\\) for \\(w\\)",
-      chunks: [
-        { label: "Goal", text: "Isolate \\(w\\)." },
-        { label: "Step", text: "Divide both sides by \\(l\\)." },
-        { label: "Solution", text: "\\(w = \\dfrac{A}{l}\\)" }
+      formula: "2. \\(A = lw\\), solve for \\(w\\)",
+      tag: { cls: "onestep", label: "One Step" },
+      rounds: [
+        { label: "Round 1", qas: [
+            ["What's the variable I need to isolate?", "\\(w\\)"],
+            ["What is obstructing me from doing so?", "\\(l\\)"],
+            ["What is \\(l\\) doing?", "Multiplying"],
+            ["What's the inverse operation to remove it?", "Division"]
+          ], eq: "\\(\\dfrac{A}{l} = \\dfrac{lw}{l}\\)", result: "\\(w = \\dfrac{A}{l}\\)", check: "Is \\(w\\) now isolated? <strong>Yes.</strong>" }
       ]
     },
     {
-      title: "3. Multi-Step: Solve \\(P = 2l + 2w\\) for \\(l\\)",
-      chunks: [
-        { label: "Step 1", text: "Subtract \\(2w\\) from both sides to move the constant term off the variable term: \\(P - 2w = 2l\\)." },
-        { label: "Step 2", text: "Divide both sides by 2." },
-        { label: "Solution", text: "\\(l = \\dfrac{P-2w}{2}\\)" }
+      formula: "3. \\(P = 2l + 2w\\), solve for \\(l\\)",
+      tag: { cls: "multistep", label: "Multi-Step" },
+      rounds: [
+        { label: "Round 1", qas: [
+            ["What's the variable I need to isolate?", "\\(l\\)"],
+            ["What is obstructing me from doing so?", "\\(2w\\) adding, and \\(2\\) multiplying"],
+            ["What's the first obstruction to undo?", "\\(2w\\) adding"],
+            ["What's the inverse operation to remove it?", "Subtraction"]
+          ], eq: "\\(P - 2w = 2w - 2w + 2l\\)", result: "\\(P - 2w = 2l\\)", check: "Is \\(l\\) now isolated? No. Keep going - see next round." },
+        { label: "Round 2", qas: [
+            ["What is obstructing me from doing so?", "\\(2\\)"],
+            ["What is \\(2\\) doing?", "Multiplying"],
+            ["What's the inverse operation to remove it?", "Division"]
+          ], eq: "\\(\\dfrac{P-2w}{2} = \\dfrac{2l}{2}\\)", result: "\\(l = \\dfrac{P-2w}{2}\\)", check: "Is \\(l\\) now isolated? <strong>Yes.</strong>" }
       ]
     },
     {
-      title: "4. Multi-Step: Solve \\(F = \\dfrac95C + 32\\) for \\(C\\)",
-      chunks: [
-        { label: "Step 1", text: "Subtract 32 from both sides: \\(F - 32 = \\dfrac95C\\)." },
-        { label: "Step 2", text: "Multiply both sides by \\(\\dfrac59\\) (the inverse of multiplying by \\(\\dfrac95\\))." },
-        { label: "Solution", text: "\\(C = \\dfrac59(F-32)\\)" }
+      formula: "4. \\(F = \\dfrac95C + 32\\), solve for \\(C\\)",
+      tag: { cls: "multistep", label: "Multi-Step" },
+      rounds: [
+        { label: "Round 1", qas: [
+            ["What's the variable I need to isolate?", "\\(C\\)"],
+            ["What is obstructing me from doing so?", "\\(32\\) adding, and \\(\\dfrac95\\) multiplying"],
+            ["What's the first obstruction to undo?", "\\(32\\) adding"],
+            ["What's the inverse operation to remove it?", "Subtraction"]
+          ], eq: "\\(F - 32 = \\dfrac95C + 32 - 32\\)", result: "\\(F - 32 = \\dfrac95C\\)", check: "Is \\(C\\) now isolated? No. Keep going - see next round." },
+        { label: "Round 2", qas: [
+            ["What is obstructing me from doing so?", "\\(\\dfrac95\\)"],
+            ["What is \\(\\dfrac95\\) doing?", "Multiplying"],
+            ["What's the inverse operation to remove it?", "Multiplying by its reciprocal, \\(\\dfrac59\\)"]
+          ], eq: "\\(\\dfrac59(F-32) = \\dfrac59\\cdot\\dfrac95C\\)", result: "\\(C = \\dfrac59(F-32)\\)", check: "Is \\(C\\) now isolated? <strong>Yes.</strong>" }
       ]
     },
     {
-      title: "5. Factoring: Solve \\(A = P + Prt\\) for \\(P\\)",
-      chunks: [
-        { label: "Step 1", text: "\\(P\\) appears in both terms on the right - there's no single inverse operation yet." },
-        { label: "Step 2", text: "Factor \\(P\\) out of the right side: \\(A = P(1+rt)\\)." },
-        { label: "Step 3", text: "Divide both sides by \\((1+rt)\\)." },
-        { label: "Solution", text: "\\(P = \\dfrac{A}{1+rt}\\)" }
+      formula: "5. \\(A = P + Prt\\), solve for \\(P\\)",
+      tag: { cls: "factor", label: "Factoring" },
+      rounds: [
+        { label: "Round 1 - Factoring Question", qas: [
+            ["What's the variable I need to isolate?", "\\(P\\)"],
+            ["What is obstructing me from doing so?", "\\(P\\) appears in <strong>two</strong> terms: \\(P\\) and \\(Prt\\)"],
+            ["Can one inverse operation remove both at once?", "No"],
+            ["What do I do instead?", "Factor \\(P\\) out of the right side"]
+          ], eq: "\\(A = P(1+rt)\\)", check: "Is \\(P\\) now isolated? No, but it now appears only once. Keep going - see next round." },
+        { label: "Round 2", qas: [
+            ["What is obstructing me from doing so?", "\\((1+rt)\\)"],
+            ["What is \\((1+rt)\\) doing?", "Multiplying"],
+            ["What's the inverse operation to remove it?", "Division"]
+          ], eq: "\\(\\dfrac{A}{1+rt} = \\dfrac{P(1+rt)}{1+rt}\\)", result: "\\(P = \\dfrac{A}{1+rt}\\)", check: "Is \\(P\\) now isolated? <strong>Yes.</strong>" }
       ]
     }
   ];
 
   function renderGuidedSteps() {
     const html = guidedProblems.map((p, i) => `
-      <div class="step-box" style="margin-top:16px;">
-        <h3 style="margin-top:0; color:var(--primary);">${p.title}</h3>
-        <button class="btn-lg" onclick="revealGuidedStep(${i})">Reveal Next Step</button>
+      <div class="ladder" style="margin-top:16px;">
+        <div class="ladder-formula">${p.formula} <span class="type-tag ${p.tag.cls}">${p.tag.label}</span></div>
+        <button class="btn-lg" onclick="revealGuidedStep(${i})">Reveal Next Round</button>
         <button class="btn-secondary" onclick="resetGuidedStep(${i})">Reset</button>
         <div id="guided-${i}-chunks" style="margin-top:14px;"></div>
       </div>
@@ -264,16 +312,21 @@
   function renderGuidedChunks(i) {
     const p = guidedProblems[i];
     const count = guidedStepCount[i] || 0;
-    const html = p.chunks.slice(0, count).map((c, idx) => {
-      const isSolution = idx === p.chunks.length - 1;
-      return `<div class="step-item visible" style="margin-top:10px; ${isSolution ? 'font-weight:800; color:var(--primary);' : ''}"><strong>${c.label}:</strong> ${c.text}</div>`;
-    }).join('');
+    const html = p.rounds.slice(0, count).map((r) => `
+      <div class="ladder-round">
+        <div class="ladder-round-label">${r.label}</div>
+        ${r.qas.map(([q, a]) => `<div class="qa"><span class="q">${q}</span><span class="a">${a}</span></div>`).join('')}
+      </div>
+      ${r.eq ? `<div class="ladder-eq">${r.eq}</div>` : ''}
+      ${r.result ? `<div class="ladder-result">${r.result}</div>` : ''}
+      ${r.check ? `<div class="ladder-check">${r.check}</div>` : ''}
+    `).join('');
     document.getElementById(`guided-${i}-chunks`).innerHTML = html;
     triggerMathJax();
   }
   function revealGuidedStep(i) {
     const p = guidedProblems[i];
-    guidedStepCount[i] = Math.min((guidedStepCount[i] || 0) + 1, p.chunks.length);
+    guidedStepCount[i] = Math.min((guidedStepCount[i] || 0) + 1, p.rounds.length);
     renderGuidedChunks(i);
   }
   function resetGuidedStep(i) {

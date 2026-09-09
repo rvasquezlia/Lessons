@@ -64,27 +64,34 @@
     <p>Rational numbers are any numbers that can be written as a fraction of integers - this includes every fraction and every terminating or repeating decimal, positive or negative. The same-sign/different-sign rules from Integers apply exactly the same way here, no matter which form the numbers take.</p>
 
     <div class="notebook-box">
-      <div class="notebook-header">1. Add/Subtract Rules</div>
-      <ul>
-        <li><strong>Same Signs:</strong> Add the absolute values and keep the common sign. \(-\frac{3}{4}+\left(-\frac{1}{8}\right)=-\frac{7}{8}\) &nbsp;&nbsp; \(-2.5+(-1.75)=-4.25\)</li>
-        <li><strong>Different Signs:</strong> Subtract the smaller absolute value from the larger. Keep the sign of the number with the larger absolute value. \(-\frac{5}{6}+\frac{1}{3}=-\frac{1}{2}\) &nbsp;&nbsp; \(3.6+(-5.2)=-1.6\)</li>
-        <li><strong>Fractions:</strong> use the butterfly method (cross-multiply) first. <strong>Decimals:</strong> line up the decimal points first.</li>
-      </ul>
+      <div class="notebook-header">1. Add/Subtract Rules - Ask Yourself These Questions</div>
+      <table class="data-table">
+        <thead><tr><th>Ask...</th><th>Then...</th></tr></thead>
+        <tbody>
+          <tr><td>Is it addition or subtraction?</td><td><strong>Addition</strong> &rarr; go straight to the next check. <strong>Subtraction</strong> &rarr; Keep-Change-Change first: keep the first number, change the operation to addition, change the second number's sign to its opposite.</td></tr>
+          <tr><td>Are the numbers fractions or decimals?</td><td><strong>Fractions:</strong> use the Butterfly Method (cross-multiply) to build a common denominator first. <strong>Decimals:</strong> line up the decimal points first.</td></tr>
+          <tr><td>Are the signs the same or different?</td><td>Compare the sign of the two numbers now being added.</td></tr>
+          <tr><td>What do I do with the numbers, and what sign does the answer get?</td><td><strong>Same signs:</strong> add the absolute values, keep the common sign. \(-\frac{3}{4}+\left(-\frac{1}{8}\right)=-\frac{7}{8}\), \(-2.5+(-1.75)=-4.25\). <strong>Different signs:</strong> subtract the smaller absolute value from the larger, keep the sign of the larger. \(-\frac{5}{6}+\frac{1}{3}=-\frac{1}{2}\), \(3.6+(-5.2)=-1.6\).</td></tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="notebook-box">
-      <div class="notebook-header">2. Multiply &amp; Divide Sign Laws</div>
-      <ul>
-        <li><strong>Same Signs = Positive:</strong> \(\left(-\frac{3}{4}\right)\times\left(-\frac{2}{5}\right)=\frac{3}{10}\) &nbsp;&nbsp; \(-2.8\times(-1.5)=4.2\)</li>
-        <li><strong>Different Signs = Negative:</strong> \(-\frac{2}{3}\times\frac{5}{9}=-\frac{10}{27}\) &nbsp;&nbsp; \(12.6\div(-3)=-4.2\)</li>
-        <li><strong>Dividing fractions:</strong> Keep-Change-Flip, then apply the sign rule.</li>
-      </ul>
+      <div class="notebook-header">2. Multiply &amp; Divide Sign Laws - Ask Yourself These Questions</div>
+      <table class="data-table">
+        <thead><tr><th>Ask...</th><th>Then...</th></tr></thead>
+        <tbody>
+          <tr><td>Is it multiplication or division of fractions?</td><td>If dividing, Keep-Change-Flip first: keep the first fraction, change &divide; to &times;, flip the second fraction to its reciprocal.</td></tr>
+          <tr><td>Are the signs the same or different?</td><td>Compare the sign of the two numbers being multiplied.</td></tr>
+          <tr><td>What sign does the result get?</td><td><strong>Same Signs = Positive:</strong> \(\left(-\frac{3}{4}\right)\times\left(-\frac{2}{5}\right)=\frac{3}{10}\), \(-2.8\times(-1.5)=4.2\). <strong>Different Signs = Negative:</strong> \(-\frac{2}{3}\times\frac{5}{9}=-\frac{10}{27}\), \(12.6\div(-3)=-4.2\).</td></tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="notebook-box">
       <div class="notebook-header">3. Switching Forms &amp; Multi-Step Expressions</div>
-      <p style="margin:0 0 8px 0;">Convert a fraction to a decimal (or a decimal to a fraction) before combining it with a number in the other form. Converting never changes a number's value or sign - it only changes what it looks like.</p>
-      <p style="margin:0;">In multi-step expressions, order of operations still applies: parentheses first, then multiplication/division left to right, then addition/subtraction left to right.</p>
+      <p style="margin:0 0 8px 0;">Before you can combine a fraction and a decimal in the same expression, ask: <strong>"Are both numbers in the same form?"</strong> If not, convert one before applying the rules above. Converting never changes a number's value or sign - it only changes what it looks like.</p>
+      <p style="margin:0;">In multi-step expressions, order of operations still applies: parentheses first, then multiplication/division left to right, then addition/subtraction left to right - ask "same signs or different signs?" fresh at each step.</p>
     </div>
 
     <div class="challenge-box">
@@ -111,6 +118,9 @@
         <li>Converting a fraction to a decimal incorrectly and carrying that error through the rest of the problem.</li>
       </ul>
     </div>
+    <div class="explainer-box">
+      For every problem below, ask the same questions you used on the Explanation page: <strong>Is it addition or subtraction (or multiplication/division)? Same signs or different signs? What do I do with the numbers?</strong> Most errors here come from skipping straight to a computation without answering those questions first.
+    </div>
 
     <div id="errors-list"></div>
 
@@ -124,8 +134,36 @@
       <button class="btn-lg" style="margin-top:14px;" onclick="checkAudit()">Submit</button>
       <div id="audit-feedback" class="feedback-msg"></div>
     </div>
-    <div class="explainer-box" id="audit-explain" style="display:none; margin-top:22px;">
-      Marco treated this as a different-signs problem, but it isn't one - both numbers being combined are negative once you rewrite the subtraction. Using Keep-Change-Change: \(-2.5 - 3.5 \rightarrow -2.5 + (-3.5)\). Now the signs <em>are</em> the same, so add the absolute values and keep the negative sign: \(2.5 + 3.5 = 6.0\), giving <strong>\(-6.0\)</strong>.
+    <div id="audit-explain" style="display:none; margin-top:22px;">
+      <div class="flow-row">
+        <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\(-2.5 - 3.5\)</span></div></div>
+        <div class="flow-steps"><div class="qa-list">
+          <div class="qa-row"><div class="qa-q">Is this addition or subtraction?</div><div class="qa-a"><span class="pill pill-sub">Subtraction</span> - apply Keep-Change-Change first. Marco skipped this.</div></div>
+        </div>
+        <div class="kcc-box"><span class="box-label">Keep-Change-Change</span>
+          <div class="kcc-chips">
+            <span class="kcc-chip">Keep \(-2.5\)</span>
+            <span class="kcc-chip">Change \(-\) to \(+\)</span>
+            <span class="kcc-chip">Change \(3.5\) to \(-3.5\)</span>
+          </div>
+        </div></div>
+      </div>
+      <div class="flow-connector"><span>&darr;</span></div>
+      <div class="flow-row">
+        <div class="flow-math"><div class="expr-focus"><span class="expr-chip active">\(-2.5 + (-3.5)\)</span></div></div>
+        <div class="flow-steps"><div class="qa-list">
+          <div class="qa-row"><div class="qa-q">Same signs or different signs?</div><div class="qa-a"><span class="pill pill-same">Same</span> - both negative, not different as Marco assumed.</div></div>
+          <div class="qa-row"><div class="qa-q">What do I do with the numbers?</div><div class="qa-a">Add the absolute values.</div></div>
+        </div>
+        <div class="resolve-box add"><span class="box-label">Resolving</span>\(2.5 + 3.5 = 6.0\)</div></div>
+      </div>
+      <div class="flow-connector"><span>&darr;</span></div>
+      <div class="flow-row">
+        <div class="flow-math final"><div class="expr-focus"><span class="expr-chip active">\(-2.5 - 3.5 = -6.0\)</span></div></div>
+        <div class="flow-steps"><div class="qa-list">
+          <div class="qa-row"><div class="qa-q">Which sign does the answer keep?</div><div class="qa-a">The common sign - negative.</div></div>
+        </div></div>
+      </div>
     </div>
   </div>
 
