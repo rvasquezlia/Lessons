@@ -76,6 +76,8 @@
     .catalog-card:hover { transform: translateY(-3px); }
     .catalog-card.disabled { opacity: 0.45; cursor: not-allowed; }
     .catalog-code { font-weight: 900; font-size: 0.78rem; letter-spacing: 0.5px; opacity: 0.75; }
+    .catalog-icon { width: 56px; height: 56px; margin: 6px auto; }
+    .ledger-icon { display: inline-block; width: 20px; height: 20px; vertical-align: middle; margin-right: 5px; }
     .catalog-name { font-weight: 800; font-size: 1.02rem; margin: 4px 0; }
     .catalog-meta { font-size: 0.8rem; opacity: 0.85; margin-bottom: 8px; }
     .catalog-price { font-size: 1.15rem; font-weight: 900; }
@@ -254,7 +256,8 @@
       color: #1e293b;
       user-select: none;
     }
-    .token.real { font-size: 1.5rem; }
+    .token.real { padding: 4px; }
+    .token.real svg { width: 100%; height: 100%; }
     .token.selected { outline: 3px solid #f59e0b; outline-offset: 2px; transform: scale(1.08); }
     .token.locked { cursor: not-allowed; opacity: 0.9; }
 
@@ -309,9 +312,12 @@
     .sign-preview .sign-verse { font-size: 1rem; line-height: 1.4; }
     .sign-preview .sign-ref { font-size: 0.82rem; font-weight: 700; opacity: 0.85; }
     .sign-preview .sign-stickers { font-size: 1.6rem; letter-spacing: 6px; }
-    .sign-rustic { border: 8px solid #92400e; background: #fef3c7; }
-    .sign-picket { border: 6px dashed #16a34a; background: #ecfdf5; }
-    .sign-vine { border: 6px solid #15803d; background: #f0fdf4; }
+    .sign-rustic { border: 8px solid #92400e; background: #fef3c7; border-radius: 10px; }
+    .sign-picket { border: 6px dashed #16a34a; background: #ecfdf5; border-radius: 10px; }
+    .sign-vine { border: 6px solid #15803d; background: #f0fdf4; border-radius: 10px; }
+    .sign-stone { border: 6px solid #64748b; background: #e2e8f0; border-radius: 4px; box-shadow: inset 0 0 0 4px #cbd5e1, 0 10px 22px rgba(0,0,0,0.18); }
+    .sign-metal { border: 6px solid #94a3b8; background: linear-gradient(160deg, #f1f5f9, #cbd5e1); border-radius: 14px; }
+    .sign-cloud { border: 6px solid #38bdf8; background: #f0f9ff; border-radius: 50% / 30%; }
     .sticker-choices label {
       display: inline-flex;
       align-items: center;
@@ -379,8 +385,10 @@
   </header>
 
   <div class="progress-bar">
-    <label for="student-name">Student / Team Name:</label>
-    <input type="text" id="student-name" placeholder="Type your name or team name">
+    <label for="team-name-1">Team Members:</label>
+    <input type="text" id="team-name-1" placeholder="Team member 1 name" oninput="syncTeamName()">
+    <input type="text" id="team-name-2" placeholder="Team member 2 name" oninput="syncTeamName()">
+    <input type="hidden" id="student-name">
     <button class="btn-print" onclick="printProgressReport('Laudato Si Eco-Garden STREAM Project')">Print My Progress</button>
   </div>
 
@@ -388,9 +396,9 @@
     <strong class="howto-label">How this page works</strong>
     <ul style="margin:0 0 0 -4px;">
       <li>This is your digital version of the paper worksheet - same math, same 2-day plan, but the garden items, calculations, and layout are all interactive here.</li>
-      <li>Drag items from the Store Catalog into your Ledger (or tap "Add to Cart"). Type your rounded estimate and your exact Line Total, then hit <strong>Check</strong> - you get 2 tries before the correct math is revealed and that row locks.</li>
+      <li>Drag items from the Store Catalog into your Ledger (or tap "Add to Cart"). Rounded Estimate and Line Total are checked separately - unlimited tries, but every attempt is counted and shown on your printed report, and each field locks as soon as you get it right.</li>
       <li>On Day 2 you'll drag your purchased items onto a 6&times;6 garden grid and can flip to a real-life preview of your design.</li>
-      <li>When you're finished, type your name above and click <strong>Print My Progress</strong> to submit proof of your work.</li>
+      <li>When you're finished, type both team members' names above and click <strong>Print My Progress</strong>, or scroll to the bottom to download your completion badge and your garden sign.</li>
     </ul>
   </div>
 
@@ -430,9 +438,10 @@
     <div class="section-title" style="font-size:1.3rem;">Your Ledger <span class="time-chip">20-40 min: exact math</span></div>
     <div class="howto-box">
       <strong class="howto-label">What to do on each row</strong>
-      These are two separate checks. <strong>Rounded Estimate:</strong> round just the Unit Price to the nearest whole
-      dollar - do not multiply by quantity. <strong>Line Total:</strong> pick your Quantity and calculate Quantity
-      &times; Unit Price. Check each one on its own - 2 tries before that field locks with the correct math shown.
+      These are two separate checks. <strong>Rounded Estimate:</strong> round the Unit Price to the nearest whole
+      dollar, then multiply by your Quantity. <strong>Line Total:</strong> multiply the exact Quantity &times; Unit
+      Price. Check each one on its own - unlimited tries, but every attempt counts, and the field locks the moment
+      you get it right.
     </div>
 
     <div id="cart-dropzone" class="cart-dropzone" ondragover="allowCartDrop(event)" ondragleave="cartDragLeave(event)" ondrop="cartDrop(event)">
@@ -442,7 +451,7 @@
             <th>Item</th>
             <th>Unit Price</th>
             <th>Qty</th>
-            <th>Rounded Estimate</th>
+            <th>Rounded Estimate (Round Price &times; Qty)</th>
             <th>Line Total (Qty &times; Price)</th>
           </tr>
         </thead>
@@ -451,22 +460,36 @@
       <p id="cart-empty-msg" class="cart-empty">Drag items from the Store Catalog above into this box (or tap "Add to Cart"). Choose 5 to 8 items.</p>
     </div>
 
-    <div class="budget-meter-wrap">
-      <div class="budget-meter"><div class="budget-fill" id="budget-fill"></div></div>
-      <p class="budget-label" id="budget-label">$0.00 locked in of $100.00 (0 of 8 items)</p>
+    <div class="challenge-box">
+      <strong>Step 1: Estimated Total (Addition of your Rounded Estimates)</strong> - once every row's Rounded
+      Estimate is checked and locked, add that whole column by hand and type your Estimated Total below.
+      <div class="calc-row">
+        Estimated Total: $
+        <input type="text" class="cell-input" id="estimatedtotal-input" placeholder="0.00">
+        <button class="row-check-btn" id="estimatedtotal-btn" onclick="checkEstimatedTotal()" disabled>Check Estimated Total</button>
+      </div>
+      <div class="feedback-msg" id="estimatedtotal-feedback"></div>
     </div>
 
     <div class="challenge-box">
-      <strong>Step: Grand Total (Addition)</strong> - once every row above is checked/locked, add the whole Line Total
-      column by hand and type your Grand Total below.
+      <strong>Step 2: Grand Total (Addition of your exact Line Totals)</strong> - once every row above is fully
+      checked/locked, add the whole Line Total column by hand and type your Grand Total below.
       <div class="calc-row">
         Grand Total Spent: $
         <input type="text" class="cell-input" id="grandtotal-input" placeholder="0.00">
-        <button class="row-check-btn" id="grandtotal-btn" onclick="checkGrandTotal()">Check Grand Total</button>
+        <button class="row-check-btn" id="grandtotal-btn" onclick="checkGrandTotal()" disabled>Check Grand Total</button>
       </div>
       <div class="feedback-msg" id="grandtotal-feedback"></div>
+    </div>
+
+    <div class="budget-meter-wrap" id="budget-meter-wrap" style="display:none;">
+      <div class="budget-meter"><div class="budget-fill" id="budget-fill"></div></div>
+      <p class="budget-label" id="budget-label"></p>
       <div id="budget-checkin" style="text-align:center;"></div>
     </div>
+    <p id="budget-meter-hint" style="text-align:center; color:#475569; font-style:italic;">
+      Your budget bar will appear here once your Grand Total is checked and correct - add up the column yourself first!
+    </p>
 
     <div style="text-align:center; margin-top:10px;">
       <span class="time-chip">40-45 min: teacher check-in</span>
@@ -557,6 +580,10 @@
               <option value="#dbeafe">Sky Blue</option>
               <option value="#dcfce7">Garden Green</option>
               <option value="#fed7aa">Clay Terracotta</option>
+              <option value="#fce7f3">Blossom Pink</option>
+              <option value="#e0e7ff">Twilight Lavender</option>
+              <option value="#f1f5f9">Stone Gray</option>
+              <option value="#ffffff">Fresh White</option>
             </select>
           </div>
           <div class="form-group">
@@ -565,13 +592,35 @@
               <option value="sign-rustic">Rustic Wood</option>
               <option value="sign-picket">Painted Picket</option>
               <option value="sign-vine">Vine Wrap</option>
+              <option value="sign-stone">Stone Tablet</option>
+              <option value="sign-metal">Modern Metal</option>
+              <option value="sign-cloud">Whimsical Cloud</option>
             </select>
           </div>
           <div class="form-group">
-            <label>Stickers (pick up to 2)</label>
+            <label for="sign-text-color">Text Color</label>
+            <select id="sign-text-color" class="form-control-lg" onchange="renderSign()">
+              <option value="#3b2412">Earth Brown</option>
+              <option value="#1e3a8a">Deep Blue</option>
+              <option value="#15803d">Forest Green</option>
+              <option value="#7c3aed">Royal Purple</option>
+              <option value="#0f172a">Ink Black</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="sign-font-select">Lettering Style</label>
+            <select id="sign-font-select" class="form-control-lg" onchange="renderSign()">
+              <option value="'Montserrat', sans-serif">Classic</option>
+              <option value="Georgia, 'Times New Roman', serif">Storybook Serif</option>
+              <option value="'Brush Script MT', cursive">Handwritten</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Stickers (pick up to 3)</label>
             <div class="sticker-choices" id="sticker-choices"></div>
           </div>
-          <button class="row-check-btn" onclick="lockSign()">Lock My Sign</button>
+          <button class="row-check-btn" id="lock-sign-btn" onclick="lockSign()">Lock My Sign</button>
+          <button class="row-check-btn" style="background:var(--accent);" onclick="downloadSign()">Download My Sign</button>
           <div class="feedback-msg" id="sign-feedback"></div>
         </div>
         <div class="sign-preview-wrap">
@@ -598,13 +647,29 @@
           <div id="stamp-detail" class="stamp-sub"></div>
         </div>
       </div>
+
+      <div class="section-title" style="font-size:1.3rem;">Celebrate! Download Your Badge</div>
+      <div class="station-card" style="text-align:center;">
+        <p style="color:#475569;">Make sure both team member names are filled in at the top of the page, then download a
+          completion badge with your names, your Grand Total, and your average cost per plant.</p>
+        <button class="row-check-btn" onclick="downloadBadge()">Download Completion Badge</button>
+        <div class="feedback-msg" id="badge-feedback"></div>
+      </div>
     </div>
   </div>
 </div>
 
+<canvas id="render-canvas" style="display:none;"></canvas>
+
 <div id="print-report"></div>
 
 <script>
+  function syncTeamName() {
+    const n1 = document.getElementById('team-name-1').value.trim();
+    const n2 = document.getElementById('team-name-2').value.trim();
+    document.getElementById('student-name').value = [n1, n2].filter(Boolean).join(' & ');
+  }
+
   function switchTab(tabId) {
     document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
@@ -613,17 +678,80 @@
   }
 
   // ================================================================
+  // HAND-DRAWN ICONS (inline SVG - no external icon library, matches the
+  // site's convention of shipping every asset inline)
+  // ================================================================
+  function flowerIcon(petalColor, centerColor, petalCount) {
+    let petals = '';
+    for (let i = 0; i < petalCount; i++) {
+      const angle = (360 / petalCount) * i;
+      petals += `<ellipse cx="20" cy="9" rx="5" ry="9" fill="${petalColor}" transform="rotate(${angle} 20 20)"/>`;
+    }
+    return `<svg viewBox="0 0 40 40" width="100%" height="100%">${petals}<circle cx="20" cy="20" r="7" fill="${centerColor}"/></svg>`;
+  }
+  function fernIcon() {
+    const color = '#16a34a';
+    const branches = [10, 16, 22, 28].map((y) =>
+      `<path d="M20 ${y} L${20 - 9} ${y - 6} M20 ${y} L${20 + 9} ${y - 6}" stroke="${color}" stroke-width="2" fill="none" stroke-linecap="round"/>`
+    ).join('');
+    return `<svg viewBox="0 0 40 40" width="100%" height="100%"><line x1="20" y1="34" x2="20" y2="8" stroke="${color}" stroke-width="2"/>${branches}</svg>`;
+  }
+  function lavenderIcon() {
+    let buds = '';
+    for (let i = 0; i < 6; i++) buds += `<ellipse cx="20" cy="${7 + i * 3}" rx="3.2" ry="2.2" fill="#8b5cf6"/>`;
+    return `<svg viewBox="0 0 40 40" width="100%" height="100%"><line x1="20" y1="34" x2="20" y2="22" stroke="#4d7c0f" stroke-width="2"/>${buds}</svg>`;
+  }
+  function soilBagIcon() {
+    return `<svg viewBox="0 0 40 40" width="100%" height="100%">
+      <path d="M10 14 L30 14 L28 34 L12 34 Z" fill="#a5691f" stroke="#7a4a13" stroke-width="1.5"/>
+      <path d="M13 14 L27 14 L25 8 L15 8 Z" fill="#c98a3d" stroke="#7a4a13" stroke-width="1.5"/>
+    </svg>`;
+  }
+  function stonesIcon() {
+    return `<svg viewBox="0 0 40 40" width="100%" height="100%">
+      <ellipse cx="13" cy="25" rx="9" ry="6" fill="#94a3b8"/>
+      <ellipse cx="27" cy="26" rx="8" ry="5.5" fill="#cbd5e1"/>
+      <ellipse cx="20" cy="19" rx="7" ry="5" fill="#64748b"/>
+    </svg>`;
+  }
+  function birdbathIcon() {
+    return `<svg viewBox="0 0 40 40" width="100%" height="100%">
+      <path d="M17 34 L23 34 L21 21 L19 21 Z" fill="#94a3b8"/>
+      <rect x="14" y="33" width="12" height="3" rx="1" fill="#64748b"/>
+      <ellipse cx="20" cy="19" rx="14" ry="5" fill="#cbd5e1" stroke="#64748b" stroke-width="1"/>
+      <ellipse cx="20" cy="18" rx="10" ry="3.2" fill="#7dd3fc"/>
+    </svg>`;
+  }
+  function stakeIcon() {
+    return `<svg viewBox="0 0 40 40" width="100%" height="100%">
+      <line x1="20" y1="35" x2="20" y2="16" stroke="#7a4a13" stroke-width="3"/>
+      <rect x="8" y="6" width="24" height="12" rx="2" fill="#deb887" stroke="#7a4a13" stroke-width="1.5"/>
+      <line x1="12" y1="12" x2="28" y2="12" stroke="#7a4a13" stroke-width="1.5" opacity="0.5"/>
+    </svg>`;
+  }
+  const ICONS = {
+    'P-01': flowerIcon('#f5c400', '#7a4a13', 12),
+    'P-02': flowerIcon('#ff8c1a', '#b3410c', 14),
+    'P-03': fernIcon(),
+    'P-04': lavenderIcon(),
+    'S-01': soilBagIcon(),
+    'S-02': stonesIcon(),
+    'D-01': birdbathIcon(),
+    'D-02': stakeIcon()
+  };
+
+  // ================================================================
   // DATA
   // ================================================================
   const CATALOG = [
-    { code: 'P-01', name: 'Sunflower Pack (3 plants)', category: 'Flowers', sun: 'Full Sun', price: 4.25, plant: true, emoji: '🌻', bg: '#fef08a', border: '#ca8a04' },
-    { code: 'P-02', name: 'Marigold Pot', category: 'Flowers', sun: 'Full Sun', price: 2.80, plant: true, emoji: '🌼', bg: '#fed7aa', border: '#ea580c' },
-    { code: 'P-03', name: 'Fern Plant', category: 'Foliage', sun: 'Shade', price: 5.15, plant: true, emoji: '🌿', bg: '#bbf7d0', border: '#16a34a' },
-    { code: 'P-04', name: 'Lavender Bush', category: 'Herbs/Flowers', sun: 'Full Sun', price: 6.50, plant: true, emoji: '🪻', bg: '#e9d5ff', border: '#7c3aed' },
-    { code: 'S-01', name: 'Potting Soil Bag (10 lbs)', category: 'Supplies', sun: 'N/A', price: 7.40, plant: false, emoji: '🟫', bg: '#e7d3b8', border: '#92400e' },
-    { code: 'S-02', name: 'Bag of Decorative River Stones', category: 'Supplies', sun: 'N/A', price: 8.95, plant: false, emoji: '🪨', bg: '#e2e8f0', border: '#64748b' },
-    { code: 'D-01', name: 'Bird Bath Fountain', category: 'Decoration', sun: 'N/A', price: 24.50, plant: false, emoji: '⛲', bg: '#bae6fd', border: '#0284c7' },
-    { code: 'D-02', name: 'Wooden Garden Stake', category: 'Decoration', sun: 'N/A', price: 3.10, plant: false, emoji: '🪧', bg: '#fde68a', border: '#b45309' }
+    { code: 'P-01', name: 'Sunflower Pack (3 plants)', category: 'Flowers', sun: 'Full Sun', price: 4.25, plant: true, bg: '#fef08a', border: '#ca8a04' },
+    { code: 'P-02', name: 'Marigold Pot', category: 'Flowers', sun: 'Full Sun', price: 2.80, plant: true, bg: '#fed7aa', border: '#ea580c' },
+    { code: 'P-03', name: 'Fern Plant', category: 'Foliage', sun: 'Shade', price: 5.15, plant: true, bg: '#bbf7d0', border: '#16a34a' },
+    { code: 'P-04', name: 'Lavender Bush', category: 'Herbs/Flowers', sun: 'Full Sun', price: 6.50, plant: true, bg: '#e9d5ff', border: '#7c3aed' },
+    { code: 'S-01', name: 'Potting Soil Bag (10 lbs)', category: 'Supplies', sun: 'N/A', price: 7.40, plant: false, bg: '#e7d3b8', border: '#92400e' },
+    { code: 'S-02', name: 'Bag of Decorative River Stones', category: 'Supplies', sun: 'N/A', price: 8.95, plant: false, bg: '#e2e8f0', border: '#64748b' },
+    { code: 'D-01', name: 'Bird Bath Fountain', category: 'Decoration', sun: 'N/A', price: 24.50, plant: false, bg: '#bae6fd', border: '#0284c7' },
+    { code: 'D-02', name: 'Wooden Garden Stake', category: 'Decoration', sun: 'N/A', price: 3.10, plant: false, bg: '#fde68a', border: '#b45309' }
   ];
   const CATALOG_BY_CODE = Object.fromEntries(CATALOG.map((c) => [c.code, c]));
 
@@ -632,13 +760,47 @@
     { ref: 'Genesis 1:31', text: "God saw everything that he had made, and indeed, it was very good." },
     { ref: 'Psalm 24:1', text: "The earth is the LORD's and everything in it, the world, and those who live in it." },
     { ref: 'Psalm 19:1', text: "The heavens declare the glory of God, and the sky proclaims his handiwork." },
+    { ref: 'Genesis 2:15', text: "The LORD God took the man and put him in the garden to work it and take care of it." },
+    { ref: 'Psalm 65:9', text: "You care for the land and water it; you enrich it abundantly." },
+    { ref: 'Colossians 1:16', text: "For in him all things were created, in heaven and on earth." },
+    { ref: 'Psalm 96:12', text: "Let the fields be jubilant, and everything in them; let all the trees of the forest sing for joy." },
+    { ref: 'Job 12:7-8', text: "Ask the animals, and they will teach you, or the birds, and they will tell you; speak to the earth, and it will teach you." },
     { ref: 'Custom', text: '' }
   ];
 
-  const STICKERS = ['🌻', '🐝', '🦋', '🌈', '☀️', '🐦'];
+  const STICKERS = ['🌻', '🐝', '🦋', '🌈', '☀️', '🐦', '🌿', '💧', '🌙', '⭐', '🍃', '🐞'];
 
   const round2 = (n) => Math.round(n * 100) / 100;
   const fmt2 = (n) => n.toFixed(2);
+  const slug = (s) => (s || '').replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '') || 'student';
+
+  // ================================================================
+  // UNLIMITED-ATTEMPT GRADING (this project overrides the shared
+  // LessonCheck 2-try-then-reveal flow: attempts are unlimited, a field
+  // locks only once solved, and the attempt count is logged into the
+  // printed report instead of being capped).
+  // ================================================================
+  const attemptCounts = {};
+  const solvedKeys = {};
+
+  function gradeAttempt(key, isCorrect, feedbackEl, messages, record) {
+    if (solvedKeys[key]) return 'correct';
+    attemptCounts[key] = (attemptCounts[key] || 0) + 1;
+    const n = attemptCounts[key];
+    feedbackEl.style.display = 'block';
+    if (isCorrect) {
+      solvedKeys[key] = true;
+      feedbackEl.className = 'feedback-msg success locked';
+      feedbackEl.innerHTML = `${messages.correct} <span style="opacity:.75; font-weight:700;">(solved in ${n} attempt${n === 1 ? '' : 's'})</span>`;
+      if (record) {
+        LessonProgress.record(key, record.label, `${record.answer} - ${n} attempt${n === 1 ? '' : 's'}`, 'correct', record.section);
+      }
+      return 'correct';
+    }
+    feedbackEl.className = 'feedback-msg error';
+    feedbackEl.innerHTML = `${messages.retry || "That's not correct yet - try again."} <span style="opacity:.75;">(attempt ${n})</span>`;
+    return 'retry';
+  }
 
   // ================================================================
   // DAY 1 - CATALOG + LEDGER
@@ -656,7 +818,8 @@
         <div class="catalog-card${disabled ? ' disabled' : ''}" style="background:${item.bg}; border-color:${item.border};"
              draggable="${disabled ? 'false' : 'true'}" ondragstart="onCatalogDragStart(event,'${item.code}')">
           <div class="catalog-code">${item.code} &middot; ${item.category}${item.sun !== 'N/A' ? ' &middot; ' + item.sun : ''}</div>
-          <div class="catalog-name">${item.emoji} ${item.name}</div>
+          <div class="catalog-icon">${ICONS[item.code]}</div>
+          <div class="catalog-name">${item.name}</div>
           <div class="catalog-meta">${item.plant ? 'Counts toward plant total' : 'Supplies / decoration'}</div>
           <div class="catalog-price">$${fmt2(item.price)}</div>
           <button class="catalog-add-btn" ${disabled ? 'disabled' : ''} onclick="addToCart('${item.code}')">
@@ -733,7 +896,7 @@
       const canRemove = !row.roundLocked && !row.totalLocked;
       return `
         <tr id="row-${code}" class="${bothLocked ? 'row-locked' : ''}">
-          <td class="item-cell">${item.emoji} ${item.name}
+          <td class="item-cell"><span class="ledger-icon">${ICONS[code]}</span>${item.name}
             ${bothLocked ? '<span class="locked-flag">Locked</span>' : (canRemove ? `<button class="remove-btn" onclick="removeItem('${code}')" title="Remove">&times;</button>` : '')}
           </td>
           <td>$${fmt2(item.price)}</td>
@@ -781,28 +944,30 @@
     const item = CATALOG_BY_CODE[code];
     const row = cart[code];
     const feedbackEl = document.getElementById(`round-feedback-${code}`);
+    const qty = parseInt(document.getElementById(`qty-${code}`).value, 10) || 0;
     const given = document.getElementById(`round-${code}`).value;
 
-    if (given.trim() === '') {
-      LessonCheck.incomplete(feedbackEl, 'Type your rounded estimate first.');
+    if (qty < 1 || given.trim() === '') {
+      LessonCheck.incomplete(feedbackEl, 'Pick a Quantity and type your Rounded Estimate before checking.');
       return;
     }
     row.roundGiven = given;
 
-    const expected = Math.round(item.price);
+    const roundedPrice = Math.round(item.price);
+    const expected = roundedPrice * qty;
     const isCorrect = LessonCheck.numericMatch(given, expected, 0.01);
-    const messages = {
-      correct: `Correct! $${fmt2(item.price)} rounds to $${expected}.00.`,
-      retry: `Round just the Unit Price ($${fmt2(item.price)}) to the nearest whole dollar - don't multiply by quantity.`,
-      reveal: `$${fmt2(item.price)} rounds to $${expected}.00 (round the unit price alone, not &times; quantity).`
-    };
-    const outcome = LessonCheck.check(`round-${code}`, isCorrect, feedbackEl, messages, {
+    const outcome = gradeAttempt(`round-${code}`, isCorrect, feedbackEl, {
+      correct: `Correct! $${fmt2(item.price)} rounds to $${roundedPrice}.00, &times; ${qty} = $${fmt2(expected)}.`,
+      retry: `Round the Unit Price ($${fmt2(item.price)}) to the nearest whole dollar, then multiply by your Quantity (${qty}).`
+    }, {
       label: `${item.name} - Rounded Estimate`,
       answer: `$${given}`,
       section: 'Day 1 - Store Ledger'
     });
-    if (outcome === 'correct' || outcome === 'reveal') {
+    if (outcome === 'correct') {
       row.roundLocked = true;
+      row.qty = qty;
+      document.getElementById(`qty-${code}`).disabled = true;
       lockField(code, 'round');
       recomputeBudget();
     }
@@ -823,17 +988,15 @@
 
     const expected = round2(qty * item.price);
     const isCorrect = LessonCheck.numericMatch(given, expected, 0.01);
-    const messages = {
+    const outcome = gradeAttempt(`total-${code}`, isCorrect, feedbackEl, {
       correct: `Correct! ${qty} &times; $${fmt2(item.price)} = $${fmt2(expected)}.`,
-      retry: 'Multiply Quantity &times; Unit Price again.',
-      reveal: `${qty} &times; $${fmt2(item.price)} = $${fmt2(expected)}.`
-    };
-    const outcome = LessonCheck.check(`total-${code}`, isCorrect, feedbackEl, messages, {
+      retry: 'Multiply Quantity &times; Unit Price again.'
+    }, {
       label: `${item.name} - Line Total`,
       answer: `Qty ${qty} &times; $${fmt2(item.price)} = $${given}`,
       section: 'Day 1 - Store Ledger'
     });
-    if (outcome === 'correct' || outcome === 'reveal') {
+    if (outcome === 'correct') {
       row.totalLocked = true;
       row.correctTotal = expected;
       row.qty = qty;
@@ -844,19 +1007,36 @@
   }
 
   function recomputeBudget() {
-    const totalLockedCodes = cartOrder.filter((c) => cart[c].totalLocked);
+    const roundLockedCodes = cartOrder.filter((c) => cart[c].roundLocked);
     const fullyLockedCodes = cartOrder.filter((c) => cart[c].roundLocked && cart[c].totalLocked);
-    const spent = round2(totalLockedCodes.reduce((sum, c) => sum + cart[c].correctTotal, 0));
-    const pct = Math.min(100, (spent / 100) * 100);
-    const fill = document.getElementById('budget-fill');
-    fill.style.width = pct + '%';
-    fill.className = 'budget-fill' + (spent > 100 ? ' over' : (spent > 85 ? '' : ' warn'));
-    document.getElementById('budget-label').textContent =
-      `$${fmt2(spent)} locked in of $100.00 (${fullyLockedCodes.length} of ${cartOrder.length} item${cartOrder.length === 1 ? '' : 's'} fully checked)`;
+    document.getElementById('estimatedtotal-btn').disabled =
+      !(cartOrder.length > 0 && roundLockedCodes.length === cartOrder.length);
+    document.getElementById('grandtotal-btn').disabled =
+      !(cartOrder.length > 0 && fullyLockedCodes.length === cartOrder.length);
+  }
 
-    const btn = document.getElementById('grandtotal-btn');
-    const allLocked = cartOrder.length > 0 && fullyLockedCodes.length === cartOrder.length;
-    btn.disabled = !allLocked;
+  function checkEstimatedTotal() {
+    const feedbackEl = document.getElementById('estimatedtotal-feedback');
+    const roundLockedCodes = cartOrder.filter((c) => cart[c].roundLocked);
+    if (cartOrder.length === 0 || roundLockedCodes.length < cartOrder.length) {
+      LessonCheck.incomplete(feedbackEl, "Check and lock every row's Rounded Estimate first.");
+      return;
+    }
+    const given = document.getElementById('estimatedtotal-input').value;
+    const expected = round2(roundLockedCodes.reduce((sum, c) => sum + Math.round(CATALOG_BY_CODE[c].price) * cart[c].qty, 0));
+    const isCorrect = LessonCheck.numericMatch(given, expected, 0.01);
+    const outcome = gradeAttempt('estimatedtotal', isCorrect, feedbackEl, {
+      correct: `Correct! Your Estimated Total is $${fmt2(expected)}.`,
+      retry: 'Add up your Rounded Estimate column again.'
+    }, {
+      label: 'Estimated Total (Addition)',
+      answer: `$${given}`,
+      section: 'Day 1 - Store Ledger'
+    });
+    if (outcome === 'correct') {
+      document.getElementById('estimatedtotal-input').disabled = true;
+      document.getElementById('estimatedtotal-btn').disabled = true;
+    }
   }
 
   function checkGrandTotal() {
@@ -870,26 +1050,37 @@
     const given = document.getElementById('grandtotal-input').value;
     const expected = round2(lockedCodes.reduce((sum, c) => sum + cart[c].correctTotal, 0));
     const isCorrect = LessonCheck.numericMatch(given, expected, 0.01);
-    const messages = {
+    const outcome = gradeAttempt('grandtotal', isCorrect, feedbackEl, {
       correct: `Correct! Your Grand Total is $${fmt2(expected)}.`,
-      retry: 'Add up the Line Total column again - line up your decimal points.',
-      reveal: `The Grand Total is $${fmt2(expected)}.`
-    };
-    const outcome = LessonCheck.check('grandtotal', isCorrect, feedbackEl, messages, {
+      retry: 'Add up the Line Total column again - line up your decimal points.'
+    }, {
       label: 'Grand Total Spent (Addition)',
       answer: `$${given}`,
       section: 'Day 1 - Store Ledger'
     });
-    if (outcome === 'correct' || outcome === 'reveal') {
+    if (outcome === 'correct') {
       window.grandTotal = expected;
       day1Locked = true;
       document.getElementById('grandtotal-input').disabled = true;
       document.getElementById('grandtotal-btn').disabled = true;
       renderCatalog();
       renderCart();
+      revealBudgetMeter(expected);
       showBudgetCheckin(expected);
       unlockDay2();
     }
+  }
+
+  function revealBudgetMeter(spent) {
+    document.getElementById('budget-meter-hint').style.display = 'none';
+    const wrap = document.getElementById('budget-meter-wrap');
+    wrap.style.display = 'block';
+    const pct = Math.min(100, (spent / 100) * 100);
+    const fill = document.getElementById('budget-fill');
+    fill.style.width = pct + '%';
+    fill.className = 'budget-fill' + (spent > 100 ? ' over' : (spent > 85 ? '' : ' warn'));
+    document.getElementById('budget-label').textContent =
+      `$${fmt2(spent)} spent of $100.00 across ${cartOrder.length} item${cartOrder.length === 1 ? '' : 's'}.`;
   }
 
   function showBudgetCheckin(total) {
@@ -918,19 +1109,21 @@
   function checkLeftover() {
     const feedbackEl = document.getElementById('leftover-feedback');
     const given = document.getElementById('leftover-input').value;
+    if (given.trim() === '') {
+      LessonCheck.incomplete(feedbackEl, 'Type your leftover amount first.');
+      return;
+    }
     const expected = round2(100 - window.grandTotal);
     const isCorrect = LessonCheck.numericMatch(given, expected, 0.01);
-    const messages = {
+    const outcome = gradeAttempt('leftover', isCorrect, feedbackEl, {
       correct: `Correct! $100.00 &minus; $${fmt2(window.grandTotal)} = $${fmt2(expected)} left over.`,
-      retry: 'Subtract your Grand Total from $100.00 again.',
-      reveal: `$100.00 &minus; $${fmt2(window.grandTotal)} = $${fmt2(expected)}.`
-    };
-    const outcome = LessonCheck.check('leftover', isCorrect, feedbackEl, messages, {
+      retry: 'Subtract your Grand Total from $100.00 again.'
+    }, {
       label: 'Leftover Budget (Subtraction)',
       answer: `$${given}`,
       section: 'Day 2 - Budget & Division'
     });
-    if (outcome === 'correct' || outcome === 'reveal') document.getElementById('leftover-input').disabled = true;
+    if (outcome === 'correct') document.getElementById('leftover-input').disabled = true;
   }
 
   function checkDivision() {
@@ -951,17 +1144,16 @@
     const countOK = LessonCheck.numericMatch(countGiven, window.plantCountExpected, 0.5);
     const avgOK = LessonCheck.numericMatch(avgGiven, expectedAvg, 0.01);
     const isCorrect = costOK && countOK && avgOK;
-    const messages = {
+    const outcome = gradeAttempt('division', isCorrect, feedbackEl, {
       correct: `Correct! $${fmt2(window.plantCostExpected)} &divide; ${window.plantCountExpected} = $${fmt2(expectedAvg)} per plant.`,
-      retry: "Check each part: Total Plant Cost, Number of Plants, and the division itself.",
-      reveal: `Total Spent on Plants: $${fmt2(window.plantCostExpected)} &divide; Number of Plants: ${window.plantCountExpected} = $${fmt2(expectedAvg)} per plant.`
-    };
-    const outcome = LessonCheck.check('division', isCorrect, feedbackEl, messages, {
+      retry: "Check each part: Total Plant Cost, Number of Plants, and the division itself."
+    }, {
       label: 'Average Cost per Plant (Division)',
       answer: `$${costGiven} ÷ ${countGiven} = $${avgGiven}`,
       section: 'Day 2 - Budget & Division'
     });
-    if (outcome === 'correct' || outcome === 'reveal') {
+    if (outcome === 'correct') {
+      window.plantAvgAchieved = expectedAvg;
       ['plantcost-input', 'plantcount-input', 'plantavg-input'].forEach((id) => { document.getElementById(id).disabled = true; });
     }
   }
@@ -1007,7 +1199,7 @@
     const t = tokens.find((tk) => tk.id === id);
     const item = CATALOG_BY_CODE[t.code];
     const isReal = gardenView === 'real';
-    const content = isReal ? item.emoji : t.code.replace('-', '');
+    const content = isReal ? ICONS[t.code] : t.code.replace('-', '');
     const selCls = (!inGrid && selectedToken === id) ? ' selected' : '';
     const lockCls = gardenLocked ? ' locked' : '';
     const clickAttr = inGrid ? `onclick="event.stopPropagation(); clickGridToken(${id})"` : `onclick="clickTrayToken(${id})"`;
@@ -1134,25 +1326,33 @@
 
   function onStickerChange(e) {
     const checked = document.querySelectorAll('.sticker-cb:checked');
-    if (checked.length > 2) { e.target.checked = false; }
+    if (checked.length > 3) { e.target.checked = false; }
     renderSign();
   }
 
-  function renderSign() {
+  function getVerseInUse() {
     const idx = parseInt(document.getElementById('verse-select').value, 10);
     const verse = VERSES[idx];
-    let text = verse.text, ref = verse.ref;
-    if (verse.ref === 'Custom') {
-      text = document.getElementById('custom-verse-text').value || 'Write your creation verse...';
-      ref = document.getElementById('custom-verse-ref').value || '';
-    }
+    if (verse.ref !== 'Custom') return { text: verse.text, ref: verse.ref };
+    return {
+      text: document.getElementById('custom-verse-text').value || 'Write your creation verse...',
+      ref: document.getElementById('custom-verse-ref').value || ''
+    };
+  }
+
+  function renderSign() {
+    const { text, ref } = getVerseInUse();
     const bg = document.getElementById('sign-bg-select').value;
     const borderClass = document.getElementById('sign-border-select').value;
+    const textColor = document.getElementById('sign-text-color').value;
+    const fontFamily = document.getElementById('sign-font-select').value;
     const stickers = [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value).join(' ');
 
     const preview = document.getElementById('sign-preview');
     preview.className = `sign-preview ${borderClass}`;
     preview.style.backgroundColor = bg;
+    preview.style.color = textColor;
+    preview.style.fontFamily = fontFamily;
     preview.innerHTML = `
       <div class="sign-verse">"${text}"</div>
       ${ref ? `<div class="sign-ref">- ${ref}</div>` : ''}
@@ -1161,24 +1361,187 @@
   }
 
   function lockSign() {
+    const { text, ref } = getVerseInUse();
     const idx = parseInt(document.getElementById('verse-select').value, 10);
-    const verse = VERSES[idx];
-    let text = verse.text, ref = verse.ref;
-    if (verse.ref === 'Custom') {
-      text = document.getElementById('custom-verse-text').value.trim();
-      ref = document.getElementById('custom-verse-ref').value.trim();
-      if (!text) {
-        LessonCheck.incomplete(document.getElementById('sign-feedback'), 'Write your creation verse before locking your sign.');
-        return;
-      }
+    if (VERSES[idx].ref === 'Custom' && !document.getElementById('custom-verse-text').value.trim()) {
+      LessonCheck.incomplete(document.getElementById('sign-feedback'), 'Write your creation verse before locking your sign.');
+      return;
     }
-    document.querySelectorAll('.sign-controls select, .sign-controls input, .sign-controls textarea, .sign-controls button').forEach((el) => { el.disabled = true; });
+    document.querySelectorAll('.sign-controls select, .sign-controls input, .sign-controls textarea, #lock-sign-btn').forEach((el) => { el.disabled = true; });
     LessonCheck.submit(document.getElementById('sign-feedback'), {
       key: 'creation-sign',
       label: 'Creation Sign (Art & Religion)',
       answer: `"${text}" - ${ref}`,
       section: 'Day 2 - Creation Sign'
     }, 'Your creation sign is locked in!');
+  }
+
+  // ================================================================
+  // DOWNLOADS: completion badge + creation sign, both rendered to a
+  // hidden <canvas> and saved via a real anchor download. This is a
+  // normal static webpage (not a sandboxed preview), so browser file
+  // downloads work the standard way.
+  // ================================================================
+  function wrapCanvasText(ctx, text, maxWidth) {
+    const words = text.split(' ');
+    const lines = [];
+    let line = '';
+    words.forEach((w) => {
+      const test = line ? `${line} ${w}` : w;
+      if (ctx.measureText(test).width > maxWidth && line) {
+        lines.push(line);
+        line = w;
+      } else {
+        line = test;
+      }
+    });
+    if (line) lines.push(line);
+    return lines;
+  }
+
+  function triggerDownload(canvas, filename) {
+    canvas.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  function downloadBadge() {
+    const feedbackEl = document.getElementById('badge-feedback');
+    const name1 = document.getElementById('team-name-1').value.trim();
+    const name2 = document.getElementById('team-name-2').value.trim();
+    if (!name1 || !name2) {
+      LessonCheck.incomplete(feedbackEl, 'Type both team member names at the top of the page first.');
+      return;
+    }
+    const canvas = document.getElementById('render-canvas');
+    canvas.width = 900;
+    canvas.height = 650;
+    const ctx = canvas.getContext('2d');
+
+    const grad = ctx.createLinearGradient(0, 0, 900, 650);
+    grad.addColorStop(0, '#dcfce7');
+    grad.addColorStop(1, '#dbeafe');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 900, 650);
+
+    ctx.strokeStyle = '#1e3a8a';
+    ctx.lineWidth = 14;
+    ctx.strokeRect(20, 20, 860, 610);
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(38, 38, 824, 574);
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#1e3a8a';
+    ctx.font = "800 24px 'Montserrat', sans-serif";
+    ctx.fillText('LINCOLN INTERNATIONAL ACADEMY', 450, 90);
+
+    ctx.font = "900 40px 'Montserrat', sans-serif";
+    ctx.fillStyle = '#0f172a';
+    ctx.fillText("Laudato Si' Eco-Garden", 450, 150);
+    ctx.font = "700 20px 'Montserrat', sans-serif";
+    ctx.fillStyle = '#334155';
+    ctx.fillText('STREAM Project - Certificate of Completion', 450, 182);
+
+    ctx.font = '28px sans-serif';
+    ctx.fillText('🌻 🌼 🌿 💜 🌻 🌼 🌿 💜', 450, 228);
+
+    ctx.font = "700 22px 'Montserrat', sans-serif";
+    ctx.fillStyle = '#0f172a';
+    ctx.fillText('This certifies that', 450, 275);
+
+    ctx.font = "900 32px 'Montserrat', sans-serif";
+    ctx.fillStyle = '#15803d';
+    ctx.fillText(`${name1} & ${name2}`, 450, 320);
+
+    ctx.font = "700 20px 'Montserrat', sans-serif";
+    ctx.fillStyle = '#0f172a';
+    ctx.fillText("successfully designed a Laudato Si' Eco-Garden", 450, 365);
+    ctx.fillText("while caring for creation and their $100.00 budget.", 450, 393);
+
+    const grand = window.grandTotal != null ? `$${fmt2(window.grandTotal)}` : 'not recorded';
+    const avg = window.plantAvgAchieved != null ? `$${fmt2(window.plantAvgAchieved)}` : 'not recorded';
+    ctx.font = "800 19px 'Montserrat', sans-serif";
+    ctx.fillStyle = '#1e3a8a';
+    ctx.fillText(`Grand Total Spent: ${grand}`, 450, 445);
+    ctx.fillText(`Average Cost per Plant: ${avg}`, 450, 475);
+
+    const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    ctx.font = "600 16px 'Montserrat', sans-serif";
+    ctx.fillStyle = '#475569';
+    ctx.fillText(today, 450, 570);
+
+    triggerDownload(canvas, `EcoGarden-Badge-${slug(name1)}-and-${slug(name2)}.png`);
+    LessonCheck.submit(feedbackEl, {
+      key: 'badge-download',
+      label: 'Completion Badge Downloaded',
+      answer: `${name1} & ${name2}`,
+      section: 'Day 2 - Celebrate'
+    }, 'Badge downloaded! Check your Downloads folder.');
+  }
+
+  function downloadSign() {
+    const feedbackEl = document.getElementById('sign-feedback');
+    const name1 = document.getElementById('team-name-1').value.trim();
+    const name2 = document.getElementById('team-name-2').value.trim();
+    if (!name1 || !name2) {
+      LessonCheck.incomplete(feedbackEl, 'Type both team member names at the top of the page before downloading your sign.');
+      return;
+    }
+    const { text, ref } = getVerseInUse();
+    const bg = document.getElementById('sign-bg-select').value;
+    const textColor = document.getElementById('sign-text-color').value;
+    const fontFamily = document.getElementById('sign-font-select').value.split(',')[0].replace(/'/g, '');
+    const borderClass = document.getElementById('sign-border-select').value;
+    const borderColors = {
+      'sign-rustic': '#92400e', 'sign-picket': '#16a34a', 'sign-vine': '#15803d',
+      'sign-stone': '#64748b', 'sign-metal': '#94a3b8', 'sign-cloud': '#38bdf8'
+    };
+    const stickers = [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value).join(' ');
+
+    const canvas = document.getElementById('render-canvas');
+    canvas.width = 700;
+    canvas.height = 800;
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(0, 0, 700, 800);
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#1e3a8a';
+    ctx.font = "800 26px 'Montserrat', sans-serif";
+    ctx.fillText(`Garden of ${name1} & ${name2}`, 350, 55);
+
+    const boxX = 70, boxY = 100, boxW = 560, boxH = 570;
+    ctx.fillStyle = bg;
+    ctx.fillRect(boxX, boxY, boxW, boxH);
+    ctx.strokeStyle = borderColors[borderClass] || '#92400e';
+    ctx.lineWidth = 14;
+    ctx.strokeRect(boxX, boxY, boxW, boxH);
+
+    ctx.fillStyle = textColor;
+    ctx.font = `700 28px ${fontFamily}, sans-serif`;
+    const lines = wrapCanvasText(ctx, `"${text}"`, boxW - 80);
+    const startY = boxY + boxH / 2 - (lines.length * 18);
+    lines.forEach((l, i) => ctx.fillText(l, boxX + boxW / 2, startY + i * 38));
+
+    if (ref) {
+      ctx.font = `700 19px ${fontFamily}, sans-serif`;
+      ctx.fillText(`- ${ref}`, boxX + boxW / 2, startY + lines.length * 38 + 22);
+    }
+    if (stickers) {
+      ctx.font = '38px sans-serif';
+      ctx.fillText(stickers, boxX + boxW / 2, boxY + boxH - 36);
+    }
+
+    triggerDownload(canvas, `Garden-of-${slug(name1)}-and-${slug(name2)}.png`);
   }
 
   // ================================================================
