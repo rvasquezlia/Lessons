@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Laudato Si' Eco-Garden - STREAM Project</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+
+  <style>
+    /* ===== Page-specific additions on top of lesson-shared.css ===== */
+
+    .time-chip {
+      display: inline-block;
+      background: #1e293b;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 3px 12px;
+      border-radius: 12px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* STREAM pillar cards */
+    .pillar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 18px 0;
+    }
+    .pillar-card {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+    }
+    .pillar-letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      color: #fff;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+    .pillar-card h4 { margin: 4px 0; font-size: 0.95rem; color: var(--primary); }
+    .pillar-card p { margin: 0; font-size: 0.85rem; color: #475569; }
+
+    /* Store catalog */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+      margin: 16px 0 24px 0;
+    }
+    .catalog-card {
+      border-radius: 12px;
+      padding: 14px 16px;
+      cursor: grab;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transition: transform 0.12s ease;
+      border-width: 3px;
+      border-style: solid;
+    }
+    .catalog-card:hover { transform: translateY(-3px); }
+    .catalog-card.disabled { opacity: 0.45; cursor: not-allowed; }
+    .catalog-code { font-weight: 900; font-size: 0.78rem; letter-spacing: 0.5px; opacity: 0.75; }
+    .catalog-name { font-weight: 800; font-size: 1.02rem; margin: 4px 0; }
+    .catalog-meta { font-size: 0.8rem; opacity: 0.85; margin-bottom: 8px; }
+    .catalog-price { font-size: 1.15rem; font-weight: 900; }
+    .catalog-add-btn {
+      display: block;
+      width: 100%;
+      margin-top: 10px;
+      padding: 7px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.15);
+      color: #1e293b;
+      font-weight: 800;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+    .catalog-add-btn:hover { background: rgba(0,0,0,0.25); }
+    .catalog-drag-hint { font-size: 0.72rem; font-style: italic; opacity: 0.7; }
+
+    /* Ledger / cart table */
+    .cart-dropzone {
+      border-radius: 14px;
+      transition: box-shadow 0.15s ease, background 0.15s ease;
+    }
+    .cart-dropzone.drop-hover {
+      box-shadow: 0 0 0 4px #93c5fd inset;
+      background: #eff6ff;
+    }
+    .cart-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+    .cart-table th, .cart-table td {
+      border: 2px solid var(--border);
+      padding: 8px 10px;
+      text-align: center;
+      font-size: 0.92rem;
+      vertical-align: middle;
+    }
+    .cart-table th { background: #eff6ff; color: var(--primary); font-weight: 800; }
+    .cart-table td.item-cell { text-align: left; font-weight: 700; }
+    .cart-table input.cell-input {
+      width: 78px;
+      padding: 7px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      text-align: center;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .cart-table input[type="number"] { width: 60px; }
+    .row-check-btn {
+      background: var(--primary-light);
+      color: #fff;
+      border: none;
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.82rem;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+    .row-check-btn:hover { background: var(--primary); }
+    .remove-btn {
+      background: none;
+      border: none;
+      color: var(--error);
+      font-weight: 900;
+      cursor: pointer;
+      font-size: 0.85rem;
+      margin-left: 6px;
+    }
+    .row-feedback { margin: 6px 0 0 0; padding: 6px 8px; font-size: 0.82rem; }
+    tr.row-locked { background: #f8fafc; }
+    tr.row-locked input { background: #e2e8f0; }
+    .cart-empty {
+      text-align: center;
+      color: var(--empty, #64748b);
+      font-style: italic;
+      padding: 18px;
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+    }
+
+    /* Budget meter */
+    .budget-meter-wrap { margin: 18px 0; }
+    .budget-meter {
+      background: #e2e8f0;
+      border-radius: 20px;
+      height: 30px;
+      overflow: hidden;
+      border: 2px solid var(--border);
+      position: relative;
+    }
+    .budget-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #15803d, #22c55e);
+      transition: width 0.3s ease, background 0.3s ease;
+      width: 0%;
+    }
+    .budget-fill.warn { background: linear-gradient(90deg, #b45309, #f59e0b); }
+    .budget-fill.over { background: linear-gradient(90deg, #991b1b, #ef4444); }
+    .budget-label {
+      text-align: center;
+      font-weight: 800;
+      margin-top: 8px;
+      font-size: 1rem;
+    }
+    .budget-badge {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+    .budget-badge.good { background: var(--success-bg); color: var(--success); border: 2px solid var(--success); }
+    .budget-badge.bad { background: var(--error-bg); color: var(--error); border: 2px solid var(--error); }
+
+    .day2-locked-notice {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--empty, #64748b);
+      font-style: italic;
+      border: 3px dashed var(--border);
+      border-radius: 14px;
+      font-size: 1.05rem;
+    }
+
+    .recap-box {
+      background: #eff6ff;
+      border: 2px solid var(--primary-light);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 22px;
+      text-align: center;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .calc-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 14px 0;
+    }
+    .calc-row input.cell-input { width: 90px; }
+
+    /* Garden tray / grid */
+    .tray {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 66px;
+      background: #f1f5f9;
+      border: 3px dashed var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin: 14px 0;
+    }
+    .tray-empty { color: var(--empty, #64748b); font-style: italic; font-size: 0.9rem; }
+    .token {
+      width: 46px;
+      height: 46px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 0.78rem;
+      cursor: grab;
+      border: 3px solid var(--tborder, #64748b);
+      background: var(--tcol, #e2e8f0);
+      color: #1e293b;
+      user-select: none;
+    }
+    .token.real { font-size: 1.5rem; }
+    .token.selected { outline: 3px solid #f59e0b; outline-offset: 2px; transform: scale(1.08); }
+    .token.locked { cursor: not-allowed; opacity: 0.9; }
+
+    .grid6 {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+      max-width: 420px;
+      margin: 16px auto;
+      background: #d9e6d3;
+      padding: 12px;
+      border-radius: 14px;
+      border: 4px solid #6b7f5e;
+    }
+    .grid6.real-view { background: #cdead0; }
+    .cell {
+      aspect-ratio: 1;
+      border: 2px dashed rgba(0,0,0,0.25);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.55);
+    }
+    .cell .token { width: 100%; height: 100%; border-radius: 6px; cursor: pointer; }
+
+    .legend-row { display: flex; flex-wrap: wrap; gap: 10px 18px; justify-content: center; margin-top: 12px; font-size: 0.85rem; }
+    .legend-row span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 16px; height: 16px; border-radius: 4px; display: inline-block; border: 2px solid #64748b; }
+
+    /* Creation sign */
+    .sign-builder { display: flex; flex-wrap: wrap; gap: 24px; margin: 18px 0; }
+    .sign-controls { flex: 1 1 260px; }
+    .sign-controls .form-group { margin-bottom: 16px; }
+    .sign-preview-wrap { flex: 1 1 260px; display: flex; align-items: center; justify-content: center; }
+    .sign-preview {
+      width: 250px;
+      min-height: 170px;
+      padding: 22px 18px;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: #3b2412;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .sign-preview .sign-verse { font-size: 1rem; line-height: 1.4; }
+    .sign-preview .sign-ref { font-size: 0.82rem; font-weight: 700; opacity: 0.85; }
+    .sign-preview .sign-stickers { font-size: 1.6rem; letter-spacing: 6px; }
+    .sign-rustic { border: 8px solid #92400e; background: #fef3c7; }
+    .sign-picket { border: 6px dashed #16a34a; background: #ecfdf5; }
+    .sign-vine { border: 6px solid #15803d; background: #f0fdf4; }
+    .sticker-choices label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-right: 12px;
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+    .sticker-choices input { transform: scale(1.2); }
+
+    /* Peer audit stamp */
+    .audit-checks { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
+    .audit-checks label { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+    .stamp-display {
+      display: none;
+      margin-top: 18px;
+      text-align: center;
+      background: var(--success-bg);
+      border: 4px solid var(--success);
+      border-radius: 50%;
+      width: 220px;
+      height: 220px;
+      margin-left: auto;
+      margin-right: auto;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: var(--success);
+      font-weight: 900;
+      transform: rotate(-8deg);
+      padding: 16px;
+    }
+    .stamp-display.show { display: flex; }
+    .stamp-display .stamp-title { font-size: 1.1rem; }
+    .stamp-display .stamp-sub { font-size: 0.78rem; font-weight: 700; margin-top: 6px; }
+
+    .locked-flag {
+      display: inline-block;
+      background: #e2e8f0;
+      color: #334155;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-left: 8px;
+    }
+
+    @media (max-width: 640px) {
+      .cart-table { font-size: 0.8rem; }
+      .cart-table input.cell-input { width: 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">2-Day STREAM Project</span>
+    <h1>Laudato Si' Eco-Garden</h1>
+    <p class="subtitle">How can we design a garden that honors God's creation while staying within our $100.00 budget using decimal calculations?</p>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student / Team Name:</label>
+    <input type="text" id="student-name" placeholder="Type your name or team name">
+    <button class="btn-print" onclick="printProgressReport('Laudato Si Eco-Garden STREAM Project')">Print My Progress</button>
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    <ul style="margin:0 0 0 -4px;">
+      <li>This is your digital version of the paper worksheet - same math, same 2-day plan, but the garden items, calculations, and layout are all interactive here.</li>
+      <li>Drag items from the Store Catalog into your Ledger (or tap "Add to Cart"). Type your rounded estimate and your exact Line Total, then hit <strong>Check</strong> - you get 2 tries before the correct math is revealed and that row locks.</li>
+      <li>On Day 2 you'll drag your purchased items onto a 6&times;6 garden grid and can flip to a real-life preview of your design.</li>
+      <li>When you're finished, type your name above and click <strong>Print My Progress</strong> to submit proof of your work.</li>
+    </ul>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('day1')">Day 1: Selection &amp; Decimal Math</button>
+    <button class="tab-btn" onclick="switchTab('day2')">Day 2: Division, Layout &amp; Sign</button>
+  </nav>
+
+  <!-- ============================= DAY 1 ============================= -->
+  <div id="day1" class="panel active">
+    <div class="section-title">Day 1: Selection, Rounding &amp; Exact Decimal Operations</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Hook: Laudato Si' - Care for Creation <span class="time-chip">0-8 min</span></div>
+      Pope Francis's letter <em>Laudato Si'</em> calls us to care for "our common home." Today your team becomes landscape
+      planners, designing a small native plant courtyard garden for the school - while being good stewards of a strict
+      <strong>$100.00 budget</strong>.
+    </div>
+
+    <div class="pillar-grid">
+      <div class="pillar-card"><div class="pillar-letter">S</div><h4>Science</h4><p>Match plants to sun vs. shade needs.</p></div>
+      <div class="pillar-card"><div class="pillar-letter">T</div><h4>Technology</h4><p>Use a calculator to audit your team's math.</p></div>
+      <div class="pillar-card"><div class="pillar-letter">R</div><h4>Religion</h4><p>Stewardship of Creation - caring for God's earth.</p></div>
+      <div class="pillar-card"><div class="pillar-letter">E</div><h4>Engineering</h4><p>Fit your items into a 6&times;6 grid (1 item = 1 space).</p></div>
+      <div class="pillar-card"><div class="pillar-letter">A</div><h4>Art</h4><p>Color your blueprint and design a creation sign.</p></div>
+      <div class="pillar-card"><div class="pillar-letter">M</div><h4>Math</h4><p>Round, multiply, add, subtract, and divide decimals.</p></div>
+    </div>
+
+    <div class="section-title" style="font-size:1.3rem;">Store Catalog <span class="time-chip">8-20 min: choose 5-8 items</span></div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do</strong>
+      Drag 5 to 8 items below into your Ledger, or tap "Add to Cart" on each one. Colors match each item's category -
+      you'll use this same color-coding later on your garden grid.
+    </div>
+    <div id="catalog" class="catalog-grid"></div>
+
+    <div class="section-title" style="font-size:1.3rem;">Your Ledger <span class="time-chip">20-40 min: exact math</span></div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on each row</strong>
+      Round the Unit Price to the nearest whole dollar (Rounded Estimate), pick your Quantity, and calculate the
+      Line Total (Quantity &times; Unit Price). Click <strong>Check</strong> - 2 tries before the row is locked with the
+      correct math shown.
+    </div>
+
+    <div id="cart-dropzone" class="cart-dropzone" ondragover="allowCartDrop(event)" ondragleave="cartDragLeave(event)" ondrop="cartDrop(event)">
+      <table class="cart-table" id="cart-table" style="display:none;">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Unit Price</th>
+            <th>Qty</th>
+            <th>Rounded Estimate</th>
+            <th>Line Total (Qty &times; Price)</th>
+          </tr>
+        </thead>
+        <tbody id="cart-body"></tbody>
+      </table>
+      <p id="cart-empty-msg" class="cart-empty">Drag items from the Store Catalog above into this box (or tap "Add to Cart"). Choose 5 to 8 items.</p>
+    </div>
+
+    <div class="budget-meter-wrap">
+      <div class="budget-meter"><div class="budget-fill" id="budget-fill"></div></div>
+      <p class="budget-label" id="budget-label">$0.00 locked in of $100.00 (0 of 8 items)</p>
+    </div>
+
+    <div class="challenge-box">
+      <strong>Step: Grand Total (Addition)</strong> - once every row above is checked/locked, add the whole Line Total
+      column by hand and type your Grand Total below.
+      <div class="calc-row">
+        Grand Total Spent: $
+        <input type="text" class="cell-input" id="grandtotal-input" placeholder="0.00">
+        <button class="row-check-btn" id="grandtotal-btn" onclick="checkGrandTotal()">Check Grand Total</button>
+      </div>
+      <div class="feedback-msg" id="grandtotal-feedback"></div>
+      <div id="budget-checkin" style="text-align:center;"></div>
+    </div>
+
+    <div style="text-align:center; margin-top:10px;">
+      <span class="time-chip">40-45 min: teacher check-in</span>
+      <p style="font-size:0.9rem; color:#475569;">Your teacher will verify your Grand Total is between $85.00 and $100.00 before Day 2.</p>
+    </div>
+  </div>
+
+  <!-- ============================= DAY 2 ============================= -->
+  <div id="day2" class="panel">
+    <div id="day2-locked" class="day2-locked-notice">
+      Finish Day 1 first: check every ledger row and lock in your Grand Total above. Day 2's subtraction, division,
+      garden layout, and creation sign all build on your Day 1 numbers.
+    </div>
+
+    <div id="day2-content" style="display:none;">
+      <div class="section-title">Day 2: Division, Garden Layout &amp; Art Sign</div>
+      <div class="recap-box" id="day2-recap"></div>
+
+      <div class="station-card">
+        <span class="station-label">Subtraction</span>
+        <div class="calc-row">
+          $100.00 &minus; $<span id="recap-total-inline"></span> (Grand Total) =
+          $ <input type="text" class="cell-input" id="leftover-input" placeholder="0.00">
+        </div>
+        <div style="text-align:center;"><button class="row-check-btn" onclick="checkLeftover()">Check Leftover</button></div>
+        <div class="feedback-msg" id="leftover-feedback"></div>
+      </div>
+
+      <div class="station-card">
+        <span class="station-label">Division: Average Cost per Plant</span>
+        <p style="font-size:0.9rem; color:#475569; text-align:center;">Only Flowers/Foliage/Herb items (P-01 to P-04) count as plants.</p>
+        <div class="calc-row">
+          Total Spent on Plants: $ <input type="text" class="cell-input" id="plantcost-input" placeholder="0.00">
+          &divide; Number of Plants: <input type="text" class="cell-input" id="plantcount-input" placeholder="0" style="width:60px;">
+          = $ <input type="text" class="cell-input" id="plantavg-input" placeholder="0.00"> per plant
+        </div>
+        <div style="text-align:center;"><button class="row-check-btn" onclick="checkDivision()">Check Division</button></div>
+        <div class="feedback-msg" id="division-feedback"></div>
+      </div>
+
+      <div class="section-title" style="font-size:1.3rem;">Engineering: Garden Grid <span class="time-chip">15-35 min</span></div>
+      <div class="howto-box">
+        <strong class="howto-label">What to do</strong>
+        Load your purchased items, then drag (or tap to select, then tap a cell) each one into the 6&times;6 grid - 1 item = 1 space.
+        Tap "See My Garden (Real Life)" to preview what it will actually look like.
+      </div>
+
+      <div style="text-align:center;">
+        <button class="row-check-btn" id="load-tokens-btn" onclick="loadGardenTokens()">Load My Purchased Items</button>
+        <button class="row-check-btn" id="view-toggle-btn" onclick="toggleGardenView()" style="background:var(--accent);">See My Garden (Real Life)</button>
+      </div>
+
+      <p style="text-align:center; font-weight:700; margin-top:14px;">Item Tray</p>
+      <div class="tray" id="tray"></div>
+
+      <p style="text-align:center; font-weight:700;">6&times;6 Garden Grid</p>
+      <div class="grid6" id="grid6"></div>
+      <div class="legend-row" id="legend-row"></div>
+
+      <div style="text-align:center; margin-top:14px;">
+        <button class="row-check-btn" onclick="lockGarden()">Lock My Garden Layout</button>
+        <span id="garden-lock-msg"></span>
+      </div>
+      <div class="feedback-msg" id="garden-feedback"></div>
+
+      <div class="section-title" style="font-size:1.3rem;">Art &amp; Religion: Creation Sign</div>
+      <div class="howto-box">
+        <strong class="howto-label">What to do</strong>
+        Choose (or write) a creation verse, decorate your sign, then lock it in.
+      </div>
+
+      <div class="sign-builder">
+        <div class="sign-controls">
+          <div class="form-group">
+            <label for="verse-select">Creation Verse</label>
+            <select id="verse-select" class="form-control-lg" onchange="onVerseChange()"></select>
+          </div>
+          <div class="form-group" id="custom-verse-group" style="display:none;">
+            <label for="custom-verse-text">Your Verse</label>
+            <textarea id="custom-verse-text" class="form-control-lg" rows="2" placeholder="Type a creation-themed verse..." oninput="renderSign()"></textarea>
+            <label for="custom-verse-ref" style="margin-top:8px;">Reference</label>
+            <input type="text" id="custom-verse-ref" class="form-control-lg" placeholder="e.g. Psalm 19:1" oninput="renderSign()">
+          </div>
+          <div class="form-group">
+            <label for="sign-bg-select">Sign Background</label>
+            <select id="sign-bg-select" class="form-control-lg" onchange="renderSign()">
+              <option value="#fef3c7">Sunshine Yellow</option>
+              <option value="#dbeafe">Sky Blue</option>
+              <option value="#dcfce7">Garden Green</option>
+              <option value="#fed7aa">Clay Terracotta</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="sign-border-select">Sign Style</label>
+            <select id="sign-border-select" class="form-control-lg" onchange="renderSign()">
+              <option value="sign-rustic">Rustic Wood</option>
+              <option value="sign-picket">Painted Picket</option>
+              <option value="sign-vine">Vine Wrap</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Stickers (pick up to 2)</label>
+            <div class="sticker-choices" id="sticker-choices"></div>
+          </div>
+          <button class="row-check-btn" onclick="lockSign()">Lock My Sign</button>
+          <div class="feedback-msg" id="sign-feedback"></div>
+        </div>
+        <div class="sign-preview-wrap">
+          <div class="sign-preview sign-rustic" id="sign-preview"></div>
+        </div>
+      </div>
+
+      <div class="section-title" style="font-size:1.3rem;">Peer Math Audit <span class="time-chip">35-45 min</span></div>
+      <div class="station-card">
+        <div class="form-group">
+          <label for="partner-name">Partner's Name</label>
+          <input type="text" id="partner-name" class="form-control-lg" placeholder="Who audited your math?" oninput="updateStampBtn()">
+        </div>
+        <div class="audit-checks">
+          <label><input type="checkbox" class="audit-cb" onchange="updateStampBtn()"> Checked one <strong>multiplication</strong> (a Line Total)</label>
+          <label><input type="checkbox" class="audit-cb" onchange="updateStampBtn()"> Checked the <strong>addition</strong> (Grand Total)</label>
+          <label><input type="checkbox" class="audit-cb" onchange="updateStampBtn()"> Checked the <strong>division</strong> (Average Cost per Plant)</label>
+        </div>
+        <div style="text-align:center;">
+          <button class="row-check-btn" id="stamp-btn" onclick="awardStamp()" disabled>Award Math Quality Stamp</button>
+        </div>
+        <div class="stamp-display" id="stamp-display">
+          <div class="stamp-title">MATH QUALITY STAMP</div>
+          <div id="stamp-detail" class="stamp-sub"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="print-report"></div>
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+
+  // ================================================================
+  // DATA
+  // ================================================================
+  const CATALOG = [
+    { code: 'P-01', name: 'Sunflower Pack (3 plants)', category: 'Flowers', sun: 'Full Sun', price: 4.25, plant: true, emoji: '🌻', bg: '#fef08a', border: '#ca8a04' },
+    { code: 'P-02', name: 'Marigold Pot', category: 'Flowers', sun: 'Full Sun', price: 2.80, plant: true, emoji: '🌼', bg: '#fed7aa', border: '#ea580c' },
+    { code: 'P-03', name: 'Fern Plant', category: 'Foliage', sun: 'Shade', price: 5.15, plant: true, emoji: '🌿', bg: '#bbf7d0', border: '#16a34a' },
+    { code: 'P-04', name: 'Lavender Bush', category: 'Herbs/Flowers', sun: 'Full Sun', price: 6.50, plant: true, emoji: '🪻', bg: '#e9d5ff', border: '#7c3aed' },
+    { code: 'S-01', name: 'Potting Soil Bag (10 lbs)', category: 'Supplies', sun: 'N/A', price: 7.40, plant: false, emoji: '🟫', bg: '#e7d3b8', border: '#92400e' },
+    { code: 'S-02', name: 'Bag of Decorative River Stones', category: 'Supplies', sun: 'N/A', price: 8.95, plant: false, emoji: '🪨', bg: '#e2e8f0', border: '#64748b' },
+    { code: 'D-01', name: 'Bird Bath Fountain', category: 'Decoration', sun: 'N/A', price: 24.50, plant: false, emoji: '⛲', bg: '#bae6fd', border: '#0284c7' },
+    { code: 'D-02', name: 'Wooden Garden Stake', category: 'Decoration', sun: 'N/A', price: 3.10, plant: false, emoji: '🪧', bg: '#fde68a', border: '#b45309' }
+  ];
+  const CATALOG_BY_CODE = Object.fromEntries(CATALOG.map((c) => [c.code, c]));
+
+  const VERSES = [
+    { ref: 'Psalm 104:24', text: "Lord, how manifold are your works! In wisdom you have made them all." },
+    { ref: 'Genesis 1:31', text: "God saw everything that he had made, and indeed, it was very good." },
+    { ref: 'Psalm 24:1', text: "The earth is the LORD's and everything in it, the world, and those who live in it." },
+    { ref: 'Psalm 19:1', text: "The heavens declare the glory of God, and the sky proclaims his handiwork." },
+    { ref: 'Custom', text: '' }
+  ];
+
+  const STICKERS = ['🌻', '🐝', '🦋', '🌈', '☀️', '🐦'];
+
+  const round2 = (n) => Math.round(n * 100) / 100;
+  const fmt2 = (n) => n.toFixed(2);
+
+  // ================================================================
+  // DAY 1 - CATALOG + LEDGER
+  // ================================================================
+  const cartOrder = [];   // codes, in the order they were added
+  const cart = {};        // code -> { qty, locked, correctTotal }
+  let day1Locked = false;
+
+  function renderCatalog() {
+    document.getElementById('catalog').innerHTML = CATALOG.map((item) => {
+      const already = !!cart[item.code];
+      const full = cartOrder.length >= 8;
+      const disabled = already || (full && !already) || day1Locked;
+      return `
+        <div class="catalog-card${disabled ? ' disabled' : ''}" style="background:${item.bg}; border-color:${item.border};"
+             draggable="${disabled ? 'false' : 'true'}" ondragstart="onCatalogDragStart(event,'${item.code}')">
+          <div class="catalog-code">${item.code} &middot; ${item.category}${item.sun !== 'N/A' ? ' &middot; ' + item.sun : ''}</div>
+          <div class="catalog-name">${item.emoji} ${item.name}</div>
+          <div class="catalog-meta">${item.plant ? 'Counts toward plant total' : 'Supplies / decoration'}</div>
+          <div class="catalog-price">$${fmt2(item.price)}</div>
+          <button class="catalog-add-btn" ${disabled ? 'disabled' : ''} onclick="addToCart('${item.code}')">
+            ${already ? 'Already in Ledger' : (full ? 'Ledger Full (8 max)' : '+ Add to Cart')}
+          </button>
+          <div class="catalog-drag-hint">or drag me into your Ledger &darr;</div>
+        </div>`;
+    }).join('');
+  }
+
+  function onCatalogDragStart(e, code) {
+    if (day1Locked || cart[code]) { e.preventDefault(); return; }
+    e.dataTransfer.setData('text/plain', code);
+  }
+  function allowCartDrop(e) {
+    e.preventDefault();
+    document.getElementById('cart-dropzone').classList.add('drop-hover');
+  }
+  function cartDragLeave() {
+    document.getElementById('cart-dropzone').classList.remove('drop-hover');
+  }
+  function cartDrop(e) {
+    e.preventDefault();
+    document.getElementById('cart-dropzone').classList.remove('drop-hover');
+    const code = e.dataTransfer.getData('text/plain');
+    if (CATALOG_BY_CODE[code]) addToCart(code);
+  }
+
+  function addToCart(code) {
+    if (day1Locked || cart[code]) return;
+    if (cartOrder.length >= 8) {
+      alert('Your team can choose at most 8 items. Remove one first if you want to swap it out.');
+      return;
+    }
+    cart[code] = { qty: 1, locked: false, correctTotal: 0 };
+    cartOrder.push(code);
+    renderCatalog();
+    renderCart();
+  }
+
+  function removeItem(code) {
+    if (day1Locked || (cart[code] && cart[code].locked)) return;
+    delete cart[code];
+    const idx = cartOrder.indexOf(code);
+    if (idx > -1) cartOrder.splice(idx, 1);
+    renderCatalog();
+    renderCart();
+  }
+
+  function updateQty(code, val) {
+    const q = parseInt(val, 10);
+    cart[code].qty = isNaN(q) || q < 1 ? 1 : q;
+  }
+
+  function renderCart() {
+    const table = document.getElementById('cart-table');
+    const empty = document.getElementById('cart-empty-msg');
+    if (cartOrder.length === 0) {
+      table.style.display = 'none';
+      empty.style.display = 'block';
+      recomputeBudget();
+      return;
+    }
+    table.style.display = 'table';
+    empty.style.display = 'none';
+
+    document.getElementById('cart-body').innerHTML = cartOrder.map((code) => {
+      const item = CATALOG_BY_CODE[code];
+      const row = cart[code];
+      const disabledAttr = row.locked ? 'disabled' : '';
+      return `
+        <tr id="row-${code}" class="${row.locked ? 'row-locked' : ''}">
+          <td class="item-cell">${item.emoji} ${item.name}
+            ${row.locked ? '<span class="locked-flag">Locked</span>' : `<button class="remove-btn" onclick="removeItem('${code}')" title="Remove">&times;</button>`}
+          </td>
+          <td>$${fmt2(item.price)}</td>
+          <td><input type="number" min="1" step="1" class="cell-input" id="qty-${code}" value="${row.qty}" oninput="updateQty('${code}', this.value)" ${disabledAttr}></td>
+          <td><input type="text" class="cell-input" id="round-${code}" placeholder="$" value="${row.roundGiven || ''}" ${disabledAttr}></td>
+          <td>
+            <input type="text" class="cell-input" id="total-${code}" placeholder="$" value="${row.totalGiven || ''}" ${disabledAttr}>
+            ${row.locked ? '' : `<br><button class="row-check-btn" onclick="checkRow('${code}')">Check</button>`}
+            <div class="feedback-msg row-feedback" id="feedback-${code}"></div>
+          </td>
+        </tr>`;
+    }).join('');
+    recomputeBudget();
+  }
+
+  function checkRow(code) {
+    const item = CATALOG_BY_CODE[code];
+    const row = cart[code];
+    const feedbackEl = document.getElementById(`feedback-${code}`);
+    const qty = parseInt(document.getElementById(`qty-${code}`).value, 10) || 0;
+    const roundGiven = document.getElementById(`round-${code}`).value;
+    const totalGiven = document.getElementById(`total-${code}`).value;
+
+    if (qty < 1 || roundGiven.trim() === '' || totalGiven.trim() === '') {
+      LessonCheck.incomplete(feedbackEl, 'Fill in your Quantity, Rounded Estimate, and Line Total before checking.');
+      return;
+    }
+    row.roundGiven = roundGiven;
+    row.totalGiven = totalGiven;
+
+    const expectedRound = Math.round(item.price);
+    const expectedTotal = round2(qty * item.price);
+    const roundOK = LessonCheck.numericMatch(roundGiven, expectedRound, 0.01);
+    const totalOK = LessonCheck.numericMatch(totalGiven, expectedTotal, 0.01);
+    const isCorrect = roundOK && totalOK;
+
+    let retryMsg = 'Check both your rounded estimate and your line total.';
+    if (roundOK && !totalOK) retryMsg = 'Your rounding looks right - double-check your Line Total (Quantity &times; Unit Price).';
+    if (!roundOK && totalOK) retryMsg = 'Your Line Total looks right - double-check your rounded estimate (nearest whole dollar).';
+
+    const messages = {
+      correct: `Correct! $${fmt2(item.price)} rounds to $${expectedRound}.00, and ${qty} &times; $${fmt2(item.price)} = $${fmt2(expectedTotal)}.`,
+      retry: retryMsg,
+      reveal: `Rounded Estimate: $${expectedRound}.00 &nbsp;|&nbsp; Line Total: ${qty} &times; $${fmt2(item.price)} = $${fmt2(expectedTotal)}`
+    };
+
+    const outcome = LessonCheck.check(`row-${code}`, isCorrect, feedbackEl, messages, {
+      label: `${item.name} - Line Total`,
+      answer: `Qty ${qty}, Round $${roundGiven}, Total $${totalGiven}`,
+      section: 'Day 1 - Store Ledger'
+    });
+
+    if (outcome === 'correct' || outcome === 'reveal') {
+      row.locked = true;
+      row.correctTotal = expectedTotal;
+      row.qty = qty;
+      renderCatalog();
+      renderCart();
+    }
+  }
+
+  function recomputeBudget() {
+    const lockedCodes = cartOrder.filter((c) => cart[c].locked);
+    const spent = round2(lockedCodes.reduce((sum, c) => sum + cart[c].correctTotal, 0));
+    const pct = Math.min(100, (spent / 100) * 100);
+    const fill = document.getElementById('budget-fill');
+    fill.style.width = pct + '%';
+    fill.className = 'budget-fill' + (spent > 100 ? ' over' : (spent > 85 ? '' : ' warn'));
+    document.getElementById('budget-label').textContent =
+      `$${fmt2(spent)} locked in of $100.00 (${lockedCodes.length} of ${cartOrder.length} item${cartOrder.length === 1 ? '' : 's'} checked)`;
+
+    const btn = document.getElementById('grandtotal-btn');
+    const allLocked = cartOrder.length > 0 && lockedCodes.length === cartOrder.length;
+    btn.disabled = !allLocked;
+  }
+
+  function checkGrandTotal() {
+    const feedbackEl = document.getElementById('grandtotal-feedback');
+    const lockedCodes = cartOrder.filter((c) => cart[c].locked);
+    if (cartOrder.length === 0 || lockedCodes.length < cartOrder.length) {
+      LessonCheck.incomplete(feedbackEl, 'Check and lock every ledger row above before totaling the column.');
+      return;
+    }
+    const given = document.getElementById('grandtotal-input').value;
+    const expected = round2(lockedCodes.reduce((sum, c) => sum + cart[c].correctTotal, 0));
+    const isCorrect = LessonCheck.numericMatch(given, expected, 0.01);
+    const messages = {
+      correct: `Correct! Your Grand Total is $${fmt2(expected)}.`,
+      retry: 'Add up the Line Total column again - line up your decimal points.',
+      reveal: `The Grand Total is $${fmt2(expected)}.`
+    };
+    const outcome = LessonCheck.check('grandtotal', isCorrect, feedbackEl, messages, {
+      label: 'Grand Total Spent (Addition)',
+      answer: `$${given}`,
+      section: 'Day 1 - Store Ledger'
+    });
+    if (outcome === 'correct' || outcome === 'reveal') {
+      window.grandTotal = expected;
+      day1Locked = true;
+      document.getElementById('grandtotal-input').disabled = true;
+      document.getElementById('grandtotal-btn').disabled = true;
+      renderCatalog();
+      renderCart();
+      showBudgetCheckin(expected);
+      unlockDay2();
+    }
+  }
+
+  function showBudgetCheckin(total) {
+    const el = document.getElementById('budget-checkin');
+    const inRange = total >= 85 && total <= 100;
+    el.innerHTML = `<span class="budget-badge ${inRange ? 'good' : 'bad'}">
+      ${inRange ? '✅ In the target zone ($85.00-$100.00)!' : '⚠️ Outside the $85.00-$100.00 target - a real budget audit would flag this.'}
+    </span>`;
+  }
+
+  // ================================================================
+  // DAY 2 UNLOCK + RECAP
+  // ================================================================
+  function unlockDay2() {
+    document.getElementById('day2-locked').style.display = 'none';
+    document.getElementById('day2-content').style.display = 'block';
+    document.getElementById('day2-recap').textContent =
+      `Your Day 1 Grand Total: $${fmt2(window.grandTotal)} across ${cartOrder.length} item${cartOrder.length === 1 ? '' : 's'}.`;
+    document.getElementById('recap-total-inline').textContent = fmt2(window.grandTotal);
+
+    const plantCodes = cartOrder.filter((c) => CATALOG_BY_CODE[c].plant);
+    window.plantCostExpected = round2(plantCodes.reduce((sum, c) => sum + cart[c].correctTotal, 0));
+    window.plantCountExpected = plantCodes.reduce((sum, c) => sum + cart[c].qty, 0);
+  }
+
+  function checkLeftover() {
+    const feedbackEl = document.getElementById('leftover-feedback');
+    const given = document.getElementById('leftover-input').value;
+    const expected = round2(100 - window.grandTotal);
+    const isCorrect = LessonCheck.numericMatch(given, expected, 0.01);
+    const messages = {
+      correct: `Correct! $100.00 &minus; $${fmt2(window.grandTotal)} = $${fmt2(expected)} left over.`,
+      retry: 'Subtract your Grand Total from $100.00 again.',
+      reveal: `$100.00 &minus; $${fmt2(window.grandTotal)} = $${fmt2(expected)}.`
+    };
+    const outcome = LessonCheck.check('leftover', isCorrect, feedbackEl, messages, {
+      label: 'Leftover Budget (Subtraction)',
+      answer: `$${given}`,
+      section: 'Day 2 - Budget & Division'
+    });
+    if (outcome === 'correct' || outcome === 'reveal') document.getElementById('leftover-input').disabled = true;
+  }
+
+  function checkDivision() {
+    const feedbackEl = document.getElementById('division-feedback');
+    if (window.plantCountExpected === 0) {
+      LessonCheck.incomplete(feedbackEl, 'You need at least one plant (P-01 to P-04) in your Day 1 ledger to compute this - go back and add one.');
+      return;
+    }
+    const costGiven = document.getElementById('plantcost-input').value;
+    const countGiven = document.getElementById('plantcount-input').value;
+    const avgGiven = document.getElementById('plantavg-input').value;
+    if (costGiven.trim() === '' || countGiven.trim() === '' || avgGiven.trim() === '') {
+      LessonCheck.incomplete(feedbackEl, 'Fill in Total Plant Cost, Number of Plants, and the Average before checking.');
+      return;
+    }
+    const expectedAvg = round2(window.plantCostExpected / window.plantCountExpected);
+    const costOK = LessonCheck.numericMatch(costGiven, window.plantCostExpected, 0.01);
+    const countOK = LessonCheck.numericMatch(countGiven, window.plantCountExpected, 0.5);
+    const avgOK = LessonCheck.numericMatch(avgGiven, expectedAvg, 0.01);
+    const isCorrect = costOK && countOK && avgOK;
+    const messages = {
+      correct: `Correct! $${fmt2(window.plantCostExpected)} &divide; ${window.plantCountExpected} = $${fmt2(expectedAvg)} per plant.`,
+      retry: "Check each part: Total Plant Cost, Number of Plants, and the division itself.",
+      reveal: `Total Spent on Plants: $${fmt2(window.plantCostExpected)} &divide; Number of Plants: ${window.plantCountExpected} = $${fmt2(expectedAvg)} per plant.`
+    };
+    const outcome = LessonCheck.check('division', isCorrect, feedbackEl, messages, {
+      label: 'Average Cost per Plant (Division)',
+      answer: `$${costGiven} ÷ ${countGiven} = $${avgGiven}`,
+      section: 'Day 2 - Budget & Division'
+    });
+    if (outcome === 'correct' || outcome === 'reveal') {
+      ['plantcost-input', 'plantcount-input', 'plantavg-input'].forEach((id) => { document.getElementById(id).disabled = true; });
+    }
+  }
+
+  // ================================================================
+  // ENGINEERING: GARDEN TRAY + 6x6 GRID
+  // ================================================================
+  let tokens = [];        // { id, code }
+  let trayIds = [];
+  let gridArr = new Array(36).fill(null);
+  let gardenBuilt = false;
+  let gardenLocked = false;
+  let gardenView = 'blueprint';
+  let selectedToken = null;
+  let nextTokenId = 1;
+
+  function loadGardenTokens() {
+    if (gardenBuilt || !window.grandTotal) return;
+    cartOrder.filter((c) => cart[c].locked).forEach((code) => {
+      for (let i = 0; i < cart[code].qty; i++) {
+        tokens.push({ id: nextTokenId, code });
+        nextTokenId++;
+      }
+    });
+    trayIds = tokens.map((t) => t.id);
+    gardenBuilt = true;
+    document.getElementById('load-tokens-btn').disabled = true;
+    document.getElementById('load-tokens-btn').textContent = `Loaded ${tokens.length} Items`;
+    renderLegend();
+    renderGarden();
+  }
+
+  function renderLegend() {
+    const seen = {};
+    tokens.forEach((t) => { seen[t.code] = true; });
+    document.getElementById('legend-row').innerHTML = Object.keys(seen).map((code) => {
+      const item = CATALOG_BY_CODE[code];
+      return `<span><span class="legend-swatch" style="background:${item.bg}; border-color:${item.border};"></span>${item.code} ${item.name}</span>`;
+    }).join('');
+  }
+
+  function tokenMarkup(id, inGrid) {
+    const t = tokens.find((tk) => tk.id === id);
+    const item = CATALOG_BY_CODE[t.code];
+    const isReal = gardenView === 'real';
+    const content = isReal ? item.emoji : t.code.replace('-', '');
+    const selCls = (!inGrid && selectedToken === id) ? ' selected' : '';
+    const lockCls = gardenLocked ? ' locked' : '';
+    const clickAttr = inGrid ? `onclick="event.stopPropagation(); clickGridToken(${id})"` : `onclick="clickTrayToken(${id})"`;
+    return `<div class="token${isReal ? ' real' : ''}${selCls}${lockCls}" style="--tcol:${item.bg}; --tborder:${item.border};"
+              draggable="${gardenLocked ? 'false' : 'true'}" ondragstart="dragStartToken(event, ${id})"
+              ${clickAttr} title="${item.name}">${content}</div>`;
+  }
+
+  function renderGarden() {
+    const trayEl = document.getElementById('tray');
+    trayEl.ondrop = dropOnTray;
+    trayEl.ondragover = allowDrop;
+    trayEl.innerHTML = trayIds.length
+      ? trayIds.map((id) => tokenMarkup(id, false)).join('')
+      : '<span class="tray-empty">All items placed - or click "Load My Purchased Items" if the tray is empty.</span>';
+
+    const gridEl = document.getElementById('grid6');
+    gridEl.className = 'grid6' + (gardenView === 'real' ? ' real-view' : '');
+    gridEl.innerHTML = gridArr.map((id, i) => `
+      <div class="cell" ondragover="allowDrop(event)" ondrop="dropOnCell(event, ${i})" onclick="clickCell(${i})">
+        ${id != null ? tokenMarkup(id, true) : ''}
+      </div>`).join('');
+  }
+
+  function allowDrop(e) { e.preventDefault(); }
+  function dragStartToken(e, id) {
+    if (gardenLocked) { e.preventDefault(); return; }
+    e.dataTransfer.setData('text/plain', String(id));
+  }
+
+  function removeFromGridIfPresent(id) {
+    const idx = gridArr.indexOf(id);
+    if (idx > -1) gridArr[idx] = null;
+  }
+
+  function dropOnCell(e, i) {
+    e.preventDefault();
+    if (gardenLocked) return;
+    const id = parseInt(e.dataTransfer.getData('text/plain'), 10);
+    if (isNaN(id) || gridArr[i] != null) return;
+    removeFromGridIfPresent(id);
+    const trayIdx = trayIds.indexOf(id);
+    if (trayIdx > -1) trayIds.splice(trayIdx, 1);
+    gridArr[i] = id;
+    selectedToken = null;
+    renderGarden();
+  }
+
+  function dropOnTray(e) {
+    e.preventDefault();
+    if (gardenLocked) return;
+    const id = parseInt(e.dataTransfer.getData('text/plain'), 10);
+    if (isNaN(id)) return;
+    removeFromGridIfPresent(id);
+    if (trayIds.indexOf(id) === -1) trayIds.push(id);
+    selectedToken = null;
+    renderGarden();
+  }
+
+  function clickTrayToken(id) {
+    if (gardenLocked) return;
+    selectedToken = selectedToken === id ? null : id;
+    renderGarden();
+  }
+
+  function clickGridToken(id) {
+    if (gardenLocked) return;
+    removeFromGridIfPresent(id);
+    if (trayIds.indexOf(id) === -1) trayIds.push(id);
+    selectedToken = null;
+    renderGarden();
+  }
+
+  function clickCell(i) {
+    if (gardenLocked || gridArr[i] != null || selectedToken == null) return;
+    const trayIdx = trayIds.indexOf(selectedToken);
+    if (trayIdx > -1) trayIds.splice(trayIdx, 1);
+    gridArr[i] = selectedToken;
+    selectedToken = null;
+    renderGarden();
+  }
+
+  function toggleGardenView() {
+    gardenView = gardenView === 'blueprint' ? 'real' : 'blueprint';
+    document.getElementById('view-toggle-btn').textContent =
+      gardenView === 'blueprint' ? '🌼 See My Garden (Real Life)' : '🎨 Back to Blueprint View';
+    renderGarden();
+  }
+
+  function lockGarden() {
+    if (!gardenBuilt) {
+      document.getElementById('garden-lock-msg').textContent = 'Load your purchased items first.';
+      return;
+    }
+    gardenLocked = true;
+    selectedToken = null;
+    renderGarden();
+    const filled = gridArr.filter((x) => x != null).length;
+    const feedbackEl = document.getElementById('garden-feedback');
+    LessonCheck.submit(feedbackEl, {
+      key: 'garden-grid',
+      label: 'Garden Grid Layout (Engineering)',
+      answer: `${filled} of 36 spaces used (${tokens.length} items purchased)`,
+      section: 'Day 2 - Garden Layout'
+    }, `Garden layout locked! You placed ${filled} of 36 spaces.`);
+  }
+
+  // ================================================================
+  // CREATION SIGN
+  // ================================================================
+  function populateVerseSelect() {
+    document.getElementById('verse-select').innerHTML = VERSES.map((v, i) =>
+      `<option value="${i}">${v.ref}${v.text ? ' - "' + v.text + '"' : ' (write your own)'}</option>`).join('');
+    document.getElementById('sticker-choices').innerHTML = STICKERS.map((s, i) =>
+      `<label><input type="checkbox" class="sticker-cb" value="${s}" onchange="onStickerChange(event)"> ${s}</label>`).join('');
+    renderSign();
+  }
+
+  function onVerseChange() {
+    const idx = parseInt(document.getElementById('verse-select').value, 10);
+    document.getElementById('custom-verse-group').style.display = VERSES[idx].ref === 'Custom' ? 'block' : 'none';
+    renderSign();
+  }
+
+  function onStickerChange(e) {
+    const checked = document.querySelectorAll('.sticker-cb:checked');
+    if (checked.length > 2) { e.target.checked = false; }
+    renderSign();
+  }
+
+  function renderSign() {
+    const idx = parseInt(document.getElementById('verse-select').value, 10);
+    const verse = VERSES[idx];
+    let text = verse.text, ref = verse.ref;
+    if (verse.ref === 'Custom') {
+      text = document.getElementById('custom-verse-text').value || 'Write your creation verse...';
+      ref = document.getElementById('custom-verse-ref').value || '';
+    }
+    const bg = document.getElementById('sign-bg-select').value;
+    const borderClass = document.getElementById('sign-border-select').value;
+    const stickers = [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value).join(' ');
+
+    const preview = document.getElementById('sign-preview');
+    preview.className = `sign-preview ${borderClass}`;
+    preview.style.backgroundColor = bg;
+    preview.innerHTML = `
+      <div class="sign-verse">"${text}"</div>
+      ${ref ? `<div class="sign-ref">- ${ref}</div>` : ''}
+      ${stickers ? `<div class="sign-stickers">${stickers}</div>` : ''}
+    `;
+  }
+
+  function lockSign() {
+    const idx = parseInt(document.getElementById('verse-select').value, 10);
+    const verse = VERSES[idx];
+    let text = verse.text, ref = verse.ref;
+    if (verse.ref === 'Custom') {
+      text = document.getElementById('custom-verse-text').value.trim();
+      ref = document.getElementById('custom-verse-ref').value.trim();
+      if (!text) {
+        LessonCheck.incomplete(document.getElementById('sign-feedback'), 'Write your creation verse before locking your sign.');
+        return;
+      }
+    }
+    document.querySelectorAll('.sign-controls select, .sign-controls input, .sign-controls textarea, .sign-controls button').forEach((el) => { el.disabled = true; });
+    LessonCheck.submit(document.getElementById('sign-feedback'), {
+      key: 'creation-sign',
+      label: 'Creation Sign (Art & Religion)',
+      answer: `"${text}" - ${ref}`,
+      section: 'Day 2 - Creation Sign'
+    }, 'Your creation sign is locked in!');
+  }
+
+  // ================================================================
+  // PEER MATH AUDIT
+  // ================================================================
+  function updateStampBtn() {
+    const name = document.getElementById('partner-name').value.trim();
+    const allChecked = [...document.querySelectorAll('.audit-cb')].every((cb) => cb.checked);
+    document.getElementById('stamp-btn').disabled = !(name && allChecked);
+  }
+
+  function awardStamp() {
+    const name = document.getElementById('partner-name').value.trim();
+    const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    document.getElementById('stamp-detail').textContent = `Audited by ${name} - ${today}`;
+    document.getElementById('stamp-display').classList.add('show');
+    document.querySelectorAll('.audit-cb, #partner-name, #stamp-btn').forEach((el) => { el.disabled = true; });
+    LessonProgress.record('peer-audit', 'Peer Math Quality Stamp', `Audited by ${name}: multiplication, addition, and division checked`, 'reflection', 'Day 2 - Peer Math Audit');
+  }
+
+  // ================================================================
+  // INIT
+  // ================================================================
+  renderCatalog();
+  renderCart();
+  populateVerseSelect();
+</script>
+
+</body>
+</html>
