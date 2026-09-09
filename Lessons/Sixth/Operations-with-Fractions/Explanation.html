@@ -25,12 +25,6 @@
   <style>
     .bar-row { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; align-items: center; margin: 16px 0; }
     .bar-caption { text-align: center; font-weight: 800; color: var(--primary); margin-top: 4px; font-size: 0.95rem; }
-    .step-line { text-align: center; font-weight: 700; margin: 10px 0; }
-    .final-box {
-      margin-top: 16px; background: var(--success-bg); border: 2px solid var(--success);
-      border-radius: 10px; padding: 12px 18px; text-align: center; font-weight: 900;
-      color: var(--success); font-size: 1.15rem;
-    }
     .frac-input { width: 60px; text-align: center; font-size: 1.3rem; font-weight: 800; border: 3px solid var(--border); border-radius: 8px; padding: 6px; }
     .frac-stack { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; margin: 0 6px; }
     .frac-stack .frac-line { width: 60px; height: 3px; background: var(--primary); margin: 3px 0; }
@@ -45,16 +39,12 @@
       <span class="brand-name">Lincoln International Academy</span>
     </div>
     <span class="badge">Operations with Fractions &middot; Explanation</span>
-    <h1>Operations with Fractions: Explanation</h1>
+    <h1>Explanation: Adding &amp; Subtracting Fractions</h1>
   </header>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    <ul style="margin:6px 0 0 0;">
-      <li>Go tab by tab: foundations, like denominators, unlike denominators, mixed numbers, whole + fraction, word problems, whiteboard.</li>
-      <li>Click <strong>Next Step</strong> to watch each worked example unfold piece by piece.</li>
-      <li>Nothing here is graded except the whiteboard tab - this is practice for that.</li>
-    </ul>
+    Every worked example: <strong>math on the left</strong>, <strong>questions on the right</strong> - only the green box is the final answer. Ask the Question Ladder for that tab, in order, every single time - it works the same way on every problem, easy or hard. Use <strong>Previous / Next</strong> to browse examples. Tab 7 is graded.
   </div>
 
   <nav class="nav-tabs">
@@ -71,26 +61,17 @@
   <div id="foundations" class="panel active">
     <div class="section-title">Foundational Concept: Same-Size Pieces</div>
 
-    <div class="howto-box">
-      <strong class="howto-label">What to do on this tab</strong>
-      <ul style="margin:6px 0 0 0;">
-        <li>Copy the notebook box into your math notebook.</li>
-        <li>Study the bar models - they're the "why" behind every rule on the rest of this page.</li>
-        <li>Nothing to submit - this is background for every algorithm on this page.</li>
-      </ul>
-    </div>
-
     <div class="explainer-box">
       <strong>The One Rule That Runs Everything:</strong> you can only add or subtract fractions when the pieces are the <strong>same size</strong> - the same denominator. If the denominators don't match, rename the fractions first.
     </div>
 
     <div class="notebook-box">
       <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
-      <p style="margin:0 0 10px 0;"><strong>Lesson Title:</strong> Operations with Fractions</p>
-      <ul>
+      <p style="margin:0 0 10px 0;"><strong>Lesson Title:</strong> Operations with Fractions - Addition &amp; Subtraction</p>
+      <ul style="margin-bottom:0;">
         <li><strong>Like Denominators:</strong> add or subtract the numerators, keep the denominator, simplify.</li>
-        <li><strong>Unlike Denominators:</strong> find the LCD, rename both fractions, then follow the like-denominator rule.</li>
-        <li><strong>Mixed Numbers:</strong> combine the whole numbers and fraction parts separately - regroup if the fraction you're subtracting is bigger.</li>
+        <li><strong>Unlike Denominators:</strong> Butterfly Method - cross-multiply for the wings, multiply the denominators for the new one, then follow the like-denominator rule.</li>
+        <li><strong>Mixed Numbers:</strong> combine the whole numbers and fraction parts separately - regroup if the fraction you're subtracting is bigger, or if the fraction sum is improper.</li>
         <li><strong>Whole Number + Fraction:</strong> adding just attaches the fraction; subtracting regroups the whole as a fraction first.</li>
       </ul>
     </div>
@@ -117,69 +98,28 @@
   <div id="like" class="panel">
     <div class="section-title">Adding &amp; Subtracting Fractions With Like Denominators</div>
 
-    <div class="howto-box">
-      <strong class="howto-label">What to do on this tab</strong>
-      <ul style="margin:6px 0 0 0;">
-        <li>Copy the notebook box into your notebook.</li>
-        <li>Step through the carousel's three worked examples, then the two Extra Guided Examples.</li>
-        <li>Reveal the word problem step by step.</li>
-      </ul>
-    </div>
-
     <div class="notebook-box">
-      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
-      <p style="margin:0 0 10px 0;"><strong>Rule #1: Like Denominators.</strong></p>
-      <ol>
-        <li><strong>Keep the denominator the same</strong> - it names the size of the pieces, and that doesn't change.</li>
-        <li><strong>Add or subtract only the numerators.</strong></li>
-        <li><strong>Simplify</strong> the result to lowest terms.</li>
-        <li><strong>If the numerator ends up bigger than (or equal to) the denominator,</strong> convert the improper fraction to a mixed number.</li>
-      </ol>
+      <div class="notebook-header">The Question Ladder</div>
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Ask...</th><th>Then...</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Same denominator?</td><td>Yes - keep the denominator, only combine the numerators.</td></tr>
+          <tr><td>2</td><td>Adding or subtracting?</td><td>Add: add the numerators. Subtract: subtract the numerators.</td></tr>
+          <tr><td>3</td><td>Is it simplified?</td><td>Reduce to simplest form; convert an improper result to a mixed number.</td></tr>
+        </tbody>
+      </table>
     </div>
 
-    <h3>Guided Example Carousel: Step-by-Step</h3>
     <div class="carousel-card">
       <div class="carousel-nav">
-        <button class="btn-nav" id="like-prev-btn" onclick="changeLikeEx(-1)">&larr; Previous Example</button>
+        <button class="btn-nav" id="like-prev-btn" onclick="changeLike(-1)">&larr; Previous</button>
         <div style="text-align:center;">
-          <span id="like-ex-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Exercise 1 of 3</span>
+          <span id="like-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
           <div class="carousel-indicators" id="like-dots" style="justify-content:center; margin-top:6px;"></div>
         </div>
-        <button class="btn-nav" id="like-next-btn" onclick="changeLikeEx(1)">Next Example &rarr;</button>
+        <button class="btn-nav" id="like-next-btn" onclick="changeLike(1)">Next &rarr;</button>
       </div>
-      <div id="like-carousel-content" style="min-height: 280px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextLikeExStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetLikeExStep()">Reset Steps</button>
-      </div>
-    </div>
-
-    <h3 style="margin-top:28px;">Extra Guided Example 1: Adding Like Denominators (\(\frac{2}{9} + \frac{5}{9}\))</h3>
-    <div class="step-box">
-      <div id="likeex1-content" style="min-height:150px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextLikeEx1Step()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetLikeEx1Step()">Reset Steps</button>
-      </div>
-    </div>
-
-    <h3>Extra Guided Example 2: Subtracting Like Denominators (\(\frac{7}{10} - \frac{3}{10}\))</h3>
-    <div class="step-box">
-      <div id="likeex2-content" style="min-height:150px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextLikeEx2Step()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetLikeEx2Step()">Reset Steps</button>
-      </div>
-    </div>
-
-    <div class="step-box" style="margin-top:24px;">
-      <h3 style="margin-top:0; color:var(--primary);">Guided Word Problem: Step-by-Step</h3>
-      <p><strong>Scenario:</strong> Maria has \(\frac{7}{8}\) of a pizza left over. She eats \(\frac{3}{8}\) of the pizza for lunch. How much pizza does she have left?</p>
-      <button class="btn-lg" onclick="revealLikeStep()">Click to Reveal Next Step</button>
-      <button class="btn-secondary" onclick="resetLikeSteps()">Reset</button>
-      <div id="like-step-1" class="step-item"><strong>Step 1: Check the denominators.</strong><br>Both fractions are eighths - like denominators, so we can subtract right away.</div>
-      <div id="like-step-2" class="step-item"><strong>Step 2: Subtract the numerators.</strong><br>\[\frac{7}{8} - \frac{3}{8} = \frac{7-3}{8} = \frac{4}{8}\]</div>
-      <div id="like-step-3" class="step-item"><strong>Step 3: Simplify.</strong><br>\(\frac{4}{8}\) simplifies to \(\mathbf{\frac{1}{2}}\) - Maria has half a pizza left.</div>
+      <div id="like-content" style="min-height: 160px;"></div>
     </div>
   </div>
 
@@ -187,69 +127,28 @@
   <div id="unlike" class="panel">
     <div class="section-title">Adding &amp; Subtracting Fractions With Unlike Denominators</div>
 
-    <div class="howto-box">
-      <strong class="howto-label">What to do on this tab</strong>
-      <ul style="margin:6px 0 0 0;">
-        <li>Copy the notebook box, then work the carousel and two extra guided examples.</li>
-        <li>Step through the recipe word problem.</li>
-      </ul>
-    </div>
-
     <div class="notebook-box">
-      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
-      <p style="margin:0 0 10px 0;"><strong>Rule #2: Unlike Denominators.</strong></p>
-      <ol>
-        <li><strong>Find the LCD</strong> (least common denominator) of the two fractions.</li>
-        <li><strong>Rename each fraction</strong> as an equivalent fraction with that denominator.</li>
-        <li><strong>Add or subtract the numerators</strong>, keeping the common denominator.</li>
-        <li><strong>Simplify</strong> the result, converting to a mixed number if it's improper.</li>
-      </ol>
+      <div class="notebook-header">The Question Ladder</div>
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Ask...</th><th>Then...</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Same denominator?</td><td>No &rarr; Butterfly Method (cross-multiply for the wings, multiply the denominators for the new one).</td></tr>
+          <tr><td>2</td><td>Adding or subtracting?</td><td>Add: add the wings. Subtract: subtract the wings (larger &minus; smaller).</td></tr>
+          <tr><td>3</td><td>Is it simplified?</td><td>Reduce to simplest form; convert an improper result to a mixed number.</td></tr>
+        </tbody>
+      </table>
     </div>
 
-    <h3>Guided Example Carousel: Step-by-Step</h3>
     <div class="carousel-card">
       <div class="carousel-nav">
-        <button class="btn-nav" id="unlike-prev-btn" onclick="changeUnlikeEx(-1)">&larr; Previous Example</button>
+        <button class="btn-nav" id="unlike-prev-btn" onclick="changeUnlike(-1)">&larr; Previous</button>
         <div style="text-align:center;">
-          <span id="unlike-ex-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Exercise 1 of 3</span>
+          <span id="unlike-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 4</span>
           <div class="carousel-indicators" id="unlike-dots" style="justify-content:center; margin-top:6px;"></div>
         </div>
-        <button class="btn-nav" id="unlike-next-btn" onclick="changeUnlikeEx(1)">Next Example &rarr;</button>
+        <button class="btn-nav" id="unlike-next-btn" onclick="changeUnlike(1)">Next &rarr;</button>
       </div>
-      <div id="unlike-carousel-content" style="min-height: 300px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextUnlikeExStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetUnlikeExStep()">Reset Steps</button>
-      </div>
-    </div>
-
-    <h3 style="margin-top:28px;">Extra Guided Example 1: Adding (\(\frac{2}{5} + \frac{1}{2}\))</h3>
-    <div class="step-box">
-      <div id="unlikeex1-content" style="min-height:180px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextUnlikeEx1Step()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetUnlikeEx1Step()">Reset Steps</button>
-      </div>
-    </div>
-
-    <h3>Extra Guided Example 2: Subtracting (\(\frac{3}{4} - \frac{2}{5}\))</h3>
-    <div class="step-box">
-      <div id="unlikeex2-content" style="min-height:180px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextUnlikeEx2Step()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetUnlikeEx2Step()">Reset Steps</button>
-      </div>
-    </div>
-
-    <div class="step-box" style="margin-top:24px;">
-      <h3 style="margin-top:0; color:var(--primary);">Guided Word Problem: Step-by-Step</h3>
-      <p><strong>Scenario:</strong> A recipe calls for \(\frac{2}{3}\) cup of flour for the cake and \(\frac{1}{4}\) cup of flour for the topping. How much flour is needed in total?</p>
-      <button class="btn-lg" onclick="revealUnlikeStep()">Click to Reveal Next Step</button>
-      <button class="btn-secondary" onclick="resetUnlikeSteps()">Reset</button>
-      <div id="unlike-step-1" class="step-item"><strong>Step 1: Find the LCD of 3 and 4.</strong><br>Multiples of 3: 3, 6, 9, <strong>12</strong>. Multiples of 4: 4, 8, <strong>12</strong>. LCD = 12.</div>
-      <div id="unlike-step-2" class="step-item"><strong>Step 2: Rename both fractions with denominator 12.</strong><br>\[\frac{2}{3} = \frac{8}{12} \qquad \frac{1}{4} = \frac{3}{12}\]</div>
-      <div id="unlike-step-3" class="step-item"><strong>Step 3: Add the numerators.</strong><br>\[\frac{8}{12} + \frac{3}{12} = \frac{11}{12}\]</div>
-      <div id="unlike-step-4" class="step-item"><strong>Step 4: Final Answer.</strong><br>The recipe needs \(\mathbf{\frac{11}{12}}\) cup of flour in total. \(\frac{11}{12}\) is already in simplest form.</div>
+      <div id="unlike-content" style="min-height: 200px;"></div>
     </div>
   </div>
 
@@ -257,71 +156,29 @@
   <div id="mixed" class="panel">
     <div class="section-title">Adding &amp; Subtracting Mixed Numbers</div>
 
-    <div class="howto-box">
-      <strong class="howto-label">What to do on this tab</strong>
-      <ul style="margin:6px 0 0 0;">
-        <li>Copy the notebook box, then work through all three carousel examples - watch for the regrouping ones.</li>
-        <li>Work the two extra guided examples, then the guided word problem.</li>
-      </ul>
-    </div>
-
     <div class="notebook-box">
-      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
-      <p style="margin:0 0 10px 0;"><strong>Rule #3: Mixed Numbers.</strong></p>
-      <ol>
-        <li><strong>Get common denominators</strong> for the fraction parts, if they're unlike.</li>
-        <li><strong>Add or subtract the fraction parts</strong> and the whole-number parts separately.</li>
-        <li><strong>Adding:</strong> if the fraction part is improper (\(\ge 1\)), regroup - carry 1 into the whole-number part.</li>
-        <li><strong>Subtracting:</strong> if the fraction you're subtracting is bigger than the fraction you have, regroup 1 whole from the whole-number part into an extra fraction first.</li>
-        <li><strong>Simplify</strong> the fraction part of your final answer.</li>
-      </ol>
-      <p style="margin:12px 0 0 0; font-size:0.95rem; color:#78350f;"><em>Tip:</em> regrouped whole numbers are shown in red in our examples so they're easy to spot on the page - that's just a classroom convention, not part of the math itself.</p>
+      <div class="notebook-header">The Question Ladder</div>
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Ask...</th><th>Then...</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Same denominator on the fraction parts?</td><td>No &rarr; Butterfly Method on the fraction parts first.</td></tr>
+          <tr><td>2</td><td>Adding or subtracting the fraction parts?</td><td>Adding: if the sum is improper, regroup - carry 1 into the whole number. Subtracting: if the fraction you have is smaller than the one being subtracted, regroup 1 whole into an extra fraction first.</td></tr>
+          <tr><td>3</td><td>Combine the whole numbers.</td><td>Add or subtract the whole-number parts, using any regrouped values.</td></tr>
+          <tr><td>4</td><td>Is it simplified?</td><td>Reduce to simplest form.</td></tr>
+        </tbody>
+      </table>
     </div>
 
-    <h3>Guided Example Carousel: Step-by-Step</h3>
     <div class="carousel-card">
       <div class="carousel-nav">
-        <button class="btn-nav" id="mix-prev-btn" onclick="changeMixEx(-1)">&larr; Previous Example</button>
+        <button class="btn-nav" id="mix-prev-btn" onclick="changeMix(-1)">&larr; Previous</button>
         <div style="text-align:center;">
-          <span id="mix-ex-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Exercise 1 of 3</span>
+          <span id="mix-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 4</span>
           <div class="carousel-indicators" id="mix-dots" style="justify-content:center; margin-top:6px;"></div>
         </div>
-        <button class="btn-nav" id="mix-next-btn" onclick="changeMixEx(1)">Next Example &rarr;</button>
+        <button class="btn-nav" id="mix-next-btn" onclick="changeMix(1)">Next &rarr;</button>
       </div>
-      <div id="mix-carousel-content" style="min-height: 320px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextMixExStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetMixExStep()">Reset Steps</button>
-      </div>
-    </div>
-
-    <h3 style="margin-top:28px;">Extra Guided Example 1: Adding With Regrouping (\(3\frac{2}{3} + 1\frac{5}{6}\))</h3>
-    <div class="step-box">
-      <div id="mixex1-content" style="min-height:200px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextMixEx1Step()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetMixEx1Step()">Reset Steps</button>
-      </div>
-    </div>
-
-    <h3>Extra Guided Example 2: Subtracting With Borrowing (\(4\frac{1}{6} - 1\frac{1}{2}\))</h3>
-    <div class="step-box">
-      <div id="mixex2-content" style="min-height:220px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextMixEx2Step()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetMixEx2Step()">Reset Steps</button>
-      </div>
-    </div>
-
-    <div class="step-box" style="margin-top:24px;">
-      <h3 style="margin-top:0; color:var(--primary);">Guided Word Problem: Step-by-Step</h3>
-      <p><strong>Scenario:</strong> A board is \(6\frac{1}{4}\) inches long. A carpenter cuts off a piece \(2\frac{3}{4}\) inches long. How much board is left?</p>
-      <button class="btn-lg" onclick="revealMixStep()">Click to Reveal Next Step</button>
-      <button class="btn-secondary" onclick="resetMixSteps()">Reset</button>
-      <div id="mix-step-1" class="step-item"><strong>Step 1: Denominators already match (fourths). Compare the fraction parts.</strong><br>\(\frac{1}{4} < \frac{3}{4}\) - we can't subtract \(\frac{3}{4}\) from \(\frac{1}{4}\) without regrouping.</div>
-      <div id="mix-step-2" class="step-item"><strong>Step 2: Regroup 1 whole from 6 into \(\frac{4}{4}\).</strong><br>\[6\frac{1}{4} = 5\frac{4}{4} + \frac{1}{4} = 5\frac{5}{4}\]</div>
-      <div id="mix-step-3" class="step-item"><strong>Step 3: Subtract whole numbers and fraction parts separately.</strong><br>\[5\frac{5}{4} - 2\frac{3}{4} = (5-2)\frac{5-3}{4} = 3\frac{2}{4}\]</div>
-      <div id="mix-step-4" class="step-item"><strong>Step 4: Simplify.</strong><br>\(3\frac{2}{4}\) simplifies to \(\mathbf{3\frac{1}{2}}\) inches of board left.</div>
+      <div id="mix-content" style="min-height: 220px;"></div>
     </div>
   </div>
 
@@ -329,91 +186,49 @@
   <div id="wholefrac" class="panel">
     <div class="section-title">Whole Numbers Plus Fractions</div>
 
-    <div class="howto-box">
-      <strong class="howto-label">What to do on this tab</strong>
-      <ul style="margin:6px 0 0 0;">
-        <li>Copy the notebook box, then work through all three carousel examples.</li>
-        <li>Work the extra guided example, then the guided word problem.</li>
-      </ul>
-    </div>
-
     <div class="notebook-box">
-      <div class="notebook-header">COPY INTO MATH NOTEBOOK</div>
-      <p style="margin:0 0 10px 0;"><strong>Rule #4: Whole Number + Fraction.</strong></p>
-      <ol>
-        <li><strong>Adding a fraction to a whole number</strong> just attaches it - a whole number is already "\(0\) parts short," so nothing to regroup. \(4 + \frac{2}{5} = 4\frac{2}{5}\).</li>
-        <li><strong>Subtracting a fraction from a whole number</strong> requires regrouping first - rewrite the whole number as (whole number \(- 1\)) plus a fraction equal to 1 with the needed denominator.</li>
-        <li><strong>Adding or subtracting a whole number and a mixed number</strong> just combines with the whole-number part - the fraction part doesn't change.</li>
-      </ol>
+      <div class="notebook-header">The Question Ladder</div>
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Ask...</th><th>Then...</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Adding or subtracting a fraction and a whole number?</td><td>Adding: just attach the fraction - nothing to regroup. Subtracting: regroup the whole number as (whole &minus; 1) plus a fraction equal to 1 first.</td></tr>
+          <tr><td>2</td><td>Whole number + mixed number?</td><td>Combine with the whole-number part only - the fraction part doesn't change.</td></tr>
+          <tr><td>3</td><td>Is it simplified?</td><td>Reduce to simplest form.</td></tr>
+        </tbody>
+      </table>
     </div>
 
-    <h3>Guided Example Carousel: Step-by-Step</h3>
     <div class="carousel-card">
       <div class="carousel-nav">
-        <button class="btn-nav" id="wf-prev-btn" onclick="changeWfEx(-1)">&larr; Previous Example</button>
+        <button class="btn-nav" id="wf-prev-btn" onclick="changeWf(-1)">&larr; Previous</button>
         <div style="text-align:center;">
-          <span id="wf-ex-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Exercise 1 of 3</span>
+          <span id="wf-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
           <div class="carousel-indicators" id="wf-dots" style="justify-content:center; margin-top:6px;"></div>
         </div>
-        <button class="btn-nav" id="wf-next-btn" onclick="changeWfEx(1)">Next Example &rarr;</button>
+        <button class="btn-nav" id="wf-next-btn" onclick="changeWf(1)">Next &rarr;</button>
       </div>
-      <div id="wf-carousel-content" style="min-height: 260px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextWfExStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetWfExStep()">Reset Steps</button>
-      </div>
-    </div>
-
-    <h3 style="margin-top:28px;">Extra Guided Example: Subtracting a Fraction From a Whole Number (\(7 - \frac{3}{8}\))</h3>
-    <div class="step-box">
-      <div id="wfex1-content" style="min-height:180px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextWfEx1Step()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetWfEx1Step()">Reset Steps</button>
-      </div>
-    </div>
-
-    <div class="step-box" style="margin-top:24px;">
-      <h3 style="margin-top:0; color:var(--primary);">Guided Word Problem: Step-by-Step</h3>
-      <p><strong>Scenario:</strong> Liam has 4 whole pizzas. He gives \(\frac{3}{4}\) of a pizza to a friend. How much pizza does he have left?</p>
-      <button class="btn-lg" onclick="revealWfStep()">Click to Reveal Next Step</button>
-      <button class="btn-secondary" onclick="resetWfSteps()">Reset</button>
-      <div id="wf-step-1" class="step-item"><strong>Step 1: Set up the problem.</strong><br>\[4 - \frac{3}{4}\]</div>
-      <div id="wf-step-2" class="step-item"><strong>Step 2: Regroup 1 whole from 4 into fourths.</strong><br>\[4 = 3\frac{4}{4}\]</div>
-      <div id="wf-step-3" class="step-item"><strong>Step 3: Subtract the fraction parts.</strong><br>\[3\frac{4}{4} - \frac{3}{4} = 3\frac{1}{4}\]</div>
-      <div id="wf-step-4" class="step-item"><strong>Step 4: Final Answer.</strong><br>Liam has \(\mathbf{3\frac{1}{4}}\) pizzas left.</div>
+      <div id="wf-content" style="min-height: 160px;"></div>
     </div>
   </div>
 
   <!-- PANEL 6: WORD PROBLEM STRATEGY -->
   <div id="wordproblem-strategy" class="panel">
     <div class="section-title">Word Problem Strategy: Estimate, Then Solve</div>
-    <div class="howto-box">
-      <strong class="howto-label">What to do on this tab</strong>
-      <ul style="margin:6px 0 0 0;">
-        <li>Try each problem on paper first.</li>
-        <li>Click <strong>Next Step</strong> to reveal the estimate, exact calculation, then final answer - and compare.</li>
-      </ul>
-    </div>
 
     <div class="explainer-box">
-      <strong>Routine:</strong> estimate first using benchmark fractions (\(0\), \(\frac{1}{2}\), \(1\)), then calculate exactly and compare. Keyword clues: total/sum/combined &rarr; add, difference/how much left/remaining &rarr; subtract.
+      <strong>Routine:</strong> estimate first using benchmark fractions (\(0\), \(\frac{1}{2}\), \(1\)), then ask the Question Ladder from Tabs 2-5 to calculate exactly, then compare. Keyword clues: total/sum/combined &rarr; add, difference/how much left/remaining &rarr; subtract.
     </div>
 
     <div class="carousel-card">
       <div class="carousel-nav">
-        <button class="btn-nav" id="wp-prev-btn" onclick="changeWordProblem(-1)">&larr; Previous Problem</button>
+        <button class="btn-nav" id="wp-prev-btn" onclick="changeWp(-1)">&larr; Previous</button>
         <div style="text-align:center;">
           <span id="wp-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Problem 1 of 5</span>
           <div class="carousel-indicators" id="wp-dots" style="justify-content:center; margin-top:6px;"></div>
         </div>
-        <button class="btn-nav" id="wp-next-btn" onclick="changeWordProblem(1)">Next Problem &rarr;</button>
+        <button class="btn-nav" id="wp-next-btn" onclick="changeWp(1)">Next &rarr;</button>
       </div>
-      <div id="wp-content" style="min-height: 300px;"></div>
-      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextWordProblemStep()">Next Step &darr;</button>
-        <button class="btn-secondary" onclick="resetWordProblemStep()">Reset Steps</button>
-      </div>
+      <div id="wp-content" style="min-height: 220px;"></div>
     </div>
   </div>
 
@@ -461,7 +276,7 @@
   }
 
   // ==========================================
-  // FRACTION BAR MODEL (simple inline SVG, no library)
+  // FRACTION BAR MODEL (simple inline SVG, no library) - Tab 1 only
   // ==========================================
   function fracBarSVG(num, den, color) {
     color = color || '#2563eb';
@@ -479,454 +294,421 @@
   document.getElementById('fd-bar-3').innerHTML = fracBarSVG(5, 6, '#15803d');
 
   // ==========================================
-  // TAB 2: LIKE DENOMINATORS CAROUSEL
+  // GENERIC CAROUSEL FACTORY (matches Seventh-grade Rational Numbers /
+  // Operations with Rational Numbers pattern) - every example is a fully-
+  // shown Question-Ladder card; Previous/Next just switch which one is on
+  // screen.
   // ==========================================
-  let currentLikeEx = 0, currentLikeExStep = 1;
+  function makeCarousel(prefix, examples) {
+    let current = 0;
+    function render() {
+      const ex = examples[current];
+      document.getElementById(`${prefix}-title`).innerText = `Example ${current + 1} of ${examples.length}`;
+      document.getElementById(`${prefix}-dots`).innerHTML = examples.map((_, i) =>
+        `<div class="dot ${i === current ? 'active' : ''}" onclick="${prefix}Jump(${i})"></div>`
+      ).join('');
+      document.getElementById(`${prefix}-content`).innerHTML = ex.html;
+      document.getElementById(`${prefix}-prev-btn`).disabled = current === 0;
+      document.getElementById(`${prefix}-next-btn`).disabled = current === examples.length - 1;
+      triggerMathJax();
+    }
+    function change(dir) { current = Math.max(0, Math.min(examples.length - 1, current + dir)); render(); }
+    function jump(idx) { current = idx; render(); }
+    function showAt(i) { current = i; render(); }
+    window[`change${cap(prefix)}`] = change;
+    window[`${prefix}Jump`] = jump;
+    render();
+    if (window.TeacherPrint) TeacherPrint.registerCarousel(`${prefix}-content`, examples.length, showAt);
+  }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  // ==========================================
+  // TAB 2: LIKE DENOMINATORS
+  // ==========================================
   const likeExamples = [
     {
-      title: "Exercise 1: Adding Like Denominators (\\(\\frac{3}{8} + \\frac{4}{8}\\))",
-      maxSteps: 2,
-      render: (step) => `
-        <div class="bar-row">
-          <div>${fracBarSVG(3, 8)}<div class="bar-caption">\\(\\frac{3}{8}\\)</div></div>
-          <div style="font-size:1.6rem; font-weight:900;">+</div>
-          <div>${fracBarSVG(4, 8, '#0891b2')}<div class="bar-caption">\\(\\frac{4}{8}\\)</div></div>
-          ${step >= 2 ? `<div style="font-size:1.6rem; font-weight:900;">=</div><div>${fracBarSVG(7, 8, '#15803d')}<div class="bar-caption">\\(\\frac{7}{8}\\)</div></div>` : ''}
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(\\dfrac38 + \\dfrac48\\) <span class="type-tag addsub">Add</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(\\dfrac38 + \\dfrac48\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same denominator?</div><div class="qa-a">Yes - eighths</div></div>
+            <div class="qa-row"><div class="qa-q">Adding or subtracting?</div><div class="qa-a">Adding - add the numerators</div></div>
+          </div><div class="resolve-box add"><span class="box-label">Resolving</span>\\(3+4=7\\)</div></div>
         </div>
-        <div class="step-line">${step === 1 ? 'Step 1: Denominators match (eighths) - add only the numerators: \\(3 + 4 = 7\\).' : ''}
-        ${step === 2 ? 'Step 2: Keep the denominator. \\(\\frac{7}{8}\\) is already in simplest form.' : ''}</div>
-        ${step >= 2 ? `<div class="final-box">\\(\\frac{3}{8} + \\frac{4}{8} = \\mathbf{\\frac{7}{8}}\\)</div>` : ''}
-      `
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\dfrac78\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Is it simplified?</div><div class="qa-a">Yes - already simplest form</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Exercise 2: Subtracting Like Denominators (\\(\\frac{5}{6} - \\frac{1}{6}\\))",
-      maxSteps: 3,
-      render: (step) => `
-        <div class="bar-row">
-          <div>${fracBarSVG(5, 6)}<div class="bar-caption">\\(\\frac{5}{6}\\)</div></div>
-          <div style="font-size:1.6rem; font-weight:900;">&minus;</div>
-          <div>${fracBarSVG(1, 6, '#0891b2')}<div class="bar-caption">\\(\\frac{1}{6}\\)</div></div>
-          ${step >= 2 ? `<div style="font-size:1.6rem; font-weight:900;">=</div><div>${fracBarSVG(4, 6, '#15803d')}<div class="bar-caption">\\(\\frac{4}{6}\\)</div></div>` : ''}
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(\\dfrac56 - \\dfrac16\\) <span class="type-tag addsub">Subtract</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(\\dfrac56 - \\dfrac16\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same denominator?</div><div class="qa-a">Yes - sixths</div></div>
+            <div class="qa-row"><div class="qa-q">Adding or subtracting?</div><div class="qa-a">Subtracting - subtract the numerators</div></div>
+          </div><div class="resolve-box sub"><span class="box-label">Resolving</span>\\(5-1=4\\)</div></div>
         </div>
-        <div class="step-line">${step === 1 ? 'Step 1: Denominators match (sixths) - subtract only the numerators: \\(5 - 1 = 4\\).' : ''}
-        ${step === 2 ? 'Step 2: Keep the denominator: \\(\\frac{4}{6}\\).' : ''}
-        ${step === 3 ? 'Step 3: Simplify - both 4 and 6 divide by 2: \\(\\frac{4}{6} = \\frac{2}{3}\\).' : ''}</div>
-        ${step >= 3 ? `<div class="final-box">\\(\\frac{5}{6} - \\frac{1}{6} = \\mathbf{\\frac{2}{3}}\\)</div>` : ''}
-      `
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\dfrac23\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Is it simplified?</div><div class="qa-a">No - \\(\\dfrac46 \\rightarrow \\dfrac23\\) (divide both by 2)</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Exercise 3: Sum Becomes Improper (\\(\\frac{5}{6} + \\frac{5}{6}\\))",
-      maxSteps: 3,
-      render: (step) => `
-        <div class="step-line" style="margin-top:0;">\\(\\frac{5}{6} + \\frac{5}{6}\\)</div>
-        ${step >= 1 ? `<p style="text-align:center;">Step 1: Add the numerators, keep the denominator: \\(\\frac{5+5}{6} = \\frac{10}{6}\\)</p>` : ''}
-        ${step >= 2 ? `<p style="text-align:center;">Step 2: \\(\\frac{10}{6}\\) is improper (numerator \\(\\ge\\) denominator) - convert to a mixed number: \\(10 \\div 6 = 1\\) remainder \\(4\\), so \\(\\frac{10}{6} = 1\\frac{4}{6}\\).</p>` : ''}
-        ${step >= 3 ? `<p style="text-align:center;">Step 3: Simplify the fraction part: \\(1\\frac{4}{6} = 1\\frac{2}{3}\\).</p>` : ''}
-        ${step >= 3 ? `<div class="final-box">\\(\\frac{5}{6} + \\frac{5}{6} = \\mathbf{1\\frac{2}{3}}\\)</div>` : ''}
-      `
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(\\dfrac56 + \\dfrac56\\) <span class="type-tag addsub">Add</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(\\dfrac56 + \\dfrac56\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same denominator?</div><div class="qa-a">Yes - sixths</div></div>
+            <div class="qa-row"><div class="qa-q">Adding or subtracting?</div><div class="qa-a">Adding - add the numerators</div></div>
+          </div><div class="resolve-box add"><span class="box-label">Resolving</span>\\(5+5=10\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(1\\dfrac23\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Is it simplified?</div><div class="qa-a">\\(\\dfrac{10}{6}\\) is improper: \\(=1\\dfrac46 \\rightarrow 1\\dfrac23\\)</div></div>
+          </div></div>
+        </div>`
     }
   ];
-  function renderLikeCarousel() {
-    const ex = likeExamples[currentLikeEx];
-    document.getElementById('like-ex-title').innerText = ex.title;
-    document.getElementById('like-dots').innerHTML = likeExamples.map((_, i) => `<div class="dot ${i === currentLikeEx ? 'active' : ''}" onclick="jumpToLikeEx(${i})"></div>`).join('');
-    document.getElementById('like-carousel-content').innerHTML = ex.render(currentLikeExStep);
-    document.getElementById('like-prev-btn').disabled = currentLikeEx === 0;
-    document.getElementById('like-next-btn').disabled = currentLikeEx === likeExamples.length - 1;
-    triggerMathJax();
-  }
-  function changeLikeEx(dir) { currentLikeEx = Math.max(0, Math.min(likeExamples.length - 1, currentLikeEx + dir)); currentLikeExStep = 1; renderLikeCarousel(); }
-  function jumpToLikeEx(idx) { currentLikeEx = idx; currentLikeExStep = 1; renderLikeCarousel(); }
-  function nextLikeExStep() { if (currentLikeExStep < likeExamples[currentLikeEx].maxSteps) { currentLikeExStep++; renderLikeCarousel(); } }
-  function resetLikeExStep() { currentLikeExStep = 1; renderLikeCarousel(); }
-  function showLikeExFullyWorked(i) { currentLikeEx = i; currentLikeExStep = likeExamples[i].maxSteps; renderLikeCarousel(); }
-  TeacherPrint.registerCarousel('like-carousel-content', likeExamples.length, showLikeExFullyWorked);
-  renderLikeCarousel();
-
-  // Extra Guided Example 1 (Like - Add)
-  let likeEx1Step = 1;
-  function renderLikeEx1() {
-    const step = likeEx1Step;
-    document.getElementById('likeex1-content').innerHTML = `
-      <div class="step-line" style="margin-top:0;">\\(\\frac{2}{9} + \\frac{5}{9}\\)</div>
-      ${step >= 1 ? `<p style="text-align:center;">Step 1: Same denominator (ninths) - add the numerators: \\(2 + 5 = 7\\).</p>` : ''}
-      ${step >= 2 ? `<p style="text-align:center;">Step 2: Keep the denominator: \\(\\frac{7}{9}\\). Already in simplest form.</p>` : ''}
-      ${step >= 2 ? `<div class="final-box">\\(\\frac{2}{9} + \\frac{5}{9} = \\mathbf{\\frac{7}{9}}\\)</div>` : ''}
-    `;
-    triggerMathJax();
-  }
-  function nextLikeEx1Step() { if (likeEx1Step < 2) { likeEx1Step++; renderLikeEx1(); } }
-  function resetLikeEx1Step() { likeEx1Step = 1; renderLikeEx1(); }
-  renderLikeEx1();
-
-  // Extra Guided Example 2 (Like - Subtract)
-  let likeEx2Step = 1;
-  function renderLikeEx2() {
-    const step = likeEx2Step;
-    document.getElementById('likeex2-content').innerHTML = `
-      <div class="step-line" style="margin-top:0;">\\(\\frac{7}{10} - \\frac{3}{10}\\)</div>
-      ${step >= 1 ? `<p style="text-align:center;">Step 1: Same denominator (tenths) - subtract the numerators: \\(7 - 3 = 4\\).</p>` : ''}
-      ${step >= 2 ? `<p style="text-align:center;">Step 2: Keep the denominator: \\(\\frac{4}{10}\\).</p>` : ''}
-      ${step >= 3 ? `<p style="text-align:center;">Step 3: Simplify - both divide by 2: \\(\\frac{4}{10} = \\frac{2}{5}\\).</p>` : ''}
-      ${step >= 3 ? `<div class="final-box">\\(\\frac{7}{10} - \\frac{3}{10} = \\mathbf{\\frac{2}{5}}\\)</div>` : ''}
-    `;
-    triggerMathJax();
-  }
-  function nextLikeEx2Step() { if (likeEx2Step < 3) { likeEx2Step++; renderLikeEx2(); } }
-  function resetLikeEx2Step() { likeEx2Step = 1; renderLikeEx2(); }
-  renderLikeEx2();
-
-  // Word problem reveal (Like)
-  let likeStepCount = 0;
-  function revealLikeStep() { likeStepCount = Math.min(likeStepCount + 1, 3); for (let i = 1; i <= 3; i++) document.getElementById(`like-step-${i}`).classList.toggle('visible', i <= likeStepCount); triggerMathJax(); }
-  function resetLikeSteps() { likeStepCount = 0; for (let i = 1; i <= 3; i++) document.getElementById(`like-step-${i}`).classList.remove('visible'); }
+  makeCarousel('like', likeExamples);
 
   // ==========================================
-  // TAB 3: UNLIKE DENOMINATORS CAROUSEL
+  // TAB 3: UNLIKE DENOMINATORS (Butterfly Method)
   // ==========================================
-  let currentUnlikeEx = 0, currentUnlikeExStep = 1;
   const unlikeExamples = [
     {
-      title: "Exercise 1: Adding Unlike Denominators (\\(\\frac{1}{3} + \\frac{1}{4}\\))",
-      maxSteps: 3,
-      render: (step) => `
-        <div class="step-line" style="margin-top:0;">\\(\\frac{1}{3} + \\frac{1}{4}\\)</div>
-        ${step >= 1 ? `<p style="text-align:center;">Step 1: Find the LCD of 3 and 4. Multiples of 3: 3, 6, 9, <strong>12</strong>. Multiples of 4: 4, 8, <strong>12</strong>. LCD = 12.</p>` : ''}
-        ${step >= 2 ? `<p style="text-align:center;">Step 2: Rename both fractions: \\(\\frac{1}{3} = \\frac{4}{12}\\) and \\(\\frac{1}{4} = \\frac{3}{12}\\).</p>` : ''}
-        ${step >= 3 ? `<p style="text-align:center;">Step 3: Add the numerators: \\(\\frac{4}{12} + \\frac{3}{12} = \\frac{7}{12}\\). Already simplest form.</p>` : ''}
-        ${step >= 3 ? `<div class="final-box">\\(\\frac{1}{3} + \\frac{1}{4} = \\mathbf{\\frac{7}{12}}\\)</div>` : ''}
-      `
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(\\dfrac13 + \\dfrac14\\) <span class="type-tag addsub">Add</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(\\dfrac13 + \\dfrac14\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same denominator?</div><div class="qa-a">No - Butterfly Method</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Wings</span>\\(1\\times4=4\\), \\(3\\times1=3\\); denom \\(3\\times4=12\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\dfrac{7}{12}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Add the wings &amp; simplify</div><div class="qa-a">\\(\\dfrac{4+3}{12} = \\dfrac{7}{12}\\) (already simplest)</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Exercise 2: Subtracting Unlike Denominators (\\(\\frac{5}{6} - \\frac{1}{4}\\))",
-      maxSteps: 3,
-      render: (step) => `
-        <div class="step-line" style="margin-top:0;">\\(\\frac{5}{6} - \\frac{1}{4}\\)</div>
-        ${step >= 1 ? `<p style="text-align:center;">Step 1: Find the LCD of 6 and 4. Multiples of 6: 6, <strong>12</strong>. Multiples of 4: 4, 8, <strong>12</strong>. LCD = 12.</p>` : ''}
-        ${step >= 2 ? `<p style="text-align:center;">Step 2: Rename both fractions: \\(\\frac{5}{6} = \\frac{10}{12}\\) and \\(\\frac{1}{4} = \\frac{3}{12}\\).</p>` : ''}
-        ${step >= 3 ? `<p style="text-align:center;">Step 3: Subtract the numerators: \\(\\frac{10}{12} - \\frac{3}{12} = \\frac{7}{12}\\). Already simplest form.</p>` : ''}
-        ${step >= 3 ? `<div class="final-box">\\(\\frac{5}{6} - \\frac{1}{4} = \\mathbf{\\frac{7}{12}}\\)</div>` : ''}
-      `
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(\\dfrac56 - \\dfrac14\\) <span class="type-tag addsub">Subtract</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(\\dfrac56 - \\dfrac14\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same denominator?</div><div class="qa-a">No - Butterfly Method</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Wings</span>\\(5\\times4=20\\), \\(6\\times1=6\\); denom \\(6\\times4=24\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\dfrac{7}{12}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Subtract the wings &amp; simplify</div><div class="qa-a">\\(\\dfrac{20-6}{24} = \\dfrac{14}{24} \\rightarrow \\dfrac{7}{12}\\)</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Exercise 3: One Denominator is a Multiple of the Other (\\(\\frac{1}{2} + \\frac{3}{8}\\))",
-      maxSteps: 3,
-      render: (step) => `
-        <div class="step-line" style="margin-top:0;">\\(\\frac{1}{2} + \\frac{3}{8}\\)</div>
-        ${step >= 1 ? `<p style="text-align:center;">Step 1: 8 is already a multiple of 2, so the LCD is 8 - only one fraction needs renaming.</p>` : ''}
-        ${step >= 2 ? `<p style="text-align:center;">Step 2: Rename: \\(\\frac{1}{2} = \\frac{4}{8}\\). \\(\\frac{3}{8}\\) stays the same.</p>` : ''}
-        ${step >= 3 ? `<p style="text-align:center;">Step 3: Add the numerators: \\(\\frac{4}{8} + \\frac{3}{8} = \\frac{7}{8}\\). Already simplest form.</p>` : ''}
-        ${step >= 3 ? `<div class="final-box">\\(\\frac{1}{2} + \\frac{3}{8} = \\mathbf{\\frac{7}{8}}\\)</div>` : ''}
-      `
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(\\dfrac12 + \\dfrac38\\) <span class="type-tag addsub">Add</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(\\dfrac12 + \\dfrac38\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same denominator?</div><div class="qa-a">No - Butterfly Method (works even when one denominator is a multiple of the other)</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Wings</span>\\(1\\times8=8\\), \\(2\\times3=6\\); denom \\(2\\times8=16\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\dfrac{7}{8}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Add the wings &amp; simplify</div><div class="qa-a">\\(\\dfrac{8+6}{16} = \\dfrac{14}{16} \\rightarrow \\dfrac{7}{8}\\)</div></div>
+          </div></div>
+        </div>`
+    },
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(\\dfrac34 - \\dfrac25\\) <span class="type-tag addsub">Subtract</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(\\dfrac34 - \\dfrac25\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same denominator?</div><div class="qa-a">No - Butterfly Method</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Wings</span>\\(3\\times5=15\\), \\(4\\times2=8\\); denom \\(4\\times5=20\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\dfrac{7}{20}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Subtract the wings &amp; simplify</div><div class="qa-a">\\(\\dfrac{15-8}{20} = \\dfrac{7}{20}\\) (already simplest)</div></div>
+          </div></div>
+        </div>`
     }
   ];
-  function renderUnlikeCarousel() {
-    const ex = unlikeExamples[currentUnlikeEx];
-    document.getElementById('unlike-ex-title').innerText = ex.title;
-    document.getElementById('unlike-dots').innerHTML = unlikeExamples.map((_, i) => `<div class="dot ${i === currentUnlikeEx ? 'active' : ''}" onclick="jumpToUnlikeEx(${i})"></div>`).join('');
-    document.getElementById('unlike-carousel-content').innerHTML = ex.render(currentUnlikeExStep);
-    document.getElementById('unlike-prev-btn').disabled = currentUnlikeEx === 0;
-    document.getElementById('unlike-next-btn').disabled = currentUnlikeEx === unlikeExamples.length - 1;
-    triggerMathJax();
-  }
-  function changeUnlikeEx(dir) { currentUnlikeEx = Math.max(0, Math.min(unlikeExamples.length - 1, currentUnlikeEx + dir)); currentUnlikeExStep = 1; renderUnlikeCarousel(); }
-  function jumpToUnlikeEx(idx) { currentUnlikeEx = idx; currentUnlikeExStep = 1; renderUnlikeCarousel(); }
-  function nextUnlikeExStep() { if (currentUnlikeExStep < unlikeExamples[currentUnlikeEx].maxSteps) { currentUnlikeExStep++; renderUnlikeCarousel(); } }
-  function resetUnlikeExStep() { currentUnlikeExStep = 1; renderUnlikeCarousel(); }
-  function showUnlikeExFullyWorked(i) { currentUnlikeEx = i; currentUnlikeExStep = unlikeExamples[i].maxSteps; renderUnlikeCarousel(); }
-  TeacherPrint.registerCarousel('unlike-carousel-content', unlikeExamples.length, showUnlikeExFullyWorked);
-  renderUnlikeCarousel();
-
-  // Extra Guided Example 1 (Unlike - Add)
-  let unlikeEx1Step = 1;
-  function renderUnlikeEx1() {
-    const step = unlikeEx1Step;
-    document.getElementById('unlikeex1-content').innerHTML = `
-      <div class="step-line" style="margin-top:0;">\\(\\frac{2}{5} + \\frac{1}{2}\\)</div>
-      ${step >= 1 ? `<p style="text-align:center;">Step 1: LCD of 5 and 2 is 10.</p>` : ''}
-      ${step >= 2 ? `<p style="text-align:center;">Step 2: Rename: \\(\\frac{2}{5} = \\frac{4}{10}\\) and \\(\\frac{1}{2} = \\frac{5}{10}\\).</p>` : ''}
-      ${step >= 3 ? `<p style="text-align:center;">Step 3: Add: \\(\\frac{4}{10} + \\frac{5}{10} = \\frac{9}{10}\\). Already simplest form.</p>` : ''}
-      ${step >= 3 ? `<div class="final-box">\\(\\frac{2}{5} + \\frac{1}{2} = \\mathbf{\\frac{9}{10}}\\)</div>` : ''}
-    `;
-    triggerMathJax();
-  }
-  function nextUnlikeEx1Step() { if (unlikeEx1Step < 3) { unlikeEx1Step++; renderUnlikeEx1(); } }
-  function resetUnlikeEx1Step() { unlikeEx1Step = 1; renderUnlikeEx1(); }
-  renderUnlikeEx1();
-
-  // Extra Guided Example 2 (Unlike - Subtract)
-  let unlikeEx2Step = 1;
-  function renderUnlikeEx2() {
-    const step = unlikeEx2Step;
-    document.getElementById('unlikeex2-content').innerHTML = `
-      <div class="step-line" style="margin-top:0;">\\(\\frac{3}{4} - \\frac{2}{5}\\)</div>
-      ${step >= 1 ? `<p style="text-align:center;">Step 1: LCD of 4 and 5 is 20.</p>` : ''}
-      ${step >= 2 ? `<p style="text-align:center;">Step 2: Rename: \\(\\frac{3}{4} = \\frac{15}{20}\\) and \\(\\frac{2}{5} = \\frac{8}{20}\\).</p>` : ''}
-      ${step >= 3 ? `<p style="text-align:center;">Step 3: Subtract: \\(\\frac{15}{20} - \\frac{8}{20} = \\frac{7}{20}\\). Already simplest form.</p>` : ''}
-      ${step >= 3 ? `<div class="final-box">\\(\\frac{3}{4} - \\frac{2}{5} = \\mathbf{\\frac{7}{20}}\\)</div>` : ''}
-    `;
-    triggerMathJax();
-  }
-  function nextUnlikeEx2Step() { if (unlikeEx2Step < 3) { unlikeEx2Step++; renderUnlikeEx2(); } }
-  function resetUnlikeEx2Step() { unlikeEx2Step = 1; renderUnlikeEx2(); }
-  renderUnlikeEx2();
-
-  // Word problem reveal (Unlike)
-  let unlikeStepCount = 0;
-  function revealUnlikeStep() { unlikeStepCount = Math.min(unlikeStepCount + 1, 4); for (let i = 1; i <= 4; i++) document.getElementById(`unlike-step-${i}`).classList.toggle('visible', i <= unlikeStepCount); triggerMathJax(); }
-  function resetUnlikeSteps() { unlikeStepCount = 0; for (let i = 1; i <= 4; i++) document.getElementById(`unlike-step-${i}`).classList.remove('visible'); }
+  makeCarousel('unlike', unlikeExamples);
 
   // ==========================================
-  // TAB 4: MIXED NUMBERS CAROUSEL
+  // TAB 4: MIXED NUMBERS
   // ==========================================
-  let currentMixEx = 0, currentMixExStep = 1;
   const mixExamples = [
     {
-      title: "Exercise 1: Adding, No Regrouping (\\(2\\frac{1}{5} + 1\\frac{2}{5}\\))",
-      maxSteps: 2,
-      render: (step) => `
-        <div class="step-line" style="margin-top:0;">\\(2\\frac{1}{5} + 1\\frac{2}{5}\\)</div>
-        ${step >= 1 ? `<p style="text-align:center;">Step 1: Same denominator - add whole numbers and fraction parts separately: \\(2+1=3\\) and \\(\\frac{1}{5}+\\frac{2}{5}=\\frac{3}{5}\\).</p>` : ''}
-        ${step >= 2 ? `<p style="text-align:center;">Step 2: The fraction part (\\(\\frac{3}{5}\\)) is already less than 1 and in simplest form - no regrouping needed.</p>` : ''}
-        ${step >= 2 ? `<div class="final-box">\\(2\\frac{1}{5} + 1\\frac{2}{5} = \\mathbf{3\\frac{3}{5}}\\)</div>` : ''}
-      `
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(2\\dfrac15 + 1\\dfrac25\\) <span class="type-tag addsub">Add</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(2\\dfrac15 + 1\\dfrac25\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same denominator on the fraction parts?</div><div class="qa-a">Yes - fifths</div></div>
+            <div class="qa-row"><div class="qa-q">Combine separately</div><div class="qa-a">Whole: \\(2+1=3\\). Fraction: \\(\\dfrac15+\\dfrac25=\\dfrac35\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(3\\dfrac35\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Anything to regroup? Simplified?</div><div class="qa-a">\\(\\dfrac35 < 1\\) and already simplest - nothing to regroup</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Exercise 2: Adding With Regrouping (\\(1\\frac{3}{4} + 2\\frac{5}{6}\\))",
-      maxSteps: 4,
-      render: (step) => `
-        <div class="step-line" style="margin-top:0;">\\(1\\frac{3}{4} + 2\\frac{5}{6}\\)</div>
-        ${step >= 1 ? `<p style="text-align:center;">Step 1: LCD of 4 and 6 is 12. Rename: \\(1\\frac{3}{4} = 1\\frac{9}{12}\\) and \\(2\\frac{5}{6} = 2\\frac{10}{12}\\).</p>` : ''}
-        ${step >= 2 ? `<p style="text-align:center;">Step 2: Add whole numbers and fraction parts separately: \\(1+2=3\\) and \\(\\frac{9}{12}+\\frac{10}{12}=\\frac{19}{12}\\).</p>` : ''}
-        ${step >= 3 ? `<p style="text-align:center;">Step 3: \\(\\frac{19}{12}\\) is improper - convert: \\(\\frac{19}{12} = 1\\frac{7}{12}\\). Regroup that extra whole into the total: \\(3 + 1\\frac{7}{12} = 4\\frac{7}{12}\\).</p>` : ''}
-        ${step >= 4 ? `<p style="text-align:center;">Step 4: \\(\\frac{7}{12}\\) is already simplest form.</p>` : ''}
-        ${step >= 4 ? `<div class="final-box">\\(1\\frac{3}{4} + 2\\frac{5}{6} = \\mathbf{4\\frac{7}{12}}\\)</div>` : ''}
-      `
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(1\\dfrac34 + 2\\dfrac56\\) <span class="type-tag addsub">Add, Regroup</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(1\\dfrac34 + 2\\dfrac56\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same denominator on the fraction parts?</div><div class="qa-a">No - Butterfly Method on \\(\\dfrac34\\) and \\(\\dfrac56\\)</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Wings</span>\\(3\\times6=18\\), \\(4\\times5=20\\); denom \\(4\\times6=24\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math running"><span class="expr-chip active">\\(3\\dfrac{38}{24}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Combine separately</div><div class="qa-a">Whole: \\(1+2=3\\). Fraction: \\(\\dfrac{18+20}{24}=\\dfrac{38}{24}\\)</div></div>
+            <div class="qa-row"><div class="qa-q">Is the fraction part improper?</div><div class="qa-a">Yes - \\(\\dfrac{38}{24} \\ge 1\\), regroup</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(4\\dfrac{7}{12}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Regroup &amp; simplify</div><div class="qa-a">\\(\\dfrac{38}{24}=1\\dfrac{14}{24}=1\\dfrac{7}{12}\\); carry: \\(3+1\\dfrac{7}{12}=4\\dfrac{7}{12}\\)</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Exercise 3: Subtracting With Borrowing (\\(5\\frac{1}{4} - 2\\frac{3}{4}\\))",
-      maxSteps: 3,
-      render: (step) => `
-        <div class="step-line" style="margin-top:0;">\\(5\\frac{1}{4} - 2\\frac{3}{4}\\)</div>
-        ${step >= 1 ? `<p style="text-align:center;">Step 1: Same denominator, but \\(\\frac{1}{4} < \\frac{3}{4}\\) - we can't subtract without regrouping.</p>` : ''}
-        ${step >= 2 ? `<p style="text-align:center;">Step 2: Regroup 1 whole from 5 into fourths: \\(5\\frac{1}{4} = 4\\frac{4}{4} + \\frac{1}{4} = 4\\frac{5}{4}\\).</p>` : ''}
-        ${step >= 3 ? `<p style="text-align:center;">Step 3: Subtract: \\(4\\frac{5}{4} - 2\\frac{3}{4} = (4-2)\\frac{5-3}{4} = 2\\frac{2}{4} = 2\\frac{1}{2}\\).</p>` : ''}
-        ${step >= 3 ? `<div class="final-box">\\(5\\frac{1}{4} - 2\\frac{3}{4} = \\mathbf{2\\frac{1}{2}}\\)</div>` : ''}
-      `
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(5\\dfrac14 - 2\\dfrac34\\) <span class="type-tag addsub">Subtract, Borrow</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(5\\dfrac14 - 2\\dfrac34\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same denominator on the fraction parts?</div><div class="qa-a">Yes - fourths</div></div>
+            <div class="qa-row"><div class="qa-q">Enough to subtract?</div><div class="qa-a">No - \\(\\dfrac14 < \\dfrac34\\), regroup 1 whole</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Regroup</span>\\(5\\dfrac14 = 4\\dfrac54\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(2\\dfrac12\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Subtract &amp; simplify</div><div class="qa-a">\\(4\\dfrac54 - 2\\dfrac34 = 2\\dfrac24 \\rightarrow 2\\dfrac12\\)</div></div>
+          </div></div>
+        </div>`
+    },
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(4\\dfrac16 - 1\\dfrac12\\) <span class="type-tag addsub">Subtract, Butterfly + Borrow</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(4\\dfrac16 - 1\\dfrac12\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Same denominator on the fraction parts?</div><div class="qa-a">No - Butterfly Method on \\(\\dfrac16\\) and \\(\\dfrac12\\)</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Wings</span>\\(1\\times2=2\\), \\(6\\times1=6\\); denom \\(6\\times2=12\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math running"><span class="expr-chip active">\\(4\\dfrac{2}{12} - 1\\dfrac{6}{12}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Enough to subtract?</div><div class="qa-a">No - \\(\\dfrac{2}{12} < \\dfrac{6}{12}\\), regroup 1 whole</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Regroup</span>\\(4\\dfrac{2}{12} = 3\\dfrac{14}{12}\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(2\\dfrac23\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Subtract &amp; simplify</div><div class="qa-a">\\(3\\dfrac{14}{12} - 1\\dfrac{6}{12} = 2\\dfrac{8}{12} \\rightarrow 2\\dfrac23\\)</div></div>
+          </div></div>
+        </div>`
     }
   ];
-  function renderMixCarousel() {
-    const ex = mixExamples[currentMixEx];
-    document.getElementById('mix-ex-title').innerText = ex.title;
-    document.getElementById('mix-dots').innerHTML = mixExamples.map((_, i) => `<div class="dot ${i === currentMixEx ? 'active' : ''}" onclick="jumpToMixEx(${i})"></div>`).join('');
-    document.getElementById('mix-carousel-content').innerHTML = ex.render(currentMixExStep);
-    document.getElementById('mix-prev-btn').disabled = currentMixEx === 0;
-    document.getElementById('mix-next-btn').disabled = currentMixEx === mixExamples.length - 1;
-    triggerMathJax();
-  }
-  function changeMixEx(dir) { currentMixEx = Math.max(0, Math.min(mixExamples.length - 1, currentMixEx + dir)); currentMixExStep = 1; renderMixCarousel(); }
-  function jumpToMixEx(idx) { currentMixEx = idx; currentMixExStep = 1; renderMixCarousel(); }
-  function nextMixExStep() { if (currentMixExStep < mixExamples[currentMixEx].maxSteps) { currentMixExStep++; renderMixCarousel(); } }
-  function resetMixExStep() { currentMixExStep = 1; renderMixCarousel(); }
-  function showMixExFullyWorked(i) { currentMixEx = i; currentMixExStep = mixExamples[i].maxSteps; renderMixCarousel(); }
-  TeacherPrint.registerCarousel('mix-carousel-content', mixExamples.length, showMixExFullyWorked);
-  renderMixCarousel();
-
-  // Extra Guided Example 1 (Mixed - Add w/ Regroup)
-  let mixEx1Step = 1;
-  function renderMixEx1() {
-    const step = mixEx1Step;
-    document.getElementById('mixex1-content').innerHTML = `
-      <div class="step-line" style="margin-top:0;">\\(3\\frac{2}{3} + 1\\frac{5}{6}\\)</div>
-      ${step >= 1 ? `<p style="text-align:center;">Step 1: LCD of 3 and 6 is 6. Rename: \\(3\\frac{2}{3} = 3\\frac{4}{6}\\); \\(1\\frac{5}{6}\\) stays.</p>` : ''}
-      ${step >= 2 ? `<p style="text-align:center;">Step 2: Add separately: \\(3+1=4\\) and \\(\\frac{4}{6}+\\frac{5}{6}=\\frac{9}{6}\\).</p>` : ''}
-      ${step >= 3 ? `<p style="text-align:center;">Step 3: \\(\\frac{9}{6}\\) is improper: \\(\\frac{9}{6}=1\\frac{3}{6}\\). Regroup into the total: \\(4+1\\frac{3}{6}=5\\frac{3}{6}\\).</p>` : ''}
-      ${step >= 4 ? `<p style="text-align:center;">Step 4: Simplify: \\(5\\frac{3}{6} = 5\\frac{1}{2}\\).</p>` : ''}
-      ${step >= 4 ? `<div class="final-box">\\(3\\frac{2}{3} + 1\\frac{5}{6} = \\mathbf{5\\frac{1}{2}}\\)</div>` : ''}
-    `;
-    triggerMathJax();
-  }
-  function nextMixEx1Step() { if (mixEx1Step < 4) { mixEx1Step++; renderMixEx1(); } }
-  function resetMixEx1Step() { mixEx1Step = 1; renderMixEx1(); }
-  renderMixEx1();
-
-  // Extra Guided Example 2 (Mixed - Subtract w/ Borrow, unlike denom)
-  let mixEx2Step = 1;
-  function renderMixEx2() {
-    const step = mixEx2Step;
-    document.getElementById('mixex2-content').innerHTML = `
-      <div class="step-line" style="margin-top:0;">\\(4\\frac{1}{6} - 1\\frac{1}{2}\\)</div>
-      ${step >= 1 ? `<p style="text-align:center;">Step 1: LCD of 6 and 2 is 6. Rename: \\(1\\frac{1}{2} = 1\\frac{3}{6}\\); \\(4\\frac{1}{6}\\) stays.</p>` : ''}
-      ${step >= 2 ? `<p style="text-align:center;">Step 2: Compare fraction parts: \\(\\frac{1}{6} < \\frac{3}{6}\\) - regroup needed.</p>` : ''}
-      ${step >= 3 ? `<p style="text-align:center;">Step 3: Regroup 1 whole from 4: \\(4\\frac{1}{6} = 3\\frac{6}{6} + \\frac{1}{6} = 3\\frac{7}{6}\\).</p>` : ''}
-      ${step >= 4 ? `<p style="text-align:center;">Step 4: Subtract: \\(3\\frac{7}{6} - 1\\frac{3}{6} = (3-1)\\frac{7-3}{6} = 2\\frac{4}{6} = 2\\frac{2}{3}\\).</p>` : ''}
-      ${step >= 4 ? `<div class="final-box">\\(4\\frac{1}{6} - 1\\frac{1}{2} = \\mathbf{2\\frac{2}{3}}\\)</div>` : ''}
-    `;
-    triggerMathJax();
-  }
-  function nextMixEx2Step() { if (mixEx2Step < 4) { mixEx2Step++; renderMixEx2(); } }
-  function resetMixEx2Step() { mixEx2Step = 1; renderMixEx2(); }
-  renderMixEx2();
-
-  // Word problem reveal (Mixed)
-  let mixStepCount = 0;
-  function revealMixStep() { mixStepCount = Math.min(mixStepCount + 1, 4); for (let i = 1; i <= 4; i++) document.getElementById(`mix-step-${i}`).classList.toggle('visible', i <= mixStepCount); triggerMathJax(); }
-  function resetMixSteps() { mixStepCount = 0; for (let i = 1; i <= 4; i++) document.getElementById(`mix-step-${i}`).classList.remove('visible'); }
+  makeCarousel('mix', mixExamples);
 
   // ==========================================
-  // TAB 5: WHOLE NUMBER + FRACTION CAROUSEL
+  // TAB 5: WHOLE NUMBERS + FRACTIONS
   // ==========================================
-  let currentWfEx = 0, currentWfExStep = 1;
   const wfExamples = [
     {
-      title: "Exercise 1: Whole Number + Fraction (\\(4 + \\frac{2}{5}\\))",
-      maxSteps: 1,
-      render: (step) => `
-        <div class="step-line" style="margin-top:0;">\\(4 + \\frac{2}{5}\\)</div>
-        ${step >= 1 ? `<p style="text-align:center;">Step 1: A whole number plus a fraction just attaches together - nothing to regroup.</p>` : ''}
-        ${step >= 1 ? `<div class="final-box">\\(4 + \\frac{2}{5} = \\mathbf{4\\frac{2}{5}}\\)</div>` : ''}
-      `
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(4 + \\dfrac25\\) <span class="type-tag addsub">Add</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(4 + \\dfrac25\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Adding or subtracting?</div><div class="qa-a">Adding a fraction to a whole number - just attach it</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(4\\dfrac25\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Anything to regroup?</div><div class="qa-a">No</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Exercise 2: Whole Number &minus; Fraction (\\(5 - \\frac{2}{3}\\))",
-      maxSteps: 3,
-      render: (step) => `
-        <div class="step-line" style="margin-top:0;">\\(5 - \\frac{2}{3}\\)</div>
-        ${step >= 1 ? `<p style="text-align:center;">Step 1: There's no fraction part to subtract from yet - regroup 1 whole into thirds.</p>` : ''}
-        ${step >= 2 ? `<p style="text-align:center;">Step 2: \\(5 = 4\\frac{3}{3}\\).</p>` : ''}
-        ${step >= 3 ? `<p style="text-align:center;">Step 3: Subtract: \\(4\\frac{3}{3} - \\frac{2}{3} = 4\\frac{1}{3}\\).</p>` : ''}
-        ${step >= 3 ? `<div class="final-box">\\(5 - \\frac{2}{3} = \\mathbf{4\\frac{1}{3}}\\)</div>` : ''}
-      `
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(5 - \\dfrac23\\) <span class="type-tag addsub">Subtract</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(5 - \\dfrac23\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Adding or subtracting?</div><div class="qa-a">Subtracting a fraction from a whole number - regroup first</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Regroup</span>\\(5 = 4\\dfrac33\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(4\\dfrac13\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Subtract</div><div class="qa-a">\\(4\\dfrac33 - \\dfrac23 = 4\\dfrac13\\)</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Exercise 3: Mixed Number + Whole Number (\\(3\\frac{1}{4} + 2\\))",
-      maxSteps: 1,
-      render: (step) => `
-        <div class="step-line" style="margin-top:0;">\\(3\\frac{1}{4} + 2\\)</div>
-        ${step >= 1 ? `<p style="text-align:center;">Step 1: Just combine with the whole-number part - the fraction part doesn't change: \\(3+2=5\\).</p>` : ''}
-        ${step >= 1 ? `<div class="final-box">\\(3\\frac{1}{4} + 2 = \\mathbf{5\\frac{1}{4}}\\)</div>` : ''}
-      `
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(3\\dfrac14 + 2\\) <span class="type-tag addsub">Add</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(3\\dfrac14 + 2\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Whole number + mixed number?</div><div class="qa-a">Combine with the whole-number part only: \\(3+2=5\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(5\\dfrac14\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Fraction part?</div><div class="qa-a">Stays the same: \\(\\dfrac14\\)</div></div>
+          </div></div>
+        </div>`
     }
   ];
-  function renderWfCarousel() {
-    const ex = wfExamples[currentWfEx];
-    document.getElementById('wf-ex-title').innerText = ex.title;
-    document.getElementById('wf-dots').innerHTML = wfExamples.map((_, i) => `<div class="dot ${i === currentWfEx ? 'active' : ''}" onclick="jumpToWfEx(${i})"></div>`).join('');
-    document.getElementById('wf-carousel-content').innerHTML = ex.render(currentWfExStep);
-    document.getElementById('wf-prev-btn').disabled = currentWfEx === 0;
-    document.getElementById('wf-next-btn').disabled = currentWfEx === wfExamples.length - 1;
-    triggerMathJax();
-  }
-  function changeWfEx(dir) { currentWfEx = Math.max(0, Math.min(wfExamples.length - 1, currentWfEx + dir)); currentWfExStep = 1; renderWfCarousel(); }
-  function jumpToWfEx(idx) { currentWfEx = idx; currentWfExStep = 1; renderWfCarousel(); }
-  function nextWfExStep() { if (currentWfExStep < wfExamples[currentWfEx].maxSteps) { currentWfExStep++; renderWfCarousel(); } }
-  function resetWfExStep() { currentWfExStep = 1; renderWfCarousel(); }
-  function showWfExFullyWorked(i) { currentWfEx = i; currentWfExStep = wfExamples[i].maxSteps; renderWfCarousel(); }
-  TeacherPrint.registerCarousel('wf-carousel-content', wfExamples.length, showWfExFullyWorked);
-  renderWfCarousel();
-
-  // Extra Guided Example (Whole - Fraction)
-  let wfEx1Step = 1;
-  function renderWfEx1() {
-    const step = wfEx1Step;
-    document.getElementById('wfex1-content').innerHTML = `
-      <div class="step-line" style="margin-top:0;">\\(7 - \\frac{3}{8}\\)</div>
-      ${step >= 1 ? `<p style="text-align:center;">Step 1: Regroup 1 whole into eighths: \\(7 = 6\\frac{8}{8}\\).</p>` : ''}
-      ${step >= 2 ? `<p style="text-align:center;">Step 2: Subtract: \\(6\\frac{8}{8} - \\frac{3}{8} = 6\\frac{5}{8}\\).</p>` : ''}
-      ${step >= 2 ? `<div class="final-box">\\(7 - \\frac{3}{8} = \\mathbf{6\\frac{5}{8}}\\)</div>` : ''}
-    `;
-    triggerMathJax();
-  }
-  function nextWfEx1Step() { if (wfEx1Step < 2) { wfEx1Step++; renderWfEx1(); } }
-  function resetWfEx1Step() { wfEx1Step = 1; renderWfEx1(); }
-  renderWfEx1();
-
-  // Word problem reveal (Whole + Fraction)
-  let wfStepCount = 0;
-  function revealWfStep() { wfStepCount = Math.min(wfStepCount + 1, 4); for (let i = 1; i <= 4; i++) document.getElementById(`wf-step-${i}`).classList.toggle('visible', i <= wfStepCount); triggerMathJax(); }
-  function resetWfSteps() { wfStepCount = 0; for (let i = 1; i <= 4; i++) document.getElementById(`wf-step-${i}`).classList.remove('visible'); }
+  makeCarousel('wf', wfExamples);
 
   // ==========================================
-  // TAB 6: WORD PROBLEM STRATEGY CAROUSEL
+  // TAB 6: WORD PROBLEM STRATEGY
   // ==========================================
-  let currentWP = 0, currentWPStep = 1;
-  const wordProblems = [
+  const wpExamples = [
     {
-      title: "Problem 1: Baking (Addition)",
-      prompt: "A recipe needs \\(\\frac{3}{4}\\) cup of white sugar and \\(\\frac{1}{2}\\) cup of brown sugar. How much sugar is needed in total?",
-      maxSteps: 3,
-      render: (step) => `
-        ${step >= 1 ? `<p><strong>Step 1 - Estimate:</strong> \\(\\frac{3}{4}\\) is close to 1, \\(\\frac{1}{2}\\) is a benchmark. Estimate \\(\\approx 1 + \\frac{1}{2} = 1\\frac{1}{2}\\) cups.</p>` : ''}
-        ${step >= 2 ? `<p><strong>Step 2 - Exact:</strong> LCD of 4 and 2 is 4. \\(\\frac{3}{4} + \\frac{2}{4} = \\frac{5}{4} = 1\\frac{1}{4}\\) cups.</p>` : ''}
-        ${step >= 3 ? `<p><strong>Step 3 - Compare:</strong> \\(1\\frac{1}{4}\\) is close to our estimate of \\(1\\frac{1}{2}\\) - reasonable!</p>` : ''}
-        ${step >= 3 ? `<div class="final-box">Total sugar: \\(\\mathbf{1\\frac{1}{4}}\\) cups</div>` : ''}
-      `
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Baking: \\(\\dfrac34 + \\dfrac12\\) cups <span class="type-tag word">Add</span></div>
+        <p style="margin:0 0 10px 0;"><strong>Scenario:</strong> A recipe needs \\(\\dfrac34\\) cup of white sugar and \\(\\dfrac12\\) cup of brown sugar. How much sugar in total?</p>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(\\dfrac34 + \\dfrac12\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Estimate (benchmark)?</div><div class="qa-a">\\(\\dfrac34\\approx1\\), \\(\\dfrac12\\) benchmark &rarr; about \\(1\\dfrac12\\)</div></div>
+            <div class="qa-row"><div class="qa-q">Same denominator?</div><div class="qa-a">No - Butterfly Method</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Wings</span>\\(3\\times2=6\\), \\(4\\times1=4\\); denom \\(4\\times2=8\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(1\\dfrac14\\) cups</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Exact</div><div class="qa-a">\\(\\dfrac{6+4}{8}=\\dfrac{10}{8}=1\\dfrac28 \\rightarrow 1\\dfrac14\\)</div></div>
+            <div class="qa-row"><div class="qa-q">Reasonable?</div><div class="qa-a">Yes - close to the \\(1\\dfrac12\\) estimate</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Problem 2: Running Distance (Mixed Number Addition)",
-      prompt: "A runner covers \\(2\\frac{1}{3}\\) miles on Monday and \\(1\\frac{5}{6}\\) miles on Tuesday. How far did she run in total?",
-      maxSteps: 3,
-      render: (step) => `
-        ${step >= 1 ? `<p><strong>Step 1 - Estimate:</strong> \\(2\\frac{1}{3} \\approx 2\\), \\(1\\frac{5}{6} \\approx 2\\) &rarr; Estimate \\(\\approx 4\\) miles.</p>` : ''}
-        ${step >= 2 ? `<p><strong>Step 2 - Exact:</strong> LCD of 3 and 6 is 6. \\(2\\frac{2}{6} + 1\\frac{5}{6} = 3\\frac{7}{6} = 4\\frac{1}{6}\\) miles.</p>` : ''}
-        ${step >= 3 ? `<p><strong>Step 3 - Compare:</strong> \\(4\\frac{1}{6}\\) is very close to our estimate of \\(4\\) - reasonable!</p>` : ''}
-        ${step >= 3 ? `<div class="final-box">Total distance: \\(\\mathbf{4\\frac{1}{6}}\\) miles</div>` : ''}
-      `
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Running: \\(2\\dfrac13 + 1\\dfrac56\\) miles <span class="type-tag word">Add</span></div>
+        <p style="margin:0 0 10px 0;"><strong>Scenario:</strong> A runner covers \\(2\\dfrac13\\) miles Monday and \\(1\\dfrac56\\) miles Tuesday. How far in total?</p>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(2\\dfrac13 + 1\\dfrac56\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Estimate?</div><div class="qa-a">\\(2\\dfrac13\\approx2\\), \\(1\\dfrac56\\approx2\\) &rarr; about 4 miles</div></div>
+            <div class="qa-row"><div class="qa-q">Same denominator?</div><div class="qa-a">No - Butterfly Method on the fraction parts</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Wings</span>\\(1\\times6=6\\), \\(3\\times5=15\\); denom \\(3\\times6=18\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math running"><span class="expr-chip active">\\(3\\dfrac{21}{18}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Combine separately</div><div class="qa-a">Whole: \\(2+1=3\\). Fraction: \\(\\dfrac{6+15}{18}=\\dfrac{21}{18}\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(4\\dfrac16\\) miles</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Regroup &amp; simplify</div><div class="qa-a">\\(\\dfrac{21}{18}=1\\dfrac{3}{18}=1\\dfrac16\\); \\(3+1\\dfrac16=4\\dfrac16\\)</div></div>
+            <div class="qa-row"><div class="qa-q">Reasonable?</div><div class="qa-a">Yes - close to the 4-mile estimate</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Problem 3: Ribbon (Mixed Number Subtraction With Borrowing)",
-      prompt: "A crafter has \\(3\\frac{1}{2}\\) yards of ribbon and uses \\(1\\frac{3}{4}\\) yards on a project. How much ribbon is left?",
-      maxSteps: 3,
-      render: (step) => `
-        ${step >= 1 ? `<p><strong>Step 1 - Estimate:</strong> \\(3\\frac{1}{2} \\approx 3\\frac{1}{2}\\), \\(1\\frac{3}{4} \\approx 2\\) &rarr; Estimate \\(\\approx 3\\frac{1}{2} - 2 = 1\\frac{1}{2}\\) yards.</p>` : ''}
-        ${step >= 2 ? `<p><strong>Step 2 - Exact:</strong> LCD of 2 and 4 is 4: \\(3\\frac{2}{4} - 1\\frac{3}{4}\\). Regroup: \\(3\\frac{2}{4} = 2\\frac{6}{4}\\). \\(2\\frac{6}{4} - 1\\frac{3}{4} = 1\\frac{3}{4}\\) yards.</p>` : ''}
-        ${step >= 3 ? `<p><strong>Step 3 - Compare:</strong> \\(1\\frac{3}{4}\\) is reasonably close to our estimate of \\(1\\frac{1}{2}\\) - reasonable!</p>` : ''}
-        ${step >= 3 ? `<div class="final-box">Ribbon left: \\(\\mathbf{1\\frac{3}{4}}\\) yards</div>` : ''}
-      `
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Ribbon: \\(3\\dfrac12 - 1\\dfrac34\\) yards <span class="type-tag word">Subtract</span></div>
+        <p style="margin:0 0 10px 0;"><strong>Scenario:</strong> A crafter has \\(3\\dfrac12\\) yards of ribbon and uses \\(1\\dfrac34\\) yards. How much ribbon is left?</p>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(3\\dfrac12 - 1\\dfrac34\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Estimate?</div><div class="qa-a">\\(3\\dfrac12\\approx3.5\\), \\(1\\dfrac34\\approx2\\) &rarr; about \\(1\\dfrac12\\)</div></div>
+            <div class="qa-row"><div class="qa-q">Same denominator?</div><div class="qa-a">No - Butterfly Method on the fraction parts</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Wings</span>\\(1\\times4=4\\), \\(2\\times3=6\\); denom \\(2\\times4=8\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math running"><span class="expr-chip active">\\(3\\dfrac48 - 1\\dfrac68\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Enough to subtract?</div><div class="qa-a">No - \\(\\dfrac48 < \\dfrac68\\), regroup 1 whole</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Regroup</span>\\(3\\dfrac48 = 2\\dfrac{12}{8}\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(1\\dfrac34\\) yards</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Subtract &amp; simplify</div><div class="qa-a">\\(2\\dfrac{12}{8} - 1\\dfrac68 = 1\\dfrac68 \\rightarrow 1\\dfrac34\\)</div></div>
+            <div class="qa-row"><div class="qa-q">Reasonable?</div><div class="qa-a">Yes - close to the \\(1\\dfrac12\\) estimate</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Problem 4: Paint (Whole Number Minus Fraction)",
-      prompt: "A painter starts with 5 liters of paint and uses \\(\\frac{2}{5}\\) liter on a shelf. How much paint is left?",
-      maxSteps: 3,
-      render: (step) => `
-        ${step >= 1 ? `<p><strong>Step 1 - Estimate:</strong> \\(\\frac{2}{5}\\) is less than \\(\\frac{1}{2}\\), so barely any paint is used - Estimate \\(\\approx 5\\) liters.</p>` : ''}
-        ${step >= 2 ? `<p><strong>Step 2 - Exact:</strong> Regroup 1 whole: \\(5 = 4\\frac{5}{5}\\). \\(4\\frac{5}{5} - \\frac{2}{5} = 4\\frac{3}{5}\\) liters.</p>` : ''}
-        ${step >= 3 ? `<p><strong>Step 3 - Compare:</strong> \\(4\\frac{3}{5}\\) is very close to our estimate of \\(5\\) - reasonable!</p>` : ''}
-        ${step >= 3 ? `<div class="final-box">Paint left: \\(\\mathbf{4\\frac{3}{5}}\\) liters</div>` : ''}
-      `
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Paint: \\(5 - \\dfrac25\\) liters <span class="type-tag word">Subtract</span></div>
+        <p style="margin:0 0 10px 0;"><strong>Scenario:</strong> A painter starts with 5 liters of paint and uses \\(\\dfrac25\\) liter on a shelf. How much paint is left?</p>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(5 - \\dfrac25\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Estimate?</div><div class="qa-a">\\(\\dfrac25\\) is small, barely used &rarr; about 5 liters</div></div>
+            <div class="qa-row"><div class="qa-q">Subtracting a fraction from a whole number?</div><div class="qa-a">Regroup first</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Regroup</span>\\(5 = 4\\dfrac55\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(4\\dfrac35\\) liters</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Subtract</div><div class="qa-a">\\(4\\dfrac55 - \\dfrac25 = 4\\dfrac35\\)</div></div>
+            <div class="qa-row"><div class="qa-q">Reasonable?</div><div class="qa-a">Yes - close to the 5-liter estimate</div></div>
+          </div></div>
+        </div>`
     },
     {
-      title: "Problem 5: Comparing Boards (Small Difference, Unlike Denominators)",
-      prompt: "Two boards measure \\(\\frac{7}{8}\\) meter and \\(\\frac{5}{6}\\) meter. What is the difference in their lengths?",
-      maxSteps: 3,
-      render: (step) => `
-        ${step >= 1 ? `<p><strong>Step 1 - Estimate:</strong> Both fractions are close to 1, so the difference should be small - Estimate \\(\\approx 0\\).</p>` : ''}
-        ${step >= 2 ? `<p><strong>Step 2 - Exact:</strong> LCD of 8 and 6 is 24: \\(\\frac{7}{8} = \\frac{21}{24}\\), \\(\\frac{5}{6} = \\frac{20}{24}\\). \\(\\frac{21}{24} - \\frac{20}{24} = \\frac{1}{24}\\) meter.</p>` : ''}
-        ${step >= 3 ? `<p><strong>Step 3 - Compare:</strong> \\(\\frac{1}{24}\\) is indeed very small, matching our estimate of about \\(0\\) - reasonable! Notice how close these two boards were, even though \\(8\\) and \\(6\\) don't look related at a glance.</p>` : ''}
-        ${step >= 3 ? `<div class="final-box">Difference: \\(\\mathbf{\\frac{1}{24}}\\) meter</div>` : ''}
-      `
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Boards: \\(\\dfrac78 - \\dfrac56\\) meters <span class="type-tag word">Subtract</span></div>
+        <p style="margin:0 0 10px 0;"><strong>Scenario:</strong> Two boards measure \\(\\dfrac78\\) meter and \\(\\dfrac56\\) meter. What's the difference in their lengths?</p>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(\\dfrac78 - \\dfrac56\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Estimate?</div><div class="qa-a">Both close to 1 &rarr; difference close to 0</div></div>
+            <div class="qa-row"><div class="qa-q">Same denominator?</div><div class="qa-a">No - Butterfly Method</div></div>
+          </div><div class="resolve-box convert"><span class="box-label">Wings</span>\\(7\\times6=42\\), \\(8\\times5=40\\); denom \\(8\\times6=48\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\dfrac{1}{24}\\) meter</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Subtract &amp; simplify</div><div class="qa-a">\\(\\dfrac{42-40}{48}=\\dfrac{2}{48} \\rightarrow \\dfrac{1}{24}\\)</div></div>
+            <div class="qa-row"><div class="qa-q">Reasonable?</div><div class="qa-a">Yes - very close to 0, matching the estimate. Notice how close these boards were, even though 8 and 6 don't look related at a glance!</div></div>
+          </div></div>
+        </div>`
     }
   ];
-  function renderWPCarousel() {
-    const wp = wordProblems[currentWP];
-    document.getElementById('wp-title').innerText = `Problem ${currentWP + 1} of ${wordProblems.length}`;
-    document.getElementById('wp-dots').innerHTML = wordProblems.map((_, i) => `<div class="dot ${i === currentWP ? 'active' : ''}" onclick="jumpToWordProblem(${i})"></div>`).join('');
-    document.getElementById('wp-content').innerHTML = `
-      <h3 style="color:var(--primary); margin-top:0;">${wp.title}</h3>
-      <p><strong>Scenario:</strong> ${wp.prompt}</p>
-      ${wp.render(currentWPStep)}
-    `;
-    document.getElementById('wp-prev-btn').disabled = currentWP === 0;
-    document.getElementById('wp-next-btn').disabled = currentWP === wordProblems.length - 1;
-    triggerMathJax();
-  }
-  function changeWordProblem(dir) { currentWP = Math.max(0, Math.min(wordProblems.length - 1, currentWP + dir)); currentWPStep = 1; renderWPCarousel(); }
-  function jumpToWordProblem(idx) { currentWP = idx; currentWPStep = 1; renderWPCarousel(); }
-  function nextWordProblemStep() { if (currentWPStep < wordProblems[currentWP].maxSteps) { currentWPStep++; renderWPCarousel(); } }
-  function resetWordProblemStep() { currentWPStep = 1; renderWPCarousel(); }
-  function showWPFullyWorked(i) { currentWP = i; currentWPStep = wordProblems[i].maxSteps; renderWPCarousel(); }
-  TeacherPrint.registerCarousel('wp-content', wordProblems.length, showWPFullyWorked);
-  renderWPCarousel();
+  makeCarousel('wp', wpExamples);
 
   // ==========================================
   // TAB 7: WHITEBOARD MODELING
@@ -974,7 +756,7 @@
     const correctDisplay = p.hasWhole ? `${p.whole}\\frac{${p.num}}{${p.den}}` : `\\frac{${p.num}}{${p.den}}`;
     LessonCheck.check(`wb-${currentWBProblem}`, correct, fb, {
       correct: `Correct! ${p.display} \\(= \\mathbf{${correctDisplay}}\\)`,
-      retry: "Not quite yet. Check your common denominator and whether you needed to regroup, then try again.",
+      retry: "Not quite yet. Ask the Question Ladder: same denominator? adding or subtracting? anything to regroup? is it simplified? Try again.",
       reveal: `Here's the correct answer: ${p.display} \\(= \\mathbf{${correctDisplay}}\\)`
     });
   }
