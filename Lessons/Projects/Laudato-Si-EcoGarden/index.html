@@ -430,9 +430,9 @@
     <div class="section-title" style="font-size:1.3rem;">Your Ledger <span class="time-chip">20-40 min: exact math</span></div>
     <div class="howto-box">
       <strong class="howto-label">What to do on each row</strong>
-      Round the Unit Price to the nearest whole dollar (Rounded Estimate), pick your Quantity, and calculate the
-      Line Total (Quantity &times; Unit Price). Click <strong>Check</strong> - 2 tries before the row is locked with the
-      correct math shown.
+      These are two separate checks. <strong>Rounded Estimate:</strong> round just the Unit Price to the nearest whole
+      dollar - do not multiply by quantity. <strong>Line Total:</strong> pick your Quantity and calculate Quantity
+      &times; Unit Price. Check each one on its own - 2 tries before that field locks with the correct math shown.
     </div>
 
     <div id="cart-dropzone" class="cart-dropzone" ondragover="allowCartDrop(event)" ondragleave="cartDragLeave(event)" ondrop="cartDrop(event)">
@@ -691,14 +691,14 @@
       alert('Your team can choose at most 8 items. Remove one first if you want to swap it out.');
       return;
     }
-    cart[code] = { qty: 1, locked: false, correctTotal: 0 };
+    cart[code] = { qty: 1, roundLocked: false, roundGiven: '', totalLocked: false, totalGiven: '', correctTotal: 0 };
     cartOrder.push(code);
     renderCatalog();
     renderCart();
   }
 
   function removeItem(code) {
-    if (day1Locked || (cart[code] && cart[code].locked)) return;
+    if (day1Locked || (cart[code] && (cart[code].roundLocked || cart[code].totalLocked))) return;
     delete cart[code];
     const idx = cartOrder.indexOf(code);
     if (idx > -1) cartOrder.splice(idx, 1);
@@ -726,90 +726,144 @@
     document.getElementById('cart-body').innerHTML = cartOrder.map((code) => {
       const item = CATALOG_BY_CODE[code];
       const row = cart[code];
-      const disabledAttr = row.locked ? 'disabled' : '';
+      const bothLocked = row.roundLocked && row.totalLocked;
+      const qtyDisabled = row.totalLocked ? 'disabled' : '';
+      const roundDisabled = row.roundLocked ? 'disabled' : '';
+      const totalDisabled = row.totalLocked ? 'disabled' : '';
+      const canRemove = !row.roundLocked && !row.totalLocked;
       return `
-        <tr id="row-${code}" class="${row.locked ? 'row-locked' : ''}">
+        <tr id="row-${code}" class="${bothLocked ? 'row-locked' : ''}">
           <td class="item-cell">${item.emoji} ${item.name}
-            ${row.locked ? '<span class="locked-flag">Locked</span>' : `<button class="remove-btn" onclick="removeItem('${code}')" title="Remove">&times;</button>`}
+            ${bothLocked ? '<span class="locked-flag">Locked</span>' : (canRemove ? `<button class="remove-btn" onclick="removeItem('${code}')" title="Remove">&times;</button>` : '')}
           </td>
           <td>$${fmt2(item.price)}</td>
-          <td><input type="number" min="1" step="1" class="cell-input" id="qty-${code}" value="${row.qty}" oninput="updateQty('${code}', this.value)" ${disabledAttr}></td>
-          <td><input type="text" class="cell-input" id="round-${code}" placeholder="$" value="${row.roundGiven || ''}" ${disabledAttr}></td>
+          <td><input type="number" min="1" step="1" class="cell-input" id="qty-${code}" value="${row.qty}" oninput="updateQty('${code}', this.value)" ${qtyDisabled}></td>
           <td>
-            <input type="text" class="cell-input" id="total-${code}" placeholder="$" value="${row.totalGiven || ''}" ${disabledAttr}>
-            ${row.locked ? '' : `<br><button class="row-check-btn" onclick="checkRow('${code}')">Check</button>`}
-            <div class="feedback-msg row-feedback" id="feedback-${code}"></div>
+            <input type="text" class="cell-input" id="round-${code}" placeholder="$" value="${row.roundGiven || ''}" ${roundDisabled}>
+            ${row.roundLocked ? '<div class="locked-flag" style="margin-top:6px;">Locked</div>' : `<br><button class="row-check-btn" onclick="checkRound('${code}')">Check</button>`}
+            <div class="feedback-msg row-feedback" id="round-feedback-${code}"></div>
+          </td>
+          <td>
+            <input type="text" class="cell-input" id="total-${code}" placeholder="$" value="${row.totalGiven || ''}" ${totalDisabled}>
+            ${row.totalLocked ? '<div class="locked-flag" style="margin-top:6px;">Locked</div>' : `<br><button class="row-check-btn" onclick="checkTotal('${code}')">Check</button>`}
+            <div class="feedback-msg row-feedback" id="total-feedback-${code}"></div>
           </td>
         </tr>`;
     }).join('');
     recomputeBudget();
   }
 
-  function checkRow(code) {
+  // Locks a single field (the input + swaps its Check button for a Locked
+  // tag) without re-rendering the whole row, so a pending retry message on
+  // the OTHER field in the same row isn't wiped out mid-attempt.
+  function lockField(code, field) {
+    const input = document.getElementById(`${field}-${code}`);
+    input.disabled = true;
+    const btn = input.parentElement.querySelector('.row-check-btn');
+    if (btn) btn.outerHTML = '<div class="locked-flag" style="margin-top:6px;">Locked</div>';
+
+    const row = cart[code];
+    const itemCell = document.querySelector(`#row-${code} .item-cell`);
+    if (row.roundLocked && row.totalLocked) {
+      const removeBtn = itemCell.querySelector('.remove-btn');
+      if (removeBtn) removeBtn.remove();
+      if (!itemCell.querySelector('.locked-flag')) {
+        itemCell.insertAdjacentHTML('beforeend', '<span class="locked-flag">Locked</span>');
+      }
+      document.getElementById(`row-${code}`).classList.add('row-locked');
+    } else {
+      const removeBtn = itemCell.querySelector('.remove-btn');
+      if (removeBtn) removeBtn.remove();
+    }
+  }
+
+  function checkRound(code) {
     const item = CATALOG_BY_CODE[code];
     const row = cart[code];
-    const feedbackEl = document.getElementById(`feedback-${code}`);
-    const qty = parseInt(document.getElementById(`qty-${code}`).value, 10) || 0;
-    const roundGiven = document.getElementById(`round-${code}`).value;
-    const totalGiven = document.getElementById(`total-${code}`).value;
+    const feedbackEl = document.getElementById(`round-feedback-${code}`);
+    const given = document.getElementById(`round-${code}`).value;
 
-    if (qty < 1 || roundGiven.trim() === '' || totalGiven.trim() === '') {
-      LessonCheck.incomplete(feedbackEl, 'Fill in your Quantity, Rounded Estimate, and Line Total before checking.');
+    if (given.trim() === '') {
+      LessonCheck.incomplete(feedbackEl, 'Type your rounded estimate first.');
       return;
     }
-    row.roundGiven = roundGiven;
-    row.totalGiven = totalGiven;
+    row.roundGiven = given;
 
-    const expectedRound = Math.round(item.price);
-    const expectedTotal = round2(qty * item.price);
-    const roundOK = LessonCheck.numericMatch(roundGiven, expectedRound, 0.01);
-    const totalOK = LessonCheck.numericMatch(totalGiven, expectedTotal, 0.01);
-    const isCorrect = roundOK && totalOK;
-
-    let retryMsg = 'Check both your rounded estimate and your line total.';
-    if (roundOK && !totalOK) retryMsg = 'Your rounding looks right - double-check your Line Total (Quantity &times; Unit Price).';
-    if (!roundOK && totalOK) retryMsg = 'Your Line Total looks right - double-check your rounded estimate (nearest whole dollar).';
-
+    const expected = Math.round(item.price);
+    const isCorrect = LessonCheck.numericMatch(given, expected, 0.01);
     const messages = {
-      correct: `Correct! $${fmt2(item.price)} rounds to $${expectedRound}.00, and ${qty} &times; $${fmt2(item.price)} = $${fmt2(expectedTotal)}.`,
-      retry: retryMsg,
-      reveal: `Rounded Estimate: $${expectedRound}.00 &nbsp;|&nbsp; Line Total: ${qty} &times; $${fmt2(item.price)} = $${fmt2(expectedTotal)}`
+      correct: `Correct! $${fmt2(item.price)} rounds to $${expected}.00.`,
+      retry: `Round just the Unit Price ($${fmt2(item.price)}) to the nearest whole dollar - don't multiply by quantity.`,
+      reveal: `$${fmt2(item.price)} rounds to $${expected}.00 (round the unit price alone, not &times; quantity).`
     };
-
-    const outcome = LessonCheck.check(`row-${code}`, isCorrect, feedbackEl, messages, {
-      label: `${item.name} - Line Total`,
-      answer: `Qty ${qty}, Round $${roundGiven}, Total $${totalGiven}`,
+    const outcome = LessonCheck.check(`round-${code}`, isCorrect, feedbackEl, messages, {
+      label: `${item.name} - Rounded Estimate`,
+      answer: `$${given}`,
       section: 'Day 1 - Store Ledger'
     });
-
     if (outcome === 'correct' || outcome === 'reveal') {
-      row.locked = true;
-      row.correctTotal = expectedTotal;
+      row.roundLocked = true;
+      lockField(code, 'round');
+      recomputeBudget();
+    }
+  }
+
+  function checkTotal(code) {
+    const item = CATALOG_BY_CODE[code];
+    const row = cart[code];
+    const feedbackEl = document.getElementById(`total-feedback-${code}`);
+    const qty = parseInt(document.getElementById(`qty-${code}`).value, 10) || 0;
+    const given = document.getElementById(`total-${code}`).value;
+
+    if (qty < 1 || given.trim() === '') {
+      LessonCheck.incomplete(feedbackEl, 'Pick a Quantity and type your Line Total before checking.');
+      return;
+    }
+    row.totalGiven = given;
+
+    const expected = round2(qty * item.price);
+    const isCorrect = LessonCheck.numericMatch(given, expected, 0.01);
+    const messages = {
+      correct: `Correct! ${qty} &times; $${fmt2(item.price)} = $${fmt2(expected)}.`,
+      retry: 'Multiply Quantity &times; Unit Price again.',
+      reveal: `${qty} &times; $${fmt2(item.price)} = $${fmt2(expected)}.`
+    };
+    const outcome = LessonCheck.check(`total-${code}`, isCorrect, feedbackEl, messages, {
+      label: `${item.name} - Line Total`,
+      answer: `Qty ${qty} &times; $${fmt2(item.price)} = $${given}`,
+      section: 'Day 1 - Store Ledger'
+    });
+    if (outcome === 'correct' || outcome === 'reveal') {
+      row.totalLocked = true;
+      row.correctTotal = expected;
       row.qty = qty;
-      renderCatalog();
-      renderCart();
+      document.getElementById(`qty-${code}`).disabled = true;
+      lockField(code, 'total');
+      recomputeBudget();
     }
   }
 
   function recomputeBudget() {
-    const lockedCodes = cartOrder.filter((c) => cart[c].locked);
-    const spent = round2(lockedCodes.reduce((sum, c) => sum + cart[c].correctTotal, 0));
+    const totalLockedCodes = cartOrder.filter((c) => cart[c].totalLocked);
+    const fullyLockedCodes = cartOrder.filter((c) => cart[c].roundLocked && cart[c].totalLocked);
+    const spent = round2(totalLockedCodes.reduce((sum, c) => sum + cart[c].correctTotal, 0));
     const pct = Math.min(100, (spent / 100) * 100);
     const fill = document.getElementById('budget-fill');
     fill.style.width = pct + '%';
     fill.className = 'budget-fill' + (spent > 100 ? ' over' : (spent > 85 ? '' : ' warn'));
     document.getElementById('budget-label').textContent =
-      `$${fmt2(spent)} locked in of $100.00 (${lockedCodes.length} of ${cartOrder.length} item${cartOrder.length === 1 ? '' : 's'} checked)`;
+      `$${fmt2(spent)} locked in of $100.00 (${fullyLockedCodes.length} of ${cartOrder.length} item${cartOrder.length === 1 ? '' : 's'} fully checked)`;
 
     const btn = document.getElementById('grandtotal-btn');
-    const allLocked = cartOrder.length > 0 && lockedCodes.length === cartOrder.length;
+    const allLocked = cartOrder.length > 0 && fullyLockedCodes.length === cartOrder.length;
     btn.disabled = !allLocked;
   }
 
   function checkGrandTotal() {
     const feedbackEl = document.getElementById('grandtotal-feedback');
-    const lockedCodes = cartOrder.filter((c) => cart[c].locked);
-    if (cartOrder.length === 0 || lockedCodes.length < cartOrder.length) {
+    const lockedCodes = cartOrder.filter((c) => cart[c].totalLocked);
+    const fullyLockedCodes = cartOrder.filter((c) => cart[c].roundLocked && cart[c].totalLocked);
+    if (cartOrder.length === 0 || fullyLockedCodes.length < cartOrder.length) {
       LessonCheck.incomplete(feedbackEl, 'Check and lock every ledger row above before totaling the column.');
       return;
     }
@@ -926,7 +980,7 @@
 
   function loadGardenTokens() {
     if (gardenBuilt || !window.grandTotal) return;
-    cartOrder.filter((c) => cart[c].locked).forEach((code) => {
+    cartOrder.filter((c) => cart[c].totalLocked).forEach((code) => {
       for (let i = 0; i < cart[code].qty; i++) {
         tokens.push({ id: nextTokenId, code });
         nextTokenId++;
