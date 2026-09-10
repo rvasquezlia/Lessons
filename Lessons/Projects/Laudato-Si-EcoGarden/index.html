@@ -565,7 +565,7 @@
       <div class="legend-row" id="legend-row"></div>
 
       <div style="text-align:center; margin-top:14px;">
-        <button class="row-check-btn" onclick="lockGarden()">Lock My Garden Layout</button>
+        <button class="row-check-btn" id="lock-garden-btn" onclick="lockGarden()">Lock My Garden Layout</button>
         <span id="garden-lock-msg"></span>
       </div>
       <div class="feedback-msg" id="garden-feedback"></div>
@@ -813,6 +813,15 @@
   let teamCode = null;
   let day2Unlocked = false;
 
+  // Apps Script cold-starts can take a few seconds - without a timeout, a
+  // slow or stuck response leaves the UI showing "Looking up..." forever
+  // with no way to retry short of reloading the whole page.
+  function fetchWithTimeout(url, opts, timeoutMs) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs || 15000);
+    return fetch(url, Object.assign({}, opts, { signal: controller.signal })).finally(() => clearTimeout(timer));
+  }
+
   async function startTeam() {
     const codeInput = document.getElementById('team-code-input');
     const code = codeInput.value.trim();
@@ -827,7 +836,7 @@
     statusEl.style.color = 'var(--primary)';
     statusEl.textContent = 'Looking up your team...';
     try {
-      const res = await fetch(`${SHEET_API_URL}?code=${encodeURIComponent(code)}`);
+      const res = await fetchWithTimeout(`${SHEET_API_URL}?code=${encodeURIComponent(code)}`);
       const result = await res.json();
       if (!result.ok) {
         statusEl.style.color = 'var(--error)';
@@ -850,7 +859,7 @@
       }
     } catch (err) {
       statusEl.style.color = 'var(--error)';
-      statusEl.textContent = "Couldn't reach the roster right now - you can still continue, but your progress won't be saved online.";
+      statusEl.textContent = "That took too long or couldn't reach the roster - tap Start / Resume to try again, or continue below without saving.";
       document.getElementById('manual-name-fallback').style.display = 'block';
       btn.disabled = false;
     }
@@ -879,7 +888,7 @@
 
   function saveProgress() {
     if (!teamCode) return;
-    fetch(SHEET_API_URL, {
+    fetchWithTimeout(SHEET_API_URL, {
       method: 'POST',
       body: JSON.stringify({
         TeamCode: teamCode,
@@ -918,6 +927,27 @@
 
     renderCatalog();
     renderCart();
+
+    if (solvedKeys['estimatedtotal']) {
+      const roundLockedCodes = cartOrder.filter((c) => cart[c].roundLocked);
+      const estExpected = round2(roundLockedCodes.reduce((sum, c) => sum + Math.round(CATALOG_BY_CODE[c].price) * cart[c].qty, 0));
+      document.getElementById('estimatedtotal-input').value = fmt2(estExpected);
+      document.getElementById('estimatedtotal-input').disabled = true;
+      document.getElementById('estimatedtotal-btn').disabled = true;
+      const fb = document.getElementById('estimatedtotal-feedback');
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Correct! Your Estimated Total is $${fmt2(estExpected)}. <span style="opacity:.75;">(restored)</span>`;
+    }
+    if (solvedKeys['grandtotal'] && window.grandTotal != null) {
+      document.getElementById('grandtotal-input').value = fmt2(window.grandTotal);
+      document.getElementById('grandtotal-input').disabled = true;
+      document.getElementById('grandtotal-btn').disabled = true;
+      const fb = document.getElementById('grandtotal-feedback');
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Correct! Your Grand Total is $${fmt2(window.grandTotal)}. <span style="opacity:.75;">(restored)</span>`;
+    }
 
     if (day1Locked && window.grandTotal != null) {
       revealBudgetMeter(window.grandTotal);
@@ -961,6 +991,7 @@
         gardenView === 'blueprint' ? '🌼 See My Garden (Real Life)' : '🎨 Back to Blueprint View';
       if (gardenLocked) {
         const filled = gridArr.filter((x) => x != null).length;
+        document.getElementById('lock-garden-btn').disabled = true;
         const fb = document.getElementById('garden-feedback');
         fb.style.display = 'block';
         fb.className = 'feedback-msg success locked';
@@ -1000,7 +1031,7 @@
     fb.className = 'feedback-msg';
     fb.textContent = 'Checking...';
     try {
-      const res = await fetch(`${SHEET_API_URL}?day2code=${encodeURIComponent(code)}`);
+      const res = await fetchWithTimeout(`${SHEET_API_URL}?day2code=${encodeURIComponent(code)}`);
       const result = await res.json();
       if (result.ok) {
         day2Unlocked = true;
@@ -1557,6 +1588,7 @@
       answer: `${filled} of 36 spaces used (${tokens.length} items purchased)`,
       section: 'Day 2 - Garden Layout'
     }, `Garden layout locked! You placed ${filled} of 36 spaces.`);
+    document.getElementById('lock-garden-btn').disabled = true;
     saveProgress();
   }
 
