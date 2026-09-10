@@ -385,12 +385,17 @@
   </header>
 
   <div class="progress-bar">
-    <label for="team-name-1">Team Members:</label>
-    <input type="text" id="team-name-1" placeholder="Team member 1 name" oninput="syncTeamName()">
-    <input type="text" id="team-name-2" placeholder="Team member 2 name" oninput="syncTeamName()">
-    <input type="hidden" id="student-name">
+    <label for="team-code-input">Team Code:</label>
+    <input type="text" id="team-code-input" placeholder="Enter your team code">
+    <button class="btn-print" id="team-code-btn" onclick="startTeam()">Start / Resume</button>
     <button class="btn-print" onclick="printProgressReport('Laudato Si Eco-Garden STREAM Project')">Print My Progress</button>
   </div>
+  <p id="team-status" style="text-align:center; margin:10px 24px 0 24px; font-weight:700; color:var(--primary);"></p>
+  <div id="manual-name-fallback" style="display:none; text-align:center; margin:10px 24px 0 24px;">
+    <input type="text" id="team-name-1" class="form-control-lg" style="display:inline-block; width:auto; margin:0 6px;" placeholder="Team member 1 name" oninput="syncTeamName()">
+    <input type="text" id="team-name-2" class="form-control-lg" style="display:inline-block; width:auto; margin:0 6px;" placeholder="Team member 2 name" oninput="syncTeamName()">
+  </div>
+  <input type="hidden" id="student-name">
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
@@ -398,7 +403,8 @@
       <li>This is your digital version of the paper worksheet - same math, same 2-day plan, but the garden items, calculations, and layout are all interactive here.</li>
       <li>Drag items from the Store Catalog into your Ledger (or tap "Add to Cart"). Rounded Estimate and Line Total are checked separately - unlimited tries, but every attempt is counted and shown on your printed report, and each field locks as soon as you get it right.</li>
       <li>On Day 2 you'll drag your purchased items onto a 6&times;6 garden grid and can flip to a real-life preview of your design.</li>
-      <li>When you're finished, type both team members' names above and click <strong>Print My Progress</strong>, or scroll to the bottom to download your completion badge and your garden sign.</li>
+      <li>Type your team code above and click <strong>Start / Resume</strong> - it remembers your names and everything you've done so far, so you can pick up right where you left off.</li>
+      <li>When you're finished, click <strong>Print My Progress</strong>, or scroll to the bottom to download your completion badge and your garden sign.</li>
     </ul>
   </div>
 
@@ -499,9 +505,18 @@
 
   <!-- ============================= DAY 2 ============================= -->
   <div id="day2" class="panel">
-    <div id="day2-locked" class="day2-locked-notice">
+    <div id="day2-finish-day1-notice" class="day2-locked-notice">
       Finish Day 1 first: check every ledger row and lock in your Grand Total above. Day 2's subtraction, division,
       garden layout, and creation sign all build on your Day 1 numbers.
+    </div>
+
+    <div id="day2-passcode-notice" class="day2-locked-notice" style="display:none;">
+      <p>Day 1 complete! Ask your teacher for today's Day 2 code to continue.</p>
+      <div class="calc-row" style="justify-content:center;">
+        <input type="text" class="cell-input" id="day2code-input" placeholder="Day 2 code" style="width:140px;">
+        <button class="row-check-btn" onclick="checkDay2Passcode()">Unlock Day 2</button>
+      </div>
+      <div class="feedback-msg" id="day2code-feedback" style="max-width:420px; margin:10px auto 0 auto;"></div>
     </div>
 
     <div id="day2-content" style="display:none;">
@@ -792,6 +807,216 @@
   const slug = (s) => (s || '').replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '') || 'student';
 
   // ================================================================
+  // GOOGLE SHEET SYNC (roster lookup, progress save/restore, Day 2 code)
+  // ================================================================
+  const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbwGbW1YIaoOf3DVnfMNl6i6tKnGyUFB5586q0G44gUeGRyFlro5Ag3z8bAz2gsH9g0nDw/exec';
+  let teamCode = null;
+  let day2Unlocked = false;
+
+  async function startTeam() {
+    const codeInput = document.getElementById('team-code-input');
+    const code = codeInput.value.trim();
+    const statusEl = document.getElementById('team-status');
+    const btn = document.getElementById('team-code-btn');
+    if (!code) {
+      statusEl.style.color = 'var(--error)';
+      statusEl.textContent = 'Type your team code first.';
+      return;
+    }
+    btn.disabled = true;
+    statusEl.style.color = 'var(--primary)';
+    statusEl.textContent = 'Looking up your team...';
+    try {
+      const res = await fetch(`${SHEET_API_URL}?code=${encodeURIComponent(code)}`);
+      const result = await res.json();
+      if (!result.ok) {
+        statusEl.style.color = 'var(--error)';
+        statusEl.textContent = `${result.error || 'Code not found'} - check with your teacher, or continue below without saving.`;
+        document.getElementById('manual-name-fallback').style.display = 'block';
+        btn.disabled = false;
+        return;
+      }
+      teamCode = code;
+      codeInput.disabled = true;
+      btn.disabled = true;
+      btn.textContent = 'Team Loaded';
+      document.getElementById('team-name-1').value = result.data.Name1 || '';
+      document.getElementById('team-name-2').value = result.data.Name2 || '';
+      syncTeamName();
+      statusEl.style.color = 'var(--success)';
+      statusEl.textContent = `Welcome back, ${result.data.Name1} & ${result.data.Name2}!`;
+      if (result.data.StateJSON) {
+        try { restoreState(JSON.parse(result.data.StateJSON)); } catch (e) { /* first-time or corrupted save - start fresh */ }
+      }
+    } catch (err) {
+      statusEl.style.color = 'var(--error)';
+      statusEl.textContent = "Couldn't reach the roster right now - you can still continue, but your progress won't be saved online.";
+      document.getElementById('manual-name-fallback').style.display = 'block';
+      btn.disabled = false;
+    }
+  }
+
+  function buildStatePayload() {
+    return {
+      cart, cartOrder, attemptCounts, solvedKeys, day1Locked,
+      grandTotal: window.grandTotal, plantCostExpected: window.plantCostExpected,
+      plantCountExpected: window.plantCountExpected, plantAvgAchieved: window.plantAvgAchieved,
+      day2Unlocked,
+      tokens, trayIds, gridArr, nextTokenId, gardenBuilt, gardenLocked, gardenView,
+      sign: {
+        verseIdx: document.getElementById('verse-select').value,
+        customText: document.getElementById('custom-verse-text').value,
+        customRef: document.getElementById('custom-verse-ref').value,
+        bg: document.getElementById('sign-bg-select').value,
+        border: document.getElementById('sign-border-select').value,
+        textColor: document.getElementById('sign-text-color').value,
+        font: document.getElementById('sign-font-select').value,
+        stickers: [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value),
+        locked: document.getElementById('lock-sign-btn').disabled
+      }
+    };
+  }
+
+  function saveProgress() {
+    if (!teamCode) return;
+    fetch(SHEET_API_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        TeamCode: teamCode,
+        GrandTotal: window.grandTotal || '',
+        AvgCostPerPlant: window.plantAvgAchieved || '',
+        ChecksSolved: Object.keys(solvedKeys).length,
+        TotalAttempts: Object.values(attemptCounts).reduce((a, b) => a + b, 0),
+        GardenSpacesUsed: gridArr.filter((x) => x != null).length,
+        CertificateDownloaded: window.certificateDownloaded ? 'TRUE' : '',
+        StateJSON: JSON.stringify(buildStatePayload())
+      })
+    }).catch((err) => { console.warn('Save to roster failed (kept in this tab only):', err); });
+  }
+
+  function restoreState(state) {
+    if (!state) return;
+    Object.assign(cart, state.cart || {});
+    cartOrder.length = 0;
+    (state.cartOrder || []).forEach((c) => cartOrder.push(c));
+    Object.assign(attemptCounts, state.attemptCounts || {});
+    Object.assign(solvedKeys, state.solvedKeys || {});
+    day1Locked = !!state.day1Locked;
+    window.grandTotal = state.grandTotal;
+    window.plantCostExpected = state.plantCostExpected;
+    window.plantCountExpected = state.plantCountExpected;
+    window.plantAvgAchieved = state.plantAvgAchieved;
+    day2Unlocked = !!state.day2Unlocked;
+
+    tokens = state.tokens || [];
+    trayIds = state.trayIds || [];
+    gridArr = state.gridArr || new Array(36).fill(null);
+    nextTokenId = state.nextTokenId || 1;
+    gardenBuilt = !!state.gardenBuilt;
+    gardenLocked = !!state.gardenLocked;
+    gardenView = state.gardenView || 'blueprint';
+
+    renderCatalog();
+    renderCart();
+
+    if (day1Locked && window.grandTotal != null) {
+      revealBudgetMeter(window.grandTotal);
+      showBudgetCheckin(window.grandTotal);
+      if (day2Unlocked) {
+        unlockDay2();
+      } else {
+        document.getElementById('day2-finish-day1-notice').style.display = 'none';
+        document.getElementById('day2-passcode-notice').style.display = 'block';
+      }
+    }
+
+    if (solvedKeys['leftover'] && window.grandTotal != null) {
+      const val = round2(100 - window.grandTotal);
+      const input = document.getElementById('leftover-input');
+      input.value = fmt2(val);
+      input.disabled = true;
+      const fb = document.getElementById('leftover-feedback');
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Correct! $100.00 &minus; $${fmt2(window.grandTotal)} = $${fmt2(val)} left over. <span style="opacity:.75;">(restored)</span>`;
+    }
+    if (solvedKeys['division'] && window.plantCountExpected) {
+      const avg = round2(window.plantCostExpected / window.plantCountExpected);
+      document.getElementById('plantcost-input').value = fmt2(window.plantCostExpected);
+      document.getElementById('plantcount-input').value = String(window.plantCountExpected);
+      document.getElementById('plantavg-input').value = fmt2(avg);
+      ['plantcost-input', 'plantcount-input', 'plantavg-input'].forEach((id) => { document.getElementById(id).disabled = true; });
+      const fb = document.getElementById('division-feedback');
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Correct! $${fmt2(window.plantCostExpected)} &divide; ${window.plantCountExpected} = $${fmt2(avg)} per plant. <span style="opacity:.75;">(restored)</span>`;
+    }
+
+    if (gardenBuilt) {
+      renderLegend();
+      renderGarden();
+      document.getElementById('load-tokens-btn').disabled = true;
+      document.getElementById('load-tokens-btn').textContent = `Loaded ${tokens.length} Items`;
+      document.getElementById('view-toggle-btn').textContent =
+        gardenView === 'blueprint' ? '🌼 See My Garden (Real Life)' : '🎨 Back to Blueprint View';
+      if (gardenLocked) {
+        const filled = gridArr.filter((x) => x != null).length;
+        const fb = document.getElementById('garden-feedback');
+        fb.style.display = 'block';
+        fb.className = 'feedback-msg success locked';
+        fb.innerHTML = `Garden layout locked! You placed ${filled} of 36 spaces. <span style="opacity:.75;">(restored)</span>`;
+      }
+    }
+
+    if (state.sign) {
+      document.getElementById('verse-select').value = state.sign.verseIdx;
+      document.getElementById('custom-verse-text').value = state.sign.customText || '';
+      document.getElementById('custom-verse-ref').value = state.sign.customRef || '';
+      document.getElementById('sign-bg-select').value = state.sign.bg;
+      document.getElementById('sign-border-select').value = state.sign.border;
+      document.getElementById('sign-text-color').value = state.sign.textColor;
+      document.getElementById('sign-font-select').value = state.sign.font;
+      document.querySelectorAll('.sticker-cb').forEach((cb) => { cb.checked = (state.sign.stickers || []).includes(cb.value); });
+      onVerseChange();
+      if (state.sign.locked) {
+        document.querySelectorAll('.sign-controls select, .sign-controls input, .sign-controls textarea, #lock-sign-btn').forEach((el) => { el.disabled = true; });
+        const fb = document.getElementById('sign-feedback');
+        fb.style.display = 'block';
+        fb.className = 'feedback-msg success locked';
+        fb.textContent = 'Your creation sign is locked in! (restored)';
+      }
+    }
+  }
+
+  async function checkDay2Passcode() {
+    const input = document.getElementById('day2code-input');
+    const code = input.value.trim();
+    const fb = document.getElementById('day2code-feedback');
+    if (!code) {
+      LessonCheck.incomplete(fb, 'Type the code your teacher gave you.');
+      return;
+    }
+    fb.style.display = 'block';
+    fb.className = 'feedback-msg';
+    fb.textContent = 'Checking...';
+    try {
+      const res = await fetch(`${SHEET_API_URL}?day2code=${encodeURIComponent(code)}`);
+      const result = await res.json();
+      if (result.ok) {
+        day2Unlocked = true;
+        unlockDay2();
+        saveProgress();
+      } else {
+        fb.className = 'feedback-msg error';
+        fb.textContent = "That's not right yet - check with your teacher.";
+      }
+    } catch (err) {
+      fb.className = 'feedback-msg error';
+      fb.textContent = "Couldn't reach the code checker right now - try again in a moment.";
+    }
+  }
+
+  // ================================================================
   // UNLIMITED-ATTEMPT GRADING (this project overrides the shared
   // LessonCheck 2-try-then-reveal flow: attempts are unlimited, a field
   // locks only once solved, and the attempt count is logged into the
@@ -987,6 +1212,7 @@
       document.getElementById(`qty-${code}`).disabled = true;
       lockField(code, 'round');
       recomputeBudget();
+      saveProgress();
     }
   }
 
@@ -1020,6 +1246,7 @@
       document.getElementById(`qty-${code}`).disabled = true;
       lockField(code, 'total');
       recomputeBudget();
+      saveProgress();
     }
   }
 
@@ -1053,6 +1280,7 @@
     if (outcome === 'correct') {
       document.getElementById('estimatedtotal-input').disabled = true;
       document.getElementById('estimatedtotal-btn').disabled = true;
+      saveProgress();
     }
   }
 
@@ -1084,7 +1312,9 @@
       renderCart();
       revealBudgetMeter(expected);
       showBudgetCheckin(expected);
-      unlockDay2();
+      document.getElementById('day2-finish-day1-notice').style.display = 'none';
+      document.getElementById('day2-passcode-notice').style.display = 'block';
+      saveProgress();
     }
   }
 
@@ -1112,7 +1342,8 @@
   // DAY 2 UNLOCK + RECAP
   // ================================================================
   function unlockDay2() {
-    document.getElementById('day2-locked').style.display = 'none';
+    document.getElementById('day2-finish-day1-notice').style.display = 'none';
+    document.getElementById('day2-passcode-notice').style.display = 'none';
     document.getElementById('day2-content').style.display = 'block';
     document.getElementById('day2-recap').textContent =
       `Your Day 1 Grand Total: $${fmt2(window.grandTotal)} across ${cartOrder.length} item${cartOrder.length === 1 ? '' : 's'}.`;
@@ -1140,7 +1371,10 @@
       answer: `$${given}`,
       section: 'Day 2 - Budget & Division'
     });
-    if (outcome === 'correct') document.getElementById('leftover-input').disabled = true;
+    if (outcome === 'correct') {
+      document.getElementById('leftover-input').disabled = true;
+      saveProgress();
+    }
   }
 
   function checkDivision() {
@@ -1172,6 +1406,7 @@
     if (outcome === 'correct') {
       window.plantAvgAchieved = expectedAvg;
       ['plantcost-input', 'plantcount-input', 'plantavg-input'].forEach((id) => { document.getElementById(id).disabled = true; });
+      saveProgress();
     }
   }
 
@@ -1322,6 +1557,7 @@
       answer: `${filled} of 36 spaces used (${tokens.length} items purchased)`,
       section: 'Day 2 - Garden Layout'
     }, `Garden layout locked! You placed ${filled} of 36 spaces.`);
+    saveProgress();
   }
 
   // ================================================================
@@ -1391,6 +1627,7 @@
       answer: `"${text}" - ${ref}`,
       section: 'Day 2 - Creation Sign'
     }, 'Your creation sign is locked in!');
+    saveProgress();
   }
 
   // ================================================================
@@ -1556,6 +1793,8 @@
       answer: `${name1} & ${name2}`,
       section: 'Day 2 - Celebrate'
     }, 'Certificate downloaded! Check your Downloads folder.');
+    window.certificateDownloaded = true;
+    saveProgress();
   }
 
   const BADGE_CONFETTI = [
@@ -1688,6 +1927,7 @@
       answer: myName,
       section: 'Day 2 - Celebrate'
     }, `${myName}'s badge downloaded! Check your Downloads folder.`);
+    saveProgress();
   }
 
   function downloadSign() {
