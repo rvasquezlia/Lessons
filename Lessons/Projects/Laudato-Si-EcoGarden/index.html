@@ -16,6 +16,21 @@
   <style>
     /* ===== Page-specific additions on top of lesson-shared.css ===== */
 
+    /* The shared .feedback-msg (16px padding, 1.15rem text) is sized for a
+       page with one or two checks - this page repeats it after nine
+       separate checks plus the sign/garden/celebrate sections, where the
+       bigger box reads oversized. Scale it down site-wide on this page
+       only, without touching the shared class other lessons rely on.
+       Declared early (before .row-feedback below) so the per-row feedback
+       boxes, already appropriately small, keep winning the cascade instead
+       of being re-enlarged by this rule. */
+    .feedback-msg {
+      padding: 9px 14px;
+      font-size: 0.92rem;
+      margin-top: 10px;
+      border-radius: 8px;
+    }
+
     .time-chip {
       display: inline-block;
       background: #1e293b;
@@ -117,15 +132,16 @@
     .cart-table th { background: #eff6ff; color: var(--primary); font-weight: 800; }
     .cart-table td.item-cell { text-align: left; font-weight: 700; }
     .cart-table input.cell-input {
-      width: 78px;
-      padding: 7px;
+      width: 100px;
+      padding: 11px;
       border: 2px solid var(--border);
       border-radius: 8px;
-      font-size: 0.95rem;
+      font-size: 1.15rem;
+      font-weight: 700;
       text-align: center;
       font-family: 'Montserrat', sans-serif;
     }
-    .cart-table input[type="number"] { width: 60px; }
+    .cart-table input[type="number"] { width: 76px; }
     .row-check-btn {
       background: var(--primary-light);
       color: #fff;
@@ -226,7 +242,7 @@
       font-weight: 700;
       margin: 14px 0;
     }
-    .calc-row input.cell-input { width: 90px; }
+    .calc-row input.cell-input { width: 116px; font-size: 1.2rem; padding: 12px; }
 
     /* Garden tray / grid */
     .tray {
@@ -291,12 +307,23 @@
     /* Creation sign */
     .sign-builder { display: flex; flex-wrap: wrap; gap: 24px; margin: 18px 0; }
     .sign-controls { flex: 1 1 260px; }
-    .sign-controls .form-group { margin-bottom: 16px; }
-    .sign-preview-wrap { flex: 1 1 260px; display: flex; align-items: center; justify-content: center; }
+    .sign-controls .form-group { margin-bottom: 11px; }
+    .sign-controls .form-group label { font-size: 0.9rem; margin-bottom: 4px; }
+    /* The shared .form-control-lg (14px/18px padding, 1.2rem text) is built
+       for a full-width single-field form - crammed into this 8-field panel
+       it reads oversized next to its own labels. Scale it down here only. */
+    .sign-controls .form-control-lg {
+      padding: 7px 10px;
+      font-size: 0.88rem;
+      border-width: 2px;
+      border-radius: 7px;
+    }
+    .sign-controls .row-check-btn { font-size: 0.8rem; padding: 8px 12px; }
+    .sign-preview-wrap { flex: 1 1 280px; display: flex; align-items: center; justify-content: center; }
     .sign-preview {
-      width: 250px;
-      min-height: 170px;
-      padding: 22px 18px;
+      width: 300px;
+      min-height: 210px;
+      padding: 26px 20px;
       border-radius: 10px;
       text-align: center;
       font-weight: 800;
@@ -308,18 +335,45 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      position: relative;
     }
-    .sign-preview .sign-title { font-size: 1.2rem; font-weight: 900; margin-bottom: 4px; }
+    .sign-preview .sign-emblem { width: 34px; height: 34px; margin-bottom: 2px; }
+    .sign-preview .sign-title { font-size: 1.25rem; font-weight: 900; margin-bottom: 4px; }
     .sign-preview .sign-verse { font-size: 1rem; line-height: 1.4; }
     .sign-preview .sign-ref { font-size: 0.82rem; font-weight: 700; opacity: 0.85; }
     .sign-preview .sign-stickers { display: flex; justify-content: center; gap: 8px; }
     .sign-sticker-icon { display: inline-block; width: 30px; height: 30px; }
-    .sign-rustic { border: 8px solid #92400e; background: #fef3c7; border-radius: 10px; }
-    .sign-picket { border: 6px dashed #16a34a; background: #ecfdf5; border-radius: 10px; }
-    .sign-vine { border: 6px solid #15803d; background: #f0fdf4; border-radius: 10px; }
-    .sign-stone { border: 6px solid #64748b; background: #e2e8f0; border-radius: 4px; box-shadow: inset 0 0 0 4px #cbd5e1, 0 10px 22px rgba(0,0,0,0.18); }
-    .sign-metal { border: 6px solid #94a3b8; background: linear-gradient(160deg, #f1f5f9, #cbd5e1); border-radius: 14px; }
-    .sign-cloud { border: 6px solid #38bdf8; background: #f0f9ff; border-radius: 50% / 30%; }
+    /* Style classes below control border shape/texture ONLY - never
+       `background`, which as a class-level rule would silently beat the
+       independently-selectable Sign Background color (a class background
+       paints over an element's own inline background-color/-image), which
+       is exactly the on-screen vs. download mismatch this was rewritten to
+       fix. Background color is always applied inline by renderSign(). */
+    .sign-rustic { border: 8px solid #92400e; border-radius: 10px; }
+    .sign-picket { border: 6px dashed #16a34a; border-radius: 10px; }
+    .sign-vine {
+      border: 6px double #15803d;
+      border-radius: 10px;
+    }
+    .sign-stone {
+      border: 6px solid #64748b;
+      border-radius: 4px;
+      box-shadow: inset 0 0 0 4px #cbd5e1, 0 10px 22px rgba(0,0,0,0.18);
+    }
+    .sign-metal {
+      border: 4px solid #94a3b8;
+      border-radius: 14px;
+      box-shadow: inset 0 0 0 3px #ffffff, 0 10px 22px rgba(0,0,0,0.18);
+    }
+    .sign-cloud { border: 6px solid #38bdf8; border-radius: 50% / 30%; }
+    .sign-ribbon {
+      border: 5px ridge #b91c1c;
+      border-radius: 6px;
+    }
+    .sign-scallop {
+      border: 6px dotted #d97706;
+      border-radius: 26px;
+    }
     .sticker-choices label {
       display: inline-flex;
       align-items: center;
@@ -369,7 +423,7 @@
 
     @media (max-width: 640px) {
       .cart-table { font-size: 0.8rem; }
-      .cart-table input.cell-input { width: 60px; }
+      .cart-table input.cell-input { width: 74px; font-size: 1rem; padding: 8px; }
     }
   </style>
 </head>
@@ -608,7 +662,7 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="sign-border-select">Sign Style</label>
+            <label for="sign-border-select">Sign Style (border)</label>
             <select id="sign-border-select" class="form-control-lg" onchange="renderSign()">
               <option value="sign-rustic">Rustic Wood</option>
               <option value="sign-picket">Painted Picket</option>
@@ -616,6 +670,8 @@
               <option value="sign-stone">Stone Tablet</option>
               <option value="sign-metal">Modern Metal</option>
               <option value="sign-cloud">Whimsical Cloud</option>
+              <option value="sign-ribbon">Ribbon Banner</option>
+              <option value="sign-scallop">Scalloped Dots</option>
             </select>
           </div>
           <div class="form-group">
@@ -626,6 +682,8 @@
               <option value="#15803d">Forest Green</option>
               <option value="#7c3aed">Royal Purple</option>
               <option value="#0f172a">Ink Black</option>
+              <option value="#c2410c">Sunset Orange</option>
+              <option value="#0f766e">Ocean Teal</option>
             </select>
           </div>
           <div class="form-group">
@@ -635,14 +693,23 @@
               <option value="Georgia, 'Times New Roman', serif">Storybook Serif</option>
               <option value="'Brush Script MT', cursive">Handwritten</option>
               <option value="'Baloo 2', cursive">Playful</option>
+              <option value="'Arial Black', Arial, sans-serif">Bold Poster</option>
+              <option value="'Comic Sans MS', 'Baloo 2', cursive">Fun &amp; Bouncy</option>
             </select>
           </div>
           <div class="form-group">
-            <label>Stickers (pick up to 3)</label>
+            <label for="sign-emblem-select">Top Emblem (fixed, above title)</label>
+            <select id="sign-emblem-select" class="form-control-lg" onchange="renderSign()">
+              <option value="">None</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Bottom Stickers (pick up to 3, fixed row)</label>
             <div class="sticker-choices" id="sticker-choices"></div>
           </div>
           <button class="row-check-btn" id="lock-sign-btn" onclick="lockSign()">Lock My Sign</button>
-          <button class="row-check-btn" style="background:var(--accent);" onclick="downloadSign()">Download My Sign</button>
+          <button class="row-check-btn celebrate-btn" style="background:var(--accent);" onclick="downloadSign()">Download My Sign</button>
+          <button class="row-check-btn celebrate-btn" style="background:var(--success);" onclick="downloadGardenSignPoster()">Download Garden + Sign Poster (PDF)</button>
           <div class="feedback-msg" id="sign-feedback"></div>
         </div>
         <div class="sign-preview-wrap">
@@ -971,6 +1038,7 @@
         textColor: document.getElementById('sign-text-color').value,
         font: document.getElementById('sign-font-select').value,
         stickers: [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value),
+        emblem: document.getElementById('sign-emblem-select').value,
         locked: document.getElementById('lock-sign-btn').disabled
       }
     };
@@ -1099,6 +1167,7 @@
       document.getElementById('sign-text-color').value = state.sign.textColor;
       document.getElementById('sign-font-select').value = state.sign.font;
       document.querySelectorAll('.sticker-cb').forEach((cb) => { cb.checked = (state.sign.stickers || []).includes(cb.value); });
+      document.getElementById('sign-emblem-select').value = state.sign.emblem || '';
       onVerseChange();
       if (state.sign.locked) {
         document.querySelectorAll('.sign-controls select, .sign-controls input, .sign-controls textarea, #lock-sign-btn').forEach((el) => { el.disabled = true; });
@@ -1691,6 +1760,12 @@
       `<option value="${i}">${v.ref}${v.text ? ' - "' + v.text + '"' : ' (write your own)'}</option>`).join('');
     document.getElementById('sticker-choices').innerHTML = STICKERS.map((s) =>
       `<label><input type="checkbox" class="sticker-cb" value="${s}" onchange="onStickerChange(event)"> <span class="sticker-icon">${STICKER_ICONS[s]}</span> ${STICKER_LABELS[s]}</label>`).join('');
+    // Separate, single-pick "emblem" slot so a team has a decoration that
+    // sits at a fixed spot above the title, not only inline in the bottom
+    // sticker row - reuses the same icon set rather than a second one.
+    const emblemSelect = document.getElementById('sign-emblem-select');
+    emblemSelect.innerHTML = '<option value="">None</option>' +
+      STICKERS.map((s) => `<option value="${s}">${STICKER_LABELS[s]}</option>`).join('');
     renderSign();
   }
 
@@ -1723,14 +1798,17 @@
     const textColor = document.getElementById('sign-text-color').value;
     const fontFamily = document.getElementById('sign-font-select').value;
     const stickerKeys = [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value);
+    const emblemKey = document.getElementById('sign-emblem-select').value;
     const title = document.getElementById('sign-title-input').value.trim();
 
     const preview = document.getElementById('sign-preview');
     preview.className = `sign-preview ${borderClass}`;
     preview.style.backgroundColor = bg;
+    preview.style.backgroundImage = 'none';
     preview.style.color = textColor;
     preview.style.fontFamily = fontFamily;
     preview.innerHTML = `
+      ${emblemKey ? `<span class="sign-emblem">${STICKER_ICONS[emblemKey]}</span>` : ''}
       ${title ? `<div class="sign-title">${title}</div>` : ''}
       <div class="sign-verse">"${text}"</div>
       ${ref ? `<div class="sign-ref">- ${ref}</div>` : ''}
@@ -1776,6 +1854,74 @@
     });
     if (line) lines.push(line);
     return lines;
+  }
+
+  // Single-radius rounded-rect path, the standard arcTo technique - reused
+  // by every canvas shape below (sign frames, the garden plot, cells).
+  function roundRectPath(ctx, x, y, w, h, r) {
+    const rr = Math.max(0, Math.min(r, w / 2, h / 2));
+    ctx.beginPath();
+    ctx.moveTo(x + rr, y);
+    ctx.arcTo(x + w, y, x + w, y + h, rr);
+    ctx.arcTo(x + w, y + h, x, y + h, rr);
+    ctx.arcTo(x, y + h, x, y, rr);
+    ctx.arcTo(x, y, x + w, y, rr);
+    ctx.closePath();
+  }
+
+  // One entry per .sign-* CSS class, describing ONLY its border shape and
+  // texture (never a background) so the download can faithfully replicate
+  // what's on screen instead of drawing a generic rectangle for every
+  // style. Matches: rustic (solid), picket (dashed), vine (CSS `double`),
+  // stone/metal (CSS inset ring), cloud (huge corner radius = blob),
+  // ribbon (CSS `ridge`), scallop (CSS `dotted`).
+  const SIGN_STYLE_META = {
+    'sign-rustic': { color: '#92400e', radius: 16, lineWidth: 16 },
+    'sign-picket': { color: '#16a34a', radius: 16, lineWidth: 12, dash: [18, 12] },
+    'sign-vine': { color: '#15803d', radius: 16, lineWidth: 14, double: true },
+    'sign-stone': { color: '#64748b', radius: 8, lineWidth: 12, inset: '#cbd5e1' },
+    'sign-metal': { color: '#94a3b8', radius: 22, lineWidth: 9, inset: '#ffffff' },
+    'sign-cloud': { color: '#38bdf8', radius: 9999, lineWidth: 12 },
+    'sign-ribbon': { color: '#b91c1c', radius: 10, lineWidth: 12, ridge: true },
+    'sign-scallop': { color: '#d97706', radius: 40, lineWidth: 12, dash: [3, 17], dashCap: 'round' }
+  };
+
+  function drawSignFrame(ctx, style, x, y, w, h, bg) {
+    const meta = SIGN_STYLE_META[style] || SIGN_STYLE_META['sign-rustic'];
+    const radius = style === 'sign-cloud' ? Math.min(w, h) * 0.42 : meta.radius;
+
+    roundRectPath(ctx, x, y, w, h, radius);
+    ctx.fillStyle = bg;
+    ctx.fill();
+
+    ctx.save();
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = meta.lineWidth;
+    ctx.strokeStyle = meta.color;
+    if (meta.dash) { ctx.setLineDash(meta.dash); if (meta.dashCap) ctx.lineCap = meta.dashCap; }
+    roundRectPath(ctx, x + meta.lineWidth / 2, y + meta.lineWidth / 2, w - meta.lineWidth, h - meta.lineWidth, Math.max(radius - meta.lineWidth / 2, 0));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.lineCap = 'butt';
+
+    if (meta.double) {
+      ctx.lineWidth = Math.max(meta.lineWidth / 3, 2);
+      roundRectPath(ctx, x + meta.lineWidth * 1.7, y + meta.lineWidth * 1.7, w - meta.lineWidth * 3.4, h - meta.lineWidth * 3.4, Math.max(radius - meta.lineWidth, 0));
+      ctx.stroke();
+    }
+    if (meta.inset) {
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = meta.inset;
+      roundRectPath(ctx, x + meta.lineWidth + 7, y + meta.lineWidth + 7, w - (meta.lineWidth + 7) * 2, h - (meta.lineWidth + 7) * 2, Math.max(radius - meta.lineWidth, 0));
+      ctx.stroke();
+    }
+    if (meta.ridge) {
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#fca5a5';
+      roundRectPath(ctx, x + meta.lineWidth + 5, y + meta.lineWidth + 5, w - (meta.lineWidth + 5) * 2, h - (meta.lineWidth + 5) * 2, Math.max(radius - meta.lineWidth, 0));
+      ctx.stroke();
+    }
+    ctx.restore();
   }
 
   function triggerDownload(canvas, filename) {
@@ -1839,6 +1985,47 @@
     return new Blob([bytes], { type: 'application/pdf' });
   }
 
+  // Same hand-rolled approach as buildCertificatePdf, generalized to N
+  // pages - each page gets its own Page/Image/Contents object trio, all
+  // listed under one shared Pages tree, so a team can get their garden
+  // layout and creation sign as one printable, two-page PDF.
+  function buildMultiPagePdf(pages) {
+    const objects = {};
+    const kids = [];
+    let nextId = 3;
+    pages.forEach((p) => {
+      const jpegBytes = atob(p.jpegDataUrl.split(',')[1]);
+      const wPt = Math.round(p.widthPx * 0.75);
+      const hPt = Math.round(p.heightPx * 0.75);
+      const contentStream = `q ${wPt} 0 0 ${hPt} 0 0 cm /Im0 Do Q`;
+      const pageId = nextId++, imgId = nextId++, contentId = nextId++;
+      objects[pageId] = `<< /Type /Page /Parent 2 0 R /Resources << /XObject << /Im0 ${imgId} 0 R >> >> /MediaBox [0 0 ${wPt} ${hPt}] /Contents ${contentId} 0 R >>`;
+      objects[imgId] = `<< /Type /XObject /Subtype /Image /Width ${p.widthPx} /Height ${p.heightPx} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpegBytes.length} >>\nstream\n${jpegBytes}\nendstream`;
+      objects[contentId] = `<< /Length ${contentStream.length} >>\nstream\n${contentStream}\nendstream`;
+      kids.push(pageId);
+    });
+    objects[1] = '<< /Type /Catalog /Pages 2 0 R >>';
+    objects[2] = `<< /Type /Pages /Kids [${kids.map((k) => `${k} 0 R`).join(' ')}] /Count ${kids.length} >>`;
+
+    const maxId = nextId - 1;
+    let pdf = '%PDF-1.4\n';
+    const offsets = [0];
+    for (let i = 1; i <= maxId; i++) {
+      offsets[i] = pdf.length;
+      pdf += `${i} 0 obj\n${objects[i]}\nendobj\n`;
+    }
+    const xrefStart = pdf.length;
+    pdf += `xref\n0 ${maxId + 1}\n0000000000 65535 f \n`;
+    for (let i = 1; i <= maxId; i++) {
+      pdf += `${String(offsets[i]).padStart(10, '0')} 00000 n \n`;
+    }
+    pdf += `trailer\n<< /Size ${maxId + 1} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`;
+
+    const bytes = new Uint8Array(pdf.length);
+    for (let i = 0; i < pdf.length; i++) bytes[i] = pdf.charCodeAt(i) & 0xff;
+    return new Blob([bytes], { type: 'application/pdf' });
+  }
+
   // The certificate/badge/stamp downloads should stay available any time,
   // as many times as a team wants - never leave one stuck disabled.
   function reenableCelebrateButtons() {
@@ -1864,9 +2051,11 @@
     return { totalAttempts, totalSolved, avg: totalSolved > 0 ? totalAttempts / totalSolved : 0 };
   }
 
-  function drawSeal(ctx, cx, cy, r, label) {
+  function drawSeal(ctx, cx, cy, r, topLabel, bottomLabel, color) {
+    color = color || '#d97706';
+    bottomLabel = bottomLabel || 'CERTIFIED';
     ctx.save();
-    ctx.strokeStyle = '#d97706';
+    ctx.strokeStyle = color;
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -1876,12 +2065,12 @@
     ctx.arc(cx, cy, r - 8, 0, Math.PI * 2);
     ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle = '#d97706';
+    ctx.fillStyle = color;
     ctx.textAlign = 'center';
     ctx.font = "800 13px 'Montserrat', sans-serif";
-    ctx.fillText(label, cx, cy - 2);
+    ctx.fillText(topLabel, cx, cy - 2);
     ctx.font = "700 10px 'Montserrat', sans-serif";
-    ctx.fillText('CERTIFIED', cx, cy + 14);
+    ctx.fillText(bottomLabel, cx, cy + 14);
     ctx.restore();
   }
 
@@ -1945,25 +2134,30 @@
 
     ctx.font = "900 34px 'Montserrat', sans-serif";
     ctx.fillStyle = '#15803d';
-    ctx.fillText(`${name1} & ${name2}`, 500, 370);
+    ctx.fillText(`${name1} & ${name2}`, 500, 368);
 
-    ctx.font = "700 20px 'Montserrat', sans-serif";
-    ctx.fillStyle = '#0f172a';
-    ctx.fillText("successfully designed a Laudato Si' Eco-Garden", 500, 410);
-    ctx.fillText("while caring for creation and their $100.00 budget.", 500, 436);
-
-    const grand = window.grandTotal != null ? `$${fmt2(window.grandTotal)}` : 'not recorded';
-    ctx.font = "800 18px 'Montserrat', sans-serif";
+    ctx.font = "800 15px 'Montserrat', sans-serif";
     ctx.fillStyle = '#1e3a8a';
-    ctx.fillText(`Grand Total Spent: ${grand}`, 500, 485);
+    ctx.fillText('6th GRADE', 500, 392);
 
-    drawSeal(ctx, 860, 590, 55, 'STREAM');
+    ctx.font = "700 19px 'Montserrat', sans-serif";
+    ctx.fillStyle = '#0f172a';
+    ctx.fillText("successfully designed a Laudato Si' Eco-Garden,", 500, 428);
+    ctx.fillText('caring for our common home through science, math,', 500, 452);
+    ctx.fillText('and faith - just as Pope Francis calls us to do.', 500, 476);
+
+    ctx.font = "italic 600 15px 'Montserrat', sans-serif";
+    ctx.fillStyle = '#475569';
+    ctx.fillText('"Praise be to you, my Lord" - Laudato Si\'', 500, 505);
+
+    drawSeal(ctx, 800, 585, 52, 'STREAM', 'CERTIFIED', '#d97706');
+    drawSeal(ctx, 200, 585, 52, 'MATH', 'QUALITY', '#15803d');
 
     const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    ctx.textAlign = 'left';
+    ctx.textAlign = 'center';
     ctx.font = "600 16px 'Montserrat', sans-serif";
     ctx.fillStyle = '#475569';
-    ctx.fillText(today, 90, 605);
+    ctx.fillText(today, 500, 650);
 
     const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.92);
     const pdfBlob = buildCertificatePdf(jpegDataUrl, canvas.width, canvas.height);
@@ -2171,6 +2365,63 @@
     reenableCelebrateButtons();
   }
 
+  // Draws the sign exactly as configured in the controls into the given
+  // box on whatever canvas context is passed in - shared by the standalone
+  // sign PNG and page 2 of the Garden + Sign poster PDF, so the two can
+  // never drift apart from each other (or from what renderSign() shows on
+  // screen, since both read the same live control values and the same
+  // drawSignFrame() used for the CSS style classes).
+  async function drawSignOntoCanvas(ctx, x, y, w, h) {
+    const { text, ref } = getVerseInUse();
+    const title = document.getElementById('sign-title-input').value.trim();
+    const bg = document.getElementById('sign-bg-select').value;
+    const textColor = document.getElementById('sign-text-color').value;
+    const fontFamily = document.getElementById('sign-font-select').value.split(',')[0].replace(/'/g, '');
+    const borderClass = document.getElementById('sign-border-select').value;
+    const stickerKeys = [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value);
+    const emblemKey = document.getElementById('sign-emblem-select').value;
+    const [stickerImgs, emblemImg] = await Promise.all([
+      Promise.all(stickerKeys.map((k) => svgToImage(STICKER_ICONS[k]))),
+      emblemKey ? svgToImage(STICKER_ICONS[emblemKey]) : Promise.resolve(null)
+    ]);
+    await document.fonts.load(`700 28px ${fontFamily}`).catch(() => {});
+
+    drawSignFrame(ctx, borderClass, x, y, w, h, bg);
+    ctx.textAlign = 'center';
+
+    let cursorY = y + 66;
+    if (emblemImg) {
+      const es = 42;
+      ctx.drawImage(emblemImg, x + w / 2 - es / 2, cursorY - es, es, es);
+      cursorY += 32;
+    }
+    if (title) {
+      ctx.fillStyle = textColor;
+      ctx.font = `900 24px ${fontFamily}, sans-serif`;
+      ctx.fillText(title, x + w / 2, cursorY);
+      cursorY += 34;
+    }
+
+    ctx.fillStyle = textColor;
+    ctx.font = `700 28px ${fontFamily}, sans-serif`;
+    const lines = wrapCanvasText(ctx, `"${text}"`, w - 90);
+    const verseY = Math.max(cursorY, y + h / 2 - (lines.length * 38) / 2 + 19);
+    lines.forEach((l, i) => ctx.fillText(l, x + w / 2, verseY + i * 38));
+    let afterVerseY = verseY + lines.length * 38;
+
+    if (ref) {
+      ctx.font = `700 19px ${fontFamily}, sans-serif`;
+      ctx.fillText(`- ${ref}`, x + w / 2, afterVerseY + 22);
+    }
+    if (stickerImgs.length) {
+      const iconSize = 44, gap = 10;
+      const totalW = stickerImgs.length * (iconSize + gap) - gap;
+      let sx = x + w / 2 - totalW / 2;
+      const sy = y + h - iconSize - 16;
+      stickerImgs.forEach((img) => { ctx.drawImage(img, sx, sy, iconSize, iconSize); sx += iconSize + gap; });
+    }
+  }
+
   async function downloadSign() {
     const feedbackEl = document.getElementById('sign-feedback');
     const name1 = document.getElementById('team-name-1').value.trim();
@@ -2179,20 +2430,6 @@
       LessonCheck.incomplete(feedbackEl, 'Type both team member names at the top of the page before downloading your sign.');
       return;
     }
-    const { text, ref } = getVerseInUse();
-    const title = document.getElementById('sign-title-input').value.trim();
-    const bg = document.getElementById('sign-bg-select').value;
-    const textColor = document.getElementById('sign-text-color').value;
-    const fontFamily = document.getElementById('sign-font-select').value.split(',')[0].replace(/'/g, '');
-    const borderClass = document.getElementById('sign-border-select').value;
-    const borderColors = {
-      'sign-rustic': '#92400e', 'sign-picket': '#16a34a', 'sign-vine': '#15803d',
-      'sign-stone': '#64748b', 'sign-metal': '#94a3b8', 'sign-cloud': '#38bdf8'
-    };
-    const stickerKeys = [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value);
-    const stickerImgs = await Promise.all(stickerKeys.map((k) => svgToImage(STICKER_ICONS[k])));
-    await document.fonts.load(`700 28px ${fontFamily}`).catch(() => {});
-
     const SCALE = 2;
     const W = 700, H = 800;
     const canvas = document.getElementById('render-canvas');
@@ -2209,40 +2446,121 @@
     ctx.font = "800 26px 'Montserrat', sans-serif";
     ctx.fillText(`Garden of ${name1} & ${name2}`, 350, 55);
 
-    const boxX = 70, boxY = 100, boxW = 560, boxH = 570;
-    ctx.fillStyle = bg;
-    ctx.fillRect(boxX, boxY, boxW, boxH);
-    ctx.strokeStyle = borderColors[borderClass] || '#92400e';
-    ctx.lineWidth = 14;
-    ctx.strokeRect(boxX, boxY, boxW, boxH);
-
-    let cursorY = boxY + boxH / 2 - 40;
-    if (title) {
-      ctx.fillStyle = textColor;
-      ctx.font = `900 24px ${fontFamily}, sans-serif`;
-      ctx.fillText(title, boxX + boxW / 2, cursorY);
-      cursorY += 34;
-    }
-
-    ctx.fillStyle = textColor;
-    ctx.font = `700 28px ${fontFamily}, sans-serif`;
-    const lines = wrapCanvasText(ctx, `"${text}"`, boxW - 80);
-    lines.forEach((l, i) => ctx.fillText(l, boxX + boxW / 2, cursorY + i * 38));
-    cursorY += lines.length * 38;
-
-    if (ref) {
-      ctx.font = `700 19px ${fontFamily}, sans-serif`;
-      ctx.fillText(`- ${ref}`, boxX + boxW / 2, cursorY + 22);
-    }
-    if (stickerImgs.length) {
-      const iconSize = 44, gap = 10;
-      const totalW = stickerImgs.length * (iconSize + gap) - gap;
-      let sx = boxX + boxW / 2 - totalW / 2;
-      const sy = boxY + boxH - iconSize - 16;
-      stickerImgs.forEach((img) => { ctx.drawImage(img, sx, sy, iconSize, iconSize); sx += iconSize + gap; });
-    }
+    await drawSignOntoCanvas(ctx, 70, 100, 560, 570);
 
     triggerDownload(canvas, `Garden-of-${slug(name1)}-and-${slug(name2)}.png`);
+    reenableCelebrateButtons();
+  }
+
+  // Draws the 6x6 garden grid (real-life icons, matching the page's "real
+  // life" view) plus a legend of what's planted where. Returns the list of
+  // catalog codes actually used, for the legend, since the poster draws
+  // the legend itself rather than reusing the page's #legend-row markup.
+  async function drawGardenOntoCanvas(ctx, x, y, size) {
+    const pad = 12, gap = 6;
+    const cellSize = (size - pad * 2 - gap * 5) / 6;
+
+    roundRectPath(ctx, x, y, size, size, 14);
+    ctx.fillStyle = '#d9e6d3';
+    ctx.fill();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#6b7f5e';
+    ctx.stroke();
+
+    const usedCodes = [...new Set(gridArr.filter((id) => id != null).map((id) => tokens.find((t) => t.id === id).code))];
+    const iconImgs = {};
+    await Promise.all(usedCodes.map(async (code) => { iconImgs[code] = await svgToImage(ICONS[code]); }));
+
+    for (let i = 0; i < 36; i++) {
+      const row = Math.floor(i / 6), col = i % 6;
+      const cx = x + pad + col * (cellSize + gap);
+      const cy = y + pad + row * (cellSize + gap);
+      roundRectPath(ctx, cx, cy, cellSize, cellSize, 6);
+      ctx.fillStyle = 'rgba(255,255,255,0.6)';
+      ctx.fill();
+      ctx.setLineDash([3, 3]);
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(0,0,0,0.25)';
+      ctx.stroke();
+      ctx.setLineDash([]);
+      const id = gridArr[i];
+      if (id != null) {
+        const t = tokens.find((tk) => tk.id === id);
+        if (t && iconImgs[t.code]) ctx.drawImage(iconImgs[t.code], cx + 3, cy + 3, cellSize - 6, cellSize - 6);
+      }
+    }
+    return usedCodes;
+  }
+
+  // Suggested by the sign feedback: "have the garden layout as well ...
+  // maybe on a PDF with both pages." A team's sign is meant to be printed
+  // and posted in the classroom, and pairing it with their actual garden
+  // layout on a second page makes one printable poster instead of two
+  // separate, disconnected downloads.
+  async function downloadGardenSignPoster() {
+    const feedbackEl = document.getElementById('sign-feedback');
+    const name1 = document.getElementById('team-name-1').value.trim();
+    const name2 = document.getElementById('team-name-2').value.trim();
+    if (!name1 || !name2) {
+      LessonCheck.incomplete(feedbackEl, 'Type both team member names at the top of the page before downloading your poster.');
+      return;
+    }
+    if (!gardenBuilt || gridArr.every((id) => id == null)) {
+      LessonCheck.incomplete(feedbackEl, 'Place at least one item in your Garden Grid (above) before downloading the poster.');
+      return;
+    }
+
+    const SCALE = 2, W = 700, H = 800;
+    const canvas = document.getElementById('render-canvas');
+    canvas.width = W * SCALE;
+    canvas.height = H * SCALE;
+
+    let ctx = canvas.getContext('2d');
+    ctx.scale(SCALE, SCALE);
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(0, 0, W, H);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#1e3a8a';
+    ctx.font = "800 24px 'Montserrat', sans-serif";
+    ctx.fillText(`${name1} & ${name2}'s Eco-Garden Layout`, 350, 50);
+    const usedCodes = await drawGardenOntoCanvas(ctx, 70, 88, 560);
+    ctx.textAlign = 'left';
+    ctx.font = "700 13px 'Montserrat', sans-serif";
+    usedCodes.forEach((code, i) => {
+      const item = CATALOG_BY_CODE[code];
+      const col = Math.floor(i / 4), row = i % 4;
+      const lx = 70 + col * 300, ly = 684 + row * 24;
+      ctx.fillStyle = item.bg;
+      ctx.fillRect(lx, ly - 12, 15, 15);
+      ctx.strokeStyle = item.border;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(lx, ly - 12, 15, 15);
+      ctx.fillStyle = '#334155';
+      const name = item.name.length > 24 ? item.name.slice(0, 22) + '...' : item.name;
+      ctx.fillText(`${item.code} ${name}`, lx + 21, ly);
+    });
+    const page1Jpeg = canvas.toDataURL('image/jpeg', 0.92);
+    const page1W = canvas.width, page1H = canvas.height;
+
+    canvas.width = W * SCALE;
+    canvas.height = H * SCALE;
+    ctx = canvas.getContext('2d');
+    ctx.scale(SCALE, SCALE);
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(0, 0, W, H);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#1e3a8a';
+    ctx.font = "800 26px 'Montserrat', sans-serif";
+    ctx.fillText(`Garden of ${name1} & ${name2}`, 350, 55);
+    await drawSignOntoCanvas(ctx, 70, 100, 560, 570);
+    const page2Jpeg = canvas.toDataURL('image/jpeg', 0.92);
+
+    const pdfBlob = buildMultiPagePdf([
+      { jpegDataUrl: page1Jpeg, widthPx: page1W, heightPx: page1H },
+      { jpegDataUrl: page2Jpeg, widthPx: canvas.width, heightPx: canvas.height }
+    ]);
+    triggerBlobDownload(pdfBlob, `EcoGarden-Poster-${slug(name1)}-and-${slug(name2)}.pdf`);
+    reenableCelebrateButtons();
   }
 
   // ================================================================
