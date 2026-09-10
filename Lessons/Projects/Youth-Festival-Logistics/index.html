@@ -1234,6 +1234,7 @@
     const isCorrect = LessonCheck.numericMatch(given, 550, 0.4);
     const outcome = gradeAttempt('ticket', isCorrect, feedbackEl, {
       correct: 'Correct! 550 additional tickets needed (800 &minus; 250 = 550).',
+      retry: 'Tip: subtract the tickets already sold from the target.'
     }, { label: 'Station 1 - Ticket Sales Volume', answer: given, section: 'Day 1 - Logistics Stations' });
     if (outcome === 'correct') {
       document.getElementById('ticket-input').disabled = true;
@@ -1251,7 +1252,8 @@
     if (given.trim() === '') { LessonCheck.incomplete(feedbackEl, 'Type your answer first.'); return; }
     const isCorrect = LessonCheck.numericMatch(given, 50, 0.4);
     const outcome = gradeAttempt('breakeven', isCorrect, feedbackEl, {
-      correct: 'Correct! 50 meal deals covers the $425.00 cost (150 + 5.50 &times; 50 = 425).'
+      correct: 'Correct! 50 meal deals covers the $425.00 cost (150 + 5.50 &times; 50 = 425).',
+      retry: 'Tip: subtract the fixed fee first, then divide by the price per meal deal.'
     }, { label: 'Station 2 - Food Stall Break-Even', answer: given, section: 'Day 1 - Logistics Stations' });
     if (outcome === 'correct') {
       document.getElementById('breakeven-input').disabled = true;
@@ -1270,6 +1272,7 @@
     const isCorrect = LessonCheck.numericMatch(given, 8, 0.4);
     const outcome = gradeAttempt('vendorhours', isCorrect, feedbackEl, {
       correct: 'Correct! At 8 hours, both vendors cost $340.00.',
+      retry: 'Tip: get the variable terms on one side and the constants on the other.'
     }, { label: 'Station 3 - Audio Equipment Comparison', answer: given, section: 'Day 1 - Logistics Stations' });
     if (outcome === 'correct') {
       document.getElementById('vendorhours-input').disabled = true;
@@ -1282,7 +1285,7 @@
   function checkBoothFormula() {
     const outcome = checkMC('boothformula', 'A', 'boothformula-feedback',
       'Correct! l = (P &minus; 2w) / 2.',
-      null,
+      'Tip: undo the addition of 2w before you divide by 2.',
       { label: 'Station 4A - Rearrange for Length', answer: document.querySelector('input[name="boothformula"]:checked').value, section: 'Day 1 - Logistics Stations' });
     if (outcome === 'correct') { maybeCompleteDay1(); saveProgress(); }
   }
@@ -1294,6 +1297,7 @@
     const isCorrect = LessonCheck.numericMatch(given, 7, 0.2);
     const outcome = gradeAttempt('boothlength', isCorrect, feedbackEl, {
       correct: 'Correct! l = (24 &minus; 10) / 2 = 7 feet.',
+      retry: 'Tip: plug P = 24 and w = 5 into your rearranged formula from Part A.'
     }, { label: 'Station 4B - Booth Length', answer: given, section: 'Day 1 - Logistics Stations' });
     if (outcome === 'correct') {
       document.getElementById('boothlength-input').disabled = true;
@@ -1310,7 +1314,7 @@
   function checkAmpFormula() {
     const outcome = checkMC('ampformula', 'A', 'ampformula-feedback',
       'Correct! I = P / V.',
-      null,
+      'Tip: divide both sides by V to isolate I.',
       { label: 'Station 5A - Rearrange for Current', answer: document.querySelector('input[name="ampformula"]:checked').value, section: 'Day 1 - Logistics Stations' });
     if (outcome === 'correct') { maybeCompleteDay1(); saveProgress(); }
   }
@@ -1322,6 +1326,7 @@
     const isCorrect = LessonCheck.numericMatch(given, 20, 0.2);
     const outcome = gradeAttempt('stagecurrent', isCorrect, feedbackEl, {
       correct: 'Correct! I = 2,400 / 120 = 20 Amps.',
+      retry: 'Tip: divide the Watts by the Volts.'
     }, { label: 'Station 5B - Stage Current Load', answer: given, section: 'Day 1 - Logistics Stations' });
     if (outcome === 'correct') {
       document.getElementById('stagecurrent-input').disabled = true;
@@ -1336,7 +1341,7 @@
   function checkCompMC() {
     checkMC('compmc', 'B', 'comp-mc-feedback',
       'Correct! A literal equation uses variables to represent specific real-world measurements or physical laws.',
-      null,
+      'Tip: think about what P = VI actually represents in real life.',
       { label: 'Check Your Understanding - Literal Equations', answer: document.querySelector('input[name="compmc"]:checked').value, section: 'Day 1 - Check Your Understanding' });
     saveProgress();
   }
@@ -1359,7 +1364,8 @@
     if (given.trim() === '') { LessonCheck.incomplete(feedbackEl, 'Type your answer first.'); return; }
     const isCorrect = LessonCheck.numericMatch(given, 4.95, 0.01);
     const outcome = gradeAttempt('taxrevenue', isCorrect, feedbackEl, {
-      correct: 'Correct! $5.50 &times; 0.90 = $4.95 per meal deal after tax.'
+      correct: 'Correct! $5.50 &times; 0.90 = $4.95 per meal deal after tax.',
+      retry: 'Tip: multiply the price by 0.90 to keep 90% after the tax.'
     }, { label: 'Bonus Challenge - New Revenue per Meal Deal', answer: given, section: 'Day 2 - Bonus Challenge' });
     if (outcome === 'correct') {
       document.getElementById('taxrevenue-input').disabled = true;
@@ -1379,6 +1385,7 @@
     const isCorrect = LessonCheck.numericMatch(given, 56, 0.4);
     const outcome = gradeAttempt('taxbreakeven', isCorrect, feedbackEl, {
       correct: 'Correct! 275 / 4.95 &asymp; 55.56, rounded up to 56 whole meal deals (6 more than before the tax).',
+      retry: 'Tip: use your new revenue in the break-even equation, then round up.'
     }, { label: 'Bonus Challenge - Updated Break-Even', answer: given, section: 'Day 2 - Bonus Challenge' });
     if (outcome === 'correct') {
       document.getElementById('taxbreakeven-input').disabled = true;
@@ -1394,6 +1401,7 @@
     const isCorrect = LessonCheck.numericMatch(given, 24, 0.4);
     const outcome = gradeAttempt('headcount', isCorrect, feedbackEl, {
       correct: 'Correct! x = 23.33..., rounded up to a target headcount of 24 people.',
+      retry: 'Tip: distribute first, then collect the x terms - and round up at the end.'
     }, { label: 'Headcount Optimization Challenge', answer: given, section: 'Day 2 - Multi-Step Optimization' });
     if (outcome === 'correct') {
       document.getElementById('headcount-input').disabled = true;
@@ -1405,21 +1413,21 @@
   function checkExit1() {
     checkMC('exit1', 'B', 'exit1-feedback',
       'Correct! Subtracting 20x (the smaller coefficient) keeps the variable term positive: 180 = 100 + 10x.',
-      null,
+      'Tip: subtract the smaller coefficient to keep the variable term positive.',
       { label: 'Exit Ticket Q1 - Variables on Both Sides', answer: document.querySelector('input[name="exit1"]:checked').value, section: 'Day 2 - Exit Ticket' });
     saveProgress();
   }
   function checkExit2() {
     checkMC('exit2', 'D', 'exit2-feedback',
       'Correct! Dividing both sides by V is the Division Property of Equality.',
-      null,
+      "Tip: you're dividing both sides by the same value.",
       { label: 'Exit Ticket Q2 - Isolating a Variable', answer: document.querySelector('input[name="exit2"]:checked').value, section: 'Day 2 - Exit Ticket' });
     saveProgress();
   }
   function checkExit3() {
     checkMC('exit3', 'D', 'exit3-feedback',
       'Correct! 4(3x + 20) = 12x + 80, so the left side becomes 12x + 80 &minus; 80.',
-      null,
+      'Tip: distribute the 4 to both terms inside the parentheses.',
       { label: 'Exit Ticket Q3 - Distributive Property', answer: document.querySelector('input[name="exit3"]:checked').value, section: 'Day 2 - Exit Ticket' });
     saveProgress();
   }
@@ -1919,12 +1927,32 @@
     ctx.restore();
   }
 
+  // The certificate is the last thing in the page, but nothing was actually
+  // stopping a team from clicking it the moment names were filled in -
+  // Day 2's required work (bonus challenge is optional and excluded) had no
+  // completion check at all. This lists whatever's still missing so the
+  // certificate only unlocks once Day 2 is actually done.
+  function missingDay2Work() {
+    const missing = [];
+    if (!solvedKeys['headcount']) missing.push('the Headcount Optimization Challenge');
+    if (!document.getElementById('stamp-display').classList.contains('show')) missing.push('the Team Math Check (award your Math Quality Stamp)');
+    if (!document.getElementById('lock-flyer-btn').disabled) missing.push('your Event Flyer (lock it in)');
+    if (!(solvedKeys['exit1'] && solvedKeys['exit2'] && solvedKeys['exit3'])) missing.push('the Exit Ticket multiple-choice questions');
+    if (!(document.getElementById('reflection-4').disabled && document.getElementById('reflection-5').disabled)) missing.push('the Exit Ticket reflections');
+    return missing;
+  }
+
   async function downloadCertificate() {
     const feedbackEl = document.getElementById('certificate-feedback');
     const name1 = document.getElementById('team-name-1').value.trim();
     const name2 = document.getElementById('team-name-2').value.trim();
     if (!name1 || !name2) {
       LessonCheck.incomplete(feedbackEl, 'Type both team member names at the top of the page first.');
+      return;
+    }
+    const missing = missingDay2Work();
+    if (missing.length) {
+      LessonCheck.incomplete(feedbackEl, `Finish Day 2 first - still need: ${missing.join(', ')}.`);
       return;
     }
     const charity = document.getElementById('flyer-charity-input').value.trim() || 'their community';
