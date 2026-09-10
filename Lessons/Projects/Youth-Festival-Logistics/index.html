@@ -95,12 +95,13 @@
     .calc-row input.cell-input { width: 116px; font-size: 1.2rem; padding: 12px; }
     .equation-display { text-align: center; font-size: 1.3rem; font-weight: 800; color: var(--primary); margin: 14px 0; }
 
-    /* Multiple-choice questions */
+    /* Multiple-choice questions - the native radio circle is visually
+       hidden; the label itself (highlighted on selection) is the only
+       indicator, so the option list reads as clean cards, not a bulleted
+       list. */
     .mc-options { display: flex; flex-direction: column; gap: 8px; margin: 12px auto; max-width: 620px; }
     .mc-options label {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
+      display: block;
       padding: 10px 14px;
       border: 2px solid var(--border);
       border-radius: 8px;
@@ -109,7 +110,15 @@
       text-align: left;
     }
     .mc-options label.selected { border-color: var(--primary-light); background: #eff6ff; }
-    .mc-options input { margin-top: 3px; flex-shrink: 0; }
+    .mc-options input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+      margin: 0;
+    }
+
+    .no-paste-note { font-size: 0.78rem; color: var(--empty, #94a3b8); font-style: italic; margin: 4px 0 0 0; }
 
     .day2-locked-notice {
       text-align: center;
@@ -386,7 +395,8 @@
     <div class="section-title" style="font-size:1.3rem;">Check Your Understanding</div>
     <div class="station-card">
       <p><strong>1.</strong> Based on the reading, why is finding the break-even point a critical task for a project manager practicing stewardship?</p>
-      <textarea id="comp-reflection-1" class="form-control-lg" rows="3" placeholder="Type your answer..."></textarea>
+      <textarea id="comp-reflection-1" class="form-control-lg" rows="3" placeholder="Type your answer..." onpaste="return blockPaste(event)" ondrop="return blockPaste(event)"></textarea>
+      <p class="no-paste-note">Type your own answer - pasting is disabled.</p>
       <div style="text-align:center;"><button class="row-check-btn" onclick="submitReflection('comp-reflection-1','comp-reflection-1-feedback','comp1','Check Your Understanding - Break-Even Point','Day 1 - Check Your Understanding')">Submit</button></div>
       <div class="feedback-msg" id="comp-reflection-1-feedback"></div>
     </div>
@@ -405,7 +415,8 @@
 
     <div class="station-card">
       <p><strong>3.</strong> The reading mentions that a park permit fee is a constant. Explain how a constant behaves differently than a variable when calculating the total cost of a festival.</p>
-      <textarea id="comp-reflection-3" class="form-control-lg" rows="3" placeholder="Type your answer..."></textarea>
+      <textarea id="comp-reflection-3" class="form-control-lg" rows="3" placeholder="Type your answer..." onpaste="return blockPaste(event)" ondrop="return blockPaste(event)"></textarea>
+      <p class="no-paste-note">Type your own answer - pasting is disabled.</p>
       <div style="text-align:center;"><button class="row-check-btn" onclick="submitReflection('comp-reflection-3','comp-reflection-3-feedback','comp3','Check Your Understanding - Constants vs. Variables','Day 1 - Check Your Understanding')">Submit</button></div>
       <div class="feedback-msg" id="comp-reflection-3-feedback"></div>
     </div>
@@ -548,7 +559,8 @@
         </div>
         <div class="feedback-msg" id="taxbreakeven-feedback"></div>
         <p><strong>3. Reflection:</strong> How does an unexpected tax or cost increase affect your ability to practice stewardship for your charity partner?</p>
-        <textarea id="bonus-reflection" class="form-control-lg" rows="3" placeholder="Type your answer..."></textarea>
+        <textarea id="bonus-reflection" class="form-control-lg" rows="3" placeholder="Type your answer..." onpaste="return blockPaste(event)" ondrop="return blockPaste(event)"></textarea>
+      <p class="no-paste-note">Type your own answer - pasting is disabled.</p>
         <div style="text-align:center;"><button class="row-check-btn" onclick="submitReflection('bonus-reflection','bonus-reflection-feedback','bonusreflect','Bonus Challenge Reflection','Day 2 - Bonus Challenge')">Submit</button></div>
         <div class="feedback-msg" id="bonus-reflection-feedback"></div>
       </div>
@@ -743,14 +755,16 @@
 
       <div class="station-card">
         <p><strong>4. Mathematical Precision and Stewardship:</strong> Explain how using precise algebraic formulas helps you be a better steward of the funds donated to the charity. What might happen if your math was "close enough" instead of exact?</p>
-        <textarea id="reflection-4" class="form-control-lg" rows="3" placeholder="Type your answer..."></textarea>
+        <textarea id="reflection-4" class="form-control-lg" rows="3" placeholder="Type your answer..." onpaste="return blockPaste(event)" ondrop="return blockPaste(event)"></textarea>
+      <p class="no-paste-note">Type your own answer - pasting is disabled.</p>
         <div style="text-align:center;"><button class="row-check-btn" onclick="submitReflection('reflection-4','reflection-4-feedback','reflect4','Exit Ticket - Precision and Stewardship','Day 2 - Exit Ticket')">Submit</button></div>
         <div class="feedback-msg" id="reflection-4-feedback"></div>
       </div>
 
       <div class="station-card">
         <p><strong>5. Ethical Impact of Planning:</strong> How does rearranging the electrical formula P = VI to check the current (I) protect the people attending the festival? Why is it an ethical failure to ignore these calculations?</p>
-        <textarea id="reflection-5" class="form-control-lg" rows="3" placeholder="Type your answer..."></textarea>
+        <textarea id="reflection-5" class="form-control-lg" rows="3" placeholder="Type your answer..." onpaste="return blockPaste(event)" ondrop="return blockPaste(event)"></textarea>
+      <p class="no-paste-note">Type your own answer - pasting is disabled.</p>
         <div style="text-align:center;"><button class="row-check-btn" onclick="submitReflection('reflection-5','reflection-5-feedback','reflect5','Exit Ticket - Ethical Impact of Planning','Day 2 - Exit Ticket')">Submit</button></div>
         <div class="feedback-msg" id="reflection-5-feedback"></div>
       </div>
@@ -1158,6 +1172,13 @@
     document.querySelectorAll(`input[name="${name}"]`).forEach((el) => {
       el.closest('label').classList.toggle('selected', el.checked);
     });
+  }
+
+  // Reflection answers should be the student's own words - block paste
+  // (Ctrl+V, right-click paste, and drag-and-drop text) on those fields.
+  function blockPaste(e) {
+    e.preventDefault();
+    return false;
   }
 
   function checkMC(name, correctValue, feedbackElId, correctMsg, retryMsg, record) {
