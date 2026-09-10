@@ -309,9 +309,11 @@
       justify-content: center;
       gap: 8px;
     }
+    .sign-preview .sign-title { font-size: 1.2rem; font-weight: 900; margin-bottom: 4px; }
     .sign-preview .sign-verse { font-size: 1rem; line-height: 1.4; }
     .sign-preview .sign-ref { font-size: 0.82rem; font-weight: 700; opacity: 0.85; }
-    .sign-preview .sign-stickers { font-size: 1.6rem; letter-spacing: 6px; }
+    .sign-preview .sign-stickers { display: flex; justify-content: center; gap: 8px; }
+    .sign-sticker-icon { display: inline-block; width: 30px; height: 30px; }
     .sign-rustic { border: 8px solid #92400e; background: #fef3c7; border-radius: 10px; }
     .sign-picket { border: 6px dashed #16a34a; background: #ecfdf5; border-radius: 10px; }
     .sign-vine { border: 6px solid #15803d; background: #f0fdf4; border-radius: 10px; }
@@ -322,11 +324,11 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      margin-right: 12px;
-      font-size: 1.3rem;
+      margin: 0 10px 8px 0;
       cursor: pointer;
     }
     .sticker-choices input { transform: scale(1.2); }
+    .sticker-icon { display: inline-block; width: 26px; height: 26px; }
 
     /* Peer audit stamp */
     .audit-checks { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
@@ -388,7 +390,7 @@
     <label for="team-code-input">Team Code:</label>
     <input type="text" id="team-code-input" placeholder="Enter your team code">
     <button class="btn-print" id="team-code-btn" onclick="startTeam()">Start / Resume</button>
-    <button class="btn-print" onclick="printProgressReport('Laudato Si Eco-Garden STREAM Project')">Print My Progress</button>
+    <button class="btn-print" onclick="printEcoGardenReport()">Print My Progress</button>
   </div>
   <p id="team-status" style="text-align:center; margin:10px 24px 0 24px; font-weight:700; color:var(--primary);"></p>
   <div id="manual-name-fallback" style="display:none; text-align:center; margin:10px 24px 0 24px;">
@@ -565,7 +567,7 @@
       <div class="legend-row" id="legend-row"></div>
 
       <div style="text-align:center; margin-top:14px;">
-        <button class="row-check-btn" onclick="lockGarden()">Lock My Garden Layout</button>
+        <button class="row-check-btn" id="lock-garden-btn" onclick="lockGarden()">Lock My Garden Layout</button>
         <span id="garden-lock-msg"></span>
       </div>
       <div class="feedback-msg" id="garden-feedback"></div>
@@ -578,6 +580,10 @@
 
       <div class="sign-builder">
         <div class="sign-controls">
+          <div class="form-group">
+            <label for="sign-title-input">Name Your Garden (optional)</label>
+            <input type="text" id="sign-title-input" class="form-control-lg" placeholder="e.g. The Sunshine Garden" maxlength="40" oninput="renderSign()">
+          </div>
           <div class="form-group">
             <label for="verse-select">Creation Verse</label>
             <select id="verse-select" class="form-control-lg" onchange="onVerseChange()"></select>
@@ -660,16 +666,20 @@
           <div class="stamp-title">MATH QUALITY STAMP</div>
           <div id="stamp-detail" class="stamp-sub"></div>
         </div>
+        <div style="text-align:center; margin-top:14px;">
+          <button class="row-check-btn celebrate-btn" style="background:var(--success);" onclick="downloadStamp()">Download Math Quality Stamp</button>
+          <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(1)">Download Badge - Team Member 1</button>
+          <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(2)">Download Badge - Team Member 2</button>
+        </div>
+        <div class="feedback-msg" id="badge-feedback"></div>
       </div>
 
-      <div class="section-title" style="font-size:1.3rem;">Celebrate! Download Your Keepsakes</div>
+      <div class="section-title" style="font-size:1.3rem;">Celebrate! Download Your Keepsake</div>
       <div class="station-card" style="text-align:center;">
-        <p style="color:#475569;">Make sure both team member names are filled in at the top of the page. Download one
-          certificate for your team, plus a personal badge for each of you.</p>
-        <button class="row-check-btn" onclick="downloadCertificate()">Download Team Certificate</button><br>
-        <button class="row-check-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(1)">Download Badge - Team Member 1</button>
-        <button class="row-check-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(2)">Download Badge - Team Member 2</button>
-        <div class="feedback-msg" id="badge-feedback"></div>
+        <p style="color:#475569;">Make sure both team member names are filled in at the top of the page, then download
+          your team certificate as a PDF. Your personal badges and Math Quality Stamp are just above, in Team Math Check.</p>
+        <button class="row-check-btn celebrate-btn" onclick="downloadCertificate()">Download Team Certificate (PDF)</button>
+        <div class="feedback-msg" id="certificate-feedback"></div>
       </div>
     </div>
   </div>
@@ -704,35 +714,35 @@
       const angle = (360 / petalCount) * i;
       petals += `<ellipse cx="20" cy="9" rx="5" ry="9" fill="${petalColor}" transform="rotate(${angle} 20 20)"/>`;
     }
-    return `<svg viewBox="0 0 40 40" width="100%" height="100%">${petals}<circle cx="20" cy="20" r="7" fill="${centerColor}"/></svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">${petals}<circle cx="20" cy="20" r="7" fill="${centerColor}"/></svg>`;
   }
   function fernIcon() {
     const color = '#16a34a';
     const branches = [10, 16, 22, 28].map((y) =>
       `<path d="M20 ${y} L${20 - 9} ${y - 6} M20 ${y} L${20 + 9} ${y - 6}" stroke="${color}" stroke-width="2" fill="none" stroke-linecap="round"/>`
     ).join('');
-    return `<svg viewBox="0 0 40 40" width="100%" height="100%"><line x1="20" y1="34" x2="20" y2="8" stroke="${color}" stroke-width="2"/>${branches}</svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%"><line x1="20" y1="34" x2="20" y2="8" stroke="${color}" stroke-width="2"/>${branches}</svg>`;
   }
   function lavenderIcon() {
     let buds = '';
     for (let i = 0; i < 6; i++) buds += `<ellipse cx="20" cy="${7 + i * 3}" rx="3.2" ry="2.2" fill="#8b5cf6"/>`;
-    return `<svg viewBox="0 0 40 40" width="100%" height="100%"><line x1="20" y1="34" x2="20" y2="22" stroke="#4d7c0f" stroke-width="2"/>${buds}</svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%"><line x1="20" y1="34" x2="20" y2="22" stroke="#4d7c0f" stroke-width="2"/>${buds}</svg>`;
   }
   function soilBagIcon() {
-    return `<svg viewBox="0 0 40 40" width="100%" height="100%">
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
       <path d="M10 14 L30 14 L28 34 L12 34 Z" fill="#a5691f" stroke="#7a4a13" stroke-width="1.5"/>
       <path d="M13 14 L27 14 L25 8 L15 8 Z" fill="#c98a3d" stroke="#7a4a13" stroke-width="1.5"/>
     </svg>`;
   }
   function stonesIcon() {
-    return `<svg viewBox="0 0 40 40" width="100%" height="100%">
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
       <ellipse cx="13" cy="25" rx="9" ry="6" fill="#94a3b8"/>
       <ellipse cx="27" cy="26" rx="8" ry="5.5" fill="#cbd5e1"/>
       <ellipse cx="20" cy="19" rx="7" ry="5" fill="#64748b"/>
     </svg>`;
   }
   function birdbathIcon() {
-    return `<svg viewBox="0 0 40 40" width="100%" height="100%">
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
       <path d="M17 34 L23 34 L21 21 L19 21 Z" fill="#94a3b8"/>
       <rect x="14" y="33" width="12" height="3" rx="1" fill="#64748b"/>
       <ellipse cx="20" cy="19" rx="14" ry="5" fill="#cbd5e1" stroke="#64748b" stroke-width="1"/>
@@ -740,10 +750,64 @@
     </svg>`;
   }
   function stakeIcon() {
-    return `<svg viewBox="0 0 40 40" width="100%" height="100%">
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
       <line x1="20" y1="35" x2="20" y2="16" stroke="#7a4a13" stroke-width="3"/>
       <rect x="8" y="6" width="24" height="12" rx="2" fill="#deb887" stroke="#7a4a13" stroke-width="1.5"/>
       <line x1="12" y1="12" x2="28" y2="12" stroke="#7a4a13" stroke-width="1.5" opacity="0.5"/>
+    </svg>`;
+  }
+  function sunIcon() {
+    const rays = [0, 45, 90, 135, 180, 225, 270, 315].map((a) =>
+      `<line x1="20" y1="20" x2="20" y2="4" stroke="#facc15" stroke-width="3" stroke-linecap="round" transform="rotate(${a} 20 20)"/>`
+    ).join('');
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">${rays}<circle cx="20" cy="20" r="9" fill="#facc15"/></svg>`;
+  }
+  function starIcon() {
+    const pts = [];
+    for (let i = 0; i < 5; i++) {
+      const outer = -Math.PI / 2 + (i * 2 * Math.PI) / 5;
+      const inner = outer + Math.PI / 5;
+      pts.push(`${20 + 14 * Math.cos(outer)},${20 + 14 * Math.sin(outer)}`);
+      pts.push(`${20 + 6 * Math.cos(inner)},${20 + 6 * Math.sin(inner)}`);
+    }
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%"><polygon points="${pts.join(' ')}" fill="#f59e0b"/></svg>`;
+  }
+  function heartIcon() {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <path d="M20 33 C 6 23, 4 12, 13 8 C 18 6, 20 11, 20 13 C 20 11, 22 6, 27 8 C 36 12, 34 23, 20 33 Z" fill="#f43f5e"/>
+    </svg>`;
+  }
+  function butterflyIcon() {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <line x1="20" y1="10" x2="20" y2="30" stroke="#78350f" stroke-width="2"/>
+      <ellipse cx="12" cy="15" rx="9" ry="7" fill="#818cf8"/>
+      <ellipse cx="28" cy="15" rx="9" ry="7" fill="#818cf8"/>
+      <ellipse cx="13" cy="26" rx="6" ry="5" fill="#a5b4fc"/>
+      <ellipse cx="27" cy="26" rx="6" ry="5" fill="#a5b4fc"/>
+    </svg>`;
+  }
+  function beeIcon() {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <ellipse cx="20" cy="20" rx="10" ry="8" fill="#facc15" stroke="#1f2937" stroke-width="1.5"/>
+      <path d="M12 15 L28 15 M12 20 L28 20 M12 25 L28 25" stroke="#1f2937" stroke-width="2.5"/>
+      <ellipse cx="13" cy="10" rx="6" ry="4" fill="#dbeafe" opacity="0.8"/>
+      <ellipse cx="25" cy="10" rx="6" ry="4" fill="#dbeafe" opacity="0.8"/>
+    </svg>`;
+  }
+  function raindropIcon() {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <path d="M20 6 C 28 18, 32 24, 32 28 A 12 12 0 0 1 8 28 C 8 24, 12 18, 20 6 Z" fill="#38bdf8"/>
+    </svg>`;
+  }
+  function moonIcon() {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <path d="M25 6 A 15 15 0 1 0 25 34 A 12 12 0 0 1 25 6 Z" fill="#a78bfa"/>
+    </svg>`;
+  }
+  function leafIcon() {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <path d="M8 30 C 8 14, 22 6, 32 8 C 32 20, 22 30, 8 30 Z" fill="#22c55e"/>
+      <line x1="10" y1="28" x2="28" y2="10" stroke="#166534" stroke-width="1.5"/>
     </svg>`;
   }
   const ICONS = {
@@ -800,11 +864,36 @@
     { ref: 'Custom', text: '' }
   ];
 
-  const STICKERS = ['🌻', '🐝', '🦋', '🌈', '☀️', '🐦', '🌿', '💧', '🌙', '⭐', '🍃', '🐞'];
+  // Hand-drawn SVG stickers (no emoji) - includes the actual plant icons
+  // from the store catalog so a team can decorate their sign with the same
+  // flowers they planted, alongside a few nature-themed extras.
+  const STICKER_ICONS = {
+    sunflower: ICONS['P-01'], marigold: ICONS['P-02'], fern: ICONS['P-03'], lavender: ICONS['P-04'],
+    sun: sunIcon(), star: starIcon(), heart: heartIcon(), butterfly: butterflyIcon(),
+    bee: beeIcon(), rain: raindropIcon(), moon: moonIcon(), leaf: leafIcon()
+  };
+  const STICKER_LABELS = {
+    sunflower: 'Sunflower', marigold: 'Marigold', fern: 'Fern', lavender: 'Lavender',
+    sun: 'Sun', star: 'Star', heart: 'Heart', butterfly: 'Butterfly',
+    bee: 'Bee', rain: 'Raindrop', moon: 'Moon', leaf: 'Leaf'
+  };
+  const STICKERS = Object.keys(STICKER_ICONS);
 
   const round2 = (n) => Math.round(n * 100) / 100;
   const fmt2 = (n) => n.toFixed(2);
   const slug = (s) => (s || '').replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '') || 'student';
+
+  // Converts an inline SVG string to a loaded <img>, for compositing onto
+  // canvas downloads (canvas can only drawImage an SVG via an Image element,
+  // not render the markup directly).
+  function svgToImage(svgString) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error('Icon failed to load'));
+      img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgString)));
+    });
+  }
 
   // ================================================================
   // GOOGLE SHEET SYNC (roster lookup, progress save/restore, Day 2 code)
@@ -812,6 +901,15 @@
   const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbwGbW1YIaoOf3DVnfMNl6i6tKnGyUFB5586q0G44gUeGRyFlro5Ag3z8bAz2gsH9g0nDw/exec';
   let teamCode = null;
   let day2Unlocked = false;
+
+  // Apps Script cold-starts can take a few seconds - without a timeout, a
+  // slow or stuck response leaves the UI showing "Looking up..." forever
+  // with no way to retry short of reloading the whole page.
+  function fetchWithTimeout(url, opts, timeoutMs) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs || 15000);
+    return fetch(url, Object.assign({}, opts, { signal: controller.signal })).finally(() => clearTimeout(timer));
+  }
 
   async function startTeam() {
     const codeInput = document.getElementById('team-code-input');
@@ -827,7 +925,7 @@
     statusEl.style.color = 'var(--primary)';
     statusEl.textContent = 'Looking up your team...';
     try {
-      const res = await fetch(`${SHEET_API_URL}?code=${encodeURIComponent(code)}`);
+      const res = await fetchWithTimeout(`${SHEET_API_URL}?code=${encodeURIComponent(code)}`);
       const result = await res.json();
       if (!result.ok) {
         statusEl.style.color = 'var(--error)';
@@ -850,7 +948,7 @@
       }
     } catch (err) {
       statusEl.style.color = 'var(--error)';
-      statusEl.textContent = "Couldn't reach the roster right now - you can still continue, but your progress won't be saved online.";
+      statusEl.textContent = "That took too long or couldn't reach the roster - tap Start / Resume to try again, or continue below without saving.";
       document.getElementById('manual-name-fallback').style.display = 'block';
       btn.disabled = false;
     }
@@ -864,6 +962,7 @@
       day2Unlocked,
       tokens, trayIds, gridArr, nextTokenId, gardenBuilt, gardenLocked, gardenView,
       sign: {
+        title: document.getElementById('sign-title-input').value,
         verseIdx: document.getElementById('verse-select').value,
         customText: document.getElementById('custom-verse-text').value,
         customRef: document.getElementById('custom-verse-ref').value,
@@ -879,7 +978,7 @@
 
   function saveProgress() {
     if (!teamCode) return;
-    fetch(SHEET_API_URL, {
+    fetchWithTimeout(SHEET_API_URL, {
       method: 'POST',
       body: JSON.stringify({
         TeamCode: teamCode,
@@ -918,6 +1017,27 @@
 
     renderCatalog();
     renderCart();
+
+    if (solvedKeys['estimatedtotal']) {
+      const roundLockedCodes = cartOrder.filter((c) => cart[c].roundLocked);
+      const estExpected = round2(roundLockedCodes.reduce((sum, c) => sum + Math.round(CATALOG_BY_CODE[c].price) * cart[c].qty, 0));
+      document.getElementById('estimatedtotal-input').value = fmt2(estExpected);
+      document.getElementById('estimatedtotal-input').disabled = true;
+      document.getElementById('estimatedtotal-btn').disabled = true;
+      const fb = document.getElementById('estimatedtotal-feedback');
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Correct! Your Estimated Total is $${fmt2(estExpected)}. <span style="opacity:.75;">(restored)</span>`;
+    }
+    if (solvedKeys['grandtotal'] && window.grandTotal != null) {
+      document.getElementById('grandtotal-input').value = fmt2(window.grandTotal);
+      document.getElementById('grandtotal-input').disabled = true;
+      document.getElementById('grandtotal-btn').disabled = true;
+      const fb = document.getElementById('grandtotal-feedback');
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Correct! Your Grand Total is $${fmt2(window.grandTotal)}. <span style="opacity:.75;">(restored)</span>`;
+    }
 
     if (day1Locked && window.grandTotal != null) {
       revealBudgetMeter(window.grandTotal);
@@ -961,6 +1081,7 @@
         gardenView === 'blueprint' ? '🌼 See My Garden (Real Life)' : '🎨 Back to Blueprint View';
       if (gardenLocked) {
         const filled = gridArr.filter((x) => x != null).length;
+        document.getElementById('lock-garden-btn').disabled = true;
         const fb = document.getElementById('garden-feedback');
         fb.style.display = 'block';
         fb.className = 'feedback-msg success locked';
@@ -969,6 +1090,7 @@
     }
 
     if (state.sign) {
+      document.getElementById('sign-title-input').value = state.sign.title || '';
       document.getElementById('verse-select').value = state.sign.verseIdx;
       document.getElementById('custom-verse-text').value = state.sign.customText || '';
       document.getElementById('custom-verse-ref').value = state.sign.customRef || '';
@@ -1000,7 +1122,7 @@
     fb.className = 'feedback-msg';
     fb.textContent = 'Checking...';
     try {
-      const res = await fetch(`${SHEET_API_URL}?day2code=${encodeURIComponent(code)}`);
+      const res = await fetchWithTimeout(`${SHEET_API_URL}?day2code=${encodeURIComponent(code)}`);
       const result = await res.json();
       if (result.ok) {
         day2Unlocked = true;
@@ -1557,6 +1679,7 @@
       answer: `${filled} of 36 spaces used (${tokens.length} items purchased)`,
       section: 'Day 2 - Garden Layout'
     }, `Garden layout locked! You placed ${filled} of 36 spaces.`);
+    document.getElementById('lock-garden-btn').disabled = true;
     saveProgress();
   }
 
@@ -1566,8 +1689,8 @@
   function populateVerseSelect() {
     document.getElementById('verse-select').innerHTML = VERSES.map((v, i) =>
       `<option value="${i}">${v.ref}${v.text ? ' - "' + v.text + '"' : ' (write your own)'}</option>`).join('');
-    document.getElementById('sticker-choices').innerHTML = STICKERS.map((s, i) =>
-      `<label><input type="checkbox" class="sticker-cb" value="${s}" onchange="onStickerChange(event)"> ${s}</label>`).join('');
+    document.getElementById('sticker-choices').innerHTML = STICKERS.map((s) =>
+      `<label><input type="checkbox" class="sticker-cb" value="${s}" onchange="onStickerChange(event)"> <span class="sticker-icon">${STICKER_ICONS[s]}</span> ${STICKER_LABELS[s]}</label>`).join('');
     renderSign();
   }
 
@@ -1599,7 +1722,8 @@
     const borderClass = document.getElementById('sign-border-select').value;
     const textColor = document.getElementById('sign-text-color').value;
     const fontFamily = document.getElementById('sign-font-select').value;
-    const stickers = [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value).join(' ');
+    const stickerKeys = [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value);
+    const title = document.getElementById('sign-title-input').value.trim();
 
     const preview = document.getElementById('sign-preview');
     preview.className = `sign-preview ${borderClass}`;
@@ -1607,9 +1731,10 @@
     preview.style.color = textColor;
     preview.style.fontFamily = fontFamily;
     preview.innerHTML = `
+      ${title ? `<div class="sign-title">${title}</div>` : ''}
       <div class="sign-verse">"${text}"</div>
       ${ref ? `<div class="sign-ref">- ${ref}</div>` : ''}
-      ${stickers ? `<div class="sign-stickers">${stickers}</div>` : ''}
+      ${stickerKeys.length ? `<div class="sign-stickers">${stickerKeys.map((k) => `<span class="sign-sticker-icon">${STICKER_ICONS[k]}</span>`).join('')}</div>` : ''}
     `;
   }
 
@@ -1666,6 +1791,60 @@
     });
   }
 
+  function triggerBlobDownload(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  // Hand-rolled minimal single-page PDF wrapping a JPEG image via the
+  // standard DCTDecode filter (PDF can embed a JPEG byte-for-byte with no
+  // re-encoding) - avoids pulling in a PDF library just to export one
+  // image. Built as a "binary string" (1 JS char = 1 byte, via atob) so
+  // ASCII PDF syntax and raw JPEG bytes can share one buffer safely.
+  function buildCertificatePdf(jpegDataUrl, widthPx, heightPx) {
+    const jpegBytes = atob(jpegDataUrl.split(',')[1]);
+    const wPt = Math.round(widthPx * 0.75);
+    const hPt = Math.round(heightPx * 0.75);
+    const contentStream = `q ${wPt} 0 0 ${hPt} 0 0 cm /Im0 Do Q`;
+
+    const objects = {
+      1: '<< /Type /Catalog /Pages 2 0 R >>',
+      2: '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+      3: `<< /Type /Page /Parent 2 0 R /Resources << /XObject << /Im0 4 0 R >> >> /MediaBox [0 0 ${wPt} ${hPt}] /Contents 5 0 R >>`,
+      4: `<< /Type /XObject /Subtype /Image /Width ${widthPx} /Height ${heightPx} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpegBytes.length} >>\nstream\n${jpegBytes}\nendstream`,
+      5: `<< /Length ${contentStream.length} >>\nstream\n${contentStream}\nendstream`
+    };
+
+    let pdf = '%PDF-1.4\n';
+    const offsets = [0];
+    for (let i = 1; i <= 5; i++) {
+      offsets[i] = pdf.length;
+      pdf += `${i} 0 obj\n${objects[i]}\nendobj\n`;
+    }
+    const xrefStart = pdf.length;
+    pdf += 'xref\n0 6\n0000000000 65535 f \n';
+    for (let i = 1; i <= 5; i++) {
+      pdf += `${String(offsets[i]).padStart(10, '0')} 00000 n \n`;
+    }
+    pdf += `trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`;
+
+    const bytes = new Uint8Array(pdf.length);
+    for (let i = 0; i < pdf.length; i++) bytes[i] = pdf.charCodeAt(i) & 0xff;
+    return new Blob([bytes], { type: 'application/pdf' });
+  }
+
+  // The certificate/badge/stamp downloads should stay available any time,
+  // as many times as a team wants - never leave one stuck disabled.
+  function reenableCelebrateButtons() {
+    document.querySelectorAll('.celebrate-btn').forEach((b) => { b.disabled = false; });
+  }
+
   // Loads the embedded logo and force-fetches a font before it's needed on
   // canvas - a <select> option that was never actually rendered as text on
   // the page (e.g. Baloo 2, picked as a sign font but never chosen) may not
@@ -1707,25 +1886,31 @@
   }
 
   async function downloadCertificate() {
-    const feedbackEl = document.getElementById('badge-feedback');
+    const feedbackEl = document.getElementById('certificate-feedback');
     const name1 = document.getElementById('team-name-1').value.trim();
     const name2 = document.getElementById('team-name-2').value.trim();
     if (!name1 || !name2) {
       LessonCheck.incomplete(feedbackEl, 'Type both team member names at the top of the page first.');
       return;
     }
-    const logo = await ensureLogoAndFont("800 20px 'Montserrat'");
+    const [logo, decoIcons] = await Promise.all([
+      ensureLogoAndFont("800 20px 'Montserrat'"),
+      Promise.all([ICONS['P-01'], ICONS['P-02'], ICONS['P-03'], ICONS['P-04'], ICONS['P-01'], ICONS['P-02'], ICONS['P-03'], ICONS['P-04']].map(svgToImage))
+    ]);
 
+    const SCALE = 2;
+    const W = 1000, H = 700;
     const canvas = document.getElementById('render-canvas');
-    canvas.width = 1000;
-    canvas.height = 700;
+    canvas.width = W * SCALE;
+    canvas.height = H * SCALE;
     const ctx = canvas.getContext('2d');
+    ctx.scale(SCALE, SCALE);
 
-    const grad = ctx.createLinearGradient(0, 0, 1000, 700);
+    const grad = ctx.createLinearGradient(0, 0, W, H);
     grad.addColorStop(0, '#eff6ff');
     grad.addColorStop(1, '#dcfce7');
     ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 1000, 700);
+    ctx.fillRect(0, 0, W, H);
 
     ctx.strokeStyle = '#1e3a8a';
     ctx.lineWidth = 14;
@@ -1749,8 +1934,10 @@
     ctx.fillStyle = '#334155';
     ctx.fillText('STREAM Project - Certificate of Completion', 500, 235);
 
-    ctx.font = '30px sans-serif';
-    ctx.fillText('🌻 🌼 🌿 💜 🌻 🌼 🌿 💜', 500, 280);
+    const decoSize = 30, decoGap = 8;
+    const decoTotal = decoIcons.length * (decoSize + decoGap) - decoGap;
+    let dx = 500 - decoTotal / 2;
+    decoIcons.forEach((img) => { ctx.drawImage(img, dx, 252, decoSize, decoSize); dx += decoSize + decoGap; });
 
     ctx.font = "700 22px 'Montserrat', sans-serif";
     ctx.fillStyle = '#0f172a';
@@ -1766,17 +1953,9 @@
     ctx.fillText("while caring for creation and their $100.00 budget.", 500, 436);
 
     const grand = window.grandTotal != null ? `$${fmt2(window.grandTotal)}` : 'not recorded';
-    const avg = window.plantAvgAchieved != null ? `$${fmt2(window.plantAvgAchieved)}` : 'not recorded';
-    const stats = computeAttemptStats();
-
     ctx.font = "800 18px 'Montserrat', sans-serif";
     ctx.fillStyle = '#1e3a8a';
-    ctx.fillText(`Grand Total Spent: ${grand}     Average Cost per Plant: ${avg}`, 500, 485);
-    if (stats.totalSolved > 0) {
-      ctx.font = "700 16px 'Montserrat', sans-serif";
-      ctx.fillStyle = '#0e7490';
-      ctx.fillText(`Teamwork Efficiency: ${stats.totalSolved} checks solved together in ${stats.totalAttempts} total tries (avg ${stats.avg.toFixed(1)} per check)`, 500, 512);
-    }
+    ctx.fillText(`Grand Total Spent: ${grand}`, 500, 485);
 
     drawSeal(ctx, 860, 590, 55, 'STREAM');
 
@@ -1786,7 +1965,9 @@
     ctx.fillStyle = '#475569';
     ctx.fillText(today, 90, 605);
 
-    triggerDownload(canvas, `EcoGarden-Certificate-${slug(name1)}-and-${slug(name2)}.png`);
+    const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    const pdfBlob = buildCertificatePdf(jpegDataUrl, canvas.width, canvas.height);
+    triggerBlobDownload(pdfBlob, `EcoGarden-Certificate-${slug(name1)}-and-${slug(name2)}.pdf`);
     LessonCheck.submit(feedbackEl, {
       key: 'certificate-download',
       label: 'Team Certificate Downloaded',
@@ -1795,6 +1976,7 @@
     }, 'Certificate downloaded! Check your Downloads folder.');
     window.certificateDownloaded = true;
     saveProgress();
+    reenableCelebrateButtons();
   }
 
   const BADGE_CONFETTI = [
@@ -1857,18 +2039,24 @@
     }
     const myName = memberNum === 1 ? name1 : name2;
     const partnerName = memberNum === 1 ? name2 : name1;
-    const logo = await ensureLogoAndFont("800 30px 'Baloo 2'");
+    const [logo, decoIcons] = await Promise.all([
+      ensureLogoAndFont("800 30px 'Baloo 2'"),
+      Promise.all([ICONS['P-01'], ICONS['P-03']].map(svgToImage))
+    ]);
 
+    const SCALE = 2;
+    const W = 500, H = 700;
     const canvas = document.getElementById('render-canvas');
-    canvas.width = 500;
-    canvas.height = 700;
+    canvas.width = W * SCALE;
+    canvas.height = H * SCALE;
     const ctx = canvas.getContext('2d');
+    ctx.scale(SCALE, SCALE);
 
-    const grad = ctx.createLinearGradient(0, 0, 500, 700);
+    const grad = ctx.createLinearGradient(0, 0, W, H);
     grad.addColorStop(0, '#fef9c3');
     grad.addColorStop(1, '#fce7f3');
     ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 500, 700);
+    ctx.fillRect(0, 0, W, H);
 
     ctx.strokeStyle = '#d97706';
     ctx.lineWidth = 10;
@@ -1896,8 +2084,8 @@
     ctx.font = "800 21px 'Baloo 2', cursive";
     ctx.fillText('STREAM GARDEN', 250, 222);
     ctx.fillText('CHAMPION', 250, 250);
-    ctx.font = '30px sans-serif';
-    ctx.fillText('🌻🏅🌿', 250, 295);
+    ctx.drawImage(decoIcons[0], 250 - 44, 272, 32, 32);
+    ctx.drawImage(decoIcons[1], 250 + 12, 272, 32, 32);
 
     ctx.font = "800 30px 'Baloo 2', cursive";
     ctx.fillStyle = '#1e3a8a';
@@ -1912,7 +2100,7 @@
     if (stats.totalSolved > 0) {
       ctx.font = "700 15px 'Montserrat', sans-serif";
       ctx.fillStyle = '#0e7490';
-      ctx.fillText(`🎯 ${stats.totalSolved} checks solved together, avg ${stats.avg.toFixed(1)} tries each`, 250, 525);
+      ctx.fillText(`${stats.totalSolved} checks solved together in ${stats.totalAttempts} total tries`, 250, 525);
     }
 
     const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -1927,10 +2115,63 @@
       answer: myName,
       section: 'Day 2 - Celebrate'
     }, `${myName}'s badge downloaded! Check your Downloads folder.`);
+    window[`badge${memberNum}Downloaded`] = true;
     saveProgress();
+    reenableCelebrateButtons();
   }
 
-  function downloadSign() {
+  async function downloadStamp() {
+    const feedbackEl = document.getElementById('badge-feedback');
+    const name1 = document.getElementById('team-name-1').value.trim();
+    const name2 = document.getElementById('team-name-2').value.trim();
+    if (!document.getElementById('stamp-display').classList.contains('show')) {
+      LessonCheck.incomplete(feedbackEl, 'Award your Math Quality Stamp above first.');
+      return;
+    }
+    const SCALE = 2;
+    const W = 500, H = 500;
+    const canvas = document.getElementById('render-canvas');
+    canvas.width = W * SCALE;
+    canvas.height = H * SCALE;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(SCALE, SCALE);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, W, H);
+    ctx.save();
+    ctx.translate(W / 2, H / 2);
+    ctx.rotate((-8 * Math.PI) / 180);
+    ctx.translate(-W / 2, -H / 2);
+
+    ctx.beginPath();
+    ctx.arc(W / 2, H / 2, 190, 0, Math.PI * 2);
+    ctx.fillStyle = '#dcfce7';
+    ctx.fill();
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = '#15803d';
+    ctx.stroke();
+    ctx.setLineDash([3, 6]);
+    ctx.beginPath();
+    ctx.arc(W / 2, H / 2, 170, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = '#15803d';
+    ctx.textAlign = 'center';
+    ctx.font = "900 32px 'Montserrat', sans-serif";
+    ctx.fillText('MATH QUALITY', W / 2, H / 2 - 12);
+    ctx.fillText('STAMP', W / 2, H / 2 + 30);
+    ctx.font = "700 15px 'Montserrat', sans-serif";
+    ctx.fillText(`Confirmed together by ${name1} & ${name2}`, W / 2, H / 2 + 68);
+    const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    ctx.fillText(today, W / 2, H / 2 + 90);
+    ctx.restore();
+
+    triggerDownload(canvas, `EcoGarden-Stamp-${slug(name1)}-and-${slug(name2)}.png`);
+    reenableCelebrateButtons();
+  }
+
+  async function downloadSign() {
     const feedbackEl = document.getElementById('sign-feedback');
     const name1 = document.getElementById('team-name-1').value.trim();
     const name2 = document.getElementById('team-name-2').value.trim();
@@ -1939,6 +2180,7 @@
       return;
     }
     const { text, ref } = getVerseInUse();
+    const title = document.getElementById('sign-title-input').value.trim();
     const bg = document.getElementById('sign-bg-select').value;
     const textColor = document.getElementById('sign-text-color').value;
     const fontFamily = document.getElementById('sign-font-select').value.split(',')[0].replace(/'/g, '');
@@ -1947,15 +2189,20 @@
       'sign-rustic': '#92400e', 'sign-picket': '#16a34a', 'sign-vine': '#15803d',
       'sign-stone': '#64748b', 'sign-metal': '#94a3b8', 'sign-cloud': '#38bdf8'
     };
-    const stickers = [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value).join(' ');
+    const stickerKeys = [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value);
+    const stickerImgs = await Promise.all(stickerKeys.map((k) => svgToImage(STICKER_ICONS[k])));
+    await document.fonts.load(`700 28px ${fontFamily}`).catch(() => {});
 
+    const SCALE = 2;
+    const W = 700, H = 800;
     const canvas = document.getElementById('render-canvas');
-    canvas.width = 700;
-    canvas.height = 800;
+    canvas.width = W * SCALE;
+    canvas.height = H * SCALE;
     const ctx = canvas.getContext('2d');
+    ctx.scale(SCALE, SCALE);
 
     ctx.fillStyle = '#f8fafc';
-    ctx.fillRect(0, 0, 700, 800);
+    ctx.fillRect(0, 0, W, H);
 
     ctx.textAlign = 'center';
     ctx.fillStyle = '#1e3a8a';
@@ -1969,19 +2216,30 @@
     ctx.lineWidth = 14;
     ctx.strokeRect(boxX, boxY, boxW, boxH);
 
+    let cursorY = boxY + boxH / 2 - 40;
+    if (title) {
+      ctx.fillStyle = textColor;
+      ctx.font = `900 24px ${fontFamily}, sans-serif`;
+      ctx.fillText(title, boxX + boxW / 2, cursorY);
+      cursorY += 34;
+    }
+
     ctx.fillStyle = textColor;
     ctx.font = `700 28px ${fontFamily}, sans-serif`;
     const lines = wrapCanvasText(ctx, `"${text}"`, boxW - 80);
-    const startY = boxY + boxH / 2 - (lines.length * 18);
-    lines.forEach((l, i) => ctx.fillText(l, boxX + boxW / 2, startY + i * 38));
+    lines.forEach((l, i) => ctx.fillText(l, boxX + boxW / 2, cursorY + i * 38));
+    cursorY += lines.length * 38;
 
     if (ref) {
       ctx.font = `700 19px ${fontFamily}, sans-serif`;
-      ctx.fillText(`- ${ref}`, boxX + boxW / 2, startY + lines.length * 38 + 22);
+      ctx.fillText(`- ${ref}`, boxX + boxW / 2, cursorY + 22);
     }
-    if (stickers) {
-      ctx.font = '38px sans-serif';
-      ctx.fillText(stickers, boxX + boxW / 2, boxY + boxH - 36);
+    if (stickerImgs.length) {
+      const iconSize = 44, gap = 10;
+      const totalW = stickerImgs.length * (iconSize + gap) - gap;
+      let sx = boxX + boxW / 2 - totalW / 2;
+      const sy = boxY + boxH - iconSize - 16;
+      stickerImgs.forEach((img) => { ctx.drawImage(img, sx, sy, iconSize, iconSize); sx += iconSize + gap; });
     }
 
     triggerDownload(canvas, `Garden-of-${slug(name1)}-and-${slug(name2)}.png`);
@@ -2005,6 +2263,103 @@
     document.getElementById('stamp-display').classList.add('show');
     document.querySelectorAll('.audit-cb, #stamp-btn').forEach((el) => { el.disabled = true; });
     LessonProgress.record('peer-audit', 'Team Math Quality Stamp', `Confirmed together by ${n1} & ${n2}: multiplication, addition, and division re-checked`, 'reflection', 'Day 2 - Team Math Check');
+  }
+
+  // ================================================================
+  // PRINTABLE PROGRESS REPORT
+  // ================================================================
+  // A page-specific report instead of the shared printProgressReport() -
+  // this page tracks attempts and multi-part checks in shapes the generic
+  // one-item-one-row report doesn't fit (two attempt counts per ledger
+  // item, download status, teamwork stats), so it builds its own #print-
+  // report content and reuses the same print-table CSS and print media
+  // rule the shared report relies on.
+  function attemptsText(key) {
+    const n = attemptCounts[key] || 0;
+    return `${n} attempt${n === 1 ? '' : 's'}`;
+  }
+
+  function printEcoGardenReport() {
+    const name1 = document.getElementById('team-name-1').value.trim();
+    const name2 = document.getElementById('team-name-2').value.trim();
+    if (!name1 || !name2) {
+      alert('Type both team member names (or resume your team code) before printing.');
+      return;
+    }
+    const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const sections = [];
+
+    const ledgerRows = cartOrder.map((code, i) => {
+      const item = CATALOG_BY_CODE[code];
+      const row = cart[code];
+      const roundResult = row.roundLocked ? `correct ($${row.roundGiven})` : 'not solved yet';
+      const totalResult = row.totalLocked ? `correct ($${row.totalGiven})` : 'not solved yet';
+      return {
+        label: `Item ${i + 1}: ${item.name}`,
+        detail: `Rounded Estimate - ${roundResult}, ${attemptsText(`round-${code}`)} &nbsp;|&nbsp; Line Total - ${totalResult}, ${attemptsText(`total-${code}`)}`
+      };
+    });
+    ledgerRows.push({
+      label: 'Estimated Total (Addition)',
+      detail: `${solvedKeys['estimatedtotal'] ? 'Correct' : 'Not solved yet'}, ${attemptsText('estimatedtotal')}`
+    });
+    ledgerRows.push({
+      label: 'Grand Total (Addition)',
+      detail: `${solvedKeys['grandtotal'] ? `Correct ($${fmt2(window.grandTotal)})` : 'Not solved yet'}, ${attemptsText('grandtotal')}`
+    });
+    sections.push({ title: 'Day 1 - Store Ledger', rows: ledgerRows });
+
+    sections.push({
+      title: 'Day 2 - Budget & Division',
+      rows: [
+        { label: 'Leftover Budget (Subtraction)', detail: `${solvedKeys['leftover'] ? 'Correct' : 'Not solved yet'}, ${attemptsText('leftover')}` },
+        { label: 'Average Cost per Plant (Division)', detail: `${solvedKeys['division'] && window.plantAvgAchieved != null ? `Correct ($${fmt2(window.plantAvgAchieved)} per plant)` : 'Not solved yet'}, ${attemptsText('division')}` }
+      ]
+    });
+
+    sections.push({
+      title: 'Day 2 - Garden & Sign',
+      rows: [
+        { label: 'Garden Grid Layout', detail: gardenLocked ? `Locked - ${gridArr.filter((x) => x != null).length} of 36 spaces used` : 'Not completed yet' },
+        { label: 'Creation Sign', detail: document.getElementById('lock-sign-btn').disabled ? 'Locked' : 'Not completed yet' }
+      ]
+    });
+
+    sections.push({
+      title: 'Celebrate',
+      rows: [
+        { label: 'Team Certificate', detail: window.certificateDownloaded ? 'Downloaded' : 'Not downloaded yet' },
+        { label: `${name1}'s Badge`, detail: window.badge1Downloaded ? 'Downloaded' : 'Not downloaded yet' },
+        { label: `${name2}'s Badge`, detail: window.badge2Downloaded ? 'Downloaded' : 'Not downloaded yet' },
+        { label: 'Math Quality Stamp', detail: document.getElementById('stamp-display').classList.contains('show') ? 'Awarded' : 'Not awarded yet' }
+      ]
+    });
+
+    const stats = computeAttemptStats();
+    const grand = window.grandTotal != null ? `$${fmt2(window.grandTotal)}` : 'not recorded yet';
+    const avg = window.plantAvgAchieved != null ? `$${fmt2(window.plantAvgAchieved)}` : 'not recorded yet';
+
+    let rowsHtml = '';
+    sections.forEach((sec) => {
+      rowsHtml += `<tr class="print-section-row"><td colspan="2">${sec.title}</td></tr>`;
+      sec.rows.forEach((r) => {
+        rowsHtml += `<tr><td>${r.label}</td><td>${r.detail}</td></tr>`;
+      });
+    });
+
+    const report = document.getElementById('print-report');
+    report.innerHTML = `
+      <h1>Laudato Si Eco-Garden STREAM Project</h1>
+      <p class="print-meta"><strong>Team:</strong> ${name1} &amp; ${name2} &nbsp;&nbsp; <strong>Date:</strong> ${today}</p>
+      <p class="print-meta"><strong>Grand Total Spent:</strong> ${grand} &nbsp;&nbsp; <strong>Average Cost per Plant:</strong> ${avg}</p>
+      <p class="print-meta"><strong>Teamwork:</strong> ${stats.totalSolved} checks solved together in ${stats.totalAttempts} total tries</p>
+      <table class="print-table">
+        <thead><tr><th>Activity</th><th>Result &amp; Attempts</th></tr></thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+      <p class="print-footer">Printed from the interactive Eco-Garden project page as a full record of this team's work.</p>
+    `;
+    window.print();
   }
 
   // ================================================================
