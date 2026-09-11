@@ -554,13 +554,13 @@
       <div class="station-card">
         <p style="color:#475569;">You already worked through every check together as a team - now grab a calculator and verify your work like a real project manager, using the checklist below.</p>
         <div class="audit-checks">
-          <label><input type="checkbox" class="audit-cb" onchange="updateStampBtn()"> Variables moved to one side</label>
-          <label><input type="checkbox" class="audit-cb" onchange="updateStampBtn()"> Constants moved to one side</label>
-          <label><input type="checkbox" class="audit-cb" onchange="updateStampBtn()"> Inverse operations shown</label>
-          <label><input type="checkbox" class="audit-cb" onchange="updateStampBtn()"> Solution verified by plugging back in</label>
+          <label><input type="checkbox" class="audit-cb" onchange="renderVerifyWork()"> Variables moved to one side</label>
+          <label><input type="checkbox" class="audit-cb" onchange="renderVerifyWork()"> Constants moved to one side</label>
+          <label><input type="checkbox" class="audit-cb" onchange="renderVerifyWork()"> Inverse operations shown</label>
+          <label><input type="checkbox" class="audit-cb" onchange="renderVerifyWork()"> Solution verified by plugging back in</label>
         </div>
         <div style="text-align:center;">
-          <button class="row-check-btn" id="stamp-btn" onclick="awardStamp()" disabled>Award Our Math Quality Stamp</button>
+          <button class="row-check-btn" id="stamp-btn" onclick="renderCelebration()" disabled>Award Our Math Quality Stamp</button>
         </div>
         <div class="stamp-display" id="stamp-display">
           <div class="stamp-title">MATH QUALITY STAMP</div>
@@ -760,7 +760,7 @@
     const n1 = document.getElementById('team-name-1').value.trim();
     const n2 = document.getElementById('team-name-2').value.trim();
     document.getElementById('student-name').value = [n1, n2].filter(Boolean).join(' & ');
-    updateStampBtn();
+    renderVerifyWork();
   }
 
   function switchTab(tabId) {
@@ -965,6 +965,11 @@
       ticketsNeeded: window.ticketsNeeded, breakEvenUnits: window.breakEvenUnits, vendorHours: window.vendorHours,
       boothLength: window.boothLength, boothWidth: window.boothWidth, stageCurrent: window.stageCurrent,
       taxRevenue: window.taxRevenue, taxBreakEven: window.taxBreakEven, headcountTarget: window.headcountTarget,
+      mathCheck: {
+        audits: [...document.querySelectorAll('.audit-cb')].map((cb) => cb.checked),
+        awarded: document.getElementById('stamp-display').classList.contains('show'),
+        detail: document.getElementById('stamp-detail').textContent
+      },
       flyer: {
         charity: document.getElementById('flyer-charity-input').value,
         tagline: document.getElementById('flyer-tagline-input').value,
@@ -1078,6 +1083,17 @@
     restoreMC('exit1', 'exit1', 'B', 'exit1-feedback', 'Correct!');
     restoreMC('exit2', 'exit2', 'D', 'exit2-feedback', 'Correct!');
     restoreMC('exit3', 'exit3', 'D', 'exit3-feedback', 'Correct!');
+
+    if (state.mathCheck) {
+      document.querySelectorAll('.audit-cb').forEach((cb, i) => { cb.checked = !!(state.mathCheck.audits || [])[i]; });
+      if (state.mathCheck.awarded) {
+        document.getElementById('stamp-detail').textContent = state.mathCheck.detail || '';
+        document.getElementById('stamp-display').classList.add('show');
+        document.querySelectorAll('.audit-cb, #stamp-btn').forEach((el) => { el.disabled = true; });
+      }
+      renderVerifyWork();
+    }
+
     if (state.reflections) {
       restoreReflection('comp-reflection-1', 'comp-reflection-1-feedback', state.reflections.comp1);
       restoreReflection('comp-reflection-3', 'comp-reflection-3-feedback', state.reflections.comp3);
@@ -2320,22 +2336,35 @@
 
   // ================================================================
   // TEAM MATH CHECK (Tier 2 verification -> peer-audit stamp gate)
+  // renderVerifyWork() reflects checklist+name state into the Award
+  // button on every change (checkbox toggle, name edit, or a restore),
+  // instead of only checking it once at the moment of a click.
+  // renderCelebration() is the same idea for the stamp itself: it can
+  // be called again after a restore without recomputing the date or
+  // re-recording progress, so the stamp state actually survives reload
+  // instead of forcing the team to re-click Award every time.
   // ================================================================
-  function updateStampBtn() {
+  function renderVerifyWork() {
     const n1 = document.getElementById('team-name-1').value.trim();
     const n2 = document.getElementById('team-name-2').value.trim();
     const allChecked = [...document.querySelectorAll('.audit-cb')].every((cb) => cb.checked);
     document.getElementById('stamp-btn').disabled = !(n1 && n2 && allChecked);
   }
 
-  function awardStamp() {
+  function renderCelebration() {
+    const alreadyAwarded = document.getElementById('stamp-display').classList.contains('show');
     const n1 = document.getElementById('team-name-1').value.trim();
     const n2 = document.getElementById('team-name-2').value.trim();
     const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    document.getElementById('stamp-detail').textContent = `Confirmed together by ${n1} & ${n2} - ${today}`;
+    if (!alreadyAwarded) {
+      document.getElementById('stamp-detail').textContent = `Confirmed together by ${n1} & ${n2} - ${today}`;
+    }
     document.getElementById('stamp-display').classList.add('show');
     document.querySelectorAll('.audit-cb, #stamp-btn').forEach((el) => { el.disabled = true; });
-    LessonProgress.record('peer-audit', 'Team Math Quality Stamp', `Confirmed together by ${n1} & ${n2}: Tier 2 verification checklist completed`, 'reflection', 'Day 2 - Team Math Check');
+    if (!alreadyAwarded) {
+      LessonProgress.record('peer-audit', 'Team Math Quality Stamp', `Confirmed together by ${n1} & ${n2}: Tier 2 verification checklist completed`, 'reflection', 'Day 2 - Team Math Check');
+      saveProgress();
+    }
   }
 
   // ================================================================
