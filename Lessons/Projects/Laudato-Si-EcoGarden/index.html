@@ -8,10 +8,11 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&family=Baloo+2:wght@500..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&family=Baloo+2:wght@500..800&family=Caveat:wght@500..700&family=Architects+Daughter&family=Special+Elite&family=Playfair+Display:wght@700..900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/konva@9/konva.min.js"></script>
 
   <style>
     /* ===== Page-specific additions on top of lesson-shared.css ===== */
@@ -307,101 +308,135 @@
     .legend-row span { display: inline-flex; align-items: center; gap: 6px; }
     .legend-swatch { width: 16px; height: 16px; border-radius: 4px; display: inline-block; border: 2px solid #64748b; }
 
-    /* Creation sign */
+    /* Creation Sign Studio - a real free-form canvas (Konva.js) instead of
+       a fixed template: material/background is chosen from a palette, but
+       every text and sticker element can be freely added, dragged,
+       resized, and rotated anywhere on the sign. */
     .sign-builder { display: flex; flex-wrap: wrap; gap: 24px; margin: 18px 0; }
-    .sign-controls { flex: 1 1 260px; }
-    .sign-controls .form-group { margin-bottom: 11px; }
-    .sign-controls .form-group label { font-size: 0.9rem; margin-bottom: 4px; }
+    .sign-toolbar { flex: 1 1 260px; display: flex; flex-direction: column; }
+    .sign-toolbar .form-group { margin-bottom: 11px; }
+    .sign-toolbar .form-group label { font-size: 0.9rem; margin-bottom: 4px; }
     /* The shared .form-control-lg (14px/18px padding, 1.2rem text) is built
-       for a full-width single-field form - crammed into this 8-field panel
+       for a full-width single-field form - crammed into this narrow panel
        it reads oversized next to its own labels. Scale it down here only. */
-    .sign-controls .form-control-lg {
+    .sign-toolbar .form-control-lg {
       padding: 7px 10px;
       font-size: 0.88rem;
       border-width: 2px;
       border-radius: 7px;
     }
-    .sign-controls .row-check-btn { font-size: 0.8rem; padding: 8px 12px; }
-    .sign-preview-wrap { flex: 1 1 280px; display: flex; align-items: center; justify-content: center; }
-    .sign-preview {
-      width: 300px;
-      min-height: 210px;
-      padding: 26px 20px;
-      border-radius: 10px;
-      text-align: center;
-      font-weight: 800;
-      font-size: 1.05rem;
-      color: #3b2412;
-      box-shadow: 0 10px 22px rgba(0,0,0,0.18);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      position: relative;
+    .sign-toolbar .row-check-btn { font-size: 0.8rem; padding: 8px 12px; }
+    .sign-toolbar .toolbar-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 11px; }
+    .sticker-picker {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+      gap: 6px;
+      margin-bottom: 11px;
+      padding: 8px;
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      border-radius: 8px;
     }
-    /* Matches the glossy sheen overlay drawSignFrame() paints onto the
-       canvas download - without this the on-screen preview and the
-       downloaded PNG would visibly disagree. */
-    .sign-preview::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 40%, rgba(15,23,42,0.08) 100%);
-      pointer-events: none;
-    }
-    .sign-preview > * { position: relative; }
-    .sign-preview .sign-emblem { width: 34px; height: 34px; margin-bottom: 2px; }
-    .sign-preview .sign-title { font-size: 1.25rem; font-weight: 900; margin-bottom: 4px; }
-    .sign-preview .sign-verse { font-size: 1rem; line-height: 1.4; }
-    .sign-preview .sign-ref { font-size: 0.82rem; font-weight: 700; opacity: 0.85; }
-    .sign-preview .sign-stickers { display: flex; justify-content: center; gap: 8px; }
-    .sign-sticker-icon { display: inline-block; width: 30px; height: 30px; }
-    /* Style classes below control border shape/texture ONLY - never
-       `background`, which as a class-level rule would silently beat the
-       independently-selectable Sign Background color (a class background
-       paints over an element's own inline background-color/-image), which
-       is exactly the on-screen vs. download mismatch this was rewritten to
-       fix. Background color is always applied inline by renderSign(). */
-    .sign-rustic { border: 8px solid #92400e; border-radius: 10px; }
-    .sign-picket { border: 6px dashed #16a34a; border-radius: 10px; }
-    .sign-vine {
-      border: 6px double #15803d;
-      border-radius: 10px;
-    }
-    .sign-stone {
-      border: 6px solid #64748b;
-      border-radius: 4px;
-      box-shadow: inset 0 0 0 4px #cbd5e1, 0 10px 22px rgba(0,0,0,0.18);
-    }
-    .sign-metal {
-      border: 4px solid #94a3b8;
-      border-radius: 14px;
-      box-shadow: inset 0 0 0 3px #ffffff, 0 10px 22px rgba(0,0,0,0.18);
-    }
-    .sign-cloud { border: 6px solid #38bdf8; border-radius: 50% / 30%; }
-    .sign-ribbon {
-      border: 5px ridge #b91c1c;
-      border-radius: 6px;
-    }
-    .sign-scallop {
-      border: 6px dotted #d97706;
-      border-radius: 26px;
-    }
-    .sticker-choices label {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      margin: 0 10px 8px 0;
+    .sticker-pick-btn {
+      width: 40px;
+      height: 40px;
+      padding: 5px;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      background: #fff;
       cursor: pointer;
     }
-    .sticker-choices input { transform: scale(1.2); }
-    .sticker-icon { display: inline-block; width: 26px; height: 26px; }
+    .sticker-pick-btn:hover { border-color: var(--primary-light); }
+    .sign-props {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 11px;
+      padding: 10px;
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+    }
+    .sign-props select, .sign-props input[type="color"] { padding: 5px 8px; font-size: 0.82rem; border-radius: 6px; border: 2px solid var(--border); }
+    .sign-props input[type="color"] { width: 36px; height: 32px; padding: 2px; cursor: pointer; }
+    .sign-props button { font-size: 0.78rem; padding: 6px 10px; }
+    .sign-stage-wrap { flex: 1 1 320px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .sign-stage-container {
+      width: 520px;
+      max-width: 100%;
+      height: 380px;
+      border-radius: 14px;
+      overflow: hidden;
+      touch-action: none;
+    }
+    .sign-hint { font-size: 0.78rem; color: #64748b; text-align: center; }
+    .sign-edit-textarea {
+      border: 2px dashed var(--primary-light);
+      background: rgba(255,255,255,0.92);
+      border-radius: 4px;
+      resize: none;
+      overflow: hidden;
+      outline: none;
+      padding: 2px;
+      margin: 0;
+      line-height: 1.15;
+      z-index: 50;
+    }
 
-    /* Peer audit stamp */
-    .audit-checks { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
-    .audit-checks label { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+    /* Technology: What-If Calculator */
+    .whatif-controls { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin: 16px 0; }
+    .whatif-field { display: flex; flex-direction: column; gap: 5px; flex: 1 1 240px; max-width: 300px; }
+    .whatif-field label { font-weight: 700; font-size: 0.85rem; color: #334155; }
+    .whatif-score {
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--primary);
+      background: #eff6ff;
+      border: 2px solid var(--primary-light);
+      border-radius: 10px;
+      padding: 12px;
+      max-width: 620px;
+      margin: 14px auto 0;
+    }
+
+    /* Celebrate: completion recap */
+    .celebration-missing-list { text-align: left; max-width: 480px; margin: 12px auto; color: #475569; }
+    .celebration-checklist {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 10px;
+      max-width: 780px;
+      margin: 16px auto 0;
+      text-align: left;
+    }
+    .celebration-item {
+      background: var(--success-bg);
+      border: 2px solid var(--success);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #14532d;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .celebration-check {
+      background: var(--success);
+      color: #fff;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    /* Math Quality Stamp */
     .stamp-display {
       display: none;
       margin-top: 18px;
@@ -667,127 +702,99 @@
       </div>
       <div class="feedback-msg" id="garden-feedback"></div>
 
-      <div class="section-title" style="font-size:1.3rem;">Art &amp; Religion: Creation Sign</div>
+      <div class="section-title" style="font-size:1.3rem;">Art &amp; Religion: Creation Sign Studio</div>
       <div class="howto-box">
         <strong class="howto-label">What to do</strong>
-        Choose (or write) a creation verse, decorate your sign, then lock it in.
+        Design your own sign - pick a material, add text and stickers anywhere you like, then drag, resize, and
+        rotate them until it's yours. Insert a creation verse, then lock it in.
       </div>
 
       <div class="sign-builder">
-        <div class="sign-controls">
+        <div class="sign-toolbar">
           <div class="form-group">
-            <label for="sign-title-input">Name Your Garden (optional)</label>
-            <input type="text" id="sign-title-input" class="form-control-lg" placeholder="e.g. The Sunshine Garden" maxlength="40" oninput="renderSign()">
+            <label for="sign-material-select">Sign Material</label>
+            <select id="sign-material-select" class="form-control-lg" onchange="setSignMaterial(this.value)">
+              <option value="wood">Rustic Wood</option>
+              <option value="chalkboard">Chalkboard</option>
+              <option value="metal">Modern Metal</option>
+              <option value="stone">Stone Tablet</option>
+              <option value="picket">Painted Picket</option>
+              <option value="banner">Ribbon Banner</option>
+            </select>
           </div>
+          <div class="toolbar-row">
+            <button type="button" class="row-check-btn" onclick="addSignText()">+ Add Text</button>
+            <button type="button" class="row-check-btn" onclick="toggleStickerPicker()">+ Add Sticker</button>
+          </div>
+          <div id="sticker-picker" class="sticker-picker" style="display:none;"></div>
+
           <div class="form-group">
-            <label for="verse-select">Creation Verse</label>
-            <select id="verse-select" class="form-control-lg" onchange="onVerseChange()"></select>
+            <label for="sign-verse-select">Insert a Creation Verse</label>
+            <select id="sign-verse-select" class="form-control-lg" onchange="onSignVerseChange()"></select>
           </div>
           <div class="form-group" id="custom-verse-group" style="display:none;">
             <label for="custom-verse-text">Your Verse</label>
-            <textarea id="custom-verse-text" class="form-control-lg" rows="2" placeholder="Type a creation-themed verse..." oninput="renderSign()"></textarea>
+            <textarea id="custom-verse-text" class="form-control-lg" rows="2" placeholder="Type a creation-themed verse..."></textarea>
             <label for="custom-verse-ref" style="margin-top:8px;">Reference</label>
-            <input type="text" id="custom-verse-ref" class="form-control-lg" placeholder="e.g. Psalm 19:1" oninput="renderSign()">
+            <input type="text" id="custom-verse-ref" class="form-control-lg" placeholder="e.g. Psalm 19:1">
           </div>
-          <div class="form-group">
-            <label for="sign-bg-select">Sign Background</label>
-            <select id="sign-bg-select" class="form-control-lg" onchange="renderSign()">
-              <option value="#fef3c7">Sunshine Yellow</option>
-              <option value="#dbeafe">Sky Blue</option>
-              <option value="#dcfce7">Garden Green</option>
-              <option value="#fed7aa">Clay Terracotta</option>
-              <option value="#fce7f3">Blossom Pink</option>
-              <option value="#e0e7ff">Twilight Lavender</option>
-              <option value="#f1f5f9">Stone Gray</option>
-              <option value="#ffffff">Fresh White</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="sign-border-select">Sign Style (border)</label>
-            <select id="sign-border-select" class="form-control-lg" onchange="renderSign()">
-              <option value="sign-rustic">Rustic Wood</option>
-              <option value="sign-picket">Painted Picket</option>
-              <option value="sign-vine">Vine Wrap</option>
-              <option value="sign-stone">Stone Tablet</option>
-              <option value="sign-metal">Modern Metal</option>
-              <option value="sign-cloud">Whimsical Cloud</option>
-              <option value="sign-ribbon">Ribbon Banner</option>
-              <option value="sign-scallop">Scalloped Dots</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="sign-text-color">Text Color</label>
-            <select id="sign-text-color" class="form-control-lg" onchange="renderSign()">
-              <option value="#3b2412">Earth Brown</option>
-              <option value="#1e3a8a">Deep Blue</option>
-              <option value="#15803d">Forest Green</option>
-              <option value="#7c3aed">Royal Purple</option>
-              <option value="#0f172a">Ink Black</option>
-              <option value="#c2410c">Sunset Orange</option>
-              <option value="#0f766e">Ocean Teal</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="sign-font-select">Lettering Style</label>
-            <select id="sign-font-select" class="form-control-lg" onchange="renderSign()">
-              <option value="'Montserrat', sans-serif">Classic</option>
-              <option value="Georgia, 'Times New Roman', serif">Storybook Serif</option>
-              <option value="'Brush Script MT', cursive">Handwritten</option>
-              <option value="'Baloo 2', cursive">Playful</option>
-              <option value="'Arial Black', Arial, sans-serif">Bold Poster</option>
-              <option value="'Comic Sans MS', 'Baloo 2', cursive">Fun &amp; Bouncy</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="sign-emblem-select">Top Emblem (fixed, above title)</label>
-            <select id="sign-emblem-select" class="form-control-lg" onchange="renderSign()">
-              <option value="">None</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Bottom Stickers (pick up to 3, fixed row)</label>
-            <div class="sticker-choices" id="sticker-choices"></div>
-          </div>
-          <button class="row-check-btn" id="lock-sign-btn" onclick="lockSign()">Lock My Sign</button>
+          <button type="button" class="row-check-btn" onclick="insertVerseText()">+ Add Verse to Sign</button>
+
+          <div id="sign-props" class="sign-props" style="display:none;"></div>
+
+          <button class="row-check-btn" id="lock-sign-btn" onclick="lockSign()" style="margin-top:14px;">Lock My Sign</button>
           <button class="row-check-btn celebrate-btn" style="background:var(--accent);" onclick="downloadSign()">Download My Sign</button>
           <button class="row-check-btn celebrate-btn" style="background:var(--success);" onclick="downloadGardenSignPoster()">Download Garden + Sign Poster (PDF)</button>
           <div class="feedback-msg" id="sign-feedback"></div>
         </div>
-        <div class="sign-preview-wrap">
-          <div class="sign-preview sign-rustic" id="sign-preview"></div>
+        <div class="sign-stage-wrap">
+          <div id="sign-stage-container" class="sign-stage-container"></div>
+          <p class="sign-hint">Drag to move &middot; corner handles to resize/rotate &middot; double-click text to edit it</p>
         </div>
       </div>
 
-      <div class="section-title" style="font-size:1.3rem;">Technology: Team Math Check <span class="time-chip">35-45 min</span></div>
+      <div class="section-title" style="font-size:1.3rem;">Technology: What-If Calculator</div>
       <div class="station-card">
-        <p style="text-align:center; color:#475569;">You already worked through every check together as a team - now
-          grab a calculator and re-check three of your answers one more time before you celebrate.</p>
-        <div class="audit-checks">
-          <label><input type="checkbox" class="audit-cb" onchange="updateStampBtn()"> Re-checked one <strong>multiplication</strong> (a Line Total)</label>
-          <label><input type="checkbox" class="audit-cb" onchange="updateStampBtn()"> Re-checked the <strong>addition</strong> (Grand Total)</label>
-          <label><input type="checkbox" class="audit-cb" onchange="updateStampBtn()"> Re-checked the <strong>division</strong> (Average Cost per Plant)</label>
+        <p style="text-align:center; color:#475569;">Gardeners use technology to test ideas before committing to
+          them. Try a different Total Spent on Plants or Number of Plants below and watch the Average Cost per
+          Plant recalculate live - this is just for exploring, and it will never change your real, locked-in
+          answer above.</p>
+        <div class="whatif-controls">
+          <div class="whatif-field">
+            <label for="whatif-cost-input">Try a Total Spent on Plants ($)</label>
+            <input type="number" id="whatif-cost-input" step="0.01" min="0" value="0" oninput="updateWhatIf()">
+          </div>
+          <div class="whatif-field">
+            <label for="whatif-count-input">Try a Number of Plants</label>
+            <input type="number" id="whatif-count-input" step="1" min="1" value="1" oninput="updateWhatIf()">
+          </div>
         </div>
-        <div style="text-align:center;">
-          <button class="row-check-btn" id="stamp-btn" onclick="awardStamp()" disabled>Award Our Math Quality Stamp</button>
-        </div>
-        <div class="stamp-display" id="stamp-display">
-          <div class="stamp-title">MATH QUALITY STAMP</div>
-          <div id="stamp-detail" class="stamp-sub"></div>
-        </div>
-        <div style="text-align:center; margin-top:14px;">
-          <button class="row-check-btn celebrate-btn" style="background:var(--success);" onclick="downloadStamp()">Download Math Quality Stamp</button>
-          <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(1)">Download Badge - Team Member 1</button>
-          <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(2)">Download Badge - Team Member 2</button>
-        </div>
-        <div class="feedback-msg" id="badge-feedback"></div>
+        <div id="whatif-result"></div>
       </div>
 
-      <div class="section-title" style="font-size:1.3rem;">Celebrate! Download Your Keepsake</div>
+      <div class="section-title" style="font-size:1.3rem;">Celebrate: Your Team's Achievement</div>
       <div class="station-card" style="text-align:center;">
-        <p style="color:#475569;">Make sure both team member names are filled in at the top of the page, then download
-          your team certificate as a PDF. Your personal badges and Math Quality Stamp are just above, in Team Math Check.</p>
-        <button class="row-check-btn celebrate-btn" onclick="downloadCertificate()">Download Team Certificate (PDF)</button>
-        <div class="feedback-msg" id="certificate-feedback"></div>
+        <div id="celebration-incomplete">
+          <p style="color:#475569;">Finish everything below to unlock your certificate, personal badges, and Math
+          Quality Stamp:</p>
+          <ul class="celebration-missing-list" id="celebration-missing-list"></ul>
+        </div>
+        <div id="celebration-complete" style="display:none;">
+          <p style="color:#475569;">Congratulations - here's everything your team accomplished:</p>
+          <div class="celebration-checklist" id="celebration-checklist"></div>
+          <div class="stamp-display" id="stamp-display">
+            <div class="stamp-title">MATH QUALITY STAMP</div>
+            <div id="stamp-detail" class="stamp-sub"></div>
+          </div>
+          <div style="text-align:center; margin-top:16px;">
+            <button class="row-check-btn celebrate-btn" onclick="downloadCertificate()">Download Team Certificate (PDF)</button>
+            <button class="row-check-btn celebrate-btn" style="background:var(--success); margin-top:10px;" onclick="downloadStamp()">Download Math Quality Stamp</button>
+            <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(1)">Download Badge - Team Member 1</button>
+            <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(2)">Download Badge - Team Member 2</button>
+          </div>
+          <div class="feedback-msg" id="certificate-feedback"></div>
+          <div class="feedback-msg" id="badge-feedback"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -802,7 +809,7 @@
     const n1 = document.getElementById('team-name-1').value.trim();
     const n2 = document.getElementById('team-name-2').value.trim();
     document.getElementById('student-name').value = [n1, n2].filter(Boolean).join(' & ');
-    updateStampBtn();
+    renderCelebration();
   }
 
   function switchTab(tabId) {
@@ -1016,6 +1023,47 @@
       <line x1="10" y1="28" x2="28" y2="10" stroke="#166534" stroke-width="1.5"/>
     </svg>`;
   }
+  function treeIcon() {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <defs><radialGradient id="tree-grad" cx="35%" cy="25%" r="85%"><stop offset="0%" stop-color="#86efac"/><stop offset="100%" stop-color="#15803d"/></radialGradient></defs>
+      <rect x="17" y="26" width="6" height="10" rx="1.5" fill="#78350f"/>
+      <circle cx="20" cy="18" r="12" fill="url(#tree-grad)"/>
+      <circle cx="12" cy="22" r="7" fill="url(#tree-grad)"/>
+      <circle cx="28" cy="22" r="7" fill="url(#tree-grad)"/>
+    </svg>`;
+  }
+  function doveIcon() {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <defs><linearGradient id="dove-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#dbeafe"/></linearGradient></defs>
+      <path d="M20 24 C 12 24, 4 20, 2 14 C 8 15, 12 17, 16 21 C 14 14, 16 8, 22 6 C 21 12, 22 17, 26 20 C 32 16, 36 16, 38 18 C 33 21, 28 24, 24 24 C 28 27, 30 31, 29 34 C 25 31, 21 28, 20 24 Z" fill="url(#dove-grad)" stroke="#94a3b8" stroke-width="0.75"/>
+      <circle cx="21" cy="15" r="1.4" fill="#334155"/>
+    </svg>`;
+  }
+  function crossIcon() {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <defs><linearGradient id="cross-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fef3c7"/><stop offset="100%" stop-color="#b45309"/></linearGradient></defs>
+      <rect x="16" y="5" width="8" height="30" rx="2" fill="url(#cross-grad)" stroke="#78350f" stroke-width="1"/>
+      <rect x="6" y="13" width="28" height="8" rx="2" fill="url(#cross-grad)" stroke="#78350f" stroke-width="1"/>
+    </svg>`;
+  }
+  function cloudIcon() {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <defs><linearGradient id="cloud-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#cbd5e1"/></linearGradient></defs>
+      <ellipse cx="14" cy="24" rx="9" ry="7" fill="url(#cloud-grad)"/>
+      <ellipse cx="24" cy="21" rx="11" ry="9" fill="url(#cloud-grad)"/>
+      <ellipse cx="30" cy="26" rx="7" ry="6" fill="url(#cloud-grad)"/>
+      <rect x="9" y="24" width="26" height="8" rx="4" fill="url(#cloud-grad)"/>
+    </svg>`;
+  }
+  function seedlingIcon() {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <defs><linearGradient id="seed-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#bbf7d0"/><stop offset="100%" stop-color="#16a34a"/></linearGradient></defs>
+      <path d="M20 34 L20 18" stroke="#166534" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M20 20 C 8 20, 8 8, 8 8 C 8 8, 20 8, 20 20 Z" fill="url(#seed-grad)"/>
+      <path d="M20 24 C 32 24, 32 12, 32 12 C 32 12, 20 12, 20 24 Z" fill="url(#seed-grad)"/>
+      <ellipse cx="20" cy="35" rx="9" ry="2.5" fill="#78350f" opacity="0.5"/>
+    </svg>`;
+  }
   const ICONS = {
     'P-01': flowerIcon('#f5c400', '#7a4a13', 12),
     'P-02': flowerIcon('#ff8c1a', '#b3410c', 14),
@@ -1076,12 +1124,14 @@
   const STICKER_ICONS = {
     sunflower: ICONS['P-01'], marigold: ICONS['P-02'], fern: ICONS['P-03'], lavender: ICONS['P-04'],
     sun: sunIcon(), star: starIcon(), heart: heartIcon(), butterfly: butterflyIcon(),
-    bee: beeIcon(), rain: raindropIcon(), moon: moonIcon(), leaf: leafIcon()
+    bee: beeIcon(), rain: raindropIcon(), moon: moonIcon(), leaf: leafIcon(),
+    tree: treeIcon(), dove: doveIcon(), cross: crossIcon(), cloud: cloudIcon(), seedling: seedlingIcon()
   };
   const STICKER_LABELS = {
     sunflower: 'Sunflower', marigold: 'Marigold', fern: 'Fern', lavender: 'Lavender',
     sun: 'Sun', star: 'Star', heart: 'Heart', butterfly: 'Butterfly',
-    bee: 'Bee', rain: 'Raindrop', moon: 'Moon', leaf: 'Leaf'
+    bee: 'Bee', rain: 'Raindrop', moon: 'Moon', leaf: 'Leaf',
+    tree: 'Tree', dove: 'Dove', cross: 'Cross', cloud: 'Cloud', seedling: 'Seedling'
   };
   const STICKERS = Object.keys(STICKER_ICONS);
 
@@ -1168,22 +1218,15 @@
       day2Unlocked,
       tokens, trayIds, gridArr, nextTokenId, gardenBuilt, gardenLocked, gardenView,
       sign: {
-        title: document.getElementById('sign-title-input').value,
-        verseIdx: document.getElementById('verse-select').value,
-        customText: document.getElementById('custom-verse-text').value,
-        customRef: document.getElementById('custom-verse-ref').value,
-        bg: document.getElementById('sign-bg-select').value,
-        border: document.getElementById('sign-border-select').value,
-        textColor: document.getElementById('sign-text-color').value,
-        font: document.getElementById('sign-font-select').value,
-        stickers: [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value),
-        emblem: document.getElementById('sign-emblem-select').value,
+        material: signMaterial,
+        elements: serializeSignElements(),
         locked: document.getElementById('lock-sign-btn').disabled
       }
     };
   }
 
   function saveProgress() {
+    renderCelebration();
     if (!teamCode) return;
     fetchWithTimeout(SHEET_API_URL, {
       method: 'POST',
@@ -1200,7 +1243,7 @@
     }).catch((err) => { console.warn('Save to roster failed (kept in this tab only):', err); });
   }
 
-  function restoreState(state) {
+  async function restoreState(state) {
     if (!state) return;
     Object.assign(cart, state.cart || {});
     cartOrder.length = 0;
@@ -1297,25 +1340,25 @@
     }
 
     if (state.sign) {
-      document.getElementById('sign-title-input').value = state.sign.title || '';
-      document.getElementById('verse-select').value = state.sign.verseIdx;
-      document.getElementById('custom-verse-text').value = state.sign.customText || '';
-      document.getElementById('custom-verse-ref').value = state.sign.customRef || '';
-      document.getElementById('sign-bg-select').value = state.sign.bg;
-      document.getElementById('sign-border-select').value = state.sign.border;
-      document.getElementById('sign-text-color').value = state.sign.textColor;
-      document.getElementById('sign-font-select').value = state.sign.font;
-      document.querySelectorAll('.sticker-cb').forEach((cb) => { cb.checked = (state.sign.stickers || []).includes(cb.value); });
-      document.getElementById('sign-emblem-select').value = state.sign.emblem || '';
-      onVerseChange();
+      if (state.sign.material) {
+        signMaterial = state.sign.material;
+        drawSignMaterial(signMaterial);
+        document.getElementById('sign-material-select').value = signMaterial;
+      }
+      if (state.sign.elements) await restoreSignElements(state.sign.elements);
       if (state.sign.locked) {
-        document.querySelectorAll('.sign-controls select, .sign-controls input, .sign-controls textarea, #lock-sign-btn').forEach((el) => { el.disabled = true; });
+        applySignLockedUI();
         const fb = document.getElementById('sign-feedback');
         fb.style.display = 'block';
         fb.className = 'feedback-msg success locked';
         fb.textContent = 'Your creation sign is locked in! (restored)';
       }
     }
+
+    if (window.plantCostExpected != null) document.getElementById('whatif-cost-input').value = fmt2(window.plantCostExpected);
+    if (window.plantCountExpected) document.getElementById('whatif-count-input').value = window.plantCountExpected;
+    updateWhatIf();
+    renderCelebration();
   }
 
   async function checkDay2Passcode() {
@@ -1892,84 +1935,401 @@
   }
 
   // ================================================================
-  // CREATION SIGN
+  // CREATION SIGN STUDIO
+  // A real free-form canvas (Konva.js): the material/background is
+  // chosen from a palette, but every text and sticker on it is an
+  // independent object a team can add, drag, resize, and rotate
+  // anywhere - not a fixed template with pre-set slots.
   // ================================================================
-  function populateVerseSelect() {
-    document.getElementById('verse-select').innerHTML = VERSES.map((v, i) =>
+  const SIGN_W = 520, SIGN_H = 380;
+  const SIGN_FONTS = [
+    { value: "'Baloo 2', cursive", label: 'Playful' },
+    { value: "'Caveat', cursive", label: 'Handwritten' },
+    { value: "'Architects Daughter', cursive", label: 'Casual Sketch' },
+    { value: "'Special Elite', monospace", label: 'Carved / Typewriter' },
+    { value: "'Playfair Display', serif", label: 'Elegant Serif' },
+    { value: "Georgia, 'Times New Roman', serif", label: 'Storybook Serif' },
+    { value: "'Montserrat', sans-serif", label: 'Classic' }
+  ];
+  const SIGN_COLORS = ['#3b2412', '#1e3a8a', '#15803d', '#7c3aed', '#0f172a', '#c2410c', '#0f766e', '#ffffff'];
+
+  let signStage = null, signBgLayer = null, signLayer = null, signTransformer = null;
+  let signMaterial = 'wood';
+  let signLocked = false;
+  let signNextId = 1;
+
+  function initSignStage() {
+    signStage = new Konva.Stage({ container: 'sign-stage-container', width: SIGN_W, height: SIGN_H });
+    signBgLayer = new Konva.Layer({ listening: false });
+    signLayer = new Konva.Layer();
+    signStage.add(signBgLayer);
+    signStage.add(signLayer);
+    signTransformer = new Konva.Transformer({ anchorSize: 10, borderDash: [4, 4] });
+    signLayer.add(signTransformer);
+    drawSignMaterial(signMaterial);
+
+    signStage.on('click tap', (e) => {
+      if (signLocked) return;
+      if (e.target === signStage || e.target.getLayer() === signBgLayer) { deselectSignNode(); return; }
+      if (e.target === signTransformer || signTransformer.nodes().indexOf(e.target) !== -1) return;
+      selectSignNode(e.target);
+    });
+  }
+
+  // One texture per material: a gradient/pattern fill plus a few
+  // hand-drawn accents (wood grain, bolts, chalk dust, mortar blobs,
+  // plank seams, ribbon tails) instead of a single flat color block.
+  function drawSignMaterial(material) {
+    signBgLayer.destroyChildren();
+    const w = SIGN_W, h = SIGN_H;
+    signBgLayer.add(new Konva.Rect({ x: 8, y: 12, width: w, height: h, cornerRadius: 16, fill: 'rgba(15,23,42,0.28)' }));
+
+    if (material === 'chalkboard') {
+      signBgLayer.add(new Konva.Rect({ width: w, height: h, cornerRadius: 8, fill: '#2f3b30', stroke: '#7c4a24', strokeWidth: 16 }));
+      for (let i = 0; i < 70; i++) {
+        signBgLayer.add(new Konva.Circle({ x: Math.random() * w, y: Math.random() * h, radius: Math.random() * 1.2 + 0.3, fill: '#fff', opacity: Math.random() * 0.15 + 0.03 }));
+      }
+    } else if (material === 'metal') {
+      signBgLayer.add(new Konva.Rect({
+        width: w, height: h, cornerRadius: 20,
+        fillLinearGradientStartPoint: { x: 0, y: 0 }, fillLinearGradientEndPoint: { x: w, y: 0 },
+        fillLinearGradientColorStops: [0, '#cbd5e1', 0.5, '#f1f5f9', 1, '#94a3b8'],
+        stroke: '#64748b', strokeWidth: 8
+      }));
+      [[24, 24], [w - 24, 24], [24, h - 24], [w - 24, h - 24]].forEach(([cx, cy]) => {
+        signBgLayer.add(new Konva.Circle({ x: cx, y: cy, radius: 8, fill: '#94a3b8', stroke: '#475569', strokeWidth: 1.5 }));
+        signBgLayer.add(new Konva.Circle({ x: cx, y: cy, radius: 2.6, fill: '#334155' }));
+      });
+    } else if (material === 'stone') {
+      signBgLayer.add(new Konva.Rect({ width: w, height: h, cornerRadius: 10, fill: '#94a3b8', stroke: '#475569', strokeWidth: 12 }));
+      for (let i = 0; i < 30; i++) {
+        signBgLayer.add(new Konva.Circle({ x: Math.random() * w, y: Math.random() * h, radius: Math.random() * 20 + 8, fill: '#64748b', opacity: 0.12 }));
+      }
+    } else if (material === 'picket') {
+      signBgLayer.add(new Konva.Rect({ width: w, height: h, cornerRadius: 12, fill: '#fefce8', stroke: '#16a34a', strokeWidth: 10, dash: [18, 12] }));
+      for (let i = 1; i < 7; i++) {
+        signBgLayer.add(new Konva.Line({ points: [(w / 7) * i, 0, (w / 7) * i, h], stroke: 'rgba(22,163,74,0.15)', strokeWidth: 2 }));
+      }
+    } else if (material === 'banner') {
+      signBgLayer.add(new Konva.Rect({
+        width: w, height: h, cornerRadius: 8,
+        fillLinearGradientStartPoint: { x: 0, y: 0 }, fillLinearGradientEndPoint: { x: 0, y: h },
+        fillLinearGradientColorStops: [0, '#dc2626', 1, '#991b1b'],
+        stroke: '#fbbf24', strokeWidth: 10
+      }));
+      signBgLayer.add(new Konva.Line({ points: [0, 0, -22, h / 2, 0, h], closed: true, fill: '#7f1d1d' }));
+      signBgLayer.add(new Konva.Line({ points: [w, 0, w + 22, h / 2, w, h], closed: true, fill: '#7f1d1d' }));
+    } else {
+      // wood (default)
+      signBgLayer.add(new Konva.Rect({
+        width: w, height: h, cornerRadius: 12,
+        fillLinearGradientStartPoint: { x: 0, y: 0 }, fillLinearGradientEndPoint: { x: w, y: h },
+        fillLinearGradientColorStops: [0, '#8b5a2b', 0.5, '#a9713f', 1, '#6b3f1d'],
+        stroke: '#4a2c12', strokeWidth: 12
+      }));
+      for (let i = 1; i < 5; i++) {
+        signBgLayer.add(new Konva.Line({ points: [12, (h / 5) * i, w - 12, (h / 5) * i], stroke: 'rgba(0,0,0,0.18)', strokeWidth: 2 }));
+      }
+      [[46, 44], [w - 70, h - 56], [w / 2 + 30, h - 34]].forEach(([cx, cy]) => {
+        signBgLayer.add(new Konva.Ellipse({ x: cx, y: cy, radiusX: 10, radiusY: 6, stroke: 'rgba(0,0,0,0.25)', strokeWidth: 2 }));
+      });
+    }
+
+    signBgLayer.add(new Konva.Rect({
+      width: w, height: h, cornerRadius: 16, listening: false,
+      fillLinearGradientStartPoint: { x: 0, y: 0 }, fillLinearGradientEndPoint: { x: w * 0.6, y: h },
+      fillLinearGradientColorStops: [0, 'rgba(255,255,255,0.35)', 0.4, 'rgba(255,255,255,0)', 1, 'rgba(15,23,42,0.08)']
+    }));
+    signBgLayer.draw();
+  }
+
+  function setSignMaterial(material) {
+    signMaterial = material;
+    drawSignMaterial(material);
+    saveProgress();
+  }
+
+  function populateSignPickers() {
+    document.getElementById('sign-verse-select').innerHTML = VERSES.map((v, i) =>
       `<option value="${i}">${v.ref}${v.text ? ' - "' + v.text + '"' : ' (write your own)'}</option>`).join('');
-    document.getElementById('sticker-choices').innerHTML = STICKERS.map((s) =>
-      `<label><input type="checkbox" class="sticker-cb" value="${s}" onchange="onStickerChange(event)"> <span class="sticker-icon">${STICKER_ICONS[s]}</span> ${STICKER_LABELS[s]}</label>`).join('');
-    // Separate, single-pick "emblem" slot so a team has a decoration that
-    // sits at a fixed spot above the title, not only inline in the bottom
-    // sticker row - reuses the same icon set rather than a second one.
-    const emblemSelect = document.getElementById('sign-emblem-select');
-    emblemSelect.innerHTML = '<option value="">None</option>' +
-      STICKERS.map((s) => `<option value="${s}">${STICKER_LABELS[s]}</option>`).join('');
-    renderSign();
+    document.getElementById('sticker-picker').innerHTML = STICKERS.map((s) =>
+      `<button type="button" class="sticker-pick-btn" title="${STICKER_LABELS[s]}" onclick="addSignIcon('${s}')">${STICKER_ICONS[s]}</button>`).join('');
   }
 
-  function onVerseChange() {
-    const idx = parseInt(document.getElementById('verse-select').value, 10);
+  function onSignVerseChange() {
+    const idx = parseInt(document.getElementById('sign-verse-select').value, 10);
     document.getElementById('custom-verse-group').style.display = VERSES[idx].ref === 'Custom' ? 'block' : 'none';
-    renderSign();
   }
 
-  function onStickerChange(e) {
-    const checked = document.querySelectorAll('.sticker-cb:checked');
-    if (checked.length > 3) { e.target.checked = false; }
-    renderSign();
+  function toggleStickerPicker() {
+    const el = document.getElementById('sticker-picker');
+    el.style.display = el.style.display === 'none' ? 'grid' : 'none';
   }
 
-  function getVerseInUse() {
-    const idx = parseInt(document.getElementById('verse-select').value, 10);
+  function nextSignId() { return 'el' + (signNextId++); }
+
+  function attachSignNodeEvents(node) {
+    node.draggable(!signLocked);
+    node.on('dragend transformend', () => saveProgress());
+    node.on('click tap', (e) => { e.cancelBubble = true; if (!signLocked) selectSignNode(node); });
+    if (node.getClassName() === 'Text') node.on('dblclick dbltap', () => { if (!signLocked) editSignText(node); });
+  }
+
+  function addSignText(text, opts) {
+    opts = opts || {};
+    const node = new Konva.Text({
+      id: nextSignId(),
+      x: SIGN_W / 2 - 100, y: SIGN_H / 2 - 18, width: 200,
+      text: text || 'Your Text Here',
+      fontSize: opts.fontSize || 26,
+      fontFamily: opts.fontFamily || SIGN_FONTS[0].value,
+      fill: opts.fill || '#3b2412',
+      fontStyle: '700', align: 'center', draggable: true
+    });
+    attachSignNodeEvents(node);
+    signLayer.add(node);
+    selectSignNode(node);
+    signLayer.draw();
+    saveProgress();
+    return node;
+  }
+
+  async function addSignIcon(key) {
+    const img = await svgToImage(STICKER_ICONS[key]);
+    const node = new Konva.Image({
+      id: nextSignId(), image: img,
+      x: SIGN_W / 2 - 24, y: SIGN_H / 2 - 24, width: 48, height: 48, draggable: true
+    });
+    node.setAttr('iconKey', key);
+    attachSignNodeEvents(node);
+    signLayer.add(node);
+    selectSignNode(node);
+    signLayer.draw();
+    document.getElementById('sticker-picker').style.display = 'none';
+    saveProgress();
+  }
+
+  function insertVerseText() {
+    const idx = parseInt(document.getElementById('sign-verse-select').value, 10);
     const verse = VERSES[idx];
-    if (verse.ref !== 'Custom') return { text: verse.text, ref: verse.ref };
-    return {
-      text: document.getElementById('custom-verse-text').value || 'Write your creation verse...',
-      ref: document.getElementById('custom-verse-ref').value || ''
-    };
+    let text, ref;
+    if (verse.ref === 'Custom') {
+      text = document.getElementById('custom-verse-text').value.trim();
+      ref = document.getElementById('custom-verse-ref').value.trim();
+      if (!text) {
+        LessonCheck.incomplete(document.getElementById('sign-feedback'), 'Write your creation verse first.');
+        return;
+      }
+    } else {
+      text = verse.text; ref = verse.ref;
+    }
+    addSignText(`"${text}"${ref ? '\n- ' + ref : ''}`, { fontSize: 19, fontFamily: SIGN_FONTS[5].value, width: 320 });
   }
 
-  function renderSign() {
-    const { text, ref } = getVerseInUse();
-    const bg = document.getElementById('sign-bg-select').value;
-    const borderClass = document.getElementById('sign-border-select').value;
-    const textColor = document.getElementById('sign-text-color').value;
-    const fontFamily = document.getElementById('sign-font-select').value;
-    const stickerKeys = [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value);
-    const emblemKey = document.getElementById('sign-emblem-select').value;
-    const title = document.getElementById('sign-title-input').value.trim();
+  // Standard Konva recipe: there's no built-in inline text editing, so a
+  // plain <textarea> is positioned over the node while it's hidden, then
+  // torn down into the Konva.Text on blur/Enter.
+  function editSignText(node) {
+    node.hide();
+    signTransformer.hide();
+    signLayer.draw();
+    const box = signStage.container().getBoundingClientRect();
+    const ta = document.createElement('textarea');
+    document.body.appendChild(ta);
+    ta.className = 'sign-edit-textarea';
+    ta.value = node.text();
+    const scaleX = node.getAbsoluteScale().x, scaleY = node.getAbsoluteScale().y;
+    ta.style.position = 'fixed';
+    ta.style.top = (box.top + node.y() * scaleY) + 'px';
+    ta.style.left = (box.left + node.x() * scaleX) + 'px';
+    ta.style.width = (node.width() * scaleX) + 'px';
+    ta.style.height = (node.height() * scaleY + 10) + 'px';
+    ta.style.fontSize = (node.fontSize() * scaleY) + 'px';
+    ta.style.fontFamily = node.fontFamily();
+    ta.style.color = node.fill();
+    ta.style.textAlign = node.align();
+    ta.style.transform = `rotate(${node.rotation()}deg)`;
+    ta.focus();
+    ta.select();
+    const finish = () => {
+      // Removing a still-focused element fires a native 'blur' on it as
+      // part of the removal itself - without unhooking this listener
+      // first, that reentrant event calls finish() a second time mid-
+      // removeChild and throws (the node is no longer where it expects).
+      ta.removeEventListener('blur', finish);
+      node.text(ta.value.trim() || 'Your Text Here');
+      if (document.body.contains(ta)) document.body.removeChild(ta);
+      node.show();
+      signTransformer.show();
+      signLayer.draw();
+      saveProgress();
+    };
+    ta.addEventListener('blur', finish);
+    ta.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ta.blur(); } });
+  }
 
-    const preview = document.getElementById('sign-preview');
-    preview.className = `sign-preview ${borderClass}`;
-    preview.style.backgroundColor = bg;
-    preview.style.backgroundImage = 'none';
-    preview.style.color = textColor;
-    preview.style.fontFamily = fontFamily;
-    preview.innerHTML = `
-      ${emblemKey ? `<span class="sign-emblem">${STICKER_ICONS[emblemKey]}</span>` : ''}
-      ${title ? `<div class="sign-title">${title}</div>` : ''}
-      <div class="sign-verse">"${text}"</div>
-      ${ref ? `<div class="sign-ref">- ${ref}</div>` : ''}
-      ${stickerKeys.length ? `<div class="sign-stickers">${stickerKeys.map((k) => `<span class="sign-sticker-icon">${STICKER_ICONS[k]}</span>`).join('')}</div>` : ''}
+  function selectSignNode(node) {
+    signTransformer.nodes([node]);
+    signLayer.draw();
+    renderSignProps(node);
+  }
+
+  function deselectSignNode() {
+    signTransformer.nodes([]);
+    signLayer.draw();
+    document.getElementById('sign-props').style.display = 'none';
+  }
+
+  function getSelectedSignNode() {
+    const nodes = signTransformer.nodes();
+    return nodes.length ? nodes[0] : null;
+  }
+
+  function renderSignProps(node) {
+    const panel = document.getElementById('sign-props');
+    const isText = node.getClassName() === 'Text';
+    panel.style.display = 'flex';
+    panel.innerHTML = `
+      ${isText ? `
+        <select id="prop-font"></select>
+        <input type="color" id="prop-color" title="Text color">
+        <button type="button" class="row-check-btn" onclick="adjustSignFontSize(2)">A+</button>
+        <button type="button" class="row-check-btn" onclick="adjustSignFontSize(-2)">A-</button>
+      ` : ''}
+      <button type="button" class="row-check-btn" onclick="bringSignNodeForward()">Forward</button>
+      <button type="button" class="row-check-btn" onclick="sendSignNodeBackward()">Backward</button>
+      <button type="button" class="row-check-btn" style="background:#dc2626;" onclick="deleteSelectedSignNode()">Delete</button>
     `;
+    if (isText) {
+      const fontSel = document.getElementById('prop-font');
+      fontSel.innerHTML = SIGN_FONTS.map((f) => `<option value="${f.value}">${f.label}</option>`).join('');
+      fontSel.value = node.fontFamily();
+      fontSel.onchange = (e) => { node.fontFamily(e.target.value); signLayer.draw(); saveProgress(); };
+      const colorInput = document.getElementById('prop-color');
+      colorInput.value = /^#[0-9a-f]{6}$/i.test(node.fill()) ? node.fill() : '#3b2412';
+      colorInput.oninput = (e) => { node.fill(e.target.value); signLayer.draw(); };
+      colorInput.onchange = () => saveProgress();
+    }
+  }
+
+  function adjustSignFontSize(delta) {
+    const node = getSelectedSignNode();
+    if (!node || node.getClassName() !== 'Text') return;
+    node.fontSize(Math.max(10, Math.min(72, node.fontSize() + delta)));
+    signLayer.draw();
+    saveProgress();
+  }
+
+  function bringSignNodeForward() {
+    const node = getSelectedSignNode();
+    if (!node) return;
+    node.moveUp();
+    signLayer.draw();
+    saveProgress();
+  }
+
+  function sendSignNodeBackward() {
+    const node = getSelectedSignNode();
+    if (!node) return;
+    node.moveDown();
+    signLayer.draw();
+    saveProgress();
+  }
+
+  function deleteSelectedSignNode() {
+    const node = getSelectedSignNode();
+    if (!node) return;
+    node.destroy();
+    deselectSignNode();
+    signLayer.draw();
+    saveProgress();
+  }
+
+  function signElementNodes() {
+    return signLayer.getChildren((n) => n !== signTransformer);
+  }
+
+  function serializeSignElements() {
+    return signElementNodes().map((n) => {
+      const base = { id: n.id(), type: n.getClassName(), x: n.x(), y: n.y(), rotation: n.rotation(), scaleX: n.scaleX(), scaleY: n.scaleY() };
+      if (n.getClassName() === 'Text') return { ...base, text: n.text(), fontFamily: n.fontFamily(), fontSize: n.fontSize(), fill: n.fill(), width: n.width() };
+      return { ...base, iconKey: n.getAttr('iconKey'), width: n.width(), height: n.height() };
+    });
+  }
+
+  function clearSignElements() {
+    signElementNodes().forEach((n) => n.destroy());
+    signLayer.draw();
+  }
+
+  async function restoreSignElements(list) {
+    clearSignElements();
+    for (const el of list) {
+      let node;
+      if (el.type === 'Text') {
+        node = new Konva.Text({
+          id: el.id, x: el.x, y: el.y, rotation: el.rotation, scaleX: el.scaleX, scaleY: el.scaleY,
+          text: el.text, fontFamily: el.fontFamily, fontSize: el.fontSize, fill: el.fill, width: el.width,
+          fontStyle: '700', align: 'center', draggable: true
+        });
+      } else {
+        const img = await svgToImage(STICKER_ICONS[el.iconKey] || STICKER_ICONS.leaf);
+        node = new Konva.Image({
+          id: el.id, image: img, x: el.x, y: el.y, rotation: el.rotation, scaleX: el.scaleX, scaleY: el.scaleY,
+          width: el.width, height: el.height, draggable: true
+        });
+        node.setAttr('iconKey', el.iconKey);
+      }
+      attachSignNodeEvents(node);
+      signLayer.add(node);
+    }
+    signTransformer.moveToTop();
+    signLayer.draw();
+    const maxId = list.reduce((m, el) => Math.max(m, parseInt(String(el.id).replace('el', ''), 10) || 0), 0);
+    signNextId = maxId + 1;
+  }
+
+  function seedDefaultSignElements() {
+    addSignText('Our Garden', { fontSize: 32, fontFamily: SIGN_FONTS[0].value });
+    deselectSignNode();
+  }
+
+  function applySignLockedUI() {
+    signLocked = true;
+    signElementNodes().forEach((n) => n.draggable(false));
+    deselectSignNode();
+    document.querySelectorAll('.sign-toolbar select, .sign-toolbar input, .sign-toolbar textarea, .sign-toolbar button:not(.celebrate-btn), #sign-material-select').forEach((el) => { el.disabled = true; });
   }
 
   function lockSign() {
-    const { text, ref } = getVerseInUse();
-    const idx = parseInt(document.getElementById('verse-select').value, 10);
-    if (VERSES[idx].ref === 'Custom' && !document.getElementById('custom-verse-text').value.trim()) {
-      LessonCheck.incomplete(document.getElementById('sign-feedback'), 'Write your creation verse before locking your sign.');
+    if (!signElementNodes().length) {
+      LessonCheck.incomplete(document.getElementById('sign-feedback'), 'Add at least one text or sticker to your sign before locking it in.');
       return;
     }
-    document.querySelectorAll('.sign-controls select, .sign-controls input, .sign-controls textarea, #lock-sign-btn').forEach((el) => { el.disabled = true; });
+    const textSummary = signElementNodes().filter((n) => n.getClassName() === 'Text').map((n) => n.text()).join(' | ') || '(stickers only)';
+    applySignLockedUI();
     LessonCheck.submit(document.getElementById('sign-feedback'), {
       key: 'creation-sign',
       label: 'Creation Sign (Art & Religion)',
-      answer: `"${text}" - ${ref}`,
+      answer: textSummary,
       section: 'Day 2 - Creation Sign'
     }, 'Your creation sign is locked in!');
     saveProgress();
+  }
+
+  function dataUrlToImage(dataUrl) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error('Sign image failed to load'));
+      img.src = dataUrl;
+    });
+  }
+
+  function getSignDataUrl() {
+    signTransformer.nodes([]);
+    signLayer.draw();
+    return signStage.toDataURL({ pixelRatio: 2 });
   }
 
   // ================================================================
@@ -2008,79 +2368,6 @@
     ctx.closePath();
   }
 
-  // One entry per .sign-* CSS class, describing ONLY its border shape and
-  // texture (never a background) so the download can faithfully replicate
-  // what's on screen instead of drawing a generic rectangle for every
-  // style. Matches: rustic (solid), picket (dashed), vine (CSS `double`),
-  // stone/metal (CSS inset ring), cloud (huge corner radius = blob),
-  // ribbon (CSS `ridge`), scallop (CSS `dotted`).
-  const SIGN_STYLE_META = {
-    'sign-rustic': { color: '#92400e', radius: 16, lineWidth: 16 },
-    'sign-picket': { color: '#16a34a', radius: 16, lineWidth: 12, dash: [18, 12] },
-    'sign-vine': { color: '#15803d', radius: 16, lineWidth: 14, double: true },
-    'sign-stone': { color: '#64748b', radius: 8, lineWidth: 12, inset: '#cbd5e1' },
-    'sign-metal': { color: '#94a3b8', radius: 22, lineWidth: 9, inset: '#ffffff' },
-    'sign-cloud': { color: '#38bdf8', radius: 9999, lineWidth: 12 },
-    'sign-ribbon': { color: '#b91c1c', radius: 10, lineWidth: 12, ridge: true },
-    'sign-scallop': { color: '#d97706', radius: 40, lineWidth: 12, dash: [3, 17], dashCap: 'round' }
-  };
-
-  function drawSignFrame(ctx, style, x, y, w, h, bg) {
-    const meta = SIGN_STYLE_META[style] || SIGN_STYLE_META['sign-rustic'];
-    const radius = style === 'sign-cloud' ? Math.min(w, h) * 0.42 : meta.radius;
-
-    // Floating drop shadow under the whole card, then a flat fill, then a
-    // diagonal glossy sheen overlay clipped to the card shape - gives every
-    // background color real depth instead of a flat, paper-flat rectangle.
-    ctx.save();
-    ctx.shadowColor = 'rgba(15,23,42,0.28)';
-    ctx.shadowBlur = 22;
-    ctx.shadowOffsetY = 10;
-    roundRectPath(ctx, x, y, w, h, radius);
-    ctx.fillStyle = bg;
-    ctx.fill();
-    ctx.restore();
-
-    ctx.save();
-    roundRectPath(ctx, x, y, w, h, radius);
-    ctx.clip();
-    const sheen = ctx.createLinearGradient(x, y, x + w * 0.6, y + h);
-    sheen.addColorStop(0, 'rgba(255,255,255,0.4)');
-    sheen.addColorStop(0.4, 'rgba(255,255,255,0)');
-    sheen.addColorStop(1, 'rgba(15,23,42,0.08)');
-    ctx.fillStyle = sheen;
-    ctx.fillRect(x, y, w, h);
-    ctx.restore();
-
-    ctx.save();
-    ctx.lineJoin = 'round';
-    ctx.lineWidth = meta.lineWidth;
-    ctx.strokeStyle = meta.color;
-    if (meta.dash) { ctx.setLineDash(meta.dash); if (meta.dashCap) ctx.lineCap = meta.dashCap; }
-    roundRectPath(ctx, x + meta.lineWidth / 2, y + meta.lineWidth / 2, w - meta.lineWidth, h - meta.lineWidth, Math.max(radius - meta.lineWidth / 2, 0));
-    ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.lineCap = 'butt';
-
-    if (meta.double) {
-      ctx.lineWidth = Math.max(meta.lineWidth / 3, 2);
-      roundRectPath(ctx, x + meta.lineWidth * 1.7, y + meta.lineWidth * 1.7, w - meta.lineWidth * 3.4, h - meta.lineWidth * 3.4, Math.max(radius - meta.lineWidth, 0));
-      ctx.stroke();
-    }
-    if (meta.inset) {
-      ctx.lineWidth = 5;
-      ctx.strokeStyle = meta.inset;
-      roundRectPath(ctx, x + meta.lineWidth + 7, y + meta.lineWidth + 7, w - (meta.lineWidth + 7) * 2, h - (meta.lineWidth + 7) * 2, Math.max(radius - meta.lineWidth, 0));
-      ctx.stroke();
-    }
-    if (meta.ridge) {
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = '#fca5a5';
-      roundRectPath(ctx, x + meta.lineWidth + 5, y + meta.lineWidth + 5, w - (meta.lineWidth + 5) * 2, h - (meta.lineWidth + 5) * 2, Math.max(radius - meta.lineWidth, 0));
-      ctx.stroke();
-    }
-    ctx.restore();
-  }
 
   function triggerDownload(canvas, filename) {
     canvas.toBlob((blob) => {
@@ -2242,7 +2529,6 @@
     if (!solvedKeys['division']) missing.push('the Average Cost per Plant (Division) check');
     if (!document.getElementById('lock-garden-btn').disabled) missing.push('your Garden Grid Layout (lock it in)');
     if (!document.getElementById('lock-sign-btn').disabled) missing.push('your Creation Sign (lock it in)');
-    if (!document.getElementById('stamp-display').classList.contains('show')) missing.push('the Team Math Check (award your Math Quality Stamp)');
     return missing;
   }
 
@@ -2408,6 +2694,11 @@
       LessonCheck.incomplete(feedbackEl, 'Type both team member names at the top of the page first.');
       return;
     }
+    const missing = missingDay2Work();
+    if (missing.length) {
+      LessonCheck.incomplete(feedbackEl, `Finish Day 2 first - still need: ${missing.join(', ')}.`);
+      return;
+    }
     const myName = memberNum === 1 ? name1 : name2;
     const partnerName = memberNum === 1 ? name2 : name1;
     const [logo, decoIcons] = await Promise.all([
@@ -2496,7 +2787,7 @@
     const name1 = document.getElementById('team-name-1').value.trim();
     const name2 = document.getElementById('team-name-2').value.trim();
     if (!document.getElementById('stamp-display').classList.contains('show')) {
-      LessonCheck.incomplete(feedbackEl, 'Award your Math Quality Stamp above first.');
+      LessonCheck.incomplete(feedbackEl, 'Finish Day 2 first to unlock your Math Quality Stamp.');
       return;
     }
     const SCALE = 2;
@@ -2542,61 +2833,13 @@
     reenableCelebrateButtons();
   }
 
-  // Draws the sign exactly as configured in the controls into the given
-  // box on whatever canvas context is passed in - shared by the standalone
-  // sign PNG and page 2 of the Garden + Sign poster PDF, so the two can
-  // never drift apart from each other (or from what renderSign() shows on
-  // screen, since both read the same live control values and the same
-  // drawSignFrame() used for the CSS style classes).
+  // The Konva stage is the single source of truth for what the sign looks
+  // like, so composing it into the certificate/poster canvas is just
+  // drawing its own rendered image - no separate drawing code to keep in
+  // sync with the on-screen studio.
   async function drawSignOntoCanvas(ctx, x, y, w, h) {
-    const { text, ref } = getVerseInUse();
-    const title = document.getElementById('sign-title-input').value.trim();
-    const bg = document.getElementById('sign-bg-select').value;
-    const textColor = document.getElementById('sign-text-color').value;
-    const fontFamily = document.getElementById('sign-font-select').value.split(',')[0].replace(/'/g, '');
-    const borderClass = document.getElementById('sign-border-select').value;
-    const stickerKeys = [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value);
-    const emblemKey = document.getElementById('sign-emblem-select').value;
-    const [stickerImgs, emblemImg] = await Promise.all([
-      Promise.all(stickerKeys.map((k) => svgToImage(STICKER_ICONS[k]))),
-      emblemKey ? svgToImage(STICKER_ICONS[emblemKey]) : Promise.resolve(null)
-    ]);
-    await document.fonts.load(`700 28px ${fontFamily}`).catch(() => {});
-
-    drawSignFrame(ctx, borderClass, x, y, w, h, bg);
-    ctx.textAlign = 'center';
-
-    let cursorY = y + 66;
-    if (emblemImg) {
-      const es = 42;
-      ctx.drawImage(emblemImg, x + w / 2 - es / 2, cursorY - es, es, es);
-      cursorY += 32;
-    }
-    if (title) {
-      ctx.fillStyle = textColor;
-      ctx.font = `900 24px ${fontFamily}, sans-serif`;
-      ctx.fillText(title, x + w / 2, cursorY);
-      cursorY += 34;
-    }
-
-    ctx.fillStyle = textColor;
-    ctx.font = `700 28px ${fontFamily}, sans-serif`;
-    const lines = wrapCanvasText(ctx, `"${text}"`, w - 90);
-    const verseY = Math.max(cursorY, y + h / 2 - (lines.length * 38) / 2 + 19);
-    lines.forEach((l, i) => ctx.fillText(l, x + w / 2, verseY + i * 38));
-    let afterVerseY = verseY + lines.length * 38;
-
-    if (ref) {
-      ctx.font = `700 19px ${fontFamily}, sans-serif`;
-      ctx.fillText(`- ${ref}`, x + w / 2, afterVerseY + 22);
-    }
-    if (stickerImgs.length) {
-      const iconSize = 44, gap = 10;
-      const totalW = stickerImgs.length * (iconSize + gap) - gap;
-      let sx = x + w / 2 - totalW / 2;
-      const sy = y + h - iconSize - 16;
-      stickerImgs.forEach((img) => { ctx.drawImage(img, sx, sy, iconSize, iconSize); sx += iconSize + gap; });
-    }
+    const img = await dataUrlToImage(getSignDataUrl());
+    ctx.drawImage(img, x, y, w, h);
   }
 
   async function downloadSign() {
@@ -2741,23 +2984,64 @@
   }
 
   // ================================================================
-  // PEER MATH AUDIT
+  // TECHNOLOGY: WHAT-IF CALCULATOR
+  // A sandbox, not a graded check - every answer above is already
+  // verified to mastery (unlimited attempts until correct), so
+  // re-checking with a calculator here would just be busywork. Instead,
+  // teams explore how the Average Cost per Plant would change with a
+  // different total spent or a different plant count, without touching
+  // their real, locked-in answer.
   // ================================================================
-  function updateStampBtn() {
-    const n1 = document.getElementById('team-name-1').value.trim();
-    const n2 = document.getElementById('team-name-2').value.trim();
-    const allChecked = [...document.querySelectorAll('.audit-cb')].every((cb) => cb.checked);
-    document.getElementById('stamp-btn').disabled = !(n1 && n2 && allChecked);
+  function updateWhatIf() {
+    const costRaw = parseFloat(document.getElementById('whatif-cost-input').value);
+    const countRaw = parseFloat(document.getElementById('whatif-count-input').value);
+    const cost = isFinite(costRaw) && costRaw >= 0 ? costRaw : 0;
+    const count = isFinite(countRaw) && countRaw > 0 ? countRaw : 1;
+    const avg = round2(cost / count);
+
+    const realAnswerLine = (solvedKeys['division'] && window.plantAvgAchieved != null)
+      ? `<p style="text-align:center; color:#64748b; margin-top:10px;">Your real, locked-in average was <strong>$${fmt2(window.plantAvgAchieved)}</strong> per plant ($${fmt2(window.plantCostExpected)} &divide; ${window.plantCountExpected}).</p>`
+      : '';
+    document.getElementById('whatif-result').innerHTML = `
+      <div class="whatif-score">$${fmt2(cost)} &divide; ${count} = $${fmt2(avg)} per plant</div>
+      ${realAnswerLine}
+    `;
   }
 
-  function awardStamp() {
+  // ================================================================
+  // CELEBRATE: completion recap (auto-derived from missingDay2Work,
+  // never a separate manually-toggled state - so it can never go stale
+  // on reload the way a manually-clicked "award stamp" button could).
+  // ================================================================
+  function renderCelebration() {
+    const missing = missingDay2Work();
+    const incompleteEl = document.getElementById('celebration-incomplete');
+    const completeEl = document.getElementById('celebration-complete');
+    if (missing.length) {
+      incompleteEl.style.display = 'block';
+      completeEl.style.display = 'none';
+      document.getElementById('celebration-missing-list').innerHTML = missing.map((m) => `<li>${m}</li>`).join('');
+      document.getElementById('stamp-display').classList.remove('show');
+      return;
+    }
+    incompleteEl.style.display = 'none';
+    completeEl.style.display = 'block';
+
     const n1 = document.getElementById('team-name-1').value.trim();
     const n2 = document.getElementById('team-name-2').value.trim();
     const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    document.getElementById('stamp-detail').textContent = `Confirmed together by ${n1} & ${n2} - ${today}`;
+    document.getElementById('stamp-detail').textContent = `Confirmed by ${n1} & ${n2} - ${today}`;
     document.getElementById('stamp-display').classList.add('show');
-    document.querySelectorAll('.audit-cb, #stamp-btn').forEach((el) => { el.disabled = true; });
-    LessonProgress.record('peer-audit', 'Team Math Quality Stamp', `Confirmed together by ${n1} & ${n2}: multiplication, addition, and division re-checked`, 'reflection', 'Day 2 - Team Math Check');
+
+    const items = [
+      `Leftover Budget (Subtraction) solved`,
+      `Average Cost per Plant (Division) solved`,
+      `Garden Grid Layout locked in`,
+      `Creation Sign locked in`
+    ];
+    document.getElementById('celebration-checklist').innerHTML = items.map((t) => `
+      <div class="celebration-item"><span class="celebration-check">&#10003;</span>${t}</div>
+    `).join('');
   }
 
   // ================================================================
@@ -2862,7 +3146,11 @@
   // ================================================================
   renderCatalog();
   renderCart();
-  populateVerseSelect();
+  populateSignPickers();
+  initSignStage();
+  seedDefaultSignElements();
+  updateWhatIf();
+  renderCelebration();
 </script>
 
 </body>
