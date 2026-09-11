@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&family=Baloo+2:wght@500..800&family=Bungee&family=Anton&family=Permanent+Marker&family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&family=Baloo+2:wght@500..800&family=Bungee&family=Anton&family=Permanent+Marker&family=Pacifico&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
@@ -178,43 +178,19 @@
     .summary-table td.value-cell { font-weight: 800; color: var(--success); text-align: center; }
     .summary-table td.value-cell.pending { color: var(--empty, #94a3b8); font-weight: 600; font-style: italic; }
 
-    /* Booth blueprint (to-scale rectangle on graph paper) */
+    /* Booth blueprint - a real CAD-style engineering sheet: navy sheet,
+       cyan grid, hatched booth outline, dimension lines with arrows, and
+       a title block, all drawn once as SVG (buildBoothBlueprintSVG) and
+       shared byte-for-byte between the live preview and every download. */
     .blueprint-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 18px 0; }
-    .blueprint-grid-paper {
-      width: 340px;
-      height: 280px;
+    #blueprint-preview {
+      width: 440px;
       max-width: 100%;
-      background-color: #fff;
-      background-image:
-        linear-gradient(rgba(30,58,138,0.14) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(30,58,138,0.14) 1px, transparent 1px);
-      background-size: 20px 20px;
-      border: 3px solid var(--border);
       border-radius: 10px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.18);
     }
-    .blueprint-rect {
-      display: none;
-      position: relative;
-      background: #dcfce7;
-      border: 3px solid #15803d;
-      border-radius: 4px;
-    }
-    .blueprint-dim {
-      position: absolute;
-      font-size: 0.78rem;
-      font-weight: 800;
-      color: #15803d;
-      background: #fff;
-      padding: 1px 7px;
-      border-radius: 6px;
-      white-space: nowrap;
-    }
-    .blueprint-dim.dim-top { top: -24px; left: 50%; transform: translateX(-50%); }
-    .blueprint-dim.dim-side { left: -8px; top: 50%; transform: translate(-100%, -50%); }
+    #blueprint-preview > svg { width: 100%; height: auto; display: block; }
     #blueprint-hint { color: var(--empty, #64748b); font-style: italic; text-align: center; }
 
     /* Event Flyer Studio - a real free-form canvas (Konva.js) instead of a
@@ -699,12 +675,7 @@
         Solve Station 4 (Spatial Planning) on Day 1 - your booth will be drawn to scale here automatically.
       </div>
       <div class="blueprint-wrap">
-        <div class="blueprint-grid-paper" id="blueprint-grid-paper">
-          <div class="blueprint-rect" id="blueprint-rect">
-            <span class="blueprint-dim dim-top" id="blueprint-dim-l"></span>
-            <span class="blueprint-dim dim-side" id="blueprint-dim-w"></span>
-          </div>
-        </div>
+        <div id="blueprint-preview"></div>
         <p id="blueprint-hint">Solve Station 4 (Spatial Planning) to see your booth drawn to scale here.</p>
       </div>
 
@@ -1579,23 +1550,99 @@
   }
 
   // ================================================================
-  // ENGINEERING: BOOTH BLUEPRINT (to-scale rectangle on graph paper)
+  // ENGINEERING: BOOTH BLUEPRINT
+  // A real CAD-style engineering sheet - navy background, cyan grid,
+  // a hatched (not flat-filled) booth outline, dimension lines with
+  // arrowheads, and a title block with scale/date/rev/approval - built
+  // once as an SVG string shared byte-for-byte between the live preview
+  // and every download, so they can never drift apart from each other.
   // ================================================================
+  const BLUEPRINT_W = 440, BLUEPRINT_H = 440;
+
+  function dimArrow(x, y, angleDeg) {
+    const s = 6;
+    return `<g transform="translate(${x},${y}) rotate(${angleDeg})"><path d="M0,0 L${-s},${-s / 2} L${-s},${s / 2} Z" fill="#7dd3fc"/></g>`;
+  }
+
+  function buildBoothBlueprintSVG(l, w) {
+    const name1 = document.getElementById('team-name-1').value.trim();
+    const name2 = document.getElementById('team-name-2').value.trim();
+    const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    const W = BLUEPRINT_W, H = BLUEPRINT_H;
+
+    // Grid lines across the whole sheet, technical-blueprint style.
+    let grid = '';
+    for (let x = 0; x <= W; x += 20) grid += `<line x1="${x}" y1="0" x2="${x}" y2="${H}" stroke="#134074" stroke-width="1"/>`;
+    for (let y = 0; y <= H; y += 20) grid += `<line x1="0" y1="${y}" x2="${W}" y2="${y}" stroke="#134074" stroke-width="1"/>`;
+
+    // Booth rectangle, scaled to fit the viewport (leaving room outside
+    // it for dimension lines, and below/right for the title block).
+    const vpX = 90, vpY = 70, vpW = 300, vpH = 200;
+    const scale = Math.min(vpW / l, vpH / w);
+    const rectW = l * scale, rectH = w * scale;
+    const rectX = vpX + (vpW - rectW) / 2, rectY = vpY + (vpH - rectH) / 2;
+
+    const dimTopY = rectY - 24;
+    const lengthDim = `
+      <line x1="${rectX}" y1="${rectY - 6}" x2="${rectX}" y2="${dimTopY - 4}" stroke="#7dd3fc" stroke-width="1"/>
+      <line x1="${rectX + rectW}" y1="${rectY - 6}" x2="${rectX + rectW}" y2="${dimTopY - 4}" stroke="#7dd3fc" stroke-width="1"/>
+      <line x1="${rectX}" y1="${dimTopY}" x2="${rectX + rectW}" y2="${dimTopY}" stroke="#7dd3fc" stroke-width="1.5"/>
+      ${dimArrow(rectX, dimTopY, 180)}
+      ${dimArrow(rectX + rectW, dimTopY, 0)}
+      <rect x="${rectX + rectW / 2 - 24}" y="${dimTopY - 17}" width="48" height="16" fill="#0B2545"/>
+      <text x="${rectX + rectW / 2}" y="${dimTopY - 5}" text-anchor="middle" font-family="'Share Tech Mono', monospace" font-size="13" fill="#7dd3fc">${l} ft</text>
+    `;
+
+    const dimLeftX = rectX - 24;
+    const widthDim = `
+      <line x1="${rectX - 6}" y1="${rectY}" x2="${dimLeftX - 4}" y2="${rectY}" stroke="#7dd3fc" stroke-width="1"/>
+      <line x1="${rectX - 6}" y1="${rectY + rectH}" x2="${dimLeftX - 4}" y2="${rectY + rectH}" stroke="#7dd3fc" stroke-width="1"/>
+      <line x1="${dimLeftX}" y1="${rectY}" x2="${dimLeftX}" y2="${rectY + rectH}" stroke="#7dd3fc" stroke-width="1.5"/>
+      ${dimArrow(dimLeftX, rectY, 270)}
+      ${dimArrow(dimLeftX, rectY + rectH, 90)}
+      <g transform="translate(${dimLeftX - 15},${rectY + rectH / 2}) rotate(-90)">
+        <rect x="-24" y="-8" width="48" height="16" fill="#0B2545"/>
+        <text x="0" y="4" text-anchor="middle" font-family="'Share Tech Mono', monospace" font-size="13" fill="#7dd3fc">${w} ft</text>
+      </g>
+    `;
+
+    const tbX = 250, tbY = 316, tbW = 176, tbH = 108;
+    const titleBlock = `
+      <rect x="${tbX}" y="${tbY}" width="${tbW}" height="${tbH}" fill="#0B2545" stroke="#7dd3fc" stroke-width="1.5"/>
+      <line x1="${tbX}" y1="${tbY + 20}" x2="${tbX + tbW}" y2="${tbY + 20}" stroke="#134074" stroke-width="1"/>
+      <text x="${tbX + 8}" y="${tbY + 14}" font-family="'Share Tech Mono', monospace" font-size="11" font-weight="700" fill="#e0f2fe">BOOTH BLUEPRINT</text>
+      <text x="${tbX + 8}" y="${tbY + 34}" font-family="'Share Tech Mono', monospace" font-size="9" fill="#7dd3fc">TEAM: ${(name1 && name2) ? `${name1} &amp; ${name2}` : '(unnamed)'}</text>
+      <text x="${tbX + 8}" y="${tbY + 49}" font-family="'Share Tech Mono', monospace" font-size="9" fill="#7dd3fc">SCALE: 1 FT = ${scale.toFixed(0)} PX</text>
+      <text x="${tbX + 8}" y="${tbY + 64}" font-family="'Share Tech Mono', monospace" font-size="9" fill="#7dd3fc">DATE: ${today}</text>
+      <text x="${tbX + 8}" y="${tbY + 79}" font-family="'Share Tech Mono', monospace" font-size="9" fill="#7dd3fc">REV: 1.0</text>
+      <g transform="translate(${tbX + tbW - 40},${tbY + tbH - 24}) rotate(-8)">
+        <rect x="-34" y="-13" width="68" height="26" rx="4" fill="none" stroke="#4ade80" stroke-width="2" stroke-dasharray="3,2"/>
+        <text x="0" y="4" text-anchor="middle" font-family="'Share Tech Mono', monospace" font-size="9" font-weight="700" fill="#4ade80">APPROVED</text>
+      </g>
+    `;
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
+      <defs>
+        <pattern id="booth-hatch" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+          <rect width="8" height="8" fill="#0ea5e9" fill-opacity="0.18"/>
+          <line x1="0" y1="0" x2="0" y2="8" stroke="#7dd3fc" stroke-width="2"/>
+        </pattern>
+      </defs>
+      <rect x="0" y="0" width="${W}" height="${H}" rx="10" fill="#0B2545"/>
+      <g opacity="0.5">${grid}</g>
+      <rect x="${rectX}" y="${rectY}" width="${rectW}" height="${rectH}" fill="url(#booth-hatch)" stroke="#e0f2fe" stroke-width="2.5"/>
+      ${lengthDim}
+      ${widthDim}
+      ${titleBlock}
+      <rect x="3" y="3" width="${W - 6}" height="${H - 6}" rx="8" fill="none" stroke="#7dd3fc" stroke-width="2"/>
+    </svg>`;
+  }
+
   function renderBlueprint(l, w) {
-    const rect = document.getElementById('blueprint-rect');
-    const maxW = 280, maxH = 220;
-    const scale = Math.min(maxW / l, maxH / w);
-    rect.style.width = (l * scale) + 'px';
-    rect.style.height = (w * scale) + 'px';
-    rect.style.display = 'block';
-    document.getElementById('blueprint-dim-l').textContent = `${l} ft`;
-    document.getElementById('blueprint-dim-w').textContent = `${w} ft`;
+    document.getElementById('blueprint-preview').innerHTML = buildBoothBlueprintSVG(l, w);
     document.getElementById('blueprint-hint').style.display = 'none';
   }
 
-  // ================================================================
-  // ART: EVENT FLYER DESIGNER
-  // ================================================================
   // ================================================================
   // EVENT FLYER STUDIO
   // A real free-form canvas (Konva.js), same pattern as Eco-Garden's
@@ -2322,44 +2369,16 @@
   // Draws the booth blueprint (to-scale rectangle on graph paper) plus the
   // Logistics Summary. Returns nothing - only reads window.boothLength /
   // window.boothWidth, which are only set once Station 4 is solved.
-  function drawBlueprintOntoCanvas(ctx, x, y, size) {
-    roundRectPath(ctx, x, y, size, size, 14);
-    ctx.fillStyle = '#ffffff';
-    ctx.fill();
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = '#94a3b8';
-    ctx.stroke();
-    ctx.save();
-    ctx.clip();
-    ctx.strokeStyle = 'rgba(30,58,138,0.14)';
-    ctx.lineWidth = 1;
-    for (let gx = x; gx <= x + size; gx += 20) {
-      ctx.beginPath(); ctx.moveTo(gx, y); ctx.lineTo(gx, y + size); ctx.stroke();
-    }
-    for (let gy = y; gy <= y + size; gy += 20) {
-      ctx.beginPath(); ctx.moveTo(x, gy); ctx.lineTo(x + size, gy); ctx.stroke();
-    }
-    ctx.restore();
-
+  // The SVG built by buildBoothBlueprintSVG() is the single source of
+  // truth for what the blueprint looks like - drawing it into the
+  // certificate/poster canvas is just rasterizing that same string,
+  // contain-fit into whatever square box is given.
+  async function drawBlueprintOntoCanvas(ctx, x, y, size) {
     const l = window.boothLength || 7, w = window.boothWidth || 5;
-    const maxW = size - 60, maxH = size - 60;
-    const scale = Math.min(maxW / l, maxH / w);
-    const rw = l * scale, rh = w * scale;
-    const rx = x + size / 2 - rw / 2, ry = y + size / 2 - rh / 2;
-    ctx.fillStyle = '#dcfce7';
-    ctx.fillRect(rx, ry, rw, rh);
-    ctx.strokeStyle = '#15803d';
-    ctx.lineWidth = 3;
-    ctx.strokeRect(rx, ry, rw, rh);
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#15803d';
-    ctx.font = "800 15px 'Montserrat', sans-serif";
-    ctx.fillText(`${l} ft`, rx + rw / 2, ry - 10);
-    ctx.save();
-    ctx.translate(rx - 14, ry + rh / 2);
-    ctx.rotate(-Math.PI / 2);
-    ctx.fillText(`${w} ft`, 0, 0);
-    ctx.restore();
+    const img = await svgToImage(buildBoothBlueprintSVG(l, w));
+    const scale = Math.min(size / BLUEPRINT_W, size / BLUEPRINT_H);
+    const drawW = BLUEPRINT_W * scale, drawH = BLUEPRINT_H * scale;
+    ctx.drawImage(img, x + (size - drawW) / 2, y + (size - drawH) / 2, drawW, drawH);
   }
 
   async function downloadBlueprintFlyerPoster() {
@@ -2390,7 +2409,7 @@
     ctx.fillText(`${name1} & ${name2}'s Booth Blueprint`, FESTIVAL_W / 2, 56);
     const gridSize = 560;
     const gridX = (FESTIVAL_W - gridSize) / 2, gridY = 88;
-    drawBlueprintOntoCanvas(ctx, gridX, gridY, gridSize);
+    await drawBlueprintOntoCanvas(ctx, gridX, gridY, gridSize);
     ctx.textAlign = 'left';
     ctx.font = "700 16px 'Montserrat', sans-serif";
     ctx.fillStyle = '#334155';
