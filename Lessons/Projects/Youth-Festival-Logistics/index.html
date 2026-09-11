@@ -228,44 +228,16 @@
       border-radius: 7px;
     }
     .flyer-controls .row-check-btn { font-size: 0.8rem; padding: 8px 12px; }
-    .flyer-preview-wrap { flex: 1 1 280px; display: flex; align-items: center; justify-content: center; }
-    .flyer-preview {
-      width: 300px;
-      min-height: 220px;
-      padding: 26px 20px;
-      border-radius: 10px;
-      text-align: center;
-      font-weight: 800;
-      font-size: 1.05rem;
-      color: #1e293b;
-      box-shadow: 0 10px 22px rgba(0,0,0,0.18);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+    .flyer-preview-wrap { flex: 2 1 420px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+    #flyer-preview {
+      width: 100%;
+      max-width: 640px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.18);
+      border: 1px solid #cbd5e1;
     }
-    .flyer-preview .flyer-emblem { width: 34px; height: 34px; margin-bottom: 2px; }
-    .flyer-preview .flyer-title { font-size: 1.25rem; font-weight: 900; margin-bottom: 2px; }
-    .flyer-preview .flyer-tagline { font-size: 0.95rem; font-style: italic; opacity: 0.9; }
-    .flyer-preview .flyer-quote { font-size: 0.88rem; line-height: 1.4; margin-top: 4px; }
-    .flyer-preview .flyer-quote-ref { font-size: 0.75rem; font-weight: 700; opacity: 0.85; }
-    .flyer-preview .flyer-stickers { display: flex; justify-content: center; gap: 8px; margin-top: 4px; }
-    .flyer-sticker-icon { display: inline-block; width: 30px; height: 30px; }
-
-    /* Style classes control border shape/texture ONLY - never `background`,
-       which as a class-level rule would silently beat the independently
-       selectable Flyer Background color (a class background paints over an
-       element's own inline background-color). Background is always applied
-       inline by renderFlyer(). */
-    .flyer-poster { border: 8px solid #1e293b; border-radius: 10px; }
-    .flyer-ticket { border: 6px dashed #b45309; border-radius: 10px; }
-    .flyer-marquee { border: 6px double #7c3aed; border-radius: 12px; }
-    .flyer-pass { border: 6px solid #0f766e; border-radius: 4px; box-shadow: inset 0 0 0 4px #99f6e4, 0 10px 22px rgba(0,0,0,0.18); }
-    .flyer-neon { border: 4px solid #db2777; border-radius: 16px; box-shadow: inset 0 0 0 3px #ffffff, 0 10px 22px rgba(0,0,0,0.18); }
-    .flyer-spotlight { border: 6px solid #f59e0b; border-radius: 50% / 30%; }
-    .flyer-ribbon { border: 5px ridge #b91c1c; border-radius: 6px; }
-    .flyer-confetti { border: 6px dotted #0ea5e9; border-radius: 26px; }
+    #flyer-preview > svg { width: 100%; height: auto; display: block; }
 
     .sticker-choices label {
       display: inline-flex;
@@ -712,7 +684,7 @@
           <div class="feedback-msg" id="flyer-feedback"></div>
         </div>
         <div class="flyer-preview-wrap">
-          <div class="flyer-preview flyer-poster" id="flyer-preview"></div>
+          <div id="flyer-preview"></div>
         </div>
       </div>
 
@@ -803,18 +775,23 @@
   // also works as a standalone data: URI image for canvas downloads, not
   // just inline in the page)
   // ================================================================
+  // Every icon below carries its own gradient <defs> (gradient shading
+  // instead of the old flat single-color fills) so it stays correct no
+  // matter how many times its string gets reused verbatim in the page.
   function musicNoteIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
-      <circle cx="14" cy="30" r="5" fill="#1e293b"/>
-      <circle cx="28" cy="26" r="5" fill="#1e293b"/>
-      <line x1="19" y1="30" x2="19" y2="10" stroke="#1e293b" stroke-width="2.5"/>
-      <line x1="33" y1="26" x2="33" y2="8" stroke="#1e293b" stroke-width="2.5"/>
-      <path d="M19 10 L33 8 L33 14 L19 16 Z" fill="#1e293b"/>
+      <defs><linearGradient id="music-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#475569"/><stop offset="100%" stop-color="#0f172a"/></linearGradient></defs>
+      <ellipse cx="14" cy="31" rx="5.2" ry="4" fill="url(#music-grad)"/>
+      <ellipse cx="28" cy="27" rx="5.2" ry="4" fill="url(#music-grad)"/>
+      <line x1="19" y1="30" x2="19" y2="10" stroke="#0f172a" stroke-width="2.5"/>
+      <line x1="33" y1="26" x2="33" y2="8" stroke="#0f172a" stroke-width="2.5"/>
+      <path d="M19 10 L33 8 L33 14 L19 16 Z" fill="url(#music-grad)"/>
     </svg>`;
   }
   function ticketIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
-      <rect x="3" y="10" width="34" height="20" rx="4" fill="#facc15" stroke="#92400e" stroke-width="2"/>
+      <defs><linearGradient id="ticket-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fde047"/><stop offset="100%" stop-color="#d97706"/></linearGradient></defs>
+      <rect x="3" y="10" width="34" height="20" rx="4" fill="url(#ticket-grad)" stroke="#92400e" stroke-width="2"/>
       <line x1="20" y1="13" x2="20" y2="27" stroke="#92400e" stroke-width="2" stroke-dasharray="2,3"/>
       <circle cx="11" cy="20" r="2" fill="#92400e"/>
       <circle cx="29" cy="20" r="2" fill="#92400e"/>
@@ -822,15 +799,18 @@
   }
   function megaphoneIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
-      <path d="M6 18 L18 12 L18 28 L6 22 Z" fill="#ef4444"/>
-      <path d="M18 12 L32 6 L32 34 L18 28 Z" fill="#f87171"/>
+      <defs><linearGradient id="mega-grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fca5a5"/><stop offset="100%" stop-color="#dc2626"/></linearGradient></defs>
+      <path d="M6 18 L18 12 L18 28 L6 22 Z" fill="#dc2626"/>
+      <path d="M18 12 L32 6 L32 34 L18 28 Z" fill="url(#mega-grad)"/>
       <rect x="4" y="17" width="4" height="6" fill="#7f1d1d"/>
       <path d="M12 29 L16 29 L18 36 L14 36 Z" fill="#7f1d1d"/>
     </svg>`;
   }
   function balloonIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
-      <ellipse cx="20" cy="16" rx="11" ry="13" fill="#ec4899"/>
+      <defs><radialGradient id="balloon-grad" cx="35%" cy="25%" r="80%"><stop offset="0%" stop-color="#f9a8d4"/><stop offset="100%" stop-color="#db2777"/></radialGradient></defs>
+      <ellipse cx="20" cy="16" rx="11" ry="13" fill="url(#balloon-grad)"/>
+      <ellipse cx="16" cy="10" rx="3" ry="4" fill="#fff" opacity="0.4"/>
       <path d="M20 29 L20 34" stroke="#831843" stroke-width="1.5" fill="none"/>
       <path d="M17 29 L20 32 L23 29" fill="none" stroke="#831843" stroke-width="1.5"/>
     </svg>`;
@@ -846,7 +826,8 @@
   }
   function microphoneIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
-      <rect x="15" y="4" width="10" height="18" rx="5" fill="#1e293b"/>
+      <defs><linearGradient id="mic-grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#475569"/><stop offset="100%" stop-color="#0f172a"/></linearGradient></defs>
+      <rect x="15" y="4" width="10" height="18" rx="5" fill="url(#mic-grad)"/>
       <path d="M11 18 a9 9 0 0 0 18 0" fill="none" stroke="#1e293b" stroke-width="2.5"/>
       <line x1="20" y1="27" x2="20" y2="34" stroke="#1e293b" stroke-width="2.5"/>
       <line x1="14" y1="34" x2="26" y2="34" stroke="#1e293b" stroke-width="2.5"/>
@@ -860,11 +841,15 @@
       pts.push(`${20 + 14 * Math.cos(outer)},${20 + 14 * Math.sin(outer)}`);
       pts.push(`${20 + 6 * Math.cos(inner)},${20 + 6 * Math.sin(inner)}`);
     }
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%"><polygon points="${pts.join(' ')}" fill="#f59e0b"/></svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <defs><radialGradient id="fest-star-grad" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#fef3c7"/><stop offset="100%" stop-color="#d97706"/></radialGradient></defs>
+      <polygon points="${pts.join(' ')}" fill="url(#fest-star-grad)" stroke="#b45309" stroke-width="0.5"/>
+    </svg>`;
   }
   function heartIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
-      <path d="M20 33 C 6 23, 4 12, 13 8 C 18 6, 20 11, 20 13 C 20 11, 22 6, 27 8 C 36 12, 34 23, 20 33 Z" fill="#f43f5e"/>
+      <defs><radialGradient id="fest-heart-grad" cx="35%" cy="25%" r="80%"><stop offset="0%" stop-color="#fda4af"/><stop offset="100%" stop-color="#e11d48"/></radialGradient></defs>
+      <path d="M20 33 C 6 23, 4 12, 13 8 C 18 6, 20 11, 20 13 C 20 11, 22 6, 27 8 C 36 12, 34 23, 20 33 Z" fill="url(#fest-heart-grad)"/>
     </svg>`;
   }
 
@@ -1518,30 +1503,24 @@
     };
   }
 
-  function renderFlyer() {
-    const bg = document.getElementById('flyer-bg-select').value;
-    const borderClass = document.getElementById('flyer-border-select').value;
-    const textColor = document.getElementById('flyer-text-color').value;
-    const fontFamily = document.getElementById('flyer-font-select').value;
-    const stickerKeys = [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value);
-    const emblemKey = document.getElementById('flyer-emblem-select').value;
-    const charity = document.getElementById('flyer-charity-input').value.trim();
-    const tagline = document.getElementById('flyer-tagline-input').value.trim();
-    const quote = getFlyerQuoteInUse();
+  function getFlyerConfig() {
+    return {
+      bg: document.getElementById('flyer-bg-select').value,
+      borderStyle: document.getElementById('flyer-border-select').value,
+      textColor: document.getElementById('flyer-text-color').value,
+      fontFamily: document.getElementById('flyer-font-select').value,
+      stickerKeys: [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value),
+      emblemKey: document.getElementById('flyer-emblem-select').value,
+      charity: document.getElementById('flyer-charity-input').value.trim(),
+      tagline: document.getElementById('flyer-tagline-input').value.trim(),
+      quote: getFlyerQuoteInUse(),
+      name1: document.getElementById('team-name-1').value.trim(),
+      name2: document.getElementById('team-name-2').value.trim()
+    };
+  }
 
-    const preview = document.getElementById('flyer-preview');
-    preview.className = `flyer-preview ${borderClass}`;
-    preview.style.backgroundColor = bg;
-    preview.style.backgroundImage = 'none';
-    preview.style.color = textColor;
-    preview.style.fontFamily = fontFamily;
-    preview.innerHTML = `
-      ${emblemKey ? `<span class="flyer-emblem">${STICKER_ICONS[emblemKey]}</span>` : ''}
-      ${charity ? `<div class="flyer-title">${charity}</div>` : '<div class="flyer-title">Youth Festival</div>'}
-      ${tagline ? `<div class="flyer-tagline">${tagline}</div>` : ''}
-      ${quote ? `<div class="flyer-quote">"${quote.text}"</div>${quote.ref ? `<div class="flyer-quote-ref">- ${quote.ref}</div>` : ''}` : ''}
-      ${stickerKeys.length ? `<div class="flyer-stickers">${stickerKeys.map((k) => `<span class="flyer-sticker-icon">${STICKER_ICONS[k]}</span>`).join('')}</div>` : ''}
-    `;
+  function renderFlyer() {
+    document.getElementById('flyer-preview').innerHTML = buildFestivalPosterSVG(getFlyerConfig());
   }
 
   function lockFlyer() {
@@ -1632,103 +1611,180 @@
     'flyer-confetti': { color: '#0ea5e9', radius: 40, lineWidth: 12, dash: [3, 17], dashCap: 'round' }
   };
 
-  function drawFlyerFrame(ctx, style, x, y, w, h, bg) {
-    const meta = FLYER_STYLE_META[style] || FLYER_STYLE_META['flyer-poster'];
-    const radius = style === 'flyer-spotlight' ? Math.min(w, h) * 0.42 : meta.radius;
+  // Canvas is exactly 11in x 8.5in at 96dpi (US Letter, landscape) so the
+  // PNG's own proportions already match the PDF poster page.
+  const FESTIVAL_W = 1056, FESTIVAL_H = 816;
 
-    roundRectPath(ctx, x, y, w, h, radius);
-    ctx.fillStyle = bg;
-    ctx.fill();
+  function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
-    ctx.save();
-    ctx.lineJoin = 'round';
-    ctx.lineWidth = meta.lineWidth;
-    ctx.strokeStyle = meta.color;
-    if (meta.dash) { ctx.setLineDash(meta.dash); if (meta.dashCap) ctx.lineCap = meta.dashCap; }
-    roundRectPath(ctx, x + meta.lineWidth / 2, y + meta.lineWidth / 2, w - meta.lineWidth, h - meta.lineWidth, Math.max(radius - meta.lineWidth / 2, 0));
-    ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.lineCap = 'butt';
-
-    if (meta.double) {
-      ctx.lineWidth = Math.max(meta.lineWidth / 3, 2);
-      roundRectPath(ctx, x + meta.lineWidth * 1.7, y + meta.lineWidth * 1.7, w - meta.lineWidth * 3.4, h - meta.lineWidth * 3.4, Math.max(radius - meta.lineWidth, 0));
-      ctx.stroke();
-    }
-    if (meta.inset) {
-      ctx.lineWidth = 5;
-      ctx.strokeStyle = meta.inset;
-      roundRectPath(ctx, x + meta.lineWidth + 7, y + meta.lineWidth + 7, w - (meta.lineWidth + 7) * 2, h - (meta.lineWidth + 7) * 2, Math.max(radius - meta.lineWidth, 0));
-      ctx.stroke();
-    }
-    if (meta.ridge) {
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = '#fca5a5';
-      roundRectPath(ctx, x + meta.lineWidth + 5, y + meta.lineWidth + 5, w - (meta.lineWidth + 5) * 2, h - (meta.lineWidth + 5) * 2, Math.max(radius - meta.lineWidth, 0));
-      ctx.stroke();
-    }
-    ctx.restore();
+  let __measureCtx = null;
+  function getMeasureCtx() {
+    if (!__measureCtx) __measureCtx = document.createElement('canvas').getContext('2d');
+    return __measureCtx;
   }
 
-  // Draws the flyer exactly as configured in the controls into the given
-  // box on whatever canvas context is passed in - shared by the standalone
-  // flyer PNG and page 2 of the Blueprint + Flyer poster PDF, so the two
-  // can never drift apart from each other or from the live preview.
-  async function drawFlyerOntoCanvas(ctx, x, y, w, h) {
-    const bg = document.getElementById('flyer-bg-select').value;
-    const textColor = document.getElementById('flyer-text-color').value;
-    const fontFamily = document.getElementById('flyer-font-select').value.split(',')[0].replace(/'/g, '');
-    const borderClass = document.getElementById('flyer-border-select').value;
-    const charity = document.getElementById('flyer-charity-input').value.trim() || 'Youth Festival';
-    const tagline = document.getElementById('flyer-tagline-input').value.trim();
-    const quote = getFlyerQuoteInUse();
-    const stickerKeys = [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value);
-    const emblemKey = document.getElementById('flyer-emblem-select').value;
-    const [stickerImgs, emblemImg] = await Promise.all([
-      Promise.all(stickerKeys.map((k) => svgToImage(STICKER_ICONS[k]))),
-      emblemKey ? svgToImage(STICKER_ICONS[emblemKey]) : Promise.resolve(null)
-    ]);
-    await document.fonts.load(`700 28px ${fontFamily}`).catch(() => {});
+  // Embeds one of the STICKER_ICONS strings (a self-contained 40x40
+  // viewBox <svg>) at a specific pixel size inside the poster - nested
+  // <svg> is valid SVG, it just needs an explicit width/height instead of
+  // the 100%/100% meant for a CSS-sized container.
+  function scaleSvgInline(svgString, size) {
+    return svgString.replace('width="100%" height="100%"', `width="${size}" height="${size}"`);
+  }
 
-    drawFlyerFrame(ctx, borderClass, x, y, w, h, bg);
-    ctx.textAlign = 'center';
-
-    let cursorY = y + 66;
-    if (emblemImg) {
-      const es = 42;
-      ctx.drawImage(emblemImg, x + w / 2 - es / 2, cursorY - es, es, es);
-      cursorY += 32;
+  function drawFlyerFrameSVG(style, x, y, w, h) {
+    const meta = FLYER_STYLE_META[style] || FLYER_STYLE_META['flyer-poster'];
+    const radius = style === 'flyer-spotlight' ? Math.min(w, h) * 0.42 : meta.radius;
+    const dashAttr = meta.dash ? `stroke-dasharray="${meta.dash.join(',')}" stroke-linecap="${meta.dashCap || 'butt'}"` : '';
+    let svg = `<rect x="${x + meta.lineWidth / 2}" y="${y + meta.lineWidth / 2}" width="${w - meta.lineWidth}" height="${h - meta.lineWidth}" rx="${Math.max(radius - meta.lineWidth / 2, 0)}" fill="none" stroke="${meta.color}" stroke-width="${meta.lineWidth}" stroke-linejoin="round" ${dashAttr}/>`;
+    if (meta.double) {
+      const lw2 = Math.max(meta.lineWidth / 3, 2);
+      svg += `<rect x="${x + meta.lineWidth * 1.7}" y="${y + meta.lineWidth * 1.7}" width="${w - meta.lineWidth * 3.4}" height="${h - meta.lineWidth * 3.4}" rx="${Math.max(radius - meta.lineWidth, 0)}" fill="none" stroke="${meta.color}" stroke-width="${lw2}"/>`;
     }
-    ctx.fillStyle = textColor;
-    ctx.font = `900 26px ${fontFamily}, sans-serif`;
-    ctx.fillText(charity, x + w / 2, cursorY);
-    cursorY += 32;
+    if (meta.inset) {
+      svg += `<rect x="${x + meta.lineWidth + 7}" y="${y + meta.lineWidth + 7}" width="${w - (meta.lineWidth + 7) * 2}" height="${h - (meta.lineWidth + 7) * 2}" rx="${Math.max(radius - meta.lineWidth, 0)}" fill="none" stroke="${meta.inset}" stroke-width="5"/>`;
+    }
+    if (meta.ridge) {
+      svg += `<rect x="${x + meta.lineWidth + 5}" y="${y + meta.lineWidth + 5}" width="${w - (meta.lineWidth + 5) * 2}" height="${h - (meta.lineWidth + 5) * 2}" rx="${Math.max(radius - meta.lineWidth, 0)}" fill="none" stroke="#fca5a5" stroke-width="3"/>`;
+    }
+    return { svg, radius };
+  }
 
-    if (tagline) {
-      ctx.font = `italic 700 19px ${fontFamily}, sans-serif`;
-      ctx.fillText(tagline, x + w / 2, cursorY);
-      cursorY += 30;
+  function buntingFragment(x, y, width) {
+    const colors = ['#ef4444', '#f59e0b', '#22c55e', '#0ea5e9', '#a855f7'];
+    const flagW = 34, gap = 12;
+    const count = Math.max(1, Math.floor(width / (flagW + gap)));
+    const startX = x + (width - (count * (flagW + gap) - gap)) / 2;
+    let flags = `<line x1="${x}" y1="${y}" x2="${x + width}" y2="${y}" stroke="#475569" stroke-width="2"/>`;
+    for (let i = 0; i < count; i++) {
+      const fx = startX + i * (flagW + gap);
+      flags += `<path d="M${fx},${y} L${fx + flagW},${y} L${fx + flagW / 2},${y + 38} Z" fill="${colors[i % colors.length]}" opacity="0.92"/>`;
+    }
+    return flags;
+  }
+
+  function balloonClusterFragment(x, y, flip) {
+    const colors = ['#ec4899', '#f59e0b', '#38bdf8'];
+    const dx = flip ? -1 : 1;
+    let g = '';
+    colors.forEach((c, i) => {
+      const bx = x + dx * i * 32;
+      const by = y - i * 16;
+      g += `
+        <path d="M${bx},${by - 16} L${bx + dx * 6},${by + 40}" stroke="#64748b" stroke-width="1.5" fill="none"/>
+        <ellipse cx="${bx}" cy="${by - 44}" rx="22" ry="28" fill="${c}"/>
+        <ellipse cx="${bx - 7}" cy="${by - 60}" rx="6" ry="8" fill="#fff" opacity="0.35"/>
+      `;
+    });
+    return `<g opacity="0.95">${g}</g>`;
+  }
+
+  function confettiScatterFragment(positions) {
+    const colors = ['#f59e0b', '#0ea5e9', '#22c55e', '#ec4899', '#a855f7'];
+    return positions.map(([px, py, rot], i) => {
+      const c = colors[i % colors.length];
+      return i % 2 === 0
+        ? `<rect x="${px}" y="${py}" width="11" height="11" fill="${c}" transform="rotate(${rot} ${px + 5} ${py + 5})" opacity="0.85"/>`
+        : `<circle cx="${px}" cy="${py}" r="5.5" fill="${c}" opacity="0.85"/>`;
+    }).join('');
+  }
+
+  // The single source of truth for the poster - the live preview injects
+  // this string directly, and both downloads rasterize the exact same
+  // string, so the two can never drift apart from each other.
+  function buildFestivalPosterSVG(cfg) {
+    const W = FESTIVAL_W, H = FESTIVAL_H;
+    const cardX = 24, cardY = 24, cardW = W - 48, cardH = H - 48;
+    const frame = drawFlyerFrameSVG(cfg.borderStyle, cardX, cardY, cardW, cardH);
+    const fontShort = (cfg.fontFamily || "'Montserrat', sans-serif").split(',')[0].replace(/'/g, '');
+    const centerX = W / 2;
+
+    const measureCtx = getMeasureCtx();
+    let quoteLines = [];
+    if (cfg.quote) {
+      measureCtx.font = `700 26px ${fontShort}, sans-serif`;
+      quoteLines = wrapCanvasText(measureCtx, `"${cfg.quote.text}"`, cardW - 340);
     }
 
-    if (quote) {
-      ctx.font = `700 22px ${fontFamily}, sans-serif`;
-      const lines = wrapCanvasText(ctx, `"${quote.text}"`, w - 90);
-      const quoteY = Math.max(cursorY + 30, y + h / 2 - (lines.length * 30) / 2 + 40);
-      lines.forEach((l, i) => ctx.fillText(l, x + w / 2, quoteY + i * 30));
-      let afterQuoteY = quoteY + lines.length * 30;
-      if (quote.ref) {
-        ctx.font = `700 16px ${fontFamily}, sans-serif`;
-        ctx.fillText(`- ${quote.ref}`, x + w / 2, afterQuoteY + 20);
+    let cursorY = cardY + 100;
+    let emblemBlock = '';
+    if (cfg.emblemKey) {
+      emblemBlock = `<g transform="translate(${centerX - 27},${cursorY - 54})">${scaleSvgInline(STICKER_ICONS[cfg.emblemKey], 54)}</g>`;
+      cursorY += 34;
+    }
+
+    const titleBlock = `<text x="${centerX}" y="${cursorY}" text-anchor="middle" font-family="${fontShort}" font-weight="900" font-size="42" fill="${cfg.textColor}">${esc(cfg.charity) || 'Youth Festival'}</text>`;
+    cursorY += 46;
+
+    let taglineBlock = '';
+    if (cfg.tagline) {
+      taglineBlock = `<text x="${centerX}" y="${cursorY}" text-anchor="middle" font-family="${fontShort}" font-style="italic" font-weight="700" font-size="26" fill="${cfg.textColor}">${esc(cfg.tagline)}</text>`;
+      cursorY += 42;
+    }
+
+    let quoteBlock = '';
+    if (cfg.quote) {
+      const quoteStartY = Math.max(cursorY + 34, cardY + cardH / 2 - (quoteLines.length * 34) / 2 + 10);
+      quoteBlock = quoteLines.map((l, i) => `<text x="${centerX}" y="${quoteStartY + i * 34}" text-anchor="middle" font-family="${fontShort}" font-weight="700" font-size="27" fill="${cfg.textColor}">${esc(l)}</text>`).join('');
+      const afterY = quoteStartY + quoteLines.length * 34;
+      if (cfg.quote.ref) {
+        quoteBlock += `<text x="${centerX}" y="${afterY + 28}" text-anchor="middle" font-family="${fontShort}" font-weight="700" font-size="20" fill="${cfg.textColor}">- ${esc(cfg.quote.ref)}</text>`;
       }
     }
 
-    if (stickerImgs.length) {
-      const iconSize = 44, gap = 10;
-      const totalW = stickerImgs.length * (iconSize + gap) - gap;
-      let sx = x + w / 2 - totalW / 2;
-      const sy = y + h - iconSize - 16;
-      stickerImgs.forEach((img) => { ctx.drawImage(img, sx, sy, iconSize, iconSize); sx += iconSize + gap; });
-    }
+    const stickerSize = 58, stickerGap = 16;
+    const totalW = cfg.stickerKeys.length ? cfg.stickerKeys.length * (stickerSize + stickerGap) - stickerGap : 0;
+    let sx = centerX - totalW / 2;
+    const stickerY = cardY + cardH - stickerSize - 78;
+    const stickersBlock = cfg.stickerKeys.map((k) => {
+      const block = `<g transform="translate(${sx},${stickerY})">${scaleSvgInline(STICKER_ICONS[k], stickerSize)}</g>`;
+      sx += stickerSize + stickerGap;
+      return block;
+    }).join('');
+
+    const creditBlock = (cfg.name1 && cfg.name2)
+      ? `<text x="${centerX}" y="${cardY + cardH - 26}" text-anchor="middle" font-family="'Baloo 2', sans-serif" font-weight="600" font-size="17" fill="${cfg.textColor}" opacity="0.7">Planned by ${esc(cfg.name1)} &amp; ${esc(cfg.name2)}</text>`
+      : '';
+
+    const bunting = buntingFragment(cardX + 60, cardY + 30, cardW - 120);
+    const balloonsL = balloonClusterFragment(cardX + 90, cardY + cardH - 30, false);
+    const balloonsR = balloonClusterFragment(cardX + cardW - 90, cardY + cardH - 30, true);
+    const confetti = confettiScatterFragment([
+      [cardX + 40, cardY + 90, 15], [cardW + cardX - 60, cardY + 100, -20],
+      [cardX + 70, cardY + 150, 40], [cardW + cardX - 90, cardY + 160, -35],
+      [cardX + 45, cardY + 210, -15], [cardW + cardX - 55, cardY + 220, 25]
+    ]);
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="'Baloo 2', sans-serif">
+      <defs>
+        <clipPath id="fp-card-clip"><rect x="${cardX}" y="${cardY}" width="${cardW}" height="${cardH}" rx="${frame.radius}"/></clipPath>
+        <linearGradient id="fp-sheen" x1="0" y1="0" x2="0.6" y2="1">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4"/>
+          <stop offset="40%" stop-color="#ffffff" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#0f172a" stop-opacity="0.08"/>
+        </linearGradient>
+        <filter id="fp-soft-shadow" x="-60%" y="-60%" width="220%" height="220%">
+          <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.3"/>
+        </filter>
+      </defs>
+      <rect x="0" y="0" width="${W}" height="${H}" fill="#f8fafc"/>
+      <g filter="url(#fp-soft-shadow)">
+        <rect x="${cardX}" y="${cardY}" width="${cardW}" height="${cardH}" rx="${frame.radius}" fill="${cfg.bg}"/>
+      </g>
+      <g clip-path="url(#fp-card-clip)">
+        <rect x="${cardX}" y="${cardY}" width="${cardW}" height="${cardH}" fill="url(#fp-sheen)"/>
+        ${bunting}
+        ${confetti}
+        ${balloonsL}
+        ${balloonsR}
+      </g>
+      ${frame.svg}
+      ${emblemBlock}
+      ${titleBlock}
+      ${taglineBlock}
+      ${quoteBlock}
+      ${stickersBlock}
+      ${creditBlock}
+    </svg>`;
   }
 
   async function downloadFlyer() {
@@ -1739,23 +1795,14 @@
       LessonCheck.incomplete(feedbackEl, 'Type both team member names at the top of the page before downloading your flyer.');
       return;
     }
+    const svgString = buildFestivalPosterSVG(getFlyerConfig());
+    const img = await svgToImage(svgString);
     const SCALE = 2;
-    const W = 700, H = 800;
     const canvas = document.getElementById('render-canvas');
-    canvas.width = W * SCALE;
-    canvas.height = H * SCALE;
+    canvas.width = FESTIVAL_W * SCALE;
+    canvas.height = FESTIVAL_H * SCALE;
     const ctx = canvas.getContext('2d');
-    ctx.scale(SCALE, SCALE);
-
-    ctx.fillStyle = '#f8fafc';
-    ctx.fillRect(0, 0, W, H);
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#1e3a8a';
-    ctx.font = "800 24px 'Montserrat', sans-serif";
-    ctx.fillText(`Planned by ${name1} & ${name2}`, 350, 55);
-
-    await drawFlyerOntoCanvas(ctx, 70, 100, 560, 570);
-
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     triggerDownload(canvas, `Festival-Flyer-${slug(name1)}-and-${slug(name2)}.png`);
     reenableCelebrateButtons();
   }
@@ -1816,22 +1863,24 @@
       return;
     }
 
-    const SCALE = 2, W = 700, H = 800;
+    const SCALE = 2;
     const canvas = document.getElementById('render-canvas');
-    canvas.width = W * SCALE;
-    canvas.height = H * SCALE;
+    canvas.width = FESTIVAL_W * SCALE;
+    canvas.height = FESTIVAL_H * SCALE;
 
     let ctx = canvas.getContext('2d');
     ctx.scale(SCALE, SCALE);
     ctx.fillStyle = '#f8fafc';
-    ctx.fillRect(0, 0, W, H);
+    ctx.fillRect(0, 0, FESTIVAL_W, FESTIVAL_H);
     ctx.textAlign = 'center';
     ctx.fillStyle = '#1e3a8a';
-    ctx.font = "800 24px 'Montserrat', sans-serif";
-    ctx.fillText(`${name1} & ${name2}'s Booth Blueprint`, 350, 50);
-    drawBlueprintOntoCanvas(ctx, 70, 88, 560);
+    ctx.font = "800 26px 'Montserrat', sans-serif";
+    ctx.fillText(`${name1} & ${name2}'s Booth Blueprint`, FESTIVAL_W / 2, 56);
+    const gridSize = 560;
+    const gridX = (FESTIVAL_W - gridSize) / 2, gridY = 88;
+    drawBlueprintOntoCanvas(ctx, gridX, gridY, gridSize);
     ctx.textAlign = 'left';
-    ctx.font = "700 14px 'Montserrat', sans-serif";
+    ctx.font = "700 16px 'Montserrat', sans-serif";
     ctx.fillStyle = '#334155';
     const summaryLines = [
       window.ticketsNeeded ? `Additional Tickets Needed: ${window.ticketsNeeded}` : null,
@@ -1839,26 +1888,23 @@
       window.stageCurrent ? `Stage Current Load: ${window.stageCurrent} Amps` : null,
       window.headcountTarget ? `Target Headcount: ${window.headcountTarget} people` : null
     ].filter(Boolean);
-    summaryLines.forEach((line, i) => { ctx.fillText(line, 90, 690 + i * 22); });
+    summaryLines.forEach((line, i) => { ctx.fillText(line, gridX, gridY + gridSize + 32 + i * 24); });
     const page1Jpeg = canvas.toDataURL('image/jpeg', 0.92);
     const page1W = canvas.width, page1H = canvas.height;
 
-    canvas.width = W * SCALE;
-    canvas.height = H * SCALE;
+    const svgString = buildFestivalPosterSVG(getFlyerConfig());
+    const img = await svgToImage(svgString);
+    canvas.width = FESTIVAL_W * SCALE;
+    canvas.height = FESTIVAL_H * SCALE;
     ctx = canvas.getContext('2d');
-    ctx.scale(SCALE, SCALE);
-    ctx.fillStyle = '#f8fafc';
-    ctx.fillRect(0, 0, W, H);
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#1e3a8a';
-    ctx.font = "800 24px 'Montserrat', sans-serif";
-    ctx.fillText(`Planned by ${name1} & ${name2}`, 350, 55);
-    await drawFlyerOntoCanvas(ctx, 70, 100, 560, 570);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     const page2Jpeg = canvas.toDataURL('image/jpeg', 0.92);
 
+    // Both pages US Letter, landscape (792x612pt) regardless of raster
+    // pixel density, so the PDF opens and prints as a normal page.
     const pdfBlob = buildMultiPagePdf([
-      { jpegDataUrl: page1Jpeg, widthPx: page1W, heightPx: page1H },
-      { jpegDataUrl: page2Jpeg, widthPx: canvas.width, heightPx: canvas.height }
+      { jpegDataUrl: page1Jpeg, widthPx: page1W, heightPx: page1H, pageWidthPt: 792, pageHeightPt: 612 },
+      { jpegDataUrl: page2Jpeg, widthPx: canvas.width, heightPx: canvas.height, pageWidthPt: 792, pageHeightPt: 612 }
     ]);
     triggerBlobDownload(pdfBlob, `Festival-Blueprint-Poster-${slug(name1)}-and-${slug(name2)}.pdf`);
     reenableCelebrateButtons();
@@ -1874,8 +1920,12 @@
     let nextId = 3;
     pages.forEach((p) => {
       const jpegBytes = atob(p.jpegDataUrl.split(',')[1]);
-      const wPt = Math.round(p.widthPx * 0.75);
-      const hPt = Math.round(p.heightPx * 0.75);
+      // Page size defaults to the raster's own pixel size at 96dpi, but a
+      // poster meant to print on real paper should pass an explicit
+      // pageWidthPt/pageHeightPt (e.g. 792x612 for US Letter landscape) so
+      // it opens as a standard page regardless of raster pixel density.
+      const wPt = Math.round(p.pageWidthPt || p.widthPx * 0.75);
+      const hPt = Math.round(p.pageHeightPt || p.heightPx * 0.75);
       const contentStream = `q ${wPt} 0 0 ${hPt} 0 0 cm /Im0 Do Q`;
       const pageId = nextId++, imgId = nextId++, contentId = nextId++;
       objects[pageId] = `<< /Type /Page /Parent 2 0 R /Resources << /XObject << /Im0 ${imgId} 0 R >> >> /MediaBox [0 0 ${wPt} ${hPt}] /Contents ${contentId} 0 R >>`;
