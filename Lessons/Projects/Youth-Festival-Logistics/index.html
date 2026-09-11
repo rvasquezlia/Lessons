@@ -249,6 +249,74 @@
     .sticker-choices input { transform: scale(1.2); }
     .sticker-icon { display: inline-block; width: 26px; height: 26px; }
 
+    /* Technology: What-If Calculator */
+    .whatif-controls { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin: 16px 0; }
+    .whatif-field { display: flex; flex-direction: column; gap: 5px; flex: 1 1 240px; max-width: 300px; }
+    .whatif-field label { font-weight: 700; font-size: 0.85rem; color: #334155; }
+    .whatif-readout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      max-width: 620px;
+      margin: 16px auto 0;
+    }
+    .whatif-readout > div {
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+    .whatif-readout span { display: block; font-size: 0.72rem; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+    .whatif-readout strong { display: block; font-size: 1.1rem; color: var(--primary); margin-top: 2px; }
+    .whatif-score {
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--primary);
+      background: #eff6ff;
+      border: 2px solid var(--primary-light);
+      border-radius: 10px;
+      padding: 12px;
+      max-width: 620px;
+      margin: 14px auto 0;
+    }
+
+    /* Celebrate: completion recap */
+    .celebration-missing-list { text-align: left; max-width: 480px; margin: 12px auto; color: #475569; }
+    .celebration-checklist {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 10px;
+      max-width: 780px;
+      margin: 16px auto 0;
+      text-align: left;
+    }
+    .celebration-item {
+      background: var(--success-bg);
+      border: 2px solid var(--success);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #14532d;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .celebration-check {
+      background: var(--success);
+      color: #fff;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+
     /* Math Quality Stamp */
     .stamp-display {
       display: none;
@@ -550,28 +618,19 @@
         <div class="feedback-msg" id="headcount-feedback"></div>
       </div>
 
-      <div class="section-title" style="font-size:1.3rem;">Technology: Team Math Check <span class="time-chip">Tier 2 verification</span></div>
+      <div class="section-title" style="font-size:1.3rem;">Technology: What-If Calculator</div>
       <div class="station-card">
-        <p style="color:#475569;">You already worked through every check together as a team - now grab a calculator and verify your work like a real project manager, using the checklist below.</p>
-        <div class="audit-checks">
-          <label><input type="checkbox" class="audit-cb" onchange="renderVerifyWork()"> Variables moved to one side</label>
-          <label><input type="checkbox" class="audit-cb" onchange="renderVerifyWork()"> Constants moved to one side</label>
-          <label><input type="checkbox" class="audit-cb" onchange="renderVerifyWork()"> Inverse operations shown</label>
-          <label><input type="checkbox" class="audit-cb" onchange="renderVerifyWork()"> Solution verified by plugging back in</label>
+        <p style="color:#475569;">Event planners use technology to test ideas before committing to them. The
+        Headcount Optimization equation you solved was <strong>4(3x + 20) &minus; 80 = 2(3x + 70)</strong>. Try a
+        different value for that "70" below and watch the target headcount recalculate live - this is just for
+        exploring, and it will never change your real, locked-in answer above.</p>
+        <div class="whatif-controls">
+          <div class="whatif-field">
+            <label for="whatif-constant-input">Try a Different Constant (2(3x + C))</label>
+            <input type="number" id="whatif-constant-input" step="1" min="0" value="70" oninput="updateWhatIf()">
+          </div>
         </div>
-        <div style="text-align:center;">
-          <button class="row-check-btn" id="stamp-btn" onclick="renderCelebration()" disabled>Award Our Math Quality Stamp</button>
-        </div>
-        <div class="stamp-display" id="stamp-display">
-          <div class="stamp-title">MATH QUALITY STAMP</div>
-          <div id="stamp-detail" class="stamp-sub"></div>
-        </div>
-        <div style="text-align:center; margin-top:14px;">
-          <button class="row-check-btn celebrate-btn" style="background:var(--success);" onclick="downloadStamp()">Download Math Quality Stamp</button>
-          <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(1)">Download Badge - Team Member 1</button>
-          <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(2)">Download Badge - Team Member 2</button>
-        </div>
-        <div class="feedback-msg" id="badge-feedback"></div>
+        <div id="whatif-result"></div>
       </div>
 
       <div class="section-title" style="font-size:1.3rem;">Engineering: Booth Blueprint <span class="time-chip">10-15 min</span></div>
@@ -741,11 +800,29 @@
         <div class="feedback-msg" id="reflection-5-feedback"></div>
       </div>
 
-      <div class="section-title" style="font-size:1.3rem;">Celebrate! Download Your Keepsake</div>
+      <div class="section-title" style="font-size:1.3rem;">Celebrate: Your Team's Achievement</div>
       <div class="station-card" style="text-align:center;">
-        <p style="color:#475569;">Make sure both team member names are filled in at the top of the page, then download your team certificate as a PDF. Your personal badges and Math Quality Stamp are just above, in Team Math Check.</p>
-        <button class="row-check-btn celebrate-btn" onclick="downloadCertificate()">Download Team Certificate (PDF)</button>
-        <div class="feedback-msg" id="certificate-feedback"></div>
+        <div id="celebration-incomplete">
+          <p style="color:#475569;">Finish everything below to unlock your certificate, personal badges, and Math
+          Quality Stamp:</p>
+          <ul class="celebration-missing-list" id="celebration-missing-list"></ul>
+        </div>
+        <div id="celebration-complete" style="display:none;">
+          <p style="color:#475569;">Congratulations - here's everything your team accomplished:</p>
+          <div class="celebration-checklist" id="celebration-checklist"></div>
+          <div class="stamp-display" id="stamp-display">
+            <div class="stamp-title">MATH QUALITY STAMP</div>
+            <div id="stamp-detail" class="stamp-sub"></div>
+          </div>
+          <div style="text-align:center; margin-top:16px;">
+            <button class="row-check-btn celebrate-btn" onclick="downloadCertificate()">Download Team Certificate (PDF)</button>
+            <button class="row-check-btn celebrate-btn" style="background:var(--success); margin-top:10px;" onclick="downloadStamp()">Download Math Quality Stamp</button>
+            <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(1)">Download Badge - Team Member 1</button>
+            <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(2)">Download Badge - Team Member 2</button>
+          </div>
+          <div class="feedback-msg" id="certificate-feedback"></div>
+          <div class="feedback-msg" id="badge-feedback"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -760,7 +837,7 @@
     const n1 = document.getElementById('team-name-1').value.trim();
     const n2 = document.getElementById('team-name-2').value.trim();
     document.getElementById('student-name').value = [n1, n2].filter(Boolean).join(' & ');
-    renderVerifyWork();
+    renderCelebration();
   }
 
   function switchTab(tabId) {
@@ -965,11 +1042,6 @@
       ticketsNeeded: window.ticketsNeeded, breakEvenUnits: window.breakEvenUnits, vendorHours: window.vendorHours,
       boothLength: window.boothLength, boothWidth: window.boothWidth, stageCurrent: window.stageCurrent,
       taxRevenue: window.taxRevenue, taxBreakEven: window.taxBreakEven, headcountTarget: window.headcountTarget,
-      mathCheck: {
-        audits: [...document.querySelectorAll('.audit-cb')].map((cb) => cb.checked),
-        awarded: document.getElementById('stamp-display').classList.contains('show'),
-        detail: document.getElementById('stamp-detail').textContent
-      },
       flyer: {
         charity: document.getElementById('flyer-charity-input').value,
         tagline: document.getElementById('flyer-tagline-input').value,
@@ -996,6 +1068,7 @@
   }
 
   function saveProgress() {
+    renderCelebration();
     if (!teamCode) return;
     fetchWithTimeout(SHEET_API_URL, {
       method: 'POST',
@@ -1084,16 +1157,6 @@
     restoreMC('exit2', 'exit2', 'D', 'exit2-feedback', 'Correct!');
     restoreMC('exit3', 'exit3', 'D', 'exit3-feedback', 'Correct!');
 
-    if (state.mathCheck) {
-      document.querySelectorAll('.audit-cb').forEach((cb, i) => { cb.checked = !!(state.mathCheck.audits || [])[i]; });
-      if (state.mathCheck.awarded) {
-        document.getElementById('stamp-detail').textContent = state.mathCheck.detail || '';
-        document.getElementById('stamp-display').classList.add('show');
-        document.querySelectorAll('.audit-cb, #stamp-btn').forEach((el) => { el.disabled = true; });
-      }
-      renderVerifyWork();
-    }
-
     if (state.reflections) {
       restoreReflection('comp-reflection-1', 'comp-reflection-1-feedback', state.reflections.comp1);
       restoreReflection('comp-reflection-3', 'comp-reflection-3-feedback', state.reflections.comp3);
@@ -1136,6 +1199,9 @@
         fb.textContent = 'Your event flyer is locked in! (restored)';
       }
     }
+
+    updateWhatIf();
+    renderCelebration();
   }
 
   async function checkDay2Passcode() {
@@ -2030,7 +2096,6 @@
   function missingDay2Work() {
     const missing = [];
     if (!solvedKeys['headcount']) missing.push('the Headcount Optimization Challenge');
-    if (!document.getElementById('stamp-display').classList.contains('show')) missing.push('the Team Math Check (award your Math Quality Stamp)');
     if (!document.getElementById('lock-flyer-btn').disabled) missing.push('your Event Flyer (lock it in)');
     if (!(solvedKeys['exit1'] && solvedKeys['exit2'] && solvedKeys['exit3'])) missing.push('the Exit Ticket multiple-choice questions');
     if (!(document.getElementById('reflection-4').disabled && document.getElementById('reflection-5').disabled)) missing.push('the Exit Ticket reflections');
@@ -2200,6 +2265,11 @@
       LessonCheck.incomplete(feedbackEl, 'Type both team member names at the top of the page first.');
       return;
     }
+    const missing = missingDay2Work();
+    if (missing.length) {
+      LessonCheck.incomplete(feedbackEl, `Finish Day 2 first - still need: ${missing.join(', ')}.`);
+      return;
+    }
     const myName = memberNum === 1 ? name1 : name2;
     const partnerName = memberNum === 1 ? name2 : name1;
     const [logo, decoIcons] = await Promise.all([
@@ -2288,7 +2358,7 @@
     const name1 = document.getElementById('team-name-1').value.trim();
     const name2 = document.getElementById('team-name-2').value.trim();
     if (!document.getElementById('stamp-display').classList.contains('show')) {
-      LessonCheck.incomplete(feedbackEl, 'Award your Math Quality Stamp above first.');
+      LessonCheck.incomplete(feedbackEl, 'Finish Day 2 first to unlock your Math Quality Stamp.');
       return;
     }
     const SCALE = 2;
@@ -2335,36 +2405,63 @@
   }
 
   // ================================================================
-  // TEAM MATH CHECK (Tier 2 verification -> peer-audit stamp gate)
-  // renderVerifyWork() reflects checklist+name state into the Award
-  // button on every change (checkbox toggle, name edit, or a restore),
-  // instead of only checking it once at the moment of a click.
-  // renderCelebration() is the same idea for the stamp itself: it can
-  // be called again after a restore without recomputing the date or
-  // re-recording progress, so the stamp state actually survives reload
-  // instead of forcing the team to re-click Award every time.
+  // TECHNOLOGY: WHAT-IF CALCULATOR
+  // A sandbox, not a graded check - every answer above is already
+  // verified to mastery (unlimited attempts until correct), so
+  // re-checking with a calculator here would just be busywork. Instead,
+  // teams explore how the Headcount Optimization equation would have
+  // turned out with a different constant, without touching their real,
+  // locked-in answer.
   // ================================================================
-  function renderVerifyWork() {
-    const n1 = document.getElementById('team-name-1').value.trim();
-    const n2 = document.getElementById('team-name-2').value.trim();
-    const allChecked = [...document.querySelectorAll('.audit-cb')].every((cb) => cb.checked);
-    document.getElementById('stamp-btn').disabled = !(n1 && n2 && allChecked);
+  function updateWhatIf() {
+    const cRaw = parseFloat(document.getElementById('whatif-constant-input').value);
+    const C = isFinite(cRaw) && cRaw >= 0 ? cRaw : 70;
+    // 4(3x + 20) - 80 = 2(3x + C)  =>  12x + 80 - 80 = 6x + 2C  =>  x = 2C / 6
+    const x = Math.ceil((2 * C) / 6);
+
+    const realAnswerLine = solvedKeys['headcount']
+      ? `<p style="text-align:center; color:#64748b; margin-top:10px;">Your real, locked-in target headcount was <strong>24</strong> people, using the equation's real constant of 70.</p>`
+      : '';
+    document.getElementById('whatif-result').innerHTML = `
+      <div class="whatif-score">4(3x + 20) &minus; 80 = 2(3x + ${C})  &rarr;  x = ${x} people</div>
+      ${realAnswerLine}
+    `;
   }
 
+  // ================================================================
+  // CELEBRATE: completion recap (auto-derived from missingDay2Work,
+  // never a separate manually-toggled state - so it can never go stale
+  // on reload the way a manually-clicked "award stamp" button could).
+  // ================================================================
   function renderCelebration() {
-    const alreadyAwarded = document.getElementById('stamp-display').classList.contains('show');
+    const missing = missingDay2Work();
+    const incompleteEl = document.getElementById('celebration-incomplete');
+    const completeEl = document.getElementById('celebration-complete');
+    if (missing.length) {
+      incompleteEl.style.display = 'block';
+      completeEl.style.display = 'none';
+      document.getElementById('celebration-missing-list').innerHTML = missing.map((m) => `<li>${m}</li>`).join('');
+      document.getElementById('stamp-display').classList.remove('show');
+      return;
+    }
+    incompleteEl.style.display = 'none';
+    completeEl.style.display = 'block';
+
     const n1 = document.getElementById('team-name-1').value.trim();
     const n2 = document.getElementById('team-name-2').value.trim();
     const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    if (!alreadyAwarded) {
-      document.getElementById('stamp-detail').textContent = `Confirmed together by ${n1} & ${n2} - ${today}`;
-    }
+    document.getElementById('stamp-detail').textContent = `Confirmed by ${n1} & ${n2} - ${today}`;
     document.getElementById('stamp-display').classList.add('show');
-    document.querySelectorAll('.audit-cb, #stamp-btn').forEach((el) => { el.disabled = true; });
-    if (!alreadyAwarded) {
-      LessonProgress.record('peer-audit', 'Team Math Quality Stamp', `Confirmed together by ${n1} & ${n2}: Tier 2 verification checklist completed`, 'reflection', 'Day 2 - Team Math Check');
-      saveProgress();
-    }
+
+    const items = [
+      `Headcount Optimization Challenge solved`,
+      `Event Flyer locked in`,
+      `Exit Ticket multiple-choice questions completed`,
+      `Exit Ticket reflections submitted`
+    ];
+    document.getElementById('celebration-checklist').innerHTML = items.map((t) => `
+      <div class="celebration-item"><span class="celebration-check">&#10003;</span>${t}</div>
+    `).join('');
   }
 
   // ================================================================
@@ -2480,6 +2577,8 @@
   // INIT
   // ================================================================
   populateFlyerSelects();
+  updateWhatIf();
+  renderCelebration();
 </script>
 
 </body>
