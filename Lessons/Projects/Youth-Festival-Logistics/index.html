@@ -461,10 +461,10 @@
 
     <div class="pillar-grid">
       <div class="pillar-card"><div class="pillar-letter">S</div><h4>Science</h4><p>Apply safety science to prevent electrical overloads.</p></div>
-      <div class="pillar-card"><div class="pillar-letter">T</div><h4>Technology</h4><p>Use a calculator to audit your team's algebra.</p></div>
+      <div class="pillar-card"><div class="pillar-letter">T</div><h4>Technology</h4><p>Use the What-If Calculator to see how changing the equation changes your headcount target.</p></div>
       <div class="pillar-card"><div class="pillar-letter">R</div><h4>Religion</h4><p>Manage donated resources responsibly for the charity partner.</p></div>
       <div class="pillar-card"><div class="pillar-letter">E</div><h4>Engineering</h4><p>Rearrange formulas to size the booth and check the circuit load.</p></div>
-      <div class="pillar-card"><div class="pillar-letter">A</div><h4>Art</h4><p>Design an event flyer with festival colors, borders, and icons.</p></div>
+      <div class="pillar-card"><div class="pillar-letter">A</div><h4>Art</h4><p>Design your own Event Flyer - style, text, and stickers, arranged your way.</p></div>
       <div class="pillar-card"><div class="pillar-letter">M</div><h4>Math</h4><p>Solve one-step, multi-step, and literal equations.</p></div>
     </div>
 
@@ -2538,6 +2538,25 @@
     ctx.restore();
   }
 
+  // A plain line-diamond-line flourish, the classic formal-certificate
+  // divider, used in place of any clip-art icon row.
+  function drawFlourishDivider(ctx, cx, y, halfWidth, color) {
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - halfWidth, y);
+    ctx.lineTo(cx - 10, y);
+    ctx.moveTo(cx + 10, y);
+    ctx.lineTo(cx + halfWidth, y);
+    ctx.stroke();
+    ctx.translate(cx, y);
+    ctx.rotate(Math.PI / 4);
+    ctx.fillStyle = color;
+    ctx.fillRect(-4, -4, 8, 8);
+    ctx.restore();
+  }
+
   // The certificate is the last thing in the page, but nothing was actually
   // stopping a team from clicking it the moment names were filled in -
   // Day 2's required work (bonus challenge is optional and excluded) had no
@@ -2566,10 +2585,7 @@
       return;
     }
     const charity = 'their community';
-    const [logo, decoIcons] = await Promise.all([
-      ensureLogoAndFont("800 20px 'Montserrat'"),
-      Promise.all(STICKERS.map((k) => svgToImage(STICKER_ICONS[k])))
-    ]);
+    const logo = await ensureLogoAndFont("800 20px 'Montserrat'");
 
     const SCALE = 2;
     const W = 1000, H = 700;
@@ -2607,41 +2623,38 @@
     ctx.fillStyle = '#334155';
     ctx.fillText('STREAM Project - Certificate of Completion', 500, 235);
 
-    const decoSize = 30, decoGap = 8;
-    const decoTotal = decoIcons.length * (decoSize + decoGap) - decoGap;
-    let dx = 500 - decoTotal / 2;
-    decoIcons.forEach((img) => { ctx.drawImage(img, dx, 252, decoSize, decoSize); dx += decoSize + decoGap; });
+    drawFlourishDivider(ctx, 500, 275, 120, '#d97706');
 
     ctx.font = "700 22px 'Montserrat', sans-serif";
     ctx.fillStyle = '#0f172a';
-    ctx.fillText('This certifies that', 500, 325);
+    ctx.fillText('This certifies that', 500, 315);
 
     ctx.font = "900 34px 'Montserrat', sans-serif";
     ctx.fillStyle = '#1e3a8a';
-    ctx.fillText(`${name1} & ${name2}`, 500, 368);
+    ctx.fillText(`${name1} & ${name2}`, 500, 358);
 
     ctx.font = "800 15px 'Montserrat', sans-serif";
     ctx.fillStyle = '#1e3a8a';
-    ctx.fillText('8th GRADE', 500, 392);
+    ctx.fillText('8th GRADE', 500, 382);
 
     ctx.font = "700 19px 'Montserrat', sans-serif";
     ctx.fillStyle = '#0f172a';
-    ctx.fillText('successfully served as Festival Project Managers, using algebra to plan a', 500, 428);
-    ctx.fillText(`safe and successful community festival in service of ${charity}`, 500, 452);
-    ctx.fillText('and the practice of stewardship.', 500, 476);
+    ctx.fillText('successfully served as Festival Project Managers, using algebra to plan a', 500, 418);
+    ctx.fillText(`safe and successful community festival in service of ${charity}`, 500, 442);
+    ctx.fillText('and the practice of stewardship.', 500, 466);
 
     ctx.font = "italic 600 15px 'Montserrat', sans-serif";
     ctx.fillStyle = '#475569';
-    ctx.fillText('"Whoever can be trusted with very little can also be trusted with much." - Luke 16:10', 500, 505);
+    ctx.fillText('"Whoever can be trusted with very little can also be trusted with much." - Luke 16:10', 500, 495);
 
-    drawSeal(ctx, 800, 585, 52, 'STREAM', 'CERTIFIED', '#d97706');
-    drawSeal(ctx, 200, 585, 52, 'MATH', 'QUALITY', '#15803d');
+    drawSeal(ctx, 800, 575, 52, 'STREAM', 'CERTIFIED', '#d97706');
+    drawSeal(ctx, 200, 575, 52, 'MATH', 'QUALITY', '#15803d');
 
     const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     ctx.textAlign = 'center';
     ctx.font = "600 16px 'Montserrat', sans-serif";
     ctx.fillStyle = '#475569';
-    ctx.fillText(today, 500, 650);
+    ctx.fillText(today, 500, 640);
 
     const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.92);
     const pdfBlob = buildMultiPagePdf([{ jpegDataUrl, widthPx: canvas.width, heightPx: canvas.height }]);
@@ -2722,10 +2735,7 @@
     }
     const myName = memberNum === 1 ? name1 : name2;
     const partnerName = memberNum === 1 ? name2 : name1;
-    const [logo, decoIcons] = await Promise.all([
-      ensureLogoAndFont("800 30px 'Baloo 2'"),
-      Promise.all(['ticket', 'megaphone'].map((k) => svgToImage(STICKER_ICONS[k])))
-    ]);
+    const logo = await ensureLogoAndFont("800 30px 'Baloo 2'");
 
     const SCALE = 2;
     const W = 500, H = 700;
@@ -2736,8 +2746,8 @@
     ctx.scale(SCALE, SCALE);
 
     const grad = ctx.createLinearGradient(0, 0, W, H);
-    grad.addColorStop(0, '#fef9c3');
-    grad.addColorStop(1, '#dbeafe');
+    grad.addColorStop(0, '#eff6ff');
+    grad.addColorStop(1, '#fef3c7');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, W, H);
 
@@ -2764,11 +2774,10 @@
     drawMedal(ctx, 250, 240, 100, '#d97706', '#fde68a');
 
     ctx.fillStyle = '#92400e';
-    ctx.font = "800 21px 'Baloo 2', cursive";
-    ctx.fillText('FESTIVAL LOGISTICS', 250, 222);
-    ctx.fillText('CHAMPION', 250, 250);
-    ctx.drawImage(decoIcons[0], 250 - 44, 272, 32, 32);
-    ctx.drawImage(decoIcons[1], 250 + 12, 272, 32, 32);
+    ctx.font = "800 19px 'Baloo 2', cursive";
+    ctx.fillText('FESTIVAL', 250, 212);
+    ctx.fillText('LOGISTICS', 250, 240);
+    ctx.fillText('CHAMPION', 250, 268);
 
     ctx.font = "800 30px 'Baloo 2', cursive";
     ctx.fillStyle = '#1e3a8a';
@@ -2783,13 +2792,15 @@
     if (stats.totalSolved > 0) {
       ctx.font = "700 15px 'Montserrat', sans-serif";
       ctx.fillStyle = '#0e7490';
-      ctx.fillText(`${stats.totalSolved} checks solved together in ${stats.totalAttempts} total tries`, 250, 525);
+      ctx.fillText(`${stats.totalSolved} checks solved together in ${stats.totalAttempts} total tries`, 250, 528);
     }
+
+    drawFlourishDivider(ctx, 250, 570, 70, '#d97706');
 
     const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     ctx.font = "600 14px 'Montserrat', sans-serif";
     ctx.fillStyle = '#64748b';
-    ctx.fillText(today, 250, 640);
+    ctx.fillText(today, 250, 615);
 
     triggerDownload(canvas, `Festival-Badge-${slug(myName)}.png`);
     LessonCheck.submit(feedbackEl, {
