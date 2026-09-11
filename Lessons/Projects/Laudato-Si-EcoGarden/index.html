@@ -2919,6 +2919,25 @@
     ctx.restore();
   }
 
+  // A plain line-diamond-line flourish, the classic formal-certificate
+  // divider, used in place of any clip-art icon row.
+  function drawFlourishDivider(ctx, cx, y, halfWidth, color) {
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - halfWidth, y);
+    ctx.lineTo(cx - 10, y);
+    ctx.moveTo(cx + 10, y);
+    ctx.lineTo(cx + halfWidth, y);
+    ctx.stroke();
+    ctx.translate(cx, y);
+    ctx.rotate(Math.PI / 4);
+    ctx.fillStyle = color;
+    ctx.fillRect(-4, -4, 8, 8);
+    ctx.restore();
+  }
+
   // The certificate had no completion check beyond "are both names filled
   // in" - reachable the moment a team typed their names, before touching
   // any Day 2 work. This lists whatever's still missing so it only
@@ -2945,10 +2964,7 @@
       LessonCheck.incomplete(feedbackEl, `Finish Day 2 first - still need: ${missing.join(', ')}.`);
       return;
     }
-    const [logo, decoIcons] = await Promise.all([
-      ensureLogoAndFont("800 20px 'Montserrat'"),
-      Promise.all([ICONS['P-01'], ICONS['P-02'], ICONS['P-03'], ICONS['P-04'], ICONS['P-01'], ICONS['P-02'], ICONS['P-03'], ICONS['P-04']].map(svgToImage))
-    ]);
+    const logo = await ensureLogoAndFont("800 20px 'Montserrat'");
 
     const SCALE = 2;
     const W = 1000, H = 700;
@@ -2986,41 +3002,38 @@
     ctx.fillStyle = '#334155';
     ctx.fillText('STREAM Project - Certificate of Completion', 500, 235);
 
-    const decoSize = 30, decoGap = 8;
-    const decoTotal = decoIcons.length * (decoSize + decoGap) - decoGap;
-    let dx = 500 - decoTotal / 2;
-    decoIcons.forEach((img) => { ctx.drawImage(img, dx, 252, decoSize, decoSize); dx += decoSize + decoGap; });
+    drawFlourishDivider(ctx, 500, 275, 120, '#d97706');
 
     ctx.font = "700 22px 'Montserrat', sans-serif";
     ctx.fillStyle = '#0f172a';
-    ctx.fillText('This certifies that', 500, 325);
+    ctx.fillText('This certifies that', 500, 315);
 
     ctx.font = "900 34px 'Montserrat', sans-serif";
     ctx.fillStyle = '#15803d';
-    ctx.fillText(`${name1} & ${name2}`, 500, 368);
+    ctx.fillText(`${name1} & ${name2}`, 500, 358);
 
     ctx.font = "800 15px 'Montserrat', sans-serif";
     ctx.fillStyle = '#1e3a8a';
-    ctx.fillText('6th GRADE', 500, 392);
+    ctx.fillText('6th GRADE', 500, 382);
 
     ctx.font = "700 19px 'Montserrat', sans-serif";
     ctx.fillStyle = '#0f172a';
-    ctx.fillText("successfully designed a Laudato Si' Eco-Garden,", 500, 428);
-    ctx.fillText('caring for our common home through science, math,', 500, 452);
-    ctx.fillText('and faith - just as Pope Francis calls us to do.', 500, 476);
+    ctx.fillText("successfully designed a Laudato Si' Eco-Garden,", 500, 418);
+    ctx.fillText('caring for our common home through science, math,', 500, 442);
+    ctx.fillText('and faith - just as Pope Francis calls us to do.', 500, 466);
 
     ctx.font = "italic 600 15px 'Montserrat', sans-serif";
     ctx.fillStyle = '#475569';
-    ctx.fillText('"Praise be to you, my Lord" - Laudato Si\'', 500, 505);
+    ctx.fillText('"Praise be to you, my Lord" - Laudato Si\'', 500, 495);
 
-    drawSeal(ctx, 800, 585, 52, 'STREAM', 'CERTIFIED', '#d97706');
-    drawSeal(ctx, 200, 585, 52, 'MATH', 'QUALITY', '#15803d');
+    drawSeal(ctx, 800, 575, 52, 'STREAM', 'CERTIFIED', '#d97706');
+    drawSeal(ctx, 200, 575, 52, 'MATH', 'QUALITY', '#15803d');
 
     const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     ctx.textAlign = 'center';
     ctx.font = "600 16px 'Montserrat', sans-serif";
     ctx.fillStyle = '#475569';
-    ctx.fillText(today, 500, 650);
+    ctx.fillText(today, 500, 640);
 
     const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.92);
     const pdfBlob = buildCertificatePdf(jpegDataUrl, canvas.width, canvas.height);
@@ -3034,29 +3047,6 @@
     window.certificateDownloaded = true;
     saveProgress();
     reenableCelebrateButtons();
-  }
-
-  const BADGE_CONFETTI = [
-    { x: 55, y: 95, color: '#f5c400', star: true }, { x: 445, y: 85, color: '#7c3aed', star: false },
-    { x: 85, y: 210, color: '#16a34a', star: false }, { x: 415, y: 230, color: '#ea580c', star: true },
-    { x: 45, y: 400, color: '#0ea5e9', star: true }, { x: 455, y: 420, color: '#db2777', star: false },
-    { x: 75, y: 560, color: '#f59e0b', star: false }, { x: 425, y: 580, color: '#15803d', star: true },
-    { x: 250, y: 55, color: '#8b5cf6', star: false }
-  ];
-
-  function drawStar(ctx, cx, cy, r, color) {
-    ctx.save();
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    for (let i = 0; i < 5; i++) {
-      const outer = -Math.PI / 2 + (i * 2 * Math.PI) / 5;
-      const inner = outer + Math.PI / 5;
-      ctx.lineTo(cx + r * Math.cos(outer), cy + r * Math.sin(outer));
-      ctx.lineTo(cx + (r / 2.4) * Math.cos(inner), cy + (r / 2.4) * Math.sin(inner));
-    }
-    ctx.closePath();
-    ctx.fill();
-    ctx.restore();
   }
 
   function drawMedal(ctx, cx, cy, r, ribbonColor, faceColor) {
@@ -3101,10 +3091,7 @@
     }
     const myName = memberNum === 1 ? name1 : name2;
     const partnerName = memberNum === 1 ? name2 : name1;
-    const [logo, decoIcons] = await Promise.all([
-      ensureLogoAndFont("800 30px 'Baloo 2'"),
-      Promise.all([ICONS['P-01'], ICONS['P-03']].map(svgToImage))
-    ]);
+    const logo = await ensureLogoAndFont("800 30px 'Baloo 2'");
 
     const SCALE = 2;
     const W = 500, H = 700;
@@ -3115,8 +3102,8 @@
     ctx.scale(SCALE, SCALE);
 
     const grad = ctx.createLinearGradient(0, 0, W, H);
-    grad.addColorStop(0, '#fef9c3');
-    grad.addColorStop(1, '#fce7f3');
+    grad.addColorStop(0, '#eff6ff');
+    grad.addColorStop(1, '#dcfce7');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, W, H);
 
@@ -3126,11 +3113,6 @@
     ctx.strokeStyle = '#1e3a8a';
     ctx.lineWidth = 3;
     ctx.strokeRect(28, 28, 444, 644);
-
-    BADGE_CONFETTI.forEach((c) => {
-      if (c.star) drawStar(ctx, c.x, c.y, 10, c.color);
-      else { ctx.fillStyle = c.color; ctx.beginPath(); ctx.arc(c.x, c.y, 7, 0, Math.PI * 2); ctx.fill(); }
-    });
 
     const logoW = 110, logoH = 55;
     ctx.drawImage(logo, 250 - logoW / 2, 45, logoW, logoH);
@@ -3144,10 +3126,8 @@
 
     ctx.fillStyle = '#92400e';
     ctx.font = "800 21px 'Baloo 2', cursive";
-    ctx.fillText('STREAM GARDEN', 250, 222);
-    ctx.fillText('CHAMPION', 250, 250);
-    ctx.drawImage(decoIcons[0], 250 - 44, 272, 32, 32);
-    ctx.drawImage(decoIcons[1], 250 + 12, 272, 32, 32);
+    ctx.fillText('STREAM GARDEN', 250, 230);
+    ctx.fillText('CHAMPION', 250, 258);
 
     ctx.font = "800 30px 'Baloo 2', cursive";
     ctx.fillStyle = '#1e3a8a';
@@ -3162,13 +3142,15 @@
     if (stats.totalSolved > 0) {
       ctx.font = "700 15px 'Montserrat', sans-serif";
       ctx.fillStyle = '#0e7490';
-      ctx.fillText(`${stats.totalSolved} checks solved together in ${stats.totalAttempts} total tries`, 250, 525);
+      ctx.fillText(`${stats.totalSolved} checks solved together in ${stats.totalAttempts} total tries`, 250, 528);
     }
+
+    drawFlourishDivider(ctx, 250, 570, 70, '#d97706');
 
     const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     ctx.font = "600 14px 'Montserrat', sans-serif";
     ctx.fillStyle = '#64748b';
-    ctx.fillText(today, 250, 640);
+    ctx.fillText(today, 250, 615);
 
     triggerDownload(canvas, `EcoGarden-Badge-${slug(myName)}.png`);
     LessonCheck.submit(feedbackEl, {
