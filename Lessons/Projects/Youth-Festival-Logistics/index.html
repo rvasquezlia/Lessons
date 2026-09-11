@@ -2670,6 +2670,29 @@
     reenableCelebrateButtons();
   }
 
+  const BADGE_CONFETTI = [
+    { x: 55, y: 95, color: '#f5c400', star: true }, { x: 445, y: 85, color: '#7c3aed', star: false },
+    { x: 85, y: 210, color: '#16a34a', star: false }, { x: 415, y: 230, color: '#ea580c', star: true },
+    { x: 45, y: 400, color: '#0ea5e9', star: true }, { x: 455, y: 420, color: '#db2777', star: false },
+    { x: 75, y: 560, color: '#f59e0b', star: false }, { x: 425, y: 580, color: '#15803d', star: true },
+    { x: 250, y: 55, color: '#8b5cf6', star: false }
+  ];
+
+  function drawStar(ctx, cx, cy, r, color) {
+    ctx.save();
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    for (let i = 0; i < 5; i++) {
+      const outer = -Math.PI / 2 + (i * 2 * Math.PI) / 5;
+      const inner = outer + Math.PI / 5;
+      ctx.lineTo(cx + r * Math.cos(outer), cy + r * Math.sin(outer));
+      ctx.lineTo(cx + (r / 2.4) * Math.cos(inner), cy + (r / 2.4) * Math.sin(inner));
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
   function drawMedal(ctx, cx, cy, r, ribbonColor, faceColor) {
     ctx.save();
     ctx.fillStyle = ribbonColor;
@@ -2735,6 +2758,11 @@
     ctx.lineWidth = 3;
     ctx.strokeRect(28, 28, 444, 644);
 
+    BADGE_CONFETTI.forEach((c) => {
+      if (c.star) drawStar(ctx, c.x, c.y, 10, c.color);
+      else { ctx.fillStyle = c.color; ctx.beginPath(); ctx.arc(c.x, c.y, 7, 0, Math.PI * 2); ctx.fill(); }
+    });
+
     const logoW = 110, logoH = 55;
     ctx.drawImage(logo, 250 - logoW / 2, 45, logoW, logoH);
 
@@ -2746,9 +2774,10 @@
     drawMedal(ctx, 250, 240, 100, '#d97706', '#fde68a');
 
     ctx.fillStyle = '#92400e';
-    ctx.font = "800 21px 'Baloo 2', cursive";
-    ctx.fillText('FESTIVAL LOGISTICS', 250, 230);
-    ctx.fillText('CHAMPION', 250, 258);
+    ctx.font = "800 19px 'Baloo 2', cursive";
+    ctx.fillText('FESTIVAL', 250, 212);
+    ctx.fillText('LOGISTICS', 250, 240);
+    ctx.fillText('CHAMPION', 250, 268);
 
     ctx.font = "800 30px 'Baloo 2', cursive";
     ctx.fillStyle = '#1e3a8a';
