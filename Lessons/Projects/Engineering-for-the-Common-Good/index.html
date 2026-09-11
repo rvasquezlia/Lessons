@@ -1446,22 +1446,23 @@
     </g>`;
   }
 
-  function groundDecoFragment(kind, x, y) {
-    if (kind === 'tree') return treeFragment(x, y, 1);
+  function groundDecoFragment(kind, x, y, scale) {
+    scale = scale || 1;
+    if (kind === 'tree') return treeFragment(x, y, scale);
     if (kind === 'flowers') {
       const colors = ['#f472b6', '#facc15', '#f87171', '#a78bfa'];
       let g = '';
       for (let i = 0; i < 4; i++) {
-        g += flowerFragment(x - 18 + i * 12, y, colors[i % colors.length], i * 22, 1);
+        g += flowerFragment(x - 18 * scale + i * 12 * scale, y, colors[i % colors.length], i * 22, scale);
       }
       return g;
     }
-    if (kind === 'rocks') return rockFragment(x, y, 1);
+    if (kind === 'rocks') return rockFragment(x, y, scale);
     return '';
   }
 
-  function pillarFragment(x, topY, baseline, material) {
-    const w = 46;
+  function pillarFragment(x, topY, baseline, material, w) {
+    w = w || 46;
     const h = baseline - topY - 18;
     let texture = '';
     if (material === 'brick') {
@@ -1490,51 +1491,56 @@
     </g>`;
   }
 
+  // Canvas is exactly 11in x 8.5in at 96dpi (US Letter, landscape) so the
+  // PNG's own proportions already match the PDF poster page - nothing
+  // gets stretched, cropped, or padded onto a mismatched page size.
+  const BLUEPRINT_W = 1056, BLUEPRINT_H = 816;
+
   function buildBlueprintSVG(cfg) {
-    const W = 900, H = 600, baseline = 430, marginX = 110;
+    const W = BLUEPRINT_W, H = BLUEPRINT_H, baseline = 585, marginX = 130;
     const sky = BLUEPRINT_SKIES[cfg.sky] || BLUEPRINT_SKIES.midday;
     const water = BLUEPRINT_WATERS[cfg.water] || BLUEPRINT_WATERS.sky;
     const meta = BLUEPRINT_MATERIALS[cfg.material] || BLUEPRINT_MATERIALS.stone;
     const usableW = W - marginX * 2;
     const xs = ELEVATION_STOPS.map((_, i) => marginX + (i * usableW) / (ELEVATION_STOPS.length - 1));
-    const pierTops = ELEVATION_STOPS.map((s) => baseline - (26 + s.value * 9));
-    const pipeYs = pierTops.map((y) => y + 4);
+    const pierTops = ELEVATION_STOPS.map((s) => baseline - (35 + s.value * 12));
+    const pipeYs = pierTops.map((y) => y + 5);
 
     let stars = '';
     if (sky.stars) {
-      const starPos = [[70,60,2.2],[160,110,1.4],[260,40,1.8],[400,90,1.2],[520,50,2.4],[640,120,1.4],[760,70,1.8],[840,40,1.3],[120,180,1.6],[820,160,1.2],[350,150,1.3],[600,180,1.7]];
+      const starPos = [[85,80,2.4],[190,150,1.6],[305,55,2],[470,120,1.4],[610,70,2.6],[750,165,1.6],[890,95,2],[985,55,1.5],[140,245,1.8],[960,220,1.4],[410,205,1.5],[705,245,1.9]];
       stars = starPos.map(([sx, sy, r]) => `
         <circle cx="${sx}" cy="${sy}" r="${r * 2.5}" fill="#f8fafc" opacity="0.25"/>
         <circle cx="${sx}" cy="${sy}" r="${r}" fill="#f8fafc" opacity="0.95"/>
       `).join('');
     }
 
-    const pillars = xs.map((x, i) => pillarFragment(x, pierTops[i], baseline, cfg.material)).join('');
+    const pillars = xs.map((x, i) => pillarFragment(x, pierTops[i], baseline, cfg.material, 54)).join('');
 
     const pipePath = `M ${xs.map((x, i) => `${x},${pipeYs[i]}`).join(' L ')}`;
     const pipe = `
-      <path d="${pipePath}" fill="none" stroke="${water.fill}" stroke-width="17" stroke-linecap="round" stroke-linejoin="round" filter="url(#bp-soft-shadow)"/>
-      <path d="${pipePath}" fill="none" stroke="url(#bp-pipe-sheen)" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="${pipePath}" fill="none" stroke="${water.light}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+      <path d="${pipePath}" fill="none" stroke="${water.fill}" stroke-width="19" stroke-linecap="round" stroke-linejoin="round" filter="url(#bp-soft-shadow)"/>
+      <path d="${pipePath}" fill="none" stroke="url(#bp-pipe-sheen)" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="${pipePath}" fill="none" stroke="${water.light}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
     `;
 
     const labels = xs.map((x, i) => `
-      <text x="${x}" y="${baseline + 34}" text-anchor="middle" font-family="'Baloo 2', sans-serif" font-weight="700" font-size="13" fill="${sky.groundText}">${esc(ELEVATION_STOPS[i].label)}</text>
-      <text x="${x}" y="${baseline + 52}" text-anchor="middle" font-family="'Baloo 2', sans-serif" font-size="12" fill="${sky.groundText}" opacity="0.85">${ELEVATION_STOPS[i].value.toFixed(2)} cm</text>
+      <text x="${x}" y="${baseline + 42}" text-anchor="middle" font-family="'Baloo 2', sans-serif" font-weight="700" font-size="16" fill="${sky.groundText}">${esc(ELEVATION_STOPS[i].label)}</text>
+      <text x="${x}" y="${baseline + 64}" text-anchor="middle" font-family="'Baloo 2', sans-serif" font-size="14" fill="${sky.groundText}" opacity="0.85">${ELEVATION_STOPS[i].value.toFixed(2)} cm</text>
     `).join('');
 
     const groundDecoXs = [marginX / 2, marginX + usableW * 0.32, marginX + usableW * 0.68, W - marginX / 2];
     const groundDecos = cfg.groundDeco && cfg.groundDeco !== 'none'
-      ? groundDecoXs.map((x) => groundDecoFragment(cfg.groundDeco, x, baseline + 96)).join('')
+      ? groundDecoXs.map((x) => groundDecoFragment(cfg.groundDeco, x, baseline + 122, 1.2)).join('')
       : '';
 
-    const skyDeco = cfg.skyDeco && cfg.skyDeco !== 'none' ? skyDecoFragment(cfg.skyDeco, 780, 90) : '';
-    const skyDeco2 = cfg.skyDeco === 'cloud' ? skyDecoFragment('cloud', 220, 70) : '';
+    const skyDeco = cfg.skyDeco && cfg.skyDeco !== 'none' ? skyDecoFragment(cfg.skyDeco, 920, 115) : '';
+    const skyDeco2 = cfg.skyDeco === 'cloud' ? skyDecoFragment('cloud', 260, 90) : '';
 
     let grass = '';
-    for (let gx = 20; gx < W - 20; gx += 14) {
-      const gh = 5 + ((gx * 7) % 5);
-      grass += `<line x1="${gx}" y1="${baseline + 6}" x2="${gx - 2}" y2="${baseline + 6 - gh}" stroke="${sky.groundDark}" stroke-width="1.5" opacity="0.35"/>`;
+    for (let gx = 24; gx < W - 24; gx += 16) {
+      const gh = 6 + ((gx * 7) % 6);
+      grass += `<line x1="${gx}" y1="${baseline + 7}" x2="${gx - 2}" y2="${baseline + 7 - gh}" stroke="${sky.groundDark}" stroke-width="1.6" opacity="0.35"/>`;
     }
 
     const title = esc(cfg.title) || 'Our Aqueduct';
@@ -1609,10 +1615,10 @@
       ${pillars}
       ${pipe}
       ${labels}
-      <text x="${W / 2}" y="42" text-anchor="middle" font-weight="800" font-size="30" fill="${sky.text}">${title}</text>
-      <text x="${W / 2}" y="${H - 28}" text-anchor="middle" font-weight="600" font-size="15" fill="${sky.groundText}" font-style="italic" opacity="0.9">${dedication}</text>
-      <rect x="10" y="10" width="${W - 20}" height="${H - 20}" fill="none" stroke="#1e3a8a" stroke-width="6" rx="10"/>
-      <rect x="20" y="20" width="${W - 40}" height="${H - 40}" fill="none" stroke="#d97706" stroke-width="2" rx="6"/>
+      <text x="${W / 2}" y="55" text-anchor="middle" font-weight="800" font-size="38" fill="${sky.text}">${title}</text>
+      <text x="${W / 2}" y="${H - 34}" text-anchor="middle" font-weight="600" font-size="18" fill="${sky.groundText}" font-style="italic" opacity="0.9">${dedication}</text>
+      <rect x="12" y="12" width="${W - 24}" height="${H - 24}" fill="none" stroke="#1e3a8a" stroke-width="7" rx="12"/>
+      <rect x="24" y="24" width="${W - 48}" height="${H - 48}" fill="none" stroke="#d97706" stroke-width="2.5" rx="7"/>
     </svg>`;
   }
 
@@ -1667,8 +1673,8 @@
     const img = await svgToImage(svgString);
     const SCALE = 2;
     const canvas = document.getElementById('render-canvas');
-    canvas.width = 900 * SCALE;
-    canvas.height = 600 * SCALE;
+    canvas.width = BLUEPRINT_W * SCALE;
+    canvas.height = BLUEPRINT_H * SCALE;
     const ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     triggerDownload(canvas, `${slug(window.blueprintConfig.title)}-blueprint.png`);
@@ -1679,12 +1685,16 @@
     const img = await svgToImage(svgString);
     const SCALE = 2;
     const canvas = document.getElementById('render-canvas');
-    canvas.width = 900 * SCALE;
-    canvas.height = 600 * SCALE;
+    canvas.width = BLUEPRINT_W * SCALE;
+    canvas.height = BLUEPRINT_H * SCALE;
     const ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.92);
-    const pdfBlob = buildMultiPagePdf([{ jpegDataUrl, widthPx: canvas.width, heightPx: canvas.height }]);
+    // US Letter, landscape (11in x 8.5in = 792 x 612 pt) - a real, standard
+    // page size regardless of how many raster pixels of quality sit under
+    // it, so it opens and prints normally instead of at some odd fractional
+    // page size derived from the canvas's own pixel count.
+    const pdfBlob = buildMultiPagePdf([{ jpegDataUrl, widthPx: canvas.width, heightPx: canvas.height, pageWidthPt: 792, pageHeightPt: 612 }]);
     triggerBlobDownload(pdfBlob, `${slug(window.blueprintConfig.title)}-blueprint-poster.pdf`);
   }
 
@@ -2080,8 +2090,13 @@
     let nextId = 3;
     pages.forEach((p) => {
       const jpegBytes = atob(p.jpegDataUrl.split(',')[1]);
-      const wPt = Math.round(p.widthPx * 0.75);
-      const hPt = Math.round(p.heightPx * 0.75);
+      // Page size defaults to the raster's own pixel size at 96dpi (the old
+      // behavior), but a poster meant to print on real paper should pass an
+      // explicit pageWidthPt/pageHeightPt (e.g. 792x612 for US Letter
+      // landscape) so it opens as a standard page no matter how many
+      // pixels of quality the raster underneath was rendered at.
+      const wPt = Math.round(p.pageWidthPt || p.widthPx * 0.75);
+      const hPt = Math.round(p.pageHeightPt || p.heightPx * 0.75);
       const contentStream = `q ${wPt} 0 0 ${hPt} 0 0 cm /Im0 Do Q`;
       const pageId = nextId++, imgId = nextId++, contentId = nextId++;
       objects[pageId] = `<< /Type /Page /Parent 2 0 R /Resources << /XObject << /Im0 ${imgId} 0 R >> >> /MediaBox [0 0 ${wPt} ${hPt}] /Contents ${contentId} 0 R >>`;
