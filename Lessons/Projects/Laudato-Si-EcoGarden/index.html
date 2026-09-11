@@ -348,6 +348,25 @@
     .sign-props select, .sign-props input[type="color"] { padding: 5px 8px; font-size: 0.82rem; border-radius: 6px; border: 2px solid var(--border); }
     .sign-props input[type="color"] { width: 36px; height: 32px; padding: 2px; cursor: pointer; }
     .sign-props button { font-size: 0.78rem; padding: 6px 10px; }
+    .sign-layers {
+      max-height: 160px;
+      overflow-y: auto;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: #f8fafc;
+      padding: 4px;
+    }
+    .sign-layer-row {
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sign-layer-row:hover { background: #eef2f7; }
+    .sign-layer-selected { background: #dbeafe; font-weight: 700; }
     .sign-stage-wrap { flex: 1 1 320px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
     .sign-stage-container {
       width: 520px;
@@ -700,6 +719,11 @@
 
       <div class="sign-builder">
         <div class="sign-toolbar">
+          <div class="toolbar-row">
+            <button type="button" class="row-check-btn" id="sign-undo-btn" onclick="undoSign()" disabled title="Undo (Ctrl+Z)">&#8630; Undo</button>
+            <button type="button" class="row-check-btn" id="sign-redo-btn" onclick="redoSign()" disabled title="Redo (Ctrl+Shift+Z)">&#8631; Redo</button>
+            <button type="button" class="row-check-btn" style="background:#dc2626;" onclick="resetSign()">Reset Sign</button>
+          </div>
           <div class="form-group">
             <label for="sign-material-select">Sign Material</label>
             <select id="sign-material-select" class="form-control-lg" onchange="setSignMaterial(this.value)">
@@ -710,6 +734,10 @@
               <option value="picket">Painted Picket</option>
               <option value="banner">Ribbon Banner</option>
             </select>
+          </div>
+          <div class="form-group">
+            <label for="sign-accent-color">Accent Color</label>
+            <input type="color" id="sign-accent-color" onchange="setSignAccentColor(this.value)">
           </div>
           <div class="toolbar-row">
             <button type="button" class="row-check-btn" onclick="addSignText()">+ Add Text</button>
@@ -730,6 +758,9 @@
           <button type="button" class="row-check-btn" onclick="insertVerseText()">+ Add Verse to Sign</button>
 
           <div id="sign-props" class="sign-props" style="display:none;"></div>
+
+          <p style="font-weight:700; margin:12px 0 4px;">Layers</p>
+          <div id="sign-layers" class="sign-layers"></div>
 
           <button class="row-check-btn" id="lock-sign-btn" onclick="lockSign()" style="margin-top:14px;">Lock My Sign</button>
           <button class="row-check-btn celebrate-btn" style="background:var(--accent);" onclick="downloadSign()">Download My Sign</button>
@@ -900,46 +931,60 @@
       <circle cx="19" cy="30" r="1.2" fill="#5c3a10" opacity="0.5"/>
     </svg>`;
   }
+  // A stacked cairn instead of three loose ovals - reads unmistakably as
+  // "decorative stones" at small sizes, where the old scattered-blob
+  // version just looked like an ambiguous gray smudge.
   function stonesIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
       <defs>
-        <radialGradient id="stone-grad-1" cx="35%" cy="25%" r="80%"><stop offset="0%" stop-color="#e2e8f0"/><stop offset="100%" stop-color="#64748b"/></radialGradient>
-        <radialGradient id="stone-grad-2" cx="35%" cy="25%" r="80%"><stop offset="0%" stop-color="#f1f5f9"/><stop offset="100%" stop-color="#94a3b8"/></radialGradient>
-        <radialGradient id="stone-grad-3" cx="35%" cy="25%" r="80%"><stop offset="0%" stop-color="#cbd5e1"/><stop offset="100%" stop-color="#475569"/></radialGradient>
+        <radialGradient id="stone-grad-1" cx="32%" cy="25%" r="85%"><stop offset="0%" stop-color="#f1f5f9"/><stop offset="100%" stop-color="#64748b"/></radialGradient>
+        <radialGradient id="stone-grad-2" cx="32%" cy="25%" r="85%"><stop offset="0%" stop-color="#e2e8f0"/><stop offset="100%" stop-color="#475569"/></radialGradient>
+        <radialGradient id="stone-grad-3" cx="32%" cy="25%" r="85%"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#94a3b8"/></radialGradient>
       </defs>
-      <ellipse cx="20" cy="31" rx="15" ry="3" fill="#000" opacity="0.12"/>
-      <ellipse cx="13" cy="25" rx="9" ry="6" fill="url(#stone-grad-1)" stroke="#475569" stroke-width="0.6"/>
-      <ellipse cx="27" cy="26" rx="8" ry="5.5" fill="url(#stone-grad-2)" stroke="#64748b" stroke-width="0.6"/>
-      <ellipse cx="20" cy="19" rx="7" ry="5" fill="url(#stone-grad-3)" stroke="#334155" stroke-width="0.6"/>
+      <ellipse cx="20" cy="35" rx="13" ry="2.4" fill="#000" opacity="0.18"/>
+      <ellipse cx="20" cy="30" rx="13" ry="7" fill="url(#stone-grad-1)" stroke="#334155" stroke-width="1.8"/>
+      <ellipse cx="20" cy="21" rx="10" ry="6" fill="url(#stone-grad-2)" stroke="#334155" stroke-width="1.8"/>
+      <ellipse cx="20" cy="12" rx="7" ry="4.5" fill="url(#stone-grad-3)" stroke="#334155" stroke-width="1.8"/>
     </svg>`;
   }
+  // A clear pedestal + wide basin + a perched bird silhouette, so it can't
+  // be mistaken for anything but a bird bath - the old version's thin
+  // subtle-gradient bowl read as an unlabeled gray blob at icon size.
   function birdbathIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
       <defs>
         <linearGradient id="bath-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#f1f5f9"/><stop offset="100%" stop-color="#94a3b8"/>
+          <stop offset="0%" stop-color="#e2e8f0"/><stop offset="100%" stop-color="#94a3b8"/>
         </linearGradient>
         <radialGradient id="bath-water" cx="40%" cy="30%" r="75%">
-          <stop offset="0%" stop-color="#e0f2fe"/><stop offset="100%" stop-color="#38bdf8"/>
+          <stop offset="0%" stop-color="#bae6fd"/><stop offset="100%" stop-color="#0284c7"/>
         </radialGradient>
       </defs>
-      <ellipse cx="20" cy="35" rx="8" ry="1.6" fill="#000" opacity="0.1"/>
-      <path d="M17 34 L23 34 L21 21 L19 21 Z" fill="url(#bath-grad)"/>
-      <rect x="14" y="33" width="12" height="3" rx="1" fill="#64748b"/>
-      <ellipse cx="20" cy="19" rx="14" ry="5" fill="url(#bath-grad)" stroke="#64748b" stroke-width="1"/>
-      <ellipse cx="20" cy="18" rx="10" ry="3.2" fill="url(#bath-water)"/>
-      <path d="M14 18 Q 20 20 26 18" stroke="#ffffff" stroke-width="0.8" fill="none" opacity="0.7"/>
+      <ellipse cx="20" cy="36" rx="9" ry="1.8" fill="#000" opacity="0.16"/>
+      <path d="M16.5 35 L23.5 35 L21.5 18 L18.5 18 Z" fill="url(#bath-grad)" stroke="#475569" stroke-width="1.2"/>
+      <rect x="13" y="33.5" width="14" height="3.2" rx="1.2" fill="#64748b" stroke="#334155" stroke-width="1"/>
+      <ellipse cx="20" cy="16" rx="15" ry="6" fill="url(#bath-grad)" stroke="#334155" stroke-width="1.8"/>
+      <ellipse cx="20" cy="15" rx="11" ry="3.8" fill="url(#bath-water)" stroke="#0369a1" stroke-width="1"/>
+      <path d="M13 15 Q 20 17.5 27 15" stroke="#ffffff" stroke-width="1.1" fill="none" opacity="0.8"/>
+      <path d="M25 11 C 27 9, 30 9.5, 29.5 12 C 32 11, 33 13.5, 30.5 14.5 C 28.5 15.3, 26 14, 25 11 Z" fill="#334155"/>
+      <circle cx="27" cy="11.3" r="0.6" fill="#fff"/>
     </svg>`;
   }
+  // A signboard planted in a visible dirt mound, thicker post, bold
+  // outline, and a small leaf decal - the old plain tan rectangle on a
+  // thin line read as an unlabeled floating box, not a garden marker.
   function stakeIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
       <defs>
         <linearGradient id="stake-sign" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f3d9a8"/><stop offset="100%" stop-color="#c98a3d"/></linearGradient>
+        <linearGradient id="stake-dirt" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a9713f"/><stop offset="100%" stop-color="#6b3f1d"/></linearGradient>
       </defs>
-      <ellipse cx="20" cy="36" rx="6" ry="1.4" fill="#000" opacity="0.1"/>
-      <line x1="20" y1="35" x2="20" y2="16" stroke="#8a5a1e" stroke-width="3"/>
-      <rect x="8" y="6" width="24" height="12" rx="2" fill="url(#stake-sign)" stroke="#7a4a13" stroke-width="1.5"/>
-      <line x1="12" y1="12" x2="28" y2="12" stroke="#7a4a13" stroke-width="1.5" opacity="0.5"/>
+      <ellipse cx="20" cy="35.5" rx="10" ry="3" fill="url(#stake-dirt)" stroke="#4a2c12" stroke-width="1.2"/>
+      <rect x="18.3" y="17" width="3.4" height="19" rx="1" fill="#8a5a1e" stroke="#5c3a10" stroke-width="1"/>
+      <rect x="7" y="5" width="26" height="14" rx="3" fill="url(#stake-sign)" stroke="#5c3a10" stroke-width="2"/>
+      <path d="M14 12 C 14 9, 17 8, 18 10 C 19 8, 22 9, 21 12 C 20.5 13.5, 18 14.5, 18 14.5 C 18 14.5, 14.5 13.5, 14 12 Z" fill="#4d7c34" stroke="#365a24" stroke-width="0.8"/>
+      <line x1="24" y1="9" x2="29" y2="9" stroke="#5c3a10" stroke-width="1.4" opacity="0.6"/>
+      <line x1="24" y1="13" x2="29" y2="13" stroke="#5c3a10" stroke-width="1.4" opacity="0.6"/>
     </svg>`;
   }
   function sunIcon() {
@@ -1209,6 +1254,7 @@
       gardenElements: serializeGardenElements(),
       sign: {
         material: signMaterial,
+        accentColor: signAccentColor,
         elements: serializeSignElements(),
         locked: document.getElementById('lock-sign-btn').disabled
       }
@@ -1329,10 +1375,14 @@
     if (state.sign) {
       if (state.sign.material) {
         signMaterial = state.sign.material;
+        signAccentColor = state.sign.accentColor || null;
         drawSignMaterial(signMaterial);
         document.getElementById('sign-material-select').value = signMaterial;
+        document.getElementById('sign-accent-color').value = signAccentColor || MATERIAL_DEFAULT_COLORS[signMaterial];
       }
       if (state.sign.elements) await restoreSignElements(state.sign.elements);
+      signHistory = []; signHistoryIndex = -1;
+      pushSignHistory();
       if (state.sign.locked) {
         applySignLockedUI();
         const fb = document.getElementById('sign-feedback');
@@ -1852,14 +1902,53 @@
   // A soil-bed background with faint grid lines as a loose spatial
   // reference (not a hard snap) - a nod to the original 6x6 layout
   // without constraining placement to it.
+  // A real raised garden bed instead of a flat green rectangle: a wood
+  // plank frame (matching the sign's wood material treatment) around a
+  // mottled soil/grass fill with real tonal variation, not one flat color.
   function drawGardenBed() {
     gardenBgLayer.destroyChildren();
-    gardenBgLayer.add(new Konva.Rect({ x: 6, y: 10, width: GARDEN_W, height: GARDEN_H, cornerRadius: 14, fill: 'rgba(15,23,42,0.2)' }));
-    gardenBgLayer.add(new Konva.Rect({ width: GARDEN_W, height: GARDEN_H, cornerRadius: 12, fill: '#d9e6d3', stroke: '#6b7f5e', strokeWidth: 10 }));
-    for (let i = 1; i < 6; i++) {
-      gardenBgLayer.add(new Konva.Line({ points: [(GARDEN_W / 6) * i, 0, (GARDEN_W / 6) * i, GARDEN_H], stroke: 'rgba(107,127,94,0.18)', strokeWidth: 1 }));
-      gardenBgLayer.add(new Konva.Line({ points: [0, (GARDEN_H / 6) * i, GARDEN_W, (GARDEN_H / 6) * i], stroke: 'rgba(107,127,94,0.18)', strokeWidth: 1 }));
+    const w = GARDEN_W, h = GARDEN_H, frame = 22;
+    gardenBgLayer.add(new Konva.Rect({ x: 6, y: 10, width: w, height: h, cornerRadius: 14, fill: 'rgba(15,23,42,0.25)' }));
+
+    gardenBgLayer.add(new Konva.Rect({
+      width: w, height: h, cornerRadius: 12,
+      fillLinearGradientStartPoint: { x: 0, y: 0 }, fillLinearGradientEndPoint: { x: w, y: h },
+      fillLinearGradientColorStops: [0, '#a9713f', 0.5, '#8b5a2b', 1, '#6b3f1d']
+    }));
+    for (let i = 1; i < 8; i++) {
+      const y = (h / 8) * i;
+      gardenBgLayer.add(new Konva.Line({ points: [4, y, w - 4, y], stroke: 'rgba(0,0,0,0.15)', strokeWidth: 1.5 }));
     }
+
+    const soilArea = { x: frame, y: frame, w: w - frame * 2, h: h - frame * 2 };
+    gardenBgLayer.add(new Konva.Rect({
+      x: soilArea.x, y: soilArea.y, width: soilArea.w, height: soilArea.h, cornerRadius: 4,
+      fillRadialGradientStartPoint: { x: soilArea.w / 2, y: soilArea.h / 2 }, fillRadialGradientStartRadius: 0,
+      fillRadialGradientEndPoint: { x: soilArea.w / 2, y: soilArea.h / 2 }, fillRadialGradientEndRadius: soilArea.w * 0.7,
+      fillRadialGradientColorStops: [0, '#dcecd4', 1, '#c3dab8']
+    }));
+    // Mottled grass clumps, not a flat fill - varied size/opacity/tone so
+    // the bed reads as soil and grass rather than a solid color swatch.
+    const clumpColors = ['#b7d3a8', '#9dbf8c', '#cfe3c1'];
+    let seed = 42;
+    const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    for (let i = 0; i < 90; i++) {
+      gardenBgLayer.add(new Konva.Circle({
+        x: soilArea.x + rnd() * soilArea.w, y: soilArea.y + rnd() * soilArea.h,
+        radius: rnd() * 10 + 3, fill: clumpColors[i % clumpColors.length], opacity: rnd() * 0.25 + 0.12
+      }));
+    }
+    for (let i = 1; i < 6; i++) {
+      gardenBgLayer.add(new Konva.Line({ points: [soilArea.x + (soilArea.w / 6) * i, soilArea.y, soilArea.x + (soilArea.w / 6) * i, soilArea.y + soilArea.h], stroke: 'rgba(107,127,94,0.15)', strokeWidth: 1 }));
+      gardenBgLayer.add(new Konva.Line({ points: [soilArea.x, soilArea.y + (soilArea.h / 6) * i, soilArea.x + soilArea.w, soilArea.y + (soilArea.h / 6) * i], stroke: 'rgba(107,127,94,0.15)', strokeWidth: 1 }));
+    }
+    gardenBgLayer.add(new Konva.Rect({ x: soilArea.x, y: soilArea.y, width: soilArea.w, height: soilArea.h, cornerRadius: 4, stroke: 'rgba(0,0,0,0.2)', strokeWidth: 2 }));
+
+    gardenBgLayer.add(new Konva.Rect({
+      width: w, height: h, cornerRadius: 12, listening: false,
+      fillLinearGradientStartPoint: { x: 0, y: 0 }, fillLinearGradientEndPoint: { x: w * 0.6, y: h },
+      fillLinearGradientColorStops: [0, 'rgba(255,255,255,0.18)', 0.4, 'rgba(255,255,255,0)', 1, 'rgba(15,23,42,0.12)']
+    }));
     gardenBgLayer.draw();
   }
 
@@ -1885,7 +1974,8 @@
     const { dx, dy } = nextGardenPlacementOffset();
     const node = new Konva.Image({
       id: 'gt' + id, image: img,
-      x: GARDEN_W / 2 - 24 + dx, y: GARDEN_H / 2 - 24 + dy, width: 48, height: 48, draggable: true
+      x: GARDEN_W / 2 - 24 + dx, y: GARDEN_H / 2 - 24 + dy, width: 48, height: 48, draggable: true,
+      shadowColor: 'rgba(0,0,0,0.35)', shadowBlur: 3, shadowOffset: { x: 2, y: 3 }, shadowOpacity: 1
     });
     node.setAttr('tokenId', id);
     node.setAttr('code', t.code);
@@ -1977,7 +2067,8 @@
       const img = await svgToImage(ICONS[el.code]);
       const node = new Konva.Image({
         id: 'gt' + el.tokenId, image: img, x: el.x, y: el.y, rotation: el.rotation,
-        scaleX: el.scaleX, scaleY: el.scaleY, width: 48, height: 48, draggable: true
+        scaleX: el.scaleX, scaleY: el.scaleY, width: 48, height: 48, draggable: true,
+        shadowColor: 'rgba(0,0,0,0.35)', shadowBlur: 3, shadowOffset: { x: 2, y: 3 }, shadowOpacity: 1
       });
       node.setAttr('tokenId', el.tokenId);
       node.setAttr('code', el.code);
@@ -2038,11 +2129,41 @@
     { value: "'Montserrat', sans-serif", label: 'Classic' }
   ];
   const SIGN_COLORS = ['#3b2412', '#1e3a8a', '#15803d', '#7c3aed', '#0f172a', '#c2410c', '#0f766e', '#ffffff'];
+  // The accent color tints whichever material is active (wood tone, ribbon
+  // red, bolt gray, ...) - these are each material's look with no accent
+  // chosen yet.
+  const MATERIAL_DEFAULT_COLORS = {
+    wood: '#8b5a2b', chalkboard: '#7c4a24', metal: '#94a3b8',
+    stone: '#94a3b8', picket: '#16a34a', banner: '#dc2626'
+  };
 
   let signStage = null, signBgLayer = null, signLayer = null, signTransformer = null;
   let signMaterial = 'wood';
+  let signAccentColor = null;
   let signLocked = false;
   let signNextId = 1;
+  let signHistory = [];
+  let signHistoryIndex = -1;
+  let signHistorySuppress = false;
+  const SIGN_HISTORY_LIMIT = 50;
+
+  function hexToRgb(hex) {
+    const m = hex.replace('#', '');
+    const full = m.length === 3 ? m.split('').map((c) => c + c).join('') : m;
+    const n = parseInt(full, 16);
+    return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+  }
+  function rgbToHex({ r, g, b }) {
+    return '#' + [r, g, b].map((v) => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, '0')).join('');
+  }
+  // amount > 0 lightens toward white, amount < 0 darkens toward black -
+  // used to derive gradient stops and accents from a single chosen color.
+  function shadeColor(hex, amount) {
+    const a = hexToRgb(hex);
+    const target = amount >= 0 ? { r: 255, g: 255, b: 255 } : { r: 0, g: 0, b: 0 };
+    const t = Math.abs(amount);
+    return rgbToHex({ r: a.r + (target.r - a.r) * t, g: a.g + (target.g - a.g) * t, b: a.b + (target.b - a.b) * t });
+  }
 
   function initSignStage() {
     signStage = new Konva.Stage({ container: 'sign-stage-container', width: SIGN_W, height: SIGN_H });
@@ -2064,13 +2185,96 @@
       selectSignNode(e.target);
     });
 
-    // Delete/Backspace removes the selected element, as long as focus isn't
-    // sitting in a text field (that should delete a character, not a shape).
+    // Delete/Backspace removes the selected element; Ctrl/Cmd+Z undoes,
+    // Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y redoes - as long as focus isn't
+    // sitting in a text field (that should edit text, not the canvas).
     document.addEventListener('keydown', (e) => {
-      if (signLocked || !getSelectedSignNode()) return;
+      if (signLocked) return;
       if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
-      if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); deleteSelectedSignNode(); }
+      const mod = e.ctrlKey || e.metaKey;
+      if (mod && e.key.toLowerCase() === 'z') { e.preventDefault(); if (e.shiftKey) redoSign(); else undoSign(); return; }
+      if (mod && e.key.toLowerCase() === 'y') { e.preventDefault(); redoSign(); return; }
+      if ((e.key === 'Delete' || e.key === 'Backspace') && getSelectedSignNode()) { e.preventDefault(); deleteSelectedSignNode(); }
     });
+  }
+
+  // ----------------------------------------------------------------
+  // UNDO / REDO: a simple linear history of full sign snapshots
+  // (material, accent color, elements). Every mutating action commits
+  // one snapshot via commitSignChange() instead of calling saveProgress()
+  // directly, so undo/redo and the server save always agree.
+  // ----------------------------------------------------------------
+  function pushSignHistory() {
+    if (signHistorySuppress) return;
+    const snapshot = { material: signMaterial, accentColor: signAccentColor, elements: serializeSignElements() };
+    signHistory = signHistory.slice(0, signHistoryIndex + 1);
+    signHistory.push(snapshot);
+    if (signHistory.length > SIGN_HISTORY_LIMIT) signHistory.shift();
+    signHistoryIndex = signHistory.length - 1;
+    updateSignHistoryButtons();
+  }
+
+  function commitSignChange() {
+    pushSignHistory();
+    renderSignLayers();
+    saveProgress();
+  }
+
+  async function applySignHistorySnapshot(snapshot) {
+    signHistorySuppress = true;
+    signMaterial = snapshot.material;
+    signAccentColor = snapshot.accentColor;
+    drawSignMaterial(signMaterial);
+    document.getElementById('sign-material-select').value = signMaterial;
+    document.getElementById('sign-accent-color').value = signAccentColor || MATERIAL_DEFAULT_COLORS[signMaterial];
+    await restoreSignElements(snapshot.elements);
+    signHistorySuppress = false;
+    updateSignHistoryButtons();
+    saveProgress();
+  }
+
+  async function undoSign() {
+    if (signHistoryIndex <= 0) return;
+    signHistoryIndex--;
+    await applySignHistorySnapshot(signHistory[signHistoryIndex]);
+  }
+
+  async function redoSign() {
+    if (signHistoryIndex >= signHistory.length - 1) return;
+    signHistoryIndex++;
+    await applySignHistorySnapshot(signHistory[signHistoryIndex]);
+  }
+
+  function updateSignHistoryButtons() {
+    const undoBtn = document.getElementById('sign-undo-btn');
+    const redoBtn = document.getElementById('sign-redo-btn');
+    if (undoBtn) undoBtn.disabled = signHistoryIndex <= 0;
+    if (redoBtn) redoBtn.disabled = signHistoryIndex >= signHistory.length - 1;
+  }
+
+  // ----------------------------------------------------------------
+  // LAYERS PANEL: every element in one clickable list, front-to-back -
+  // the only reliable way to select something once pieces start
+  // overlapping on the canvas.
+  // ----------------------------------------------------------------
+  function renderSignLayers() {
+    const panel = document.getElementById('sign-layers');
+    if (!panel) return;
+    const nodes = signElementNodes();
+    if (!nodes.length) { panel.innerHTML = '<span class="tray-empty">No elements yet</span>'; return; }
+    const selected = getSelectedSignNode();
+    panel.innerHTML = nodes.slice().reverse().map((n) => {
+      const isText = n.getClassName() === 'Text';
+      const label = isText ? (n.text().split('\n')[0].slice(0, 22) || 'Text') : (STICKER_LABELS[n.getAttr('iconKey')] || 'Sticker');
+      const selCls = n === selected ? ' sign-layer-selected' : '';
+      return `<div class="sign-layer-row${selCls}" onclick="selectSignNodeById('${n.id()}')">${isText ? '🔤' : '🖼️'} ${label}</div>`;
+    }).join('');
+  }
+
+  function selectSignNodeById(id) {
+    if (signLocked) return;
+    const node = signElementNodes().find((n) => n.id() === id);
+    if (node) selectSignNode(node);
   }
 
   // Every new element would otherwise land on the exact same spot (dead
@@ -2087,10 +2291,11 @@
   function drawSignMaterial(material) {
     signBgLayer.destroyChildren();
     const w = SIGN_W, h = SIGN_H;
+    const base = signAccentColor || MATERIAL_DEFAULT_COLORS[material] || MATERIAL_DEFAULT_COLORS.wood;
     signBgLayer.add(new Konva.Rect({ x: 8, y: 12, width: w, height: h, cornerRadius: 16, fill: 'rgba(15,23,42,0.28)' }));
 
     if (material === 'chalkboard') {
-      signBgLayer.add(new Konva.Rect({ width: w, height: h, cornerRadius: 8, fill: '#2f3b30', stroke: '#7c4a24', strokeWidth: 16 }));
+      signBgLayer.add(new Konva.Rect({ width: w, height: h, cornerRadius: 8, fill: '#2f3b30', stroke: base, strokeWidth: 16 }));
       for (let i = 0; i < 70; i++) {
         signBgLayer.add(new Konva.Circle({ x: Math.random() * w, y: Math.random() * h, radius: Math.random() * 1.2 + 0.3, fill: '#fff', opacity: Math.random() * 0.15 + 0.03 }));
       }
@@ -2098,39 +2303,39 @@
       signBgLayer.add(new Konva.Rect({
         width: w, height: h, cornerRadius: 20,
         fillLinearGradientStartPoint: { x: 0, y: 0 }, fillLinearGradientEndPoint: { x: w, y: 0 },
-        fillLinearGradientColorStops: [0, '#cbd5e1', 0.5, '#f1f5f9', 1, '#94a3b8'],
-        stroke: '#64748b', strokeWidth: 8
+        fillLinearGradientColorStops: [0, shadeColor(base, 0.3), 0.5, shadeColor(base, 0.55), 1, base],
+        stroke: shadeColor(base, -0.25), strokeWidth: 8
       }));
       [[24, 24], [w - 24, 24], [24, h - 24], [w - 24, h - 24]].forEach(([cx, cy]) => {
-        signBgLayer.add(new Konva.Circle({ x: cx, y: cy, radius: 8, fill: '#94a3b8', stroke: '#475569', strokeWidth: 1.5 }));
-        signBgLayer.add(new Konva.Circle({ x: cx, y: cy, radius: 2.6, fill: '#334155' }));
+        signBgLayer.add(new Konva.Circle({ x: cx, y: cy, radius: 8, fill: base, stroke: shadeColor(base, -0.35), strokeWidth: 1.5 }));
+        signBgLayer.add(new Konva.Circle({ x: cx, y: cy, radius: 2.6, fill: shadeColor(base, -0.5) }));
       });
     } else if (material === 'stone') {
-      signBgLayer.add(new Konva.Rect({ width: w, height: h, cornerRadius: 10, fill: '#94a3b8', stroke: '#475569', strokeWidth: 12 }));
+      signBgLayer.add(new Konva.Rect({ width: w, height: h, cornerRadius: 10, fill: base, stroke: shadeColor(base, -0.35), strokeWidth: 12 }));
       for (let i = 0; i < 30; i++) {
-        signBgLayer.add(new Konva.Circle({ x: Math.random() * w, y: Math.random() * h, radius: Math.random() * 20 + 8, fill: '#64748b', opacity: 0.12 }));
+        signBgLayer.add(new Konva.Circle({ x: Math.random() * w, y: Math.random() * h, radius: Math.random() * 20 + 8, fill: shadeColor(base, -0.3), opacity: 0.12 }));
       }
     } else if (material === 'picket') {
-      signBgLayer.add(new Konva.Rect({ width: w, height: h, cornerRadius: 12, fill: '#fefce8', stroke: '#16a34a', strokeWidth: 10, dash: [18, 12] }));
+      signBgLayer.add(new Konva.Rect({ width: w, height: h, cornerRadius: 12, fill: '#fefce8', stroke: base, strokeWidth: 10, dash: [18, 12] }));
       for (let i = 1; i < 7; i++) {
-        signBgLayer.add(new Konva.Line({ points: [(w / 7) * i, 0, (w / 7) * i, h], stroke: 'rgba(22,163,74,0.15)', strokeWidth: 2 }));
+        signBgLayer.add(new Konva.Line({ points: [(w / 7) * i, 0, (w / 7) * i, h], stroke: shadeColor(base, 0.5), strokeWidth: 2, opacity: 0.4 }));
       }
     } else if (material === 'banner') {
       signBgLayer.add(new Konva.Rect({
         width: w, height: h, cornerRadius: 8,
         fillLinearGradientStartPoint: { x: 0, y: 0 }, fillLinearGradientEndPoint: { x: 0, y: h },
-        fillLinearGradientColorStops: [0, '#dc2626', 1, '#991b1b'],
+        fillLinearGradientColorStops: [0, base, 1, shadeColor(base, -0.35)],
         stroke: '#fbbf24', strokeWidth: 10
       }));
-      signBgLayer.add(new Konva.Line({ points: [0, 0, -22, h / 2, 0, h], closed: true, fill: '#7f1d1d' }));
-      signBgLayer.add(new Konva.Line({ points: [w, 0, w + 22, h / 2, w, h], closed: true, fill: '#7f1d1d' }));
+      signBgLayer.add(new Konva.Line({ points: [0, 0, -22, h / 2, 0, h], closed: true, fill: shadeColor(base, -0.35) }));
+      signBgLayer.add(new Konva.Line({ points: [w, 0, w + 22, h / 2, w, h], closed: true, fill: shadeColor(base, -0.35) }));
     } else {
       // wood (default)
       signBgLayer.add(new Konva.Rect({
         width: w, height: h, cornerRadius: 12,
         fillLinearGradientStartPoint: { x: 0, y: 0 }, fillLinearGradientEndPoint: { x: w, y: h },
-        fillLinearGradientColorStops: [0, '#8b5a2b', 0.5, '#a9713f', 1, '#6b3f1d'],
-        stroke: '#4a2c12', strokeWidth: 12
+        fillLinearGradientColorStops: [0, base, 0.5, shadeColor(base, 0.2), 1, shadeColor(base, -0.25)],
+        stroke: shadeColor(base, -0.4), strokeWidth: 12
       }));
       for (let i = 1; i < 5; i++) {
         signBgLayer.add(new Konva.Line({ points: [12, (h / 5) * i, w - 12, (h / 5) * i], stroke: 'rgba(0,0,0,0.18)', strokeWidth: 2 }));
@@ -2151,7 +2356,26 @@
   function setSignMaterial(material) {
     signMaterial = material;
     drawSignMaterial(material);
-    saveProgress();
+    document.getElementById('sign-accent-color').value = signAccentColor || MATERIAL_DEFAULT_COLORS[material];
+    commitSignChange();
+  }
+
+  function setSignAccentColor(hex) {
+    signAccentColor = hex;
+    drawSignMaterial(signMaterial);
+    document.getElementById('sign-accent-color').value = hex;
+    commitSignChange();
+  }
+
+  function resetSign() {
+    if (!confirm("Clear your whole sign and start over? You can still Undo right after if you change your mind.")) return;
+    clearSignElements();
+    signMaterial = 'wood';
+    signAccentColor = null;
+    drawSignMaterial(signMaterial);
+    document.getElementById('sign-material-select').value = signMaterial;
+    document.getElementById('sign-accent-color').value = MATERIAL_DEFAULT_COLORS.wood;
+    seedDefaultSignElements();
   }
 
   function populateSignPickers() {
@@ -2175,7 +2399,7 @@
 
   function attachSignNodeEvents(node) {
     node.draggable(!signLocked);
-    node.on('dragend transformend', () => saveProgress());
+    node.on('dragend transformend', () => commitSignChange());
     node.on('click tap', (e) => { e.cancelBubble = true; if (!signLocked) selectSignNode(node); });
     if (node.getClassName() === 'Text') node.on('dblclick dbltap', () => { if (!signLocked) editSignText(node); });
   }
@@ -2196,7 +2420,7 @@
     signLayer.add(node);
     selectSignNode(node);
     signLayer.draw();
-    saveProgress();
+    commitSignChange();
     return node;
   }
 
@@ -2213,7 +2437,7 @@
     selectSignNode(node);
     signLayer.draw();
     document.getElementById('sticker-picker').style.display = 'none';
-    saveProgress();
+    commitSignChange();
   }
 
   function insertVerseText() {
@@ -2269,7 +2493,7 @@
       node.show();
       signTransformer.show();
       signLayer.draw();
-      saveProgress();
+      commitSignChange();
     };
     ta.addEventListener('blur', finish);
     ta.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ta.blur(); } });
@@ -2279,12 +2503,14 @@
     signTransformer.nodes([node]);
     signLayer.draw();
     renderSignProps(node);
+    renderSignLayers();
   }
 
   function deselectSignNode() {
     signTransformer.nodes([]);
     signLayer.draw();
     document.getElementById('sign-props').style.display = 'none';
+    renderSignLayers();
   }
 
   function getSelectedSignNode() {
@@ -2302,7 +2528,11 @@
         <input type="color" id="prop-color" title="Text color">
         <button type="button" class="row-check-btn" onclick="adjustSignFontSize(2)">A+</button>
         <button type="button" class="row-check-btn" onclick="adjustSignFontSize(-2)">A-</button>
-      ` : ''}
+        <button type="button" class="row-check-btn" onclick="toggleSignTextOutline()">${node.getAttr('outlineOn') ? 'Remove Outline' : 'Add Outline'}</button>
+      ` : `
+        <label style="font-size:0.78rem; font-weight:700;">Size</label>
+        <input type="range" id="prop-size" min="0.4" max="3" step="0.1" style="width:110px;">
+      `}
       <button type="button" class="row-check-btn" onclick="duplicateSelectedSignNode()">Duplicate</button>
       <button type="button" class="row-check-btn" onclick="bringSignNodeForward()">Forward</button>
       <button type="button" class="row-check-btn" onclick="sendSignNodeBackward()">Backward</button>
@@ -2312,12 +2542,44 @@
       const fontSel = document.getElementById('prop-font');
       fontSel.innerHTML = SIGN_FONTS.map((f) => `<option value="${f.value}">${f.label}</option>`).join('');
       fontSel.value = node.fontFamily();
-      fontSel.onchange = (e) => { node.fontFamily(e.target.value); signLayer.draw(); saveProgress(); };
+      fontSel.onchange = (e) => { node.fontFamily(e.target.value); signLayer.draw(); commitSignChange(); };
       const colorInput = document.getElementById('prop-color');
       colorInput.value = /^#[0-9a-f]{6}$/i.test(node.fill()) ? node.fill() : '#3b2412';
       colorInput.oninput = (e) => { node.fill(e.target.value); signLayer.draw(); };
-      colorInput.onchange = () => saveProgress();
+      colorInput.onchange = () => commitSignChange();
+    } else {
+      const sizeInput = document.getElementById('prop-size');
+      sizeInput.value = node.scaleX();
+      sizeInput.oninput = (e) => { const s = parseFloat(e.target.value); node.scaleX(s); node.scaleY(s); signLayer.draw(); };
+      sizeInput.onchange = () => commitSignChange();
     }
+  }
+
+  // A subtle white outline + shadow behind the text - the difference
+  // between legible and lost when a light color sits on a busy texture
+  // like stone or wood grain.
+  function toggleSignTextOutline() {
+    const node = getSelectedSignNode();
+    if (!node || node.getClassName() !== 'Text') return;
+    const enabled = !node.getAttr('outlineOn');
+    node.setAttr('outlineOn', enabled);
+    if (enabled) {
+      node.stroke('#ffffff');
+      node.strokeWidth(4);
+      node.fillAfterStrokeEnabled(true);
+      node.shadowColor('rgba(0,0,0,0.35)');
+      node.shadowBlur(4);
+      node.shadowOffset({ x: 1, y: 1 });
+    } else {
+      node.stroke(null);
+      node.strokeWidth(0);
+      node.shadowColor(null);
+      node.shadowBlur(0);
+      node.shadowOffset({ x: 0, y: 0 });
+    }
+    signLayer.draw();
+    renderSignProps(node);
+    commitSignChange();
   }
 
   function adjustSignFontSize(delta) {
@@ -2325,7 +2587,7 @@
     if (!node || node.getClassName() !== 'Text') return;
     node.fontSize(Math.max(10, Math.min(72, node.fontSize() + delta)));
     signLayer.draw();
-    saveProgress();
+    commitSignChange();
   }
 
   function bringSignNodeForward() {
@@ -2333,7 +2595,7 @@
     if (!node) return;
     node.moveUp();
     signLayer.draw();
-    saveProgress();
+    commitSignChange();
   }
 
   function sendSignNodeBackward() {
@@ -2341,7 +2603,7 @@
     if (!node) return;
     node.moveDown();
     signLayer.draw();
-    saveProgress();
+    commitSignChange();
   }
 
   function deleteSelectedSignNode() {
@@ -2350,7 +2612,7 @@
     node.destroy();
     deselectSignNode();
     signLayer.draw();
-    saveProgress();
+    commitSignChange();
   }
 
   function duplicateSelectedSignNode() {
@@ -2359,14 +2621,18 @@
     const isText = node.getClassName() === 'Text';
     const common = { id: nextSignId(), x: node.x() + 20, y: node.y() + 20, rotation: node.rotation(), scaleX: node.scaleX(), scaleY: node.scaleY(), draggable: true };
     const clone = isText
-      ? new Konva.Text({ ...common, text: node.text(), fontFamily: node.fontFamily(), fontSize: node.fontSize(), fill: node.fill(), width: node.width(), fontStyle: '700', align: 'center' })
+      ? new Konva.Text({
+          ...common, text: node.text(), fontFamily: node.fontFamily(), fontSize: node.fontSize(), fill: node.fill(), width: node.width(), fontStyle: '700', align: 'center',
+          stroke: node.stroke(), strokeWidth: node.strokeWidth(), shadowColor: node.shadowColor(), shadowBlur: node.shadowBlur(), shadowOffset: node.shadowOffset(), fillAfterStrokeEnabled: true
+        })
       : new Konva.Image({ ...common, image: node.image(), width: node.width(), height: node.height() });
+    if (isText) clone.setAttr('outlineOn', node.getAttr('outlineOn'));
     if (!isText) clone.setAttr('iconKey', node.getAttr('iconKey'));
     attachSignNodeEvents(clone);
     signLayer.add(clone);
     selectSignNode(clone);
     signLayer.draw();
-    saveProgress();
+    commitSignChange();
   }
 
   function signElementNodes() {
@@ -2376,7 +2642,13 @@
   function serializeSignElements() {
     return signElementNodes().map((n) => {
       const base = { id: n.id(), type: n.getClassName(), x: n.x(), y: n.y(), rotation: n.rotation(), scaleX: n.scaleX(), scaleY: n.scaleY() };
-      if (n.getClassName() === 'Text') return { ...base, text: n.text(), fontFamily: n.fontFamily(), fontSize: n.fontSize(), fill: n.fill(), width: n.width() };
+      if (n.getClassName() === 'Text') {
+        return {
+          ...base, text: n.text(), fontFamily: n.fontFamily(), fontSize: n.fontSize(), fill: n.fill(), width: n.width(),
+          outlineOn: !!n.getAttr('outlineOn'), stroke: n.stroke(), strokeWidth: n.strokeWidth(),
+          shadowColor: n.shadowColor(), shadowBlur: n.shadowBlur(), shadowOffset: n.shadowOffset()
+        };
+      }
       return { ...base, iconKey: n.getAttr('iconKey'), width: n.width(), height: n.height() };
     });
   }
@@ -2394,8 +2666,11 @@
         node = new Konva.Text({
           id: el.id, x: el.x, y: el.y, rotation: el.rotation, scaleX: el.scaleX, scaleY: el.scaleY,
           text: el.text, fontFamily: el.fontFamily, fontSize: el.fontSize, fill: el.fill, width: el.width,
-          fontStyle: '700', align: 'center', draggable: true
+          fontStyle: '700', align: 'center', draggable: true,
+          stroke: el.stroke || null, strokeWidth: el.strokeWidth || 0, fillAfterStrokeEnabled: true,
+          shadowColor: el.shadowColor || null, shadowBlur: el.shadowBlur || 0, shadowOffset: el.shadowOffset || { x: 0, y: 0 }
         });
+        node.setAttr('outlineOn', !!el.outlineOn);
       } else {
         const img = await svgToImage(STICKER_ICONS[el.iconKey] || STICKER_ICONS.leaf);
         node = new Konva.Image({
@@ -2411,6 +2686,7 @@
     signLayer.draw();
     const maxId = list.reduce((m, el) => Math.max(m, parseInt(String(el.id).replace('el', ''), 10) || 0), 0);
     signNextId = maxId + 1;
+    renderSignLayers();
   }
 
   function seedDefaultSignElements() {
