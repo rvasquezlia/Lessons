@@ -1964,7 +1964,10 @@
     signLayer = new Konva.Layer();
     signStage.add(signBgLayer);
     signStage.add(signLayer);
-    signTransformer = new Konva.Transformer({ anchorSize: 10, borderDash: [4, 4] });
+    signTransformer = new Konva.Transformer({
+      anchorSize: 10, borderDash: [4, 4],
+      rotationSnaps: Array.from({ length: 24 }, (_, i) => i * 15)
+    });
     signLayer.add(signTransformer);
     drawSignMaterial(signMaterial);
 
@@ -1974,6 +1977,22 @@
       if (e.target === signTransformer || signTransformer.nodes().indexOf(e.target) !== -1) return;
       selectSignNode(e.target);
     });
+
+    // Delete/Backspace removes the selected element, as long as focus isn't
+    // sitting in a text field (that should delete a character, not a shape).
+    document.addEventListener('keydown', (e) => {
+      if (signLocked || !getSelectedSignNode()) return;
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+      if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); deleteSelectedSignNode(); }
+    });
+  }
+
+  // Every new element would otherwise land on the exact same spot (dead
+  // center) and silently stack, invisible, under whatever was added first -
+  // cascading the offset makes each new addition visible immediately.
+  function nextSignPlacementOffset() {
+    const step = (signElementNodes().length % 6) * 18;
+    return { dx: step, dy: step };
   }
 
   // One texture per material: a gradient/pattern fill plus a few
@@ -2077,9 +2096,10 @@
 
   function addSignText(text, opts) {
     opts = opts || {};
+    const { dx, dy } = nextSignPlacementOffset();
     const node = new Konva.Text({
       id: nextSignId(),
-      x: SIGN_W / 2 - 100, y: SIGN_H / 2 - 18, width: 200,
+      x: SIGN_W / 2 - 100 + dx, y: SIGN_H / 2 - 18 + dy, width: 200,
       text: text || 'Your Text Here',
       fontSize: opts.fontSize || 26,
       fontFamily: opts.fontFamily || SIGN_FONTS[0].value,
@@ -2096,9 +2116,10 @@
 
   async function addSignIcon(key) {
     const img = await svgToImage(STICKER_ICONS[key]);
+    const { dx, dy } = nextSignPlacementOffset();
     const node = new Konva.Image({
       id: nextSignId(), image: img,
-      x: SIGN_W / 2 - 24, y: SIGN_H / 2 - 24, width: 48, height: 48, draggable: true
+      x: SIGN_W / 2 - 24 + dx, y: SIGN_H / 2 - 24 + dy, width: 48, height: 48, draggable: true
     });
     node.setAttr('iconKey', key);
     attachSignNodeEvents(node);
@@ -2196,6 +2217,7 @@
         <button type="button" class="row-check-btn" onclick="adjustSignFontSize(2)">A+</button>
         <button type="button" class="row-check-btn" onclick="adjustSignFontSize(-2)">A-</button>
       ` : ''}
+      <button type="button" class="row-check-btn" onclick="duplicateSelectedSignNode()">Duplicate</button>
       <button type="button" class="row-check-btn" onclick="bringSignNodeForward()">Forward</button>
       <button type="button" class="row-check-btn" onclick="sendSignNodeBackward()">Backward</button>
       <button type="button" class="row-check-btn" style="background:#dc2626;" onclick="deleteSelectedSignNode()">Delete</button>
@@ -2241,6 +2263,22 @@
     if (!node) return;
     node.destroy();
     deselectSignNode();
+    signLayer.draw();
+    saveProgress();
+  }
+
+  function duplicateSelectedSignNode() {
+    const node = getSelectedSignNode();
+    if (!node) return;
+    const isText = node.getClassName() === 'Text';
+    const common = { id: nextSignId(), x: node.x() + 20, y: node.y() + 20, rotation: node.rotation(), scaleX: node.scaleX(), scaleY: node.scaleY(), draggable: true };
+    const clone = isText
+      ? new Konva.Text({ ...common, text: node.text(), fontFamily: node.fontFamily(), fontSize: node.fontSize(), fill: node.fill(), width: node.width(), fontStyle: '700', align: 'center' })
+      : new Konva.Image({ ...common, image: node.image(), width: node.width(), height: node.height() });
+    if (!isText) clone.setAttr('iconKey', node.getAttr('iconKey'));
+    attachSignNodeEvents(clone);
+    signLayer.add(clone);
+    selectSignNode(clone);
     signLayer.draw();
     saveProgress();
   }
@@ -2839,7 +2877,13 @@
   // sync with the on-screen studio.
   async function drawSignOntoCanvas(ctx, x, y, w, h) {
     const img = await dataUrlToImage(getSignDataUrl());
-    ctx.drawImage(img, x, y, w, h);
+    // The sign's own canvas is a fixed landscape shape (SIGN_W x SIGN_H)
+    // that rarely matches the caller's box exactly - stretching it to fill
+    // (x,y,w,h) distorts every bolt, gradient, and letter on it. Contain-fit
+    // instead: scale to the box uniformly and center, like a real image export.
+    const scale = Math.min(w / SIGN_W, h / SIGN_H);
+    const drawW = SIGN_W * scale, drawH = SIGN_H * scale;
+    ctx.drawImage(img, x + (w - drawW) / 2, y + (h - drawH) / 2, drawW, drawH);
   }
 
   async function downloadSign() {
