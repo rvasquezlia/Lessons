@@ -96,9 +96,14 @@
 
     /* Multiple-choice / choice questions - no native radio circle, no
        letter prefix - the highlighted label card is the only indicator. */
-    .mc-options { display: flex; flex-direction: column; gap: 8px; margin: 12px auto; max-width: 640px; }
+    /* Grid by default so short options sit two-up instead of wasting a
+       full row each; mc-options-wide (paragraph-length options, like the
+       CST Sourcing Dilemma) forces a single column instead. */
+    .mc-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin: 12px auto; max-width: 640px; }
+    .mc-options.mc-options-wide { grid-template-columns: 1fr; max-width: 680px; }
     .mc-options label {
-      display: block;
+      display: flex;
+      align-items: center;
       padding: 10px 14px;
       border: 2px solid var(--border);
       border-radius: 8px;
@@ -174,7 +179,7 @@
     .summary-table td.value-cell { font-weight: 800; color: var(--success); text-align: center; }
     .summary-table td.value-cell.pending { color: var(--empty, #94a3b8); font-weight: 600; font-style: italic; }
 
-    #elevation-numberline { max-width: 620px; margin: 16px auto; }
+    #elevation-numberline { max-width: 680px; margin: 16px auto; }
     #elevation-numberline svg { width: 100%; height: auto; display: block; }
 
     /* Key Vocabulary drag-and-drop match-up */
@@ -266,6 +271,73 @@
     #blueprint-preview svg { width: 100%; height: auto; display: block; }
     .blueprint-btn-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
     .blueprint-note { font-size: 0.8rem; color: #64748b; text-align: center; max-width: 500px; }
+
+    /* Technology: What-If Calculator */
+    .whatif-controls { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin: 16px 0; }
+    .whatif-controls .blueprint-field { flex: 1 1 240px; max-width: 300px; }
+    .whatif-readout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      max-width: 620px;
+      margin: 16px auto 0;
+    }
+    .whatif-readout > div {
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+    .whatif-readout span { display: block; font-size: 0.72rem; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+    .whatif-readout strong { display: block; font-size: 1.1rem; color: var(--primary); margin-top: 2px; }
+    .whatif-score {
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--primary);
+      background: #eff6ff;
+      border: 2px solid var(--primary-light);
+      border-radius: 10px;
+      padding: 12px;
+      max-width: 620px;
+      margin: 14px auto 0;
+    }
+
+    /* Celebrate: completion recap */
+    .celebration-missing-list { text-align: left; max-width: 480px; margin: 12px auto; color: #475569; }
+    .celebration-checklist {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 10px;
+      max-width: 780px;
+      margin: 16px auto 0;
+      text-align: left;
+    }
+    .celebration-item {
+      background: var(--success-bg);
+      border: 2px solid var(--success);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #14532d;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .celebration-check {
+      background: var(--success);
+      color: #fff;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
 
     .stamp-display {
       display: none;
@@ -415,7 +487,7 @@
       <p style="color:#475569;">Catholic Social Teaching calls us to show Solidarity with workers. You must choose
       how to source your remaining specialized materials. This choice is not graded right or wrong, but it will
       change your team's numbers for the rest of the project.</p>
-      <div class="mc-options" id="mc-cstchoice">
+      <div class="mc-options mc-options-wide" id="mc-cstchoice">
         <label><input type="radio" name="cstchoice" value="A" onchange="highlightMC('cstchoice')"> Option A (Fair Trade): Costs $12.50. Ensures workers are paid a just wage. Effect: +20 Stewardship Points.</label>
         <label><input type="radio" name="cstchoice" value="B" onchange="highlightMC('cstchoice')"> Option B (Standard Sourcing): Costs $4.00. Labor practices are unknown. Effect: &minus;15 Stewardship Points.</label>
       </div>
@@ -460,7 +532,7 @@
 
     <div class="station-card">
       <p><strong>Critical Thinking:</strong> If your final ledger balance in Step 3 was a negative number, what would that imply about your project management in terms of stewardship?</p>
-      <div class="mc-options" id="mc-criticalthinking">
+      <div class="mc-options mc-options-wide" id="mc-criticalthinking">
         <label><input type="radio" name="criticalthinking" value="A" onchange="highlightMC('criticalthinking')"> The project is sustainable because negative numbers show that money was spent on others.</label>
         <label><input type="radio" name="criticalthinking" value="B" onchange="highlightMC('criticalthinking')"> The project has exceeded its budget, meaning resources were not managed within the provided means.</label>
         <label><input type="radio" name="criticalthinking" value="C" onchange="highlightMC('criticalthinking')"> The project is more ethical because higher costs always result in better outcomes for the poor.</label>
@@ -631,29 +703,25 @@
         <div class="feedback-msg" id="blueprintart-feedback"></div>
       </div>
 
-      <div class="section-title" style="font-size:1.3rem;">Technology: Team Math Check</div>
+      <div class="section-title" style="font-size:1.3rem;">Technology: What-If Calculator</div>
       <div class="station-card">
-        <p style="text-align:center; color:#475569;">You already worked through every check together as a team.
-        Now grab a calculator and verify your work like a real project manager, using the checklist below.</p>
-        <div class="audit-checks">
-          <label><input type="checkbox" class="audit-cb" onchange="updateStampBtn()"> All signed number operations correct (+/&minus;)</label>
-          <label><input type="checkbox" class="audit-cb" onchange="updateStampBtn()"> Ledger balance and elevation changes double-checked</label>
-          <label><input type="checkbox" class="audit-cb" onchange="updateStampBtn()"> Order of operations followed in the Master Formula</label>
-          <label><input type="checkbox" class="audit-cb" onchange="updateStampBtn()"> Variance and average flow time verified</label>
+        <p style="color:#475569;">Engineers use technology to test ideas before committing to them. Try a different
+        CST sourcing option or a different average flow time below and watch the Master Performance Formula
+        recalculate live - this is just for exploring, and it will never change your real, locked-in answers above.</p>
+        <div class="whatif-controls">
+          <div class="blueprint-field">
+            <label for="whatif-cst-select">Try CST Option</label>
+            <select id="whatif-cst-select" onchange="updateWhatIf()">
+              <option value="A">Option A (Fair Trade)</option>
+              <option value="B">Option B (Standard Sourcing)</option>
+            </select>
+          </div>
+          <div class="blueprint-field">
+            <label for="whatif-flowtime-input">Try an Average Flow Time (s)</label>
+            <input type="number" id="whatif-flowtime-input" step="0.01" min="1" value="15.03" oninput="updateWhatIf()">
+          </div>
         </div>
-        <div style="text-align:center;">
-          <button class="row-check-btn" id="stamp-btn" onclick="awardStamp()" disabled>Award Our Math Quality Stamp</button>
-        </div>
-        <div class="stamp-display" id="stamp-display">
-          <div class="stamp-title">MATH QUALITY STAMP</div>
-          <div id="stamp-detail" class="stamp-sub"></div>
-        </div>
-        <div style="text-align:center; margin-top:14px;">
-          <button class="row-check-btn celebrate-btn" style="background:var(--success);" onclick="downloadStamp()">Download Math Quality Stamp</button>
-          <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(1)">Download Badge - Team Member 1</button>
-          <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(2)">Download Badge - Team Member 2</button>
-        </div>
-        <div class="feedback-msg" id="badge-feedback"></div>
+        <div id="whatif-result"></div>
       </div>
 
       <div class="section-title" style="font-size:1.3rem;">Stewardship Reflection</div>
@@ -678,13 +746,29 @@
         <div class="feedback-msg" id="self-assessment-feedback"></div>
       </div>
 
-      <div class="section-title" style="font-size:1.3rem;">Celebrate! Download Your Keepsake</div>
+      <div class="section-title" style="font-size:1.3rem;">Celebrate: Your Team's Achievement</div>
       <div class="station-card" style="text-align:center;">
-        <p style="color:#475569;">Make sure both team member names are filled in at the top of the page, then
-        download your team certificate as a PDF. Your personal badges and Math Quality Stamp are just above, in
-        Team Math Check.</p>
-        <button class="row-check-btn celebrate-btn" onclick="downloadCertificate()">Download Team Certificate (PDF)</button>
-        <div class="feedback-msg" id="certificate-feedback"></div>
+        <div id="celebration-incomplete">
+          <p style="color:#475569;">Finish everything below to unlock your certificate, personal badges, and Math
+          Quality Stamp:</p>
+          <ul class="celebration-missing-list" id="celebration-missing-list"></ul>
+        </div>
+        <div id="celebration-complete" style="display:none;">
+          <p style="color:#475569;">Congratulations - here's everything your team accomplished:</p>
+          <div class="celebration-checklist" id="celebration-checklist"></div>
+          <div class="stamp-display" id="stamp-display">
+            <div class="stamp-title">MATH QUALITY STAMP</div>
+            <div id="stamp-detail" class="stamp-sub"></div>
+          </div>
+          <div class="blueprint-btn-row" style="margin-top:16px;">
+            <button class="row-check-btn celebrate-btn" onclick="downloadCertificate()">Download Team Certificate (PDF)</button>
+            <button class="row-check-btn celebrate-btn" style="background:var(--success);" onclick="downloadStamp()">Download Math Quality Stamp</button>
+            <button class="row-check-btn celebrate-btn" style="background:var(--accent);" onclick="downloadSoloBadge(1)">Download Badge - Team Member 1</button>
+            <button class="row-check-btn celebrate-btn" style="background:var(--accent);" onclick="downloadSoloBadge(2)">Download Badge - Team Member 2</button>
+          </div>
+          <div class="feedback-msg" id="certificate-feedback"></div>
+          <div class="feedback-msg" id="badge-feedback"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -699,7 +783,7 @@
     const n1 = document.getElementById('team-name-1').value.trim();
     const n2 = document.getElementById('team-name-2').value.trim();
     document.getElementById('student-name').value = [n1, n2].filter(Boolean).join(' & ');
-    updateStampBtn();
+    renderCelebration();
   }
 
   function switchTab(tabId) {
@@ -873,6 +957,7 @@
   }
 
   function saveProgress() {
+    renderCelebration();
     if (!teamCode) return;
     fetchWithTimeout(SHEET_API_URL, {
       method: 'POST',
@@ -1031,6 +1116,11 @@
         fb.innerHTML = 'Blueprint locked! Download your poster below. <span style="opacity:.75;">(restored)</span>';
       }
     }
+
+    if (window.cstChoice) document.getElementById('whatif-cst-select').value = window.cstChoice;
+    if (window.avgFlowTime != null) document.getElementById('whatif-flowtime-input').value = fmt2(window.avgFlowTime);
+    updateWhatIf();
+    renderCelebration();
   }
 
   async function checkDay2Passcode() {
@@ -1510,6 +1600,74 @@
     triggerBlobDownload(pdfBlob, `${slug(window.blueprintConfig.title)}-blueprint-poster.pdf`);
   }
 
+  // ================================================================
+  // ELEVATION PROFILE CHART
+  // A vertical elevation-vs-sequence chart (like a real engineering
+  // elevation profile), not a horizontal number line - height on the
+  // page now matches height in real life, which is far easier to read
+  // than arrows arcing back and forth over one shared axis.
+  // ================================================================
+  function buildElevationProfileSVG() {
+    const W = 700, H = 380, marginL = 56, marginR = 34, marginT = 26, marginB = 60;
+    const domainMin = -3, domainMax = 20;
+    const plotW = W - marginL - marginR;
+    const plotH = H - marginT - marginB;
+    const xs = ELEVATION_STOPS.map((_, i) => marginL + (i * plotW) / (ELEVATION_STOPS.length - 1));
+    const yFor = (v) => marginT + ((domainMax - v) / (domainMax - domainMin)) * plotH;
+
+    let gridlines = '';
+    for (let v = 0; v <= domainMax; v += 5) {
+      const y = yFor(v);
+      gridlines += `
+        <line x1="${marginL}" y1="${y}" x2="${W - marginR}" y2="${y}" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="${marginL - 10}" y="${y + 4}" text-anchor="end" font-size="11" fill="#64748b" font-family="'Baloo 2', sans-serif">${v}</text>
+      `;
+    }
+    const groundY = yFor(0);
+    const ground = `
+      <line x1="${marginL}" y1="${groundY}" x2="${W - marginR}" y2="${groundY}" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6,4"/>
+      <text x="${W - marginR}" y="${groundY - 6}" text-anchor="end" font-size="10" fill="#64748b" font-family="'Baloo 2', sans-serif">Ground Level (0 cm)</text>
+    `;
+    const axis = `<line x1="${marginL}" y1="${marginT - 6}" x2="${marginL}" y2="${H - marginB}" stroke="#334155" stroke-width="2"/>`;
+
+    let segments = '';
+    for (let i = 0; i < ELEVATION_STOPS.length - 1; i++) {
+      const x1 = xs[i], y1 = yFor(ELEVATION_STOPS[i].value);
+      const x2 = xs[i + 1], y2 = yFor(ELEVATION_STOPS[i + 1].value);
+      const delta = round2(ELEVATION_STOPS[i + 1].value - ELEVATION_STOPS[i].value);
+      const color = delta > 0 ? '#16a34a' : '#dc2626';
+      const midX = (x1 + x2) / 2, midY = (y1 + y2) / 2 - 14;
+      segments += `
+        <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="4" stroke-linecap="round"/>
+        <rect x="${midX - 24}" y="${midY - 12}" width="48" height="18" rx="4" fill="#fff" stroke="${color}" stroke-width="1.5"/>
+        <text x="${midX}" y="${midY + 1}" text-anchor="middle" font-size="12" font-weight="800" fill="${color}" font-family="'Baloo 2', sans-serif">${delta > 0 ? '+' : ''}${delta}</text>
+      `;
+    }
+
+    let points = '';
+    ELEVATION_STOPS.forEach((s, i) => {
+      const x = xs[i], y = yFor(s.value);
+      points += `
+        <circle cx="${x}" cy="${y}" r="6" fill="#1e3a8a" stroke="#fff" stroke-width="2"/>
+        <text x="${x}" y="${H - marginB + 20}" text-anchor="middle" font-size="12" font-weight="700" fill="#1e293b" font-family="'Baloo 2', sans-serif">${esc(s.label)}</text>
+        <text x="${x}" y="${H - marginB + 36}" text-anchor="middle" font-size="11" fill="#475569" font-family="'Baloo 2', sans-serif">${s.value.toFixed(2)} cm</text>
+      `;
+    });
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
+      ${gridlines}
+      ${ground}
+      ${axis}
+      <text x="16" y="${marginT + plotH / 2}" text-anchor="middle" font-size="11" fill="#64748b" font-family="'Baloo 2', sans-serif" transform="rotate(-90 16 ${marginT + plotH / 2})">Elevation (cm)</text>
+      ${segments}
+      ${points}
+    </svg>`;
+  }
+
+  function renderElevationProfile() {
+    document.getElementById('elevation-numberline').innerHTML = buildElevationProfileSVG();
+  }
+
   function checkStraws() {
     const feedbackEl = document.getElementById('straws-feedback');
     const given = document.getElementById('straws-input').value;
@@ -1725,23 +1883,79 @@
   }
 
   // ================================================================
-  // TEAM MATH CHECK (peer-audit stamp gate)
+  // TECHNOLOGY: WHAT-IF CALCULATOR
+  // A sandbox, not a graded check - lets a team see how the Master
+  // Performance Formula would have turned out under a different CST
+  // choice or a different flow time, without touching their real,
+  // locked-in answers above.
   // ================================================================
-  function updateStampBtn() {
-    const n1 = document.getElementById('team-name-1').value.trim();
-    const n2 = document.getElementById('team-name-2').value.trim();
-    const allChecked = [...document.querySelectorAll('.audit-cb')].every((cb) => cb.checked);
-    document.getElementById('stamp-btn').disabled = !(n1 && n2 && allChecked);
+  function updateWhatIf() {
+    const cstOption = document.getElementById('whatif-cst-select').value;
+    const flowTimeRaw = parseFloat(document.getElementById('whatif-flowtime-input').value);
+    const flowTime = isFinite(flowTimeRaw) && flowTimeRaw > 0 ? flowTimeRaw : 15.03;
+    const cstCost = cstOption === 'A' ? -12.50 : -4.00;
+    const stewardshipPoints = cstOption === 'A' ? 20 : -15;
+    const day1Ledger = round2(100 + STRAWS_TOTAL + CONNECTORS_TOTAL + cstCost);
+    const day2Ledger = round2(day1Ledger - 8.62 + 16);
+    const V = window.heightVariance != null ? window.heightVariance : -1.6;
+    const score = round2((stewardshipPoints + 0.5 * day2Ledger) - Math.abs(V) / (flowTime / 10));
+
+    const realScoreLine = (solvedKeys['masterscore'] && window.masterScore != null)
+      ? `<p style="text-align:center; color:#64748b; margin-top:10px;">Your real, locked-in score was <strong>${fmt2(window.masterScore)}</strong> with Option ${window.cstChoice}.</p>`
+      : '';
+    document.getElementById('whatif-result').innerHTML = `
+      <div class="whatif-readout">
+        <div><span>S (Stewardship)</span><strong>${stewardshipPoints}</strong></div>
+        <div><span>C (Remaining Cash)</span><strong>$${fmt2(day2Ledger)}</strong></div>
+        <div><span>V (Height Variance)</span><strong>${fmt2(V)}</strong></div>
+        <div><span>T (Flow Time)</span><strong>${fmt2(flowTime)}s</strong></div>
+      </div>
+      <div class="whatif-score">Master Score = ${fmt2(score)}</div>
+      ${realScoreLine}
+    `;
   }
 
-  function awardStamp() {
+  // ================================================================
+  // CELEBRATE: completion recap (auto-derived from solvedKeys, never
+  // a separate manually-toggled state - so it can never go stale on
+  // reload the way a manually-clicked "award stamp" button could).
+  // ================================================================
+  function renderCelebration() {
+    const missing = missingDay2Work();
+    const incompleteEl = document.getElementById('celebration-incomplete');
+    const completeEl = document.getElementById('celebration-complete');
+    if (missing.length) {
+      incompleteEl.style.display = 'block';
+      completeEl.style.display = 'none';
+      document.getElementById('celebration-missing-list').innerHTML = missing.map((m) => `<li>${m}</li>`).join('');
+      document.getElementById('stamp-display').classList.remove('show');
+      return;
+    }
+    incompleteEl.style.display = 'none';
+    completeEl.style.display = 'block';
+
     const n1 = document.getElementById('team-name-1').value.trim();
     const n2 = document.getElementById('team-name-2').value.trim();
     const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    document.getElementById('stamp-detail').textContent = `Confirmed together by ${n1} & ${n2} - ${today}`;
+    document.getElementById('stamp-detail').textContent = `Confirmed by ${n1} & ${n2} - ${today}`;
     document.getElementById('stamp-display').classList.add('show');
-    document.querySelectorAll('.audit-cb, #stamp-btn').forEach((el) => { el.disabled = true; });
-    LessonProgress.record('peer-audit', 'Team Math Quality Stamp', `Confirmed together by ${n1} & ${n2}: verification checklist completed`, 'reflection', 'Day 2 - Team Math Check');
+
+    const items = [
+      `Key Vocabulary Match-Up completed`,
+      `CST Sourcing Choice: Option ${window.cstChoice}`,
+      `Day 1 Ledger Balance: $${fmt2(window.day1LedgerBalance)}`,
+      `Final Aqueduct Elevation: 16.00 cm`,
+      `Day 2 Ledger Adjustments: $${fmt2(window.day2LedgerBalance)}`,
+      `Height Variance: ${fmt2(window.heightVariance)}`,
+      `Average Flow Time: ${fmt2(window.avgFlowTime)}s`,
+      `Master Performance Score: ${fmt2(window.masterScore)}`,
+      `Aqueduct Blueprint locked in: "${window.blueprintConfig.title}"`,
+      `Stewardship Reflection submitted`,
+      `Self-Assessment submitted`
+    ];
+    document.getElementById('celebration-checklist').innerHTML = items.map((t) => `
+      <div class="celebration-item"><span class="celebration-check">&#10003;</span>${t}</div>
+    `).join('');
   }
 
   // ================================================================
@@ -1873,7 +2087,6 @@
     if (!(solvedKeys['run3'] && solvedKeys['avgflowtime'])) missing.push('Day 2 Step 3 (Average Flow Time)');
     if (!solvedKeys['masterscore']) missing.push('Day 2 Step 4 (Master Performance Formula)');
     if (!solvedKeys['blueprintart']) missing.push('the Aqueduct Blueprint Studio (lock in your design)');
-    if (!document.getElementById('stamp-display').classList.contains('show')) missing.push('the Team Math Check (award your Math Quality Stamp)');
     if (!(document.getElementById('stewardship-reflection').disabled && document.getElementById('self-assessment').disabled)) missing.push('the Stewardship Reflection and Self-Assessment');
     return missing;
   }
@@ -2039,6 +2252,11 @@
       LessonCheck.incomplete(feedbackEl, 'Type both team member names at the top of the page first.');
       return;
     }
+    const missing = missingDay2Work();
+    if (missing.length) {
+      LessonCheck.incomplete(feedbackEl, `Finish Day 2 first - still need: ${missing.join(', ')}.`);
+      return;
+    }
     const myName = memberNum === 1 ? name1 : name2;
     const partnerName = memberNum === 1 ? name2 : name1;
     const [logo, decoIcons] = await Promise.all([
@@ -2127,7 +2345,7 @@
     const name1 = document.getElementById('team-name-1').value.trim();
     const name2 = document.getElementById('team-name-2').value.trim();
     if (!document.getElementById('stamp-display').classList.contains('show')) {
-      LessonCheck.incomplete(feedbackEl, 'Award your Math Quality Stamp above first.');
+      LessonCheck.incomplete(feedbackEl, 'Finish Day 2 first to unlock your Math Quality Stamp.');
       return;
     }
     const SCALE = 2;
@@ -2272,20 +2490,9 @@
 
   renderVocabMatch();
   renderBlueprintArt();
-
-  renderNumberLine('elevation-numberline', {
-    min: -5, max: 20, step: 5,
-    points: [
-      { value: 0, label: 'Start', color: '#1e3a8a' },
-      { value: 16, label: 'Final', color: '#15803d' }
-    ],
-    arrows: [
-      { from: 0, to: 15, label: '+15', color: '#16a34a', row: 0 },
-      { from: 15, to: 9.75, label: '-5.25', color: '#dc2626', row: 1 },
-      { from: 9.75, to: 18.5, label: '+8.75', color: '#16a34a', row: 2 },
-      { from: 18.5, to: 16, label: '-2.5', color: '#dc2626', row: 3 }
-    ]
-  });
+  renderElevationProfile();
+  updateWhatIf();
+  renderCelebration();
 </script>
 
 </body>
