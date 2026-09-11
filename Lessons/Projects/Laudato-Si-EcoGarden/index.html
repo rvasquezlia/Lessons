@@ -248,7 +248,10 @@
     }
     .calc-row input.cell-input { width: 116px; font-size: 1.2rem; padding: 12px; }
 
-    /* Garden tray / grid */
+    /* Garden Builder: a free-form Konva.js canvas (like the Creation Sign
+       Studio) instead of a fixed 6x6 cell grid - items are placed by
+       clicking a tray chip, then dragged, resized, and rotated anywhere
+       on the plot. */
     .tray {
       display: flex;
       flex-wrap: wrap;
@@ -265,44 +268,28 @@
       width: 46px;
       height: 46px;
       border-radius: 8px;
+      padding: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 900;
-      font-size: 0.78rem;
-      cursor: grab;
+      cursor: pointer;
       border: 3px solid var(--tborder, #64748b);
       background: var(--tcol, #e2e8f0);
-      color: #1e293b;
       user-select: none;
     }
-    .token.real { padding: 4px; }
-    .token.real svg { width: 100%; height: 100%; }
-    .token.selected { outline: 3px solid #f59e0b; outline-offset: 2px; transform: scale(1.08); }
-    .token.locked { cursor: not-allowed; opacity: 0.9; }
+    .token svg { width: 100%; height: 100%; }
+    .token.locked { cursor: not-allowed; opacity: 0.6; }
 
-    .grid6 {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 6px;
-      max-width: 420px;
-      margin: 16px auto;
-      background: #d9e6d3;
-      padding: 12px;
+    .garden-builder { display: flex; flex-wrap: wrap; gap: 24px; margin: 18px 0; }
+    .garden-toolbar { flex: 1 1 260px; }
+    .garden-stage-container {
+      width: 480px;
+      max-width: 100%;
+      height: 480px;
       border-radius: 14px;
-      border: 4px solid #6b7f5e;
+      overflow: hidden;
+      touch-action: none;
     }
-    .grid6.real-view { background: #cdead0; }
-    .cell {
-      aspect-ratio: 1;
-      border: 2px dashed rgba(0,0,0,0.25);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255,255,255,0.55);
-    }
-    .cell .token { width: 100%; height: 100%; border-radius: 6px; cursor: pointer; }
 
     .legend-row { display: flex; flex-wrap: wrap; gap: 10px 18px; justify-content: center; margin-top: 12px; font-size: 0.85rem; }
     .legend-row span { display: inline-flex; align-items: center; gap: 6px; }
@@ -677,30 +664,32 @@
         <div class="feedback-msg" id="division-feedback"></div>
       </div>
 
-      <div class="section-title" style="font-size:1.3rem;">Engineering: Garden Grid <span class="time-chip">15-35 min</span></div>
+      <div class="section-title" style="font-size:1.3rem;">Engineering: Garden Builder <span class="time-chip">15-35 min</span></div>
       <div class="howto-box">
         <strong class="howto-label">What to do</strong>
-        Load your purchased items, then drag (or tap to select, then tap a cell) each one into the 6&times;6 grid - 1 item = 1 space.
-        Tap "See My Garden (Real Life)" to preview what it will actually look like.
+        Load your purchased items, then click one in the tray to place it in your garden - drag it anywhere,
+        and use the corner handles to resize or rotate it.
       </div>
 
       <div style="text-align:center;">
         <button class="row-check-btn" id="load-tokens-btn" onclick="loadGardenTokens()">Load My Purchased Items</button>
-        <button class="row-check-btn" id="view-toggle-btn" onclick="toggleGardenView()" style="background:var(--accent);">See My Garden (Real Life)</button>
       </div>
 
-      <p style="text-align:center; font-weight:700; margin-top:14px;">Item Tray</p>
-      <div class="tray" id="tray"></div>
-
-      <p style="text-align:center; font-weight:700;">6&times;6 Garden Grid</p>
-      <div class="grid6" id="grid6"></div>
+      <div class="garden-builder">
+        <div class="garden-toolbar">
+          <p style="font-weight:700; margin:0 0 8px;">Item Tray - click one to place it</p>
+          <div class="tray" id="tray"></div>
+          <div id="garden-props" class="sign-props" style="display:none;"></div>
+          <button class="row-check-btn" id="lock-garden-btn" onclick="lockGarden()" style="margin-top:10px;">Lock My Garden Layout</button>
+          <span id="garden-lock-msg"></span>
+          <div class="feedback-msg" id="garden-feedback"></div>
+        </div>
+        <div class="sign-stage-wrap">
+          <div id="garden-stage-container" class="garden-stage-container"></div>
+          <p class="sign-hint">Click a tray item to place it &middot; drag to move &middot; corner handles to resize/rotate</p>
+        </div>
+      </div>
       <div class="legend-row" id="legend-row"></div>
-
-      <div style="text-align:center; margin-top:14px;">
-        <button class="row-check-btn" id="lock-garden-btn" onclick="lockGarden()">Lock My Garden Layout</button>
-        <span id="garden-lock-msg"></span>
-      </div>
-      <div class="feedback-msg" id="garden-feedback"></div>
 
       <div class="section-title" style="font-size:1.3rem;">Art &amp; Religion: Creation Sign Studio</div>
       <div class="howto-box">
@@ -1216,7 +1205,8 @@
       grandTotal: window.grandTotal, plantCostExpected: window.plantCostExpected,
       plantCountExpected: window.plantCountExpected, plantAvgAchieved: window.plantAvgAchieved,
       day2Unlocked,
-      tokens, trayIds, gridArr, nextTokenId, gardenBuilt, gardenLocked, gardenView,
+      tokens, trayIds, nextTokenId, gardenBuilt, gardenLocked,
+      gardenElements: serializeGardenElements(),
       sign: {
         material: signMaterial,
         elements: serializeSignElements(),
@@ -1236,7 +1226,7 @@
         AvgCostPerPlant: window.plantAvgAchieved || '',
         ChecksSolved: Object.keys(solvedKeys).length,
         TotalAttempts: Object.values(attemptCounts).reduce((a, b) => a + b, 0),
-        GardenSpacesUsed: gridArr.filter((x) => x != null).length,
+        GardenSpacesUsed: gardenElementNodes().length,
         CertificateDownloaded: window.certificateDownloaded ? 'TRUE' : '',
         StateJSON: JSON.stringify(buildStatePayload())
       })
@@ -1259,11 +1249,9 @@
 
     tokens = state.tokens || [];
     trayIds = state.trayIds || [];
-    gridArr = state.gridArr || new Array(36).fill(null);
     nextTokenId = state.nextTokenId || 1;
     gardenBuilt = !!state.gardenBuilt;
     gardenLocked = !!state.gardenLocked;
-    gardenView = state.gardenView || 'blueprint';
 
     renderCatalog();
     renderCart();
@@ -1324,18 +1312,17 @@
 
     if (gardenBuilt) {
       renderLegend();
-      renderGarden();
+      renderTray();
       document.getElementById('load-tokens-btn').disabled = true;
       document.getElementById('load-tokens-btn').textContent = `Loaded ${tokens.length} Items`;
-      document.getElementById('view-toggle-btn').textContent =
-        gardenView === 'blueprint' ? '🌼 See My Garden (Real Life)' : '🎨 Back to Blueprint View';
+      if (state.gardenElements) await restoreGardenElements(state.gardenElements);
       if (gardenLocked) {
-        const filled = gridArr.filter((x) => x != null).length;
+        applyGardenLockedUI();
         document.getElementById('lock-garden-btn').disabled = true;
         const fb = document.getElementById('garden-feedback');
         fb.style.display = 'block';
         fb.className = 'feedback-msg success locked';
-        fb.innerHTML = `Garden layout locked! You placed ${filled} of 36 spaces. <span style="opacity:.75;">(restored)</span>`;
+        fb.innerHTML = `Garden layout locked! You placed ${gardenElementNodes().length} of ${tokens.length} items. <span style="opacity:.75;">(restored)</span>`;
       }
     }
 
@@ -1784,16 +1771,19 @@
   }
 
   // ================================================================
-  // ENGINEERING: GARDEN TRAY + 6x6 GRID
+  // ENGINEERING: GARDEN BUILDER
+  // A free-form Konva.js canvas, same pattern as the Creation Sign
+  // Studio: click a tray item to place it, then drag/resize/rotate it
+  // anywhere on the plot - not locked to one item per grid cell.
   // ================================================================
-  let tokens = [];        // { id, code }
-  let trayIds = [];
-  let gridArr = new Array(36).fill(null);
+  let tokens = [];        // { id, code } - one entry per purchased unit
+  let trayIds = [];       // ids not yet placed on the garden canvas
   let gardenBuilt = false;
   let gardenLocked = false;
-  let gardenView = 'blueprint';
-  let selectedToken = null;
   let nextTokenId = 1;
+
+  const GARDEN_W = 480, GARDEN_H = 480;
+  let gardenStage = null, gardenBgLayer = null, gardenLayer = null, gardenTransformer = null;
 
   function loadGardenTokens() {
     if (gardenBuilt || !window.grandTotal) return;
@@ -1808,7 +1798,7 @@
     document.getElementById('load-tokens-btn').disabled = true;
     document.getElementById('load-tokens-btn').textContent = `Loaded ${tokens.length} Items`;
     renderLegend();
-    renderGarden();
+    renderTray();
   }
 
   function renderLegend() {
@@ -1820,98 +1810,190 @@
     }).join('');
   }
 
-  function tokenMarkup(id, inGrid) {
-    const t = tokens.find((tk) => tk.id === id);
-    const item = CATALOG_BY_CODE[t.code];
-    const isReal = gardenView === 'real';
-    const content = isReal ? ICONS[t.code] : t.code.replace('-', '');
-    const selCls = (!inGrid && selectedToken === id) ? ' selected' : '';
-    const lockCls = gardenLocked ? ' locked' : '';
-    const clickAttr = inGrid ? `onclick="event.stopPropagation(); clickGridToken(${id})"` : `onclick="clickTrayToken(${id})"`;
-    return `<div class="token${isReal ? ' real' : ''}${selCls}${lockCls}" style="--tcol:${item.bg}; --tborder:${item.border};"
-              draggable="${gardenLocked ? 'false' : 'true'}" ondragstart="dragStartToken(event, ${id})"
-              ${clickAttr} title="${item.name}">${content}</div>`;
-  }
-
-  function renderGarden() {
+  function renderTray() {
     const trayEl = document.getElementById('tray');
-    trayEl.ondrop = dropOnTray;
-    trayEl.ondragover = allowDrop;
     trayEl.innerHTML = trayIds.length
-      ? trayIds.map((id) => tokenMarkup(id, false)).join('')
+      ? trayIds.map((id) => {
+          const t = tokens.find((tk) => tk.id === id);
+          const item = CATALOG_BY_CODE[t.code];
+          return `<div class="token${gardenLocked ? ' locked' : ''}" style="--tcol:${item.bg}; --tborder:${item.border};"
+                    onclick="placeGardenToken(${id})" title="${gardenLocked ? item.name : 'Click to place: ' + item.name}">${ICONS[t.code]}</div>`;
+        }).join('')
       : '<span class="tray-empty">All items placed - or click "Load My Purchased Items" if the tray is empty.</span>';
-
-    const gridEl = document.getElementById('grid6');
-    gridEl.className = 'grid6' + (gardenView === 'real' ? ' real-view' : '');
-    gridEl.innerHTML = gridArr.map((id, i) => `
-      <div class="cell" ondragover="allowDrop(event)" ondrop="dropOnCell(event, ${i})" onclick="clickCell(${i})">
-        ${id != null ? tokenMarkup(id, true) : ''}
-      </div>`).join('');
   }
 
-  function allowDrop(e) { e.preventDefault(); }
-  function dragStartToken(e, id) {
-    if (gardenLocked) { e.preventDefault(); return; }
-    e.dataTransfer.setData('text/plain', String(id));
+  function initGardenStage() {
+    gardenStage = new Konva.Stage({ container: 'garden-stage-container', width: GARDEN_W, height: GARDEN_H });
+    gardenBgLayer = new Konva.Layer({ listening: false });
+    gardenLayer = new Konva.Layer();
+    gardenStage.add(gardenBgLayer);
+    gardenStage.add(gardenLayer);
+    gardenTransformer = new Konva.Transformer({
+      anchorSize: 10, borderDash: [4, 4],
+      rotationSnaps: Array.from({ length: 24 }, (_, i) => i * 15)
+    });
+    gardenLayer.add(gardenTransformer);
+    drawGardenBed();
+
+    gardenStage.on('click tap', (e) => {
+      if (gardenLocked) return;
+      if (e.target === gardenStage || e.target.getLayer() === gardenBgLayer) { deselectGardenNode(); return; }
+      if (e.target === gardenTransformer || gardenTransformer.nodes().indexOf(e.target) !== -1) return;
+      selectGardenNode(e.target);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (gardenLocked || !getSelectedGardenNode()) return;
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+      if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); returnSelectedGardenNodeToTray(); }
+    });
   }
 
-  function removeFromGridIfPresent(id) {
-    const idx = gridArr.indexOf(id);
-    if (idx > -1) gridArr[idx] = null;
+  // A soil-bed background with faint grid lines as a loose spatial
+  // reference (not a hard snap) - a nod to the original 6x6 layout
+  // without constraining placement to it.
+  function drawGardenBed() {
+    gardenBgLayer.destroyChildren();
+    gardenBgLayer.add(new Konva.Rect({ x: 6, y: 10, width: GARDEN_W, height: GARDEN_H, cornerRadius: 14, fill: 'rgba(15,23,42,0.2)' }));
+    gardenBgLayer.add(new Konva.Rect({ width: GARDEN_W, height: GARDEN_H, cornerRadius: 12, fill: '#d9e6d3', stroke: '#6b7f5e', strokeWidth: 10 }));
+    for (let i = 1; i < 6; i++) {
+      gardenBgLayer.add(new Konva.Line({ points: [(GARDEN_W / 6) * i, 0, (GARDEN_W / 6) * i, GARDEN_H], stroke: 'rgba(107,127,94,0.18)', strokeWidth: 1 }));
+      gardenBgLayer.add(new Konva.Line({ points: [0, (GARDEN_H / 6) * i, GARDEN_W, (GARDEN_H / 6) * i], stroke: 'rgba(107,127,94,0.18)', strokeWidth: 1 }));
+    }
+    gardenBgLayer.draw();
   }
 
-  function dropOnCell(e, i) {
-    e.preventDefault();
+  function gardenElementNodes() {
+    return gardenLayer.getChildren((n) => n !== gardenTransformer);
+  }
+
+  function nextGardenPlacementOffset() {
+    const step = (gardenElementNodes().length % 8) * 16;
+    return { dx: step, dy: step };
+  }
+
+  function attachGardenNodeEvents(node) {
+    node.draggable(!gardenLocked);
+    node.on('dragend transformend', () => saveProgress());
+    node.on('click tap', (e) => { e.cancelBubble = true; if (!gardenLocked) selectGardenNode(node); });
+  }
+
+  async function placeGardenToken(id) {
     if (gardenLocked) return;
-    const id = parseInt(e.dataTransfer.getData('text/plain'), 10);
-    if (isNaN(id) || gridArr[i] != null) return;
-    removeFromGridIfPresent(id);
-    const trayIdx = trayIds.indexOf(id);
-    if (trayIdx > -1) trayIds.splice(trayIdx, 1);
-    gridArr[i] = id;
-    selectedToken = null;
-    renderGarden();
+    const t = tokens.find((tk) => tk.id === id);
+    const img = await svgToImage(ICONS[t.code]);
+    const { dx, dy } = nextGardenPlacementOffset();
+    const node = new Konva.Image({
+      id: 'gt' + id, image: img,
+      x: GARDEN_W / 2 - 24 + dx, y: GARDEN_H / 2 - 24 + dy, width: 48, height: 48, draggable: true
+    });
+    node.setAttr('tokenId', id);
+    node.setAttr('code', t.code);
+    attachGardenNodeEvents(node);
+    gardenLayer.add(node);
+    const idx = trayIds.indexOf(id);
+    if (idx > -1) trayIds.splice(idx, 1);
+    renderTray();
+    selectGardenNode(node);
+    gardenLayer.draw();
+    saveProgress();
   }
 
-  function dropOnTray(e) {
-    e.preventDefault();
-    if (gardenLocked) return;
-    const id = parseInt(e.dataTransfer.getData('text/plain'), 10);
-    if (isNaN(id)) return;
-    removeFromGridIfPresent(id);
+  function selectGardenNode(node) {
+    gardenTransformer.nodes([node]);
+    gardenLayer.draw();
+    renderGardenProps(node);
+  }
+
+  function deselectGardenNode() {
+    gardenTransformer.nodes([]);
+    gardenLayer.draw();
+    document.getElementById('garden-props').style.display = 'none';
+  }
+
+  function getSelectedGardenNode() {
+    const nodes = gardenTransformer.nodes();
+    return nodes.length ? nodes[0] : null;
+  }
+
+  function renderGardenProps(node) {
+    const panel = document.getElementById('garden-props');
+    const item = CATALOG_BY_CODE[node.getAttr('code')];
+    panel.style.display = 'flex';
+    panel.innerHTML = `
+      <span style="font-weight:700; font-size:0.85rem;">${item.name}</span>
+      <button type="button" class="row-check-btn" onclick="bringGardenNodeForward()">Forward</button>
+      <button type="button" class="row-check-btn" onclick="sendGardenNodeBackward()">Backward</button>
+      <button type="button" class="row-check-btn" style="background:#dc2626;" onclick="returnSelectedGardenNodeToTray()">Return to Tray</button>
+    `;
+  }
+
+  function bringGardenNodeForward() {
+    const node = getSelectedGardenNode();
+    if (!node) return;
+    node.moveUp();
+    gardenLayer.draw();
+    saveProgress();
+  }
+
+  function sendGardenNodeBackward() {
+    const node = getSelectedGardenNode();
+    if (!node) return;
+    node.moveDown();
+    gardenLayer.draw();
+    saveProgress();
+  }
+
+  // A garden item is a specific unit the team already bought - "deleting"
+  // it should hand it back to the tray to be placed again, never destroy
+  // it outright, since a team can't lose an item they paid for.
+  function returnSelectedGardenNodeToTray() {
+    const node = getSelectedGardenNode();
+    if (!node) return;
+    const id = node.getAttr('tokenId');
+    node.destroy();
+    deselectGardenNode();
     if (trayIds.indexOf(id) === -1) trayIds.push(id);
-    selectedToken = null;
-    renderGarden();
+    renderTray();
+    gardenLayer.draw();
+    saveProgress();
   }
 
-  function clickTrayToken(id) {
-    if (gardenLocked) return;
-    selectedToken = selectedToken === id ? null : id;
-    renderGarden();
+  function serializeGardenElements() {
+    return gardenElementNodes().map((n) => ({
+      tokenId: n.getAttr('tokenId'), code: n.getAttr('code'),
+      x: n.x(), y: n.y(), rotation: n.rotation(), scaleX: n.scaleX(), scaleY: n.scaleY()
+    }));
   }
 
-  function clickGridToken(id) {
-    if (gardenLocked) return;
-    removeFromGridIfPresent(id);
-    if (trayIds.indexOf(id) === -1) trayIds.push(id);
-    selectedToken = null;
-    renderGarden();
+  function clearGardenElements() {
+    gardenElementNodes().forEach((n) => n.destroy());
+    gardenLayer.draw();
   }
 
-  function clickCell(i) {
-    if (gardenLocked || gridArr[i] != null || selectedToken == null) return;
-    const trayIdx = trayIds.indexOf(selectedToken);
-    if (trayIdx > -1) trayIds.splice(trayIdx, 1);
-    gridArr[i] = selectedToken;
-    selectedToken = null;
-    renderGarden();
+  async function restoreGardenElements(list) {
+    clearGardenElements();
+    for (const el of list) {
+      const img = await svgToImage(ICONS[el.code]);
+      const node = new Konva.Image({
+        id: 'gt' + el.tokenId, image: img, x: el.x, y: el.y, rotation: el.rotation,
+        scaleX: el.scaleX, scaleY: el.scaleY, width: 48, height: 48, draggable: true
+      });
+      node.setAttr('tokenId', el.tokenId);
+      node.setAttr('code', el.code);
+      attachGardenNodeEvents(node);
+      gardenLayer.add(node);
+    }
+    gardenTransformer.moveToTop();
+    gardenLayer.draw();
   }
 
-  function toggleGardenView() {
-    gardenView = gardenView === 'blueprint' ? 'real' : 'blueprint';
-    document.getElementById('view-toggle-btn').textContent =
-      gardenView === 'blueprint' ? '🌼 See My Garden (Real Life)' : '🎨 Back to Blueprint View';
-    renderGarden();
+  function applyGardenLockedUI() {
+    gardenLocked = true;
+    gardenElementNodes().forEach((n) => n.draggable(false));
+    deselectGardenNode();
+    document.getElementById('load-tokens-btn').disabled = true;
+    renderTray();
   }
 
   function lockGarden() {
@@ -1919,19 +2001,23 @@
       document.getElementById('garden-lock-msg').textContent = 'Load your purchased items first.';
       return;
     }
-    gardenLocked = true;
-    selectedToken = null;
-    renderGarden();
-    const filled = gridArr.filter((x) => x != null).length;
+    const placedCount = gardenElementNodes().length;
+    applyGardenLockedUI();
     const feedbackEl = document.getElementById('garden-feedback');
     LessonCheck.submit(feedbackEl, {
       key: 'garden-grid',
       label: 'Garden Grid Layout (Engineering)',
-      answer: `${filled} of 36 spaces used (${tokens.length} items purchased)`,
+      answer: `${placedCount} of ${tokens.length} items placed`,
       section: 'Day 2 - Garden Layout'
-    }, `Garden layout locked! You placed ${filled} of 36 spaces.`);
+    }, `Garden layout locked! You placed ${placedCount} of ${tokens.length} items.`);
     document.getElementById('lock-garden-btn').disabled = true;
     saveProgress();
+  }
+
+  function getGardenDataUrl() {
+    gardenTransformer.nodes([]);
+    gardenLayer.draw();
+    return gardenStage.toDataURL({ pixelRatio: 2 });
   }
 
   // ================================================================
@@ -1964,7 +2050,10 @@
     signLayer = new Konva.Layer();
     signStage.add(signBgLayer);
     signStage.add(signLayer);
-    signTransformer = new Konva.Transformer({ anchorSize: 10, borderDash: [4, 4] });
+    signTransformer = new Konva.Transformer({
+      anchorSize: 10, borderDash: [4, 4],
+      rotationSnaps: Array.from({ length: 24 }, (_, i) => i * 15)
+    });
     signLayer.add(signTransformer);
     drawSignMaterial(signMaterial);
 
@@ -1974,6 +2063,22 @@
       if (e.target === signTransformer || signTransformer.nodes().indexOf(e.target) !== -1) return;
       selectSignNode(e.target);
     });
+
+    // Delete/Backspace removes the selected element, as long as focus isn't
+    // sitting in a text field (that should delete a character, not a shape).
+    document.addEventListener('keydown', (e) => {
+      if (signLocked || !getSelectedSignNode()) return;
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+      if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); deleteSelectedSignNode(); }
+    });
+  }
+
+  // Every new element would otherwise land on the exact same spot (dead
+  // center) and silently stack, invisible, under whatever was added first -
+  // cascading the offset makes each new addition visible immediately.
+  function nextSignPlacementOffset() {
+    const step = (signElementNodes().length % 6) * 18;
+    return { dx: step, dy: step };
   }
 
   // One texture per material: a gradient/pattern fill plus a few
@@ -2077,9 +2182,10 @@
 
   function addSignText(text, opts) {
     opts = opts || {};
+    const { dx, dy } = nextSignPlacementOffset();
     const node = new Konva.Text({
       id: nextSignId(),
-      x: SIGN_W / 2 - 100, y: SIGN_H / 2 - 18, width: 200,
+      x: SIGN_W / 2 - 100 + dx, y: SIGN_H / 2 - 18 + dy, width: 200,
       text: text || 'Your Text Here',
       fontSize: opts.fontSize || 26,
       fontFamily: opts.fontFamily || SIGN_FONTS[0].value,
@@ -2096,9 +2202,10 @@
 
   async function addSignIcon(key) {
     const img = await svgToImage(STICKER_ICONS[key]);
+    const { dx, dy } = nextSignPlacementOffset();
     const node = new Konva.Image({
       id: nextSignId(), image: img,
-      x: SIGN_W / 2 - 24, y: SIGN_H / 2 - 24, width: 48, height: 48, draggable: true
+      x: SIGN_W / 2 - 24 + dx, y: SIGN_H / 2 - 24 + dy, width: 48, height: 48, draggable: true
     });
     node.setAttr('iconKey', key);
     attachSignNodeEvents(node);
@@ -2196,6 +2303,7 @@
         <button type="button" class="row-check-btn" onclick="adjustSignFontSize(2)">A+</button>
         <button type="button" class="row-check-btn" onclick="adjustSignFontSize(-2)">A-</button>
       ` : ''}
+      <button type="button" class="row-check-btn" onclick="duplicateSelectedSignNode()">Duplicate</button>
       <button type="button" class="row-check-btn" onclick="bringSignNodeForward()">Forward</button>
       <button type="button" class="row-check-btn" onclick="sendSignNodeBackward()">Backward</button>
       <button type="button" class="row-check-btn" style="background:#dc2626;" onclick="deleteSelectedSignNode()">Delete</button>
@@ -2241,6 +2349,22 @@
     if (!node) return;
     node.destroy();
     deselectSignNode();
+    signLayer.draw();
+    saveProgress();
+  }
+
+  function duplicateSelectedSignNode() {
+    const node = getSelectedSignNode();
+    if (!node) return;
+    const isText = node.getClassName() === 'Text';
+    const common = { id: nextSignId(), x: node.x() + 20, y: node.y() + 20, rotation: node.rotation(), scaleX: node.scaleX(), scaleY: node.scaleY(), draggable: true };
+    const clone = isText
+      ? new Konva.Text({ ...common, text: node.text(), fontFamily: node.fontFamily(), fontSize: node.fontSize(), fill: node.fill(), width: node.width(), fontStyle: '700', align: 'center' })
+      : new Konva.Image({ ...common, image: node.image(), width: node.width(), height: node.height() });
+    if (!isText) clone.setAttr('iconKey', node.getAttr('iconKey'));
+    attachSignNodeEvents(clone);
+    signLayer.add(clone);
+    selectSignNode(clone);
     signLayer.draw();
     saveProgress();
   }
@@ -2839,7 +2963,13 @@
   // sync with the on-screen studio.
   async function drawSignOntoCanvas(ctx, x, y, w, h) {
     const img = await dataUrlToImage(getSignDataUrl());
-    ctx.drawImage(img, x, y, w, h);
+    // The sign's own canvas is a fixed landscape shape (SIGN_W x SIGN_H)
+    // that rarely matches the caller's box exactly - stretching it to fill
+    // (x,y,w,h) distorts every bolt, gradient, and letter on it. Contain-fit
+    // instead: scale to the box uniformly and center, like a real image export.
+    const scale = Math.min(w / SIGN_W, h / SIGN_H);
+    const drawW = SIGN_W * scale, drawH = SIGN_H * scale;
+    ctx.drawImage(img, x + (w - drawW) / 2, y + (h - drawH) / 2, drawW, drawH);
   }
 
   async function downloadSign() {
@@ -2876,40 +3006,15 @@
   // life" view) plus a legend of what's planted where. Returns the list of
   // catalog codes actually used, for the legend, since the poster draws
   // the legend itself rather than reusing the page's #legend-row markup.
+  // Same idea as the sign: the Konva stage is the single source of truth
+  // for the garden's layout, so exporting it is just drawing its own
+  // rendered image, contain-fit into whatever square box is given.
   async function drawGardenOntoCanvas(ctx, x, y, size) {
-    const pad = 12, gap = 6;
-    const cellSize = (size - pad * 2 - gap * 5) / 6;
-
-    roundRectPath(ctx, x, y, size, size, 14);
-    ctx.fillStyle = '#d9e6d3';
-    ctx.fill();
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = '#6b7f5e';
-    ctx.stroke();
-
-    const usedCodes = [...new Set(gridArr.filter((id) => id != null).map((id) => tokens.find((t) => t.id === id).code))];
-    const iconImgs = {};
-    await Promise.all(usedCodes.map(async (code) => { iconImgs[code] = await svgToImage(ICONS[code]); }));
-
-    for (let i = 0; i < 36; i++) {
-      const row = Math.floor(i / 6), col = i % 6;
-      const cx = x + pad + col * (cellSize + gap);
-      const cy = y + pad + row * (cellSize + gap);
-      roundRectPath(ctx, cx, cy, cellSize, cellSize, 6);
-      ctx.fillStyle = 'rgba(255,255,255,0.6)';
-      ctx.fill();
-      ctx.setLineDash([3, 3]);
-      ctx.lineWidth = 1.5;
-      ctx.strokeStyle = 'rgba(0,0,0,0.25)';
-      ctx.stroke();
-      ctx.setLineDash([]);
-      const id = gridArr[i];
-      if (id != null) {
-        const t = tokens.find((tk) => tk.id === id);
-        if (t && iconImgs[t.code]) ctx.drawImage(iconImgs[t.code], cx + 3, cy + 3, cellSize - 6, cellSize - 6);
-      }
-    }
-    return usedCodes;
+    const img = await dataUrlToImage(getGardenDataUrl());
+    const scale = Math.min(size / GARDEN_W, size / GARDEN_H);
+    const drawW = GARDEN_W * scale, drawH = GARDEN_H * scale;
+    ctx.drawImage(img, x + (size - drawW) / 2, y + (size - drawH) / 2, drawW, drawH);
+    return [...new Set(gardenElementNodes().map((n) => n.getAttr('code')))];
   }
 
   // Suggested by the sign feedback: "have the garden layout as well ...
@@ -2925,8 +3030,8 @@
       LessonCheck.incomplete(feedbackEl, 'Type both team member names at the top of the page before downloading your poster.');
       return;
     }
-    if (!gardenBuilt || gridArr.every((id) => id == null)) {
-      LessonCheck.incomplete(feedbackEl, 'Place at least one item in your Garden Grid (above) before downloading the poster.');
+    if (!gardenBuilt || !gardenElementNodes().length) {
+      LessonCheck.incomplete(feedbackEl, 'Place at least one item in your garden (above) before downloading the poster.');
       return;
     }
 
@@ -3099,7 +3204,7 @@
     sections.push({
       title: 'Day 2 - Garden & Sign',
       rows: [
-        { label: 'Garden Grid Layout', detail: gardenLocked ? `Locked - ${gridArr.filter((x) => x != null).length} of 36 spaces used` : 'Not completed yet' },
+        { label: 'Garden Grid Layout', detail: gardenLocked ? `Locked - ${gardenElementNodes().length} of ${tokens.length} items placed` : 'Not completed yet' },
         { label: 'Creation Sign', detail: document.getElementById('lock-sign-btn').disabled ? 'Locked' : 'Not completed yet' }
       ]
     });
@@ -3146,6 +3251,7 @@
   // ================================================================
   renderCatalog();
   renderCart();
+  initGardenStage();
   populateSignPickers();
   initSignStage();
   seedDefaultSignElements();
