@@ -848,13 +848,25 @@
   // reused verbatim in the document (one garden can drop the same plant
   // token many times). Gradients give real shading instead of the old
   // flat single-color fills.
-  function flowerIcon(petalColor, centerColor, petalCount) {
+  // planted=true draws the same flower head shrunk and shifted up with a
+  // stem and leaf beneath it, for when the flower is placed in the garden
+  // rather than shown as a flat catalog/tray icon.
+  function flowerIcon(petalColor, centerColor, petalCount, planted) {
     const gid = 'flo-' + petalColor.replace('#', '') + '-' + centerColor.replace('#', '');
     let petals = '';
     for (let i = 0; i < petalCount; i++) {
       const angle = (360 / petalCount) * i;
       petals += `<path d="M20,20 C 24,14 24,8 20,2 C 16,8 16,14 20,20 Z" fill="url(#${gid})" stroke="${centerColor}" stroke-width="0.4" stroke-opacity="0.4" transform="rotate(${angle} 20 20)"/>`;
     }
+    const head = `${petals}<circle cx="20" cy="20" r="6.5" fill="url(#${gid}-c)" stroke="${centerColor}" stroke-width="0.6"/>`;
+    const groundAndStem = planted
+      ? `<ellipse cx="20" cy="37" rx="7" ry="1.8" fill="#000" opacity="0.12"/>
+         <line x1="20" y1="21" x2="20" y2="36" stroke="#3f6212" stroke-width="2.2" stroke-linecap="round"/>
+         <path d="M20 29 Q 26 27 27.5 21" stroke="#4d7c0f" stroke-width="2" fill="none" stroke-linecap="round"/>`
+      : `<ellipse cx="20" cy="30" rx="11" ry="3" fill="#000" opacity="0.08"/>`;
+    const headGroup = planted
+      ? `<g transform="translate(20,15) scale(0.62) translate(-20,-20)">${head}</g>`
+      : head;
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
       <defs>
         <radialGradient id="${gid}" cx="50%" cy="85%" r="90%">
@@ -867,9 +879,8 @@
           <stop offset="100%" stop-color="${centerColor}"/>
         </radialGradient>
       </defs>
-      <ellipse cx="20" cy="30" rx="11" ry="3" fill="#000" opacity="0.08"/>
-      ${petals}
-      <circle cx="20" cy="20" r="6.5" fill="url(#${gid}-c)" stroke="${centerColor}" stroke-width="0.6"/>
+      ${groundAndStem}
+      ${headGroup}
     </svg>`;
   }
   function fernIcon() {
@@ -931,20 +942,22 @@
       <circle cx="19" cy="30" r="1.2" fill="#5c3a10" opacity="0.5"/>
     </svg>`;
   }
-  // A stacked cairn instead of three loose ovals - reads unmistakably as
-  // "decorative stones" at small sizes, where the old scattered-blob
-  // version just looked like an ambiguous gray smudge.
+  // A small pile of smooth, irregular river stones (plus one loose pebble)
+  // instead of three perfectly stacked ovals with a heavy outline - reads
+  // as an actual bag of stones tipped out, not a balanced cairn.
   function stonesIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
       <defs>
-        <radialGradient id="stone-grad-1" cx="32%" cy="25%" r="85%"><stop offset="0%" stop-color="#f1f5f9"/><stop offset="100%" stop-color="#64748b"/></radialGradient>
-        <radialGradient id="stone-grad-2" cx="32%" cy="25%" r="85%"><stop offset="0%" stop-color="#e2e8f0"/><stop offset="100%" stop-color="#475569"/></radialGradient>
-        <radialGradient id="stone-grad-3" cx="32%" cy="25%" r="85%"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#94a3b8"/></radialGradient>
+        <radialGradient id="stone-grad-1" cx="30%" cy="22%" r="90%"><stop offset="0%" stop-color="#f8fafc"/><stop offset="55%" stop-color="#cbd5e1"/><stop offset="100%" stop-color="#7c8ba1"/></radialGradient>
+        <radialGradient id="stone-grad-2" cx="32%" cy="24%" r="90%"><stop offset="0%" stop-color="#eef2f6"/><stop offset="55%" stop-color="#b8c2d0"/><stop offset="100%" stop-color="#64748b"/></radialGradient>
+        <radialGradient id="stone-grad-3" cx="28%" cy="20%" r="90%"><stop offset="0%" stop-color="#fdfdfd"/><stop offset="55%" stop-color="#d7dee6"/><stop offset="100%" stop-color="#8b96a8"/></radialGradient>
       </defs>
-      <ellipse cx="20" cy="35" rx="13" ry="2.4" fill="#000" opacity="0.18"/>
-      <ellipse cx="20" cy="30" rx="13" ry="7" fill="url(#stone-grad-1)" stroke="#334155" stroke-width="1.8"/>
-      <ellipse cx="20" cy="21" rx="10" ry="6" fill="url(#stone-grad-2)" stroke="#334155" stroke-width="1.8"/>
-      <ellipse cx="20" cy="12" rx="7" ry="4.5" fill="url(#stone-grad-3)" stroke="#334155" stroke-width="1.8"/>
+      <ellipse cx="20" cy="35.5" rx="13.5" ry="2.4" fill="#000" opacity="0.16"/>
+      <path d="M6,31 C5,27 8,23 13,22 C18,21 24,21 29,23 C33,25 34,29 31,32 C27,35 12,35 8,33 C7,32.5 6.3,31.8 6,31 Z" fill="url(#stone-grad-1)" stroke="#5b6a80" stroke-width="1" stroke-opacity="0.6"/>
+      <path d="M11,26 Q16,24 22,25" fill="none" stroke="#4b5768" stroke-width="0.7" stroke-opacity="0.35" stroke-linecap="round"/>
+      <path d="M10,22 C9,18.5 12,15.5 16.5,15 C21,14.5 25,16.5 25.5,20 C26,23.5 22.5,26 17.5,26 C13,26 10.7,25 10,22 Z" fill="url(#stone-grad-2)" stroke="#5b6a80" stroke-width="1" stroke-opacity="0.6" transform="rotate(-6 17 20)"/>
+      <path d="M15,14.5 C14.2,11.7 16.5,9.3 20,9.3 C23.3,9.3 25.3,11.8 24.5,14.4 C23.7,17 20.6,18 18.5,17.6 C16.3,17.2 15.6,16.6 15,14.5 Z" fill="url(#stone-grad-3)" stroke="#5b6a80" stroke-width="0.9" stroke-opacity="0.6" transform="rotate(8 19.5 13.5)"/>
+      <ellipse cx="30" cy="32" rx="3.4" ry="2.3" fill="url(#stone-grad-1)" stroke="#5b6a80" stroke-width="0.8" stroke-opacity="0.5" transform="rotate(20 30 32)"/>
     </svg>`;
   }
   // A clear pedestal + wide basin + a perched bird silhouette, so it can't
@@ -1107,6 +1120,14 @@
     'S-02': stonesIcon(),
     'D-01': birdbathIcon(),
     'D-02': stakeIcon()
+  };
+
+  // Same icons, but flowers grow a stem/leaf - used only for tokens actually
+  // placed in the garden, so the catalog/tray/ledger keep the flat flower.
+  const GARDEN_ICONS = {
+    ...ICONS,
+    'P-01': flowerIcon('#f5c400', '#7a4a13', 12, true),
+    'P-02': flowerIcon('#ff8c1a', '#b3410c', 14, true)
   };
 
   // Small optimized copy of the school logo (240x120, ~27KB base64) embedded
@@ -1970,7 +1991,7 @@
   async function placeGardenToken(id) {
     if (gardenLocked) return;
     const t = tokens.find((tk) => tk.id === id);
-    const img = await svgToImage(ICONS[t.code]);
+    const img = await svgToImage(GARDEN_ICONS[t.code]);
     const { dx, dy } = nextGardenPlacementOffset();
     const node = new Konva.Image({
       id: 'gt' + id, image: img,
@@ -2064,7 +2085,7 @@
   async function restoreGardenElements(list) {
     clearGardenElements();
     for (const el of list) {
-      const img = await svgToImage(ICONS[el.code]);
+      const img = await svgToImage(GARDEN_ICONS[el.code]);
       const node = new Konva.Image({
         id: 'gt' + el.tokenId, image: img, x: el.x, y: el.y, rotation: el.rotation,
         scaleX: el.scaleX, scaleY: el.scaleY, width: 48, height: 48, draggable: true,
