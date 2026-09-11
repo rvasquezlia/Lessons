@@ -177,6 +177,96 @@
     #elevation-numberline { max-width: 620px; margin: 16px auto; }
     #elevation-numberline svg { width: 100%; height: auto; display: block; }
 
+    /* Key Vocabulary drag-and-drop match-up */
+    .vocab-match-wrap { display: flex; flex-wrap: wrap; gap: 20px; margin: 16px 0; }
+    .vocab-terms, .vocab-definitions { flex: 1 1 280px; display: flex; flex-direction: column; gap: 10px; }
+    .vocab-term-card {
+      background: #eff6ff;
+      border: 3px solid var(--primary-light);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-weight: 800;
+      color: var(--primary);
+      cursor: grab;
+      text-align: center;
+      transition: transform 0.1s ease;
+    }
+    .vocab-term-card.selected { outline: 3px solid #f59e0b; outline-offset: 2px; }
+    .vocab-term-card.matched { background: var(--success-bg); border-color: var(--success); color: var(--success); cursor: default; opacity: 0.85; }
+    .vocab-def-slot {
+      border: 3px dashed var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+      color: #334155;
+      cursor: pointer;
+    }
+    .vocab-def-slot.matched { border-style: solid; border-color: var(--success); background: var(--success-bg); cursor: default; }
+    .vocab-def-slot.wrong-flash { border-color: var(--error); background: var(--error-bg); }
+
+    /* Aqueduct Blueprint Studio */
+    .blueprint-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      margin: 16px 0;
+      align-items: flex-start;
+    }
+    .blueprint-controls {
+      flex: 1 1 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .blueprint-field { display: flex; flex-direction: column; gap: 5px; }
+    .blueprint-field label { font-weight: 700; font-size: 0.85rem; color: #334155; }
+    .blueprint-field input[type="text"], .blueprint-field select {
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: #fff;
+    }
+    .blueprint-swatch-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .blueprint-swatch {
+      border: 3px solid transparent;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: #fff;
+      color: #334155;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+    .blueprint-swatch.active { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+    .blueprint-preview-wrap {
+      flex: 2 1 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+    #blueprint-preview {
+      width: 100%;
+      max-width: 640px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.18);
+      border: 1px solid #cbd5e1;
+    }
+    #blueprint-preview svg { width: 100%; height: auto; display: block; }
+    .blueprint-btn-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .blueprint-note { font-size: 0.8rem; color: #64748b; text-align: center; max-width: 500px; }
+
     .stamp-display {
       display: none;
       margin-top: 18px;
@@ -265,31 +355,27 @@
       ensure that those with the least resources are served first.</p>
       <p>Every project involves a ledger balance where we track our spending. Stewardship means balancing a budget
       while making ethical decisions. An engineer might choose more expensive materials if they are sourced
-      sustainably or if the workers are paid a fair wage. While using cheaper materials might save money, a positive
-      change for the budget, it might harm the environment or exploit workers, a negative impact on our common home.
-      In engineering for the common good, we use math to ensure our designs are precise and our hearts to ensure
-      they are just.</p>
+      sustainably or if the workers are paid a fair wage. While using cheaper materials might save money (a positive
+      change for the budget), it might harm the environment or exploit workers (a negative impact on our common
+      home). In engineering for the common good, we use math to ensure our designs are precise and our hearts to
+      ensure they are just.</p>
     </div>
 
-    <div class="notebook-box key-terms-list">
-      <div class="notebook-header">Key Vocabulary</div>
-      <p><strong>Positive &amp; Negative Integers</strong> - whole numbers and their opposites, like 5 and negative
-      5.</p>
-      <p><strong>Rational Numbers</strong> - any number that can be written as a fraction, including decimals that
-      end or repeat.</p>
-      <p><strong>Hydrodynamics</strong> - the study of how liquids, like water, move and flow.</p>
-      <p><strong>Stewardship</strong> - the job of supervising or taking care of something, such as the
-      environment.</p>
-      <p><strong>Elevation Change / Slope</strong> - the difference in height between two points; a measure of
-      steepness.</p>
-      <p><strong>Ledger Balance</strong> - the total amount of money remaining in an account after all additions and
-      subtractions.</p>
+    <div class="station-card">
+      <span class="station-label">Key Vocabulary Match-Up</span>
+      <p style="color:#475569;">Drag each term onto its matching definition, or tap a term and then tap the
+      definition. There's no limit on tries, but get all six correct before moving on.</p>
+      <div class="vocab-match-wrap">
+        <div class="vocab-terms" id="vocab-terms"></div>
+        <div class="vocab-definitions" id="vocab-definitions"></div>
+      </div>
+      <div class="feedback-msg" id="vocabmatch-feedback"></div>
     </div>
 
     <div class="pillar-grid">
       <div class="pillar-card"><div class="pillar-letter">S</div><h4>Science</h4><p>Apply hydrodynamics: how slope and gravity move water.</p></div>
       <div class="pillar-card"><div class="pillar-letter">T</div><h4>Technology</h4><p>Use a calculator to audit your team's ledger.</p></div>
-      <div class="pillar-card"><div class="pillar-letter">R</div><h4>Stewardship</h4><p>Apply Solidarity and the Option for the Poor to a real budget choice.</p></div>
+      <div class="pillar-card"><div class="pillar-letter">R</div><h4>Religion</h4><p>Apply Solidarity and the Option for the Poor to a real budget choice.</p></div>
       <div class="pillar-card"><div class="pillar-letter">E</div><h4>Engineering</h4><p>Track elevation change to keep water flowing safely.</p></div>
       <div class="pillar-card"><div class="pillar-letter">A</div><h4>Art</h4><p>Diagram your aqueduct's elevation path on a number line.</p></div>
       <div class="pillar-card"><div class="pillar-letter">M</div><h4>Math</h4><p>Add, subtract, and multiply positive and negative rational numbers.</p></div>
@@ -470,9 +556,9 @@
 
       <div class="station-card">
         <span class="station-label">Step 4: The Master Performance Formula</span>
-        <p style="color:#475569;">S is your Stewardship Points from Day 1, C is your remaining cash (Step 1 above),
-        V is your Variance (Step 2), and T is your Average Flow Time (Step 3). Use your own team's numbers below.
-        Show every step of your order of operations.</p>
+        <p style="color:#475569;">S is your Stewardship Points from Day 1, C is your remaining cash (Day 2 Step 1
+        above), V is your Variance (Day 2 Step 2), and T is your Average Flow Time (Day 2 Step 3). Use your own
+        team's numbers below. Show every step of your order of operations.</p>
         <div class="equation-display">Score = (S + 0.5C) &minus; |V| / (T / 10)</div>
         <div class="calc-row">
           Final Project Score:
@@ -480,6 +566,69 @@
           <button class="row-check-btn" onclick="checkMasterScore()">Check</button>
         </div>
         <div class="feedback-msg" id="masterscore-feedback"></div>
+      </div>
+
+      <div class="section-title" style="font-size:1.3rem;">Art: Aqueduct Blueprint Studio</div>
+      <div class="station-card">
+        <p style="color:#475569;">Real engineers sketch a blueprint before anything gets built. Your blueprint below
+        is not just decoration - the height of every arch is drawn directly from the elevation data you worked with
+        on Day 1 (Start, Reservoir, First Pipe, Support Beam, Final Basin), so the shape of your aqueduct is the
+        real shape of the water's path. Choose your materials, name your project, and design the water system your
+        community will rely on.</p>
+        <div class="blueprint-wrap">
+          <div class="blueprint-controls">
+            <div class="blueprint-field">
+              <label for="blueprint-title-input">Name Your Water System</label>
+              <input type="text" id="blueprint-title-input" maxlength="40" placeholder="e.g. The Esperanza Aqueduct" oninput="renderBlueprintArt()">
+            </div>
+            <div class="blueprint-field">
+              <label for="blueprint-dedication-input">Dedicated To</label>
+              <input type="text" id="blueprint-dedication-input" maxlength="50" placeholder="e.g. The families of Barrio San Martin" oninput="renderBlueprintArt()">
+            </div>
+            <div class="blueprint-field">
+              <label>Sky</label>
+              <div class="blueprint-swatch-row" id="blueprint-sky-row"></div>
+            </div>
+            <div class="blueprint-field">
+              <label>Arch Material</label>
+              <div class="blueprint-swatch-row" id="blueprint-material-row"></div>
+            </div>
+            <div class="blueprint-field">
+              <label>Water Color</label>
+              <div class="blueprint-swatch-row" id="blueprint-water-row"></div>
+            </div>
+            <div class="blueprint-field">
+              <label for="blueprint-sky-deco-select">Sky Decoration</label>
+              <select id="blueprint-sky-deco-select" onchange="renderBlueprintArt()">
+                <option value="sun">Sun</option>
+                <option value="moon">Moon</option>
+                <option value="bird">Bird</option>
+                <option value="cloud">Cloud</option>
+                <option value="none">None</option>
+              </select>
+            </div>
+            <div class="blueprint-field">
+              <label for="blueprint-ground-deco-select">Ground Decoration</label>
+              <select id="blueprint-ground-deco-select" onchange="renderBlueprintArt()">
+                <option value="tree">Trees</option>
+                <option value="flowers">Flower Beds</option>
+                <option value="rocks">Rocks</option>
+                <option value="none">None</option>
+              </select>
+            </div>
+          </div>
+          <div class="blueprint-preview-wrap">
+            <div id="blueprint-preview"></div>
+            <div class="blueprint-btn-row">
+              <button class="row-check-btn" id="blueprint-lock-btn" onclick="lockBlueprintArt()">Lock My Blueprint</button>
+              <button class="row-check-btn" id="blueprint-png-btn" onclick="downloadBlueprintArt()" disabled>Download PNG</button>
+              <button class="row-check-btn" id="blueprint-pdf-btn" onclick="downloadBlueprintPoster()" disabled>Download PDF Poster</button>
+            </div>
+            <p class="blueprint-note">Try every material and sky combination before you lock it in - once locked,
+            your blueprint is final and ready to download.</p>
+          </div>
+        </div>
+        <div class="feedback-msg" id="blueprintart-feedback"></div>
       </div>
 
       <div class="section-title" style="font-size:1.3rem;">Technology: Team Math Check</div>
@@ -712,7 +861,14 @@
       day1LedgerBalance: window.day1LedgerBalance, finalElevation: window.finalElevation,
       day2LedgerBalance: window.day2LedgerBalance, heightVariance: window.heightVariance,
       run3: window.run3, avgFlowTime: window.avgFlowTime, masterScore: window.masterScore,
-      cstReflection: document.getElementById('cst-reflection').value
+      cstReflection: document.getElementById('cst-reflection').value,
+      reflections: {
+        stewardreflect: document.getElementById('stewardship-reflection').value,
+        selfassess: document.getElementById('self-assessment').value
+      },
+      vocabMatched: vocabMatched,
+      blueprintConfig: window.blueprintConfig,
+      blueprintLocked: blueprintLocked
     };
   }
 
@@ -776,6 +932,30 @@
       fb.className = 'feedback-msg success locked';
       fb.innerHTML = `${msg} <span style="opacity:.75;">(restored)</span>`;
     };
+    // Reflection textareas were never saved at all - submitReflection()
+    // disables the field and records it in LessonProgress, but never sets
+    // this page's own solvedKeys, so a team resuming their code saw an
+    // empty, still-enabled box even though it had already been submitted.
+    // Gate on the saved text itself (non-empty = it was submitted).
+    const restoreReflection = (textareaId, feedbackId, savedText) => {
+      if (!savedText) return;
+      const el = document.getElementById(textareaId);
+      el.value = savedText;
+      el.disabled = true;
+      const fb = document.getElementById(feedbackId);
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = 'Submitted! This will be reviewed from your printed progress report. <span style="opacity:.75;">(restored)</span>';
+    };
+
+    Object.assign(vocabMatched, state.vocabMatched || {});
+    if (Object.keys(vocabMatched).length) renderVocabMatch();
+    if (solvedKeys['vocabmatch']) {
+      const fb = document.getElementById('vocabmatch-feedback');
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = 'All six terms matched! <span style="opacity:.75;">(restored)</span>';
+    }
 
     restoreNumeric('straws', 'straws-input', 'straws-feedback', '-17.50', 'Correct! 50 &times; &minus;$0.35 = &minus;$17.50.');
     restoreNumeric('connectors', 'connectors-input', 'connectors-feedback', '-23.00', 'Correct! 20 &times; &minus;$1.15 = &minus;$23.00.');
@@ -823,6 +1003,33 @@
     }
     if (solvedKeys['masterscore'] && window.masterScore != null) {
       restoreNumeric('masterscore', 'masterscore-input', 'masterscore-feedback', fmt2(window.masterScore), `Correct! Your final project score is ${fmt2(window.masterScore)}.`);
+    }
+    if (state.reflections) {
+      restoreReflection('stewardship-reflection', 'stewardship-reflection-feedback', state.reflections.stewardreflect);
+      restoreReflection('self-assessment', 'self-assessment-feedback', state.reflections.selfassess);
+    }
+
+    if (state.blueprintConfig) {
+      Object.assign(window.blueprintConfig, state.blueprintConfig);
+      document.getElementById('blueprint-title-input').value = window.blueprintConfig.title || '';
+      document.getElementById('blueprint-dedication-input').value = window.blueprintConfig.dedication || '';
+      document.getElementById('blueprint-sky-deco-select').value = window.blueprintConfig.skyDeco || 'sun';
+      document.getElementById('blueprint-ground-deco-select').value = window.blueprintConfig.groundDeco || 'tree';
+      renderBlueprintArt();
+      if (state.blueprintLocked && solvedKeys['blueprintart']) {
+        blueprintLocked = true;
+        document.getElementById('blueprint-title-input').disabled = true;
+        document.getElementById('blueprint-dedication-input').disabled = true;
+        document.getElementById('blueprint-sky-deco-select').disabled = true;
+        document.getElementById('blueprint-ground-deco-select').disabled = true;
+        document.getElementById('blueprint-lock-btn').disabled = true;
+        document.getElementById('blueprint-png-btn').disabled = false;
+        document.getElementById('blueprint-pdf-btn').disabled = false;
+        const fb = document.getElementById('blueprintart-feedback');
+        fb.style.display = 'block';
+        fb.className = 'feedback-msg success locked';
+        fb.innerHTML = 'Blueprint locked! Download your poster below. <span style="opacity:.75;">(restored)</span>';
+      }
     }
   }
 
@@ -933,7 +1140,7 @@
   let day1Locked = false;
   const STRAWS_TOTAL = -17.50;
   const CONNECTORS_TOTAL = -23.00;
-  const DAY1_GATE_KEYS = ['straws', 'connectors', 'cstchoice', 'ledgerbalance', 'elevation', 'criticalthinking'];
+  const DAY1_GATE_KEYS = ['vocabmatch', 'straws', 'connectors', 'cstchoice', 'ledgerbalance', 'elevation', 'criticalthinking'];
 
   function maybeCompleteDay1() {
     if (day1Locked) return;
@@ -942,6 +1149,365 @@
       document.getElementById('day2-finish-day1-notice').style.display = 'none';
       document.getElementById('day2-passcode-notice').style.display = 'block';
     }
+  }
+
+  // ================================================================
+  // KEY VOCABULARY MATCH-UP (drag-and-drop, with tap-to-select as the
+  // touch-friendly fallback - same pattern as a token-to-grid drag)
+  // ================================================================
+  const VOCAB_TERMS = [
+    { key: 'integer', term: 'Positive & Negative Integers', def: 'Whole numbers and their opposites, like 5 and negative 5.' },
+    { key: 'rational', term: 'Rational Numbers', def: 'Any number that can be written as a fraction, including decimals that end or repeat.' },
+    { key: 'hydro', term: 'Hydrodynamics', def: 'The study of how liquids, like water, move and flow.' },
+    { key: 'stewardship', term: 'Stewardship', def: 'The job of supervising or taking care of something, such as the environment.' },
+    { key: 'elevation-term', term: 'Elevation Change / Slope', def: 'The difference in height between two points; a measure of steepness.' },
+    { key: 'ledger', term: 'Ledger Balance', def: 'The total amount of money remaining in an account after all additions and subtractions.' }
+  ];
+  const vocabMatched = {};
+  let vocabSelectedTerm = null;
+  let vocabAttempts = 0;
+  // Definitions render in one shuffled order, chosen once, so a definition
+  // doesn't visibly jump to a new spot after a wrong or right attempt.
+  let vocabDefOrder = null;
+
+  function shuffleArray(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function renderVocabMatch() {
+    if (!vocabDefOrder) vocabDefOrder = shuffleArray(VOCAB_TERMS.map((v) => v.key));
+    document.getElementById('vocab-terms').innerHTML = VOCAB_TERMS.map((v) => {
+      const matched = vocabMatched[v.key];
+      const selected = vocabSelectedTerm === v.key;
+      const handlers = matched ? '' : `onclick="onVocabTermClick('${v.key}')" draggable="true" ondragstart="onVocabDragStart(event,'${v.key}')"`;
+      return `<div class="vocab-term-card${matched ? ' matched' : ''}${selected ? ' selected' : ''}" ${handlers}>${v.term}${matched ? ' &#10003;' : ''}</div>`;
+    }).join('');
+    document.getElementById('vocab-definitions').innerHTML = vocabDefOrder.map((key) => {
+      const v = VOCAB_TERMS.find((t) => t.key === key);
+      const matched = vocabMatched[key];
+      const handlers = matched ? '' : `onclick="onVocabDefClick('${key}')" ondragover="event.preventDefault()" ondrop="onVocabDrop(event,'${key}')"`;
+      return `<div class="vocab-def-slot${matched ? ' matched' : ''}" id="vocab-def-${key}" ${handlers}>${v.def}</div>`;
+    }).join('');
+  }
+
+  function onVocabTermClick(key) {
+    vocabSelectedTerm = vocabSelectedTerm === key ? null : key;
+    renderVocabMatch();
+  }
+  function onVocabDragStart(e, key) {
+    e.dataTransfer.setData('text/plain', key);
+  }
+  function onVocabDrop(e, defKey) {
+    e.preventDefault();
+    attemptVocabMatch(e.dataTransfer.getData('text/plain'), defKey);
+  }
+  function onVocabDefClick(defKey) {
+    if (!vocabSelectedTerm) return;
+    attemptVocabMatch(vocabSelectedTerm, defKey);
+  }
+
+  function attemptVocabMatch(termKey, defKey) {
+    if (!termKey || vocabMatched[termKey]) return;
+    vocabAttempts++;
+    const feedbackEl = document.getElementById('vocabmatch-feedback');
+    if (termKey === defKey) {
+      vocabMatched[termKey] = true;
+      vocabSelectedTerm = null;
+      renderVocabMatch();
+      if (VOCAB_TERMS.every((v) => vocabMatched[v.key])) {
+        solvedKeys['vocabmatch'] = true;
+        attemptCounts['vocabmatch'] = vocabAttempts;
+        feedbackEl.style.display = 'block';
+        feedbackEl.className = 'feedback-msg success locked';
+        feedbackEl.innerHTML = `All six terms matched! <span style="opacity:.75; font-weight:700;">(solved in ${vocabAttempts} attempt${vocabAttempts === 1 ? '' : 's'})</span>`;
+        LessonProgress.record('vocabmatch', 'Key Vocabulary Match-Up', `All 6 terms matched in ${vocabAttempts} attempts`, 'correct', 'Day 1 - Key Vocabulary');
+        maybeCompleteDay1();
+        saveProgress();
+      }
+    } else {
+      vocabSelectedTerm = null;
+      document.querySelectorAll('.vocab-term-card.selected').forEach((el) => { el.classList.remove('selected'); });
+      const slot = document.getElementById(`vocab-def-${defKey}`);
+      if (slot) {
+        slot.classList.add('wrong-flash');
+        setTimeout(() => { slot.classList.remove('wrong-flash'); }, 500);
+      }
+      feedbackEl.style.display = 'block';
+      feedbackEl.className = 'feedback-msg error';
+      feedbackEl.innerHTML = `That's not a match yet - try again. <span style="opacity:.75;">(attempt ${vocabAttempts})</span>`;
+    }
+  }
+
+  // ================================================================
+  // ART: AQUEDUCT BLUEPRINT STUDIO
+  // A single SVG-building function (buildBlueprintSVG) is the one and
+  // only source of the artwork - the live preview injects its string
+  // straight into the page, and the PNG/PDF downloads rasterize that
+  // exact same string through svgToImage(). There is no separate
+  // "redraw for canvas" code path, so the download can never drift
+  // from what the team sees on screen.
+  // ================================================================
+  const ELEVATION_STOPS = [
+    { value: 0, label: 'Start' },
+    { value: 15, label: 'Reservoir' },
+    { value: 9.75, label: 'First Pipe' },
+    { value: 18.5, label: 'Support Beam' },
+    { value: 16, label: 'Final Basin' }
+  ];
+
+  const BLUEPRINT_SKIES = {
+    dawn: { name: 'Dawn', top: '#fed7aa', bottom: '#fef9c3', ground: '#86efac', groundDark: '#4d9c5e', text: '#1e293b', groundText: '#1e293b' },
+    midday: { name: 'Midday', top: '#7dd3fc', bottom: '#e0f2fe', ground: '#4ade80', groundDark: '#16803c', text: '#1e293b', groundText: '#1e293b' },
+    sunset: { name: 'Sunset', top: '#9a3412', bottom: '#fdba74', ground: '#65a30d', groundDark: '#3f6212', text: '#fff7ed', groundText: '#1e293b' },
+    starry: { name: 'Starry Night', top: '#0f172a', bottom: '#3730a3', ground: '#1e3a2f', groundDark: '#0f231a', stars: true, text: '#f8fafc', groundText: '#e2e8f0' }
+  };
+  const BLUEPRINT_MATERIALS = {
+    stone: { name: 'Stone', fill: '#cbd5e1', dark: '#94a3b8', deep: '#64748b' },
+    brick: { name: 'Brick', fill: '#c2703d', dark: '#9a4b23', deep: '#7c3a1a' },
+    steel: { name: 'Steel', fill: '#a8b3c2', dark: '#64748b', deep: '#334155' },
+    wood: { name: 'Wood', fill: '#c19a6b', dark: '#8b5e34', deep: '#5c3d21' }
+  };
+  const BLUEPRINT_WATERS = {
+    sky: { name: 'Sky Blue', fill: '#38bdf8', light: '#bae6fd' },
+    turquoise: { name: 'Turquoise', fill: '#2dd4bf', light: '#ccfbf1' },
+    glacial: { name: 'Glacial White', fill: '#e0f2fe', light: '#ffffff' },
+    golden: { name: 'Golden Hour', fill: '#f59e0b', light: '#fde68a' }
+  };
+
+  window.blueprintConfig = { sky: 'midday', material: 'stone', water: 'sky', skyDeco: 'sun', groundDeco: 'tree' };
+  let blueprintLocked = false;
+
+  function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  function skyDecoFragment(kind, cx, cy) {
+    if (kind === 'sun') {
+      let rays = '';
+      for (let i = 0; i < 8; i++) {
+        const a = (i * Math.PI) / 4;
+        rays += `<line x1="${cx + 26 * Math.cos(a)}" y1="${cy + 26 * Math.sin(a)}" x2="${cx + 38 * Math.cos(a)}" y2="${cy + 38 * Math.sin(a)}" stroke="#fbbf24" stroke-width="4" stroke-linecap="round"/>`;
+      }
+      return `<g>${rays}<circle cx="${cx}" cy="${cy}" r="22" fill="#fde047" stroke="#f59e0b" stroke-width="2"/></g>`;
+    }
+    if (kind === 'moon') {
+      return `<g><circle cx="${cx}" cy="${cy}" r="22" fill="#f1f5f9"/><circle cx="${cx + 10}" cy="${cy - 6}" r="18" fill="#0f172a" opacity="0.85"/></g>`;
+    }
+    if (kind === 'bird') {
+      return `<g stroke="#334155" stroke-width="3" fill="none" stroke-linecap="round">
+        <path d="M ${cx - 18} ${cy} Q ${cx - 8} ${cy - 12} ${cx} ${cy}"/>
+        <path d="M ${cx} ${cy} Q ${cx + 8} ${cy - 12} ${cx + 18} ${cy}"/>
+        <path d="M ${cx + 46} ${cy + 18} Q ${cx + 56} ${cy + 6} ${cx + 64} ${cy + 18}"/>
+        <path d="M ${cx + 64} ${cy + 18} Q ${cx + 72} ${cy + 6} ${cx + 82} ${cy + 18}"/>
+      </g>`;
+    }
+    if (kind === 'cloud') {
+      return `<g fill="#ffffff" opacity="0.9">
+        <ellipse cx="${cx}" cy="${cy}" rx="30" ry="16"/>
+        <ellipse cx="${cx + 26}" cy="${cy - 6}" rx="22" ry="14"/>
+        <ellipse cx="${cx - 26}" cy="${cy + 4}" rx="20" ry="12"/>
+      </g>`;
+    }
+    return '';
+  }
+
+  function groundDecoFragment(kind, x, y) {
+    if (kind === 'tree') {
+      return `<g>
+        <rect x="${x - 4}" y="${y - 22}" width="8" height="26" fill="#7c4a2d"/>
+        <circle cx="${x}" cy="${y - 34}" r="18" fill="#16a34a"/>
+        <circle cx="${x - 12}" cy="${y - 24}" r="12" fill="#22c55e"/>
+        <circle cx="${x + 12}" cy="${y - 24}" r="12" fill="#22c55e"/>
+      </g>`;
+    }
+    if (kind === 'flowers') {
+      const colors = ['#f472b6', '#facc15', '#f87171', '#a78bfa'];
+      let g = '';
+      for (let i = 0; i < 4; i++) {
+        const fx = x - 18 + i * 12;
+        const c = colors[i % colors.length];
+        g += `<g transform="translate(${fx},${y})">
+          <line x1="0" y1="0" x2="0" y2="-10" stroke="#16803c" stroke-width="2"/>
+          <circle cx="0" cy="-14" r="5" fill="${c}"/>
+          <circle cx="-4" cy="-10" r="3.5" fill="${c}"/>
+          <circle cx="4" cy="-10" r="3.5" fill="${c}"/>
+        </g>`;
+      }
+      return g;
+    }
+    if (kind === 'rocks') {
+      return `<g fill="#94a3b8" stroke="#64748b" stroke-width="1.5">
+        <ellipse cx="${x - 14}" cy="${y - 4}" rx="12" ry="8"/>
+        <ellipse cx="${x + 6}" cy="${y - 2}" rx="16" ry="10"/>
+        <ellipse cx="${x + 24}" cy="${y - 5}" rx="9" ry="7"/>
+      </g>`;
+    }
+    return '';
+  }
+
+  function pillarFragment(x, topY, baseline, material) {
+    const w = 46;
+    let texture = '';
+    if (material === 'brick') {
+      for (let ty = topY + 20; ty < baseline; ty += 14) {
+        texture += `<line x1="${x - w / 2}" y1="${ty}" x2="${x + w / 2}" y2="${ty}" stroke="${BLUEPRINT_MATERIALS.brick.deep}" stroke-width="1.5"/>`;
+      }
+    } else if (material === 'wood') {
+      for (let i = 1; i < 4; i++) {
+        texture += `<line x1="${x - w / 2 + i * (w / 4)}" y1="${topY + 20}" x2="${x - w / 2 + i * (w / 4)}" y2="${baseline}" stroke="${BLUEPRINT_MATERIALS.wood.deep}" stroke-width="1" opacity="0.6"/>`;
+      }
+    } else if (material === 'steel') {
+      for (let ty = topY + 26; ty < baseline; ty += 22) {
+        texture += `<circle cx="${x - w / 2 + 6}" cy="${ty}" r="2" fill="${BLUEPRINT_MATERIALS.steel.deep}"/><circle cx="${x + w / 2 - 6}" cy="${ty}" r="2" fill="${BLUEPRINT_MATERIALS.steel.deep}"/>`;
+      }
+    }
+    const meta = BLUEPRINT_MATERIALS[material] || BLUEPRINT_MATERIALS.stone;
+    return `<g>
+      <rect x="${x - w / 2}" y="${topY + 18}" width="${w}" height="${baseline - topY - 18}" fill="${meta.fill}" stroke="${meta.deep}" stroke-width="2"/>
+      ${texture}
+      <path d="M ${x - w / 2} ${topY + 18} A ${w / 2} 18 0 0 1 ${x + w / 2} ${topY + 18}" fill="${meta.dark}" stroke="${meta.deep}" stroke-width="2"/>
+      <rect x="${x - w / 2 - 6}" y="${baseline - 8}" width="${w + 12}" height="8" fill="${meta.deep}"/>
+    </g>`;
+  }
+
+  function buildBlueprintSVG(cfg) {
+    const W = 900, H = 600, baseline = 430, marginX = 110;
+    const sky = BLUEPRINT_SKIES[cfg.sky] || BLUEPRINT_SKIES.midday;
+    const water = BLUEPRINT_WATERS[cfg.water] || BLUEPRINT_WATERS.sky;
+    const usableW = W - marginX * 2;
+    const xs = ELEVATION_STOPS.map((_, i) => marginX + (i * usableW) / (ELEVATION_STOPS.length - 1));
+    const pierTops = ELEVATION_STOPS.map((s) => baseline - (26 + s.value * 9));
+    const pipeYs = pierTops.map((y) => y + 4);
+
+    let stars = '';
+    if (sky.stars) {
+      const starPos = [[70,60],[160,110],[260,40],[400,90],[520,50],[640,120],[760,70],[840,40],[120,180],[820,160]];
+      stars = starPos.map(([sx, sy]) => `<circle cx="${sx}" cy="${sy}" r="${1.5 + (sx % 3)}" fill="#f8fafc" opacity="0.9"/>`).join('');
+    }
+
+    const pillars = xs.map((x, i) => pillarFragment(x, pierTops[i], baseline, cfg.material)).join('');
+
+    const pipePath = `M ${xs.map((x, i) => `${x},${pipeYs[i]}`).join(' L ')}`;
+    const pipe = `
+      <path d="${pipePath}" fill="none" stroke="${water.fill}" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="${pipePath}" fill="none" stroke="${water.light}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+    `;
+
+    const labels = xs.map((x, i) => `
+      <text x="${x}" y="${baseline + 34}" text-anchor="middle" font-family="'Baloo 2', sans-serif" font-weight="700" font-size="13" fill="${sky.groundText}">${esc(ELEVATION_STOPS[i].label)}</text>
+      <text x="${x}" y="${baseline + 52}" text-anchor="middle" font-family="'Baloo 2', sans-serif" font-size="12" fill="${sky.groundText}" opacity="0.85">${ELEVATION_STOPS[i].value.toFixed(2)} cm</text>
+    `).join('');
+
+    const groundDecoXs = [marginX / 2, marginX + usableW * 0.32, marginX + usableW * 0.68, W - marginX / 2];
+    const groundDecos = cfg.groundDeco && cfg.groundDeco !== 'none'
+      ? groundDecoXs.map((x) => groundDecoFragment(cfg.groundDeco, x, baseline + 96)).join('')
+      : '';
+
+    const skyDeco = cfg.skyDeco && cfg.skyDeco !== 'none' ? skyDecoFragment(cfg.skyDeco, 780, 90) : '';
+    const skyDeco2 = cfg.skyDeco === 'cloud' ? skyDecoFragment('cloud', 220, 70) : '';
+
+    const title = esc(cfg.title) || 'Our Aqueduct';
+    const dedication = cfg.dedication ? `Dedicated to: ${esc(cfg.dedication)}` : 'A water system built for the common good';
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="'Baloo 2', sans-serif">
+      <defs>
+        <linearGradient id="bp-sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${sky.top}"/>
+          <stop offset="100%" stop-color="${sky.bottom}"/>
+        </linearGradient>
+        <linearGradient id="bp-ground" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${sky.ground}"/>
+          <stop offset="100%" stop-color="${sky.groundDark}"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="${W}" height="${H}" fill="url(#bp-sky)"/>
+      ${stars}
+      ${skyDeco}${skyDeco2}
+      <rect x="0" y="${baseline}" width="${W}" height="${H - baseline}" fill="url(#bp-ground)"/>
+      ${groundDecos}
+      ${pillars}
+      ${pipe}
+      ${labels}
+      <text x="${W / 2}" y="42" text-anchor="middle" font-weight="800" font-size="30" fill="${sky.text}">${title}</text>
+      <text x="${W / 2}" y="${H - 28}" text-anchor="middle" font-weight="600" font-size="15" fill="${sky.groundText}" font-style="italic" opacity="0.9">${dedication}</text>
+      <rect x="10" y="10" width="${W - 20}" height="${H - 20}" fill="none" stroke="#1e3a8a" stroke-width="6" rx="10"/>
+      <rect x="20" y="20" width="${W - 40}" height="${H - 40}" fill="none" stroke="#d97706" stroke-width="2" rx="6"/>
+    </svg>`;
+  }
+
+  function buildBlueprintSwatchRow(containerId, options, current, onPick) {
+    const el = document.getElementById(containerId);
+    el.innerHTML = Object.keys(options).map((key) => `
+      <button type="button" class="blueprint-swatch${key === current ? ' active' : ''}" data-key="${key}" onclick="${onPick}('${key}')">${esc(options[key].name)}</button>
+    `).join('');
+  }
+
+  function setBlueprintSky(key) { if (blueprintLocked) return; window.blueprintConfig.sky = key; renderBlueprintArt(); }
+  function setBlueprintMaterial(key) { if (blueprintLocked) return; window.blueprintConfig.material = key; renderBlueprintArt(); }
+  function setBlueprintWater(key) { if (blueprintLocked) return; window.blueprintConfig.water = key; renderBlueprintArt(); }
+
+  function renderBlueprintArt() {
+    const cfg = window.blueprintConfig;
+    cfg.title = document.getElementById('blueprint-title-input').value.trim();
+    cfg.dedication = document.getElementById('blueprint-dedication-input').value.trim();
+    cfg.skyDeco = document.getElementById('blueprint-sky-deco-select').value;
+    cfg.groundDeco = document.getElementById('blueprint-ground-deco-select').value;
+    document.getElementById('blueprint-preview').innerHTML = buildBlueprintSVG(cfg);
+    buildBlueprintSwatchRow('blueprint-sky-row', BLUEPRINT_SKIES, cfg.sky, 'setBlueprintSky');
+    buildBlueprintSwatchRow('blueprint-material-row', BLUEPRINT_MATERIALS, cfg.material, 'setBlueprintMaterial');
+    buildBlueprintSwatchRow('blueprint-water-row', BLUEPRINT_WATERS, cfg.water, 'setBlueprintWater');
+  }
+
+  function lockBlueprintArt() {
+    const feedbackEl = document.getElementById('blueprintart-feedback');
+    if (!window.blueprintConfig.title) {
+      LessonCheck.incomplete(feedbackEl, 'Give your water system a name first.');
+      return;
+    }
+    blueprintLocked = true;
+    solvedKeys['blueprintart'] = true;
+    document.getElementById('blueprint-title-input').disabled = true;
+    document.getElementById('blueprint-dedication-input').disabled = true;
+    document.getElementById('blueprint-sky-deco-select').disabled = true;
+    document.getElementById('blueprint-ground-deco-select').disabled = true;
+    document.getElementById('blueprint-lock-btn').disabled = true;
+    document.getElementById('blueprint-png-btn').disabled = false;
+    document.getElementById('blueprint-pdf-btn').disabled = false;
+    document.querySelectorAll('.blueprint-swatch').forEach((el) => { el.style.cursor = 'default'; });
+    feedbackEl.style.display = 'block';
+    feedbackEl.className = 'feedback-msg success locked';
+    feedbackEl.innerHTML = 'Blueprint locked! Download your poster below.';
+    LessonProgress.record('blueprintart', 'Aqueduct Blueprint Studio', `"${window.blueprintConfig.title}"`, 'correct', 'Day 2 - Art');
+    saveProgress();
+  }
+
+  async function downloadBlueprintArt() {
+    const svgString = buildBlueprintSVG(window.blueprintConfig);
+    const img = await svgToImage(svgString);
+    const SCALE = 2;
+    const canvas = document.getElementById('render-canvas');
+    canvas.width = 900 * SCALE;
+    canvas.height = 600 * SCALE;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    triggerDownload(canvas, `${slug(window.blueprintConfig.title)}-blueprint.png`);
+  }
+
+  async function downloadBlueprintPoster() {
+    const svgString = buildBlueprintSVG(window.blueprintConfig);
+    const img = await svgToImage(svgString);
+    const SCALE = 2;
+    const canvas = document.getElementById('render-canvas');
+    canvas.width = 900 * SCALE;
+    canvas.height = 600 * SCALE;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    const pdfBlob = buildMultiPagePdf([{ jpegDataUrl, widthPx: canvas.width, heightPx: canvas.height }]);
+    triggerBlobDownload(pdfBlob, `${slug(window.blueprintConfig.title)}-blueprint-poster.pdf`);
   }
 
   function checkStraws() {
@@ -1306,6 +1872,7 @@
     if (!solvedKeys['heightvariance']) missing.push('Day 2 Step 2 (Height Variance)');
     if (!(solvedKeys['run3'] && solvedKeys['avgflowtime'])) missing.push('Day 2 Step 3 (Average Flow Time)');
     if (!solvedKeys['masterscore']) missing.push('Day 2 Step 4 (Master Performance Formula)');
+    if (!solvedKeys['blueprintart']) missing.push('the Aqueduct Blueprint Studio (lock in your design)');
     if (!document.getElementById('stamp-display').classList.contains('show')) missing.push('the Team Math Check (award your Math Quality Stamp)');
     if (!(document.getElementById('stewardship-reflection').disabled && document.getElementById('self-assessment').disabled)) missing.push('the Stewardship Reflection and Self-Assessment');
     return missing;
@@ -1627,6 +2194,7 @@
     sections.push({
       title: 'Day 1 - Project Planning and Budgeting',
       rows: [
+        { label: 'Key Vocabulary Match-Up', detail: `${solvedKeys['vocabmatch'] ? 'All 6 matched' : 'Not solved yet'}, ${attemptsText('vocabmatch')}` },
         { label: 'Step 1 - Structural Straws', detail: `${solvedKeys['straws'] ? 'Correct (-$17.50)' : 'Not solved yet'}, ${attemptsText('straws')}` },
         { label: 'Step 1 - Watertight Connectors', detail: `${solvedKeys['connectors'] ? 'Correct (-$23.00)' : 'Not solved yet'}, ${attemptsText('connectors')}` },
         { label: 'Step 2 - CST Sourcing Dilemma', detail: solvedKeys['cstchoice'] ? `Option ${window.cstChoice} chosen` : 'Not chosen yet' },
@@ -1643,7 +2211,8 @@
         { label: 'Step 2 - Height Variance', detail: `${solvedKeys['heightvariance'] ? `Correct (${fmt2(window.heightVariance)})` : 'Not solved yet'}, ${attemptsText('heightvariance')}` },
         { label: 'Step 3 - Run 3 Time', detail: `${solvedKeys['run3'] ? 'Correct (17.6s)' : 'Not solved yet'}, ${attemptsText('run3')}` },
         { label: 'Step 3 - Average Flow Time', detail: `${solvedKeys['avgflowtime'] ? `Correct (${fmt2(window.avgFlowTime)}s)` : 'Not solved yet'}, ${attemptsText('avgflowtime')}` },
-        { label: 'Step 4 - Master Performance Formula', detail: `${solvedKeys['masterscore'] ? `Correct (${fmt2(window.masterScore)})` : 'Not solved yet'}, ${attemptsText('masterscore')}` }
+        { label: 'Step 4 - Master Performance Formula', detail: `${solvedKeys['masterscore'] ? `Correct (${fmt2(window.masterScore)})` : 'Not solved yet'}, ${attemptsText('masterscore')}` },
+        { label: 'Art - Aqueduct Blueprint Studio', detail: solvedKeys['blueprintart'] ? `Locked in ("${window.blueprintConfig.title}")` : 'Not locked in yet' }
       ]
     });
 
@@ -1692,6 +2261,18 @@
   // ================================================================
   // INIT
   // ================================================================
+  // Some browsers restore a form's checked/selected state from history
+  // (back/forward navigation, tab restore) independently of this script -
+  // force every radio in the page to a clean, unchecked state on load so
+  // the CST choice can never appear pre-picked before a team touches it.
+  // restoreState() (a separate, later, async path after a team-code
+  // lookup) re-checks the correct one afterward if there's real saved
+  // progress to restore.
+  document.querySelectorAll('input[type="radio"]').forEach((el) => { el.checked = false; });
+
+  renderVocabMatch();
+  renderBlueprintArt();
+
   renderNumberLine('elevation-numberline', {
     min: -5, max: 20, step: 5,
     points: [

@@ -994,6 +994,13 @@
         stickers: [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value),
         emblem: document.getElementById('flyer-emblem-select').value,
         locked: document.getElementById('lock-flyer-btn').disabled
+      },
+      reflections: {
+        comp1: document.getElementById('comp-reflection-1').value,
+        comp3: document.getElementById('comp-reflection-3').value,
+        bonusreflect: document.getElementById('bonus-reflection').value,
+        reflect4: document.getElementById('reflection-4').value,
+        reflect5: document.getElementById('reflection-5').value
       }
     };
   }
@@ -1056,6 +1063,21 @@
       fb.className = 'feedback-msg success locked';
       fb.innerHTML = `${msg} <span style="opacity:.75;">(restored)</span>`;
     };
+    // Reflection textareas were never saved at all - submitReflection()
+    // disables the field and records it in LessonProgress, but never sets
+    // this page's own solvedKeys, so a team resuming their code saw an
+    // empty, still-enabled box even though it had already been submitted.
+    // Gate on the saved text itself (non-empty = it was submitted).
+    const restoreReflection = (textareaId, feedbackId, savedText) => {
+      if (!savedText) return;
+      const el = document.getElementById(textareaId);
+      el.value = savedText;
+      el.disabled = true;
+      const fb = document.getElementById(feedbackId);
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = 'Submitted! This will be reviewed from your printed progress report. <span style="opacity:.75;">(restored)</span>';
+    };
 
     restoreNumeric('ticket', 'ticket-input', 'ticket-feedback', 550, 'Correct! 550 additional tickets needed.', 'summary-tickets', '550 tickets');
     restoreNumeric('breakeven', 'breakeven-input', 'breakeven-feedback', 50, 'Correct! 50 meal deals covers the $425.00 cost.', 'summary-breakeven', '50 meal deals');
@@ -1071,6 +1093,13 @@
     restoreMC('exit1', 'exit1', 'B', 'exit1-feedback', 'Correct!');
     restoreMC('exit2', 'exit2', 'D', 'exit2-feedback', 'Correct!');
     restoreMC('exit3', 'exit3', 'D', 'exit3-feedback', 'Correct!');
+    if (state.reflections) {
+      restoreReflection('comp-reflection-1', 'comp-reflection-1-feedback', state.reflections.comp1);
+      restoreReflection('comp-reflection-3', 'comp-reflection-3-feedback', state.reflections.comp3);
+      restoreReflection('bonus-reflection', 'bonus-reflection-feedback', state.reflections.bonusreflect);
+      restoreReflection('reflection-4', 'reflection-4-feedback', state.reflections.reflect4);
+      restoreReflection('reflection-5', 'reflection-5-feedback', state.reflections.reflect5);
+    }
 
     if (window.boothLength && window.boothWidth) renderBlueprint(window.boothLength, window.boothWidth);
 
