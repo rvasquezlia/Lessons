@@ -272,37 +272,37 @@
     .blueprint-btn-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
     .blueprint-note { font-size: 0.8rem; color: #64748b; text-align: center; max-width: 500px; }
 
-    /* Technology: What-If Calculator */
-    .whatif-controls { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin: 16px 0; }
-    .whatif-controls .blueprint-field { flex: 1 1 240px; max-width: 300px; }
-    .whatif-readout {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 10px;
-      max-width: 620px;
-      margin: 16px auto 0;
-    }
-    .whatif-readout > div {
+    /* Technology: Compare Your Choice */
+    .compare-choice-wrap { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin: 20px 0 6px; }
+    .compare-card {
+      position: relative;
+      flex: 1 1 260px;
+      max-width: 300px;
       background: #f8fafc;
       border: 2px solid var(--border);
-      border-radius: 10px;
-      padding: 10px;
-      text-align: center;
+      border-radius: 12px;
+      padding: 20px 18px 16px;
     }
-    .whatif-readout span { display: block; font-size: 0.72rem; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
-    .whatif-readout strong { display: block; font-size: 1.1rem; color: var(--primary); margin-top: 2px; }
-    .whatif-score {
-      text-align: center;
-      font-size: 1.4rem;
+    .compare-card h4 { margin: 0 0 12px; text-align: center; color: #1e293b; font-size: 1rem; }
+    .compare-card-yours { border-color: var(--success); background: var(--success-bg); }
+    .compare-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--success);
+      color: #fff;
+      font-size: 0.7rem;
       font-weight: 800;
-      color: var(--primary);
-      background: #eff6ff;
-      border: 2px solid var(--primary-light);
-      border-radius: 10px;
-      padding: 12px;
-      max-width: 620px;
-      margin: 14px auto 0;
+      padding: 4px 12px;
+      border-radius: 999px;
+      white-space: nowrap;
     }
+    .compare-row { display: flex; justify-content: space-between; gap: 8px; padding: 7px 0; border-bottom: 1px solid #e2e8f0; font-size: 0.88rem; }
+    .compare-row:last-child { border-bottom: none; }
+    .compare-row span { color: #64748b; }
+    .compare-row strong { color: #1e293b; }
+    .compare-score strong { color: var(--primary); font-size: 1.15rem; }
 
     /* Celebrate: completion recap */
     .celebration-missing-list { text-align: left; max-width: 480px; margin: 12px auto; color: #475569; }
@@ -703,25 +703,12 @@
         <div class="feedback-msg" id="blueprintart-feedback"></div>
       </div>
 
-      <div class="section-title" style="font-size:1.3rem;">Technology: What-If Calculator</div>
+      <div class="section-title" style="font-size:1.3rem;">Technology: Compare Your Choice</div>
       <div class="station-card">
-        <p style="color:#475569;">Engineers use technology to test ideas before committing to them. Try a different
-        CST sourcing option or a different average flow time below and watch the Master Performance Formula
-        recalculate live - this is just for exploring, and it will never change your real, locked-in answers above.</p>
-        <div class="whatif-controls">
-          <div class="blueprint-field">
-            <label for="whatif-cst-select">Try CST Option</label>
-            <select id="whatif-cst-select" onchange="updateWhatIf()">
-              <option value="A">Option A (Fair Trade)</option>
-              <option value="B">Option B (Standard Sourcing)</option>
-            </select>
-          </div>
-          <div class="blueprint-field">
-            <label for="whatif-flowtime-input">Try an Average Flow Time (s)</label>
-            <input type="number" id="whatif-flowtime-input" step="0.01" min="1" value="15.03" oninput="updateWhatIf()">
-          </div>
-        </div>
-        <div id="whatif-result"></div>
+        <p style="color:#475569;">Technology lets engineers compare outcomes side by side. Using your team's real
+        Height Variance and Average Flow Time, here's what your Master Performance Score would have been under
+        <strong>each</strong> CST sourcing option - so you can see exactly what your choice was worth.</p>
+        <div class="compare-choice-wrap" id="compare-choice-result"></div>
       </div>
 
       <div class="section-title" style="font-size:1.3rem;">Stewardship Reflection</div>
@@ -957,6 +944,7 @@
   }
 
   function saveProgress() {
+    renderCompareChoice();
     renderCelebration();
     if (!teamCode) return;
     fetchWithTimeout(SHEET_API_URL, {
@@ -1117,9 +1105,7 @@
       }
     }
 
-    if (window.cstChoice) document.getElementById('whatif-cst-select').value = window.cstChoice;
-    if (window.avgFlowTime != null) document.getElementById('whatif-flowtime-input').value = fmt2(window.avgFlowTime);
-    updateWhatIf();
+    renderCompareChoice();
     renderCelebration();
   }
 
@@ -1357,10 +1343,10 @@
     starry: { name: 'Starry Night', top: '#0f172a', bottom: '#3730a3', ground: '#1e3a2f', groundDark: '#0f231a', stars: true, text: '#f8fafc', groundText: '#e2e8f0' }
   };
   const BLUEPRINT_MATERIALS = {
-    stone: { name: 'Stone', fill: '#cbd5e1', dark: '#94a3b8', deep: '#64748b' },
-    brick: { name: 'Brick', fill: '#c2703d', dark: '#9a4b23', deep: '#7c3a1a' },
-    steel: { name: 'Steel', fill: '#a8b3c2', dark: '#64748b', deep: '#334155' },
-    wood: { name: 'Wood', fill: '#c19a6b', dark: '#8b5e34', deep: '#5c3d21' }
+    stone: { name: 'Stone', light: '#f1f5f9', fill: '#cbd5e1', dark: '#94a3b8', deep: '#64748b' },
+    brick: { name: 'Brick', light: '#e08e5c', fill: '#c2703d', dark: '#9a4b23', deep: '#7c3a1a' },
+    steel: { name: 'Steel', light: '#e2e8f0', fill: '#a8b3c2', dark: '#64748b', deep: '#334155' },
+    wood: { name: 'Wood', light: '#dab88a', fill: '#c19a6b', dark: '#8b5e34', deep: '#5c3d21' }
   };
   const BLUEPRINT_WATERS = {
     sky: { name: 'Sky Blue', fill: '#38bdf8', light: '#bae6fd' },
@@ -1377,77 +1363,114 @@
   function skyDecoFragment(kind, cx, cy) {
     if (kind === 'sun') {
       let rays = '';
-      for (let i = 0; i < 8; i++) {
-        const a = (i * Math.PI) / 4;
-        rays += `<line x1="${cx + 26 * Math.cos(a)}" y1="${cy + 26 * Math.sin(a)}" x2="${cx + 38 * Math.cos(a)}" y2="${cy + 38 * Math.sin(a)}" stroke="#fbbf24" stroke-width="4" stroke-linecap="round"/>`;
+      for (let i = 0; i < 12; i++) {
+        const a = (i * Math.PI) / 6;
+        const len = i % 2 === 0 ? 20 : 13;
+        rays += `<line x1="${cx + 28 * Math.cos(a)}" y1="${cy + 28 * Math.sin(a)}" x2="${cx + (28 + len) * Math.cos(a)}" y2="${cy + (28 + len) * Math.sin(a)}" stroke="#fde68a" stroke-width="3" stroke-linecap="round"/>`;
       }
-      return `<g>${rays}<circle cx="${cx}" cy="${cy}" r="22" fill="#fde047" stroke="#f59e0b" stroke-width="2"/></g>`;
+      return `<g>
+        <circle cx="${cx}" cy="${cy}" r="58" fill="url(#bp-sun-glow)"/>
+        ${rays}
+        <circle cx="${cx}" cy="${cy}" r="24" fill="url(#bp-sun-body)" filter="url(#bp-soft-shadow)"/>
+      </g>`;
     }
     if (kind === 'moon') {
-      return `<g><circle cx="${cx}" cy="${cy}" r="22" fill="#f1f5f9"/><circle cx="${cx + 10}" cy="${cy - 6}" r="18" fill="#0f172a" opacity="0.85"/></g>`;
+      return `<g>
+        <circle cx="${cx}" cy="${cy}" r="48" fill="url(#bp-moon-glow)"/>
+        <g filter="url(#bp-soft-shadow)">
+          <circle cx="${cx}" cy="${cy}" r="22" fill="url(#bp-moon-body)"/>
+          <circle cx="${cx + 10}" cy="${cy - 7}" r="18" fill="#1e1b4b" opacity="0.82"/>
+        </g>
+        <circle cx="${cx - 6}" cy="${cy + 5}" r="2.6" fill="#94a3b8" opacity="0.5"/>
+        <circle cx="${cx - 1}" cy="${cy - 9}" r="1.6" fill="#94a3b8" opacity="0.4"/>
+      </g>`;
     }
     if (kind === 'bird') {
       return `<g stroke="#334155" stroke-width="3" fill="none" stroke-linecap="round">
-        <path d="M ${cx - 18} ${cy} Q ${cx - 8} ${cy - 12} ${cx} ${cy}"/>
-        <path d="M ${cx} ${cy} Q ${cx + 8} ${cy - 12} ${cx + 18} ${cy}"/>
-        <path d="M ${cx + 46} ${cy + 18} Q ${cx + 56} ${cy + 6} ${cx + 64} ${cy + 18}"/>
-        <path d="M ${cx + 64} ${cy + 18} Q ${cx + 72} ${cy + 6} ${cx + 82} ${cy + 18}"/>
+        <path d="M ${cx - 18} ${cy} Q ${cx - 8} ${cy - 13} ${cx} ${cy - 1} Q ${cx + 8} ${cy - 13} ${cx + 18} ${cy}"/>
+        <path d="M ${cx + 44} ${cy + 20} Q ${cx + 53} ${cy + 9} ${cx + 61} ${cy + 19} Q ${cx + 69} ${cy + 9} ${cx + 78} ${cy + 20}" stroke-width="2.5" opacity="0.75"/>
       </g>`;
     }
     if (kind === 'cloud') {
-      return `<g fill="#ffffff" opacity="0.9">
-        <ellipse cx="${cx}" cy="${cy}" rx="30" ry="16"/>
-        <ellipse cx="${cx + 26}" cy="${cy - 6}" rx="22" ry="14"/>
-        <ellipse cx="${cx - 26}" cy="${cy + 4}" rx="20" ry="12"/>
-      </g>`;
+      return cloudFragment(cx, cy, 1);
     }
     return '';
   }
 
-  function groundDecoFragment(kind, x, y) {
-    if (kind === 'tree') {
-      return `<g>
-        <rect x="${x - 4}" y="${y - 22}" width="8" height="26" fill="#7c4a2d"/>
-        <circle cx="${x}" cy="${y - 34}" r="18" fill="#16a34a"/>
-        <circle cx="${x - 12}" cy="${y - 24}" r="12" fill="#22c55e"/>
-        <circle cx="${x + 12}" cy="${y - 24}" r="12" fill="#22c55e"/>
-      </g>`;
+  function cloudFragment(cx, cy, scale) {
+    return `<g filter="url(#bp-soft-shadow)" opacity="0.95">
+      <ellipse cx="${cx - 18 * scale}" cy="${cy + 6 * scale}" rx="${16 * scale}" ry="${11 * scale}" fill="url(#bp-cloud-grad)"/>
+      <ellipse cx="${cx + 2 * scale}" cy="${cy - 6 * scale}" rx="${22 * scale}" ry="${15 * scale}" fill="url(#bp-cloud-grad)"/>
+      <ellipse cx="${cx + 24 * scale}" cy="${cy + 2 * scale}" rx="${18 * scale}" ry="${12 * scale}" fill="url(#bp-cloud-grad)"/>
+      <ellipse cx="${cx}" cy="${cy + 10 * scale}" rx="${34 * scale}" ry="${9 * scale}" fill="url(#bp-cloud-grad)"/>
+    </g>`;
+  }
+
+  function treeFragment(x, y, scale) {
+    return `<g>
+      <ellipse cx="${x}" cy="${y + 3}" rx="${22 * scale}" ry="${5 * scale}" fill="#0f172a" opacity="0.14"/>
+      <g filter="url(#bp-soft-shadow)">
+        <rect x="${x - 4 * scale}" y="${y - 30 * scale}" width="${8 * scale}" height="${30 * scale}" rx="2" fill="url(#bp-trunk-grad)"/>
+        <line x1="${x - 1 * scale}" y1="${y - 26 * scale}" x2="${x - 1 * scale}" y2="${y - 4 * scale}" stroke="#3f2712" stroke-width="1" opacity="0.4"/>
+        <circle cx="${x - 15 * scale}" cy="${y - 36 * scale}" r="${14 * scale}" fill="url(#bp-tree-grad)"/>
+        <circle cx="${x + 15 * scale}" cy="${y - 36 * scale}" r="${14 * scale}" fill="url(#bp-tree-grad)"/>
+        <circle cx="${x}" cy="${y - 48 * scale}" r="${19 * scale}" fill="url(#bp-tree-grad)"/>
+        <circle cx="${x - 6 * scale}" cy="${y - 58 * scale}" r="${11 * scale}" fill="url(#bp-tree-grad)"/>
+      </g>
+    </g>`;
+  }
+
+  function flowerFragment(x, y, color, rotation, scale) {
+    let petals = '';
+    for (let i = 0; i < 5; i++) {
+      const angle = rotation + (i * 360) / 5;
+      petals += `<path d="M0,0 C ${4 * scale},${-9 * scale} ${7 * scale},${-13 * scale} 0,${-17 * scale} C ${-7 * scale},${-13 * scale} ${-4 * scale},${-9 * scale} 0,0 Z" fill="${color}" transform="rotate(${angle})"/>`;
     }
+    return `<g transform="translate(${x},${y})">
+      <line x1="0" y1="0" x2="0" y2="${11 * scale}" stroke="#16803c" stroke-width="${2 * scale}"/>
+      <path d="M0,${6 * scale} Q ${7 * scale},${4 * scale} ${5 * scale},${11 * scale} Q ${1 * scale},${9 * scale} 0,${6 * scale} Z" fill="#22c55e"/>
+      <g filter="url(#bp-soft-shadow)">
+        <g>${petals}</g>
+        <circle cx="0" cy="0" r="${4.5 * scale}" fill="#fde047" stroke="#f59e0b" stroke-width="0.5"/>
+      </g>
+    </g>`;
+  }
+
+  function rockFragment(x, y, scale) {
+    return `<g>
+      <ellipse cx="${x}" cy="${y + 3}" rx="${26 * scale}" ry="${5 * scale}" fill="#0f172a" opacity="0.12"/>
+      <g filter="url(#bp-soft-shadow)">
+        <path d="M ${x - 16 * scale} ${y} Q ${x - 19 * scale} ${y - 11 * scale} ${x - 6 * scale} ${y - 13 * scale} Q ${x + 3 * scale} ${y - 17 * scale} ${x + 11 * scale} ${y - 8 * scale} Q ${x + 19 * scale} ${y - 3 * scale} ${x + 12 * scale} ${y + 1 * scale} Q ${x + 3 * scale} ${y + 4 * scale} ${x - 6 * scale} ${y + 3 * scale} Z" fill="url(#bp-rock-grad)" stroke="#64748b" stroke-width="1"/>
+        <path d="M ${x + 9 * scale} ${y - 2 * scale} Q ${x + 15 * scale} ${y - 11 * scale} ${x + 24 * scale} ${y - 6 * scale} Q ${x + 28 * scale} ${y - 1 * scale} ${x + 21 * scale} ${y + 2 * scale} Z" fill="url(#bp-rock-grad)" stroke="#64748b" stroke-width="1"/>
+      </g>
+    </g>`;
+  }
+
+  function groundDecoFragment(kind, x, y) {
+    if (kind === 'tree') return treeFragment(x, y, 1);
     if (kind === 'flowers') {
       const colors = ['#f472b6', '#facc15', '#f87171', '#a78bfa'];
       let g = '';
       for (let i = 0; i < 4; i++) {
-        const fx = x - 18 + i * 12;
-        const c = colors[i % colors.length];
-        g += `<g transform="translate(${fx},${y})">
-          <line x1="0" y1="0" x2="0" y2="-10" stroke="#16803c" stroke-width="2"/>
-          <circle cx="0" cy="-14" r="5" fill="${c}"/>
-          <circle cx="-4" cy="-10" r="3.5" fill="${c}"/>
-          <circle cx="4" cy="-10" r="3.5" fill="${c}"/>
-        </g>`;
+        g += flowerFragment(x - 18 + i * 12, y, colors[i % colors.length], i * 22, 1);
       }
       return g;
     }
-    if (kind === 'rocks') {
-      return `<g fill="#94a3b8" stroke="#64748b" stroke-width="1.5">
-        <ellipse cx="${x - 14}" cy="${y - 4}" rx="12" ry="8"/>
-        <ellipse cx="${x + 6}" cy="${y - 2}" rx="16" ry="10"/>
-        <ellipse cx="${x + 24}" cy="${y - 5}" rx="9" ry="7"/>
-      </g>`;
-    }
+    if (kind === 'rocks') return rockFragment(x, y, 1);
     return '';
   }
 
   function pillarFragment(x, topY, baseline, material) {
     const w = 46;
+    const h = baseline - topY - 18;
     let texture = '';
     if (material === 'brick') {
       for (let ty = topY + 20; ty < baseline; ty += 14) {
-        texture += `<line x1="${x - w / 2}" y1="${ty}" x2="${x + w / 2}" y2="${ty}" stroke="${BLUEPRINT_MATERIALS.brick.deep}" stroke-width="1.5"/>`;
+        texture += `<line x1="${x - w / 2}" y1="${ty}" x2="${x + w / 2}" y2="${ty}" stroke="${BLUEPRINT_MATERIALS.brick.deep}" stroke-width="1.5" opacity="0.6"/>`;
       }
     } else if (material === 'wood') {
       for (let i = 1; i < 4; i++) {
-        texture += `<line x1="${x - w / 2 + i * (w / 4)}" y1="${topY + 20}" x2="${x - w / 2 + i * (w / 4)}" y2="${baseline}" stroke="${BLUEPRINT_MATERIALS.wood.deep}" stroke-width="1" opacity="0.6"/>`;
+        texture += `<line x1="${x - w / 2 + i * (w / 4)}" y1="${topY + 20}" x2="${x - w / 2 + i * (w / 4)}" y2="${baseline}" stroke="${BLUEPRINT_MATERIALS.wood.deep}" stroke-width="1" opacity="0.5"/>`;
       }
     } else if (material === 'steel') {
       for (let ty = topY + 26; ty < baseline; ty += 22) {
@@ -1456,10 +1479,14 @@
     }
     const meta = BLUEPRINT_MATERIALS[material] || BLUEPRINT_MATERIALS.stone;
     return `<g>
-      <rect x="${x - w / 2}" y="${topY + 18}" width="${w}" height="${baseline - topY - 18}" fill="${meta.fill}" stroke="${meta.deep}" stroke-width="2"/>
-      ${texture}
-      <path d="M ${x - w / 2} ${topY + 18} A ${w / 2} 18 0 0 1 ${x + w / 2} ${topY + 18}" fill="${meta.dark}" stroke="${meta.deep}" stroke-width="2"/>
-      <rect x="${x - w / 2 - 6}" y="${baseline - 8}" width="${w + 12}" height="8" fill="${meta.deep}"/>
+      <ellipse cx="${x}" cy="${baseline + 4}" rx="${w / 2 + 8}" ry="6" fill="#0f172a" opacity="0.18"/>
+      <g filter="url(#bp-soft-shadow)">
+        <rect x="${x - w / 2}" y="${topY + 18}" width="${w}" height="${h}" fill="url(#bp-pillar-grad)" stroke="${meta.deep}" stroke-width="2"/>
+        <rect x="${x - w / 2 + 4}" y="${topY + 22}" width="4" height="${h - 8}" fill="${meta.light}" opacity="0.55" rx="2"/>
+        ${texture}
+        <path d="M ${x - w / 2} ${topY + 18} A ${w / 2} 18 0 0 1 ${x + w / 2} ${topY + 18}" fill="url(#bp-pillar-cap-grad)" stroke="${meta.deep}" stroke-width="2"/>
+        <rect x="${x - w / 2 - 6}" y="${baseline - 8}" width="${w + 12}" height="8" fill="${meta.deep}"/>
+      </g>
     </g>`;
   }
 
@@ -1467,6 +1494,7 @@
     const W = 900, H = 600, baseline = 430, marginX = 110;
     const sky = BLUEPRINT_SKIES[cfg.sky] || BLUEPRINT_SKIES.midday;
     const water = BLUEPRINT_WATERS[cfg.water] || BLUEPRINT_WATERS.sky;
+    const meta = BLUEPRINT_MATERIALS[cfg.material] || BLUEPRINT_MATERIALS.stone;
     const usableW = W - marginX * 2;
     const xs = ELEVATION_STOPS.map((_, i) => marginX + (i * usableW) / (ELEVATION_STOPS.length - 1));
     const pierTops = ELEVATION_STOPS.map((s) => baseline - (26 + s.value * 9));
@@ -1474,16 +1502,20 @@
 
     let stars = '';
     if (sky.stars) {
-      const starPos = [[70,60],[160,110],[260,40],[400,90],[520,50],[640,120],[760,70],[840,40],[120,180],[820,160]];
-      stars = starPos.map(([sx, sy]) => `<circle cx="${sx}" cy="${sy}" r="${1.5 + (sx % 3)}" fill="#f8fafc" opacity="0.9"/>`).join('');
+      const starPos = [[70,60,2.2],[160,110,1.4],[260,40,1.8],[400,90,1.2],[520,50,2.4],[640,120,1.4],[760,70,1.8],[840,40,1.3],[120,180,1.6],[820,160,1.2],[350,150,1.3],[600,180,1.7]];
+      stars = starPos.map(([sx, sy, r]) => `
+        <circle cx="${sx}" cy="${sy}" r="${r * 2.5}" fill="#f8fafc" opacity="0.25"/>
+        <circle cx="${sx}" cy="${sy}" r="${r}" fill="#f8fafc" opacity="0.95"/>
+      `).join('');
     }
 
     const pillars = xs.map((x, i) => pillarFragment(x, pierTops[i], baseline, cfg.material)).join('');
 
     const pipePath = `M ${xs.map((x, i) => `${x},${pipeYs[i]}`).join(' L ')}`;
     const pipe = `
-      <path d="${pipePath}" fill="none" stroke="${water.fill}" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="${pipePath}" fill="none" stroke="${water.light}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+      <path d="${pipePath}" fill="none" stroke="${water.fill}" stroke-width="17" stroke-linecap="round" stroke-linejoin="round" filter="url(#bp-soft-shadow)"/>
+      <path d="${pipePath}" fill="none" stroke="url(#bp-pipe-sheen)" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="${pipePath}" fill="none" stroke="${water.light}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
     `;
 
     const labels = xs.map((x, i) => `
@@ -1499,6 +1531,12 @@
     const skyDeco = cfg.skyDeco && cfg.skyDeco !== 'none' ? skyDecoFragment(cfg.skyDeco, 780, 90) : '';
     const skyDeco2 = cfg.skyDeco === 'cloud' ? skyDecoFragment('cloud', 220, 70) : '';
 
+    let grass = '';
+    for (let gx = 20; gx < W - 20; gx += 14) {
+      const gh = 5 + ((gx * 7) % 5);
+      grass += `<line x1="${gx}" y1="${baseline + 6}" x2="${gx - 2}" y2="${baseline + 6 - gh}" stroke="${sky.groundDark}" stroke-width="1.5" opacity="0.35"/>`;
+    }
+
     const title = esc(cfg.title) || 'Our Aqueduct';
     const dedication = cfg.dedication ? `Dedicated to: ${esc(cfg.dedication)}` : 'A water system built for the common good';
 
@@ -1512,11 +1550,61 @@
           <stop offset="0%" stop-color="${sky.ground}"/>
           <stop offset="100%" stop-color="${sky.groundDark}"/>
         </linearGradient>
+        <linearGradient id="bp-pillar-grad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="${meta.light}"/>
+          <stop offset="55%" stop-color="${meta.fill}"/>
+          <stop offset="100%" stop-color="${meta.dark}"/>
+        </linearGradient>
+        <linearGradient id="bp-pillar-cap-grad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="${meta.fill}"/>
+          <stop offset="100%" stop-color="${meta.dark}"/>
+        </linearGradient>
+        <linearGradient id="bp-pipe-sheen" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55"/>
+          <stop offset="35%" stop-color="#ffffff" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+        <radialGradient id="bp-sun-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff7cc" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#fff7cc" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="bp-sun-body" cx="35%" cy="32%" r="70%">
+          <stop offset="0%" stop-color="#fff6b0"/>
+          <stop offset="100%" stop-color="#f59e0b"/>
+        </radialGradient>
+        <radialGradient id="bp-moon-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#c7d2fe" stop-opacity="0.45"/>
+          <stop offset="100%" stop-color="#c7d2fe" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="bp-moon-body" cx="35%" cy="32%" r="75%">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="100%" stop-color="#cbd5e1"/>
+        </radialGradient>
+        <radialGradient id="bp-cloud-grad" cx="40%" cy="30%" r="75%">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="100%" stop-color="#dbe3ee"/>
+        </radialGradient>
+        <radialGradient id="bp-tree-grad" cx="32%" cy="28%" r="75%">
+          <stop offset="0%" stop-color="#4ade80"/>
+          <stop offset="100%" stop-color="#15803d"/>
+        </radialGradient>
+        <linearGradient id="bp-trunk-grad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#8b5e34"/>
+          <stop offset="100%" stop-color="#5c3d21"/>
+        </linearGradient>
+        <linearGradient id="bp-rock-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#cbd5e1"/>
+          <stop offset="100%" stop-color="#94a3b8"/>
+        </linearGradient>
+        <filter id="bp-soft-shadow" x="-60%" y="-60%" width="220%" height="220%">
+          <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.28"/>
+        </filter>
       </defs>
       <rect x="0" y="0" width="${W}" height="${H}" fill="url(#bp-sky)"/>
       ${stars}
       ${skyDeco}${skyDeco2}
       <rect x="0" y="${baseline}" width="${W}" height="${H - baseline}" fill="url(#bp-ground)"/>
+      ${grass}
       ${groundDecos}
       ${pillars}
       ${pipe}
@@ -1889,30 +1977,28 @@
   // choice or a different flow time, without touching their real,
   // locked-in answers above.
   // ================================================================
-  function updateWhatIf() {
-    const cstOption = document.getElementById('whatif-cst-select').value;
-    const flowTimeRaw = parseFloat(document.getElementById('whatif-flowtime-input').value);
-    const flowTime = isFinite(flowTimeRaw) && flowTimeRaw > 0 ? flowTimeRaw : 15.03;
-    const cstCost = cstOption === 'A' ? -12.50 : -4.00;
-    const stewardshipPoints = cstOption === 'A' ? 20 : -15;
-    const day1Ledger = round2(100 + STRAWS_TOTAL + CONNECTORS_TOTAL + cstCost);
-    const day2Ledger = round2(day1Ledger - 8.62 + 16);
+  function renderCompareChoice() {
     const V = window.heightVariance != null ? window.heightVariance : -1.6;
-    const score = round2((stewardshipPoints + 0.5 * day2Ledger) - Math.abs(V) / (flowTime / 10));
-
-    const realScoreLine = (solvedKeys['masterscore'] && window.masterScore != null)
-      ? `<p style="text-align:center; color:#64748b; margin-top:10px;">Your real, locked-in score was <strong>${fmt2(window.masterScore)}</strong> with Option ${window.cstChoice}.</p>`
-      : '';
-    document.getElementById('whatif-result').innerHTML = `
-      <div class="whatif-readout">
-        <div><span>S (Stewardship)</span><strong>${stewardshipPoints}</strong></div>
-        <div><span>C (Remaining Cash)</span><strong>$${fmt2(day2Ledger)}</strong></div>
-        <div><span>V (Height Variance)</span><strong>${fmt2(V)}</strong></div>
-        <div><span>T (Flow Time)</span><strong>${fmt2(flowTime)}s</strong></div>
-      </div>
-      <div class="whatif-score">Master Score = ${fmt2(score)}</div>
-      ${realScoreLine}
-    `;
+    const T = window.avgFlowTime != null ? window.avgFlowTime : 15.03;
+    const options = [
+      { key: 'A', name: 'Option A (Fair Trade)', cstCost: -12.50, stewardship: 20 },
+      { key: 'B', name: 'Option B (Standard Sourcing)', cstCost: -4.00, stewardship: -15 }
+    ];
+    document.getElementById('compare-choice-result').innerHTML = options.map((opt) => {
+      const day1Ledger = round2(100 + STRAWS_TOTAL + CONNECTORS_TOTAL + opt.cstCost);
+      const day2Ledger = round2(day1Ledger - 8.62 + 16);
+      const score = round2((opt.stewardship + 0.5 * day2Ledger) - Math.abs(V) / (T / 10));
+      const isYours = window.cstChoice === opt.key;
+      return `
+        <div class="compare-card${isYours ? ' compare-card-yours' : ''}">
+          ${isYours ? '<div class="compare-badge">Your Team Chose This</div>' : ''}
+          <h4>${opt.name}</h4>
+          <div class="compare-row"><span>Stewardship Points</span><strong>${opt.stewardship}</strong></div>
+          <div class="compare-row"><span>Remaining Cash</span><strong>$${fmt2(day2Ledger)}</strong></div>
+          <div class="compare-row compare-score"><span>Master Score</span><strong>${fmt2(score)}</strong></div>
+        </div>
+      `;
+    }).join('');
   }
 
   // ================================================================
@@ -2491,7 +2577,7 @@
   renderVocabMatch();
   renderBlueprintArt();
   renderElevationProfile();
-  updateWhatIf();
+  renderCompareChoice();
   renderCelebration();
 </script>
 

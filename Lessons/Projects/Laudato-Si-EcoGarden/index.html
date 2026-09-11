@@ -340,6 +340,18 @@
       gap: 8px;
       position: relative;
     }
+    /* Matches the glossy sheen overlay drawSignFrame() paints onto the
+       canvas download - without this the on-screen preview and the
+       downloaded PNG would visibly disagree. */
+    .sign-preview::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 40%, rgba(15,23,42,0.08) 100%);
+      pointer-events: none;
+    }
+    .sign-preview > * { position: relative; }
     .sign-preview .sign-emblem { width: 34px; height: 34px; margin-bottom: 2px; }
     .sign-preview .sign-title { font-size: 1.25rem; font-weight: 900; margin-bottom: 4px; }
     .sign-preview .sign-verse { font-size: 1rem; line-height: 1.4; }
@@ -804,59 +816,144 @@
   // HAND-DRAWN ICONS (inline SVG - no external icon library, matches the
   // site's convention of shipping every asset inline)
   // ================================================================
+  // Every icon below is self-contained (own <defs> gradient/filter) so it
+  // still renders correctly no matter how many times its string gets
+  // reused verbatim in the document (one garden can drop the same plant
+  // token many times). Gradients give real shading instead of the old
+  // flat single-color fills.
   function flowerIcon(petalColor, centerColor, petalCount) {
+    const gid = 'flo-' + petalColor.replace('#', '') + '-' + centerColor.replace('#', '');
     let petals = '';
     for (let i = 0; i < petalCount; i++) {
       const angle = (360 / petalCount) * i;
-      petals += `<ellipse cx="20" cy="9" rx="5" ry="9" fill="${petalColor}" transform="rotate(${angle} 20 20)"/>`;
+      petals += `<path d="M20,20 C 24,14 24,8 20,2 C 16,8 16,14 20,20 Z" fill="url(#${gid})" stroke="${centerColor}" stroke-width="0.4" stroke-opacity="0.4" transform="rotate(${angle} 20 20)"/>`;
     }
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">${petals}<circle cx="20" cy="20" r="7" fill="${centerColor}"/></svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <defs>
+        <radialGradient id="${gid}" cx="50%" cy="85%" r="90%">
+          <stop offset="0%" stop-color="#fff8dc"/>
+          <stop offset="45%" stop-color="${petalColor}"/>
+          <stop offset="100%" stop-color="${centerColor}"/>
+        </radialGradient>
+        <radialGradient id="${gid}-c" cx="35%" cy="30%" r="75%">
+          <stop offset="0%" stop-color="#fff6b0"/>
+          <stop offset="100%" stop-color="${centerColor}"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="20" cy="30" rx="11" ry="3" fill="#000" opacity="0.08"/>
+      ${petals}
+      <circle cx="20" cy="20" r="6.5" fill="url(#${gid}-c)" stroke="${centerColor}" stroke-width="0.6"/>
+    </svg>`;
   }
   function fernIcon() {
-    const color = '#16a34a';
-    const branches = [10, 16, 22, 28].map((y) =>
-      `<path d="M20 ${y} L${20 - 9} ${y - 6} M20 ${y} L${20 + 9} ${y - 6}" stroke="${color}" stroke-width="2" fill="none" stroke-linecap="round"/>`
-    ).join('');
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%"><line x1="20" y1="34" x2="20" y2="8" stroke="${color}" stroke-width="2"/>${branches}</svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <defs>
+        <linearGradient id="fern-grad" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stop-color="#166534"/>
+          <stop offset="100%" stop-color="#4ade80"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="20" cy="34" rx="9" ry="2.2" fill="#000" opacity="0.1"/>
+      <g stroke="url(#fern-grad)" stroke-width="2" fill="none" stroke-linecap="round">
+        <line x1="20" y1="34" x2="20" y2="7" stroke="#166534" stroke-width="2.2"/>
+        <path d="M20 26 Q 14 24 11 18"/>
+        <path d="M20 26 Q 26 24 29 18"/>
+        <path d="M20 19 Q 15 17 13 12"/>
+        <path d="M20 19 Q 25 17 27 12"/>
+        <path d="M20 12 Q 16 10 15 6"/>
+        <path d="M20 12 Q 24 10 25 6"/>
+      </g>
+    </svg>`;
   }
   function lavenderIcon() {
     let buds = '';
-    for (let i = 0; i < 6; i++) buds += `<ellipse cx="20" cy="${7 + i * 3}" rx="3.2" ry="2.2" fill="#8b5cf6"/>`;
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%"><line x1="20" y1="34" x2="20" y2="22" stroke="#4d7c0f" stroke-width="2"/>${buds}</svg>`;
+    for (let i = 0; i < 7; i++) {
+      const y = 6 + i * 3;
+      const r = 3.4 - i * 0.12;
+      buds += `<ellipse cx="${20 + (i % 2 === 0 ? -1.2 : 1.2)}" cy="${y}" rx="${r}" ry="2.3" fill="url(#lav-grad)"/>`;
+    }
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <defs>
+        <linearGradient id="lav-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#c4b5fd"/>
+          <stop offset="100%" stop-color="#7c3aed"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="20" cy="35" rx="6" ry="1.6" fill="#000" opacity="0.08"/>
+      <line x1="20" y1="34" x2="20" y2="20" stroke="#4d7c0f" stroke-width="2"/>
+      ${buds}
+    </svg>`;
   }
   function soilBagIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
-      <path d="M10 14 L30 14 L28 34 L12 34 Z" fill="#a5691f" stroke="#7a4a13" stroke-width="1.5"/>
-      <path d="M13 14 L27 14 L25 8 L15 8 Z" fill="#c98a3d" stroke="#7a4a13" stroke-width="1.5"/>
+      <defs>
+        <linearGradient id="soil-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#c98a3d"/>
+          <stop offset="100%" stop-color="#8a5a1e"/>
+        </linearGradient>
+        <linearGradient id="soil-fold-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#e0a75e"/>
+          <stop offset="100%" stop-color="#a5691f"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="20" cy="35" rx="10" ry="2" fill="#000" opacity="0.12"/>
+      <path d="M10 14 L30 14 L28 34 L12 34 Z" fill="url(#soil-grad)" stroke="#5c3a10" stroke-width="1.2"/>
+      <path d="M13 14 L27 14 L25 8 L15 8 Z" fill="url(#soil-fold-grad)" stroke="#5c3a10" stroke-width="1.2"/>
+      <circle cx="16" cy="24" r="1.3" fill="#5c3a10" opacity="0.5"/>
+      <circle cx="23" cy="27" r="1" fill="#5c3a10" opacity="0.5"/>
+      <circle cx="19" cy="30" r="1.2" fill="#5c3a10" opacity="0.5"/>
     </svg>`;
   }
   function stonesIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
-      <ellipse cx="13" cy="25" rx="9" ry="6" fill="#94a3b8"/>
-      <ellipse cx="27" cy="26" rx="8" ry="5.5" fill="#cbd5e1"/>
-      <ellipse cx="20" cy="19" rx="7" ry="5" fill="#64748b"/>
+      <defs>
+        <radialGradient id="stone-grad-1" cx="35%" cy="25%" r="80%"><stop offset="0%" stop-color="#e2e8f0"/><stop offset="100%" stop-color="#64748b"/></radialGradient>
+        <radialGradient id="stone-grad-2" cx="35%" cy="25%" r="80%"><stop offset="0%" stop-color="#f1f5f9"/><stop offset="100%" stop-color="#94a3b8"/></radialGradient>
+        <radialGradient id="stone-grad-3" cx="35%" cy="25%" r="80%"><stop offset="0%" stop-color="#cbd5e1"/><stop offset="100%" stop-color="#475569"/></radialGradient>
+      </defs>
+      <ellipse cx="20" cy="31" rx="15" ry="3" fill="#000" opacity="0.12"/>
+      <ellipse cx="13" cy="25" rx="9" ry="6" fill="url(#stone-grad-1)" stroke="#475569" stroke-width="0.6"/>
+      <ellipse cx="27" cy="26" rx="8" ry="5.5" fill="url(#stone-grad-2)" stroke="#64748b" stroke-width="0.6"/>
+      <ellipse cx="20" cy="19" rx="7" ry="5" fill="url(#stone-grad-3)" stroke="#334155" stroke-width="0.6"/>
     </svg>`;
   }
   function birdbathIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
-      <path d="M17 34 L23 34 L21 21 L19 21 Z" fill="#94a3b8"/>
+      <defs>
+        <linearGradient id="bath-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f1f5f9"/><stop offset="100%" stop-color="#94a3b8"/>
+        </linearGradient>
+        <radialGradient id="bath-water" cx="40%" cy="30%" r="75%">
+          <stop offset="0%" stop-color="#e0f2fe"/><stop offset="100%" stop-color="#38bdf8"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="20" cy="35" rx="8" ry="1.6" fill="#000" opacity="0.1"/>
+      <path d="M17 34 L23 34 L21 21 L19 21 Z" fill="url(#bath-grad)"/>
       <rect x="14" y="33" width="12" height="3" rx="1" fill="#64748b"/>
-      <ellipse cx="20" cy="19" rx="14" ry="5" fill="#cbd5e1" stroke="#64748b" stroke-width="1"/>
-      <ellipse cx="20" cy="18" rx="10" ry="3.2" fill="#7dd3fc"/>
+      <ellipse cx="20" cy="19" rx="14" ry="5" fill="url(#bath-grad)" stroke="#64748b" stroke-width="1"/>
+      <ellipse cx="20" cy="18" rx="10" ry="3.2" fill="url(#bath-water)"/>
+      <path d="M14 18 Q 20 20 26 18" stroke="#ffffff" stroke-width="0.8" fill="none" opacity="0.7"/>
     </svg>`;
   }
   function stakeIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
-      <line x1="20" y1="35" x2="20" y2="16" stroke="#7a4a13" stroke-width="3"/>
-      <rect x="8" y="6" width="24" height="12" rx="2" fill="#deb887" stroke="#7a4a13" stroke-width="1.5"/>
+      <defs>
+        <linearGradient id="stake-sign" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f3d9a8"/><stop offset="100%" stop-color="#c98a3d"/></linearGradient>
+      </defs>
+      <ellipse cx="20" cy="36" rx="6" ry="1.4" fill="#000" opacity="0.1"/>
+      <line x1="20" y1="35" x2="20" y2="16" stroke="#8a5a1e" stroke-width="3"/>
+      <rect x="8" y="6" width="24" height="12" rx="2" fill="url(#stake-sign)" stroke="#7a4a13" stroke-width="1.5"/>
       <line x1="12" y1="12" x2="28" y2="12" stroke="#7a4a13" stroke-width="1.5" opacity="0.5"/>
     </svg>`;
   }
   function sunIcon() {
     const rays = [0, 45, 90, 135, 180, 225, 270, 315].map((a) =>
-      `<line x1="20" y1="20" x2="20" y2="4" stroke="#facc15" stroke-width="3" stroke-linecap="round" transform="rotate(${a} 20 20)"/>`
+      `<line x1="20" y1="20" x2="20" y2="4" stroke="#fde68a" stroke-width="3" stroke-linecap="round" transform="rotate(${a} 20 20)"/>`
     ).join('');
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">${rays}<circle cx="20" cy="20" r="9" fill="#facc15"/></svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <defs><radialGradient id="sun-grad" cx="35%" cy="32%" r="70%"><stop offset="0%" stop-color="#fff6b0"/><stop offset="100%" stop-color="#f59e0b"/></radialGradient></defs>
+      ${rays}<circle cx="20" cy="20" r="9" fill="url(#sun-grad)"/>
+    </svg>`;
   }
   function starIcon() {
     const pts = [];
@@ -866,43 +963,56 @@
       pts.push(`${20 + 14 * Math.cos(outer)},${20 + 14 * Math.sin(outer)}`);
       pts.push(`${20 + 6 * Math.cos(inner)},${20 + 6 * Math.sin(inner)}`);
     }
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%"><polygon points="${pts.join(' ')}" fill="#f59e0b"/></svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <defs><radialGradient id="star-grad" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#fef3c7"/><stop offset="100%" stop-color="#d97706"/></radialGradient></defs>
+      <polygon points="${pts.join(' ')}" fill="url(#star-grad)" stroke="#b45309" stroke-width="0.5"/>
+    </svg>`;
   }
   function heartIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
-      <path d="M20 33 C 6 23, 4 12, 13 8 C 18 6, 20 11, 20 13 C 20 11, 22 6, 27 8 C 36 12, 34 23, 20 33 Z" fill="#f43f5e"/>
+      <defs><radialGradient id="heart-grad" cx="35%" cy="25%" r="80%"><stop offset="0%" stop-color="#fda4af"/><stop offset="100%" stop-color="#e11d48"/></radialGradient></defs>
+      <path d="M20 33 C 6 23, 4 12, 13 8 C 18 6, 20 11, 20 13 C 20 11, 22 6, 27 8 C 36 12, 34 23, 20 33 Z" fill="url(#heart-grad)"/>
     </svg>`;
   }
   function butterflyIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <defs>
+        <radialGradient id="bfly-grad" cx="40%" cy="30%" r="80%"><stop offset="0%" stop-color="#c7d2fe"/><stop offset="100%" stop-color="#6366f1"/></radialGradient>
+      </defs>
       <line x1="20" y1="10" x2="20" y2="30" stroke="#78350f" stroke-width="2"/>
-      <ellipse cx="12" cy="15" rx="9" ry="7" fill="#818cf8"/>
-      <ellipse cx="28" cy="15" rx="9" ry="7" fill="#818cf8"/>
-      <ellipse cx="13" cy="26" rx="6" ry="5" fill="#a5b4fc"/>
-      <ellipse cx="27" cy="26" rx="6" ry="5" fill="#a5b4fc"/>
+      <ellipse cx="12" cy="15" rx="9" ry="7" fill="url(#bfly-grad)"/>
+      <ellipse cx="28" cy="15" rx="9" ry="7" fill="url(#bfly-grad)"/>
+      <ellipse cx="13" cy="26" rx="6" ry="5" fill="url(#bfly-grad)" opacity="0.85"/>
+      <ellipse cx="27" cy="26" rx="6" ry="5" fill="url(#bfly-grad)" opacity="0.85"/>
+      <circle cx="10" cy="13" r="2" fill="#fff" opacity="0.6"/>
     </svg>`;
   }
   function beeIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
-      <ellipse cx="20" cy="20" rx="10" ry="8" fill="#facc15" stroke="#1f2937" stroke-width="1.5"/>
-      <path d="M12 15 L28 15 M12 20 L28 20 M12 25 L28 25" stroke="#1f2937" stroke-width="2.5"/>
+      <defs><radialGradient id="bee-grad" cx="35%" cy="25%" r="80%"><stop offset="0%" stop-color="#fef08a"/><stop offset="100%" stop-color="#eab308"/></radialGradient></defs>
       <ellipse cx="13" cy="10" rx="6" ry="4" fill="#dbeafe" opacity="0.8"/>
       <ellipse cx="25" cy="10" rx="6" ry="4" fill="#dbeafe" opacity="0.8"/>
+      <ellipse cx="20" cy="20" rx="10" ry="8" fill="url(#bee-grad)" stroke="#1f2937" stroke-width="1.5"/>
+      <path d="M12 15 L28 15 M12 20 L28 20 M12 25 L28 25" stroke="#1f2937" stroke-width="2.5"/>
     </svg>`;
   }
   function raindropIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
-      <path d="M20 6 C 28 18, 32 24, 32 28 A 12 12 0 0 1 8 28 C 8 24, 12 18, 20 6 Z" fill="#38bdf8"/>
+      <defs><radialGradient id="rain-grad" cx="35%" cy="25%" r="80%"><stop offset="0%" stop-color="#bae6fd"/><stop offset="100%" stop-color="#0284c7"/></radialGradient></defs>
+      <path d="M20 6 C 28 18, 32 24, 32 28 A 12 12 0 0 1 8 28 C 8 24, 12 18, 20 6 Z" fill="url(#rain-grad)"/>
+      <ellipse cx="16" cy="24" rx="2.5" ry="4" fill="#fff" opacity="0.4"/>
     </svg>`;
   }
   function moonIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
-      <path d="M25 6 A 15 15 0 1 0 25 34 A 12 12 0 0 1 25 6 Z" fill="#a78bfa"/>
+      <defs><radialGradient id="mooni-grad" cx="35%" cy="25%" r="80%"><stop offset="0%" stop-color="#ddd6fe"/><stop offset="100%" stop-color="#7c3aed"/></radialGradient></defs>
+      <path d="M25 6 A 15 15 0 1 0 25 34 A 12 12 0 0 1 25 6 Z" fill="url(#mooni-grad)"/>
     </svg>`;
   }
   function leafIcon() {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
-      <path d="M8 30 C 8 14, 22 6, 32 8 C 32 20, 22 30, 8 30 Z" fill="#22c55e"/>
+      <defs><linearGradient id="leaf-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#86efac"/><stop offset="100%" stop-color="#15803d"/></linearGradient></defs>
+      <path d="M8 30 C 8 14, 22 6, 32 8 C 32 20, 22 30, 8 30 Z" fill="url(#leaf-grad)"/>
       <line x1="10" y1="28" x2="28" y2="10" stroke="#166534" stroke-width="1.5"/>
     </svg>`;
   }
@@ -1919,9 +2029,28 @@
     const meta = SIGN_STYLE_META[style] || SIGN_STYLE_META['sign-rustic'];
     const radius = style === 'sign-cloud' ? Math.min(w, h) * 0.42 : meta.radius;
 
+    // Floating drop shadow under the whole card, then a flat fill, then a
+    // diagonal glossy sheen overlay clipped to the card shape - gives every
+    // background color real depth instead of a flat, paper-flat rectangle.
+    ctx.save();
+    ctx.shadowColor = 'rgba(15,23,42,0.28)';
+    ctx.shadowBlur = 22;
+    ctx.shadowOffsetY = 10;
     roundRectPath(ctx, x, y, w, h, radius);
     ctx.fillStyle = bg;
     ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    roundRectPath(ctx, x, y, w, h, radius);
+    ctx.clip();
+    const sheen = ctx.createLinearGradient(x, y, x + w * 0.6, y + h);
+    sheen.addColorStop(0, 'rgba(255,255,255,0.4)');
+    sheen.addColorStop(0.4, 'rgba(255,255,255,0)');
+    sheen.addColorStop(1, 'rgba(15,23,42,0.08)');
+    ctx.fillStyle = sheen;
+    ctx.fillRect(x, y, w, h);
+    ctx.restore();
 
     ctx.save();
     ctx.lineJoin = 'round';
