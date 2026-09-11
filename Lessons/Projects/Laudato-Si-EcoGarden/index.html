@@ -3426,8 +3426,11 @@
     document.getElementById('stamp-display').classList.add('show');
 
     const items = [
+      `Store Ledger completed: ${cartOrder.length} item${cartOrder.length === 1 ? '' : 's'} priced and totaled`,
+      `Estimated Total (Addition) solved`,
+      `Grand Total Spent: $${fmt2(window.grandTotal)}`,
       `Leftover Budget (Subtraction) solved`,
-      `Average Cost per Plant (Division) solved`,
+      `Average Cost per Plant (Division): $${fmt2(window.plantAvgAchieved)}`,
       `Garden Grid Layout locked in`,
       `Creation Sign locked in`
     ];
