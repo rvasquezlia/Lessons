@@ -253,6 +253,12 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.12);
     }
     .blueprint-swatch.active { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+    .blueprint-check-row { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+    .blueprint-check-row label {
+      display: flex; align-items: center; gap: 5px;
+      font-weight: 600; font-size: 0.82rem; color: #334155; cursor: pointer;
+    }
+    .blueprint-check-row input[type="checkbox"] { width: 15px; height: 15px; cursor: pointer; }
     .blueprint-preview-wrap {
       flex: 2 1 420px;
       display: flex;
@@ -670,24 +676,23 @@
               <div class="blueprint-swatch-row" id="blueprint-water-row"></div>
             </div>
             <div class="blueprint-field">
-              <label for="blueprint-sky-deco-select">Sky Decoration</label>
-              <select id="blueprint-sky-deco-select" onchange="renderBlueprintArt()">
-                <option value="sun">Sun</option>
-                <option value="moon">Moon</option>
-                <option value="bird">Bird</option>
-                <option value="cloud">Cloud</option>
-                <option value="none">None</option>
-              </select>
+              <label>Sky Decoration <span style="font-weight:400; opacity:.7;">(pick any combo)</span></label>
+              <div class="blueprint-check-row" id="blueprint-sky-deco-checks">
+                <label><input type="checkbox" value="sun" checked onchange="renderBlueprintArt()"> Sun</label>
+                <label><input type="checkbox" value="moon" onchange="renderBlueprintArt()"> Moon</label>
+                <label><input type="checkbox" value="bird" onchange="renderBlueprintArt()"> Bird</label>
+                <label><input type="checkbox" value="cloud" onchange="renderBlueprintArt()"> Cloud</label>
+              </div>
             </div>
             <div class="blueprint-field">
-              <label for="blueprint-ground-deco-select">Ground Decoration</label>
-              <select id="blueprint-ground-deco-select" onchange="renderBlueprintArt()">
-                <option value="tree">Trees</option>
-                <option value="flowers">Flower Beds</option>
-                <option value="rocks">Rocks</option>
-                <option value="none">None</option>
-              </select>
+              <label>Ground Decoration <span style="font-weight:400; opacity:.7;">(pick any combo)</span></label>
+              <div class="blueprint-check-row" id="blueprint-ground-deco-checks">
+                <label><input type="checkbox" value="tree" checked onchange="renderBlueprintArt()"> Trees</label>
+                <label><input type="checkbox" value="flowers" onchange="renderBlueprintArt()"> Flower Beds</label>
+                <label><input type="checkbox" value="rocks" onchange="renderBlueprintArt()"> Rocks</label>
+              </div>
             </div>
+            <button type="button" class="row-check-btn" style="align-self:flex-start;" onclick="surpriseMeBlueprint()">🎲 Surprise Me</button>
           </div>
           <div class="blueprint-preview-wrap">
             <div id="blueprint-preview"></div>
@@ -1086,15 +1091,14 @@
       Object.assign(window.blueprintConfig, state.blueprintConfig);
       document.getElementById('blueprint-title-input').value = window.blueprintConfig.title || '';
       document.getElementById('blueprint-dedication-input').value = window.blueprintConfig.dedication || '';
-      document.getElementById('blueprint-sky-deco-select').value = window.blueprintConfig.skyDeco || 'sun';
-      document.getElementById('blueprint-ground-deco-select').value = window.blueprintConfig.groundDeco || 'tree';
+      setCheckedValues('blueprint-sky-deco-checks', window.blueprintConfig.skyDecos || (window.blueprintConfig.skyDeco ? [window.blueprintConfig.skyDeco] : ['sun']));
+      setCheckedValues('blueprint-ground-deco-checks', window.blueprintConfig.groundDecos || (window.blueprintConfig.groundDeco ? [window.blueprintConfig.groundDeco] : ['tree']));
       renderBlueprintArt();
       if (state.blueprintLocked && solvedKeys['blueprintart']) {
         blueprintLocked = true;
         document.getElementById('blueprint-title-input').disabled = true;
         document.getElementById('blueprint-dedication-input').disabled = true;
-        document.getElementById('blueprint-sky-deco-select').disabled = true;
-        document.getElementById('blueprint-ground-deco-select').disabled = true;
+        document.querySelectorAll('#blueprint-sky-deco-checks input, #blueprint-ground-deco-checks input').forEach((el) => { el.disabled = true; });
         document.getElementById('blueprint-lock-btn').disabled = true;
         document.getElementById('blueprint-png-btn').disabled = false;
         document.getElementById('blueprint-pdf-btn').disabled = false;
@@ -1355,7 +1359,7 @@
     golden: { name: 'Golden Hour', fill: '#f59e0b', light: '#fde68a' }
   };
 
-  window.blueprintConfig = { sky: 'midday', material: 'stone', water: 'sky', skyDeco: 'sun', groundDeco: 'tree' };
+  window.blueprintConfig = { sky: 'midday', material: 'stone', water: 'sky', skyDecos: ['sun'], groundDecos: ['tree'] };
   let blueprintLocked = false;
 
   function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
@@ -1530,12 +1534,16 @@
     `).join('');
 
     const groundDecoXs = [marginX / 2, marginX + usableW * 0.32, marginX + usableW * 0.68, W - marginX / 2];
-    const groundDecos = cfg.groundDeco && cfg.groundDeco !== 'none'
-      ? groundDecoXs.map((x) => groundDecoFragment(cfg.groundDeco, x, baseline + 122, 1.2)).join('')
+    const groundDecoKinds = (cfg.groundDecos && cfg.groundDecos.length) ? cfg.groundDecos : (cfg.groundDeco && cfg.groundDeco !== 'none' ? [cfg.groundDeco] : []);
+    const groundDecos = groundDecoKinds.length
+      ? groundDecoXs.map((x, i) => groundDecoFragment(groundDecoKinds[i % groundDecoKinds.length], x, baseline + 122, 1.2)).join('')
       : '';
 
-    const skyDeco = cfg.skyDeco && cfg.skyDeco !== 'none' ? skyDecoFragment(cfg.skyDeco, 920, 115) : '';
-    const skyDeco2 = cfg.skyDeco === 'cloud' ? skyDecoFragment('cloud', 260, 90) : '';
+    const SKY_DECO_SLOTS = [[920, 115], [260, 90], [560, 60], [130, 195]];
+    const skyDecoKinds = (cfg.skyDecos && cfg.skyDecos.length) ? cfg.skyDecos : (cfg.skyDeco && cfg.skyDeco !== 'none' ? [cfg.skyDeco] : []);
+    const skyDeco = skyDecoKinds.slice(0, SKY_DECO_SLOTS.length)
+      .map((kind, i) => skyDecoFragment(kind, SKY_DECO_SLOTS[i][0], SKY_DECO_SLOTS[i][1]))
+      .join('');
 
     let grass = '';
     for (let gx = 24; gx < W - 24; gx += 16) {
@@ -1608,7 +1616,7 @@
       </defs>
       <rect x="0" y="0" width="${W}" height="${H}" fill="url(#bp-sky)"/>
       ${stars}
-      ${skyDeco}${skyDeco2}
+      ${skyDeco}
       <rect x="0" y="${baseline}" width="${W}" height="${H - baseline}" fill="url(#bp-ground)"/>
       ${grass}
       ${groundDecos}
@@ -1633,12 +1641,40 @@
   function setBlueprintMaterial(key) { if (blueprintLocked) return; window.blueprintConfig.material = key; renderBlueprintArt(); }
   function setBlueprintWater(key) { if (blueprintLocked) return; window.blueprintConfig.water = key; renderBlueprintArt(); }
 
+  function checkedValues(containerId) {
+    return Array.from(document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`)).map((el) => el.value);
+  }
+
+  function setCheckedValues(containerId, values) {
+    const set = new Set(values || []);
+    document.querySelectorAll(`#${containerId} input[type="checkbox"]`).forEach((el) => { el.checked = set.has(el.value); });
+  }
+
+  function surpriseMeBlueprint() {
+    if (blueprintLocked) return;
+    const cfg = window.blueprintConfig;
+    const pick = (obj) => Object.keys(obj)[Math.floor(Math.random() * Object.keys(obj).length)];
+    const pickSome = (arr) => arr.filter(() => Math.random() < 0.5);
+    cfg.sky = pick(BLUEPRINT_SKIES);
+    cfg.material = pick(BLUEPRINT_MATERIALS);
+    cfg.water = pick(BLUEPRINT_WATERS);
+    let skyPick = pickSome(['sun', 'moon', 'bird', 'cloud']);
+    if (!skyPick.length) skyPick = ['cloud'];
+    let groundPick = pickSome(['tree', 'flowers', 'rocks']);
+    if (!groundPick.length) groundPick = ['tree'];
+    cfg.skyDecos = skyPick;
+    cfg.groundDecos = groundPick;
+    setCheckedValues('blueprint-sky-deco-checks', cfg.skyDecos);
+    setCheckedValues('blueprint-ground-deco-checks', cfg.groundDecos);
+    renderBlueprintArt();
+  }
+
   function renderBlueprintArt() {
     const cfg = window.blueprintConfig;
     cfg.title = document.getElementById('blueprint-title-input').value.trim();
     cfg.dedication = document.getElementById('blueprint-dedication-input').value.trim();
-    cfg.skyDeco = document.getElementById('blueprint-sky-deco-select').value;
-    cfg.groundDeco = document.getElementById('blueprint-ground-deco-select').value;
+    cfg.skyDecos = checkedValues('blueprint-sky-deco-checks');
+    cfg.groundDecos = checkedValues('blueprint-ground-deco-checks');
     document.getElementById('blueprint-preview').innerHTML = buildBlueprintSVG(cfg);
     buildBlueprintSwatchRow('blueprint-sky-row', BLUEPRINT_SKIES, cfg.sky, 'setBlueprintSky');
     buildBlueprintSwatchRow('blueprint-material-row', BLUEPRINT_MATERIALS, cfg.material, 'setBlueprintMaterial');
@@ -1655,8 +1691,7 @@
     solvedKeys['blueprintart'] = true;
     document.getElementById('blueprint-title-input').disabled = true;
     document.getElementById('blueprint-dedication-input').disabled = true;
-    document.getElementById('blueprint-sky-deco-select').disabled = true;
-    document.getElementById('blueprint-ground-deco-select').disabled = true;
+    document.querySelectorAll('#blueprint-sky-deco-checks input, #blueprint-ground-deco-checks input').forEach((el) => { el.disabled = true; });
     document.getElementById('blueprint-lock-btn').disabled = true;
     document.getElementById('blueprint-png-btn').disabled = false;
     document.getElementById('blueprint-pdf-btn').disabled = false;

@@ -8,10 +8,11 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&family=Baloo+2:wght@500..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&family=Baloo+2:wght@500..800&family=Bungee&family=Anton&family=Permanent+Marker&family=Pacifico&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/konva@9/konva.min.js"></script>
 
   <style>
     /* ===== Page-specific additions on top of lesson-shared.css ===== */
@@ -177,77 +178,112 @@
     .summary-table td.value-cell { font-weight: 800; color: var(--success); text-align: center; }
     .summary-table td.value-cell.pending { color: var(--empty, #94a3b8); font-weight: 600; font-style: italic; }
 
-    /* Booth blueprint (to-scale rectangle on graph paper) */
+    /* Booth blueprint - a real CAD-style engineering sheet: navy sheet,
+       cyan grid, hatched booth outline, dimension lines with arrows, and
+       a title block, all drawn once as SVG (buildBoothBlueprintSVG) and
+       shared byte-for-byte between the live preview and every download. */
     .blueprint-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 18px 0; }
-    .blueprint-grid-paper {
-      width: 340px;
-      height: 280px;
+    #blueprint-preview {
+      width: 440px;
       max-width: 100%;
-      background-color: #fff;
-      background-image:
-        linear-gradient(rgba(30,58,138,0.14) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(30,58,138,0.14) 1px, transparent 1px);
-      background-size: 20px 20px;
-      border: 3px solid var(--border);
       border-radius: 10px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.18);
     }
-    .blueprint-rect {
-      display: none;
-      position: relative;
-      background: #dcfce7;
-      border: 3px solid #15803d;
-      border-radius: 4px;
-    }
-    .blueprint-dim {
-      position: absolute;
-      font-size: 0.78rem;
-      font-weight: 800;
-      color: #15803d;
-      background: #fff;
-      padding: 1px 7px;
-      border-radius: 6px;
-      white-space: nowrap;
-    }
-    .blueprint-dim.dim-top { top: -24px; left: 50%; transform: translateX(-50%); }
-    .blueprint-dim.dim-side { left: -8px; top: 50%; transform: translate(-100%, -50%); }
+    #blueprint-preview > svg { width: 100%; height: auto; display: block; }
     #blueprint-hint { color: var(--empty, #64748b); font-style: italic; text-align: center; }
 
-    /* Event flyer builder */
-    .flyer-builder { display: flex; flex-wrap: wrap; gap: 24px; margin: 18px 0; }
-    .flyer-controls { flex: 1 1 260px; }
-    .flyer-controls .form-group { margin-bottom: 11px; }
-    .flyer-controls .form-group label { font-size: 0.9rem; margin-bottom: 4px; }
-    .flyer-controls .form-control-lg {
+    /* Event Flyer Studio - a real free-form canvas (Konva.js) instead of a
+       fixed template: poster style is chosen from a palette, but every
+       text and sticker can be freely added, dragged, resized, and
+       rotated anywhere. Mirrors the Creation Sign Studio pattern. */
+    .sign-builder { display: flex; flex-wrap: wrap; gap: 24px; margin: 18px 0; }
+    .sign-toolbar { flex: 1 1 260px; display: flex; flex-direction: column; }
+    .sign-toolbar .form-group { margin-bottom: 11px; }
+    .sign-toolbar .form-group label { font-size: 0.9rem; margin-bottom: 4px; }
+    .sign-toolbar .form-control-lg {
       padding: 7px 10px;
       font-size: 0.88rem;
       border-width: 2px;
       border-radius: 7px;
     }
-    .flyer-controls .row-check-btn { font-size: 0.8rem; padding: 8px 12px; }
-    .flyer-preview-wrap { flex: 2 1 420px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
-    #flyer-preview {
-      width: 100%;
-      max-width: 640px;
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.18);
-      border: 1px solid #cbd5e1;
+    .sign-toolbar .row-check-btn { font-size: 0.8rem; padding: 8px 12px; }
+    .sign-toolbar .toolbar-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 11px; }
+    .sticker-picker {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+      gap: 6px;
+      margin-bottom: 11px;
+      padding: 8px;
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      border-radius: 8px;
     }
-    #flyer-preview > svg { width: 100%; height: auto; display: block; }
-
-    .sticker-choices label {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      margin: 0 10px 8px 0;
+    .sticker-pick-btn {
+      width: 40px;
+      height: 40px;
+      padding: 5px;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      background: #fff;
       cursor: pointer;
     }
-    .sticker-choices input { transform: scale(1.2); }
-    .sticker-icon { display: inline-block; width: 26px; height: 26px; }
+    .sticker-pick-btn:hover { border-color: var(--primary-light); }
+    .sign-props {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 11px;
+      padding: 10px;
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+    }
+    .sign-props select, .sign-props input[type="color"] { padding: 5px 8px; font-size: 0.82rem; border-radius: 6px; border: 2px solid var(--border); }
+    .sign-props input[type="color"] { width: 36px; height: 32px; padding: 2px; cursor: pointer; }
+    .sign-props button { font-size: 0.78rem; padding: 6px 10px; }
+    .sign-layers {
+      max-height: 160px;
+      overflow-y: auto;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: #f8fafc;
+      padding: 4px;
+    }
+    .sign-layer-row {
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sign-layer-row:hover { background: #eef2f7; }
+    .sign-layer-selected { background: #dbeafe; font-weight: 700; }
+    .sign-stage-wrap { flex: 1 1 320px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .flyer-stage-container {
+      width: 560px;
+      max-width: 100%;
+      height: 432px;
+      border-radius: 14px;
+      overflow: hidden;
+      touch-action: none;
+    }
+    .sign-hint { font-size: 0.78rem; color: #64748b; text-align: center; }
+    .sign-edit-textarea {
+      border: 2px dashed var(--primary-light);
+      background: rgba(255,255,255,0.92);
+      border-radius: 4px;
+      resize: none;
+      overflow: hidden;
+      outline: none;
+      padding: 2px;
+      margin: 0;
+      line-height: 1.15;
+      z-index: 50;
+    }
 
     /* Technology: What-If Calculator */
     .whatif-controls { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin: 16px 0; }
@@ -639,111 +675,75 @@
         Solve Station 4 (Spatial Planning) on Day 1 - your booth will be drawn to scale here automatically.
       </div>
       <div class="blueprint-wrap">
-        <div class="blueprint-grid-paper" id="blueprint-grid-paper">
-          <div class="blueprint-rect" id="blueprint-rect">
-            <span class="blueprint-dim dim-top" id="blueprint-dim-l"></span>
-            <span class="blueprint-dim dim-side" id="blueprint-dim-w"></span>
-          </div>
-        </div>
+        <div id="blueprint-preview"></div>
         <p id="blueprint-hint">Solve Station 4 (Spatial Planning) to see your booth drawn to scale here.</p>
       </div>
 
-      <div class="section-title" style="font-size:1.3rem;">Art: Event Flyer Design</div>
+      <div class="section-title" style="font-size:1.3rem;">Art: Event Flyer Studio</div>
       <div class="howto-box">
         <strong class="howto-label">What to do</strong>
-        Design your official festival flyer, then lock it in. Try different styles until you find your favorite -
-        nothing here is graded on looks alone.
+        Design your own flyer - pick a poster style, then add text and stickers anywhere you like: drag, resize,
+        and rotate them until it's yours. Nothing here is graded on looks alone.
       </div>
 
-      <div class="flyer-builder">
-        <div class="flyer-controls">
-          <div class="form-group">
-            <label for="flyer-charity-input">Charity Partner Name (optional)</label>
-            <input type="text" id="flyer-charity-input" class="form-control-lg" placeholder="e.g. Riverside Youth Center" maxlength="40" oninput="renderFlyer()">
+      <div class="sign-builder">
+        <div class="sign-toolbar">
+          <div class="toolbar-row">
+            <button type="button" class="row-check-btn" id="flyer-undo-btn" onclick="undoFlyer()" disabled title="Undo (Ctrl+Z)">&#8630; Undo</button>
+            <button type="button" class="row-check-btn" id="flyer-redo-btn" onclick="redoFlyer()" disabled title="Redo (Ctrl+Shift+Z)">&#8631; Redo</button>
+            <button type="button" class="row-check-btn" style="background:#dc2626;" onclick="resetFlyer()">Reset Flyer</button>
           </div>
           <div class="form-group">
-            <label for="flyer-tagline-input">Event Tagline</label>
-            <input type="text" id="flyer-tagline-input" class="form-control-lg" placeholder="e.g. A Night for Our Neighbors" maxlength="50" oninput="renderFlyer()">
+            <label for="flyer-material-select">Poster Style</label>
+            <select id="flyer-material-select" class="form-control-lg" onchange="setFlyerMaterial(this.value)">
+              <option value="poster">Concert Poster</option>
+              <option value="ticket">Ticket Stub</option>
+              <option value="marquee">Marquee Frame</option>
+              <option value="pass">Backstage Pass</option>
+              <option value="neon">Neon Sign</option>
+              <option value="spotlight">Spotlight</option>
+              <option value="ribbon">Ribbon Banner</option>
+              <option value="confetti">Confetti Trim</option>
+            </select>
           </div>
           <div class="form-group">
-            <label><input type="checkbox" id="flyer-quote-toggle" onchange="onFlyerQuoteToggle()"> Add a stewardship quote (optional)</label>
+            <label for="flyer-accent-color">Accent Color</label>
+            <input type="color" id="flyer-accent-color" onchange="setFlyerAccentColor(this.value)">
+          </div>
+          <div class="toolbar-row">
+            <button type="button" class="row-check-btn" onclick="addFlyerText()">+ Add Text</button>
+            <button type="button" class="row-check-btn" onclick="toggleFlyerStickerPicker()">+ Add Sticker</button>
+          </div>
+          <div id="flyer-sticker-picker" class="sticker-picker" style="display:none;"></div>
+
+          <div class="form-group">
+            <label><input type="checkbox" id="flyer-quote-toggle" onchange="onFlyerQuoteToggle()"> Insert a stewardship quote</label>
           </div>
           <div class="form-group" id="flyer-quote-group" style="display:none;">
             <label for="flyer-verse-select">Stewardship Quote</label>
             <select id="flyer-verse-select" class="form-control-lg" onchange="onFlyerVerseChange()"></select>
             <div id="custom-quote-group" style="display:none; margin-top:8px;">
               <label for="custom-quote-text">Your Quote</label>
-              <textarea id="custom-quote-text" class="form-control-lg" rows="2" placeholder="Type a stewardship-themed quote..." oninput="renderFlyer()"></textarea>
+              <textarea id="custom-quote-text" class="form-control-lg" rows="2" placeholder="Type a stewardship-themed quote..."></textarea>
               <label for="custom-quote-ref" style="margin-top:8px;">Reference</label>
-              <input type="text" id="custom-quote-ref" class="form-control-lg" placeholder="e.g. Luke 16:10" oninput="renderFlyer()">
+              <input type="text" id="custom-quote-ref" class="form-control-lg" placeholder="e.g. Luke 16:10">
             </div>
+            <button type="button" class="row-check-btn" style="margin-top:8px;" onclick="insertFlyerQuoteText()">+ Add Quote to Flyer</button>
           </div>
-          <div class="form-group">
-            <label for="flyer-bg-select">Flyer Background</label>
-            <select id="flyer-bg-select" class="form-control-lg" onchange="renderFlyer()">
-              <option value="#fef3c7">Ticket Yellow</option>
-              <option value="#dbeafe">Stage Blue</option>
-              <option value="#dcfce7">Community Green</option>
-              <option value="#fed7aa">Sunset Orange</option>
-              <option value="#fce7f3">Party Pink</option>
-              <option value="#e0e7ff">Night Purple</option>
-              <option value="#f1f5f9">Concrete Gray</option>
-              <option value="#ffffff">Spotlight White</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="flyer-border-select">Flyer Style (border)</label>
-            <select id="flyer-border-select" class="form-control-lg" onchange="renderFlyer()">
-              <option value="flyer-poster">Concert Poster</option>
-              <option value="flyer-ticket">Ticket Stub</option>
-              <option value="flyer-marquee">Marquee Frame</option>
-              <option value="flyer-pass">Backstage Pass</option>
-              <option value="flyer-neon">Neon Sign</option>
-              <option value="flyer-spotlight">Spotlight</option>
-              <option value="flyer-ribbon">Ribbon Banner</option>
-              <option value="flyer-confetti">Confetti Trim</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="flyer-text-color">Text Color</label>
-            <select id="flyer-text-color" class="form-control-lg" onchange="renderFlyer()">
-              <option value="#1e293b">Charcoal</option>
-              <option value="#1e3a8a">Deep Blue</option>
-              <option value="#15803d">Forest Green</option>
-              <option value="#7c3aed">Royal Purple</option>
-              <option value="#0f172a">Ink Black</option>
-              <option value="#c2410c">Sunset Orange</option>
-              <option value="#0f766e">Ocean Teal</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="flyer-font-select">Lettering Style</label>
-            <select id="flyer-font-select" class="form-control-lg" onchange="renderFlyer()">
-              <option value="'Montserrat', sans-serif">Classic</option>
-              <option value="Georgia, 'Times New Roman', serif">Poster Serif</option>
-              <option value="'Brush Script MT', cursive">Marquee Script</option>
-              <option value="'Baloo 2', cursive">Playful</option>
-              <option value="'Arial Black', Arial, sans-serif">Bold Poster</option>
-              <option value="'Comic Sans MS', 'Baloo 2', cursive">Fun &amp; Bouncy</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="flyer-emblem-select">Top Emblem (fixed, above title)</label>
-            <select id="flyer-emblem-select" class="form-control-lg" onchange="renderFlyer()">
-              <option value="">None</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Bottom Stickers (pick up to 3, fixed row)</label>
-            <div class="sticker-choices" id="sticker-choices"></div>
-          </div>
-          <button class="row-check-btn" id="lock-flyer-btn" onclick="lockFlyer()">Lock My Flyer</button>
+
+          <div id="flyer-props" class="sign-props" style="display:none;"></div>
+
+          <p style="font-weight:700; margin:12px 0 4px;">Layers</p>
+          <div id="flyer-layers" class="sign-layers"></div>
+
+          <button class="row-check-btn" id="lock-flyer-btn" onclick="lockFlyer()" style="margin-top:14px;">Lock My Flyer</button>
           <button class="row-check-btn celebrate-btn" style="background:var(--accent);" onclick="downloadFlyer()">Download My Flyer</button>
           <button class="row-check-btn celebrate-btn" style="background:var(--success);" onclick="downloadBlueprintFlyerPoster()">Download Blueprint + Flyer Poster (PDF)</button>
           <div class="feedback-msg" id="flyer-feedback"></div>
         </div>
-        <div class="flyer-preview-wrap">
-          <div id="flyer-preview"></div>
+        <div class="sign-stage-wrap">
+          <div id="flyer-stage-container" class="flyer-stage-container"></div>
+          <p class="sign-hint">Drag to move &middot; corner handles to resize/rotate &middot; double-click text to edit it</p>
         </div>
       </div>
 
@@ -929,14 +929,30 @@
       <path d="M20 33 C 6 23, 4 12, 13 8 C 18 6, 20 11, 20 13 C 20 11, 22 6, 27 8 C 36 12, 34 23, 20 33 Z" fill="url(#fest-heart-grad)"/>
     </svg>`;
   }
+  function pennantIcon() {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <defs><linearGradient id="fest-pennant-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs>
+      <line x1="8" y1="6" x2="8" y2="35" stroke="#64748b" stroke-width="2.5"/>
+      <path d="M8 8 L32 15 L8 22 Z" fill="url(#fest-pennant-grad)" stroke="#1e3a8a" stroke-width="1"/>
+    </svg>`;
+  }
+  function sparkleIcon() {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="100%" height="100%">
+      <defs><radialGradient id="fest-sparkle-grad" cx="40%" cy="30%" r="80%"><stop offset="0%" stop-color="#fef9c3"/><stop offset="100%" stop-color="#eab308"/></radialGradient></defs>
+      <path d="M20 4 C 21 14, 26 19, 36 20 C 26 21, 21 26, 20 36 C 19 26, 14 21, 4 20 C 14 19, 19 14, 20 4 Z" fill="url(#fest-sparkle-grad)"/>
+      <circle cx="31" cy="9" r="3" fill="url(#fest-sparkle-grad)"/>
+    </svg>`;
+  }
 
   const STICKER_ICONS = {
     music: musicNoteIcon(), ticket: ticketIcon(), megaphone: megaphoneIcon(), balloon: balloonIcon(),
-    confetti: confettiIcon(), mic: microphoneIcon(), star: starIcon(), heart: heartIcon()
+    confetti: confettiIcon(), mic: microphoneIcon(), star: starIcon(), heart: heartIcon(),
+    pennant: pennantIcon(), sparkle: sparkleIcon()
   };
   const STICKER_LABELS = {
     music: 'Music Note', ticket: 'Ticket', megaphone: 'Megaphone', balloon: 'Balloon',
-    confetti: 'Confetti', mic: 'Microphone', star: 'Star', heart: 'Heart'
+    confetti: 'Confetti', mic: 'Microphone', star: 'Star', heart: 'Heart',
+    pennant: 'Pennant Flag', sparkle: 'Sparkle'
   };
   const STICKERS = Object.keys(STICKER_ICONS);
 
@@ -953,6 +969,24 @@
   const round2 = (n) => Math.round(n * 100) / 100;
   const fmt2 = (n) => n.toFixed(2);
   const slug = (s) => (s || '').replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '') || 'student';
+
+  function hexToRgb(hex) {
+    const m = hex.replace('#', '');
+    const full = m.length === 3 ? m.split('').map((c) => c + c).join('') : m;
+    const n = parseInt(full, 16);
+    return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+  }
+  function rgbToHex({ r, g, b }) {
+    return '#' + [r, g, b].map((v) => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, '0')).join('');
+  }
+  // amount > 0 lightens toward white, amount < 0 darkens toward black -
+  // used to derive gradient stops and accents from a single chosen color.
+  function shadeColor(hex, amount) {
+    const a = hexToRgb(hex);
+    const target = amount >= 0 ? { r: 255, g: 255, b: 255 } : { r: 0, g: 0, b: 0 };
+    const t = Math.abs(amount);
+    return rgbToHex({ r: a.r + (target.r - a.r) * t, g: a.g + (target.g - a.g) * t, b: a.b + (target.b - a.b) * t });
+  }
 
   // Converts an inline SVG string to a loaded <img>, for compositing onto
   // canvas downloads (canvas can only drawImage an SVG via an Image
@@ -1043,18 +1077,9 @@
       boothLength: window.boothLength, boothWidth: window.boothWidth, stageCurrent: window.stageCurrent,
       taxRevenue: window.taxRevenue, taxBreakEven: window.taxBreakEven, headcountTarget: window.headcountTarget,
       flyer: {
-        charity: document.getElementById('flyer-charity-input').value,
-        tagline: document.getElementById('flyer-tagline-input').value,
-        quoteEnabled: document.getElementById('flyer-quote-toggle').checked,
-        verseIdx: document.getElementById('flyer-verse-select').value,
-        customText: document.getElementById('custom-quote-text').value,
-        customRef: document.getElementById('custom-quote-ref').value,
-        bg: document.getElementById('flyer-bg-select').value,
-        border: document.getElementById('flyer-border-select').value,
-        textColor: document.getElementById('flyer-text-color').value,
-        font: document.getElementById('flyer-font-select').value,
-        stickers: [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value),
-        emblem: document.getElementById('flyer-emblem-select').value,
+        material: flyerMaterial,
+        accentColor: flyerAccentColor,
+        elements: serializeFlyerElements(),
         locked: document.getElementById('lock-flyer-btn').disabled
       },
       reflections: {
@@ -1087,7 +1112,7 @@
     }).catch((err) => { console.warn('Save to roster failed (kept in this tab only):', err); });
   }
 
-  function restoreState(state) {
+  async function restoreState(state) {
     if (!state) return;
     Object.assign(attemptCounts, state.attemptCounts || {});
     Object.assign(solvedKeys, state.solvedKeys || {});
@@ -1177,22 +1202,18 @@
     }
 
     if (state.flyer) {
-      document.getElementById('flyer-charity-input').value = state.flyer.charity || '';
-      document.getElementById('flyer-tagline-input').value = state.flyer.tagline || '';
-      document.getElementById('flyer-quote-toggle').checked = !!state.flyer.quoteEnabled;
-      document.getElementById('flyer-quote-group').style.display = state.flyer.quoteEnabled ? 'block' : 'none';
-      document.getElementById('flyer-verse-select').value = state.flyer.verseIdx || '0';
-      document.getElementById('custom-quote-text').value = state.flyer.customText || '';
-      document.getElementById('custom-quote-ref').value = state.flyer.customRef || '';
-      document.getElementById('flyer-bg-select').value = state.flyer.bg;
-      document.getElementById('flyer-border-select').value = state.flyer.border;
-      document.getElementById('flyer-text-color').value = state.flyer.textColor;
-      document.getElementById('flyer-font-select').value = state.flyer.font;
-      document.querySelectorAll('.sticker-cb').forEach((cb) => { cb.checked = (state.flyer.stickers || []).includes(cb.value); });
-      document.getElementById('flyer-emblem-select').value = state.flyer.emblem || '';
-      onFlyerVerseChange();
+      if (state.flyer.material) {
+        flyerMaterial = state.flyer.material;
+        flyerAccentColor = state.flyer.accentColor || null;
+        drawFlyerMaterial(flyerMaterial);
+        document.getElementById('flyer-material-select').value = flyerMaterial;
+        document.getElementById('flyer-accent-color').value = flyerAccentColor || FLYER_MATERIAL_COLORS[flyerMaterial];
+      }
+      if (state.flyer.elements) await restoreFlyerElements(state.flyer.elements);
+      flyerHistory = []; flyerHistoryIndex = -1;
+      pushFlyerHistory();
       if (state.flyer.locked) {
-        document.querySelectorAll('.flyer-controls select, .flyer-controls input, .flyer-controls textarea, #lock-flyer-btn').forEach((el) => { el.disabled = true; });
+        applyFlyerLockedUI();
         const fb = document.getElementById('flyer-feedback');
         fb.style.display = 'block';
         fb.className = 'feedback-msg success locked';
@@ -1529,96 +1550,726 @@
   }
 
   // ================================================================
-  // ENGINEERING: BOOTH BLUEPRINT (to-scale rectangle on graph paper)
+  // ENGINEERING: BOOTH BLUEPRINT
+  // A real CAD-style engineering sheet - navy background, cyan grid,
+  // a hatched (not flat-filled) booth outline, dimension lines with
+  // arrowheads, and a title block with scale/date/rev/approval - built
+  // once as an SVG string shared byte-for-byte between the live preview
+  // and every download, so they can never drift apart from each other.
   // ================================================================
+  const BLUEPRINT_W = 440, BLUEPRINT_H = 440;
+
+  function dimArrow(x, y, angleDeg) {
+    const s = 6;
+    return `<g transform="translate(${x},${y}) rotate(${angleDeg})"><path d="M0,0 L${-s},${-s / 2} L${-s},${s / 2} Z" fill="#7dd3fc"/></g>`;
+  }
+
+  function buildBoothBlueprintSVG(l, w) {
+    const name1 = document.getElementById('team-name-1').value.trim();
+    const name2 = document.getElementById('team-name-2').value.trim();
+    const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    const W = BLUEPRINT_W, H = BLUEPRINT_H;
+
+    // Grid lines across the whole sheet, technical-blueprint style.
+    let grid = '';
+    for (let x = 0; x <= W; x += 20) grid += `<line x1="${x}" y1="0" x2="${x}" y2="${H}" stroke="#134074" stroke-width="1"/>`;
+    for (let y = 0; y <= H; y += 20) grid += `<line x1="0" y1="${y}" x2="${W}" y2="${y}" stroke="#134074" stroke-width="1"/>`;
+
+    // Booth rectangle, scaled to fit the viewport (leaving room outside
+    // it for dimension lines, and below/right for the title block).
+    const vpX = 90, vpY = 70, vpW = 300, vpH = 200;
+    const scale = Math.min(vpW / l, vpH / w);
+    const rectW = l * scale, rectH = w * scale;
+    const rectX = vpX + (vpW - rectW) / 2, rectY = vpY + (vpH - rectH) / 2;
+
+    const dimTopY = rectY - 24;
+    const lengthDim = `
+      <line x1="${rectX}" y1="${rectY - 6}" x2="${rectX}" y2="${dimTopY - 4}" stroke="#7dd3fc" stroke-width="1"/>
+      <line x1="${rectX + rectW}" y1="${rectY - 6}" x2="${rectX + rectW}" y2="${dimTopY - 4}" stroke="#7dd3fc" stroke-width="1"/>
+      <line x1="${rectX}" y1="${dimTopY}" x2="${rectX + rectW}" y2="${dimTopY}" stroke="#7dd3fc" stroke-width="1.5"/>
+      ${dimArrow(rectX, dimTopY, 180)}
+      ${dimArrow(rectX + rectW, dimTopY, 0)}
+      <rect x="${rectX + rectW / 2 - 24}" y="${dimTopY - 17}" width="48" height="16" fill="#0B2545"/>
+      <text x="${rectX + rectW / 2}" y="${dimTopY - 5}" text-anchor="middle" font-family="'Share Tech Mono', monospace" font-size="13" fill="#7dd3fc">${l} ft</text>
+    `;
+
+    const dimLeftX = rectX - 24;
+    const widthDim = `
+      <line x1="${rectX - 6}" y1="${rectY}" x2="${dimLeftX - 4}" y2="${rectY}" stroke="#7dd3fc" stroke-width="1"/>
+      <line x1="${rectX - 6}" y1="${rectY + rectH}" x2="${dimLeftX - 4}" y2="${rectY + rectH}" stroke="#7dd3fc" stroke-width="1"/>
+      <line x1="${dimLeftX}" y1="${rectY}" x2="${dimLeftX}" y2="${rectY + rectH}" stroke="#7dd3fc" stroke-width="1.5"/>
+      ${dimArrow(dimLeftX, rectY, 270)}
+      ${dimArrow(dimLeftX, rectY + rectH, 90)}
+      <g transform="translate(${dimLeftX - 15},${rectY + rectH / 2}) rotate(-90)">
+        <rect x="-24" y="-8" width="48" height="16" fill="#0B2545"/>
+        <text x="0" y="4" text-anchor="middle" font-family="'Share Tech Mono', monospace" font-size="13" fill="#7dd3fc">${w} ft</text>
+      </g>
+    `;
+
+    const tbX = 250, tbY = 316, tbW = 176, tbH = 108;
+    const titleBlock = `
+      <rect x="${tbX}" y="${tbY}" width="${tbW}" height="${tbH}" fill="#0B2545" stroke="#7dd3fc" stroke-width="1.5"/>
+      <line x1="${tbX}" y1="${tbY + 20}" x2="${tbX + tbW}" y2="${tbY + 20}" stroke="#134074" stroke-width="1"/>
+      <text x="${tbX + 8}" y="${tbY + 14}" font-family="'Share Tech Mono', monospace" font-size="11" font-weight="700" fill="#e0f2fe">BOOTH BLUEPRINT</text>
+      <text x="${tbX + 8}" y="${tbY + 34}" font-family="'Share Tech Mono', monospace" font-size="9" fill="#7dd3fc">TEAM: ${(name1 && name2) ? `${name1} &amp; ${name2}` : '(unnamed)'}</text>
+      <text x="${tbX + 8}" y="${tbY + 49}" font-family="'Share Tech Mono', monospace" font-size="9" fill="#7dd3fc">SCALE: 1 FT = ${scale.toFixed(0)} PX</text>
+      <text x="${tbX + 8}" y="${tbY + 64}" font-family="'Share Tech Mono', monospace" font-size="9" fill="#7dd3fc">DATE: ${today}</text>
+      <text x="${tbX + 8}" y="${tbY + 79}" font-family="'Share Tech Mono', monospace" font-size="9" fill="#7dd3fc">REV: 1.0</text>
+      <g transform="translate(${tbX + tbW - 40},${tbY + tbH - 24}) rotate(-8)">
+        <rect x="-34" y="-13" width="68" height="26" rx="4" fill="none" stroke="#4ade80" stroke-width="2" stroke-dasharray="3,2"/>
+        <text x="0" y="4" text-anchor="middle" font-family="'Share Tech Mono', monospace" font-size="9" font-weight="700" fill="#4ade80">APPROVED</text>
+      </g>
+    `;
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
+      <defs>
+        <pattern id="booth-hatch" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+          <rect width="8" height="8" fill="#0ea5e9" fill-opacity="0.18"/>
+          <line x1="0" y1="0" x2="0" y2="8" stroke="#7dd3fc" stroke-width="2"/>
+        </pattern>
+      </defs>
+      <rect x="0" y="0" width="${W}" height="${H}" rx="10" fill="#0B2545"/>
+      <g opacity="0.5">${grid}</g>
+      <rect x="${rectX}" y="${rectY}" width="${rectW}" height="${rectH}" fill="url(#booth-hatch)" stroke="#e0f2fe" stroke-width="2.5"/>
+      ${lengthDim}
+      ${widthDim}
+      ${titleBlock}
+      <rect x="3" y="3" width="${W - 6}" height="${H - 6}" rx="8" fill="none" stroke="#7dd3fc" stroke-width="2"/>
+    </svg>`;
+  }
+
   function renderBlueprint(l, w) {
-    const rect = document.getElementById('blueprint-rect');
-    const maxW = 280, maxH = 220;
-    const scale = Math.min(maxW / l, maxH / w);
-    rect.style.width = (l * scale) + 'px';
-    rect.style.height = (w * scale) + 'px';
-    rect.style.display = 'block';
-    document.getElementById('blueprint-dim-l').textContent = `${l} ft`;
-    document.getElementById('blueprint-dim-w').textContent = `${w} ft`;
+    document.getElementById('blueprint-preview').innerHTML = buildBoothBlueprintSVG(l, w);
     document.getElementById('blueprint-hint').style.display = 'none';
   }
 
   // ================================================================
-  // ART: EVENT FLYER DESIGNER
+  // EVENT FLYER STUDIO
+  // A real free-form canvas (Konva.js), same pattern as Eco-Garden's
+  // Creation Sign Studio: poster style/accent color are chosen from a
+  // palette, but every text and sticker is an independent object a team
+  // can add, drag, resize, and rotate anywhere - not fixed slots.
   // ================================================================
+  const FLYER_W = 560, FLYER_H = 432;
+  const FLYER_FONTS = [
+    { value: "'Baloo 2', cursive", label: 'Playful' },
+    { value: "'Bungee', cursive", label: 'Bold Poster' },
+    { value: "'Anton', sans-serif", label: 'Condensed Headline' },
+    { value: "'Permanent Marker', cursive", label: 'Marker Script' },
+    { value: "'Pacifico', cursive", label: 'Marquee Script' },
+    { value: "Georgia, 'Times New Roman', serif", label: 'Poster Serif' },
+    { value: "'Montserrat', sans-serif", label: 'Classic' }
+  ];
+  // Each poster style's look with no accent color chosen yet.
+  const FLYER_MATERIAL_COLORS = {
+    poster: '#1e293b', ticket: '#b45309', marquee: '#7c3aed', pass: '#0f766e',
+    neon: '#db2777', spotlight: '#f59e0b', ribbon: '#b91c1c', confetti: '#0ea5e9'
+  };
+
+  let flyerStage = null, flyerBgLayer = null, flyerLayer = null, flyerTransformer = null;
+  let flyerMaterial = 'poster';
+  let flyerAccentColor = null;
+  let flyerLocked = false;
+  let flyerNextId = 1;
+  let flyerHistory = [];
+  let flyerHistoryIndex = -1;
+  let flyerHistorySuppress = false;
+  const FLYER_HISTORY_LIMIT = 50;
+
+  function initFlyerStage() {
+    flyerStage = new Konva.Stage({ container: 'flyer-stage-container', width: FLYER_W, height: FLYER_H });
+    flyerBgLayer = new Konva.Layer({ listening: false });
+    flyerLayer = new Konva.Layer();
+    flyerStage.add(flyerBgLayer);
+    flyerStage.add(flyerLayer);
+    flyerTransformer = new Konva.Transformer({
+      anchorSize: 10, borderDash: [4, 4],
+      rotationSnaps: Array.from({ length: 24 }, (_, i) => i * 15)
+    });
+    flyerLayer.add(flyerTransformer);
+    drawFlyerMaterial(flyerMaterial);
+
+    flyerStage.on('click tap', (e) => {
+      if (flyerLocked) return;
+      if (e.target === flyerStage || e.target.getLayer() === flyerBgLayer) { deselectFlyerNode(); return; }
+      if (e.target === flyerTransformer || flyerTransformer.nodes().indexOf(e.target) !== -1) return;
+      selectFlyerNode(e.target);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (flyerLocked) return;
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+      const mod = e.ctrlKey || e.metaKey;
+      if (mod && e.key.toLowerCase() === 'z') { e.preventDefault(); if (e.shiftKey) redoFlyer(); else undoFlyer(); return; }
+      if (mod && e.key.toLowerCase() === 'y') { e.preventDefault(); redoFlyer(); return; }
+      if ((e.key === 'Delete' || e.key === 'Backspace') && getSelectedFlyerNode()) { e.preventDefault(); deleteSelectedFlyerNode(); }
+    });
+  }
+
+  // One texture per poster style: a gradient/pattern fill plus a few
+  // hand-drawn accents (ticket notches, marquee bulbs, lanyard punch,
+  // neon glow, spotlight beam, ribbon tails, confetti flecks) instead of
+  // a single flat color behind a plain border.
+  function drawFlyerMaterial(material) {
+    flyerBgLayer.destroyChildren();
+    const w = FLYER_W, h = FLYER_H;
+    const base = flyerAccentColor || FLYER_MATERIAL_COLORS[material] || FLYER_MATERIAL_COLORS.poster;
+
+    if (material === 'ticket') {
+      flyerBgLayer.add(new Konva.Rect({ x: 6, y: 10, width: w, height: h, cornerRadius: 14, fill: 'rgba(15,23,42,0.22)' }));
+      flyerBgLayer.add(new Konva.Rect({ width: w, height: h, cornerRadius: 14, fill: '#fefce8', stroke: base, strokeWidth: 12, dash: [16, 11] }));
+      [0.28, 0.72].forEach((frac) => {
+        flyerBgLayer.add(new Konva.Circle({ x: w * frac, y: 0, radius: 12, fill: '#f8fafc' }));
+        flyerBgLayer.add(new Konva.Circle({ x: w * frac, y: h, radius: 12, fill: '#f8fafc' }));
+      });
+    } else if (material === 'marquee') {
+      flyerBgLayer.add(new Konva.Rect({ x: 6, y: 10, width: w, height: h, cornerRadius: 16, fill: 'rgba(15,23,42,0.25)' }));
+      flyerBgLayer.add(new Konva.Rect({
+        width: w, height: h, cornerRadius: 16,
+        fillLinearGradientStartPoint: { x: 0, y: 0 }, fillLinearGradientEndPoint: { x: w, y: h },
+        fillLinearGradientColorStops: [0, shadeColor(base, 0.55), 1, shadeColor(base, 0.2)],
+        stroke: shadeColor(base, -0.3), strokeWidth: 10
+      }));
+      const bulbGap = 26;
+      for (let x = 14; x < w - 6; x += bulbGap) {
+        flyerBgLayer.add(new Konva.Circle({ x, y: 8, radius: 4, fill: '#fef08a', stroke: '#b45309', strokeWidth: 1 }));
+        flyerBgLayer.add(new Konva.Circle({ x, y: h - 8, radius: 4, fill: '#fef08a', stroke: '#b45309', strokeWidth: 1 }));
+      }
+      for (let y = 14; y < h - 6; y += bulbGap) {
+        flyerBgLayer.add(new Konva.Circle({ x: 8, y, radius: 4, fill: '#fef08a', stroke: '#b45309', strokeWidth: 1 }));
+        flyerBgLayer.add(new Konva.Circle({ x: w - 8, y, radius: 4, fill: '#fef08a', stroke: '#b45309', strokeWidth: 1 }));
+      }
+    } else if (material === 'pass') {
+      flyerBgLayer.add(new Konva.Rect({ x: 6, y: 10, width: w, height: h, cornerRadius: 12, fill: 'rgba(15,23,42,0.2)' }));
+      flyerBgLayer.add(new Konva.Rect({ width: w, height: h, cornerRadius: 12, fill: '#f0fdfa', stroke: base, strokeWidth: 10 }));
+      flyerBgLayer.add(new Konva.Rect({ x: 10, y: 10, width: w - 20, height: h - 20, cornerRadius: 6, stroke: shadeColor(base, 0.4), strokeWidth: 4 }));
+      flyerBgLayer.add(new Konva.Circle({ x: w / 2, y: 22, radius: 9, fill: '#f0fdfa', stroke: shadeColor(base, -0.3), strokeWidth: 2 }));
+    } else if (material === 'neon') {
+      flyerBgLayer.add(new Konva.Rect({ width: w, height: h, cornerRadius: 22, fill: '#0f172a' }));
+      flyerBgLayer.add(new Konva.Rect({
+        x: 5, y: 5, width: w - 10, height: h - 10, cornerRadius: 18, stroke: base, strokeWidth: 4,
+        shadowColor: base, shadowBlur: 18, shadowOpacity: 0.9
+      }));
+      flyerBgLayer.add(new Konva.Rect({ x: 12, y: 12, width: w - 24, height: h - 24, cornerRadius: 14, stroke: shadeColor(base, 0.5), strokeWidth: 1.5, opacity: 0.7 }));
+    } else if (material === 'spotlight') {
+      flyerBgLayer.add(new Konva.Rect({ x: 6, y: 10, width: w, height: h, cornerRadius: w * 0.42, fill: 'rgba(15,23,42,0.22)' }));
+      flyerBgLayer.add(new Konva.Rect({
+        width: w, height: h, cornerRadius: w * 0.42,
+        fillRadialGradientStartPoint: { x: w / 2, y: h / 2 }, fillRadialGradientStartRadius: 0,
+        fillRadialGradientEndPoint: { x: w / 2, y: h / 2 }, fillRadialGradientEndRadius: w * 0.62,
+        fillRadialGradientColorStops: [0, shadeColor(base, 0.7), 0.7, shadeColor(base, 0.15), 1, shadeColor(base, -0.35)],
+        stroke: shadeColor(base, -0.3), strokeWidth: 10
+      }));
+    } else if (material === 'ribbon') {
+      flyerBgLayer.add(new Konva.Rect({ x: 6, y: 10, width: w, height: h, cornerRadius: 12, fill: 'rgba(15,23,42,0.22)' }));
+      flyerBgLayer.add(new Konva.Rect({
+        width: w, height: h, cornerRadius: 10,
+        fillLinearGradientStartPoint: { x: 0, y: 0 }, fillLinearGradientEndPoint: { x: 0, y: h },
+        fillLinearGradientColorStops: [0, shadeColor(base, 0.15), 1, shadeColor(base, -0.3)],
+        stroke: '#fca5a5', strokeWidth: 8
+      }));
+      flyerBgLayer.add(new Konva.Line({ points: [0, 0, -20, h / 2, 0, h], closed: true, fill: shadeColor(base, -0.35) }));
+      flyerBgLayer.add(new Konva.Line({ points: [w, 0, w + 20, h / 2, w, h], closed: true, fill: shadeColor(base, -0.35) }));
+    } else if (material === 'confetti') {
+      flyerBgLayer.add(new Konva.Rect({ x: 6, y: 10, width: w, height: h, cornerRadius: 30, fill: 'rgba(15,23,42,0.2)' }));
+      flyerBgLayer.add(new Konva.Rect({ width: w, height: h, cornerRadius: 30, fill: '#f8fafc', stroke: base, strokeWidth: 10, dash: [3, 15], dashCap: 'round' }));
+      const confettiColors = [base, shadeColor(base, 0.4), shadeColor(base, -0.3), '#f59e0b', '#22c55e', '#ec4899'];
+      let seed = 7;
+      const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+      for (let i = 0; i < 40; i++) {
+        const edge = rnd() < 0.5;
+        const x = edge ? rnd() * w : (rnd() < 0.5 ? rnd() * 24 : w - rnd() * 24);
+        const y = edge ? (rnd() < 0.5 ? rnd() * 24 : h - rnd() * 24) : rnd() * h;
+        const c = confettiColors[i % confettiColors.length];
+        if (i % 2 === 0) flyerBgLayer.add(new Konva.Rect({ x, y, width: 8, height: 8, fill: c, rotation: rnd() * 360, opacity: 0.85 }));
+        else flyerBgLayer.add(new Konva.Circle({ x, y, radius: 4, fill: c, opacity: 0.85 }));
+      }
+    } else {
+      // poster (default)
+      flyerBgLayer.add(new Konva.Rect({ x: 6, y: 10, width: w, height: h, cornerRadius: 14, fill: 'rgba(15,23,42,0.25)' }));
+      flyerBgLayer.add(new Konva.Rect({
+        width: w, height: h, cornerRadius: 14,
+        fillLinearGradientStartPoint: { x: 0, y: 0 }, fillLinearGradientEndPoint: { x: w, y: h },
+        fillLinearGradientColorStops: [0, '#f8fafc', 1, '#e2e8f0'],
+        stroke: base, strokeWidth: 14
+      }));
+    }
+
+    flyerBgLayer.add(new Konva.Rect({
+      width: w, height: h, cornerRadius: 16, listening: false,
+      fillLinearGradientStartPoint: { x: 0, y: 0 }, fillLinearGradientEndPoint: { x: w * 0.6, y: h },
+      fillLinearGradientColorStops: [0, 'rgba(255,255,255,0.3)', 0.4, 'rgba(255,255,255,0)', 1, 'rgba(15,23,42,0.1)']
+    }));
+    flyerBgLayer.draw();
+  }
+
+  function setFlyerMaterial(material) {
+    flyerMaterial = material;
+    drawFlyerMaterial(material);
+    document.getElementById('flyer-accent-color').value = flyerAccentColor || FLYER_MATERIAL_COLORS[material];
+    commitFlyerChange();
+  }
+
+  function setFlyerAccentColor(hex) {
+    flyerAccentColor = hex;
+    drawFlyerMaterial(flyerMaterial);
+    document.getElementById('flyer-accent-color').value = hex;
+    commitFlyerChange();
+  }
+
+  function resetFlyer() {
+    if (!confirm("Clear your whole flyer and start over? You can still Undo right after if you change your mind.")) return;
+    clearFlyerElements();
+    flyerMaterial = 'poster';
+    flyerAccentColor = null;
+    drawFlyerMaterial(flyerMaterial);
+    document.getElementById('flyer-material-select').value = flyerMaterial;
+    document.getElementById('flyer-accent-color').value = FLYER_MATERIAL_COLORS.poster;
+    seedDefaultFlyerElements();
+  }
+
   function populateFlyerSelects() {
     document.getElementById('flyer-verse-select').innerHTML = STEWARD_QUOTES.map((v, i) =>
       `<option value="${i}">${v.ref}${v.text ? ' - "' + v.text + '"' : ' (write your own)'}</option>`).join('');
-    document.getElementById('sticker-choices').innerHTML = STICKERS.map((s) =>
-      `<label><input type="checkbox" class="sticker-cb" value="${s}" onchange="onStickerChange(event)"> <span class="sticker-icon">${STICKER_ICONS[s]}</span> ${STICKER_LABELS[s]}</label>`).join('');
-    const emblemSelect = document.getElementById('flyer-emblem-select');
-    emblemSelect.innerHTML = '<option value="">None</option>' +
-      STICKERS.map((s) => `<option value="${s}">${STICKER_LABELS[s]}</option>`).join('');
-    renderFlyer();
+    document.getElementById('flyer-sticker-picker').innerHTML = STICKERS.map((s) =>
+      `<button type="button" class="sticker-pick-btn" title="${STICKER_LABELS[s]}" onclick="addFlyerIcon('${s}')">${STICKER_ICONS[s]}</button>`).join('');
   }
 
   function onFlyerQuoteToggle() {
     document.getElementById('flyer-quote-group').style.display = document.getElementById('flyer-quote-toggle').checked ? 'block' : 'none';
-    renderFlyer();
   }
 
   function onFlyerVerseChange() {
     const idx = parseInt(document.getElementById('flyer-verse-select').value, 10);
     document.getElementById('custom-quote-group').style.display = STEWARD_QUOTES[idx].ref === 'Custom' ? 'block' : 'none';
-    renderFlyer();
   }
 
-  function onStickerChange(e) {
-    const checked = document.querySelectorAll('.sticker-cb:checked');
-    if (checked.length > 3) { e.target.checked = false; }
-    renderFlyer();
+  function toggleFlyerStickerPicker() {
+    const el = document.getElementById('flyer-sticker-picker');
+    el.style.display = el.style.display === 'none' ? 'grid' : 'none';
   }
 
-  function getFlyerQuoteInUse() {
-    if (!document.getElementById('flyer-quote-toggle').checked) return null;
+  function nextFlyerId() { return 'el' + (flyerNextId++); }
+
+  function flyerElementNodes() {
+    return flyerLayer.getChildren((n) => n !== flyerTransformer);
+  }
+
+  function nextFlyerPlacementOffset() {
+    const step = (flyerElementNodes().length % 6) * 18;
+    return { dx: step, dy: step };
+  }
+
+  function attachFlyerNodeEvents(node) {
+    node.draggable(!flyerLocked);
+    node.on('dragend transformend', () => commitFlyerChange());
+    node.on('click tap', (e) => { e.cancelBubble = true; if (!flyerLocked) selectFlyerNode(node); });
+    if (node.getClassName() === 'Text') node.on('dblclick dbltap', () => { if (!flyerLocked) editFlyerText(node); });
+  }
+
+  // Neon's near-black background makes the usual dark charcoal default
+  // unreadable - default new text to whichever color actually shows up
+  // on the current poster style instead of one fixed color for all eight.
+  function flyerDefaultTextColor() {
+    return flyerMaterial === 'neon' ? '#ffffff' : '#1e293b';
+  }
+
+  function addFlyerText(text, opts) {
+    opts = opts || {};
+    const { dx, dy } = nextFlyerPlacementOffset();
+    const node = new Konva.Text({
+      id: nextFlyerId(),
+      x: FLYER_W / 2 - 110 + dx, y: FLYER_H / 2 - 20 + dy, width: 220,
+      text: text || 'Your Text Here',
+      fontSize: opts.fontSize || 30,
+      fontFamily: opts.fontFamily || FLYER_FONTS[1].value,
+      fill: opts.fill || flyerDefaultTextColor(),
+      fontStyle: '700', align: 'center', draggable: true
+    });
+    attachFlyerNodeEvents(node);
+    flyerLayer.add(node);
+    selectFlyerNode(node);
+    flyerLayer.draw();
+    commitFlyerChange();
+    return node;
+  }
+
+  async function addFlyerIcon(key) {
+    const img = await svgToImage(STICKER_ICONS[key]);
+    const { dx, dy } = nextFlyerPlacementOffset();
+    const node = new Konva.Image({
+      id: nextFlyerId(), image: img,
+      x: FLYER_W / 2 - 26 + dx, y: FLYER_H / 2 - 26 + dy, width: 52, height: 52, draggable: true
+    });
+    node.setAttr('iconKey', key);
+    attachFlyerNodeEvents(node);
+    flyerLayer.add(node);
+    selectFlyerNode(node);
+    flyerLayer.draw();
+    document.getElementById('flyer-sticker-picker').style.display = 'none';
+    commitFlyerChange();
+  }
+
+  function insertFlyerQuoteText() {
     const idx = parseInt(document.getElementById('flyer-verse-select').value, 10);
     const quote = STEWARD_QUOTES[idx];
-    if (quote.ref !== 'Custom') return { text: quote.text, ref: quote.ref };
-    return {
-      text: document.getElementById('custom-quote-text').value || 'Write your stewardship quote...',
-      ref: document.getElementById('custom-quote-ref').value || ''
-    };
+    let text, ref;
+    if (quote.ref === 'Custom') {
+      text = document.getElementById('custom-quote-text').value.trim();
+      ref = document.getElementById('custom-quote-ref').value.trim();
+      if (!text) {
+        LessonCheck.incomplete(document.getElementById('flyer-feedback'), 'Write your stewardship quote first.');
+        return;
+      }
+    } else {
+      text = quote.text; ref = quote.ref;
+    }
+    addFlyerText(`"${text}"${ref ? '\n- ' + ref : ''}`, { fontSize: 20, fontFamily: FLYER_FONTS[5].value, width: 320 });
   }
 
-  function getFlyerConfig() {
-    return {
-      bg: document.getElementById('flyer-bg-select').value,
-      borderStyle: document.getElementById('flyer-border-select').value,
-      textColor: document.getElementById('flyer-text-color').value,
-      fontFamily: document.getElementById('flyer-font-select').value,
-      stickerKeys: [...document.querySelectorAll('.sticker-cb:checked')].map((cb) => cb.value),
-      emblemKey: document.getElementById('flyer-emblem-select').value,
-      charity: document.getElementById('flyer-charity-input').value.trim(),
-      tagline: document.getElementById('flyer-tagline-input').value.trim(),
-      quote: getFlyerQuoteInUse(),
-      name1: document.getElementById('team-name-1').value.trim(),
-      name2: document.getElementById('team-name-2').value.trim()
+  // Standard Konva recipe: there's no built-in inline text editing, so a
+  // plain <textarea> is positioned over the node while it's hidden, then
+  // torn down into the Konva.Text on blur/Enter.
+  function editFlyerText(node) {
+    node.hide();
+    flyerTransformer.hide();
+    flyerLayer.draw();
+    const box = flyerStage.container().getBoundingClientRect();
+    const ta = document.createElement('textarea');
+    document.body.appendChild(ta);
+    ta.className = 'sign-edit-textarea';
+    ta.value = node.text();
+    const scaleX = node.getAbsoluteScale().x, scaleY = node.getAbsoluteScale().y;
+    ta.style.position = 'fixed';
+    ta.style.top = (box.top + node.y() * scaleY) + 'px';
+    ta.style.left = (box.left + node.x() * scaleX) + 'px';
+    ta.style.width = (node.width() * scaleX) + 'px';
+    ta.style.height = (node.height() * scaleY + 10) + 'px';
+    ta.style.fontSize = (node.fontSize() * scaleY) + 'px';
+    ta.style.fontFamily = node.fontFamily();
+    ta.style.color = node.fill();
+    ta.style.textAlign = node.align();
+    ta.style.transform = `rotate(${node.rotation()}deg)`;
+    ta.focus();
+    ta.select();
+    const finish = () => {
+      // Removing a still-focused element fires a native 'blur' on it as
+      // part of the removal itself - without unhooking this listener
+      // first, that reentrant event calls finish() a second time mid-
+      // removeChild and throws (the node is no longer where it expects).
+      ta.removeEventListener('blur', finish);
+      node.text(ta.value.trim() || 'Your Text Here');
+      if (document.body.contains(ta)) document.body.removeChild(ta);
+      node.show();
+      flyerTransformer.show();
+      flyerLayer.draw();
+      commitFlyerChange();
     };
+    ta.addEventListener('blur', finish);
+    ta.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ta.blur(); } });
   }
 
-  function renderFlyer() {
-    document.getElementById('flyer-preview').innerHTML = buildFestivalPosterSVG(getFlyerConfig());
+  function selectFlyerNode(node) {
+    flyerTransformer.nodes([node]);
+    flyerLayer.draw();
+    renderFlyerProps(node);
+    renderFlyerLayers();
+  }
+
+  function deselectFlyerNode() {
+    flyerTransformer.nodes([]);
+    flyerLayer.draw();
+    document.getElementById('flyer-props').style.display = 'none';
+    renderFlyerLayers();
+  }
+
+  function getSelectedFlyerNode() {
+    const nodes = flyerTransformer.nodes();
+    return nodes.length ? nodes[0] : null;
+  }
+
+  function renderFlyerProps(node) {
+    const panel = document.getElementById('flyer-props');
+    const isText = node.getClassName() === 'Text';
+    panel.style.display = 'flex';
+    panel.innerHTML = `
+      ${isText ? `
+        <select id="flyer-prop-font"></select>
+        <input type="color" id="flyer-prop-color" title="Text color">
+        <button type="button" class="row-check-btn" onclick="adjustFlyerFontSize(2)">A+</button>
+        <button type="button" class="row-check-btn" onclick="adjustFlyerFontSize(-2)">A-</button>
+        <button type="button" class="row-check-btn" onclick="toggleFlyerTextOutline()">${node.getAttr('outlineOn') ? 'Remove Outline' : 'Add Outline'}</button>
+      ` : `
+        <label style="font-size:0.78rem; font-weight:700;">Size</label>
+        <input type="range" id="flyer-prop-size" min="0.4" max="3" step="0.1" style="width:110px;">
+      `}
+      <button type="button" class="row-check-btn" onclick="duplicateSelectedFlyerNode()">Duplicate</button>
+      <button type="button" class="row-check-btn" onclick="bringFlyerNodeForward()">Forward</button>
+      <button type="button" class="row-check-btn" onclick="sendFlyerNodeBackward()">Backward</button>
+      <button type="button" class="row-check-btn" style="background:#dc2626;" onclick="deleteSelectedFlyerNode()">Delete</button>
+    `;
+    if (isText) {
+      const fontSel = document.getElementById('flyer-prop-font');
+      fontSel.innerHTML = FLYER_FONTS.map((f) => `<option value="${f.value}">${f.label}</option>`).join('');
+      fontSel.value = node.fontFamily();
+      fontSel.onchange = (e) => { node.fontFamily(e.target.value); flyerLayer.draw(); commitFlyerChange(); };
+      const colorInput = document.getElementById('flyer-prop-color');
+      colorInput.value = /^#[0-9a-f]{6}$/i.test(node.fill()) ? node.fill() : '#1e293b';
+      colorInput.oninput = (e) => { node.fill(e.target.value); flyerLayer.draw(); };
+      colorInput.onchange = () => commitFlyerChange();
+    } else {
+      const sizeInput = document.getElementById('flyer-prop-size');
+      sizeInput.value = node.scaleX();
+      sizeInput.oninput = (e) => { const s = parseFloat(e.target.value); node.scaleX(s); node.scaleY(s); flyerLayer.draw(); };
+      sizeInput.onchange = () => commitFlyerChange();
+    }
+  }
+
+  // A subtle white outline + shadow behind the text - the difference
+  // between legible and lost when a light color sits on a busy poster
+  // style like neon or confetti.
+  function toggleFlyerTextOutline() {
+    const node = getSelectedFlyerNode();
+    if (!node || node.getClassName() !== 'Text') return;
+    const enabled = !node.getAttr('outlineOn');
+    node.setAttr('outlineOn', enabled);
+    if (enabled) {
+      node.stroke('#ffffff');
+      node.strokeWidth(4);
+      node.fillAfterStrokeEnabled(true);
+      node.shadowColor('rgba(0,0,0,0.35)');
+      node.shadowBlur(4);
+      node.shadowOffset({ x: 1, y: 1 });
+    } else {
+      node.stroke(null);
+      node.strokeWidth(0);
+      node.shadowColor(null);
+      node.shadowBlur(0);
+      node.shadowOffset({ x: 0, y: 0 });
+    }
+    flyerLayer.draw();
+    renderFlyerProps(node);
+    commitFlyerChange();
+  }
+
+  function adjustFlyerFontSize(delta) {
+    const node = getSelectedFlyerNode();
+    if (!node || node.getClassName() !== 'Text') return;
+    node.fontSize(Math.max(10, Math.min(72, node.fontSize() + delta)));
+    flyerLayer.draw();
+    commitFlyerChange();
+  }
+
+  function bringFlyerNodeForward() {
+    const node = getSelectedFlyerNode();
+    if (!node) return;
+    node.moveUp();
+    flyerLayer.draw();
+    commitFlyerChange();
+  }
+
+  function sendFlyerNodeBackward() {
+    const node = getSelectedFlyerNode();
+    if (!node) return;
+    node.moveDown();
+    flyerLayer.draw();
+    commitFlyerChange();
+  }
+
+  function deleteSelectedFlyerNode() {
+    const node = getSelectedFlyerNode();
+    if (!node) return;
+    node.destroy();
+    deselectFlyerNode();
+    flyerLayer.draw();
+    commitFlyerChange();
+  }
+
+  function duplicateSelectedFlyerNode() {
+    const node = getSelectedFlyerNode();
+    if (!node) return;
+    const isText = node.getClassName() === 'Text';
+    const common = { id: nextFlyerId(), x: node.x() + 20, y: node.y() + 20, rotation: node.rotation(), scaleX: node.scaleX(), scaleY: node.scaleY(), draggable: true };
+    const clone = isText
+      ? new Konva.Text({
+          ...common, text: node.text(), fontFamily: node.fontFamily(), fontSize: node.fontSize(), fill: node.fill(), width: node.width(), fontStyle: '700', align: 'center',
+          stroke: node.stroke(), strokeWidth: node.strokeWidth(), shadowColor: node.shadowColor(), shadowBlur: node.shadowBlur(), shadowOffset: node.shadowOffset(), fillAfterStrokeEnabled: true
+        })
+      : new Konva.Image({ ...common, image: node.image(), width: node.width(), height: node.height() });
+    if (isText) clone.setAttr('outlineOn', node.getAttr('outlineOn'));
+    if (!isText) clone.setAttr('iconKey', node.getAttr('iconKey'));
+    attachFlyerNodeEvents(clone);
+    flyerLayer.add(clone);
+    selectFlyerNode(clone);
+    flyerLayer.draw();
+    commitFlyerChange();
+  }
+
+  function serializeFlyerElements() {
+    return flyerElementNodes().map((n) => {
+      const base = { id: n.id(), type: n.getClassName(), x: n.x(), y: n.y(), rotation: n.rotation(), scaleX: n.scaleX(), scaleY: n.scaleY() };
+      if (n.getClassName() === 'Text') {
+        return {
+          ...base, text: n.text(), fontFamily: n.fontFamily(), fontSize: n.fontSize(), fill: n.fill(), width: n.width(),
+          outlineOn: !!n.getAttr('outlineOn'), stroke: n.stroke(), strokeWidth: n.strokeWidth(),
+          shadowColor: n.shadowColor(), shadowBlur: n.shadowBlur(), shadowOffset: n.shadowOffset()
+        };
+      }
+      return { ...base, iconKey: n.getAttr('iconKey'), width: n.width(), height: n.height() };
+    });
+  }
+
+  function clearFlyerElements() {
+    flyerElementNodes().forEach((n) => n.destroy());
+    flyerLayer.draw();
+  }
+
+  async function restoreFlyerElements(list) {
+    clearFlyerElements();
+    for (const el of list) {
+      let node;
+      if (el.type === 'Text') {
+        node = new Konva.Text({
+          id: el.id, x: el.x, y: el.y, rotation: el.rotation, scaleX: el.scaleX, scaleY: el.scaleY,
+          text: el.text, fontFamily: el.fontFamily, fontSize: el.fontSize, fill: el.fill, width: el.width,
+          fontStyle: '700', align: 'center', draggable: true,
+          stroke: el.stroke || null, strokeWidth: el.strokeWidth || 0, fillAfterStrokeEnabled: true,
+          shadowColor: el.shadowColor || null, shadowBlur: el.shadowBlur || 0, shadowOffset: el.shadowOffset || { x: 0, y: 0 }
+        });
+        node.setAttr('outlineOn', !!el.outlineOn);
+      } else {
+        const img = await svgToImage(STICKER_ICONS[el.iconKey] || STICKER_ICONS.star);
+        node = new Konva.Image({
+          id: el.id, image: img, x: el.x, y: el.y, rotation: el.rotation, scaleX: el.scaleX, scaleY: el.scaleY,
+          width: el.width, height: el.height, draggable: true
+        });
+        node.setAttr('iconKey', el.iconKey);
+      }
+      attachFlyerNodeEvents(node);
+      flyerLayer.add(node);
+    }
+    flyerTransformer.moveToTop();
+    flyerLayer.draw();
+    const maxId = list.reduce((m, el) => Math.max(m, parseInt(String(el.id).replace('el', ''), 10) || 0), 0);
+    flyerNextId = maxId + 1;
+    renderFlyerLayers();
+  }
+
+  function seedDefaultFlyerElements() {
+    addFlyerText('Youth Festival', { fontSize: 40, fontFamily: FLYER_FONTS[1].value });
+    deselectFlyerNode();
+  }
+
+  function applyFlyerLockedUI() {
+    flyerLocked = true;
+    flyerElementNodes().forEach((n) => n.draggable(false));
+    deselectFlyerNode();
+    document.querySelectorAll('.sign-toolbar select, .sign-toolbar input, .sign-toolbar textarea, .sign-toolbar button:not(.celebrate-btn), #flyer-material-select').forEach((el) => { el.disabled = true; });
   }
 
   function lockFlyer() {
-    const tagline = document.getElementById('flyer-tagline-input').value.trim();
-    if (!tagline) {
-      LessonCheck.incomplete(document.getElementById('flyer-feedback'), 'Add an event tagline before locking your flyer.');
+    if (!flyerElementNodes().length) {
+      LessonCheck.incomplete(document.getElementById('flyer-feedback'), 'Add at least one text or sticker to your flyer before locking it in.');
       return;
     }
-    document.querySelectorAll('.flyer-controls select, .flyer-controls input, .flyer-controls textarea, #lock-flyer-btn').forEach((el) => { el.disabled = true; });
+    const textSummary = flyerElementNodes().filter((n) => n.getClassName() === 'Text').map((n) => n.text()).join(' | ') || '(stickers only)';
+    applyFlyerLockedUI();
     LessonCheck.submit(document.getElementById('flyer-feedback'), {
       key: 'event-flyer',
       label: 'Event Flyer (Art)',
-      answer: tagline,
+      answer: textSummary,
       section: 'Day 2 - Event Flyer'
     }, 'Your event flyer is locked in!');
     saveProgress();
+  }
+
+  function getFlyerDataUrl() {
+    flyerTransformer.nodes([]);
+    flyerLayer.draw();
+    return flyerStage.toDataURL({ pixelRatio: 2 });
+  }
+
+  // ----------------------------------------------------------------
+  // UNDO / REDO
+  // ----------------------------------------------------------------
+  function pushFlyerHistory() {
+    if (flyerHistorySuppress) return;
+    const snapshot = { material: flyerMaterial, accentColor: flyerAccentColor, elements: serializeFlyerElements() };
+    flyerHistory = flyerHistory.slice(0, flyerHistoryIndex + 1);
+    flyerHistory.push(snapshot);
+    if (flyerHistory.length > FLYER_HISTORY_LIMIT) flyerHistory.shift();
+    flyerHistoryIndex = flyerHistory.length - 1;
+    updateFlyerHistoryButtons();
+  }
+
+  function commitFlyerChange() {
+    pushFlyerHistory();
+    renderFlyerLayers();
+    saveProgress();
+  }
+
+  async function applyFlyerHistorySnapshot(snapshot) {
+    flyerHistorySuppress = true;
+    flyerMaterial = snapshot.material;
+    flyerAccentColor = snapshot.accentColor;
+    drawFlyerMaterial(flyerMaterial);
+    document.getElementById('flyer-material-select').value = flyerMaterial;
+    document.getElementById('flyer-accent-color').value = flyerAccentColor || FLYER_MATERIAL_COLORS[flyerMaterial];
+    await restoreFlyerElements(snapshot.elements);
+    flyerHistorySuppress = false;
+    updateFlyerHistoryButtons();
+    saveProgress();
+  }
+
+  async function undoFlyer() {
+    if (flyerHistoryIndex <= 0) return;
+    flyerHistoryIndex--;
+    await applyFlyerHistorySnapshot(flyerHistory[flyerHistoryIndex]);
+  }
+
+  async function redoFlyer() {
+    if (flyerHistoryIndex >= flyerHistory.length - 1) return;
+    flyerHistoryIndex++;
+    await applyFlyerHistorySnapshot(flyerHistory[flyerHistoryIndex]);
+  }
+
+  function updateFlyerHistoryButtons() {
+    const undoBtn = document.getElementById('flyer-undo-btn');
+    const redoBtn = document.getElementById('flyer-redo-btn');
+    if (undoBtn) undoBtn.disabled = flyerHistoryIndex <= 0;
+    if (redoBtn) redoBtn.disabled = flyerHistoryIndex >= flyerHistory.length - 1;
+  }
+
+  // ----------------------------------------------------------------
+  // LAYERS PANEL
+  // ----------------------------------------------------------------
+  function renderFlyerLayers() {
+    const panel = document.getElementById('flyer-layers');
+    if (!panel) return;
+    const nodes = flyerElementNodes();
+    if (!nodes.length) { panel.innerHTML = '<span class="tray-empty">No elements yet</span>'; return; }
+    const selected = getSelectedFlyerNode();
+    panel.innerHTML = nodes.slice().reverse().map((n) => {
+      const isText = n.getClassName() === 'Text';
+      const label = isText ? (n.text().split('\n')[0].slice(0, 22) || 'Text') : (STICKER_LABELS[n.getAttr('iconKey')] || 'Sticker');
+      const selCls = n === selected ? ' sign-layer-selected' : '';
+      return `<div class="sign-layer-row${selCls}" onclick="selectFlyerNodeById('${n.id()}')">${isText ? '🔤' : '🖼️'} ${label}</div>`;
+    }).join('');
+  }
+
+  function selectFlyerNodeById(id) {
+    if (flyerLocked) return;
+    const node = flyerElementNodes().find((n) => n.id() === id);
+    if (node) selectFlyerNode(node);
+  }
+
+  function dataUrlToImage(dataUrl) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error('Flyer image failed to load'));
+      img.src = dataUrl;
+    });
   }
 
   // ================================================================
@@ -1678,195 +2329,20 @@
     ctx.closePath();
   }
 
-  // One entry per .flyer-* CSS class, describing ONLY its border shape and
-  // texture (never a background) so the download faithfully replicates
-  // what's on screen instead of drawing a generic rectangle for every
-  // style.
-  const FLYER_STYLE_META = {
-    'flyer-poster': { color: '#1e293b', radius: 14, lineWidth: 16 },
-    'flyer-ticket': { color: '#b45309', radius: 14, lineWidth: 12, dash: [16, 11] },
-    'flyer-marquee': { color: '#7c3aed', radius: 16, lineWidth: 14, double: true },
-    'flyer-pass': { color: '#0f766e', radius: 8, lineWidth: 12, inset: '#99f6e4' },
-    'flyer-neon': { color: '#db2777', radius: 22, lineWidth: 9, inset: '#ffffff' },
-    'flyer-spotlight': { color: '#f59e0b', radius: 9999, lineWidth: 12 },
-    'flyer-ribbon': { color: '#b91c1c', radius: 10, lineWidth: 12, ridge: true },
-    'flyer-confetti': { color: '#0ea5e9', radius: 40, lineWidth: 12, dash: [3, 17], dashCap: 'round' }
-  };
-
   // Canvas is exactly 11in x 8.5in at 96dpi (US Letter, landscape) so the
   // PNG's own proportions already match the PDF poster page.
   const FESTIVAL_W = 1056, FESTIVAL_H = 816;
 
-  function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
-  let __measureCtx = null;
-  function getMeasureCtx() {
-    if (!__measureCtx) __measureCtx = document.createElement('canvas').getContext('2d');
-    return __measureCtx;
-  }
-
-  // Embeds one of the STICKER_ICONS strings (a self-contained 40x40
-  // viewBox <svg>) at a specific pixel size inside the poster - nested
-  // <svg> is valid SVG, it just needs an explicit width/height instead of
-  // the 100%/100% meant for a CSS-sized container.
-  function scaleSvgInline(svgString, size) {
-    return svgString.replace('width="100%" height="100%"', `width="${size}" height="${size}"`);
-  }
-
-  function drawFlyerFrameSVG(style, x, y, w, h) {
-    const meta = FLYER_STYLE_META[style] || FLYER_STYLE_META['flyer-poster'];
-    const radius = style === 'flyer-spotlight' ? Math.min(w, h) * 0.42 : meta.radius;
-    const dashAttr = meta.dash ? `stroke-dasharray="${meta.dash.join(',')}" stroke-linecap="${meta.dashCap || 'butt'}"` : '';
-    let svg = `<rect x="${x + meta.lineWidth / 2}" y="${y + meta.lineWidth / 2}" width="${w - meta.lineWidth}" height="${h - meta.lineWidth}" rx="${Math.max(radius - meta.lineWidth / 2, 0)}" fill="none" stroke="${meta.color}" stroke-width="${meta.lineWidth}" stroke-linejoin="round" ${dashAttr}/>`;
-    if (meta.double) {
-      const lw2 = Math.max(meta.lineWidth / 3, 2);
-      svg += `<rect x="${x + meta.lineWidth * 1.7}" y="${y + meta.lineWidth * 1.7}" width="${w - meta.lineWidth * 3.4}" height="${h - meta.lineWidth * 3.4}" rx="${Math.max(radius - meta.lineWidth, 0)}" fill="none" stroke="${meta.color}" stroke-width="${lw2}"/>`;
-    }
-    if (meta.inset) {
-      svg += `<rect x="${x + meta.lineWidth + 7}" y="${y + meta.lineWidth + 7}" width="${w - (meta.lineWidth + 7) * 2}" height="${h - (meta.lineWidth + 7) * 2}" rx="${Math.max(radius - meta.lineWidth, 0)}" fill="none" stroke="${meta.inset}" stroke-width="5"/>`;
-    }
-    if (meta.ridge) {
-      svg += `<rect x="${x + meta.lineWidth + 5}" y="${y + meta.lineWidth + 5}" width="${w - (meta.lineWidth + 5) * 2}" height="${h - (meta.lineWidth + 5) * 2}" rx="${Math.max(radius - meta.lineWidth, 0)}" fill="none" stroke="#fca5a5" stroke-width="3"/>`;
-    }
-    return { svg, radius };
-  }
-
-  function buntingFragment(x, y, width) {
-    const colors = ['#ef4444', '#f59e0b', '#22c55e', '#0ea5e9', '#a855f7'];
-    const flagW = 34, gap = 12;
-    const count = Math.max(1, Math.floor(width / (flagW + gap)));
-    const startX = x + (width - (count * (flagW + gap) - gap)) / 2;
-    let flags = `<line x1="${x}" y1="${y}" x2="${x + width}" y2="${y}" stroke="#475569" stroke-width="2"/>`;
-    for (let i = 0; i < count; i++) {
-      const fx = startX + i * (flagW + gap);
-      flags += `<path d="M${fx},${y} L${fx + flagW},${y} L${fx + flagW / 2},${y + 38} Z" fill="${colors[i % colors.length]}" opacity="0.92"/>`;
-    }
-    return flags;
-  }
-
-  function balloonClusterFragment(x, y, flip) {
-    const colors = ['#ec4899', '#f59e0b', '#38bdf8'];
-    const dx = flip ? -1 : 1;
-    let g = '';
-    colors.forEach((c, i) => {
-      const bx = x + dx * i * 32;
-      const by = y - i * 16;
-      g += `
-        <path d="M${bx},${by - 16} L${bx + dx * 6},${by + 40}" stroke="#64748b" stroke-width="1.5" fill="none"/>
-        <ellipse cx="${bx}" cy="${by - 44}" rx="22" ry="28" fill="${c}"/>
-        <ellipse cx="${bx - 7}" cy="${by - 60}" rx="6" ry="8" fill="#fff" opacity="0.35"/>
-      `;
-    });
-    return `<g opacity="0.95">${g}</g>`;
-  }
-
-  function confettiScatterFragment(positions) {
-    const colors = ['#f59e0b', '#0ea5e9', '#22c55e', '#ec4899', '#a855f7'];
-    return positions.map(([px, py, rot], i) => {
-      const c = colors[i % colors.length];
-      return i % 2 === 0
-        ? `<rect x="${px}" y="${py}" width="11" height="11" fill="${c}" transform="rotate(${rot} ${px + 5} ${py + 5})" opacity="0.85"/>`
-        : `<circle cx="${px}" cy="${py}" r="5.5" fill="${c}" opacity="0.85"/>`;
-    }).join('');
-  }
-
-  // The single source of truth for the poster - the live preview injects
-  // this string directly, and both downloads rasterize the exact same
-  // string, so the two can never drift apart from each other.
-  function buildFestivalPosterSVG(cfg) {
-    const W = FESTIVAL_W, H = FESTIVAL_H;
-    const cardX = 24, cardY = 24, cardW = W - 48, cardH = H - 48;
-    const frame = drawFlyerFrameSVG(cfg.borderStyle, cardX, cardY, cardW, cardH);
-    const fontShort = (cfg.fontFamily || "'Montserrat', sans-serif").split(',')[0].replace(/'/g, '');
-    const centerX = W / 2;
-
-    const measureCtx = getMeasureCtx();
-    let quoteLines = [];
-    if (cfg.quote) {
-      measureCtx.font = `700 26px ${fontShort}, sans-serif`;
-      quoteLines = wrapCanvasText(measureCtx, `"${cfg.quote.text}"`, cardW - 340);
-    }
-
-    let cursorY = cardY + 100;
-    let emblemBlock = '';
-    if (cfg.emblemKey) {
-      emblemBlock = `<g transform="translate(${centerX - 27},${cursorY - 54})">${scaleSvgInline(STICKER_ICONS[cfg.emblemKey], 54)}</g>`;
-      cursorY += 34;
-    }
-
-    const titleBlock = `<text x="${centerX}" y="${cursorY}" text-anchor="middle" font-family="${fontShort}" font-weight="900" font-size="42" fill="${cfg.textColor}">${esc(cfg.charity) || 'Youth Festival'}</text>`;
-    cursorY += 46;
-
-    let taglineBlock = '';
-    if (cfg.tagline) {
-      taglineBlock = `<text x="${centerX}" y="${cursorY}" text-anchor="middle" font-family="${fontShort}" font-style="italic" font-weight="700" font-size="26" fill="${cfg.textColor}">${esc(cfg.tagline)}</text>`;
-      cursorY += 42;
-    }
-
-    let quoteBlock = '';
-    if (cfg.quote) {
-      const quoteStartY = Math.max(cursorY + 34, cardY + cardH / 2 - (quoteLines.length * 34) / 2 + 10);
-      quoteBlock = quoteLines.map((l, i) => `<text x="${centerX}" y="${quoteStartY + i * 34}" text-anchor="middle" font-family="${fontShort}" font-weight="700" font-size="27" fill="${cfg.textColor}">${esc(l)}</text>`).join('');
-      const afterY = quoteStartY + quoteLines.length * 34;
-      if (cfg.quote.ref) {
-        quoteBlock += `<text x="${centerX}" y="${afterY + 28}" text-anchor="middle" font-family="${fontShort}" font-weight="700" font-size="20" fill="${cfg.textColor}">- ${esc(cfg.quote.ref)}</text>`;
-      }
-    }
-
-    const stickerSize = 58, stickerGap = 16;
-    const totalW = cfg.stickerKeys.length ? cfg.stickerKeys.length * (stickerSize + stickerGap) - stickerGap : 0;
-    let sx = centerX - totalW / 2;
-    const stickerY = cardY + cardH - stickerSize - 78;
-    const stickersBlock = cfg.stickerKeys.map((k) => {
-      const block = `<g transform="translate(${sx},${stickerY})">${scaleSvgInline(STICKER_ICONS[k], stickerSize)}</g>`;
-      sx += stickerSize + stickerGap;
-      return block;
-    }).join('');
-
-    const creditBlock = (cfg.name1 && cfg.name2)
-      ? `<text x="${centerX}" y="${cardY + cardH - 26}" text-anchor="middle" font-family="'Baloo 2', sans-serif" font-weight="600" font-size="17" fill="${cfg.textColor}" opacity="0.7">Planned by ${esc(cfg.name1)} &amp; ${esc(cfg.name2)}</text>`
-      : '';
-
-    const bunting = buntingFragment(cardX + 60, cardY + 30, cardW - 120);
-    const balloonsL = balloonClusterFragment(cardX + 90, cardY + cardH - 30, false);
-    const balloonsR = balloonClusterFragment(cardX + cardW - 90, cardY + cardH - 30, true);
-    const confetti = confettiScatterFragment([
-      [cardX + 40, cardY + 90, 15], [cardW + cardX - 60, cardY + 100, -20],
-      [cardX + 70, cardY + 150, 40], [cardW + cardX - 90, cardY + 160, -35],
-      [cardX + 45, cardY + 210, -15], [cardW + cardX - 55, cardY + 220, 25]
-    ]);
-
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="'Baloo 2', sans-serif">
-      <defs>
-        <clipPath id="fp-card-clip"><rect x="${cardX}" y="${cardY}" width="${cardW}" height="${cardH}" rx="${frame.radius}"/></clipPath>
-        <linearGradient id="fp-sheen" x1="0" y1="0" x2="0.6" y2="1">
-          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4"/>
-          <stop offset="40%" stop-color="#ffffff" stop-opacity="0"/>
-          <stop offset="100%" stop-color="#0f172a" stop-opacity="0.08"/>
-        </linearGradient>
-        <filter id="fp-soft-shadow" x="-60%" y="-60%" width="220%" height="220%">
-          <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.3"/>
-        </filter>
-      </defs>
-      <rect x="0" y="0" width="${W}" height="${H}" fill="#f8fafc"/>
-      <g filter="url(#fp-soft-shadow)">
-        <rect x="${cardX}" y="${cardY}" width="${cardW}" height="${cardH}" rx="${frame.radius}" fill="${cfg.bg}"/>
-      </g>
-      <g clip-path="url(#fp-card-clip)">
-        <rect x="${cardX}" y="${cardY}" width="${cardW}" height="${cardH}" fill="url(#fp-sheen)"/>
-        ${bunting}
-        ${confetti}
-        ${balloonsL}
-        ${balloonsR}
-      </g>
-      ${frame.svg}
-      ${emblemBlock}
-      ${titleBlock}
-      ${taglineBlock}
-      ${quoteBlock}
-      ${stickersBlock}
-      ${creditBlock}
-    </svg>`;
+  // The Konva stage is the single source of truth for what the flyer
+  // looks like, so composing it into the certificate/poster canvas is
+  // just drawing its own rendered image, contain-fit into the box -
+  // no separate drawing code to keep in sync with the on-screen studio.
+  async function drawFlyerOntoCanvas(ctx, x, y, w, h) {
+    const img = await dataUrlToImage(getFlyerDataUrl());
+    const scale = Math.min(w / FLYER_W, h / FLYER_H);
+    const drawW = FLYER_W * scale, drawH = FLYER_H * scale;
+    ctx.drawImage(img, x + (w - drawW) / 2, y + (h - drawH) / 2, drawW, drawH);
   }
 
   async function downloadFlyer() {
@@ -1877,14 +2353,15 @@
       LessonCheck.incomplete(feedbackEl, 'Type both team member names at the top of the page before downloading your flyer.');
       return;
     }
-    const svgString = buildFestivalPosterSVG(getFlyerConfig());
-    const img = await svgToImage(svgString);
     const SCALE = 2;
     const canvas = document.getElementById('render-canvas');
     canvas.width = FESTIVAL_W * SCALE;
     canvas.height = FESTIVAL_H * SCALE;
     const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    ctx.scale(SCALE, SCALE);
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(0, 0, FESTIVAL_W, FESTIVAL_H);
+    await drawFlyerOntoCanvas(ctx, 0, 0, FESTIVAL_W, FESTIVAL_H);
     triggerDownload(canvas, `Festival-Flyer-${slug(name1)}-and-${slug(name2)}.png`);
     reenableCelebrateButtons();
   }
@@ -1892,44 +2369,16 @@
   // Draws the booth blueprint (to-scale rectangle on graph paper) plus the
   // Logistics Summary. Returns nothing - only reads window.boothLength /
   // window.boothWidth, which are only set once Station 4 is solved.
-  function drawBlueprintOntoCanvas(ctx, x, y, size) {
-    roundRectPath(ctx, x, y, size, size, 14);
-    ctx.fillStyle = '#ffffff';
-    ctx.fill();
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = '#94a3b8';
-    ctx.stroke();
-    ctx.save();
-    ctx.clip();
-    ctx.strokeStyle = 'rgba(30,58,138,0.14)';
-    ctx.lineWidth = 1;
-    for (let gx = x; gx <= x + size; gx += 20) {
-      ctx.beginPath(); ctx.moveTo(gx, y); ctx.lineTo(gx, y + size); ctx.stroke();
-    }
-    for (let gy = y; gy <= y + size; gy += 20) {
-      ctx.beginPath(); ctx.moveTo(x, gy); ctx.lineTo(x + size, gy); ctx.stroke();
-    }
-    ctx.restore();
-
+  // The SVG built by buildBoothBlueprintSVG() is the single source of
+  // truth for what the blueprint looks like - drawing it into the
+  // certificate/poster canvas is just rasterizing that same string,
+  // contain-fit into whatever square box is given.
+  async function drawBlueprintOntoCanvas(ctx, x, y, size) {
     const l = window.boothLength || 7, w = window.boothWidth || 5;
-    const maxW = size - 60, maxH = size - 60;
-    const scale = Math.min(maxW / l, maxH / w);
-    const rw = l * scale, rh = w * scale;
-    const rx = x + size / 2 - rw / 2, ry = y + size / 2 - rh / 2;
-    ctx.fillStyle = '#dcfce7';
-    ctx.fillRect(rx, ry, rw, rh);
-    ctx.strokeStyle = '#15803d';
-    ctx.lineWidth = 3;
-    ctx.strokeRect(rx, ry, rw, rh);
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#15803d';
-    ctx.font = "800 15px 'Montserrat', sans-serif";
-    ctx.fillText(`${l} ft`, rx + rw / 2, ry - 10);
-    ctx.save();
-    ctx.translate(rx - 14, ry + rh / 2);
-    ctx.rotate(-Math.PI / 2);
-    ctx.fillText(`${w} ft`, 0, 0);
-    ctx.restore();
+    const img = await svgToImage(buildBoothBlueprintSVG(l, w));
+    const scale = Math.min(size / BLUEPRINT_W, size / BLUEPRINT_H);
+    const drawW = BLUEPRINT_W * scale, drawH = BLUEPRINT_H * scale;
+    ctx.drawImage(img, x + (size - drawW) / 2, y + (size - drawH) / 2, drawW, drawH);
   }
 
   async function downloadBlueprintFlyerPoster() {
@@ -1960,7 +2409,7 @@
     ctx.fillText(`${name1} & ${name2}'s Booth Blueprint`, FESTIVAL_W / 2, 56);
     const gridSize = 560;
     const gridX = (FESTIVAL_W - gridSize) / 2, gridY = 88;
-    drawBlueprintOntoCanvas(ctx, gridX, gridY, gridSize);
+    await drawBlueprintOntoCanvas(ctx, gridX, gridY, gridSize);
     ctx.textAlign = 'left';
     ctx.font = "700 16px 'Montserrat', sans-serif";
     ctx.fillStyle = '#334155';
@@ -1974,12 +2423,13 @@
     const page1Jpeg = canvas.toDataURL('image/jpeg', 0.92);
     const page1W = canvas.width, page1H = canvas.height;
 
-    const svgString = buildFestivalPosterSVG(getFlyerConfig());
-    const img = await svgToImage(svgString);
     canvas.width = FESTIVAL_W * SCALE;
     canvas.height = FESTIVAL_H * SCALE;
     ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    ctx.scale(SCALE, SCALE);
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(0, 0, FESTIVAL_W, FESTIVAL_H);
+    await drawFlyerOntoCanvas(ctx, 0, 0, FESTIVAL_W, FESTIVAL_H);
     const page2Jpeg = canvas.toDataURL('image/jpeg', 0.92);
 
     // Both pages US Letter, landscape (792x612pt) regardless of raster
@@ -2115,7 +2565,7 @@
       LessonCheck.incomplete(feedbackEl, `Finish Day 2 first - still need: ${missing.join(', ')}.`);
       return;
     }
-    const charity = document.getElementById('flyer-charity-input').value.trim() || 'their community';
+    const charity = 'their community';
     const [logo, decoIcons] = await Promise.all([
       ensureLogoAndFont("800 20px 'Montserrat'"),
       Promise.all(STICKERS.map((k) => svgToImage(STICKER_ICONS[k])))
@@ -2577,6 +3027,8 @@
   // INIT
   // ================================================================
   populateFlyerSelects();
+  initFlyerStage();
+  seedDefaultFlyerElements();
   updateWhatIf();
   renderCelebration();
 </script>
