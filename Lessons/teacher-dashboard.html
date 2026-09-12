@@ -273,6 +273,7 @@
             <th data-table="all-submissions" data-sort="itemsAttempted">Attempted</th>
             <th data-table="all-submissions" data-sort="avgSeconds">Avg sec/answer</th>
             <th data-table="all-submissions" data-sort="tabsViewed">Tabs viewed</th>
+            <th data-table="all-submissions" data-sort="totalMinutes">Time on task</th>
             <th data-table="all-submissions" data-sort="reachedEnd">Reached end</th>
             <th data-table="all-submissions" data-sort="lastSubmittedAt">Last submitted</th>
             <th>Flags</th>
@@ -479,6 +480,35 @@
 
   // All the analysis lives here, not in Apps Script - tune these rules
   // freely without ever touching the backend.
+  // Groups a row's timestamped events into work sessions - not live
+  // monitoring, just a retrospective read of "when did this student
+  // actually sit down and work on this," entirely from timestamps
+  // already being logged (every tab view, check attempt, and submission
+  // carries one). Two events count as the same session while the gap
+  // between them is under `gapMinutes`; anything longer is treated as
+  // the student having left and come back later, starting a new session.
+  // A single-event session has a duration of 0 (a brief visit, not a
+  // formatting bug) rather than being padded to look like time was spent.
+  const SESSION_GAP_MINUTES = 15;
+  function computeSessions(events, gapMinutes) {
+    if (!events.length) return [];
+    const sorted = events.slice().sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    const sessions = [];
+    let current = { start: sorted[0].timestamp, end: sorted[0].timestamp, count: 1 };
+    for (let i = 1; i < sorted.length; i++) {
+      const gap = (new Date(sorted[i].timestamp) - new Date(current.end)) / 60000;
+      if (gap > gapMinutes) {
+        sessions.push(current);
+        current = { start: sorted[i].timestamp, end: sorted[i].timestamp, count: 1 };
+      } else {
+        current.end = sorted[i].timestamp;
+        current.count++;
+      }
+    }
+    sessions.push(current);
+    return sessions.map((s) => Object.assign(s, { minutes: Math.round((new Date(s.end) - new Date(s.start)) / 60000) }));
+  }
+
   function decorateRow(row) {
     let allSubmissions = [];
     try { allSubmissions = JSON.parse(row.submissionsLog || '[]'); } catch (e) { allSubmissions = []; }
@@ -568,10 +598,18 @@
     if (row.flagReason) flags.push(row.flagReason);
     if (rapidBurst) flags.push('3+ answers within 60 seconds');
 
+    // Sessions are built from every logged event (tab views and
+    // reached-end included, not just graded answers) - a student reading
+    // a Vocabulary tab with nothing to check still counts as time spent
+    // working on the page.
+    const sessions = computeSessions(allSubmissions, SESSION_GAP_MINUTES);
+    const totalMinutes = sessions.reduce((sum, s) => sum + s.minutes, 0);
+
     return Object.assign({}, row, {
       submissions, avgSeconds, rapidBurst, flags, allEvents,
       tabsViewed: tabViews.length, reachedEnd, itemsAttempted, itemsCorrect, scorePct,
-      pointsEarned, pointsPossible: gradedCount, isTestPrep, reflectionSubmitted
+      pointsEarned, pointsPossible: gradedCount, isTestPrep, reflectionSubmitted,
+      sessions, totalMinutes
     });
   }
 
@@ -1165,15 +1203,16 @@
         <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
         <td>${r.itemsAttempted}</td>
         <td>${r.tabsViewed}</td>
+        <td>${r.totalMinutes} min</td>
         <td>${r.reachedEnd ? 'yes' : 'no'}</td>
         <td>${r.lastSubmittedAt ? new Date(r.lastSubmittedAt).toLocaleString() : '-'}</td>
         <td>${r.flags.map((f) => `<span class="pill flag">${f}</span>`).join(' ') || '-'}</td>
         <td><span class="expand-btn" onclick="toggleDetail('${id}')">Attempts</span></td>
       </tr>
-      <tr class="detail-row" id="detail-${id}" hidden><td colspan="8">${submissionDetailTable(r)}</td></tr>
+      <tr class="detail-row" id="detail-${id}" hidden><td colspan="9">${submissionDetailTable(r)}</td></tr>
     `;
     }).join('');
-    return `<table><thead><tr><th>Student</th><th>Score</th><th>Attempted</th><th>Tabs</th><th>Reached end</th><th>Last submitted</th><th>Flags</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+    return `<table><thead><tr><th>Student</th><th>Score</th><th>Attempted</th><th>Tabs</th><th>Time on task</th><th>Reached end</th><th>Last submitted</th><th>Flags</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   function renderByStudent() {
@@ -1232,22 +1271,23 @@
         <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
         <td>${r.itemsAttempted}</td>
         <td>${r.tabsViewed}</td>
+        <td>${r.totalMinutes} min</td>
         <td>${r.reachedEnd ? 'yes' : 'no'}</td>
         <td>${r.lastSubmittedAt ? new Date(r.lastSubmittedAt).toLocaleString() : '-'}</td>
         <td>${r.flags.map((f) => `<span class="pill flag">${f}</span>`).join(' ') || '-'}</td>
         <td><span class="expand-btn" onclick="toggleDetail('${id}')">Attempts</span></td>
       </tr>
-      <tr class="detail-row" id="detail-${id}" hidden><td colspan="8">${submissionDetailTable(r)}</td></tr>
+      <tr class="detail-row" id="detail-${id}" hidden><td colspan="9">${submissionDetailTable(r)}</td></tr>
     `;
     }).join('');
-    return `<table><thead><tr><th>Activity</th><th>Score</th><th>Attempted</th><th>Tabs</th><th>Reached end</th><th>Last submitted</th><th>Flags</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+    return `<table><thead><tr><th>Activity</th><th>Score</th><th>Attempted</th><th>Tabs</th><th>Time on task</th><th>Reached end</th><th>Last submitted</th><th>Flags</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   function renderAllSubmissions() {
     const items = sortItems(filteredRows(), 'all-submissions', 'lastSubmittedAt');
     document.getElementById('all-submissions-legend').innerHTML = groupLegendHtml(items);
     const tbody = document.getElementById('all-submissions-body');
-    if (!items.length) { tbody.innerHTML = '<tr><td colspan="10" class="empty-note">No submissions match the current filter.</td></tr>'; return; }
+    if (!items.length) { tbody.innerHTML = '<tr><td colspan="11" class="empty-note">No submissions match the current filter.</td></tr>'; return; }
     tbody.innerHTML = items.map((r, i) => `
       <tr class="${r.flags.length ? 'flagged' : ''}">
         <td>${groupDot(r.grade, r.teacher)}${r.studentName}</td>
@@ -1256,17 +1296,36 @@
         <td>${r.itemsAttempted}</td>
         <td>${r.avgSeconds === null ? '-' : r.avgSeconds + 's'}</td>
         <td>${r.tabsViewed}</td>
+        <td>${r.totalMinutes} min</td>
         <td>${r.reachedEnd ? '<span class="pill ok">yes</span>' : '<span class="pill neutral">no</span>'}</td>
         <td>${r.lastSubmittedAt ? new Date(r.lastSubmittedAt).toLocaleString() : '-'}</td>
         <td>${r.flags.map((f) => `<span class="pill flag">${f}</span>`).join(' ') || '<span class="pill ok">none</span>'}</td>
         <td><span class="expand-btn" onclick="toggleDetail('submission-${i}')">Details</span></td>
       </tr>
-      <tr class="detail-row" id="detail-submission-${i}" hidden><td colspan="10">${submissionDetailTable(r)}</td></tr>
+      <tr class="detail-row" id="detail-submission-${i}" hidden><td colspan="11">${submissionDetailTable(r)}</td></tr>
     `).join('');
   }
 
+  // Retrospective, not live: just a read of when a student's already-
+  // logged timestamps cluster into work sessions - see computeSessions().
+  function sessionsHtml(r) {
+    if (!r.sessions || !r.sessions.length) return '';
+    const rows = r.sessions.map((s, i) => `
+      <tr>
+        <td>Session ${i + 1}</td>
+        <td>${new Date(s.start).toLocaleString()}</td>
+        <td>${new Date(s.end).toLocaleTimeString()}</td>
+        <td>${s.minutes} min</td>
+        <td>${s.count}</td>
+      </tr>
+    `).join('');
+    return `<p style="margin:0 0 6px 0;"><strong>Work sessions</strong> (total ${r.totalMinutes} min across ${r.sessions.length} session${r.sessions.length === 1 ? '' : 's'}):</p>
+      <table><thead><tr><th>#</th><th>Start</th><th>End</th><th>Duration</th><th>Events</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
   function submissionDetailTable(r) {
-    if (!r.submissions.length) return '<em>No graded items logged.</em>';
+    const sessions = sessionsHtml(r);
+    if (!r.submissions.length) return sessions ? `${sessions}<p style="margin-top:14px;"><em>No graded items logged.</em></p>` : '<em>No graded items logged.</em>';
     const items = r.submissions.map((s) => `
       <tr>
         <td>${s.label}</td>
@@ -1276,7 +1335,8 @@
         <td>${new Date(s.timestamp).toLocaleTimeString()}</td>
       </tr>
     `).join('');
-    return `<table><thead><tr><th>Item</th><th>Answer</th><th>Verdict</th><th>Attempt</th><th>Time</th></tr></thead><tbody>${items}</tbody></table>`;
+    const itemsTable = `<table><thead><tr><th>Item</th><th>Answer</th><th>Verdict</th><th>Attempt</th><th>Time</th></tr></thead><tbody>${items}</tbody></table>`;
+    return sessions ? `${sessions}<div style="margin-top:14px;">${itemsTable}</div>` : itemsTable;
   }
 
   function renderAll() {

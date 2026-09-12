@@ -559,6 +559,30 @@ answers before computing "avg seconds per answer" or the rapid-burst
 flag — a tab view isn't an answer, and would otherwise skew both. They
 surface instead as their own `Tabs viewed` / `Reached end` columns.
 
+**Work sessions ("when did they actually work on this") are computed
+retrospectively from these same timestamps - there is no live/real-time
+monitoring anywhere in this system, by design.** `computeSessions(events,
+gapMinutes)` in `teacher-dashboard.html` groups a row's full event list
+(`allSubmissions` - every tab view, check attempt, and submission, not
+just graded answers) into sessions: consecutive events stay in the same
+session while the gap between them is under `SESSION_GAP_MINUTES` (15);
+a longer gap means the student left and came back later, starting a new
+session. `decorateRow()` attaches `sessions` (each `{start, end, count,
+minutes}`) and `totalMinutes` (their sum) to every row - a single-event
+session has `minutes: 0` (a brief visit, not padded to look like time
+was spent) rather than being dropped. Surfaced as a `Time on task`
+column on By Activity's/By Student's per-row detail tables and on All
+Submissions, and as a "Work sessions" table (session #, start, end,
+duration, event count) prepended to `submissionDetailTable()`'s
+existing per-item breakdown - reused by all three of those tables, so
+this needed exactly one change to show up everywhere. Deliberately not
+a live/real-time feature: this is a read of already-logged history when
+a teacher opens the dashboard, not anything watching a student as they
+work. If a genuinely live view is ever wanted, that's a separate,
+much bigger architectural decision (Apps Script/Sheets has no
+push/websocket mechanism) - don't casually extend this retrospective
+computation into one.
+
 ### Wired units — current activity IDs
 
 Same 5-page pattern (Review/Vocabulary-Literacy/Practice-Set/Word-Problems/
