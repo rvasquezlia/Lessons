@@ -59,6 +59,7 @@
   .pill.flag { background: var(--error-bg); color: var(--error); }
   .pill.ok { background: var(--success-bg); color: var(--success); }
   .pill.neutral { background: #e2e8f0; color: #475569; }
+  .pill.progress { background: #fef3c7; color: #92400e; }
   .detail-row td { background: #f8fafc; }
   .detail-row table { font-size: 0.82rem; }
   .expand-btn { cursor: pointer; color: var(--primary-light); font-weight: 700; }
@@ -105,10 +106,11 @@
   <nav class="nav-tabs">
     <button class="tab-btn active" data-tab="overview" onclick="switchDashTab('overview')">Overview</button>
     <button class="tab-btn" data-tab="by-unit" onclick="switchDashTab('by-unit')">By Unit</button>
+    <button class="tab-btn" data-tab="activity-status" onclick="switchDashTab('activity-status')">Activity Status</button>
     <button class="tab-btn" data-tab="by-activity" onclick="switchDashTab('by-activity')">By Activity</button>
     <button class="tab-btn" data-tab="by-student" onclick="switchDashTab('by-student')">By Student</button>
     <button class="tab-btn" data-tab="all-submissions" onclick="switchDashTab('all-submissions')">All Submissions</button>
-    <button class="tab-btn" data-tab="access-log" onclick="switchDashTab('access-log')">Access Log</button>
+    <button class="tab-btn" data-tab="access-log" onclick="switchDashTab('access-log')">Denied Access</button>
   </nav>
 
   <div id="overview" class="panel active">
@@ -159,6 +161,29 @@
       </div>
     </div>
     <div id="by-unit-detail" class="detail-view" hidden></div>
+  </div>
+
+  <div id="activity-status" class="panel">
+    <div class="section-title">Activity Status</div>
+    <p style="color:#64748b; margin-top:-10px;">Are students actually opening each activity? One row per activity, showing how many eligible students haven't started it, opened it but haven't answered anything yet, are partway through, or have reached the end. Click an activity to see which student is in which state.</p>
+    <div id="activity-status-list">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-table="activity-status" data-sort="activityTitle">Activity</th>
+              <th data-table="activity-status" data-sort="grade">Grade</th>
+              <th data-table="activity-status" data-sort="notStarted">Not started</th>
+              <th data-table="activity-status" data-sort="opened">Opened only</th>
+              <th data-table="activity-status" data-sort="inProgress">In progress</th>
+              <th data-table="activity-status" data-sort="completed">Completed</th>
+            </tr>
+          </thead>
+          <tbody id="activity-status-body"></tbody>
+        </table>
+      </div>
+    </div>
+    <div id="activity-status-detail" class="detail-view" hidden></div>
   </div>
 
   <div id="by-activity" class="panel">
@@ -234,8 +259,8 @@
   </div>
 
   <div id="access-log" class="panel">
-    <div class="section-title">Access Log</div>
-    <p style="color:#64748b; margin-top:-10px;">Denied access attempts only - a student opening an activity their grade doesn't match, or one no longer active. Allowed opens aren't logged here anymore (see the Overview tab's Recent Activity feed for those); rows recorded before this change may still say "Allowed" and are kept for history.</p>
+    <div class="section-title">Denied Access</div>
+    <p style="color:#64748b; margin-top:-10px;">Not "did they open it" - see the Activity Status tab for that. This is purely a security/troubleshooting log: a student attempting an activity their grade doesn't match, or one no longer active. Rows recorded before this was denials-only may still say "Allowed" and are kept for history.</p>
     <div class="stat-row" id="access-log-stats"></div>
     <div class="table-wrap">
       <table>
@@ -277,6 +302,7 @@
 
   const sortState = {
     'by-unit': { key: 'avgScore', dir: 1 },
+    'activity-status': { key: 'notStarted', dir: -1 },
     'by-student': { key: 'avgScore', dir: 1 },
     'by-activity': { key: 'avgScore', dir: 1 },
     'all-submissions': { key: 'lastSubmittedAt', dir: -1 },
@@ -288,6 +314,7 @@
   // filter state, so it's fine for these to just reflect whatever the most
   // recent renderAll() computed.
   let lastUnitSummaries = [];
+  let lastActivityStatus = [];
   let lastActivitySummaries = [];
   let lastStudentSummaries = [];
 
@@ -595,6 +622,50 @@
     });
   }
 
+  // Four-state engagement funnel, distinct from AccessLog's allow/deny
+  // security log (which the Sheet already owns) - this answers "did they
+  // actually open it," derived entirely from Progress: no row at all
+  // means they never opened the activity; a row with reachedEnd means
+  // they clicked through every tab; a row with graded items but no
+  // reachedEnd means they're partway through; a row with neither just
+  // means they opened it (tab views logged) but haven't answered
+  // anything gradeable yet.
+  const STATUS_LABEL = { 'not-started': 'Not started', opened: 'Opened only', 'in-progress': 'In progress', completed: 'Completed' };
+  const STATUS_PILL = { 'not-started': 'neutral', opened: 'neutral', 'in-progress': 'progress', completed: 'ok' };
+
+  function progressStatus(row) {
+    if (!row) return 'not-started';
+    if (row.reachedEnd) return 'completed';
+    if (row.itemsAttempted > 0) return 'in-progress';
+    return 'opened';
+  }
+
+  // Reuses computeActivitySummaries()'s own rows/eligible-roster logic so
+  // this can never disagree with the By Activity tab it's built from.
+  function computeActivityStatusBreakdown(a) {
+    const f = activeFilters();
+    const eligible = roster.filter((s) =>
+      s.status === 'Active' && String(s.grade) === String(a.grade) && (!f.teacher || s.teacher === f.teacher)
+    );
+    const rowsByEmail = {};
+    a.rows.forEach((r) => { rowsByEmail[r.email] = r; });
+    const perStudent = eligible.map((s) => {
+      const row = rowsByEmail[s.email];
+      return { email: s.email, studentName: s.studentName, teacher: s.teacher, row, status: progressStatus(row) };
+    });
+    const counts = { 'not-started': 0, opened: 0, 'in-progress': 0, completed: 0 };
+    perStudent.forEach((p) => { counts[p.status]++; });
+    return {
+      activityId: a.activityId, activityTitle: a.activityTitle, grade: a.grade, perStudent,
+      notStarted: counts['not-started'], opened: counts.opened, inProgress: counts['in-progress'], completed: counts.completed,
+      total: eligible.length
+    };
+  }
+
+  function computeAllActivityStatus() {
+    return computeActivitySummaries().map(computeActivityStatusBreakdown);
+  }
+
   function barClass(pct) {
     if (pct === null) return '';
     if (pct < 60) return 'low';
@@ -777,6 +848,53 @@
     if (idx !== -1) openActivityDetail(idx); else showListView('by-activity');
   }
   window.jumpToActivity = jumpToActivity;
+
+  function renderActivityStatus() {
+    const items = sortItems(computeAllActivityStatus(), 'activity-status', 'activityTitle');
+    lastActivityStatus = items;
+    const tbody = document.getElementById('activity-status-body');
+    if (!items.length) { tbody.innerHTML = '<tr><td colspan="6" class="empty-note">No activities match the current filter.</td></tr>'; }
+    else {
+      tbody.innerHTML = items.map((a, i) => `
+        <tr class="${a.total > 0 && a.notStarted === a.total ? 'zero-activity' : ''}">
+          <td><span class="expand-btn" onclick="openActivityStatusDetail(${i})">${a.activityTitle}</span></td>
+          <td>${a.grade}</td>
+          <td>${a.notStarted}</td>
+          <td>${a.opened}</td>
+          <td>${a.inProgress}</td>
+          <td>${a.completed}</td>
+        </tr>
+      `).join('');
+    }
+    showListView('activity-status');
+  }
+
+  function openActivityStatusDetail(i) {
+    const a = lastActivityStatus[i];
+    if (!a) return;
+    const rowsHtml = a.perStudent.slice().sort((x, y) => x.studentName.localeCompare(y.studentName)).map((p) => `
+      <tr>
+        <td>${p.studentName}</td>
+        <td>${p.teacher || '-'}</td>
+        <td><span class="pill ${STATUS_PILL[p.status]}">${STATUS_LABEL[p.status]}</span></td>
+        <td>${p.row && p.row.scorePct !== null ? p.row.scorePct + '%' : '-'}</td>
+        <td>${p.row ? p.row.tabsViewed : 0}</td>
+        <td>${p.row && p.row.lastSubmittedAt ? new Date(p.row.lastSubmittedAt).toLocaleString() : '-'}</td>
+      </tr>
+    `).join('');
+    showDetailView('activity-status', `
+      <button class="btn-back" onclick="showListView('activity-status')">&larr; Back to activities</button>
+      <h3>${a.activityTitle} <span class="pill neutral">Grade ${a.grade}</span></h3>
+      <div class="stat-row">
+        <div class="stat-tile"><div class="n ${a.notStarted ? 'warn' : ''}">${a.notStarted}</div><div class="l">Not started</div></div>
+        <div class="stat-tile"><div class="n">${a.opened}</div><div class="l">Opened only</div></div>
+        <div class="stat-tile"><div class="n">${a.inProgress}</div><div class="l">In progress</div></div>
+        <div class="stat-tile"><div class="n">${a.completed}</div><div class="l">Completed</div></div>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>Student</th><th>Teacher</th><th>Status</th><th>Score</th><th>Tabs viewed</th><th>Last activity</th></tr></thead><tbody>${rowsHtml}</tbody></table></div>
+    `);
+  }
+  window.openActivityStatusDetail = openActivityStatusDetail;
 
   function renderByActivity() {
     const items = sortItems(computeActivitySummaries(), 'by-activity', 'activityTitle');
@@ -1004,6 +1122,7 @@
   function renderAll() {
     renderOverview();
     renderByUnit();
+    renderActivityStatus();
     renderByActivity();
     renderByStudent();
     renderAllSubmissions();

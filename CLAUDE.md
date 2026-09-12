@@ -221,6 +221,18 @@ and has six tabs, all driven by the same `allRows`/`roster`/
   every activity in it; click an activity there and it jumps straight to
   that activity's own detail view on the By Activity tab
   (`jumpToActivity()`) — a unit number is never a dead end.
+- **Activity Status** — "are students actually opening this?", answered
+  with a four-state funnel per activity (Not started / Opened only / In
+  progress / Completed), computed by `computeActivityStatusBreakdown()`
+  from `Progress` alone: no row at all is Not started; a row with
+  `reachedEnd` is Completed; a row with graded items but no `reachedEnd`
+  is In progress; a row with neither (only tab views logged) is Opened
+  only. This is deliberately not the `AccessLog` sheet/tab (see "Denied
+  Access" below) — the Sheet's own AccessLog is a permission/security
+  log, not an engagement one, and using the same name for both was
+  confusing what each was for. Click an activity to see which student is
+  in which state, with stat tiles for the same four counts scoped to
+  just that activity.
 - **By Activity** — one row per catalog activity (including activities
   nobody has started), with a completion percentage computed against
   how many *eligible* roster students exist for that grade (and teacher,
@@ -239,6 +251,14 @@ and has six tabs, all driven by the same `allRows`/`roster`/
   is the one tab that keeps the older inline-expand-a-row pattern
   (`toggleDetail()`) instead of a separate detail view — it's already
   the raw per-item layer, not a summary that would otherwise dead-end.
+- **Denied Access** (tab id still `access-log` internally, only the
+  visible label changed) — every `AccessLog` row, joined against
+  `roster` (for student name) and `activityCatalog` (for activity
+  title) client-side via `joinRosterName()`/`joinActivityTitle()`, with
+  its own denied-count and most-common-denial-reason stat tiles. This is
+  purely the security/troubleshooting log now that Activity Status
+  covers "did they open it" — see that tab's entry above for why the two
+  were split.
 
 Both By Student's and By Activity's per-row tables (`studentDetailTable()`/
 `activityDetailTable()`) have their own "Attempts" column using that
@@ -249,10 +269,6 @@ activities (or an activity into one of its students) reaches the exact
 same attempt-level detail without a third full-panel view. Generated ids
 run through `safeId()` first since an email or activityId can contain
 characters (`@`, `.`) that aren't safe unescaped inside an HTML `id`.
-- **Access Log** — every `AccessLog` row, joined against `roster` (for
-  student name) and `activityCatalog` (for activity title) client-side
-  via `joinRosterName()`/`joinActivityTitle()`, with its own denied-count
-  and most-common-denial-reason stat tiles.
 
 **By Unit/By Activity/By Student share one list-then-detail pattern**
 (`showListView(tabKey)`/`showDetailView(tabKey, html)`, keyed off each
