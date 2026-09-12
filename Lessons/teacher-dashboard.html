@@ -32,6 +32,23 @@
   }
   .btn-refresh:hover { background: var(--primary-light); }
 
+  /* One-click Grade/Teacher filters - a button per value plus an "All"
+     button, instead of a <select> a teacher has to open to see the
+     choices. #teacher-filter-group is hidden entirely for a scoped
+     teacher account (see onDataLoaded) the same way the old dropdown
+     used to be, since such an account only ever has one teacher value
+     worth picking anyway. */
+  .pill-filter-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .pill-filter-label { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+  .filter-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .filter-pill {
+    padding: 6px 14px; border-radius: 999px; border: 2px solid var(--border);
+    background: var(--card); color: var(--text); font-family: inherit;
+    font-weight: 700; font-size: 0.82rem; cursor: pointer;
+  }
+  .filter-pill:hover { border-color: var(--primary-light); }
+  .filter-pill.active { background: var(--primary); border-color: var(--primary); color: white; }
+
   .stat-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
   .stat-tile { background: var(--bg); border: 2px solid var(--border); border-radius: 12px; padding: 14px 20px; min-width: 140px; flex: 1; }
   .stat-tile .n { font-size: 1.7rem; font-weight: 800; color: var(--primary); }
@@ -59,6 +76,15 @@
   .status-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; font-size: 0.85rem; }
   .status-legend span { display: inline-flex; align-items: center; gap: 6px; }
   .status-legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; flex-shrink: 0; }
+
+  /* Overview's "When students work" 24-hour histogram - a plain CSS bar
+     chart, no charting library, matching the same lightweight-SVG/CSS
+     approach used everywhere else on this page (status-stack, the
+     Integrity scatter plot). */
+  .hour-chart { display: flex; align-items: flex-end; gap: 2px; height: 90px; }
+  .hour-bar { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; }
+  .hour-bar-fill { width: 100%; background: var(--primary-light); border-radius: 2px 2px 0 0; min-height: 2px; }
+  .hour-bar-label { font-size: 0.6rem; color: #94a3b8; margin-top: 2px; }
 
   /* Per-student grade+teacher color coding - a small dot next to a
      student's name in any list that can mix several teachers/grades
@@ -140,8 +166,14 @@
 
   <div class="filter-bar">
     <div class="filters">
-      <label>Grade: <select id="filter-grade"><option value="">All</option></select></label>
-      <label>Teacher: <select id="filter-teacher"><option value="">All</option></select></label>
+      <div class="pill-filter-group">
+        <span class="pill-filter-label">Grade:</span>
+        <div class="filter-pills" id="grade-pills"></div>
+      </div>
+      <div class="pill-filter-group" id="teacher-filter-group">
+        <span class="pill-filter-label">Teacher:</span>
+        <div class="filter-pills" id="teacher-pills"></div>
+      </div>
       <label>Activity: <select id="filter-activity"><option value="">All</option></select></label>
       <label><input type="checkbox" id="filter-flagged-only"> Flagged only</label>
     </div>
@@ -178,6 +210,12 @@
       <div class="card" style="grid-column: 1 / -1;">
         <h3>Flags</h3>
         <div id="flags-summary"></div>
+      </div>
+    </div>
+    <div class="card-grid">
+      <div class="card" style="grid-column: 1 / -1;">
+        <h3>When students work</h3>
+        <div id="hour-histogram"></div>
       </div>
     </div>
   </div>
@@ -365,6 +403,18 @@
   let activityCatalog = [];
   let teacherScope = null;
 
+  // '' means "All" for both, same convention the old <select>-based
+  // filters used - activeFilters()/filteredRows() etc. never needed to
+  // change when these became pill buttons instead of a dropdown.
+  // currentGradeFilter starts unset (not yet defaulted) - populateFilters()
+  // defaults it to the first available grade the first time data loads,
+  // per the teacher's request not to mix every grade's data together by
+  // default; gradeFilterInitialized keeps a later Refresh from stomping
+  // on whatever grade the teacher has since picked.
+  let currentGradeFilter = '';
+  let currentTeacherFilter = '';
+  let gradeFilterInitialized = false;
+
   // requestGeneration/resolved stop a slow, now-superseded sign-in
   // attempt from undoing a later one that already succeeded - see
   // /CLAUDE.md's "Stale in-flight requests" note. Same pattern as
@@ -510,6 +560,7 @@
 
   function onDataLoaded(result) {
     allRows = (result.rows || []).map(decorateRow);
+    applyDuplicateAnswerFlags(allRows);
     roster = result.roster || [];
     activityCatalog = result.activityCatalog || [];
     teacherScope = result.scope || null;
@@ -521,13 +572,6 @@
     const scopeNote = teacherScope ? ` - showing only ${teacherScope}'s students` : '';
     document.getElementById('loaded-as').textContent =
       `${activeStudents} active students${scopeNote} - ${allRows.length} activity records.`;
-
-    // A scoped teacher's roster is already pre-filtered to their own
-    // students server-side, so a "Teacher" filter would only ever have
-    // one option worth picking - hide it rather than show a dropdown
-    // that can't do anything.
-    const teacherFilterLabel = document.getElementById('filter-teacher').closest('label');
-    if (teacherFilterLabel) teacherFilterLabel.style.display = teacherScope ? 'none' : '';
 
     // The dashboard is visible by this point regardless of what happens
     // next - a bug in any render function should show up as a visible
@@ -570,6 +614,9 @@
   const TAB_SKIP_SECONDS = 2;        // moving to the next tab this fast reads as clicking through without reading
   const STALLED_DAYS = 7;            // days since a student's last logged event, with unfinished work outstanding, before calling them "stalled"
   const FOCUS_LOSS_FLAG_THRESHOLD = 3; // briefly switching away once or twice is normal; flag only once it happens repeatedly in one activity
+  const MIN_REFLECTION_WORDS = 4;    // a reflection this short (and not already caught as padded) reads as low-effort, not a real answer
+  const DUPLICATE_ANSWER_WINDOW_MINUTES = 15; // two students sharing an identical wrong answer within this window reads as shared work, not coincidence
+  const DUPLICATE_ANSWER_MIN_LENGTH = 4;      // a shared answer shorter than this (e.g. "5", "-3") is too common to mean anything on its own
 
   // A reflection answer is "padded" when it's long enough to judge (at
   // least 12 words - short real answers shouldn't be flagged just for
@@ -586,6 +633,18 @@
     return uniqueRatio < 0.4;
   }
 
+  // The opposite failure mode from padding: a reflection so short it
+  // can't be a genuine answer, just enough typed to satisfy a completion
+  // requirement (e.g. "idk", "good", "done"). Deliberately a separate,
+  // lower bar than isPaddedReflection()'s 12-word floor - a 4-9 word
+  // answer is too short to judge for padding (not enough words to say
+  // whether they repeat) but is still worth flagging as low-effort on
+  // its own.
+  function isTooShortReflection(text) {
+    const tokens = tokenize(text);
+    return tokens.length > 0 && tokens.length < MIN_REFLECTION_WORDS;
+  }
+
   // Buckets a flag string (see decorateRow's `flags` array) into a
   // human-scale category for the Integrity Monitor's summary counts -
   // matched by substring since the flag strings themselves carry their
@@ -600,6 +659,8 @@
     if (/tab-skipping/i.test(flagText)) return 'Tab-skipping';
     if (/Pasted/.test(flagText)) return 'Paste detected';
     if (/Left the tab/.test(flagText)) return 'Left the tab repeatedly';
+    if (/very short/.test(flagText)) return 'Low-effort reflection';
+    if (/[Mm]atching wrong answer/.test(flagText)) return 'Possible shared answers';
     return 'Teacher-flagged';
   }
 
@@ -713,13 +774,16 @@
     let fastGuessCount = 0;       // 1st attempt on an item answered suspiciously soon after the previous event
     let sacrificeCount = 0;       // fast 1st attempt (a throwaway guess) followed by a properly-paced, correct 2nd attempt
     let paddedReflectionCount = 0; // a submitted reflection whose word choice looks copy-pasted/padded rather than composed
+    let shortReflectionCount = 0; // a submitted reflection too short to be a real answer (e.g. "idk")
     let failedFirstTry = 0;       // graded items whose first attempt wasn't correct - the denominator for Attempt-2 Recovery
     let correctSecondTry = 0;     // of those, the ones eventually answered correctly - the numerator for Attempt-2 Recovery
     Object.keys(byKey).forEach((key) => {
       const entries = byKey[key];
       if (entries[entries.length - 1].verdict === 'reflection') {
         reflectionSubmitted++;
-        if (isPaddedReflection(entries[entries.length - 1].answer)) paddedReflectionCount++;
+        const reflectionText = entries[entries.length - 1].answer;
+        if (isPaddedReflection(reflectionText)) paddedReflectionCount++;
+        else if (isTooShortReflection(reflectionText)) shortReflectionCount++;
         return;
       }
       gradedCount++;
@@ -792,6 +856,7 @@
     if (fastGuessCount > 0) flags.push(`Fast-guessing on ${fastGuessCount} item${fastGuessCount === 1 ? '' : 's'} (<${FAST_GUESS_SECONDS}s)`);
     if (sacrificeCount > 0) flags.push(`Attempt-1 sacrifice pattern (${sacrificeCount})`);
     if (paddedReflectionCount > 0) flags.push(`Reflection may be padded (${paddedReflectionCount})`);
+    if (shortReflectionCount > 0) flags.push(`Reflection was very short (${shortReflectionCount})`);
     if (idleGapCount > 0) flags.push(`Idle gap${idleGapCount === 1 ? '' : 's'} during session (${idleGapCount})`);
     if (tabSkipCount > 0) flags.push(`Rapid tab-skipping (${tabSkipCount})`);
     if (pasteEvents.length > 0) flags.push(`Pasted into an answer field (${pasteEvents.length})`);
@@ -809,9 +874,62 @@
       tabsViewed: tabViews.length, reachedEnd, itemsAttempted, itemsCorrect, scorePct,
       pointsEarned, pointsPossible: gradedCount, isTestPrep, reflectionSubmitted,
       sessions, totalMinutes,
-      fastGuessCount, sacrificeCount, paddedReflectionCount, idleGapCount, tabSkipCount,
+      fastGuessCount, sacrificeCount, paddedReflectionCount, shortReflectionCount, idleGapCount, tabSkipCount,
       failedFirstTry, correctSecondTry,
       pasteCount: pasteEvents.length, focusLossCount: focusLostEvents.length, awayMinutes
+    });
+  }
+
+  // Cross-student integrity check, unlike every other flag above (which
+  // only ever looks at one row on its own): two different students
+  // submitting the exact same WRONG answer on the same activity+item
+  // within a short window is a strong, purely retrospective signal of
+  // shared work - a real cheating detector, but one that needs nothing
+  // beyond answers already being recorded (no new instrumentation, no
+  // live monitoring - it only ever runs once, right after all of a
+  // teacher's data loads). Deliberately conservative to avoid false
+  // positives: only wrong/incomplete answers count (two students both
+  // getting a question right isn't suspicious), and only answers at
+  // least DUPLICATE_ANSWER_MIN_LENGTH characters long (a shared "5" or
+  // "-3" on a numeric item is too common to mean anything on its own -
+  // a shared multi-character or multi-token answer is a much stronger
+  // coincidence to rule out). Called once from onDataLoaded, right after
+  // every row is decorated, mutating each affected row's own `flags`
+  // array in place - not re-run per filter change, since which students
+  // share an answer doesn't depend on what a teacher currently has
+  // selected in the Grade/Teacher/Activity pills.
+  function applyDuplicateAnswerFlags(rows) {
+    const groups = {};
+    rows.forEach((row) => {
+      row.submissions.forEach((s) => {
+        if (s.verdict === 'correct' || s.verdict === 'reflection') return;
+        // Whitespace is stripped too (not just trimmed/lowercased) so
+        // "x^2 + 3x - 4" and "x^2+3x-4" - the same wrong answer typed
+        // with different spacing - still match; this is deliberately a
+        // plain string comparison, not the math-aware normalizeExpr()
+        // some lesson pages use for grading, since this flag has to work
+        // for any answer type (text, numeric, algebraic), not just the
+        // fraction/expression problems normalizeExpr() was built for.
+        const norm = String(s.answer || '').trim().toLowerCase().replace(/\s+/g, '');
+        if (norm.length < DUPLICATE_ANSWER_MIN_LENGTH) return;
+        const key = `${row.activityId}|${s.key}|${norm}`;
+        (groups[key] = groups[key] || []).push({ row, timestamp: s.timestamp });
+      });
+    });
+    Object.values(groups).forEach((entries) => {
+      if (entries.length < 2) return;
+      entries.forEach((entry, i) => {
+        const matchCount = entries.filter((other, j) =>
+          j !== i && other.row.email !== entry.row.email &&
+          Math.abs(new Date(other.timestamp) - new Date(entry.timestamp)) / 60000 <= DUPLICATE_ANSWER_WINDOW_MINUTES
+        ).length;
+        if (matchCount > 0) entry.row._duplicateMatches = (entry.row._duplicateMatches || 0) + matchCount;
+      });
+    });
+    rows.forEach((row) => {
+      if (row._duplicateMatches) {
+        row.flags.push(`Matching wrong answer to ${row._duplicateMatches} other submission${row._duplicateMatches === 1 ? '' : 's'}`);
+      }
     });
   }
 
@@ -823,9 +941,61 @@
       ? activityCatalog.map((a) => a.title)
       : [...new Set(allRows.map((r) => r.activityTitle))];
 
-    fillSelect('filter-grade', [...new Set([...gradesFromRoster, ...gradesFromCatalog])].filter(Boolean).sort());
-    fillSelect('filter-teacher', [...new Set(teachersFromRoster)].filter(Boolean).sort());
+    const grades = [...new Set([...gradesFromRoster, ...gradesFromCatalog])].filter(Boolean).sort();
+    const teachers = [...new Set(teachersFromRoster)].filter(Boolean).sort();
+
+    // Default to the first grade rather than "All" the first time data
+    // loads, so grades aren't mixed together unless a teacher deliberately
+    // picks "All Grades" - a later Refresh leaves whatever grade the
+    // teacher has since selected alone (gradeFilterInitialized).
+    if (!gradeFilterInitialized) {
+      gradeFilterInitialized = true;
+      if (grades.length) currentGradeFilter = grades[0];
+    } else if (currentGradeFilter && !grades.includes(currentGradeFilter)) {
+      currentGradeFilter = ''; // the previously selected grade no longer exists in this data
+    }
+    if (currentTeacherFilter && !teachers.includes(currentTeacherFilter)) currentTeacherFilter = '';
+
+    renderFilterPills('grade-pills', grades, currentGradeFilter, 'All Grades', selectGrade);
+
+    // A scoped teacher's roster is already pre-filtered to their own
+    // students server-side, so a Teacher filter would only ever have one
+    // option worth picking - hide the whole group rather than show
+    // buttons that can't do anything (same behavior the old dropdown had).
+    const teacherGroup = document.getElementById('teacher-filter-group');
+    if (teacherGroup) teacherGroup.style.display = teacherScope ? 'none' : '';
+    if (!teacherScope) renderFilterPills('teacher-pills', teachers, currentTeacherFilter, 'All Teachers', selectTeacher);
+
     fillSelect('filter-activity', [...new Set(activityTitles)].filter(Boolean).sort());
+  }
+
+  // Shared by the Grade and Teacher pill groups - one button per value
+  // plus a leading "All ..." button, the currently-selected one marked
+  // .active. Re-rendered on every populateFilters() call (data load or
+  // Refresh) so removed/renamed values never leave a stale, unclickable
+  // pill behind.
+  function renderFilterPills(containerId, values, current, allLabel, onSelect) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    const options = [{ value: '', label: allLabel }, ...values.map((v) => ({ value: v, label: v }))];
+    el.innerHTML = options.map((o) =>
+      `<button type="button" class="filter-pill${o.value === current ? ' active' : ''}" data-value="${o.value}">${o.label}</button>`
+    ).join('');
+    el.querySelectorAll('.filter-pill').forEach((btn) => {
+      btn.addEventListener('click', () => onSelect(btn.dataset.value));
+    });
+  }
+
+  function selectGrade(value) {
+    currentGradeFilter = value;
+    populateFilters(); // re-renders pill .active states (grade change can also affect which teachers/activities are relevant)
+    renderAll();
+  }
+
+  function selectTeacher(value) {
+    currentTeacherFilter = value;
+    populateFilters();
+    renderAll();
   }
 
   function fillSelect(id, values) {
@@ -842,8 +1012,8 @@
 
   function activeFilters() {
     return {
-      grade: document.getElementById('filter-grade').value,
-      teacher: document.getElementById('filter-teacher').value,
+      grade: currentGradeFilter,
+      teacher: currentTeacherFilter,
       activity: document.getElementById('filter-activity').value,
       flaggedOnly: document.getElementById('filter-flagged-only').checked
     };
@@ -1265,6 +1435,41 @@
     renderScoreBars('bars-activity-score', activitySummaries, 'activityTitle');
     renderScoreBars('bars-student-score', studentSummaries, 'studentName');
     renderFlagsSummary(rows);
+    renderHourHistogram(rows);
+  }
+
+  // "When do students actually work on this" - a 24-hour distribution of
+  // every logged event's timestamp (tab views, answers, everything in
+  // allEvents) in the viewing browser's own local time, same convention
+  // as every other toLocaleString() on this page. Purely descriptive, not
+  // a flag - useful for noticing a pattern (e.g. a burst right before a
+  // deadline, or work happening well outside class time) from timestamps
+  // that are already being recorded, no new instrumentation needed.
+  function computeHourHistogram(rows) {
+    const counts = new Array(24).fill(0);
+    rows.forEach((r) => r.allEvents.forEach((e) => {
+      if (!e.timestamp) return;
+      counts[new Date(e.timestamp).getHours()]++;
+    }));
+    return counts;
+  }
+
+  function renderHourHistogram(rows) {
+    const el = document.getElementById('hour-histogram');
+    if (!el) return;
+    const counts = computeHourHistogram(rows);
+    const max = Math.max(1, ...counts);
+    el.innerHTML = `
+      <div class="hour-chart">
+        ${counts.map((c, h) => `
+          <div class="hour-bar" title="${h}:00 - ${c} event${c === 1 ? '' : 's'}">
+            <div class="hour-bar-fill" style="height:${Math.round((c / max) * 100)}%;"></div>
+            <div class="hour-bar-label">${h % 3 === 0 ? h : ''}</div>
+          </div>
+        `).join('')}
+      </div>
+      <p class="empty-note" style="margin-top:6px;">Hour of day (your local time) across every logged event in the current filter.</p>
+    `;
   }
 
   function renderFlagsSummary(rows) {
@@ -1826,7 +2031,7 @@
   window.switchSubTab = switchSubTab;
 
   document.addEventListener('change', (e) => {
-    if (['filter-grade', 'filter-teacher', 'filter-activity', 'filter-flagged-only'].includes(e.target.id)) renderAll();
+    if (['filter-activity', 'filter-flagged-only'].includes(e.target.id)) renderAll();
   });
   document.addEventListener('click', (e) => {
     const th = e.target.closest('th[data-sort]');

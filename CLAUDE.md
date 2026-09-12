@@ -186,7 +186,39 @@ client-side, it simply never gets them. `activityCatalog` is never
 filtered (an activity isn't "owned" by a teacher). The response also
 carries `scope` itself (`null` for unrestricted, else the matched
 teacher name) so the dashboard can say whose students it's showing and
-hide the now-pointless "Teacher" filter dropdown for a scoped account.
+hide the now-pointless "Teacher" filter pills for a scoped account (see
+"Grade/Teacher quick filters" below).
+
+**Grade/Teacher quick filters are one-click pill buttons, not
+`<select>` dropdowns, and Grade defaults away from "All."** Both used to
+be plain `<select>`s; the teacher reported the "All Grades" default as
+mixing every grade's data together in every table with no visual
+separation, and asked for a faster way to switch than opening a
+dropdown. `renderFilterPills(containerId, values, current, allLabel,
+onSelect)` renders one button per value plus a leading "All ..." button
+into `#grade-pills`/`#teacher-pills`, called from `populateFilters()`
+(itself only called once per data load/Refresh, from `onDataLoaded()`).
+`currentGradeFilter`/`currentTeacherFilter` (plain JS variables, `''`
+meaning "All" - same convention the old `<select>.value` used, so
+`activeFilters()`/`filteredRows()`/`filteredRoster()`/`filteredCatalog()`
+needed no changes beyond reading these instead of a DOM element's
+`.value`) are set by `selectGrade(value)`/`selectTeacher(value)`, called
+from each pill's own click listener - both then re-run
+`populateFilters()` (to refresh which pill shows `.active`) and
+`renderAll()`. `gradeFilterInitialized` makes the "default to the first
+grade" behavior fire only once per page load: the very first
+`populateFilters()` call sets `currentGradeFilter` to the first grade in
+sorted order (numeric-looking grades like `"6"`/`"7"`/`"8"` happen to
+sort correctly as strings too) rather than leaving it at `''`/"All" - a
+teacher can still click "All Grades" explicitly at any time, this only
+changes what's shown before that first click. A later Refresh leaves
+whatever grade/teacher the teacher has since selected alone, resetting
+only if that value no longer exists in the freshly-loaded data (e.g. a
+student's grade changed in the Sheet). The Activity filter stays a
+`<select>` (too many activities for a button row to make sense); the
+Teacher pill group (`#teacher-filter-group`) is hidden entirely for a
+scoped account exactly as the old dropdown was, since such an account
+only ever has one teacher value worth picking anyway.
 
 Deliberately, **all analysis happens in the dashboard's own JS, not in
 Apps Script**: average time between answers, the "3 answers within 60
@@ -254,11 +286,18 @@ which level of navigation they're looking at:
   are never identical across rows) with links to jump into either the
   flagged-only submission log (`jumpToFlagged()`) or straight to the
   Integrity & Behavior Monitor tab's Flags sub-tab
-  (`jumpToIntegrityFlags()`). It never lists individual students or a
-  raw event feed — that used to live here (a "Students who haven't
-  started" list and a global "Recent activity" feed) but got moved into
-  the per-student/per-activity detail views, where it's actually about
-  something instead of everyone's events interleaved.
+  (`jumpToIntegrityFlags()`), and a **"When students work"** card - a
+  plain CSS 24-hour bar chart (`computeHourHistogram()`/
+  `renderHourHistogram()`, no charting library) of every logged event's
+  hour-of-day in the viewing browser's own local time, across the
+  current filter. Purely descriptive, not a flag - it's there to surface
+  a pattern (e.g. a burst right before a deadline, or work happening
+  well outside class hours) that's sitting in timestamps already being
+  recorded, nothing new to log for it. It never lists individual
+  students or a raw event feed — that used to live here (a "Students who
+  haven't started" list and a global "Recent activity" feed) but got
+  moved into the per-student/per-activity detail views, where it's
+  actually about something instead of everyone's events interleaved.
 - **Unit & Lesson Deep Dive** — merges the former standalone By Unit and
   By Activity tabs into one tab with two sub-tabs, **By Unit** and **By
   Activity** (`switchSubTab('unit-lesson', 'units'|'activities')`) -
@@ -581,13 +620,40 @@ every other tab.
   are (`isIntegrityKey()`), and reach `teacher-dashboard.html` through
   the exact same channel every other signal on this page uses - no
   special-casing anywhere else in the pipeline.
-- Each of the seven signals above appends its own descriptive string
+- **Low-effort reflection** (`shortReflectionCount`) - a submitted
+  reflection under `MIN_REFLECTION_WORDS` (4) words (e.g. "idk", "good",
+  "done") - the opposite failure mode from padding above: too short to
+  judge for word-repetition (`isPaddedReflection()`'s own 12-word floor
+  doesn't apply), but still not a genuine answer.
+  `isTooShortReflection()` only ever runs on a reflection that already
+  failed the padding check, so a single reflection is never flagged for
+  both reasons at once.
+- **Possible shared answers** (`applyDuplicateAnswerFlags()`) - the one
+  signal here that isn't per-row: two different students submitting the
+  *exact same wrong* answer on the same activity+item within
+  `DUPLICATE_ANSWER_WINDOW_MINUTES` (15) of each other. Run once, from
+  `onDataLoaded()` right after every row is decorated (`allRows =
+  (...).map(decorateRow); applyDuplicateAnswerFlags(allRows);`), since it
+  needs to compare rows against *each other*, not just look at one row's
+  own history - the one exception to "all analysis happens per-row" in
+  this file. Deliberately conservative to keep false positives down:
+  only wrong/incomplete answers count (two students both answering
+  correctly isn't suspicious - they're supposed to converge on the same
+  right answer), and only answers at least `DUPLICATE_ANSWER_MIN_LENGTH`
+  (4) characters after whitespace is stripped (so `"x^2 + 3x - 4"` and
+  `"x^2+3x-4"` still match as the same wrong answer) - a shared `"5"` or
+  `"-3"` on a numeric item is far too common on its own to mean
+  anything. This is a genuinely strong integrity signal (a classic
+  "identical wrong answer" copying tell) built entirely from answers
+  already being recorded - no new instrumentation, still fully
+  retrospective.
+- Each of the nine signals above appends its own descriptive string
   (with its own per-row count baked in, e.g. `"Fast-guessing on 2 items
   (<3s)"`) to the same `flags` array the pre-existing `flagReason`/
   rapid-burst flags already used - every place that already rendered
   `flags` (row styling, the Flags columns, per-activity/per-student
   detail tables) picked these up with no further changes.
-  `flagCategory(flagText)` buckets a flag string back into one of eight
+  `flagCategory(flagText)` buckets a flag string back into one of ten
   human-scale categories (matched by substring, since the strings
   themselves are never identical row-to-row) for the Overview/Integrity
   Monitor summary counts.
