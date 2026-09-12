@@ -197,32 +197,67 @@ change.
 The page visually matches the rest of the site (reuses
 `lesson-shared.css`'s `.app-container`/`.brand-row`/`.nav-tabs`/
 `.tab-btn`/`.panel`/`.section-title` rather than its own one-off styles)
-and has five tabs, all driven by the same `allRows`/`roster`/
+and has six tabs, all driven by the same `allRows`/`roster`/
 `activityCatalog`/`accessLog` globals and a shared `Grade`/`Teacher`/
 `Activity`/"flagged only" filter bar:
 
-- **Overview** — class-wide stat tiles (active students, activities,
-  average score, students who haven't started anything, flagged
-  submissions, denied access attempts), lowest-scoring activities/
-  students as bar charts, short lists of at-risk students/submissions,
-  and a "Recent activity" feed (`renderRecentActivity()`) — every logged
-  interaction (graded answer, tab view, reached-end) across the filtered
-  rows, newest first, built from `Progress.SubmissionsLog` timestamps
-  directly rather than from `AccessLog`.
-- **By Student** — one row per roster student (including students with
-  zero `Progress` rows, so "hasn't started anything" is visible instead
-  of just absent), averaged across every activity they've touched;
-  expandable to a per-activity breakdown.
+- **Overview** — summary only, deliberately: stat tiles (active
+  students, activities, average score, not-started count, flagged
+  submissions, denied access attempts), a "Progress by unit" bar chart,
+  lowest-scoring-activity and lowest-scoring-student bar charts, and a
+  "Flags" card (count plus a breakdown by flag reason) with a "View all
+  flagged submissions" link that checks the flagged-only filter and
+  jumps to All Submissions (`jumpToFlagged()`). It never lists individual
+  students or a raw event feed — that used to live here (a
+  "Students who haven't started" list and a global "Recent activity"
+  feed) but got moved into the per-student/per-activity detail views
+  below, where it's actually about something instead of everyone's
+  events interleaved.
+- **By Unit** — one row per `ActivityCatalog.Unit` (+ grade, since two
+  grades could reuse a unit name), aggregated from the same per-activity
+  numbers `computeActivitySummaries()` produces
+  (`computeUnitSummaries()` just groups those instead of re-deriving
+  anything, so it can't disagree with By Activity). Click a unit to see
+  every activity in it; click an activity there and it jumps straight to
+  that activity's own detail view on the By Activity tab
+  (`jumpToActivity()`) — a unit number is never a dead end.
 - **By Activity** — one row per catalog activity (including activities
   nobody has started), with a completion percentage computed against
   how many *eligible* roster students exist for that grade (and teacher,
-  if filtered); expandable to see who has/hasn't completed it.
+  if filtered). Click an activity for its own mini dashboard: stat
+  tiles, a score-by-student bar chart, the full per-student table, and
+  that activity's own "Recent activity" timeline (built from
+  `Progress.SubmissionsLog` timestamps, scoped to just this activity).
+- **By Student** — one row per roster student (including students with
+  zero `Progress` rows, so "hasn't started anything" is visible instead
+  of just absent), averaged across every activity they've touched. Click
+  a student for their full profile: stat tiles, a score-by-activity bar
+  chart, the full per-activity table, and their own "Recent activity"
+  timeline across everything they've touched.
 - **All Submissions** — the original flat one-row-per-(student,activity)
-  table, kept as the detail view everything else summarizes from.
+  table, kept as the detail view everything else summarizes from. This
+  is the one tab that keeps the older inline-expand-a-row pattern
+  (`toggleDetail()`) instead of a separate detail view — it's already
+  the raw per-item layer, not a summary that would otherwise dead-end.
 - **Access Log** — every `AccessLog` row, joined against `roster` (for
   student name) and `activityCatalog` (for activity title) client-side
   via `joinRosterName()`/`joinActivityTitle()`, with its own denied-count
   and most-common-denial-reason stat tiles.
+
+**By Unit/By Activity/By Student share one list-then-detail pattern**
+(`showListView(tabKey)`/`showDetailView(tabKey, html)`, keyed off each
+tab's `#<tabKey>-list`/`#<tabKey>-detail` elements): the table is the
+list view, clicking a row swaps to a full-panel detail view instead of
+expanding a squeezed inline row, and a "← Back" button swaps back.
+`lastUnitSummaries`/`lastActivitySummaries`/`lastStudentSummaries` cache
+each tab's most recently rendered rows so a click can open a detail view
+by array index without recomputing; `renderAll()` re-renders every tab
+(and resets each back to its list view) on every filter change or
+refresh, so a stale index can't be clicked from an outdated list.
+Score bars (`scoreBarsHtml()`) and the recent-activity timeline
+(`recentActivityHtml()`) are both extracted as plain string-builders
+specifically so Overview's compact cards and each detail view's larger
+ones can share the same rendering without duplicating it.
 
 **Data-quality note**: the raw `Progress` columns
 (`ItemsAttempted`/`ItemsCorrect`/`ScorePct`) count *every* logged
