@@ -60,6 +60,16 @@
   .status-legend span { display: inline-flex; align-items: center; gap: 6px; }
   .status-legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; flex-shrink: 0; }
 
+  /* Per-student grade+teacher color coding - a small dot next to a
+     student's name in any list that can mix several teachers/grades
+     (an unrestricted "All"-scope teacher, or one activity opened by
+     several sections at once), so groups are scannable at a glance
+     instead of reading the Teacher column on every single row. */
+  .group-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; vertical-align: middle; flex-shrink: 0; }
+  .legend-row { display: flex; flex-wrap: wrap; gap: 10px 16px; margin-bottom: 14px; font-size: 0.85rem; }
+  .legend-row span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+
   table { width: 100%; border-collapse: collapse; background: var(--card); font-size: 0.88rem; }
   th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
   th { background: var(--primary); color: white; cursor: pointer; user-select: none; white-space: nowrap; }
@@ -252,6 +262,7 @@
 
   <div id="all-submissions" class="panel">
     <div class="section-title">All Submissions (detail)</div>
+    <div id="all-submissions-legend"></div>
     <div class="table-wrap">
       <table>
         <thead>
@@ -709,6 +720,48 @@
     return computeActivitySummaries().map(computeActivityStatusBreakdown);
   }
 
+  // Deterministic color per grade+teacher combo, so any list that can mix
+  // several teachers/grades (an unrestricted "All"-scope teacher, or one
+  // activity opened by several sections) can be scanned by group without
+  // reading the Teacher/Grade column on every row. The same combo always
+  // gets the same color everywhere this is used, since the hash is a pure
+  // function of the key string - no shared mutable "next color" counter to
+  // get out of sync between views.
+  const GROUP_COLORS = ['#2563eb', '#d97706', '#16a34a', '#db2777', '#7c3aed', '#0891b2', '#ca8a04', '#dc2626', '#0d9488', '#4338ca'];
+  const groupColorCache = {};
+  function groupKey(grade, teacher) {
+    return `${grade == null ? '' : grade}|${teacher || ''}`;
+  }
+  function groupColor(grade, teacher) {
+    const key = groupKey(grade, teacher);
+    if (!(key in groupColorCache)) {
+      let hash = 0;
+      for (let i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
+      groupColorCache[key] = GROUP_COLORS[hash % GROUP_COLORS.length];
+    }
+    return groupColorCache[key];
+  }
+  function groupDot(grade, teacher) {
+    const label = `Grade ${grade}${teacher ? ' · ' + teacher : ''}`;
+    return `<span class="group-dot" style="background:${groupColor(grade, teacher)};" title="${label}"></span>`;
+  }
+  // A compact legend of every distinct grade+teacher combo actually
+  // present in the given rows, so the dots' colors are decodable without
+  // hovering each one - skipped entirely when every row is the same
+  // group, since there's nothing to disambiguate.
+  function groupLegendHtml(rows) {
+    const seen = {};
+    rows.forEach((r) => {
+      const key = groupKey(r.grade, r.teacher);
+      if (!seen[key]) seen[key] = { grade: r.grade, teacher: r.teacher };
+    });
+    const groups = Object.values(seen);
+    if (groups.length < 2) return '';
+    return `<div class="legend-row">${groups.map((g) =>
+      `<span><i class="legend-dot" style="background:${groupColor(g.grade, g.teacher)};"></i>Grade ${g.grade}${g.teacher ? ' &middot; ' + g.teacher : ''}</span>`
+    ).join('')}</div>`;
+  }
+
   function barClass(pct) {
     if (pct === null) return '';
     if (pct < 60) return 'low';
@@ -975,7 +1028,7 @@
     if (!a) return;
     const rowsHtml = a.perStudent.slice().sort((x, y) => x.studentName.localeCompare(y.studentName)).map((p) => `
       <tr>
-        <td>${p.studentName}</td>
+        <td>${groupDot(a.grade, p.teacher)}${p.studentName}</td>
         <td>${p.teacher || '-'}</td>
         <td><span class="pill ${STATUS_PILL[p.status]}">${STATUS_LABEL[p.status]}</span></td>
         <td>${p.row && p.row.scorePct !== null ? p.row.scorePct + '%' : '-'}</td>
@@ -992,6 +1045,7 @@
         <div class="stat-tile"><div class="n">${a.inProgress}</div><div class="l">In progress</div></div>
         <div class="stat-tile"><div class="n">${a.completed}</div><div class="l">Completed</div></div>
       </div>
+      ${groupLegendHtml(a.perStudent.map((p) => ({ grade: a.grade, teacher: p.teacher })))}
       <div class="table-wrap"><table><thead><tr><th>Student</th><th>Teacher</th><th>Status</th><th>Score</th><th>Tabs viewed</th><th>Last activity</th></tr></thead><tbody>${rowsHtml}</tbody></table></div>
     `);
   }
@@ -1038,6 +1092,7 @@
         <div class="stat-tile"><div class="n ${a.flaggedCount ? 'warn' : ''}">${a.flaggedCount}</div><div class="l">Flagged</div></div>
       </div>
       <div class="card"><h3>Score by student</h3><div>${scoreBarsHtml(a.rows, 'studentName', 'scorePct')}</div></div>
+      ${groupLegendHtml(a.rows)}
       <div class="table-wrap">${activityDetailTable(a)}</div>
       <div class="card"><h3>Recent activity on this page</h3>${recentActivityHtml(events)}</div>
     `);
@@ -1057,7 +1112,7 @@
       const id = `activity-${safeId(a.activityId)}-${i}`;
       return `
       <tr class="${r.flags.length ? 'flagged' : ''}">
-        <td>${r.studentName}</td>
+        <td>${groupDot(r.grade, r.teacher)}${r.studentName}</td>
         <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
         <td>${r.itemsAttempted}</td>
         <td>${r.tabsViewed}</td>
@@ -1141,11 +1196,12 @@
 
   function renderAllSubmissions() {
     const items = sortItems(filteredRows(), 'all-submissions', 'lastSubmittedAt');
+    document.getElementById('all-submissions-legend').innerHTML = groupLegendHtml(items);
     const tbody = document.getElementById('all-submissions-body');
     if (!items.length) { tbody.innerHTML = '<tr><td colspan="10" class="empty-note">No submissions match the current filter.</td></tr>'; return; }
     tbody.innerHTML = items.map((r, i) => `
       <tr class="${r.flags.length ? 'flagged' : ''}">
-        <td>${r.studentName}</td>
+        <td>${groupDot(r.grade, r.teacher)}${r.studentName}</td>
         <td>${r.activityTitle}</td>
         <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
         <td>${r.itemsAttempted}</td>
