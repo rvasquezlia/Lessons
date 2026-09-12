@@ -345,11 +345,14 @@ surface instead as their own `Tabs viewed` / `Reached end` columns.
 ### Wired units — current activity IDs
 
 Same 5-page pattern (Review/Vocabulary-Literacy/Practice-Set/Word-Problems/
-Test-Prep wired, Explanation/Teacher-Guide left alone) now applied to four
-units across Sixth and Seventh grade, in addition to Rational Numbers.
-**Eighth grade is not wired yet** — do not assume Linear-Equations or
-Literal-Equations pages have any of this; check for `gsi/client` in a
-page's `<head>` before trusting that they do.
+Test-Prep wired, Explanation/Teacher-Guide left alone) now applied to six
+units across Sixth, Seventh, and Eighth grade, in addition to Rational
+Numbers — **every grade is wired now**. A page-specific extra some units
+have (Guided-Solving-Ladder, on Seventh/Operations-with-Rationals and
+Eighth/Literal-Equations) is left alone too, same as Explanation/
+Teacher-Guide — don't assume a page has any of this without checking for
+`gsi/client` in its `<head>` first, in case a new unit gets added later
+without being wired yet.
 
 | Unit | ActivityId prefix | listRegistry / revealAnswerKey |
 |---|---|---|
@@ -358,13 +361,15 @@ page's `<head>` before trusting that they do.
 | Sixth/Operations-with-Fractions | `6-operations-with-fractions-*` | Same shape as Decimal-Operations, except Test-Prep's `checkListRegistry`/`submitListRegistry` **are** merged into `window.listRegistry` (`Object.assign`) since both already use the single-input convention — only the remaining one-offs (concept check, critical thinking, extra credit, readiness) are hand-written. |
 | Seventh/Integers | `7-integers-*` | Practice-Set/Word-Problems use `window.listRegistry` (local var `listRegistry`), Review uses `checkListRegistry`. Vocabulary-Literacy and Test-Prep are hand-written; Test-Prep also has a checkbox multi-select pattern (`checkQCMulti`) and a 4-select sign-group pattern (`checkQCSigns`) with their own reveal logic. |
 | Seventh/Operations-with-Rationals | `7-operations-with-rationals-*` | Same shape as Integers (including a `checkQCMulti` checkbox group in Test-Prep), but no sign-group pattern. |
+| Eighth/Linear-Equations | `8-linear-equations-*` | Review uses `window.listRegistry` (local var `checkListRegistry`). Vocabulary-Literacy, Practice-Set, and Word-Problems are entirely hand-written `window.revealAnswerKey` (no page has a shared registry covering everything). Test-Prep's `listRegistry` (local var, matching the shared-name convention) covers only its submit-only Mixed Practice tab; the rest (Check Your Understanding, Error Analysis, Readiness Check) is hand-written. Practice-Set's Strategy Challenge tab is student-choice-driven (pick a group first) and has nothing to reveal until a group is picked — `revealAnswerKey` skips it harmlessly if none was. |
+| Eighth/Literal-Equations | `8-literal-equations-*` | Review uses `window.listRegistry` (local var `checkListRegistry`). Practice-Set's `symRegistry` and Word-Problems' `wpRegistry` are both exposed as `window.listRegistry`, covering most of each page; Practice-Set still hand-writes its Tab 4 Live Number Check (targets depend on live slider values, recomputed with the same formula the check functions use) and Tab 5 Error Analysis, and Word-Problems hand-writes its one Tab 3 investment-comparison item. Test-Prep's `submitSymRegistry` (as `window.listRegistry`) covers Mixed Practice parts 1-2 only; part 3 (numeric, separate render/check functions) plus Full Review/Error Analysis/Readiness Check are hand-written. Vocabulary-Literacy is entirely hand-written (two standalone check functions, no registry). |
 
 Every wired page needs its own row in `ActivityCatalog` (matching
-`Grade`, `Active: TRUE`) before its gate will let anyone in — that's 25
-rows total now (5 pages × 5 units). `index.html`'s `CURRICULUM` also
+`Grade`, `Active: TRUE`) before its gate will let anyone in — that's 35
+rows total now (5 pages × 7 units). `index.html`'s `CURRICULUM` also
 needs an `activityIds` block per topic (see the existing entries) or a
 signed-in student won't see that topic on the index even once the pages
-themselves work — this has been added for all 5 wired units already.
+themselves work — this has been added for all 7 wired units already.
 
 **Before trusting `window.revealAnswerKey` or `window.listRegistry` works
 on a specific page you haven't checked**, open that page's own `<script>`
@@ -391,11 +396,10 @@ activity — see `Code.gs`'s `identify` branch).
   no wired sections at all doesn't show as an empty card — it's just
   omitted.
 
-**This means every other topic in `CURRICULUM` (Sixth's two topics,
-Seventh's Integers and Operations with Rationals, both Eighth topics) is
-currently invisible to students** — not because those pages are broken,
-but because none of their sections have an `activityId` yet. As more
-pages get wired the same way the Rational Numbers unit was, add their
+**Every topic in `CURRICULUM` now has an `activityIds` block** — all
+seven wired units (Sixth's two, Seventh's three, Eighth's two) are
+visible to a signed-in student on the index, in addition to Rational
+Numbers. As new units get added and wired the same way, add their
 `activityId`s to `CURRICULUM` the same way, or a signed-in student won't
 see them on the index even once the pages themselves work.
 
