@@ -202,7 +202,7 @@ The page visually matches the rest of the site (reuses
 `.tab-btn`/`.panel`/`.section-title` rather than its own one-off styles
 — including the filter bar, which used to be a dark navy strip that
 didn't match anything else on the page and is now a plain light
-`--bg`/`--border` bar like the rest of the site's cards) and has six
+`--bg`/`--border` bar like the rest of the site's cards) and has eight
 tabs, all driven by the same `allRows`/`roster`/`activityCatalog`
 globals and a shared `Grade`/`Teacher`/`Activity`/"flagged only" filter
 bar. None of the tab panels carry an explanatory `<p>` under their
@@ -211,33 +211,41 @@ headers are the interface; a per-tab paragraph restating "one row per
 X, click a row to see Y" was decided to be redundant with that.
 
 Tab order is **Overview, By Unit, By Activity, By Student, Activity
-Status, All Submissions** — the three "By X" drill-downs sit together,
-Activity Status (engagement funnel) comes right after them, and All
-Submissions (the flat raw log) stays last since it's the destination
-everything else summarizes from, not a place to land first. Activity
-Status used to sit between By Unit and By Activity, which read as an
-arbitrary interruption of the "By X" group; moving it after them was a
-front-end-only reorder (nav buttons + matching `.panel` divs), nothing
-in `Code.gs` or the data shapes changed.
+Status, Roster, Integrity Monitor, All Submissions** — the three "By X"
+drill-downs sit together, Activity Status (engagement funnel) comes
+right after them, Roster and Integrity Monitor (both added in the same
+pass as the retrospective integrity/effort signals below) sit after
+that as the two "whole-class-at-a-glance" views built from those new
+numbers, and All Submissions (the flat raw log) stays last since it's
+the destination everything else summarizes from, not a place to land
+first. Activity Status used to sit between By Unit and By Activity,
+which read as an arbitrary interruption of the "By X" group; moving it
+after them was a front-end-only reorder (nav buttons + matching
+`.panel` divs), nothing in `Code.gs` or the data shapes changed.
 
 **Every list tab defaults to alphabetical order**, not a score/date
 ranking — `sortState` in `teacher-dashboard.html` sets By Unit/By
-Activity/Activity Status to `activityTitle`/`unit` ascending and By
-Student/All Submissions to `studentName` ascending. A teacher scanning
-for one specific student or activity shouldn't have to hunt through a
-ranked list first; clicking any column header still re-sorts by that
-column exactly as before, this only changes what a tab shows before any
-click.
+Activity/Activity Status/Roster to `activityTitle`/`unit`/`studentName`
+ascending and By Student/All Submissions to `studentName` ascending
+(Integrity Monitor is the one exception, defaulting to `lastSubmittedAt`
+descending - most-recent-incident-first reads better for a ledger than
+alphabetical). A teacher scanning for one specific student or activity
+shouldn't have to hunt through a ranked list first; clicking any column
+header still re-sorts by that column exactly as before, this only
+changes what a tab shows before any click.
 
 - **Overview** — summary only, deliberately: stat tiles (active
-  students, activities, average score, not-started count, flagged
-  submissions), a "Progress by unit" bar chart, lowest-scoring-activity
-  and lowest-scoring-student bar charts, and a "Flags" card (count plus
-  a breakdown by flag reason) with a "View all flagged submissions" link
-  that checks the flagged-only filter and jumps to All Submissions
-  (`jumpToFlagged()`). It never lists individual students or a raw event
-  feed — that used to live here (a "Students who haven't started" list
-  and a global "Recent activity" feed) but got moved into the
+  students, activities, average score, average Effort Score Index,
+  not-started count, stalled-student count, flagged submissions), a
+  "Progress by unit" bar chart, lowest-scoring-activity and
+  lowest-scoring-student bar charts, and a "Flags" card (count plus a
+  breakdown by flag *category* - see `flagCategory()` below - not the
+  raw flag string, most of which carry their own per-row count and so
+  are never identical across rows) with links to jump into either the
+  flagged-only All Submissions view (`jumpToFlagged()`) or straight to
+  the Integrity Monitor tab. It never lists individual students or a raw
+  event feed — that used to live here (a "Students who haven't started"
+  list and a global "Recent activity" feed) but got moved into the
   per-student/per-activity detail views below, where it's actually about
   something instead of everyone's events interleaved.
 - **By Unit** — one row per `ActivityCatalog.Unit` (+ grade, since two
@@ -258,10 +266,14 @@ click.
 - **By Student** — one row per roster student (including students with
   zero `Progress` rows, so "hasn't started anything" is visible instead
   of just absent), averaged across every activity they've touched. Click
-  a student for their full profile: stat tiles, a score-by-activity bar
-  chart, a **"Lesson completion by unit"** card, the full per-activity
-  table, and their own "Recent activity" timeline across everything
-  they've touched.
+  a student for their full profile: stat tiles (activities started, avg
+  score, flags, last active, plus a second row for Effort Score Index,
+  average Lesson Completion %, Attempt-2 Recovery Index, and
+  days-since-last-activity/Stalled - see the Roster/Integrity notes
+  below for what each one means), a score-by-activity bar chart, a
+  **"Lesson completion by unit"** card, the full per-activity table, and
+  their own "Recent activity" timeline across everything they've
+  touched.
 
 **"Lesson Completion %" (`computeStudentUnitCompletion()`) is a
 per-student, per-unit metric - not to be confused with
@@ -306,6 +318,26 @@ count, and total activity count.
   five counts scoped to just that activity. This is the dashboard's only
   engagement view now - the tab that used to read `AccessLog` (see
   below) is gone entirely.
+- **Roster** — every roster student in one flat table (reusing
+  `computeStudentSummaries()` as-is, so it can never disagree with By
+  Student), with the columns that don't fit in By Student's own list
+  without crowding it: Avg score, Effort Score Index, Lesson Completion
+  % (averaged across the student's own wired units), Attempt-2 Recovery
+  Index, Flags, and a "Last activity" column that reads "Stalled - Nd"
+  once `STALLED_DAYS` (7) is crossed. No separate detail view of its own
+  - clicking a name calls `jumpToStudentDetail(email)` (same pattern as
+  `jumpToActivity()`), which switches to By Student and opens that same
+  student's existing profile rather than building a second one.
+- **Integrity Monitor** — every row carrying at least one flag (stat
+  tiles for the total plus a per-category breakdown via `flagCategory()`),
+  a time-on-task-vs-score scatter plot (`renderIntegrityScatter()`, one
+  dot per scored row, red if flagged - built as a small inline SVG, no
+  charting library), and a flagged-only ledger table
+  (`renderIntegrityMonitor()`) using the same inline-expand
+  `submissionDetailTable()` pattern as All Submissions. This is a
+  **retrospective read of already-recorded activity, never live
+  monitoring** - see the "Recorded-data integrity signals" note below
+  for exactly what is and isn't computed here, and why.
 - **All Submissions** — the original flat one-row-per-(student,activity)
   table, kept as the detail view everything else summarizes from. This
   is the one tab that keeps the older inline-expand-a-row pattern
@@ -447,6 +479,91 @@ actually *fixes* a pre-existing mismatch with `progressStatus()`'s own
 doc comment, which already claimed "a row with graded items but no
 reachedEnd means they're partway through" while the old code counted
 reflections toward that same number.
+
+**Recorded-data integrity/effort signals - retrospective only, never
+live monitoring.** After the scoring/session/completion work above, the
+dashboard grew a further set of signals modeled on a longer platform
+spec the teacher provided, but scoped down hard to one explicit rule the
+teacher stated twice, in these exact terms: *"no live monitoring, only
+recorded activity on their usage of the tool so that we can gather info
+on their attempts."* Every signal below is therefore computed entirely
+from timestamps, attempt numbers, and answer text already sitting in
+`Progress.SubmissionsLog` - nothing here adds any new client-side
+instrumentation to a lesson page, and nothing runs while a student is
+actually working. A teacher only ever sees this once they open the
+dashboard and it re-reads the whole `Progress` sheet - exactly like
+every other tab.
+
+- **`_thinkSeconds`** - `decorateRow()` sorts a row's full
+  `SubmissionsLog` (`allSubmissions`, every event type) and attaches
+  seconds-since-the-previous-event directly onto each entry *before*
+  filtering it into `submissions`/`tabViews` - a filtered array holds
+  references to the same objects, so both copies see the field for
+  free. Every pacing signal below reads this one field; nothing
+  separately re-walks the timestamps.
+- **Fast-guessing** (`fastGuessCount`) - a graded item's first attempt
+  submitted under `FAST_GUESS_SECONDS` (3s) after the previous event.
+- **Attempt-1 sacrifice** (`sacrificeCount`) - a fast (guessed) first
+  attempt followed by a correct second attempt that took at least
+  `SACRIFICE_MIN_SECONDS` (15s) - the pattern of "throw away a guess,
+  then actually work it out with the reveal/retry as a hint."
+- **Reflection padding** (`paddedReflectionCount`) - a submitted
+  reflection (verdict `'reflection'`) of at least 12 words (shorter
+  answers are never judged, to avoid flagging legitimately brief ones)
+  whose distinct-word ratio (`isPaddedReflection()`/`tokenize()`) is
+  under 40% - the signature of repeated/copy-pasted filler typed to
+  satisfy a completion requirement rather than actually reflect.
+- **Idle gaps** (`idleGapCount`) - a pause of at least
+  `IDLE_GAP_MIN_MINUTES` (3) between two consecutive logged events that's
+  still short enough (under `SESSION_GAP_MINUTES`, 15) to count as the
+  same work session rather than starting a new one - a multi-minute
+  pause mid-session, not a departure.
+- **Tab-skipping** (`tabSkipCount`) - two consecutive tab-view timestamps
+  less than `TAB_SKIP_SECONDS` (2) apart, checked against `tabViews`'
+  own timestamps specifically (not the row-wide `_thinkSeconds`, which
+  could span a graded answer in between) - reads as clicking through the
+  nav without reading a tab's content.
+- Each of the five signals above appends its own descriptive string (with
+  its own per-row count baked in, e.g. `"Fast-guessing on 2 items (<3s)"`)
+  to the same `flags` array the pre-existing `flagReason`/rapid-burst
+  flags already used - every place that already rendered `flags` (row
+  styling, the Flags columns, per-activity/per-student detail tables)
+  picked these up with no further changes. `flagCategory(flagText)`
+  buckets a flag string back into one of six human-scale categories
+  (matched by substring, since the strings themselves are never
+  identical row-to-row) for the Overview/Integrity Monitor summary
+  counts.
+- **Effort Score Index** (`computeEffortScore(rows)`, per-student
+  aggregate) - a 0-100 composite: 40% how far they get into each
+  activity on average (`reachedEnd` = 100, any engagement at all = 50,
+  otherwise 0), 40% what fraction of their reflections weren't padded
+  (defaults to 100% when they have no reflections yet, so a student
+  isn't penalized for nothing to judge), 20% what fraction of their rows
+  carry zero flags. Weights are a starting point, not a validated
+  formula - tune freely, this is pure front-end analysis.
+- **Attempt-2 Recovery Index** (`computeRecoveryIndex(rows)`, per-student
+  aggregate) - of every graded item missed on the first try
+  (`failedFirstTry`, tracked per row in `decorateRow()`), what percentage
+  were eventually answered correctly (`correctSecondTry`)? `null` (not
+  0%) when a student has never missed a first try at all.
+- **Days Since Last Attempt / Stalled** (`daysSinceLastActive`/`stalled`
+  on `computeStudentSummaries()`'s output) - approximated from the most
+  recent logged event across every activity a student has touched, since
+  `ActivityCatalog` has no assigned-start-date concept to measure a true
+  "days overdue" against. A student is only ever `stalled` when they
+  also still have at least one un-`reachedEnd` activity outstanding -
+  there's nothing to be stalled on otherwise, however long ago they were
+  last active. `STALLED_DAYS` (7) is the cutoff.
+
+**Deliberately deferred, not silently dropped**, because each would need
+either genuinely new client-side instrumentation beyond what's already
+logged, or is inherently a live feature the "no live monitoring" rule
+rules out outright: a Printable PDF/Report Generator, Item Diagnostics
+(per-distractor wrong-answer analysis), true clipboard/DevTools/
+concurrent-session detection, Vocabulary flashcard rapid-flip tracking,
+and any Live Classroom View. Revisit these only on explicit request, and
+only after confirming what new instrumentation (if any) each would
+actually require.
 
 - **Spreadsheet ID**: `1-HLtX5AwskPx8hy_Ip2kjGMz5OUIS91M2x0FgEt75zA`
 - **Apps Script Web App URL**: `https://script.google.com/macros/s/AKfycbyC7mb1TKfg3JvhiZftXMf7oXkzrBMWJczZSURC7sIfoIxYnZrrumYfx-j7JYTY0A9i/exec`

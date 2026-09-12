@@ -139,6 +139,8 @@
     <button class="tab-btn" data-tab="by-activity" onclick="switchDashTab('by-activity')">By Activity</button>
     <button class="tab-btn" data-tab="by-student" onclick="switchDashTab('by-student')">By Student</button>
     <button class="tab-btn" data-tab="activity-status" onclick="switchDashTab('activity-status')">Activity Status</button>
+    <button class="tab-btn" data-tab="roster" onclick="switchDashTab('roster')">Roster</button>
+    <button class="tab-btn" data-tab="integrity" onclick="switchDashTab('integrity')">Integrity Monitor</button>
     <button class="tab-btn" data-tab="all-submissions" onclick="switchDashTab('all-submissions')">All Submissions</button>
   </nav>
 
@@ -261,6 +263,55 @@
     <div id="activity-status-detail" class="detail-view" hidden></div>
   </div>
 
+  <div id="roster" class="panel">
+    <div class="section-title">Roster</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-table="roster" data-sort="studentName">Student</th>
+            <th data-table="roster" data-sort="grade">Grade</th>
+            <th data-table="roster" data-sort="teacher">Teacher</th>
+            <th data-table="roster" data-sort="avgScore">Avg score</th>
+            <th data-table="roster" data-sort="effortScore">Effort Score</th>
+            <th data-table="roster" data-sort="overallCompletionPct">Completion</th>
+            <th data-table="roster" data-sort="recoveryIndex">Attempt-2 recovery</th>
+            <th data-table="roster" data-sort="totalFlags">Flags</th>
+            <th data-table="roster" data-sort="daysSinceLastActive">Last activity</th>
+          </tr>
+        </thead>
+        <tbody id="roster-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="integrity" class="panel">
+    <div class="section-title">Integrity Monitor</div>
+    <div class="stat-row" id="integrity-stats"></div>
+    <div class="card-grid">
+      <div class="card" style="grid-column: 1 / -1;">
+        <h3>Time on task vs. score</h3>
+        <div id="integrity-scatter"></div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-table="integrity" data-sort="studentName">Student</th>
+            <th data-table="integrity" data-sort="activityTitle">Activity</th>
+            <th>Flags</th>
+            <th data-table="integrity" data-sort="scorePct">Score</th>
+            <th data-table="integrity" data-sort="totalMinutes">Time on task</th>
+            <th data-table="integrity" data-sort="lastSubmittedAt">Last submitted</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="integrity-body"></tbody>
+      </table>
+    </div>
+  </div>
+
   <div id="all-submissions" class="panel">
     <div class="section-title">All Submissions (detail)</div>
     <div id="all-submissions-legend"></div>
@@ -316,6 +367,8 @@
     'activity-status': { key: 'activityTitle', dir: 1 },
     'by-student': { key: 'studentName', dir: 1 },
     'by-activity': { key: 'activityTitle', dir: 1 },
+    'roster': { key: 'studentName', dir: 1 },
+    'integrity': { key: 'lastSubmittedAt', dir: -1 },
     'all-submissions': { key: 'studentName', dir: 1 }
   };
 
@@ -327,6 +380,7 @@
   let lastActivityStatus = [];
   let lastActivitySummaries = [];
   let lastStudentSummaries = [];
+  let lastRosterSummaries = [];
 
   function fetchWithTimeout(url, opts, timeoutMs) {
     const controller = new AbortController();
@@ -491,6 +545,48 @@
   // A single-event session has a duration of 0 (a brief visit, not a
   // formatting bug) rather than being padded to look like time was spent.
   const SESSION_GAP_MINUTES = 15;
+
+  // Thresholds for the retrospective integrity/effort signals below - all
+  // derived purely from timestamps and text already sitting in
+  // Progress.SubmissionsLog, nothing that requires new client-side
+  // instrumentation or anything "live." Tune freely; these are starting
+  // points, not validated cutoffs.
+  const FAST_GUESS_SECONDS = 3;      // an answer submitted this soon after the previous event reads as a guess, not a read-then-answer
+  const SACRIFICE_MIN_SECONDS = 15;  // a 2nd attempt taking at least this long (after a fast 1st) reads as "actually tried" this time
+  const IDLE_GAP_MIN_MINUTES = 3;    // a gap at least this long (but still under SESSION_GAP_MINUTES, so still one session) reads as a pause, not just normal pacing
+  const TAB_SKIP_SECONDS = 2;        // moving to the next tab this fast reads as clicking through without reading
+  const STALLED_DAYS = 7;            // days since a student's last logged event, with unfinished work outstanding, before calling them "stalled"
+
+  // A reflection answer is "padded" when it's long enough to judge (at
+  // least 12 words - short real answers shouldn't be flagged just for
+  // being short) but most of its words repeat rather than being distinct
+  // - the signature of copy-pasted or keyboard-mashed filler text typed
+  // to satisfy a completion requirement rather than actually reflect.
+  function tokenize(text) {
+    return String(text || '').toLowerCase().match(/[a-z0-9']+/g) || [];
+  }
+  function isPaddedReflection(text) {
+    const tokens = tokenize(text);
+    if (tokens.length < 12) return false;
+    const uniqueRatio = new Set(tokens).size / tokens.length;
+    return uniqueRatio < 0.4;
+  }
+
+  // Buckets a flag string (see decorateRow's `flags` array) into a
+  // human-scale category for the Integrity Monitor's summary counts -
+  // matched by substring since the flag strings themselves carry their
+  // own per-row counts (e.g. "Fast-guessing on 2 items (<3s)") and so are
+  // never identical across rows even within the same category.
+  function flagCategory(flagText) {
+    if (/60 seconds/.test(flagText)) return 'Rapid-fire answers';
+    if (/Fast-guessing/.test(flagText)) return 'Fast guessing';
+    if (/sacrifice/.test(flagText)) return 'Attempt-1 sacrifice';
+    if (/padded/.test(flagText)) return 'Reflection padding';
+    if (/Idle/.test(flagText)) return 'Idle gap';
+    if (/tab-skipping/i.test(flagText)) return 'Tab-skipping';
+    return 'Teacher-flagged';
+  }
+
   function computeSessions(events, gapMinutes) {
     if (!events.length) return [];
     const sorted = events.slice().sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
@@ -514,6 +610,20 @@
     let allSubmissions = [];
     try { allSubmissions = JSON.parse(row.submissionsLog || '[]'); } catch (e) { allSubmissions = []; }
     allSubmissions.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+    // Seconds since the previous logged event (any type - graded answer,
+    // tab view, or reached-end), attached directly onto each object in
+    // allSubmissions before it gets filtered into submissions/tabViews
+    // below - a filtered array holds references to these same objects, so
+    // both copies see the field with no extra bookkeeping. This is the one
+    // signal every pacing-based flag below (Fast-Guessing, Attempt-1-
+    // Sacrifice, Tab-Skipping, Idle gaps) is built from, and it needs
+    // nothing beyond timestamps already being logged - still a
+    // retrospective read after the fact, not anything watching a student
+    // live as they work.
+    allSubmissions.forEach((s, i) => {
+      s._thinkSeconds = i === 0 ? null : (new Date(s.timestamp) - new Date(allSubmissions[i - 1].timestamp)) / 1000;
+    });
 
     // lesson-auth.js logs tab views and "reached the end" as their own
     // synced items (key "tab-*" / "reached-end"), separate from graded
@@ -559,13 +669,28 @@
     let itemsCorrect = 0;
     let pointsEarned = 0;
     let reflectionSubmitted = 0;
+    // Recorded-data-only integrity signals, one count per row - each is
+    // just a pattern in timestamps/attempt numbers/answer text already
+    // logged, never anything requiring new live instrumentation (see
+    // /CLAUDE.md's Integrity Monitor note).
+    let fastGuessCount = 0;       // 1st attempt on an item answered suspiciously soon after the previous event
+    let sacrificeCount = 0;       // fast 1st attempt (a throwaway guess) followed by a properly-paced, correct 2nd attempt
+    let paddedReflectionCount = 0; // a submitted reflection whose word choice looks copy-pasted/padded rather than composed
+    let failedFirstTry = 0;       // graded items whose first attempt wasn't correct - the denominator for Attempt-2 Recovery
+    let correctSecondTry = 0;     // of those, the ones eventually answered correctly - the numerator for Attempt-2 Recovery
     Object.keys(byKey).forEach((key) => {
       const entries = byKey[key];
       if (entries[entries.length - 1].verdict === 'reflection') {
         reflectionSubmitted++;
+        if (isPaddedReflection(entries[entries.length - 1].answer)) paddedReflectionCount++;
         return;
       }
       gradedCount++;
+      const first = entries[0];
+      const firstFast = typeof first._thinkSeconds === 'number' && first._thinkSeconds < FAST_GUESS_SECONDS;
+      if (firstFast) fastGuessCount++;
+      const firstWasCorrect = first.verdict === 'correct';
+      if (!firstWasCorrect) failedFirstTry++;
       const correctEntry = entries.find((e) => e.verdict === 'correct');
       if (!correctEntry) return; // never correct - 0 points
       itemsCorrect++;
@@ -574,7 +699,36 @@
       } else {
         pointsEarned += (correctEntry.attemptNumber || 1) === 1 ? 1 : 0.5;
       }
+      if (!firstWasCorrect && (correctEntry.attemptNumber || 1) > 1) {
+        correctSecondTry++;
+        const second = entries[1];
+        if (firstFast && second && typeof second._thinkSeconds === 'number' && second._thinkSeconds >= SACRIFICE_MIN_SECONDS) {
+          sacrificeCount++;
+        }
+      }
     });
+
+    // Idle gaps: a pause of at least IDLE_GAP_MIN_MINUTES between any two
+    // consecutive logged events, still short enough (under
+    // SESSION_GAP_MINUTES) to count as the same work session rather than
+    // two separate ones - i.e. the student didn't fully leave and come
+    // back, but stepped away mid-session for a few minutes.
+    let idleGapCount = 0;
+    for (let i = 1; i < allSubmissions.length; i++) {
+      const gapMin = allSubmissions[i]._thinkSeconds / 60;
+      if (gapMin >= IDLE_GAP_MIN_MINUTES && gapMin <= SESSION_GAP_MINUTES) idleGapCount++;
+    }
+
+    // Tab-skipping: moving from one tab to the next this fast reads as
+    // clicking through the nav without reading the tab's content -
+    // checked against tabViews' own consecutive timestamps specifically
+    // (not the global _thinkSeconds), since that could span a graded
+    // answer or reached-end event in between.
+    let tabSkipCount = 0;
+    for (let i = 1; i < tabViews.length; i++) {
+      const gapSec = (new Date(tabViews[i].timestamp) - new Date(tabViews[i - 1].timestamp)) / 1000;
+      if (gapSec < TAB_SKIP_SECONDS) tabSkipCount++;
+    }
 
     const itemsAttempted = gradedCount;
     // null (not 0) when nothing graded yet, so an engagement-only page
@@ -598,6 +752,11 @@
     const flags = [];
     if (row.flagReason) flags.push(row.flagReason);
     if (rapidBurst) flags.push('3+ answers within 60 seconds');
+    if (fastGuessCount > 0) flags.push(`Fast-guessing on ${fastGuessCount} item${fastGuessCount === 1 ? '' : 's'} (<${FAST_GUESS_SECONDS}s)`);
+    if (sacrificeCount > 0) flags.push(`Attempt-1 sacrifice pattern (${sacrificeCount})`);
+    if (paddedReflectionCount > 0) flags.push(`Reflection may be padded (${paddedReflectionCount})`);
+    if (idleGapCount > 0) flags.push(`Idle gap${idleGapCount === 1 ? '' : 's'} during session (${idleGapCount})`);
+    if (tabSkipCount > 0) flags.push(`Rapid tab-skipping (${tabSkipCount})`);
 
     // Sessions are built from every logged event (tab views and
     // reached-end included, not just graded answers) - a student reading
@@ -610,7 +769,9 @@
       submissions, avgSeconds, rapidBurst, flags, allEvents,
       tabsViewed: tabViews.length, reachedEnd, itemsAttempted, itemsCorrect, scorePct,
       pointsEarned, pointsPossible: gradedCount, isTestPrep, reflectionSubmitted,
-      sessions, totalMinutes
+      sessions, totalMinutes,
+      fastGuessCount, sacrificeCount, paddedReflectionCount, idleGapCount, tabSkipCount,
+      failedFirstTry, correctSecondTry
     });
   }
 
@@ -691,6 +852,38 @@
     return vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : null;
   }
 
+  // "Effort Score Index" - a single composite 0-100 number approximating
+  // how genuinely engaged a student's already-recorded activity looks,
+  // not a live measurement: a weighted blend of (a) how far they get
+  // into each activity on average (reached the end vs. only opened it),
+  // (b) what fraction of their submitted reflections read like real
+  // answers rather than padded/copy-pasted filler, and (c) what fraction
+  // of their activity rows carry no integrity flag at all. A student with
+  // no reflections yet isn't penalized for it - validReflectionRate
+  // defaults to 1 (neutral) rather than 0 when there's nothing to judge.
+  // Weights (0.4/0.4/0.2) are a starting point, not a validated formula -
+  // tune freely, this is pure front-end analysis (see /CLAUDE.md).
+  function computeEffortScore(rows) {
+    if (!rows.length) return null;
+    const engagementPct = avg(rows.map((r) => r.reachedEnd ? 100 : ((r.tabsViewed > 0 || r.itemsAttempted > 0) ? 50 : 0))) || 0;
+    const totalReflections = rows.reduce((s, r) => s + r.reflectionSubmitted, 0);
+    const paddedReflections = rows.reduce((s, r) => s + r.paddedReflectionCount, 0);
+    const validReflectionRate = totalReflections ? (totalReflections - paddedReflections) / totalReflections : 1;
+    const nonFlaggedRowRatio = rows.filter((r) => r.flags.length === 0).length / rows.length;
+    return Math.round(0.4 * engagementPct + 0.4 * (validReflectionRate * 100) + 0.2 * (nonFlaggedRowRatio * 100));
+  }
+
+  // "Attempt 2 Recovery Index" - of every graded item this student missed
+  // on the first try, what percentage did they go on to actually answer
+  // correctly on a later try? Null (not 0) when they've never missed a
+  // first try at all, so a student who's simply never needed a 2nd
+  // attempt doesn't show as "0% recovery."
+  function computeRecoveryIndex(rows) {
+    const failedFirstTry = rows.reduce((s, r) => s + r.failedFirstTry, 0);
+    const correctSecondTry = rows.reduce((s, r) => s + r.correctSecondTry, 0);
+    return failedFirstTry ? Math.round((correctSecondTry / failedFirstTry) * 100) : null;
+  }
+
   function computeStudentSummaries() {
     const rows = filteredRows();
     const byEmail = {};
@@ -711,7 +904,31 @@
         const t = new Date(r.lastSubmittedAt);
         return (!max || t > max) ? t : max;
       }, null);
-      return Object.assign({}, g, { activitiesStarted: g.rows.length, avgScore, totalFlags, lastActive });
+      // "Days Since Last Attempt" / Stalled - approximated from the most
+      // recent logged event across every activity this student has
+      // touched, since ActivityCatalog has no assigned-start-date concept
+      // to measure against instead (see /CLAUDE.md). A student with
+      // nothing left unfinished is never "stalled," however long ago they
+      // last worked - there's nothing outstanding to be stalled on.
+      const daysSinceLastActive = lastActive ? Math.floor((Date.now() - lastActive.getTime()) / 86400000) : null;
+      const hasUnfinished = g.rows.some((r) => !r.reachedEnd);
+      const stalled = hasUnfinished && daysSinceLastActive !== null && daysSinceLastActive >= STALLED_DAYS;
+      const effortScore = computeEffortScore(g.rows);
+      const recoveryIndex = computeRecoveryIndex(g.rows);
+      // Lesson Completion % averaged across this student's own wired
+      // units (computeStudentUnitCompletion, same "passed or locked out
+      // both count as done" rule) - a single roster-scannable number,
+      // distinct from computeActivitySummaries()'s completionPct which
+      // measures roster-wide participation, not one student's finish rate.
+      const unitCompletion = computeStudentUnitCompletion(g);
+      const completionValues = unitCompletion.map((u) => u.lessonCompletionPct).filter((v) => v !== null);
+      const overallCompletionPct = completionValues.length
+        ? Math.round(completionValues.reduce((a, b) => a + b, 0) / completionValues.length)
+        : null;
+      return Object.assign({}, g, {
+        activitiesStarted: g.rows.length, avgScore, totalFlags, lastActive,
+        daysSinceLastActive, stalled, effortScore, recoveryIndex, overallCompletionPct
+      });
     });
   }
 
@@ -991,12 +1208,16 @@
     const flaggedCount = rows.filter((r) => r.flags.length > 0).length;
     const overallAvg = avg(rows.map((r) => r.scorePct));
     const notStartedCount = studentSummaries.filter((s) => s.activitiesStarted === 0).length;
+    const avgEffort = avg(studentSummaries.map((s) => s.effortScore));
+    const stalledCount = studentSummaries.filter((s) => s.stalled).length;
 
     document.getElementById('overview-stats').innerHTML = `
       <div class="stat-tile"><div class="n">${rosterRows.length}</div><div class="l">Active students (filtered)</div></div>
       <div class="stat-tile"><div class="n">${activitySummaries.length}</div><div class="l">Activities (filtered)</div></div>
       <div class="stat-tile"><div class="n">${overallAvg === null ? '-' : overallAvg + '%'}</div><div class="l">Average score</div></div>
+      <div class="stat-tile"><div class="n">${avgEffort === null ? '-' : avgEffort}</div><div class="l">Avg Effort Score Index</div></div>
       <div class="stat-tile"><div class="n ${notStartedCount ? 'warn' : ''}">${notStartedCount}</div><div class="l">Not started anything</div></div>
+      <div class="stat-tile"><div class="n ${stalledCount ? 'warn' : ''}">${stalledCount}</div><div class="l">Stalled (${STALLED_DAYS}+ days)</div></div>
       <div class="stat-tile"><div class="n ${flaggedCount ? 'warn' : ''}">${flaggedCount}</div><div class="l">Flagged submissions</div></div>
     `;
 
@@ -1010,14 +1231,22 @@
     const flaggedRows = rows.filter((r) => r.flags.length > 0);
     const el = document.getElementById('flags-summary');
     if (!flaggedRows.length) { el.innerHTML = '<p class="empty-note">Nothing flagged in the current filter.</p>'; return; }
-    const reasonCounts = {};
-    flaggedRows.forEach((r) => r.flags.forEach((fl) => { reasonCounts[fl] = (reasonCounts[fl] || 0) + 1; }));
+    // Bucketed by category (flagCategory), not the raw flag string - most
+    // of these strings carry their own per-row count (e.g. "Fast-guessing
+    // on 2 items"), so grouping on the literal text would make almost
+    // every flag its own singleton bucket.
+    const categoryCounts = {};
+    flaggedRows.forEach((r) => r.flags.forEach((fl) => {
+      const c = flagCategory(fl);
+      categoryCounts[c] = (categoryCounts[c] || 0) + 1;
+    }));
     el.innerHTML = `
       <div class="stat-row" style="margin-bottom:8px;">
         <div class="stat-tile"><div class="n warn">${flaggedRows.length}</div><div class="l">Flagged submissions</div></div>
-        ${Object.keys(reasonCounts).map((r) => `<div class="stat-tile"><div class="n">${reasonCounts[r]}</div><div class="l">${r}</div></div>`).join('')}
+        ${Object.keys(categoryCounts).map((c) => `<div class="stat-tile"><div class="n">${categoryCounts[c]}</div><div class="l">${c}</div></div>`).join('')}
       </div>
       <span class="expand-btn" onclick="jumpToFlagged()">View all flagged submissions &rarr;</span>
+      <span class="expand-btn" style="margin-left:16px;" onclick="switchDashTab('integrity')">Open Integrity Monitor &rarr;</span>
     `;
   }
 
@@ -1111,6 +1340,16 @@
     if (idx !== -1) openActivityDetail(idx); else showListView('by-activity');
   }
   window.jumpToActivity = jumpToActivity;
+
+  // Same pattern as jumpToActivity above, but into By Student - the
+  // Roster and Integrity Monitor tabs both link into a student's existing
+  // profile view rather than building a second one.
+  function jumpToStudentDetail(email) {
+    switchDashTab('by-student');
+    const idx = lastStudentSummaries.findIndex((s) => s.email === email);
+    if (idx !== -1) openStudentDetail(idx); else showListView('by-student');
+  }
+  window.jumpToStudentDetail = jumpToStudentDetail;
 
   // Aggregate stacked-bar graph summing every filtered activity's own
   // four-state breakdown into one bar - the funnel table below already
@@ -1291,6 +1530,94 @@
     showListView('by-student');
   }
 
+  // Roster is the compact "everyone at a glance" view: the same
+  // per-student aggregates computeStudentSummaries() already produces
+  // (so it can never disagree with By Student), surfaced with the
+  // effort/completion/recovery/stalled columns that don't fit in By
+  // Student's own list without crowding it. Clicking a name jumps into
+  // that same student's full profile on By Student rather than building
+  // a second detail view.
+  function renderRoster() {
+    const items = sortItems(computeStudentSummaries(), 'roster', 'studentName');
+    lastRosterSummaries = items;
+    const tbody = document.getElementById('roster-body');
+    if (!items.length) { tbody.innerHTML = '<tr><td colspan="9" class="empty-note">No students match the current filter.</td></tr>'; return; }
+    tbody.innerHTML = items.map((s) => `
+      <tr class="${s.stalled ? 'flagged' : (s.activitiesStarted === 0 ? 'zero-activity' : '')}">
+        <td><span class="expand-btn" onclick="jumpToStudentDetail('${s.email}')">${s.studentName}</span></td>
+        <td>${s.grade}</td>
+        <td>${s.teacher || '-'}</td>
+        <td>${s.avgScore === null ? '-' : s.avgScore + '%'}</td>
+        <td>${s.effortScore === null ? '-' : s.effortScore}</td>
+        <td>${s.overallCompletionPct === null ? '-' : s.overallCompletionPct + '%'}</td>
+        <td>${s.recoveryIndex === null ? '-' : s.recoveryIndex + '%'}</td>
+        <td>${s.totalFlags ? `<span class="pill flag">${s.totalFlags}</span>` : '<span class="pill ok">0</span>'}</td>
+        <td>${s.stalled ? `<span class="pill flag">Stalled - ${s.daysSinceLastActive}d</span>` : (s.daysSinceLastActive === null ? '-' : s.daysSinceLastActive + 'd ago')}</td>
+      </tr>
+    `).join('');
+  }
+
+  // Integrity Monitor: every row carrying at least one recorded-data flag
+  // (see decorateRow's `flags` array - all retrospective, nothing live),
+  // plus a class-wide time-on-task-vs-score scatter to spot the shape of
+  // the whole filtered set at a glance, not just row by row.
+  function computeIntegrityRows() {
+    return filteredRows().filter((r) => r.flags.length > 0);
+  }
+
+  function renderIntegrityScatter(rows) {
+    const pts = rows.filter((r) => r.scorePct !== null);
+    const el = document.getElementById('integrity-scatter');
+    if (!pts.length) { el.innerHTML = '<p class="empty-note">No scored submissions in the current filter.</p>'; return; }
+    const maxMinutes = Math.max(1, ...pts.map((r) => r.totalMinutes));
+    const W = 600, H = 260, PAD = 34;
+    const dots = pts.map((r) => {
+      const x = PAD + (r.totalMinutes / maxMinutes) * (W - PAD * 2);
+      const y = H - PAD - (r.scorePct / 100) * (H - PAD * 2);
+      const color = r.flags.length ? '#dc2626' : '#2563eb';
+      return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4" fill="${color}" fill-opacity="0.65"><title>${r.studentName} - ${r.activityTitle}: ${r.scorePct}% in ${r.totalMinutes} min</title></circle>`;
+    }).join('');
+    el.innerHTML = `
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%; height:auto; max-height:300px;">
+        <line x1="${PAD}" y1="${H - PAD}" x2="${W - PAD}" y2="${H - PAD}" stroke="#cbd5e1" />
+        <line x1="${PAD}" y1="${PAD}" x2="${PAD}" y2="${H - PAD}" stroke="#cbd5e1" />
+        <text x="${W / 2}" y="${H - 8}" font-size="11" fill="#64748b" text-anchor="middle">Time on task (minutes, from recorded sessions)</text>
+        <text x="14" y="${H / 2}" font-size="11" fill="#64748b" text-anchor="middle" transform="rotate(-90 14 ${H / 2})">Score %</text>
+        ${dots}
+      </svg>
+      <p class="empty-note" style="margin-top:6px;">Each dot is one student's activity - red means flagged. Built entirely from already-logged timestamps, not live monitoring.</p>
+    `;
+  }
+
+  function renderIntegrityMonitor() {
+    const flaggedRows = computeIntegrityRows();
+    const categoryCounts = {};
+    flaggedRows.forEach((r) => r.flags.forEach((f) => {
+      const c = flagCategory(f);
+      categoryCounts[c] = (categoryCounts[c] || 0) + 1;
+    }));
+    document.getElementById('integrity-stats').innerHTML = `
+      <div class="stat-tile"><div class="n ${flaggedRows.length ? 'warn' : ''}">${flaggedRows.length}</div><div class="l">Flagged rows</div></div>
+      ${Object.keys(categoryCounts).map((c) => `<div class="stat-tile"><div class="n">${categoryCounts[c]}</div><div class="l">${c}</div></div>`).join('')}
+    `;
+    renderIntegrityScatter(filteredRows());
+    const items = sortItems(flaggedRows, 'integrity', 'lastSubmittedAt');
+    const tbody = document.getElementById('integrity-body');
+    if (!items.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-note">Nothing flagged in the current filter.</td></tr>'; return; }
+    tbody.innerHTML = items.map((r, i) => `
+      <tr class="flagged">
+        <td>${groupDot(r.grade, r.teacher)}${r.studentName}</td>
+        <td>${r.activityTitle}</td>
+        <td>${r.flags.map((f) => `<span class="pill flag">${f}</span>`).join(' ')}</td>
+        <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
+        <td>${r.totalMinutes} min</td>
+        <td>${r.lastSubmittedAt ? new Date(r.lastSubmittedAt).toLocaleString() : '-'}</td>
+        <td><span class="expand-btn" onclick="toggleDetail('integrity-${i}')">Details</span></td>
+      </tr>
+      <tr class="detail-row" id="detail-integrity-${i}" hidden><td colspan="7">${submissionDetailTable(r)}</td></tr>
+    `).join('');
+  }
+
   // Table version of computeStudentUnitCompletion() for the student
   // detail drawer - "0 total" units (nothing in ActivityCatalog for this
   // grade, shouldn't normally happen) are skipped rather than shown as a
@@ -1328,6 +1655,12 @@
         <div class="stat-tile"><div class="n">${s.avgScore === null ? '-' : s.avgScore + '%'}</div><div class="l">Avg score</div></div>
         <div class="stat-tile"><div class="n ${s.totalFlags ? 'warn' : ''}">${s.totalFlags}</div><div class="l">Flags</div></div>
         <div class="stat-tile"><div class="n" style="font-size:1rem;">${s.lastActive ? s.lastActive.toLocaleString() : '-'}</div><div class="l">Last active</div></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-tile"><div class="n">${s.effortScore === null ? '-' : s.effortScore}</div><div class="l">Effort Score Index</div></div>
+        <div class="stat-tile"><div class="n">${s.overallCompletionPct === null ? '-' : s.overallCompletionPct + '%'}</div><div class="l">Lesson completion (avg)</div></div>
+        <div class="stat-tile"><div class="n">${s.recoveryIndex === null ? '-' : s.recoveryIndex + '%'}</div><div class="l">Attempt-2 recovery</div></div>
+        <div class="stat-tile"><div class="n ${s.stalled ? 'warn' : ''}" style="font-size:1rem;">${s.stalled ? `Stalled - ${s.daysSinceLastActive}d` : (s.daysSinceLastActive === null ? '-' : s.daysSinceLastActive + 'd ago')}</div><div class="l">Since last activity</div></div>
       </div>
       <div class="card"><h3>Score by activity</h3><div>${scoreBarsHtml(s.rows, 'activityTitle', 'scorePct')}</div></div>
       <div class="card"><h3>Lesson completion by unit</h3><div class="table-wrap">${lessonCompletionHtml(computeStudentUnitCompletion(s))}</div></div>
@@ -1421,6 +1754,8 @@
     renderActivityStatus();
     renderByActivity();
     renderByStudent();
+    renderRoster();
+    renderIntegrityMonitor();
     renderAllSubmissions();
   }
 
