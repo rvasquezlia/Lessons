@@ -20,6 +20,8 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
@@ -275,8 +277,28 @@
     triggerMathJax();
   }
 
+  // ASCIIMath always double-parenthesizes every fraction (e.g. a typed
+  // n/-3 fraction reads back as "(n)/(-3)"), so a typed math-field answer
+  // needs its redundant parens stripped before comparing against accepted[]
+  // - see /CLAUDE.md's "Visual math input" note.
+  function stripRedundantParens(s) {
+    let prev;
+    do {
+      prev = s;
+      s = s.replace(/\(([^()+-]+)\)/g, '$1');
+    } while (s !== prev);
+    return s;
+  }
+
   function normalizeExpr(s) {
-    return String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, '');
+    return stripRedundantParens(String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, ''));
+  }
+
+  // Reads a <math-field>'s answer as ASCIIMath text, guarded against the
+  // MathLive script never loading (blocked network, ad blocker, cold CDN
+  // failure).
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
   }
 
   // ==========================================
@@ -299,7 +321,7 @@
     const html = translateItems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
-        <input type="text" id="tr-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="Answer">
+        <math-field id="tr-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="\\text{Answer}"></math-field>
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkTranslate(${i})">Check</button>
         <div id="tr-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
@@ -310,7 +332,7 @@
 
   function checkTranslate(idx) {
     const p = translateItems[idx];
-    const val = document.getElementById(`tr-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`tr-${idx}-input`));
     const fb = document.getElementById(`tr-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
@@ -377,7 +399,12 @@
       const input = document.getElementById(id);
       const fb = document.getElementById(feedbackId);
       if (!input || !fb) return;
-      input.value = answer;
+      // translateItems' displayAnswer carries its own \( \) wrapper (used
+      // as-is in the "Correct!" message); a <math-field>'s .value setter
+      // expects raw LaTeX, so that wrapper has to come off before setting
+      // it here even though the feedback text below still wants it - see
+      // /CLAUDE.md's "Visual math input" note.
+      input.value = answer.replace(/^\\\(|\\\)$/g, '');
       input.disabled = true;
       const container = input.closest('.guided-practice');
       const btn = container && container.querySelector('button');
