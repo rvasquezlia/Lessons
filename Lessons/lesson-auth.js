@@ -143,8 +143,31 @@ const LessonSync = (() => {
       onRecord({ key: `focus-back-${now}`, label: 'Returned to this tab', answer: '', verdict: 'focus-regained', section: 'Integrity' });
     }
   }
+  // Right-click detection - same scope and shape as paste detection
+  // above, deliberately: only a right-click (contextmenu) that lands on
+  // an actual answer field (INPUT/TEXTAREA/MATH-FIELD) is ever logged,
+  // never a right-click anywhere else on the page (branding, nav,
+  // question text) and never anything outside the page at all (a
+  // browser only ever exposes this event for its own document - there's
+  // no way for page JS to see a right-click on the OS desktop or another
+  // tab, so this is a real boundary, not just a policy). The context
+  // menu itself is never blocked (`e.preventDefault()` is deliberately
+  // never called) - a student may have a perfectly ordinary reason to
+  // right-click (spellcheck, "look up") - this only records that it
+  // happened, the same way paste does, for the teacher to review later.
+  let lastRightClickLoggedAt = 0;
+  function onContextMenu(e) {
+    if (!ready || !idToken) return;
+    const tag = e.target && e.target.tagName;
+    if (!tag || !['INPUT', 'TEXTAREA', 'MATH-FIELD'].includes(tag)) return;
+    const now = Date.now();
+    if (now - lastRightClickLoggedAt < 2000) return;
+    lastRightClickLoggedAt = now;
+    onRecord({ key: `rightclick-${now}`, label: 'Right-clicked in an answer field', answer: '', verdict: 'rightclick-detected', section: 'Integrity' });
+  }
   document.addEventListener('paste', onPaste);
   document.addEventListener('visibilitychange', onVisibilityChange);
+  document.addEventListener('contextmenu', onContextMenu);
 
   function hideLoadingIndicator() {
     const el = document.getElementById('lesson-loading');

@@ -561,6 +561,7 @@
   function onDataLoaded(result) {
     allRows = (result.rows || []).map(decorateRow);
     applyDuplicateAnswerFlags(allRows);
+    applyLookedUpFlags(allRows);
     roster = result.roster || [];
     activityCatalog = result.activityCatalog || [];
     teacherScope = result.scope || null;
@@ -617,6 +618,9 @@
   const MIN_REFLECTION_WORDS = 4;    // a reflection this short (and not already caught as padded) reads as low-effort, not a real answer
   const DUPLICATE_ANSWER_WINDOW_MINUTES = 15; // two students sharing an identical wrong answer within this window reads as shared work, not coincidence
   const DUPLICATE_ANSWER_MIN_LENGTH = 4;      // a shared answer shorter than this (e.g. "5", "-3") is too common to mean anything on its own
+  const LOOKED_UP_SCORE_THRESHOLD = 90;       // scorePct at/above this counts as "high" for the possible-lookup check
+  const LOOKED_UP_TIME_RATIO = 0.5;           // time on task at/under this fraction of the activity's own average counts as "unusually fast"
+  const LOOKED_UP_MIN_PEERS = 3;              // need at least this many scored peers on the same activity before "unusual" means anything
 
   // A reflection answer is "padded" when it's long enough to judge (at
   // least 12 words - short real answers shouldn't be flagged just for
@@ -661,6 +665,8 @@
     if (/Left the tab/.test(flagText)) return 'Left the tab repeatedly';
     if (/very short/.test(flagText)) return 'Low-effort reflection';
     if (/[Mm]atching wrong answer/.test(flagText)) return 'Possible shared answers';
+    if (/Right-clicked/.test(flagText)) return 'Right-click detected';
+    if (/worth a closer look/.test(flagText)) return 'Possible answer lookup';
     return 'Teacher-flagged';
   }
 
@@ -709,19 +715,20 @@
     // "attempted" and produces a misleading score for any page with
     // engagement tracking (now every wired page) - recomputed here from
     // just the graded items instead of trusting those raw columns.
-    // "paste-*"/"focus-lost-*"/"focus-back-*" are lesson-auth.js's own
-    // integrity events (see /CLAUDE.md) - each one is unique per
-    // occurrence (not a repeated attempt on one item), so they're
-    // excluded from graded-item scoring the same way tab-*/reached-end
-    // already are, or they'd wrongly count as "graded items never
-    // answered correctly."
-    const isIntegrityKey = (key) => key.startsWith('paste-') || key.startsWith('focus-lost-') || key.startsWith('focus-back-');
+    // "paste-*"/"focus-lost-*"/"focus-back-*"/"rightclick-*" are
+    // lesson-auth.js's own integrity events (see /CLAUDE.md) - each one
+    // is unique per occurrence (not a repeated attempt on one item), so
+    // they're excluded from graded-item scoring the same way
+    // tab-*/reached-end already are, or they'd wrongly count as "graded
+    // items never answered correctly."
+    const isIntegrityKey = (key) => key.startsWith('paste-') || key.startsWith('focus-lost-') || key.startsWith('focus-back-') || key.startsWith('rightclick-');
     const submissions = allSubmissions.filter((s) => !s.key.startsWith('tab-') && s.key !== 'reached-end' && !isIntegrityKey(s.key));
     const tabViews = allSubmissions.filter((s) => s.key.startsWith('tab-'));
     const reachedEnd = allSubmissions.some((s) => s.key === 'reached-end');
     const pasteEvents = allSubmissions.filter((s) => s.verdict === 'paste-detected');
     const focusLostEvents = allSubmissions.filter((s) => s.verdict === 'focus-lost');
     const focusBackEvents = allSubmissions.filter((s) => s.verdict === 'focus-regained');
+    const rightClickEvents = allSubmissions.filter((s) => s.verdict === 'rightclick-detected');
     // Pairs each "left this tab" event with the next "returned" event (if
     // any - a student who never comes back, or is still away as of the
     // last sync, simply doesn't close that pair) to get real away-time,
@@ -861,6 +868,7 @@
     if (tabSkipCount > 0) flags.push(`Rapid tab-skipping (${tabSkipCount})`);
     if (pasteEvents.length > 0) flags.push(`Pasted into an answer field (${pasteEvents.length})`);
     if (focusLostEvents.length >= FOCUS_LOSS_FLAG_THRESHOLD) flags.push(`Left the tab ${focusLostEvents.length} times`);
+    if (rightClickEvents.length > 0) flags.push(`Right-clicked in an answer field (${rightClickEvents.length})`);
 
     // Sessions are built from every logged event (tab views and
     // reached-end included, not just graded answers) - a student reading
@@ -876,7 +884,8 @@
       sessions, totalMinutes,
       fastGuessCount, sacrificeCount, paddedReflectionCount, shortReflectionCount, idleGapCount, tabSkipCount,
       failedFirstTry, correctSecondTry,
-      pasteCount: pasteEvents.length, focusLossCount: focusLostEvents.length, awayMinutes
+      pasteCount: pasteEvents.length, focusLossCount: focusLostEvents.length, awayMinutes,
+      rightClickCount: rightClickEvents.length
     });
   }
 
@@ -930,6 +939,38 @@
       if (row._duplicateMatches) {
         row.flags.push(`Matching wrong answer to ${row._duplicateMatches} other submission${row._duplicateMatches === 1 ? '' : 's'}`);
       }
+    });
+  }
+
+  // Another cross-student check (see applyDuplicateAnswerFlags above for
+  // why this can't live in decorateRow()'s per-row pass): a composite
+  // "this might have been looked up or pasted in" signal, combining
+  // three things that are only meaningful together - a paste event (see
+  // "Paste detection" in /CLAUDE.md), a high score, and a completion
+  // time unusually fast *relative to this activity's own other
+  // students* (not an arbitrary fixed cutoff, since a fast page for one
+  // activity is a normal pace for another). None of the three alone is
+  // suspicious - pasting into a math-field is often just how a student
+  // enters their own worked-out answer, finishing fast can mean genuine
+  // mastery, and a high score is the goal - but a fast, high-scoring
+  // finish that also involved a paste is worth a teacher's second look.
+  // Requires LOOKED_UP_MIN_PEERS scored students on the same activity
+  // before "unusually fast" means anything at all.
+  function applyLookedUpFlags(rows) {
+    const byActivity = {};
+    rows.forEach((row) => { (byActivity[row.activityId] = byActivity[row.activityId] || []).push(row); });
+    Object.values(byActivity).forEach((activityRows) => {
+      const scoredTimes = activityRows.filter((r) => r.scorePct !== null).map((r) => r.totalMinutes);
+      if (scoredTimes.length < LOOKED_UP_MIN_PEERS) return;
+      const avgTime = scoredTimes.reduce((a, b) => a + b, 0) / scoredTimes.length;
+      if (avgTime <= 0) return;
+      activityRows.forEach((row) => {
+        if (row.scorePct === null || row.scorePct < LOOKED_UP_SCORE_THRESHOLD) return;
+        if (row.pasteCount === 0) return;
+        if (row.totalMinutes <= avgTime * LOOKED_UP_TIME_RATIO) {
+          row.flags.push('Fast, high-scoring completion with a paste - worth a closer look');
+        }
+      });
     });
   }
 
@@ -1710,6 +1751,52 @@
   // a score-by-student bar chart, and this activity's own interaction
   // timeline (recomputed here rather than reused from a global feed, so
   // it only ever shows events for this one page).
+  // "Item Diagnostics" lite - per-item wrong-answer analysis, built
+  // entirely from answers already sitting in SubmissionsLog (no new
+  // instrumentation): groups every wrong/incomplete answer on this
+  // activity by item key, then by the exact (trimmed, not otherwise
+  // normalized) answer text, so a teacher can see which specific wrong
+  // answer is the most common "distractor" per question. Only an item
+  // with at least 2 wrong attempts total is worth showing - a single
+  // wrong answer isn't a pattern.
+  function computeDistractorAnalysis(rows) {
+    const byItem = {};
+    rows.forEach((row) => {
+      row.submissions.forEach((s) => {
+        if (s.verdict === 'correct' || s.verdict === 'reflection') return;
+        const text = String(s.answer || '').trim();
+        if (!text) return;
+        const item = (byItem[s.key] = byItem[s.key] || { label: s.label || s.key, answers: {} });
+        const norm = text.toLowerCase();
+        item.answers[norm] = item.answers[norm] || { text, count: 0 };
+        item.answers[norm].count++;
+      });
+    });
+    return Object.values(byItem)
+      .map((item) => {
+        const answers = Object.values(item.answers).sort((a, b) => b.count - a.count);
+        const totalWrong = answers.reduce((sum, a) => sum + a.count, 0);
+        return { label: item.label, topAnswer: answers[0], totalWrong };
+      })
+      .filter((item) => item.totalWrong >= 2)
+      .sort((a, b) => b.totalWrong - a.totalWrong);
+  }
+
+  function distractorAnalysisHtml(rows) {
+    const items = computeDistractorAnalysis(rows);
+    if (!items.length) return '<p class="empty-note">No repeated wrong answers yet.</p>';
+    return `<table><thead><tr><th>Item</th><th>Most common wrong answer</th><th>Times</th><th>Total wrong attempts</th></tr></thead><tbody>${
+      items.map((it) => `
+        <tr>
+          <td>${it.label}</td>
+          <td>${it.topAnswer.text}</td>
+          <td>${it.topAnswer.count}</td>
+          <td>${it.totalWrong}</td>
+        </tr>
+      `).join('')
+    }</tbody></table>`;
+  }
+
   function openActivityDetail(i) {
     const a = lastActivitySummaries[i];
     if (!a) return;
@@ -1728,6 +1815,7 @@
       <div class="card"><h3>Score by student</h3><div>${scoreBarsHtml(a.rows, 'studentName', 'scorePct')}</div></div>
       ${groupLegendHtml(a.rows)}
       <div class="table-wrap">${activityDetailTable(a)}</div>
+      <div class="card"><h3>Most common wrong answers</h3><div class="table-wrap">${distractorAnalysisHtml(a.rows)}</div></div>
       <div class="card"><h3>Recent activity on this page</h3>${recentActivityHtml(events)}</div>
     `);
   }

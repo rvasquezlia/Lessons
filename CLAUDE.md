@@ -82,7 +82,7 @@ shipping new backend code.
   committed code by an unpredictable amount - confusing to debug, since
   it looks like a bug that "sometimes" happens when it's really just
   staleness. Current versions: `token-cache.js` → `2`, `lesson-auth.js` →
-  `8`.
+  `9`.
 - **`hidden` doesn't always mean hidden — check for a competing CSS rule
   first.** `#lesson-loading` has its own `display: flex` (to center the
   spinner), and an ID selector beats the browser's default
@@ -319,9 +319,24 @@ which level of navigation they're looking at:
     how many *eligible* roster students exist for that grade (and
     teacher, if filtered). Click an activity for its own mini dashboard:
     stat tiles, a score-by-student bar chart, the full per-student
-    table, and that activity's own "Recent activity" timeline (built
-    from `Progress.SubmissionsLog` timestamps, scoped to just this
-    activity).
+    table, a **"Most common wrong answers"** card (see "Item Diagnostics,
+    lite" below), and that activity's own "Recent activity" timeline
+    (built from `Progress.SubmissionsLog` timestamps, scoped to just
+    this activity).
+
+**"Item Diagnostics, lite"** (`computeDistractorAnalysis()`/
+`distractorAnalysisHtml()`) answers the "which wrong answer do students
+pick most" question from the original platform spec, as far as it can
+be answered from data already logged: for the activity currently open,
+groups every wrong/incomplete answer by item key, then by exact answer
+text, and shows the single most common wrong answer per item (only for
+items with 2+ total wrong attempts logged - one wrong answer isn't a
+pattern yet). This is deliberately **not** the fuller per-distractor
+analysis the original spec described, which would need multiple-choice
+options to be structured data rather than free-text answers to bucket
+correctly - that fuller version stays on the deferred list further
+down; this lite version works for any answer type already being
+recorded as plain text, no new instrumentation or data shape needed.
 - **Student Roster & Profiles** — merges the former standalone By
   Student and Roster tabs, which had drifted into showing nearly the
   same student list twice (By Student's own columns, plus a handful of
@@ -628,11 +643,17 @@ every other tab.
   `isTooShortReflection()` only ever runs on a reflection that already
   failed the padding check, so a single reflection is never flagged for
   both reasons at once.
-- **Possible shared answers** (`applyDuplicateAnswerFlags()`) - the one
-  signal here that isn't per-row: two different students submitting the
-  *exact same wrong* answer on the same activity+item within
-  `DUPLICATE_ANSWER_WINDOW_MINUTES` (15) of each other. Run once, from
-  `onDataLoaded()` right after every row is decorated (`allRows =
+- **Right-click detection** (`rightClickCount`) - see "Paste detection
+  and tab-focus tracking" under "Engagement tracking" further down for
+  the full mechanism (it's built to the exact same scope as paste
+  detection: only a right-click landing on an actual answer field is
+  ever logged, the browser's context menu is never blocked). Flagged on
+  any occurrence (`"Right-clicked in an answer field (N)"`).
+- **Possible shared answers** (`applyDuplicateAnswerFlags()`) - the
+  first of two signals here that aren't per-row: two different students
+  submitting the *exact same wrong* answer on the same activity+item
+  within `DUPLICATE_ANSWER_WINDOW_MINUTES` (15) of each other. Run once,
+  from `onDataLoaded()` right after every row is decorated (`allRows =
   (...).map(decorateRow); applyDuplicateAnswerFlags(allRows);`), since it
   needs to compare rows against *each other*, not just look at one row's
   own history - the one exception to "all analysis happens per-row" in
@@ -647,13 +668,31 @@ every other tab.
   "identical wrong answer" copying tell) built entirely from answers
   already being recorded - no new instrumentation, still fully
   retrospective.
-- Each of the nine signals above appends its own descriptive string
+- **Possible answer lookup** (`applyLookedUpFlags()`) - the second
+  cross-row signal: a composite of three things that only mean something
+  *together* - a paste event, a high score (`scorePct >=
+  LOOKED_UP_SCORE_THRESHOLD`, 90), and a completion time unusually fast
+  *relative to this same activity's other students*
+  (`totalMinutes <= LOOKED_UP_TIME_RATIO × that activity's own average
+  time among scored rows`, ratio 0.5) - not a fixed cutoff, since a fast
+  time on one activity is a normal pace on another. None of the three
+  alone is suspicious (pasting a worked-out answer into a math-field is
+  often completely legitimate, finishing fast can mean real mastery, a
+  high score is the goal), but a fast, high-scoring finish that also
+  involved a paste is worth a second look. Needs at least
+  `LOOKED_UP_MIN_PEERS` (3) other scored students on the same activity
+  before "unusually fast" means anything - runs once from
+  `onDataLoaded()` right after `applyDuplicateAnswerFlags()`
+  (`applyLookedUpFlags(allRows)`), grouping rows by `activityId` to
+  compute each activity's own average time before checking any
+  individual row against it.
+- Each of the ten signals above appends its own descriptive string
   (with its own per-row count baked in, e.g. `"Fast-guessing on 2 items
   (<3s)"`) to the same `flags` array the pre-existing `flagReason`/
   rapid-burst flags already used - every place that already rendered
   `flags` (row styling, the Flags columns, per-activity/per-student
   detail tables) picked these up with no further changes.
-  `flagCategory(flagText)` buckets a flag string back into one of ten
+  `flagCategory(flagText)` buckets a flag string back into one of twelve
   human-scale categories (matched by substring, since the strings
   themselves are never identical row-to-row) for the Overview/Integrity
   Monitor summary counts.
@@ -682,17 +721,21 @@ every other tab.
 **Deliberately deferred, not silently dropped**, because each would need
 either genuinely new client-side instrumentation beyond what's already
 logged, or is inherently a live feature the "no live monitoring" rule
-rules out outright: a Printable PDF/Report Generator, Item Diagnostics
-(per-distractor wrong-answer analysis), true DevTools/concurrent-session
-detection, Vocabulary flashcard rapid-flip tracking, and any Live
-Classroom View. Revisit these only on explicit request, and only after
-confirming what new instrumentation (if any) each would actually
-require. **Paste detection has since been added** (see above) - narrower
-and more ethically bounded than the original spec's "clipboard
-monitoring": it logs only the fact and rough location of a paste, never
-clipboard content, so it's no longer in this deferred list on its own,
-but genuine DevTools/concurrent-session detection remain deferred for
-the reasons above.
+rules out outright: a Printable PDF/Report Generator, the *full*
+per-distractor Item Diagnostics (structured multiple-choice-option
+analysis - a "lite," free-text-answer version now exists, see "Item
+Diagnostics, lite" above), true DevTools/concurrent-session detection,
+Vocabulary flashcard rapid-flip tracking, and any Live Classroom View.
+Revisit these only on explicit request, and only after confirming what
+new instrumentation (if any) each would actually require. **Paste
+detection, right-click detection, and two cross-student integrity
+checks (possible shared answers, possible answer lookup) have since
+been added** (see above) - all narrower and more ethically bounded than
+the original spec's broader "clipboard/behavior monitoring": each logs
+or compares only the fact of an event (or answer text already being
+recorded), never new content, so none of them are in this deferred list
+on their own anymore - but genuine DevTools/concurrent-session detection
+remain deferred for the reasons above.
 
 - **Spreadsheet ID**: `1-HLtX5AwskPx8hy_Ip2kjGMz5OUIS91M2x0FgEt75zA`
 - **Apps Script Web App URL**: `https://script.google.com/macros/s/AKfycbyC7mb1TKfg3JvhiZftXMf7oXkzrBMWJczZSURC7sIfoIxYnZrrumYfx-j7JYTY0A9i/exec`
@@ -931,10 +974,34 @@ new page to be covered.
   twice during a class period is normal, not itself suspicious - the
   raw `focusLossCount`/`awayMinutes` numbers are still available even
   when nothing gets flagged.
-- **Cache-bust note**: this shipped as `lesson-auth.js` → `v8` - bumped
-  across all 37 referencing pages (same mechanical `?v=` bump described
-  in "Persisted sign-in" above; `token-cache.js` is unaffected and stays
-  at `v2`).
+- **Right-click detection** (`rightClickCount`), added in the same
+  reviewed pass as the two cross-student checks below, per the explicit
+  instruction that it "falls under the same activity recorded as they
+  would do it in the page" - i.e. built to the exact same scope and
+  shape as paste detection above, not a broader or separately-invasive
+  mechanism. `onContextMenu(e)` listens for `contextmenu` on `document`
+  but - like `onPaste()` - only logs anything when `e.target` is an
+  `INPUT`/`TEXTAREA`/`MATH-FIELD`: a right-click on the branding, nav,
+  or question text is never logged, and a right-click "outside the
+  page" isn't something page JS can even observe in the first place (a
+  browser only ever fires `contextmenu` for its own document). The
+  browser's context menu is never blocked (`e.preventDefault()` is
+  deliberately never called) - this only records that a right-click
+  happened in an answer field, the same non-invasive "flag the fact,
+  not the content" design as paste detection, since a student may have
+  an entirely ordinary reason to right-click (spellcheck, "look up").
+  Logged as `rightclick-<timestamp>` (verdict `rightclick-detected`),
+  excluded from graded scoring by the same `isIntegrityKey()` check as
+  the other three integrity event types, and flagged on any occurrence
+  (`"Right-clicked in an answer field (N)"`) - unlike tab-focus loss,
+  there's no "everyone does this occasionally" baseline to wait out,
+  since right-clicking inside a math/text answer field specifically is
+  rare during normal use.
+- **Cache-bust note**: this shipped as `lesson-auth.js` → `v9` (paste/
+  focus tracking shipped as `v8`; right-click detection bumped it again
+  to `v9`) - bumped across all 37 referencing pages each time (same
+  mechanical `?v=` bump described in "Persisted sign-in" above;
+  `token-cache.js` is unaffected and stays at `v2`).
 
 ### Wired units — current activity IDs
 
