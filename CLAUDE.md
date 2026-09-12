@@ -42,7 +42,7 @@ Script, from the Sheet) whenever it changes, then redeploy.
 | `AccessLog` | **Automatic** — written entirely by Apps Script | Every access attempt, allowed or denied, for audit: `Timestamp, Email, ActivityId, StudentGrade, RequiredGrade, Result, Reason`. Read-only. |
 
 - **Spreadsheet ID**: `1-HLtX5AwskPx8hy_Ip2kjGMz5OUIS91M2x0FgEt75zA`
-- **Apps Script Web App URL**: `TODO — fill in once deployed`
+- **Apps Script Web App URL**: `https://script.google.com/macros/s/AKfycbyC7mb1TKfg3JvhiZftXMf7oXkzrBMWJczZSURC7sIfoIxYnZrrumYfx-j7JYTY0A9i/exec`
 
 ### Flow
 
@@ -58,14 +58,14 @@ Script, from the Sheet) whenever it changes, then redeploy.
    (`submission` request type) — appended into that same `Progress` row's
    `SubmissionsLog`, never a new row.
 
-### Status as of this file's creation
+### Status
 
 Done: OAuth client + consent screen created, `hd`-domain check validated
-live against a real `lincoln.edu.ni` account. Apps Script code drafted
-(see `automation/apps-script/Code.gs`).
+live against a real `lincoln.edu.ni` account. Sheet created with all 4
+tabs. Apps Script deployed as a Web App (URL above).
 
-Not yet done: the Sheet itself hasn't been created, the script hasn't been
-deployed, and no lesson page has been wired to any of this yet. Nothing
-about student-facing pages should be assumed to work until that's true —
-check this file's Spreadsheet ID / Web App URL fields above; if they still
-say `TODO`, the backend doesn't exist yet.
+Not yet done: the deployed script hasn't been tested end-to-end with a
+real ID token, `Roster`/`ActivityCatalog` may only have test rows in
+them rather than the real class lists, and no lesson page has been
+wired to any of this yet. Don't assume student-facing pages work until
+that's true.
