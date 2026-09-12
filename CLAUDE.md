@@ -511,6 +511,54 @@ means students never see it (same omission rule as any other section)
 and teachers see a harmless "Guided Solving Ladder: Coming soon" tag on
 the other five topics, same as any genuinely-unbuilt section would show.
 
+### Visual math input pilot (Eighth/Literal-Equations/Practice-Set.html only)
+
+Every other page's "solve for a variable" answers are typed as plain
+text (e.g. `d/t`) into a normal `<input>`, string-compared after
+`normalizeExpr()` against a hardcoded `accepted[]` list of equivalent
+spellings per problem. As a pilot for a real visual math editor (built
+by dragging/typing into an actual fraction/expression structure, not
+typing slash-delimited text), Practice-Set's Tabs 1-3 (`renderSymList()`
+/ `checkSymItem()`, the `symRegistry` also exposed as `window.listRegistry`)
+now use [MathLive](https://cortexjs.io/mathlive/)'s `<math-field>` custom
+element instead of `<input type="text">`, loaded via
+`<script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js">`
+in the `<head>` (pin the version on any future upgrade — same convention
+as this page's existing pinned `mathjax@3` include just above it).
+
+**Why this page didn't need much rework.** `<math-field>` happens to
+mirror the exact two things `checkSymItem()` and `unlockTeacherView()`
+(in `lesson-auth.js`) already relied on from a plain `<input>`: a
+settable `.value` property (MathLive's default LaTeX form, so
+`displayAnswer` strings like `\dfrac{d}{t}` still work unchanged for
+the teacher-view reveal) and a reflected `.disabled` boolean (so
+`unlockTeacherView`'s generic `window.listRegistry` reveal loop needed
+**zero** changes). The one real change is how `checkSymItem()` reads
+the student's answer: `field.getValue('ascii-math')` instead of
+`field.value` - ASCIIMath linearizes `\frac{d}{t}` as `"d/t"`, close
+enough to the existing `accepted[]` spellings that `normalizeExpr()`
+still does the rest of the comparison unchanged. `getValue` is guarded
+with `typeof field.getValue === 'function'` first: if the MathLive
+script never loaded (blocked network, ad blocker, a cold CDN failure),
+`<math-field>` stays an undefined custom element with no such method,
+and this treats that the same as an empty answer instead of throwing -
+the same "degrade to a clear message, never a silent crash" instinct
+behind this project's other loading-robustness fixes (see "Loading is
+hardened..." above).
+
+**This is a pilot, not the new site-wide pattern yet.** Every other
+page's fraction/expression answers - including this same unit's own
+Word-Problems, Test-Prep, Review, and Vocabulary-Literacy, and every
+other unit's Practice-Set - are still plain `<input type="text">` and
+untouched. Don't assume `<math-field>` is available on a page just
+because it's in the same unit; check for the MathLive `<script>` tag
+in that specific page's own `<head>` first. If the pilot proves out,
+rolling it out further means repeating this same swap (markup +
+`getValue('ascii-math')` read + the `typeof` guard) on each additional
+page's own check function - `unlockTeacherView`'s reveal loop already
+works generically for any `window.listRegistry` page, so it needs no
+changes to support more pages doing this.
+
 ### index.html is also gated now
 
 Unlike a lesson page, the index links to many activities rather than

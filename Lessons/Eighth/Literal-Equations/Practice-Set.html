@@ -20,6 +20,12 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <!-- Visual math input pilot (this unit only - see /CLAUDE.md's "Visual
+       math input pilot" note): registers the <math-field> custom element
+       used by renderSymList() below, in place of a plain text input, for
+       "solve for a variable" answers. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
@@ -94,7 +100,7 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Tabs 1-3: type the expression only, e.g. <code>A/w</code>. Tab 4: sliders, then type a number. <strong>2 tries</strong> per item.
+    Tabs 1-3: enter the expression in the math box - build fractions with the fraction template, e.g. <code>A/w</code>. Tab 4: sliders, then type a number. <strong>2 tries</strong> per item.
   </div>
 
   <nav class="nav-tabs">
@@ -109,7 +115,7 @@
   <div id="warmup" class="panel active">
     <div class="section-title">Solving for a Variable That Appears Once</div>
     <div class="explainer-box">
-      Type only the expression for the target variable - not "x =", just what goes on the other side. For a fraction, use a slash: type <code>d/t</code> for \(\dfrac{d}{t}\).
+      Enter only the expression for the target variable in the math box - not "x =", just what goes on the other side. For a fraction, type <code>/</code> to open the fraction template and build \(\dfrac{d}{t}\) visually, numerator on top and denominator on the bottom.
     </div>
     <div class="notebook-box">
       <div class="notebook-header">Before You Start: The Question Ladder</div>
@@ -287,7 +293,7 @@
         <strong>${i + 1}.</strong> ${p.q}
         <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
           <label style="font-weight:700;">\\(${p.target} = \\)</label>
-          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="expression">
+          <math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:220px; display:inline-block;" placeholder="\\text{expression}"></math-field>
           <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkSymItem('${keyPrefix}', ${i})">Check</button>
         </div>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
@@ -301,8 +307,18 @@
   function checkSymItem(keyPrefix, idx) {
     const cfg = symRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const field = document.getElementById(`${keyPrefix}-${idx}-input`);
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    // A <math-field> (see the "Visual math input pilot" note above)
+    // exposes getValue('ascii-math') instead of a plain .value string -
+    // ASCIIMath renders \frac{d}{t} as "d/t", which matches the existing
+    // accepted[] spellings closely enough that normalizeExpr() below
+    // still does the rest of the comparison work unchanged. If the
+    // MathLive script never loaded (blocked network, ad blocker, cold
+    // CDN failure), <math-field> stays an undefined custom element with
+    // no getValue - treat that the same as an empty answer instead of
+    // throwing on a missing method.
+    const val = typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter an expression before checking - this won't count as an attempt yet.");
       return;
