@@ -49,11 +49,9 @@ function logAccess_(email, activityId, studentGrade, requiredGrade, result, reas
 
 // Pure access computation - no logging here. Verified email must be on
 // the roster, and the roster's grade must match the activity's required
-// grade. Called both when a student opens an activity (logged every time,
-// see checkAccessAndLog_) and on every submission to re-verify nothing
-// changed mid-session (logged only on denial, see verifyStillAllowed_) -
-// logging every submission's routine re-check would flood AccessLog with
-// one row per Check-button click instead of one row per real event.
+// grade. Called both when a student opens an activity and on every
+// submission to re-verify nothing changed mid-session - see checkAccess_
+// for the logging policy shared by both call sites.
 function resolveAccess_(email, activityId) {
   const roster = ss_().getSheetByName('Roster');
   const rMap = colMap_(roster);
@@ -81,13 +79,22 @@ function resolveAccess_(email, activityId) {
   return { allowed: true, student, activityTitle: activityRow.row[cMap['Title']], studentGrade: student.grade, requiredGrade };
 }
 
-function checkAccessAndLog_(email, activityId) {
-  const result = resolveAccess_(email, activityId);
-  logAccess_(email, activityId, result.studentGrade || '', result.requiredGrade || '', result.allowed ? 'Allowed' : 'Denied', result.allowed ? '' : result.logReason);
-  return result;
-}
-
-function verifyStillAllowed_(email, activityId) {
+// AccessLog only records denials now, not every allowed open. An allowed
+// access-check is already fully recoverable from Progress: FirstStartedAt
+// (set once, at the same moment this would have logged "Allowed") and
+// SubmissionsLog's own per-item timestamps (including the tab-<panelId>
+// entries logged on every real page visit - see "Engagement tracking")
+// are a genuine, deduped interaction timeline the dashboard can read
+// directly, unlike AccessLog. Logging every allowed open was also
+// double-counting itself: a client-side timeout doesn't stop this
+// function from finishing server-side, so a slow cold-start attempt
+// followed by the client's own automatic retry could log the exact same
+// real-world visit twice - AccessLog would show a burst of rows for one
+// student opening one page. A denial is rare and worth a teacher's
+// attention regardless of an occasional duplicate, so it stays logged;
+// used for both a student opening an activity and every submission's
+// routine re-check that access hasn't changed mid-session.
+function checkAccess_(email, activityId) {
   const result = resolveAccess_(email, activityId);
   if (!result.allowed) {
     logAccess_(email, activityId, result.studentGrade || '', result.requiredGrade || '', 'Denied', result.logReason);
@@ -181,17 +188,16 @@ function doPost(e) {
       // Checked before the roster lookup since a teacher's email has no
       // reason to be in Roster (which is grade/student-specific).
       if (isTeacher_(auth.email)) {
-        logAccess_(auth.email, body.activityId, '', '', 'Allowed', 'Teacher answer-key view');
         return jsonOut_({ ok: true, allowed: true, role: 'teacher', student: { name: auth.name } });
       }
-      const access = checkAccessAndLog_(auth.email, body.activityId);
+      const access = checkAccess_(auth.email, body.activityId);
       if (!access.allowed) return jsonOut_({ ok: true, allowed: false, reason: access.reason });
       const progress = getOrCreateProgressRow_(auth.email, body.activityId, access.student, access.activityTitle);
       return jsonOut_({ ok: true, allowed: true, role: 'student', student: access.student, progress });
     }
 
     if (body.type === 'submission') {
-      const access = verifyStillAllowed_(auth.email, body.activityId);
+      const access = checkAccess_(auth.email, body.activityId);
       if (!access.allowed) return jsonOut_({ ok: false, error: access.reason });
       const updated = recordSubmission_(auth.email, body.activityId, access.student, access.activityTitle, body.item);
       return jsonOut_({ ok: true, progress: updated });

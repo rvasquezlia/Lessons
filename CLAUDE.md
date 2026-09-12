@@ -117,7 +117,36 @@ Manage deployments → edit the existing deployment → New version, so the
 | `ActivityCatalog` | **Manual** — teacher adds one row per activity: `ActivityId, Title, Grade, Unit, Active` | Drives the grade-gate check. Adding a new lesson page = adding one row here, nothing else. |
 | `Teachers` | **Manual** — one column: `Email` | Gates the `teacher-data` dashboard endpoint. Only emails listed here can pull all-student data; being on `Roster` as a `Teacher` name does not grant this by itself. |
 | `Progress` | **Automatic** — written entirely by Apps Script | One row per (student, activity), upserted on every save. Columns: `Email, StudentName, Grade, Teacher, ActivityId, ActivityTitle, FirstStartedAt, LastSubmittedAt, ItemsTotal, ItemsAttempted, ItemsCorrect, ScorePct, Status, SubmissionsLog (JSON), FlagReason, ReviewedByTeacher, ReviewedAt`. The last two are the only cells a teacher should hand-edit (checking off a flagged row after review). |
-| `AccessLog` | **Automatic** — written entirely by Apps Script | One row per real access event: a student opening an activity (allowed or denied), or a submission-time re-check that comes back denied. Routine allowed re-checks on every Check-button click are NOT logged here — that was an earlier bug (see git history) that flooded this tab. |
+| `AccessLog` | **Automatic** — written entirely by Apps Script | **Denied access attempts only** — a student opening an activity their grade doesn't match, or one no longer active. Routine allowed re-checks on every Check-button click were never logged here (an earlier bug, see git history, that flooded this tab); **allowed opens stopped being logged here at all** in a later pass (see below) since they were both redundant with `Progress` and a source of duplicate rows in their own right. Rows from before that change may still say `Allowed` and are kept for history, not backfilled away. |
+
+**Why `AccessLog` shrank to denials-only.** Even after the Check-button
+flood was fixed, `AccessLog` could still show a burst of rows for a
+single real visit: an `access-check`/`submission` call that Apps
+Script's cold start makes slow enough to hit the client's timeout
+triggers exactly one automatic retry (`lesson-auth.js`'s
+`proceedWithToken`) — but the client's `AbortController` only stops the
+*client* from waiting, it doesn't stop the Apps Script execution that's
+already running server-side. A slow-but-eventually-successful first
+attempt plus its retry could both reach `logAccess_`, so one student
+opening one page could log two "Allowed" rows, and a whole class hitting
+cold starts at the start of a period could look like a flood in the
+Sheet within a couple of minutes. Fixing the duplicate cleanly would
+need the client to send a stable idempotency key across a retry and the
+backend to dedupe on it — more machinery than an "Allowed" row is worth,
+since it was never telling a teacher anything `Progress` doesn't
+already: `FirstStartedAt` (set once, at the same moment an "Allowed" row
+would have been logged) plus `SubmissionsLog`'s own per-item timestamps
+(including the `tab-<panelId>` entries logged on every real page visit —
+see "Engagement tracking" below) are a genuine, deduped interaction
+timeline for that student+activity already. `checkAccess_` (formerly two
+near-identical functions, `checkAccessAndLog_` and `verifyStillAllowed_`,
+now merged into one) logs a `Denied` row exactly as before — denials are
+rare, and worth flagging even with an occasional duplicate — but never
+logs `Allowed` anymore, for a student or for the teacher answer-key-view
+path. The teacher dashboard's Overview tab has a "Recent activity" card
+that reads this same `Progress.SubmissionsLog` timeline directly
+(flattened across every visible row, newest first) as the replacement
+for what an allowed-opens `AccessLog` used to show.
 
 ### Teacher dashboard
 
@@ -161,8 +190,11 @@ and has five tabs, all driven by the same `allRows`/`roster`/
 - **Overview** — class-wide stat tiles (active students, activities,
   average score, students who haven't started anything, flagged
   submissions, denied access attempts), lowest-scoring activities/
-  students as bar charts, and short lists of at-risk students/
-  submissions.
+  students as bar charts, short lists of at-risk students/submissions,
+  and a "Recent activity" feed (`renderRecentActivity()`) — every logged
+  interaction (graded answer, tab view, reached-end) across the filtered
+  rows, newest first, built from `Progress.SubmissionsLog` timestamps
+  directly rather than from `AccessLog`.
 - **By Student** — one row per roster student (including students with
   zero `Progress` rows, so "hasn't started anything" is visible instead
   of just absent), averaged across every activity they've touched;

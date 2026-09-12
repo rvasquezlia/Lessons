@@ -129,6 +129,13 @@
         <div id="most-flagged-list"></div>
       </div>
     </div>
+    <div class="card-grid">
+      <div class="card" style="grid-column: 1 / -1;">
+        <h3>Recent activity</h3>
+        <p style="color:#64748b; margin:-8px 0 12px 0; font-size:0.85rem;">Every logged interaction - answers, tabs opened, reaching the end of a page - newest first. This is the real per-student timeline; the Access Log tab is only for denied access attempts now.</p>
+        <div id="recent-activity-list"></div>
+      </div>
+    </div>
   </div>
 
   <div id="by-student" class="panel">
@@ -199,7 +206,7 @@
 
   <div id="access-log" class="panel">
     <div class="section-title">Access Log</div>
-    <p style="color:#64748b; margin-top:-10px;">Every time a student opened an activity - allowed or denied - plus any denied re-check mid-activity. Not a row per Check-button click.</p>
+    <p style="color:#64748b; margin-top:-10px;">Denied access attempts only - a student opening an activity their grade doesn't match, or one no longer active. Allowed opens aren't logged here anymore (see the Overview tab's Recent Activity feed for those); rows recorded before this change may still say "Allowed" and are kept for history.</p>
     <div class="stat-row" id="access-log-stats"></div>
     <div class="table-wrap">
       <table>
@@ -357,6 +364,15 @@
     const submissions = allSubmissions.filter((s) => !s.key.startsWith('tab-') && s.key !== 'reached-end');
     const tabViews = allSubmissions.filter((s) => s.key.startsWith('tab-'));
     const reachedEnd = allSubmissions.some((s) => s.key === 'reached-end');
+    // Every logged event, typed, for the Overview "Recent activity" feed -
+    // this is the "other activity log with timestamps" AccessLog's noisy
+    // allowed-rows were replaced with: it's already deduped (one entry per
+    // real interaction) and timestamped by the backend itself.
+    const allEvents = allSubmissions.map((s) => ({
+      type: s.key === 'reached-end' ? 'reached-end' : (s.key.startsWith('tab-') ? 'tab' : 'graded'),
+      label: s.key === 'reached-end' ? 'Reached the end' : (s.key.startsWith('tab-') ? `Viewed tab: ${s.label || s.key.slice(4)}` : s.label),
+      verdict: s.verdict, timestamp: s.timestamp
+    }));
 
     const latestByKey = {};
     submissions.forEach((s) => { latestByKey[s.key] = s.verdict; });
@@ -385,7 +401,7 @@
     if (rapidBurst) flags.push('3+ answers within 60 seconds');
 
     return Object.assign({}, row, {
-      submissions, avgSeconds, rapidBurst, flags,
+      submissions, avgSeconds, rapidBurst, flags, allEvents,
       tabsViewed: tabViews.length, reachedEnd, itemsAttempted, itemsCorrect, scorePct
     });
   }
@@ -564,6 +580,27 @@
     mostFlaggedEl.innerHTML = flaggedRows.length
       ? '<ul style="margin:0; padding-left:18px;">' + flaggedRows.map((r) => `<li>${r.studentName} - ${r.activityTitle}: ${r.flags.map((fl) => `<span class="pill flag">${fl}</span>`).join(' ')}</li>`).join('') + '</ul>'
       : '<p class="empty-note">Nothing flagged in the current filter.</p>';
+
+    renderRecentActivity(rows);
+  }
+
+  const EVENT_PILL = { graded: 'neutral', tab: 'ok', 'reached-end': 'flag' };
+
+  function renderRecentActivity(rows) {
+    const events = [];
+    rows.forEach((r) => {
+      r.allEvents.forEach((e) => events.push(Object.assign({}, e, { studentName: r.studentName, activityTitle: r.activityTitle })));
+    });
+    events.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    const el = document.getElementById('recent-activity-list');
+    if (!events.length) { el.innerHTML = '<p class="empty-note">No interactions logged yet in the current filter.</p>'; return; }
+    el.innerHTML = '<ul style="margin:0; padding-left:0; list-style:none;">' + events.slice(0, 25).map((e) => `
+      <li style="padding:5px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:baseline; flex-wrap:wrap;">
+        <span class="pill ${EVENT_PILL[e.type] || 'neutral'}">${e.type === 'graded' ? (e.verdict || 'answer') : e.type}</span>
+        <strong>${e.studentName}</strong> - ${e.activityTitle} - ${e.label || ''}
+        <span style="margin-left:auto; color:#94a3b8; font-size:0.8rem;">${e.timestamp ? new Date(e.timestamp).toLocaleString() : ''}</span>
+      </li>
+    `).join('') + '</ul>';
   }
 
   function sortItems(items, tableKey, keyFallback) {
