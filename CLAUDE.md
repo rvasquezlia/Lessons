@@ -115,7 +115,7 @@ Manage deployments → edit the existing deployment → New version, so the
 |---|---|---|
 | `Roster` | **Manual** — teacher maintains: `Email, StudentName, Grade, Teacher, Section, Status` | Source of truth for who's allowed in and what grade/teacher they belong to. Add/remove students here directly in the Sheet. |
 | `ActivityCatalog` | **Manual** — teacher adds one row per activity: `ActivityId, Title, Grade, Unit, Active` | Drives the grade-gate check. Adding a new lesson page = adding one row here, nothing else. |
-| `Teachers` | **Manual** — one column: `Email` | Gates the `teacher-data` dashboard endpoint. Only emails listed here can pull all-student data; being on `Roster` as a `Teacher` name does not grant this by itself. |
+| `Teachers` | **Manual** — `Email, Scope` (`Scope` optional) | Gates the `teacher-data` dashboard endpoint. Only emails listed here can pull data at all; being on `Roster` as a `Teacher` name does not grant this by itself. `Scope` controls *how much* of it: blank, `All`, or the column missing entirely means unrestricted (sees every student — this is the whole sheet's original behavior, still the default); any other value must exactly match a name used in `Roster`'s own `Teacher` column and restricts that account to only students with that `Teacher` value. Typo the name (case, spelling) and that teacher silently sees nobody, not an error — double-check it against `Roster` when adding a row. |
 | `Progress` | **Automatic** — written entirely by Apps Script | One row per (student, activity), upserted on every save. Columns: `Email, StudentName, Grade, Teacher, ActivityId, ActivityTitle, FirstStartedAt, LastSubmittedAt, ItemsTotal, ItemsAttempted, ItemsCorrect, ScorePct, Status, SubmissionsLog (JSON), FlagReason, ReviewedByTeacher, ReviewedAt`. The last two are the only cells a teacher should hand-edit (checking off a flagged row after review). |
 | `AccessLog` | **Automatic** — written entirely by Apps Script | **Denied access attempts only** — a student opening an activity their grade doesn't match, or one no longer active. Routine allowed re-checks on every Check-button click were never logged here (an earlier bug, see git history, that flooded this tab); **allowed opens stopped being logged here at all** in a later pass (see below) since they were both redundant with `Progress` and a source of duplicate rows in their own right. Rows from before that change may still say `Allowed` and are kept for history, not backfilled away. |
 
@@ -170,6 +170,20 @@ see `getRosterForDashboard_`/`getActivityCatalogForDashboard_`/
 dashboard can show students/activities with **zero** submissions (a
 `Progress`-only view can only ever show rows that already exist) and
 real access-attempt history, not just graded answers.
+
+**Per-teacher scoping happens entirely server-side, before any of that
+data leaves `Code.gs`.** `getTeacherScope_(email)` reads the signed-in
+teacher's `Scope` value from the `Teachers` tab; `getScopedEmailSet_`
+turns that into the set of student emails whose `Roster.Teacher` matches
+it (or `null` for an unrestricted account). `getAllProgressForDashboard_`/
+`getRosterForDashboard_`/`getAccessLogForDashboard_` all take that set
+and filter by it before returning anything — a restricted teacher's
+browser never receives another teacher's student rows to filter out
+client-side, it simply never gets them. `activityCatalog` is never
+filtered (an activity isn't "owned" by a teacher). The response also
+carries `scope` itself (`null` for unrestricted, else the matched
+teacher name) so the dashboard can say whose students it's showing and
+hide the now-pointless "Teacher" filter dropdown for a scoped account.
 
 Deliberately, **all analysis happens in the dashboard's own JS, not in
 Apps Script**: average time between answers, the "3 answers within 60

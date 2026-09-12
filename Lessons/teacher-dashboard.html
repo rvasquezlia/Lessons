@@ -236,6 +236,7 @@
   let roster = [];
   let activityCatalog = [];
   let accessLog = [];
+  let teacherScope = null;
 
   // requestGeneration/resolved stop a slow, now-superseded sign-in
   // attempt from undoing a later one that already succeeded - see
@@ -334,13 +335,23 @@
     roster = result.roster || [];
     activityCatalog = result.activityCatalog || [];
     accessLog = (result.accessLog || []).slice().sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    teacherScope = result.scope || null;
 
     hideLoadingIndicator();
     document.getElementById('lesson-gate').hidden = true;
     document.getElementById('dashboard').hidden = false;
     const activeStudents = roster.filter((s) => s.status === 'Active').length;
+    const scopeNote = teacherScope ? ` - showing only ${teacherScope}'s students` : '';
     document.getElementById('loaded-as').textContent =
-      `${activeStudents} active students on roster - ${allRows.length} activity records, ${accessLog.length} access events.`;
+      `${activeStudents} active students${scopeNote} - ${allRows.length} activity records, ${accessLog.length} access events.`;
+
+    // A scoped teacher's roster is already pre-filtered to their own
+    // students server-side, so a "Teacher" filter would only ever have
+    // one option worth picking - hide it rather than show a dropdown
+    // that can't do anything.
+    const teacherFilterLabel = document.getElementById('filter-teacher').closest('label');
+    if (teacherFilterLabel) teacherFilterLabel.style.display = teacherScope ? 'none' : '';
+
     populateFilters();
     renderAll();
   }

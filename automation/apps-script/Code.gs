@@ -166,14 +166,21 @@ function doPost(e) {
   // just aggregate over whoever happened to submit something.
   // accessLog is included so denied/allowed access attempts are visible
   // too, not just graded work.
+  //
+  // A Teachers-tab Scope restricts rows/roster/accessLog to just that
+  // teacher's own students (see getTeacherScope_) - activityCatalog is
+  // never filtered, since an activity isn't "owned" by a teacher.
   if (body.type === 'teacher-data') {
     if (!isTeacher_(auth.email)) return jsonOut_({ ok: false, error: 'Not authorized' });
+    const scope = getTeacherScope_(auth.email);
+    const emailSet = getScopedEmailSet_(scope);
     return jsonOut_({
       ok: true,
-      rows: getAllProgressForDashboard_(),
-      roster: getRosterForDashboard_(),
+      scope: scope || null,
+      rows: getAllProgressForDashboard_(emailSet),
+      roster: getRosterForDashboard_(emailSet),
       activityCatalog: getActivityCatalogForDashboard_(),
-      accessLog: getAccessLogForDashboard_()
+      accessLog: getAccessLogForDashboard_(emailSet)
     });
   }
 
@@ -297,6 +304,40 @@ function isTeacher_(email) {
   return !!findRow_(sheet, map['Email'], email);
 }
 
+// Teachers tab optionally has a `Scope` column. Blank or the literal
+// string "All" (including a Teachers row with no Scope column at all)
+// means unrestricted - sees every student, same as before this existed.
+// Any other value must exactly match a name used in Roster's own
+// `Teacher` column, and restricts that account to only those students.
+// Returns null for "unrestricted", or the Roster.Teacher name string to
+// filter by.
+function getTeacherScope_(email) {
+  const sheet = ss_().getSheetByName('Teachers');
+  const map = colMap_(sheet);
+  const found = findRow_(sheet, map['Email'], email);
+  if (!found || map['Scope'] === undefined) return null;
+  const scope = found.row[map['Scope']];
+  return (!scope || scope === 'All') ? null : scope;
+}
+
+// null scope (unrestricted) returns null - callers treat a null email
+// set as "don't filter". A restricted scope returns the set of student
+// emails whose Roster.Teacher matches, so Progress/AccessLog rows (which
+// don't carry a teacher name a restricted account could match against
+// directly, and shouldn't have to re-derive it) can be filtered by email
+// instead.
+function getScopedEmailSet_(scope) {
+  if (!scope) return null;
+  const sheet = ss_().getSheetByName('Roster');
+  const map = colMap_(sheet);
+  const data = sheet.getDataRange().getValues();
+  const set = {};
+  for (let r = 1; r < data.length; r++) {
+    if (data[r][map['Teacher']] === scope) set[data[r][map['Email']]] = true;
+  }
+  return set;
+}
+
 function rowToDashboardRow_(row, map) {
   return {
     email: row[map['Email']],
@@ -318,23 +359,33 @@ function rowToDashboardRow_(row, map) {
   };
 }
 
-function getAllProgressForDashboard_() {
+// emailSet is null (unrestricted) or a { email: true } lookup from
+// getScopedEmailSet_ - a scoped teacher only ever gets rows for their
+// own students back from the backend, never filtered client-side, so
+// there's no way for the dashboard's own JS to accidentally leak the
+// unfiltered set.
+function getAllProgressForDashboard_(emailSet) {
   const sheet = ss_().getSheetByName('Progress');
   const map = colMap_(sheet);
   const data = sheet.getDataRange().getValues();
   const rows = [];
-  for (let r = 1; r < data.length; r++) rows.push(rowToDashboardRow_(data[r], map));
+  for (let r = 1; r < data.length; r++) {
+    const row = rowToDashboardRow_(data[r], map);
+    if (!emailSet || emailSet[row.email]) rows.push(row);
+  }
   return rows;
 }
 
-function getRosterForDashboard_() {
+function getRosterForDashboard_(emailSet) {
   const sheet = ss_().getSheetByName('Roster');
   const map = colMap_(sheet);
   const data = sheet.getDataRange().getValues();
   const rows = [];
   for (let r = 1; r < data.length; r++) {
+    const email = data[r][map['Email']];
+    if (emailSet && !emailSet[email]) continue;
     rows.push({
-      email: data[r][map['Email']],
+      email: email,
       studentName: data[r][map['StudentName']],
       grade: data[r][map['Grade']],
       teacher: data[r][map['Teacher']],
@@ -362,15 +413,17 @@ function getActivityCatalogForDashboard_() {
   return rows;
 }
 
-function getAccessLogForDashboard_() {
+function getAccessLogForDashboard_(emailSet) {
   const sheet = ss_().getSheetByName('AccessLog');
   const map = colMap_(sheet);
   const data = sheet.getDataRange().getValues();
   const rows = [];
   for (let r = 1; r < data.length; r++) {
+    const email = data[r][map['Email']];
+    if (emailSet && !emailSet[email]) continue;
     rows.push({
       timestamp: data[r][map['Timestamp']],
-      email: data[r][map['Email']],
+      email: email,
       activityId: data[r][map['ActivityId']],
       studentGrade: data[r][map['StudentGrade']],
       requiredGrade: data[r][map['RequiredGrade']],
