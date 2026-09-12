@@ -220,11 +220,28 @@
       color: #94a3b8;
       font-size: 0.85rem;
     }
+
+    .lesson-gate { max-width: 480px; margin: 80px auto; padding: 32px; background: var(--card); border: 2px solid var(--border); border-radius: 16px; text-align: center; box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
+    .lesson-gate h2 { margin-top: 0; }
+    .lesson-gate .g_id_signin { display: flex; justify-content: center; margin: 20px 0; }
+    #lesson-gate-status { min-height: 1.2em; font-weight: 600; }
   </style>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-gate" class="lesson-gate">
+  <h2>Lincoln International Academy</h2>
+  <p>Sign in with your school Google account to see your lessons.</p>
+  <div id="g_id_onload"
+       data-client_id="478111261772-7l1qamohr0fjsa7ekosuhpj9jum1q4vc.apps.googleusercontent.com"
+       data-callback="handleGoogleSignIn">
+  </div>
+  <div class="g_id_signin" data-type="standard"></div>
+  <p id="lesson-gate-status"></p>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -318,7 +335,19 @@
           practice: "Practice-Set.html",
           word: "Word-Problems.html",
           test: "Test-Prep.html",
-          teacher: "Teacher-Guide.html"
+          teacher: "Teacher-Guide.html",
+          // activityId per section = that page's LessonSync.init() id.
+          // Only sections listed here are shown to a signed-in student -
+          // see "Sign-in + grade filtering" below. explain/teacher have
+          // none on purpose: Explanation isn't wired yet, and the
+          // Teacher's Guide should never appear for a student regardless.
+          activityIds: {
+            review: "7-rational-numbers-review",
+            vocab: "7-rational-numbers-vocabulary-literacy",
+            practice: "7-rational-numbers-practice-set",
+            word: "7-rational-numbers-word-problems",
+            test: "7-rational-numbers-test-prep"
+          }
         },
         {
           title: "Operations with Rational Numbers",
@@ -367,8 +396,20 @@
   };
 
   const GRADE_ORDER = ["Sixth", "Seventh", "Eighth"];
+  const GRADE_KEY_BY_NUMBER = { 6: "Sixth", 7: "Seventh", 8: "Eighth" };
 
-  function renderSectionLink(section, topic) {
+  // restrictToWired = true (student view): a section only ever shows as a
+  // link if the topic explicitly lists an activityId for it, and the
+  // Teacher's Guide never shows at all, full stop - not "coming soon",
+  // just absent. restrictToWired = false (teacher view) is the original,
+  // unrestricted behavior (every section, including Teacher's Guide,
+  // "Coming soon" placeholders and all).
+  function renderSectionLink(section, topic, restrictToWired) {
+    if (restrictToWired) {
+      if (section.key === "teacher") return "";
+      const activityId = topic.activityIds && topic.activityIds[section.key];
+      if (!activityId) return "";
+    }
     const href = topic[section.key];
     if (!href) {
       return `<span class="empty-tag">${section.label}<br>Coming soon</span>`;
@@ -379,8 +420,13 @@
       </a>`;
   }
 
-  function renderTopicCard(topic) {
-    const sectionLinks = SECTIONS.map((s) => renderSectionLink(s, topic)).join("");
+  function topicHasAnyWiredSection(topic) {
+    return !!(topic.activityIds && Object.keys(topic.activityIds).length);
+  }
+
+  function renderTopicCard(topic, restrictToWired) {
+    if (restrictToWired && !topicHasAnyWiredSection(topic)) return "";
+    const sectionLinks = SECTIONS.map((s) => renderSectionLink(s, topic, restrictToWired)).join("");
     return `
       <div class="topic-card">
         <div class="topic-card-head">
@@ -393,12 +439,12 @@
       </div>`;
   }
 
-  function renderGradePanel(gradeKey, isFirst) {
+  function renderGradePanel(gradeKey, isFirst, restrictToWired) {
     const grade = CURRICULUM[gradeKey];
-    const topics = grade.topics || [];
+    const topics = (grade.topics || []).filter((t) => !restrictToWired || topicHasAnyWiredSection(t));
     const body = topics.length === 0
-      ? `<p class="coming-soon">No topics published yet for ${grade.label} - check back soon.</p>`
-      : `<div class="topic-grid">${topics.map(renderTopicCard).join("")}</div>`;
+      ? `<p class="coming-soon">${restrictToWired ? "No activities are open for your grade yet - check back soon." : `No topics published yet for ${grade.label} - check back soon.`}</p>`
+      : `<div class="topic-grid">${topics.map((t) => renderTopicCard(t, restrictToWired)).join("")}</div>`;
     return `
       <div class="grade-panel${isFirst ? " active" : ""}" id="panel-${gradeKey}">
         <div class="grade-intro">
@@ -427,14 +473,66 @@
     });
   }
 
-  document.getElementById("grade-picker").innerHTML =
-    GRADE_ORDER.map((g, i) => renderGradePill(g, i === 0)).join("");
-  document.getElementById("grade-panels").innerHTML =
-    GRADE_ORDER.map((g, i) => renderGradePanel(g, i === 0)).join("");
+  // Teacher: everything, unrestricted, exactly as before sign-in existed.
+  function renderForTeacher() {
+    document.getElementById("grade-picker").innerHTML =
+      GRADE_ORDER.map((g, i) => renderGradePill(g, i === 0)).join("");
+    document.getElementById("grade-panels").innerHTML =
+      GRADE_ORDER.map((g, i) => renderGradePanel(g, i === 0, false)).join("");
+    document.querySelectorAll(".grade-pill").forEach((btn) => {
+      btn.addEventListener("click", () => showGrade(btn.dataset.grade));
+    });
+  }
 
-  document.querySelectorAll(".grade-pill").forEach((btn) => {
-    btn.addEventListener("click", () => showGrade(btn.dataset.grade));
-  });
+  // Student: only their own grade, no picker (nothing else to pick), and
+  // only sections that are actually wired up yet.
+  function renderForStudent(gradeKey) {
+    document.getElementById("grade-picker").innerHTML = "";
+    document.getElementById("grade-panels").innerHTML = renderGradePanel(gradeKey, true, true);
+  }
+
+  // ===== Sign-in gate =====
+  const LESSON_SYNC_API_URL = 'https://script.google.com/macros/s/AKfycbyC7mb1TKfg3JvhiZftXMf7oXkzrBMWJczZSURC7sIfoIxYnZrrumYfx-j7JYTY0A9i/exec';
+
+  function fetchWithTimeout(url, opts, timeoutMs) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs || 15000);
+    return fetch(url, Object.assign({}, opts, { signal: controller.signal })).finally(() => clearTimeout(timer));
+  }
+
+  function setGateStatus(msg, isError) {
+    const el = document.getElementById("lesson-gate-status");
+    el.textContent = msg;
+    el.style.color = isError ? "#b91c1c" : "var(--primary)";
+  }
+
+  async function handleGoogleSignIn(response) {
+    setGateStatus("Checking your account...", false);
+    try {
+      const res = await fetchWithTimeout(LESSON_SYNC_API_URL, {
+        method: "POST",
+        body: JSON.stringify({ idToken: response.credential, type: "identify" })
+      });
+      const result = await res.json();
+      if (!result.ok) { setGateStatus(result.error || "Could not verify your account.", true); return; }
+      if (result.role === "unknown") { setGateStatus(result.reason, true); return; }
+
+      if (result.role === "teacher") {
+        document.getElementById("lesson-gate").hidden = true;
+        document.querySelector(".app-container").hidden = false;
+        renderForTeacher();
+        return;
+      }
+      const gradeKey = GRADE_KEY_BY_NUMBER[Number(result.student.grade)] || result.student.grade;
+      if (!CURRICULUM[gradeKey]) { setGateStatus(`No lessons are set up for grade ${result.student.grade} yet.`, true); return; }
+      document.getElementById("lesson-gate").hidden = true;
+      document.querySelector(".app-container").hidden = false;
+      renderForStudent(gradeKey);
+    } catch (err) {
+      setGateStatus("Couldn't reach the roster - check your connection and try again.", true);
+    }
+  }
+  window.handleGoogleSignIn = handleGoogleSignIn;
 </script>
 
 </body>

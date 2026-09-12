@@ -134,6 +134,27 @@ function doPost(e) {
       return jsonOut_({ ok: true, allowed: true, role: 'student', student: access.student, progress });
     }
 
+    // Identity-only, no activity attached - used by index.html, which
+    // links to many activities rather than gating one. Same
+    // Teachers-before-Roster order as access-check, but never checks
+    // ActivityCatalog/grade-match against anything, since there's no
+    // single activity here to match against.
+    if (body.type === 'identify') {
+      if (isTeacher_(auth.email)) {
+        return jsonOut_({ ok: true, role: 'teacher', student: { name: auth.name } });
+      }
+      const roster = ss_().getSheetByName('Roster');
+      const rMap = colMap_(roster);
+      const studentRow = findRow_(roster, rMap['Email'], auth.email);
+      if (!studentRow || studentRow.row[rMap['Status']] !== 'Active') {
+        return jsonOut_({ ok: true, role: 'unknown', reason: 'Your account is not on the class roster yet - check with your teacher.' });
+      }
+      return jsonOut_({
+        ok: true, role: 'student',
+        student: { name: studentRow.row[rMap['StudentName']], grade: studentRow.row[rMap['Grade']], teacher: studentRow.row[rMap['Teacher']] }
+      });
+    }
+
     if (body.type === 'submission') {
       const access = verifyStillAllowed_(auth.email, body.activityId);
       if (!access.allowed) return jsonOut_({ ok: false, error: access.reason });

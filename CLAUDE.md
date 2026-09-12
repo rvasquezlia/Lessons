@@ -121,6 +121,32 @@ surface instead as their own `Tabs viewed` / `Reached end` columns.
 Each of the five wired pages needs its own row in `ActivityCatalog`
 (`Grade: 7`, `Active: TRUE`) before its gate will let anyone in.
 
+### index.html is also gated now
+
+Unlike a lesson page, the index links to many activities rather than
+being one itself, so it calls a third request type, `identify` (email +
+role + grade only, no `ActivityCatalog`/grade check against a specific
+activity — see `Code.gs`'s `identify` branch).
+
+- **Teacher** (`Teachers` tab): unrestricted — every grade, every topic,
+  every section including the Teacher's Guide, exactly like the index
+  behaved before any of this existed.
+- **Student** (`Roster`): only their own grade's panel (no grade picker),
+  and within it, only sections a topic explicitly lists an `activityId`
+  for in `CURRICULUM` (see the `Rational Numbers` topic under `Seventh`
+  for the pattern). The Teacher's Guide section never shows for a
+  student, full stop, regardless of whether it's "wired." A topic with
+  no wired sections at all doesn't show as an empty card — it's just
+  omitted.
+
+**This means every other topic in `CURRICULUM` (Sixth's two topics,
+Seventh's Integers and Operations with Rationals, both Eighth topics) is
+currently invisible to students** — not because those pages are broken,
+but because none of their sections have an `activityId` yet. As more
+pages get wired the same way the Rational Numbers unit was, add their
+`activityId`s to `CURRICULUM` the same way, or a signed-in student won't
+see them on the index even once the pages themselves work.
+
 ### Flow
 
 1. Teacher shares an activity link.
