@@ -24,8 +24,14 @@
 
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="../../lesson-auth.js"></script>
 
   <style>
+    .lesson-gate { max-width: 480px; margin: 80px auto; padding: 32px; background: var(--card); border: 2px solid var(--border); border-radius: 16px; text-align: center; }
+    .lesson-gate h2 { margin-top: 0; }
+    .lesson-gate .g_id_signin { display: flex; justify-content: center; margin: 20px 0; }
+    #lesson-gate-status { min-height: 1.2em; font-weight: 600; }
     .glossary-term {
       background: #ffffff;
       border: 2px solid var(--border);
@@ -42,7 +48,18 @@
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-gate" class="lesson-gate">
+  <h2>Sign in to start this activity</h2>
+  <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+  <div id="g_id_onload"
+       data-client_id="478111261772-7l1qamohr0fjsa7ekosuhpj9jum1q4vc.apps.googleusercontent.com"
+       data-callback="handleGoogleSignIn">
+  </div>
+  <div class="g_id_signin" data-type="standard"></div>
+  <p id="lesson-gate-status"></p>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -57,7 +74,7 @@
     <ul style="margin:0 0 0 -4px;">
       <li>Work the three tabs in order: number system vocabulary, operation-terms review, then comparing &amp; ordering language.</li>
       <li>Copy every glossary box into your notebook.</li>
-      <li>No Print My Progress button here - the checks are just for you, to see what's solid before the next lesson.</li>
+      <li>These checks aren't scored for a grade - they're just for you, to see what's solid before the next lesson. Your teacher can still see that you worked through this page (which tabs you opened and whether you reached the end), so it's worth actually doing rather than clicking through.</li>
     </ul>
   </div>
 
@@ -253,6 +270,8 @@
 </div>
 
 <script>
+  LessonSync.init('7-rational-numbers-vocabulary-literacy');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -341,6 +360,58 @@
     if (explain.length <= 5) { LessonCheck.incomplete(fb, "Write your answer before submitting."); return; }
     LessonCheck.submit(fb, { key: 'rn-critical', label: 'Critical Thinking: a number at least 0.5 but less than 1', answer: explain });
   }
+
+  // No window.listRegistry on this page - three different problem shapes
+  // (plain inputs, a 4-select match, single selects), so the teacher
+  // reveal is built by hand for each.
+  window.revealAnswerKey = function () {
+    numVocabProblems.forEach((p, idx) => {
+      const input = document.getElementById(`nv-${idx}-input`);
+      const fb = document.getElementById(`nv-${idx}-feedback`);
+      if (!input || !fb) return;
+      input.value = p.a;
+      input.disabled = true;
+      const btn = input.parentElement && input.parentElement.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${p.a}</strong>`;
+    });
+
+    const ovExpected = ['Reciprocal', 'LCD', 'Simplest', 'Align'];
+    ['ov-0', 'ov-1', 'ov-2', 'ov-3'].forEach((id, i) => {
+      const sel = document.getElementById(id);
+      if (sel) { sel.value = ovExpected[i]; sel.disabled = true; }
+    });
+    const ovBtn = document.querySelector('.challenge-box button[onclick="checkOpVocab()"]');
+    if (ovBtn) ovBtn.disabled = true;
+    const ovFb = document.getElementById('ov-feedback');
+    if (ovFb) {
+      ovFb.style.display = 'block';
+      ovFb.className = 'feedback-msg success locked';
+      ovFb.innerHTML = 'Answer key: Reciprocal, Common Denominator, Simplest Form, Decimal Alignment (in order).';
+    }
+
+    Object.keys(compareWordsAnswers).forEach((idx) => {
+      const sel = document.getElementById(`cw-${idx}`);
+      const fb = document.getElementById(`cw-${idx}-feedback`);
+      if (sel) { sel.value = compareWordsAnswers[idx]; sel.disabled = true; }
+      const btn = sel && sel.closest('.step-box') && sel.closest('.step-box').querySelector('button');
+      if (btn) btn.disabled = true;
+      if (fb) {
+        fb.style.display = 'block';
+        fb.className = 'feedback-msg success locked';
+        fb.innerHTML = `Answer key: <strong>${compareWordsAnswers[idx]}</strong>`;
+      }
+    });
+
+    const criticalFb = document.getElementById('rn-critical-feedback');
+    if (criticalFb) {
+      criticalFb.style.display = 'block';
+      criticalFb.className = 'feedback-msg success locked';
+      criticalFb.innerHTML = 'Open-ended - any number in [0.5, 1) with a valid explanation is correct (e.g. 0.6, because it is greater than or equal to 0.5 and less than 1).';
+    }
+  };
 </script>
 </body>
 </html>

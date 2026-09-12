@@ -70,6 +70,8 @@
         <th data-sort="scorePct">Score</th>
         <th data-sort="itemsAttempted">Attempted</th>
         <th data-sort="avgSeconds">Avg sec/answer</th>
+        <th data-sort="tabsViewed">Tabs viewed</th>
+        <th data-sort="reachedEnd">Reached end</th>
         <th data-sort="lastSubmittedAt">Last submitted</th>
         <th>Flags</th>
         <th></th>
@@ -127,9 +129,17 @@
   // All the analysis lives here, not in Apps Script - tune these rules
   // freely without ever touching the backend.
   function decorateRow(row) {
-    let submissions = [];
-    try { submissions = JSON.parse(row.submissionsLog || '[]'); } catch (e) { submissions = []; }
-    submissions.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    let allSubmissions = [];
+    try { allSubmissions = JSON.parse(row.submissionsLog || '[]'); } catch (e) { allSubmissions = []; }
+    allSubmissions.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+    // lesson-auth.js logs tab views and "reached the end" as their own
+    // synced items (key "tab-*" / "reached-end") separate from graded
+    // answers - mixing them into "average time per answer" would be
+    // misleading (a tab view isn't an answer), so they're split out here.
+    const submissions = allSubmissions.filter((s) => !s.key.startsWith('tab-') && s.key !== 'reached-end');
+    const tabViews = allSubmissions.filter((s) => s.key.startsWith('tab-'));
+    const reachedEnd = allSubmissions.some((s) => s.key === 'reached-end');
 
     const deltas = [];
     for (let i = 1; i < submissions.length; i++) {
@@ -149,7 +159,7 @@
     if (row.flagReason) flags.push(row.flagReason);
     if (rapidBurst) flags.push('3+ answers within 60 seconds');
 
-    return Object.assign({}, row, { submissions, avgSeconds, rapidBurst, flags });
+    return Object.assign({}, row, { submissions, avgSeconds, rapidBurst, flags, tabsViewed: tabViews.length, reachedEnd });
   }
 
   function populateFilters() {
@@ -211,11 +221,13 @@
         <td>${r.scorePct}%</td>
         <td>${r.itemsAttempted}</td>
         <td>${r.avgSeconds === null ? '-' : r.avgSeconds + 's'}</td>
+        <td>${r.tabsViewed}</td>
+        <td>${r.reachedEnd ? '<span class="pill ok">yes</span>' : '<span class="pill flag">no</span>'}</td>
         <td>${r.lastSubmittedAt ? new Date(r.lastSubmittedAt).toLocaleString() : '-'}</td>
         <td>${r.flags.map((f) => `<span class="pill flag">${f}</span>`).join(' ') || '<span class="pill ok">none</span>'}</td>
         <td><span class="expand-btn" onclick="toggleDetail(${i})">Details</span></td>
       </tr>
-      <tr class="detail-row" id="detail-${i}" hidden><td colspan="8">${detailTable(r)}</td></tr>
+      <tr class="detail-row" id="detail-${i}" hidden><td colspan="10">${detailTable(r)}</td></tr>
     `).join('');
     window._currentRows = rows;
   }

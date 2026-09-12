@@ -22,7 +22,13 @@
 
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="../../lesson-auth.js"></script>
   <style>
+    .lesson-gate { max-width: 480px; margin: 80px auto; padding: 32px; background: var(--card); border: 2px solid var(--border); border-radius: 16px; text-align: center; }
+    .lesson-gate h2 { margin-top: 0; }
+    .lesson-gate .g_id_signin { display: flex; justify-content: center; margin: 20px 0; }
+    #lesson-gate-status { min-height: 1.2em; font-weight: 600; }
     .glossary-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -50,7 +56,18 @@
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-gate" class="lesson-gate">
+  <h2>Sign in to start this activity</h2>
+  <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+  <div id="g_id_onload"
+       data-client_id="478111261772-7l1qamohr0fjsa7ekosuhpj9jum1q4vc.apps.googleusercontent.com"
+       data-callback="handleGoogleSignIn">
+  </div>
+  <div class="g_id_signin" data-type="standard"></div>
+  <p id="lesson-gate-status"></p>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -63,7 +80,7 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Nothing here is graded &ndash; this is a warm-up. Rational Numbers is about classifying numbers and converting between fractions and decimals, and it leans hard on two skills from earlier: the sign rules you just learned in Integers, and fraction mechanics (simplifying, converting) from earlier grades. Work through the tabs in order, then use the practice tab honestly.
+    Nothing here is scored for a grade &ndash; this is a warm-up. Rational Numbers is about classifying numbers and converting between fractions and decimals, and it leans hard on two skills from earlier: the sign rules you just learned in Integers, and fraction mechanics (simplifying, converting) from earlier grades. Work through the tabs in order, then use the practice tab honestly &ndash; your teacher can see which tabs you opened and whether you reached the end, so it's worth actually doing.
   </div>
 
   <nav class="nav-tabs">
@@ -225,6 +242,8 @@
 </div>
 
 <script>
+  LessonSync.init('7-rational-numbers-review');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -243,6 +262,7 @@
   // GENERIC CHECK-STYLE PRACTICE LIST (2 tries, then reveal)
   // ==========================================
   const checkListRegistry = {};
+  window.listRegistry = checkListRegistry; // read by lesson-auth.js's teacher answer-key view
 
   function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
     checkListRegistry[keyPrefix] = { problems, retry: retryMsg };

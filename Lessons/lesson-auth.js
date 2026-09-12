@@ -84,6 +84,41 @@ const LessonSync = (() => {
       nameField.disabled = true;
     }
     if (progress && progress.SubmissionsLog) restoreSubmissions(progress.SubmissionsLog);
+    trackCurrentTab(); // log whichever tab is visible by default, even if the student never clicks another one
+  }
+
+  // Logs which tab is currently visible as its own synced item, separate
+  // from LessonProgress/LessonCheck - this is what lets pages with no
+  // graded questions at all (or a teacher wanting engagement instead of
+  // scores) still show up on the dashboard: whether a student opened the
+  // page, which tabs they viewed, and whether they reached the last one.
+  // Reads DOM state (.active classes) rather than taking a tabId param,
+  // so it works identically whether called right after sign-in or right
+  // after a tab switch.
+  function trackCurrentTab() {
+    if (!ready || !idToken) return;
+    const activeBtn = document.querySelector('.tab-btn.active');
+    const activePanel = document.querySelector('.panel.active');
+    if (!activeBtn || !activePanel) return;
+    onRecord({ key: `tab-${activePanel.id}`, label: `Viewed tab: ${activeBtn.textContent.trim()}`, answer: '', verdict: 'viewed', section: 'Navigation' });
+    const allTabs = [...document.querySelectorAll('.tab-btn')];
+    if (allTabs.length && activeBtn === allTabs[allTabs.length - 1]) {
+      onRecord({ key: 'reached-end', label: 'Reached last tab', answer: 'yes', verdict: 'reached-end', section: 'Navigation' });
+    }
+  }
+
+  // switchTab() is declared with `function` (not const/let) on every
+  // lesson page, so it's a real window property we can wrap - same trick
+  // as the LessonProgress.record patch below. Only takes effect once the
+  // page's own script has defined it, which init() guarantees since
+  // function declarations are hoisted before any code in that script runs.
+  function patchSwitchTab() {
+    if (typeof window.switchTab !== 'function') return;
+    const originalSwitchTab = window.switchTab;
+    window.switchTab = function (tabId) {
+      originalSwitchTab(tabId);
+      trackCurrentTab();
+    };
   }
 
   // Fills in every problem with its correct answer instead of the
@@ -122,6 +157,12 @@ const LessonSync = (() => {
         feedback.innerHTML = `Answer key: <strong>${answer}</strong>`;
       });
     });
+
+    // Extension point for pages whose problems aren't in window.listRegistry
+    // (multiple bespoke check functions, select dropdowns, multi-field
+    // answers) - such a page defines window.revealAnswerKey itself and this
+    // just calls it.
+    if (typeof window.revealAnswerKey === 'function') window.revealAnswerKey();
   }
 
   async function handleGoogleSignIn(response) {
@@ -162,6 +203,7 @@ const LessonSync = (() => {
 
   function init(id) {
     activityId = id;
+    patchSwitchTab();
   }
 
   return { init };

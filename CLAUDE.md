@@ -75,16 +75,51 @@ correct answer instead of the interactive check flow, reading
 `role: "student"` through the normal `Roster`/`ActivityCatalog` grade
 check as before.
 
-This currently only works on pages using the `renderPracticeList()` /
-`checkPractice()` pattern (single text-input-per-problem, like the
-Rational Numbers Practice Set pilot) because that's what
-`window.listRegistry` and the `<key>-input`/`<key>-feedback` id
-convention come from. A page with a different problem shape (radio-button
-groups, multi-field answers) needs its own reveal logic added to
-`unlockTeacherView` before this will show anything for it — don't assume
-teacher view works on a page until it's been wired the same way this
-pilot page was (`window.listRegistry = listRegistry;` after that
-constant's declaration).
+Pages using the `renderPracticeList()`/`checkPractice()` single-text-input
+pattern get this for free by exposing their registry as
+`window.listRegistry` (see Practice-Set.html, Word-Problems.html,
+Review.html — each just adds one line after declaring their local
+registry object, whatever it's called locally). A page with a different
+problem shape (select dropdowns, multi-field answers, several unrelated
+check functions with no shared registry — see Vocabulary-Literacy.html,
+Test-Prep.html) instead defines its own `window.revealAnswerKey`
+function that fills in and locks every one of its own problems by hand;
+`unlockTeacherView` calls it if present. **Don't assume teacher view
+works on a new page** until it has either `window.listRegistry` exposed
+or its own `window.revealAnswerKey` — check the page's own script for
+one of those two before trusting the answer key to show anything.
+
+### Engagement tracking (tab views, not just graded answers)
+
+`lesson-auth.js` also patches `window.switchTab` (a real `function`
+declaration on every lesson page, not a `const`, so it's a genuine
+`window` property this can wrap) to sync two more item types into the
+same `SubmissionsLog`, independent of `LessonCheck`/`LessonProgress`:
+`tab-<panelId>` (verdict `viewed`, logged once per tab actually opened,
+including the first one visible at sign-in) and `reached-end` (verdict
+`reached-end`, logged once the last `.tab-btn` in the page's nav is
+opened). This is what lets a page with no graded content at all (or one
+where grading isn't the point) still show meaningful data: whether a
+student opened it, how many tabs they saw, whether they got to the end.
+
+`teacher-dashboard.html`'s `decorateRow()` splits these out from graded
+answers before computing "avg seconds per answer" or the rapid-burst
+flag — a tab view isn't an answer, and would otherwise skew both. They
+surface instead as their own `Tabs viewed` / `Reached end` columns.
+
+### Rational Numbers unit — current activity IDs
+
+| Page | ActivityId | Notes |
+|---|---|---|
+| Practice-Set.html | `7-rational-numbers-practice-set` | Full grading + teacher answer key (`window.listRegistry`). |
+| Word-Problems.html | `7-rational-numbers-word-problems` | Submit-only (graded from printed report), `window.listRegistry` + a small `window.revealAnswerKey` for the one open-ended item (`hike-order`) it doesn't cover. |
+| Test-Prep.html | `7-rational-numbers-test-prep` | Four different problem shapes, all via a hand-written `window.revealAnswerKey`. |
+| Vocabulary-Literacy.html | `7-rational-numbers-vocabulary-literacy` | Not graded for a score by design — tracked for engagement (tab views, reached-end) plus its own answer checks. Hand-written `window.revealAnswerKey`. |
+| Review.html | `7-rational-numbers-review` | Same as Vocabulary-Literacy: framed as an ungraded warm-up, still tracked. Uses `window.listRegistry` (its local var is `checkListRegistry`). |
+| Explanation.html, Teacher-Guide.html | *(none)* | No checkable content — not wired to auth/sync at all. |
+
+Each of the five wired pages needs its own row in `ActivityCatalog`
+(`Grade: 7`, `Active: TRUE`) before its gate will let anyone in.
 
 ### Flow
 

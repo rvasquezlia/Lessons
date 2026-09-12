@@ -22,10 +22,29 @@
 
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="../../lesson-auth.js"></script>
+  <style>
+    .lesson-gate { max-width: 480px; margin: 80px auto; padding: 32px; background: var(--card); border: 2px solid var(--border); border-radius: 16px; text-align: center; }
+    .lesson-gate h2 { margin-top: 0; }
+    .lesson-gate .g_id_signin { display: flex; justify-content: center; margin: 20px 0; }
+    #lesson-gate-status { min-height: 1.2em; font-weight: 600; }
+  </style>
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-gate" class="lesson-gate">
+  <h2>Sign in to start this activity</h2>
+  <p>Sign in with your Lincoln International Academy Google account to begin. Your progress will be saved to your account.</p>
+  <div id="g_id_onload"
+       data-client_id="478111261772-7l1qamohr0fjsa7ekosuhpj9jum1q4vc.apps.googleusercontent.com"
+       data-callback="handleGoogleSignIn">
+  </div>
+  <div class="g_id_signin" data-type="standard"></div>
+  <p id="lesson-gate-status"></p>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -240,6 +259,8 @@
 </div>
 
 <script>
+  LessonSync.init('7-rational-numbers-test-prep');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -433,6 +454,63 @@
     // submit-only: recorded for the printed report, never revealed on screen.
     LessonCheck.submit(fb, { key: `mp-${idx}`, label: `4. Mixed Practice #${idx + 1}: ${p.label}`, answer: raw, section: '4. Mixed Practice', correct });
   }
+
+  // This page has four different problem shapes, none using
+  // window.listRegistry, so lesson-auth.js's generic teacher-view reveal
+  // can't touch any of it - this fills in every tab's answer key directly.
+  window.revealAnswerKey = function () {
+    const fillInput = (id, feedbackId, answer) => {
+      const input = document.getElementById(id);
+      const fb = document.getElementById(feedbackId);
+      if (!input || !fb) return;
+      input.value = answer;
+      input.disabled = true;
+      const btn = input.parentElement && input.parentElement.querySelector('button');
+      if (btn) { btn.disabled = true; btn.style.cursor = 'not-allowed'; }
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
+    };
+
+    cuProblems.forEach((p, i) => fillInput(`cu-${i}-input`, `cu-${i}-feedback`, p.a !== undefined ? String(p.a) : p.accepted[0]));
+
+    errorAnalysisProblems.forEach((p, i) => {
+      const explainEl = document.getElementById(`ea-${i}-explain`);
+      const answerEl = document.getElementById(`ea-${i}-answer`);
+      const fb = document.getElementById(`ea-${i}-feedback`);
+      if (!explainEl || !answerEl || !fb) return;
+      explainEl.value = p.rule;
+      answerEl.value = p.correctAnswer;
+      explainEl.disabled = true;
+      answerEl.disabled = true;
+      const btn = answerEl.closest('.guided-practice') && answerEl.closest('.guided-practice').querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${p.correctAnswer}</strong>`;
+    });
+
+    const auditSel = document.getElementById('audit-choice');
+    const auditFb = document.getElementById('audit-feedback');
+    if (auditSel && auditFb) {
+      auditSel.value = 'incorrect';
+      auditSel.disabled = true;
+      auditFb.style.display = 'block';
+      auditFb.className = 'feedback-msg success locked';
+      auditFb.innerHTML = 'Answer key: Jordan is incorrect.';
+      document.getElementById('audit-explain').style.display = 'block';
+    }
+
+    Object.keys(qcAnswers).forEach((set) => {
+      Object.keys(qcAnswers[set]).forEach((idx) => {
+        fillInput(`qc-${set}${idx}`, `qc-${set}${idx}-feedback`, String(qcAnswers[set][idx]));
+      });
+    });
+
+    mpProblems.forEach((p, i) => fillInput(`mp-${i}-input`, `mp-${i}-feedback`, p.a !== undefined ? String(p.a) : p.accepted[0]));
+
+    triggerMathJax();
+  };
 </script>
 <div id="print-report"></div>
 </body>
