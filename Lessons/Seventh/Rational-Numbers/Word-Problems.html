@@ -20,6 +20,8 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
@@ -139,7 +141,10 @@
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
         <strong>${i + 1}.</strong> ${p.q}
         <div style="margin-top:10px;">
-          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+          ${p.text
+            ? `<input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">`
+            : `<math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:220px; display:inline-block;" placeholder="\\text{Answer}"></math-field>`
+          }
           <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkItem('${keyPrefix}', ${i})">Submit</button>
         </div>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:8px;"></div>
@@ -147,6 +152,7 @@
     `).join('');
     document.getElementById(containerId).innerHTML = html;
     problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, `${section} #${i + 1}: ${p.label}`, section));
+    triggerMathJax();
   }
 
   const listRegistry = {};
@@ -156,17 +162,47 @@
     return String(s || '').toLowerCase().replace(/\s+/g, '');
   }
 
+  // ASCIIMath always double-parenthesizes every fraction (e.g. \dfrac{3}{4}
+  // reads back as "(3)/(4)"), so a typed math-field answer needs its
+  // redundant parens stripped before comparing against a plain "3/4" in
+  // accepted[] - see /CLAUDE.md's "Visual math input" note.
+  function stripRedundantParens(s) {
+    let prev;
+    do {
+      prev = s;
+      s = s.replace(/\(([^()+-]+)\)/g, '$1');
+    } while (s !== prev);
+    return s;
+  }
+
+  function normalizeExpr(s) {
+    return stripRedundantParens(normalizeAns(s));
+  }
+
+  function answerMatches(val, accepted) {
+    const norm = normalizeExpr(val);
+    return (accepted || []).some((a) => normalizeExpr(a) === norm);
+  }
+
+  // Reads a <math-field>'s answer as ASCIIMath text, guarded against the
+  // MathLive script never loading (blocked network, ad blocker, cold CDN
+  // failure).
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
   function checkItem(keyPrefix, idx) {
     const cfg = listRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const raw = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const field = document.getElementById(`${keyPrefix}-${idx}-input`);
+    const raw = p.text ? field.value : readMathField(field);
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
     let correct;
     if (p.a !== undefined) {
       correct = LessonCheck.numericMatch(raw, p.a, p.tol !== undefined ? p.tol : 0.01);
     } else if (p.accepted) {
-      correct = p.accepted.includes(normalizeAns(raw));
+      correct = p.text ? p.accepted.includes(normalizeAns(raw)) : answerMatches(raw, p.accepted);
     } else {
       correct = undefined; // open-ended, no auto-grade - shows as "Submitted" on the report
     }
@@ -185,7 +221,7 @@
     { q: "A recipe calls for \\(\\dfrac{3}{4}\\) cup of sugar. Write this amount as a decimal.", a: 0.75, label: "Recipe sugar as a decimal" },
     { q: "Sam's batting average is \\(0.325\\). Write this as a fraction in lowest terms.", accepted: ["13/40"], label: "Batting average as a fraction" },
     { q: "One board measures \\(\\dfrac{5}{8}\\) inch thick; another measures \\(0.6\\) inch thick. Enter the thickness of the thicker board as a decimal.", a: 0.625, label: "Thicker board" },
-    { q: "A pitcher threw strikes on \\(\\dfrac{2}{5}\\) of his pitches yesterday, and on \\(0.36\\) of his pitches today. On which day was his strike fraction higher - type \"yesterday\" or \"today\".", accepted: ["yesterday"], label: "Higher strike fraction" }
+    { q: "A pitcher threw strikes on \\(\\dfrac{2}{5}\\) of his pitches yesterday, and on \\(0.36\\) of his pitches today. On which day was his strike fraction higher - type \"yesterday\" or \"today\".", accepted: ["yesterday"], label: "Higher strike fraction", text: true }
   ];
   setup('cc-list', ccProblems, 'cc', '1. Converting & Comparing');
 
@@ -220,7 +256,7 @@
     { q: "A stock price started at \\(\\$45.50\\), dropped \\(\\dfrac{3}{4}\\) of a dollar, then rose \\(\\$1.25\\). What is the final price?", a: 46.00, label: "Final stock price" },
     { q: "Which is colder: \\(-\\dfrac{3}{4}^\\circ\\text{C}\\) or \\(-0.8^\\circ\\text{C}\\)? Enter the colder temperature as a decimal.", a: -0.8, label: "Colder temperature" },
     { q: "A submarine's depth changes from \\(-12.4\\) m to \\(-8.9\\) m. Express the change as a positive number of meters risen.", a: 3.5, label: "Submarine rise" },
-    { q: "Order from least to greatest: \\(-1.5,\\ \\dfrac{3}{4},\\ -2,\\ 0.2\\).", accepted: ["-2,-1.5,0.2,3/4"], label: "Order four rational numbers" },
+    { q: "Order from least to greatest: \\(-1.5,\\ \\dfrac{3}{4},\\ -2,\\ 0.2\\).", accepted: ["-2,-1.5,0.2,3/4"], label: "Order four rational numbers", text: true },
     { q: "A runner's time improved from \\(12.75\\) minutes to \\(12\\dfrac{1}{2}\\) minutes. By how much did her time decrease?", a: 0.25, label: "Runner's time decrease" },
     { q: "A container holds \\(\\dfrac{3}{4}\\) gallon of paint. Ana uses \\(0.4\\) gallon on one wall and \\(\\dfrac{1}{8}\\) gallon on another. How much paint (in gallons, as a decimal) remains?", a: 0.225, label: "Paint remaining" }
   ];
