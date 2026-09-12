@@ -764,6 +764,36 @@
     });
   }
 
+  // "Lesson Completion %" for one student, broken out by unit: what
+  // fraction of that unit's wired activities (for the student's own
+  // grade) has this student finished - status completed-passed OR
+  // completed-locked-out, either way counts as done, per progressStatus().
+  // Deliberately distinct from computeActivitySummaries()'s own
+  // completionPct, which measures participation (started at all) across
+  // the whole eligible roster, not one student's own finish rate - the
+  // two answer different questions and shouldn't be confused. Reuses the
+  // same unit + 'Unassigned' fallback convention as computeUnitSummaries()
+  // so a unit name always matches between the two.
+  function computeStudentUnitCompletion(s) {
+    const catalogForGrade = activityCatalog.filter((a) => String(a.grade) === String(s.grade));
+    const byUnit = {};
+    catalogForGrade.forEach((a) => {
+      const unit = a.unit || 'Unassigned';
+      (byUnit[unit] = byUnit[unit] || []).push(a.activityId);
+    });
+    const rowsById = {};
+    s.rows.forEach((r) => { rowsById[r.activityId] = r; });
+    return Object.keys(byUnit).sort().map((unit) => {
+      const activityIds = byUnit[unit];
+      const statuses = activityIds.map((id) => progressStatus(rowsById[id]));
+      const passed = statuses.filter((st) => st === 'completed-passed').length;
+      const lockedOut = statuses.filter((st) => st === 'completed-locked-out').length;
+      const total = activityIds.length;
+      const lessonCompletionPct = total ? Math.round(((passed + lockedOut) / total) * 100) : null;
+      return { unit, total, passed, lockedOut, lessonCompletionPct };
+    });
+  }
+
   // Five-state engagement/mastery funnel, distinct from AccessLog's
   // allow/deny security log (which the Sheet already owns) - this
   // answers "did they actually open it, and did they pass it," derived
@@ -1261,6 +1291,26 @@
     showListView('by-student');
   }
 
+  // Table version of computeStudentUnitCompletion() for the student
+  // detail drawer - "0 total" units (nothing in ActivityCatalog for this
+  // grade, shouldn't normally happen) are skipped rather than shown as a
+  // confusing "-  %" row.
+  function lessonCompletionHtml(units) {
+    const rows = units.filter((u) => u.total > 0);
+    if (!rows.length) return '<p class="empty-note">No wired units found for this grade.</p>';
+    return `<table><thead><tr><th>Unit</th><th>Completion</th><th>Passed</th><th>Locked Out</th><th>Total Activities</th></tr></thead><tbody>${
+      rows.map((u) => `
+        <tr>
+          <td>${u.unit}</td>
+          <td>${u.lessonCompletionPct === null ? '-' : u.lessonCompletionPct + '%'}</td>
+          <td>${u.passed}</td>
+          <td>${u.lockedOut}</td>
+          <td>${u.total}</td>
+        </tr>
+      `).join('')
+    }</tbody></table>`;
+  }
+
   // This student's full profile - every activity they've touched, a
   // score-by-activity bar chart, and their own interaction timeline
   // across all of it (this is the "all students metrics" drill-down).
@@ -1280,6 +1330,7 @@
         <div class="stat-tile"><div class="n" style="font-size:1rem;">${s.lastActive ? s.lastActive.toLocaleString() : '-'}</div><div class="l">Last active</div></div>
       </div>
       <div class="card"><h3>Score by activity</h3><div>${scoreBarsHtml(s.rows, 'activityTitle', 'scorePct')}</div></div>
+      <div class="card"><h3>Lesson completion by unit</h3><div class="table-wrap">${lessonCompletionHtml(computeStudentUnitCompletion(s))}</div></div>
       <div class="table-wrap">${studentDetailTable(s)}</div>
       <div class="card"><h3>Recent activity</h3>${recentActivityHtml(events)}</div>
     `);

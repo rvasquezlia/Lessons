@@ -259,8 +259,27 @@ click.
   zero `Progress` rows, so "hasn't started anything" is visible instead
   of just absent), averaged across every activity they've touched. Click
   a student for their full profile: stat tiles, a score-by-activity bar
-  chart, the full per-activity table, and their own "Recent activity"
-  timeline across everything they've touched.
+  chart, a **"Lesson completion by unit"** card, the full per-activity
+  table, and their own "Recent activity" timeline across everything
+  they've touched.
+
+**"Lesson Completion %" (`computeStudentUnitCompletion()`) is a
+per-student, per-unit metric - not to be confused with
+`computeActivitySummaries()`'s own `completionPct`.** The existing
+`completionPct` (used in By Activity/By Unit) measures *participation*:
+what fraction of the *eligible roster* has even started a given
+activity. `computeStudentUnitCompletion()` answers a different
+question for one specific student: of a unit's wired activities (for
+that student's own grade), what fraction has *this student* actually
+finished - status `completed-passed` or `completed-locked-out` from the
+five-state funnel above, either way counts as "done" toward completion
+even though only Passed counts toward mastery. Grouped by
+`ActivityCatalog.Unit` using the same `unit`/`'Unassigned'` fallback
+convention as `computeUnitSummaries()`, so a unit name always matches
+between the two views. Rendered as its own table in the By Student
+detail drawer (`lessonCompletionHtml()`), listing every wired unit for
+that student's grade with its Completion %, Passed count, Locked Out
+count, and total activity count.
 - **Activity Status** — "are students actually opening this, and are
   they passing it?", answered with a five-state funnel per activity
   (Not started / Opened only / In progress / Completed - Passed /
