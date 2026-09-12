@@ -448,7 +448,7 @@
     hideLoadingIndicator();
     document.getElementById('lesson-gate').hidden = true;
     document.getElementById('dashboard').hidden = false;
-    const activeStudents = roster.filter((s) => s.status === 'Active').length;
+    const activeStudents = roster.filter((s) => isActiveStatus(s.status)).length;
     const scopeNote = teacherScope ? ` - showing only ${teacherScope}'s students` : '';
     document.getElementById('loaded-as').textContent =
       `${activeStudents} active students${scopeNote} - ${allRows.length} activity records.`;
@@ -583,7 +583,7 @@
   function filteredRoster() {
     const f = activeFilters();
     return roster.filter((s) =>
-      s.status === 'Active' &&
+      isActiveStatus(s.status) &&
       (!f.grade || String(s.grade) === f.grade) &&
       (!f.teacher || s.teacher === f.teacher)
     );
@@ -596,6 +596,16 @@
       (!f.grade || String(a.grade) === f.grade) &&
       (!f.activity || a.title === f.activity)
     );
+  }
+
+  // Roster.Status is hand-typed in the Sheet, same as Roster.Email/
+  // Teachers.Email that Code.gs now normalizes server-side (see
+  // findRowByEmail_/isActiveStatus_ there) - a stray "active" or
+  // "Active " here used to just silently drop that student from every
+  // count on this page (not started, active students, By Student, By
+  // Unit/Activity completion percentages) with no error anywhere.
+  function isActiveStatus(status) {
+    return String(status || '').trim().toLowerCase() === 'active';
   }
 
   function avg(nums) {
@@ -645,7 +655,7 @@
       const avgSeconds = avg(g.rows.map((r) => r.avgSeconds));
       const flaggedCount = g.rows.filter((r) => r.flags.length > 0).length;
       const eligible = roster.filter((s) =>
-        s.status === 'Active' && String(s.grade) === String(g.grade) && (!f.teacher || s.teacher === f.teacher)
+        isActiveStatus(s.status) && String(s.grade) === String(g.grade) && (!f.teacher || s.teacher === f.teacher)
       ).length;
       const startedCount = g.rows.length;
       const completionPct = eligible ? Math.round((startedCount / eligible) * 100) : null;
@@ -699,7 +709,7 @@
   function computeActivityStatusBreakdown(a) {
     const f = activeFilters();
     const eligible = roster.filter((s) =>
-      s.status === 'Active' && String(s.grade) === String(a.grade) && (!f.teacher || s.teacher === f.teacher)
+      isActiveStatus(s.status) && String(s.grade) === String(a.grade) && (!f.teacher || s.teacher === f.teacher)
     );
     const rowsByEmail = {};
     a.rows.forEach((r) => { rowsByEmail[r.email] = r; });

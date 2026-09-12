@@ -42,6 +42,34 @@ function findRow_(sheet, colIdx, value) {
   return null;
 }
 
+// Trim + lowercase so a stray leading/trailing space or a capitalized
+// letter typed into Roster/Teachers (both hand-maintained by a teacher,
+// not code) doesn't silently fail to match the token's email - "not on
+// the roster" used to fire for that too, indistinguishable from actually
+// missing. Google's own token email is already lowercase in practice,
+// but this normalizes both sides the same way regardless.
+function normalizeEmail_(email) {
+  return String(email || '').trim().toLowerCase();
+}
+
+// Same idea as findRow_ but for an Email column specifically - compares
+// normalizeEmail_() on both sides instead of a raw strict match.
+function findRowByEmail_(sheet, colIdx, email) {
+  const target = normalizeEmail_(email);
+  const data = sheet.getDataRange().getValues();
+  for (let r = 1; r < data.length; r++) {
+    if (normalizeEmail_(data[r][colIdx]) === target) return { rowNumber: r + 1, row: data[r] };
+  }
+  return null;
+}
+
+// Same reasoning as normalizeEmail_ - Status is hand-typed too, and
+// "active" / "Active " / "ACTIVE" all clearly mean the same thing a
+// strict === 'Active' would silently reject.
+function isActiveStatus_(status) {
+  return String(status || '').trim().toLowerCase() === 'active';
+}
+
 function logAccess_(email, activityId, studentGrade, requiredGrade, result, reason) {
   const sheet = ss_().getSheetByName('AccessLog');
   sheet.appendRow([new Date(), email, activityId, studentGrade, requiredGrade, result, reason]);
@@ -55,8 +83,8 @@ function logAccess_(email, activityId, studentGrade, requiredGrade, result, reas
 function resolveAccess_(email, activityId) {
   const roster = ss_().getSheetByName('Roster');
   const rMap = colMap_(roster);
-  const studentRow = findRow_(roster, rMap['Email'], email);
-  if (!studentRow || studentRow.row[rMap['Status']] !== 'Active') {
+  const studentRow = findRowByEmail_(roster, rMap['Email'], email);
+  if (!studentRow || !isActiveStatus_(studentRow.row[rMap['Status']])) {
     return { allowed: false, reason: 'Your account is not on the class roster yet - check with your teacher.', logReason: 'Not found on roster' };
   }
   const student = {
@@ -143,8 +171,8 @@ function doPost(e) {
     }
     const roster = ss_().getSheetByName('Roster');
     const rMap = colMap_(roster);
-    const studentRow = findRow_(roster, rMap['Email'], auth.email);
-    if (!studentRow || studentRow.row[rMap['Status']] !== 'Active') {
+    const studentRow = findRowByEmail_(roster, rMap['Email'], auth.email);
+    if (!studentRow || !isActiveStatus_(studentRow.row[rMap['Status']])) {
       return jsonOut_({ ok: true, role: 'unknown', reason: 'Your account is not on the class roster yet - check with your teacher.' });
     }
     return jsonOut_({
@@ -301,7 +329,7 @@ function jsonOut_(obj) {
 function isTeacher_(email) {
   const sheet = ss_().getSheetByName('Teachers');
   const map = colMap_(sheet);
-  return !!findRow_(sheet, map['Email'], email);
+  return !!findRowByEmail_(sheet, map['Email'], email);
 }
 
 // Teachers tab optionally has a `Scope` column. Blank or the literal
@@ -314,7 +342,7 @@ function isTeacher_(email) {
 function getTeacherScope_(email) {
   const sheet = ss_().getSheetByName('Teachers');
   const map = colMap_(sheet);
-  const found = findRow_(sheet, map['Email'], email);
+  const found = findRowByEmail_(sheet, map['Email'], email);
   if (!found || map['Scope'] === undefined) return null;
   const scope = found.row[map['Scope']];
   return (!scope || scope === 'All') ? null : scope;
