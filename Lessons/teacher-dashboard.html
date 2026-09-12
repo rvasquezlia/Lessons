@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Dashboard - Lessons Progress</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson-shared.css">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 24px; }
+  h1 { margin: 0 0 4px 0; }
+  .lesson-gate { max-width: 480px; margin: 80px auto; padding: 32px; background: var(--card); border: 2px solid var(--border); border-radius: 16px; text-align: center; }
+  .lesson-gate .g_id_signin { display: flex; justify-content: center; margin: 20px 0; }
+  #gate-status { min-height: 1.2em; font-weight: 600; }
+
+  #dashboard { max-width: 1200px; margin: 0 auto; }
+  .controls { display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0; align-items: center; }
+  .controls select, .controls input { padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; }
+  .stat-row { display: flex; gap: 16px; flex-wrap: wrap; margin: 16px 0; }
+  .stat-tile { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 18px; min-width: 140px; }
+  .stat-tile .n { font-size: 1.6rem; font-weight: 800; color: var(--primary); }
+  .stat-tile .l { font-size: 0.8rem; color: var(--text); opacity: 0.7; }
+
+  table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; font-size: 0.9rem; }
+  th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--primary); color: white; cursor: pointer; user-select: none; }
+  tr.flagged { background: var(--error-bg); }
+  tr.flagged td:first-child { border-left: 4px solid var(--error); }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+  .pill.flag { background: var(--error-bg); color: var(--error); }
+  .pill.ok { background: var(--success-bg); color: var(--success); }
+  .detail-row td { background: #f8fafc; }
+  .detail-row table { font-size: 0.82rem; }
+  .expand-btn { cursor: pointer; color: var(--primary-light); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div id="lesson-gate" class="lesson-gate">
+  <h2>Teacher Dashboard</h2>
+  <p>Sign in with your Lincoln International Academy Google account.</p>
+  <div id="g_id_onload"
+       data-client_id="478111261772-7l1qamohr0fjsa7ekosuhpj9jum1q4vc.apps.googleusercontent.com"
+       data-callback="handleGoogleSignIn">
+  </div>
+  <div class="g_id_signin" data-type="standard"></div>
+  <p id="gate-status"></p>
+</div>
+
+<div id="dashboard" hidden>
+  <h1>Lessons Progress Dashboard</h1>
+  <p id="loaded-as"></p>
+
+  <div class="stat-row" id="stat-row"></div>
+
+  <div class="controls">
+    <label>Grade: <select id="filter-grade"><option value="">All</option></select></label>
+    <label>Teacher: <select id="filter-teacher"><option value="">All</option></select></label>
+    <label>Activity: <select id="filter-activity"><option value="">All</option></select></label>
+    <label><input type="checkbox" id="filter-flagged-only"> Flagged only</label>
+    <button id="refresh-btn">Refresh</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th data-sort="studentName">Student</th>
+        <th data-sort="activityTitle">Activity</th>
+        <th data-sort="scorePct">Score</th>
+        <th data-sort="itemsAttempted">Attempted</th>
+        <th data-sort="avgSeconds">Avg sec/answer</th>
+        <th data-sort="lastSubmittedAt">Last submitted</th>
+        <th>Flags</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="rows-body"></tbody>
+  </table>
+</div>
+
+<script>
+  const LESSON_SYNC_API_URL = 'https://script.google.com/macros/s/AKfycbyC7mb1TKfg3JvhiZftXMf7oXkzrBMWJczZSURC7sIfoIxYnZrrumYfx-j7JYTY0A9i/exec';
+
+  let idToken = null;
+  let allRows = [];
+  let sortKey = 'lastSubmittedAt';
+  let sortDir = -1;
+
+  function fetchWithTimeout(url, opts, timeoutMs) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs || 15000);
+    return fetch(url, Object.assign({}, opts, { signal: controller.signal })).finally(() => clearTimeout(timer));
+  }
+
+  function setGateStatus(msg, isError) {
+    const el = document.getElementById('gate-status');
+    el.textContent = msg;
+    el.style.color = isError ? 'var(--error)' : 'var(--primary)';
+  }
+
+  async function handleGoogleSignIn(response) {
+    idToken = response.credential;
+    setGateStatus('Loading...', false);
+    await loadData();
+  }
+  window.handleGoogleSignIn = handleGoogleSignIn;
+
+  async function loadData() {
+    try {
+      const res = await fetchWithTimeout(LESSON_SYNC_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ idToken, type: 'teacher-data' })
+      });
+      const result = await res.json();
+      if (!result.ok) { setGateStatus(result.error || 'Not authorized for the dashboard.', true); return; }
+      allRows = result.rows.map(decorateRow);
+      document.getElementById('lesson-gate').hidden = true;
+      document.getElementById('dashboard').hidden = false;
+      populateFilters();
+      render();
+    } catch (err) {
+      setGateStatus("Couldn't reach the backend - check your connection and try again.", true);
+    }
+  }
+
+  // All the analysis lives here, not in Apps Script - tune these rules
+  // freely without ever touching the backend.
+  function decorateRow(row) {
+    let submissions = [];
+    try { submissions = JSON.parse(row.submissionsLog || '[]'); } catch (e) { submissions = []; }
+    submissions.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+    const deltas = [];
+    for (let i = 1; i < submissions.length; i++) {
+      deltas.push((new Date(submissions[i].timestamp) - new Date(submissions[i - 1].timestamp)) / 1000);
+    }
+    const avgSeconds = deltas.length ? Math.round(deltas.reduce((a, b) => a + b, 0) / deltas.length) : null;
+
+    // Rapid-burst flag: any 3 submissions where the first and third are
+    // within 60 seconds of each other.
+    let rapidBurst = false;
+    for (let i = 2; i < submissions.length; i++) {
+      const span = (new Date(submissions[i].timestamp) - new Date(submissions[i - 2].timestamp)) / 1000;
+      if (span <= 60) { rapidBurst = true; break; }
+    }
+
+    const flags = [];
+    if (row.flagReason) flags.push(row.flagReason);
+    if (rapidBurst) flags.push('3+ answers within 60 seconds');
+
+    return Object.assign({}, row, { submissions, avgSeconds, rapidBurst, flags });
+  }
+
+  function populateFilters() {
+    fillSelect('filter-grade', [...new Set(allRows.map((r) => r.grade))].sort());
+    fillSelect('filter-teacher', [...new Set(allRows.map((r) => r.teacher))].sort());
+    fillSelect('filter-activity', [...new Set(allRows.map((r) => r.activityTitle))].sort());
+  }
+
+  function fillSelect(id, values) {
+    const el = document.getElementById(id);
+    values.forEach((v) => {
+      if (!v) return;
+      const opt = document.createElement('option');
+      opt.value = v; opt.textContent = v;
+      el.appendChild(opt);
+    });
+  }
+
+  function currentRows() {
+    const grade = document.getElementById('filter-grade').value;
+    const teacher = document.getElementById('filter-teacher').value;
+    const activity = document.getElementById('filter-activity').value;
+    const flaggedOnly = document.getElementById('filter-flagged-only').checked;
+    let rows = allRows.filter((r) =>
+      (!grade || String(r.grade) === grade) &&
+      (!teacher || r.teacher === teacher) &&
+      (!activity || r.activityTitle === activity) &&
+      (!flaggedOnly || r.flags.length > 0)
+    );
+    rows.sort((a, b) => {
+      const av = a[sortKey], bv = b[sortKey];
+      if (av === bv) return 0;
+      if (av === null || av === undefined) return 1;
+      if (bv === null || bv === undefined) return -1;
+      return av > bv ? sortDir : -sortDir;
+    });
+    return rows;
+  }
+
+  function renderStats() {
+    const rows = currentRows();
+    const flaggedCount = rows.filter((r) => r.flags.length > 0).length;
+    const avgScore = rows.length ? Math.round(rows.reduce((s, r) => s + (r.scorePct || 0), 0) / rows.length) : 0;
+    document.getElementById('stat-row').innerHTML = `
+      <div class="stat-tile"><div class="n">${rows.length}</div><div class="l">Rows shown</div></div>
+      <div class="stat-tile"><div class="n">${flaggedCount}</div><div class="l">Flagged</div></div>
+      <div class="stat-tile"><div class="n">${avgScore}%</div><div class="l">Average score</div></div>
+    `;
+  }
+
+  function render() {
+    renderStats();
+    const rows = currentRows();
+    const tbody = document.getElementById('rows-body');
+    tbody.innerHTML = rows.map((r, i) => `
+      <tr class="${r.flags.length ? 'flagged' : ''}">
+        <td>${r.studentName}</td>
+        <td>${r.activityTitle}</td>
+        <td>${r.scorePct}%</td>
+        <td>${r.itemsAttempted}</td>
+        <td>${r.avgSeconds === null ? '-' : r.avgSeconds + 's'}</td>
+        <td>${r.lastSubmittedAt ? new Date(r.lastSubmittedAt).toLocaleString() : '-'}</td>
+        <td>${r.flags.map((f) => `<span class="pill flag">${f}</span>`).join(' ') || '<span class="pill ok">none</span>'}</td>
+        <td><span class="expand-btn" onclick="toggleDetail(${i})">Details</span></td>
+      </tr>
+      <tr class="detail-row" id="detail-${i}" hidden><td colspan="8">${detailTable(r)}</td></tr>
+    `).join('');
+    window._currentRows = rows;
+  }
+
+  function detailTable(r) {
+    if (!r.submissions.length) return '<em>No submissions logged.</em>';
+    const items = r.submissions.map((s) => `
+      <tr>
+        <td>${s.label}</td>
+        <td>${s.answer}</td>
+        <td>${s.verdict}</td>
+        <td>${s.attemptNumber}</td>
+        <td>${new Date(s.timestamp).toLocaleTimeString()}</td>
+      </tr>
+    `).join('');
+    return `<table><thead><tr><th>Item</th><th>Answer</th><th>Verdict</th><th>Attempt</th><th>Time</th></tr></thead><tbody>${items}</tbody></table>`;
+  }
+
+  function toggleDetail(i) {
+    const row = document.getElementById(`detail-${i}`);
+    row.hidden = !row.hidden;
+  }
+  window.toggleDetail = toggleDetail;
+
+  document.addEventListener('change', (e) => {
+    if (['filter-grade', 'filter-teacher', 'filter-activity', 'filter-flagged-only'].includes(e.target.id)) render();
+  });
+  document.addEventListener('click', (e) => {
+    const th = e.target.closest('th[data-sort]');
+    if (!th) return;
+    const key = th.dataset.sort;
+    if (sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = 1; }
+    render();
+  });
+  document.getElementById('refresh-btn').addEventListener('click', loadData);
+</script>
+</body>
+</html>

@@ -133,6 +133,16 @@ function doPost(e) {
       return jsonOut_({ ok: true, progress: updated });
     }
 
+    // Read-only, teacher-dashboard-facing. Deliberately hands back raw
+    // rows (SubmissionsLog included as-is) rather than pre-computed
+    // stats - decoding it and computing things like average time between
+    // answers or flagging rapid bursts lives in the dashboard page's own
+    // JS, so those rules can be tuned without redeploying this script.
+    if (body.type === 'teacher-data') {
+      if (!isTeacher_(auth.email)) return jsonOut_({ ok: false, error: 'Not authorized' });
+      return jsonOut_({ ok: true, rows: getAllProgressForDashboard_() });
+    }
+
     return jsonOut_({ ok: false, error: 'Unknown request type' });
   } finally {
     lock.releaseLock();
@@ -219,4 +229,40 @@ function rowToProgress_(row, map) {
 
 function jsonOut_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
+
+function isTeacher_(email) {
+  const sheet = ss_().getSheetByName('Teachers');
+  const map = colMap_(sheet);
+  return !!findRow_(sheet, map['Email'], email);
+}
+
+function rowToDashboardRow_(row, map) {
+  return {
+    email: row[map['Email']],
+    studentName: row[map['StudentName']],
+    grade: row[map['Grade']],
+    teacher: row[map['Teacher']],
+    activityId: row[map['ActivityId']],
+    activityTitle: row[map['ActivityTitle']],
+    firstStartedAt: row[map['FirstStartedAt']],
+    lastSubmittedAt: row[map['LastSubmittedAt']],
+    itemsAttempted: row[map['ItemsAttempted']],
+    itemsCorrect: row[map['ItemsCorrect']],
+    scorePct: row[map['ScorePct']],
+    status: row[map['Status']],
+    submissionsLog: row[map['SubmissionsLog']] || '[]',
+    flagReason: row[map['FlagReason']],
+    reviewedByTeacher: row[map['ReviewedByTeacher']],
+    reviewedAt: row[map['ReviewedAt']]
+  };
+}
+
+function getAllProgressForDashboard_() {
+  const sheet = ss_().getSheetByName('Progress');
+  const map = colMap_(sheet);
+  const data = sheet.getDataRange().getValues();
+  const rows = [];
+  for (let r = 1; r < data.length; r++) rows.push(rowToDashboardRow_(data[r], map));
+  return rows;
 }

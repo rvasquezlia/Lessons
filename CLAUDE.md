@@ -29,17 +29,37 @@ shipping new backend code.
 
 ### The shared Sheet
 
-One spreadsheet, four tabs. Canonical source of truth for the Apps Script
+One spreadsheet, five tabs. Canonical source of truth for the Apps Script
 code that reads/writes it: `automation/apps-script/Code.gs` in this repo —
 copy that file's contents into the Apps Script editor (Extensions → Apps
-Script, from the Sheet) whenever it changes, then redeploy.
+Script, from the Sheet) whenever it changes, then redeploy (Deploy →
+Manage deployments → edit the existing deployment → New version, so the
+`/exec` URL doesn't change).
 
 | Tab | Who fills it in | Purpose |
 |---|---|---|
 | `Roster` | **Manual** — teacher maintains: `Email, StudentName, Grade, Teacher, Section, Status` | Source of truth for who's allowed in and what grade/teacher they belong to. Add/remove students here directly in the Sheet. |
 | `ActivityCatalog` | **Manual** — teacher adds one row per activity: `ActivityId, Title, Grade, Unit, Active` | Drives the grade-gate check. Adding a new lesson page = adding one row here, nothing else. |
+| `Teachers` | **Manual** — one column: `Email` | Gates the `teacher-data` dashboard endpoint. Only emails listed here can pull all-student data; being on `Roster` as a `Teacher` name does not grant this by itself. |
 | `Progress` | **Automatic** — written entirely by Apps Script | One row per (student, activity), upserted on every save. Columns: `Email, StudentName, Grade, Teacher, ActivityId, ActivityTitle, FirstStartedAt, LastSubmittedAt, ItemsTotal, ItemsAttempted, ItemsCorrect, ScorePct, Status, SubmissionsLog (JSON), FlagReason, ReviewedByTeacher, ReviewedAt`. The last two are the only cells a teacher should hand-edit (checking off a flagged row after review). |
-| `AccessLog` | **Automatic** — written entirely by Apps Script | Every access attempt, allowed or denied, for audit: `Timestamp, Email, ActivityId, StudentGrade, RequiredGrade, Result, Reason`. Read-only. |
+| `AccessLog` | **Automatic** — written entirely by Apps Script | One row per real access event: a student opening an activity (allowed or denied), or a submission-time re-check that comes back denied. Routine allowed re-checks on every Check-button click are NOT logged here — that was an earlier bug (see git history) that flooded this tab. |
+
+### Teacher dashboard
+
+`Lessons/teacher-dashboard.html` — a standalone, teacher-only page (not
+linked from any lesson). Signs in the same way as a lesson page, but
+calls the backend with `type: 'teacher-data'` instead of
+`access-check`/`submission`; the backend checks the signed-in email
+against the `Teachers` tab and, if authorized, returns every `Progress`
+row as-is (including the raw `SubmissionsLog` JSON).
+
+Deliberately, **all analysis happens in the dashboard's own JS, not in
+Apps Script**: average time between answers, the "3 answers within 60
+seconds" rapid-burst flag, sorting, filtering. Tune or add rules by
+editing `teacher-dashboard.html` directly — that never requires touching
+`Code.gs` or redeploying the backend. Only touch the backend if the data
+being *returned* needs to change (a new column, a new tab to join
+against), not when the flagging rules change.
 
 - **Spreadsheet ID**: `1-HLtX5AwskPx8hy_Ip2kjGMz5OUIS91M2x0FgEt75zA`
 - **Apps Script Web App URL**: `https://script.google.com/macros/s/AKfycbyC7mb1TKfg3JvhiZftXMf7oXkzrBMWJczZSURC7sIfoIxYnZrrumYfx-j7JYTY0A9i/exec`
