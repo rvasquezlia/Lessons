@@ -20,6 +20,11 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <!-- Visual math input (site-wide rollout from the Eighth/Literal-Equations
+       pilot - see /CLAUDE.md's "Visual math input" note): registers the
+       <math-field> custom element used for this page's fraction answers. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
@@ -351,7 +356,7 @@
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
-        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:170px; display:inline-block;" placeholder="Answer">
+        <math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:170px; display:inline-block;"></math-field>
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
@@ -360,14 +365,29 @@
     triggerMathJax();
   }
 
+  // See Practice-Set.html's stripRedundantParens/normFracStrict (same
+  // regex, different local name) and /CLAUDE.md's "Visual math input"
+  // note: MathLive's ascii-math always wraps both sides of a fraction in
+  // parens even when trivial, so this needs to undo that before
+  // comparing, not just lowercase/strip whitespace.
   function normFrac(s) {
-    return String(s || '').toLowerCase().replace(/\s+/g, '');
+    let out = String(s || '').toLowerCase().replace(/\s+/g, '');
+    let prev;
+    do { prev = out; out = out.replace(/\(([^()+-]+)\)/g, '$1'); } while (out !== prev);
+    return out;
+  }
+
+  // Reads a <math-field>'s answer as ASCIIMath text, guarded against the
+  // MathLive script never loading - see Eighth/Literal-Equations'
+  // Practice-Set.html for the identical helper.
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
   }
 
   function checkListItem(keyPrefix, idx) {
     const cfg = checkListRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`${keyPrefix}-${idx}-input`));
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
