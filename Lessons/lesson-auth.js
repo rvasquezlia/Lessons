@@ -185,7 +185,17 @@ const LessonSync = (() => {
         if (btn) { btn.disabled = true; btn.style.cursor = 'not-allowed'; }
         feedback.style.display = 'block';
         feedback.className = 'feedback-msg success locked';
-        feedback.innerHTML = `Answer key: <strong>${answer}</strong>`;
+        // Wrapped in \( \) so MathJax actually typesets it - `answer` is
+        // raw LaTeX (p.displayAnswer, e.g. "\dfrac{V}{\pi r^2}") on any
+        // page using a math-field, and unlike input.value (which a
+        // math-field renders directly from raw LaTeX with no MathJax
+        // involved), this is plain innerHTML text with no renderer of its
+        // own - without delimiters it used to show the literal LaTeX
+        // source instead of a rendered fraction, easy to miss on a plain
+        // <input> (which showed the exact same unrendered LaTeX as its
+        // value) but glaring next to a math-field rendering the same
+        // answer correctly right above it.
+        feedback.innerHTML = `Answer key: <strong>\\(${answer}\\)</strong>`;
       });
     });
 
@@ -194,6 +204,12 @@ const LessonSync = (() => {
     // answers) - such a page defines window.revealAnswerKey itself and this
     // just calls it.
     if (typeof window.revealAnswerKey === 'function') window.revealAnswerKey();
+
+    // Every gated page defines its own triggerMathJax() (checks
+    // window.MathJax/typesetPromise before calling) - the answer-key text
+    // just inserted above is new DOM content MathJax has never scanned,
+    // so nothing renders until this runs.
+    if (typeof triggerMathJax === 'function') triggerMathJax();
   }
 
   // Shared by a fresh button click/One Tap response and a cached token
