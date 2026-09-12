@@ -20,6 +20,12 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <!-- Visual math input (rolled out from the Practice-Set pilot - see
+       /CLAUDE.md's "Visual math input pilot" note): registers the
+       <math-field> custom element used for this page's fraction/
+       expression answer inputs. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
@@ -421,7 +427,7 @@
   <div id="exercises" class="panel">
     <div class="section-title">Exercise Battery (15 Problems)</div>
     <div class="explainer-box">
-      Work each problem on paper using the Question Ladder from Tab 1, then type only the expression for the target variable - not "x =", just what goes on the other side. For a fraction, use a slash: type <code>d/t</code> for \(\dfrac{d}{t}\). Each item gives you up to <strong>2 tries</strong> before showing the correct rearrangement.
+      Work each problem on paper using the Question Ladder from Tab 1, then enter only the expression for the target variable in the math box - not "x =", just what goes on the other side. For a fraction, type <code>/</code> to open the fraction template and build \(\dfrac{d}{t}\) visually. Each item gives you up to <strong>2 tries</strong> before showing the correct rearrangement.
     </div>
 
     <div class="notebook-box">
@@ -446,7 +452,7 @@
   <div id="crosscurricular" class="panel">
     <div class="section-title">Formulas From Other Classes</div>
     <div class="explainer-box">
-      Literal equations aren't just an Algebra I thing - you'll rearrange formulas exactly like this in Science, Geometry, and even Financial Math. Same Question Ladder, same four questions, just a different subject's letters. See the typing key on Tab 3 for how to type \(\pi\) and other symbols.
+      Literal equations aren't just an Algebra I thing - you'll rearrange formulas exactly like this in Science, Geometry, and even Financial Math. Same Question Ladder, same four questions, just a different subject's letters.
     </div>
     <div id="cross-ex-list"></div>
   </div>
@@ -469,8 +475,25 @@
     triggerMathJax();
   }
 
+  // See Practice-Set.html's identical helpers (and /CLAUDE.md's "Visual
+  // math input pilot" note) for the full explanation.
+  function stripRedundantParens(s) {
+    let prev;
+    do { prev = s; s = s.replace(/\(([^()+-]+)\)/g, '$1'); } while (s !== prev);
+    return s;
+  }
+
   function normalizeExpr(s) {
-    return String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, '');
+    return stripRedundantParens(String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, ''));
+  }
+
+  function answerMatches(val, accepted) {
+    const nv = normalizeExpr(val);
+    return accepted.some((a) => normalizeExpr(a) === nv);
+  }
+
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
   }
 
   // ==========================================
@@ -525,7 +548,7 @@
         <strong>${i + 1}.</strong> ${p.q}
         <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
           <label style="font-weight:700;">\\(${p.target} = \\)</label>
-          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="expression">
+          <math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:220px; display:inline-block;" placeholder="\\text{expression}"></math-field>
           <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkExerciseItem('${keyPrefix}', ${i})">Check</button>
         </div>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
@@ -539,13 +562,13 @@
   function checkExerciseItem(keyPrefix, idx) {
     const cfg = exRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`${keyPrefix}-${idx}-input`));
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter an expression before checking - this won't count as an attempt yet.");
       return;
     }
-    const correct = p.accepted.includes(normalizeExpr(val));
+    const correct = answerMatches(val, p.accepted);
     LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
       correct: `Correct! \\(${p.target} = ${p.displayAnswer}\\)`,
       retry: p.hint || "Not quite yet. Walk back through the Question Ladder and try again.",
