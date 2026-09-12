@@ -166,10 +166,13 @@ authorized, returns four things in one response: `rows` (every
 before), plus now also `roster` (every `Roster` row), `activityCatalog`
 (every `ActivityCatalog` row), and `accessLog` (every `AccessLog` row) —
 see `getRosterForDashboard_`/`getActivityCatalogForDashboard_`/
-`getAccessLogForDashboard_` in `Code.gs`. The extra three exist so the
-dashboard can show students/activities with **zero** submissions (a
-`Progress`-only view can only ever show rows that already exist) and
-real access-attempt history, not just graded answers.
+`getAccessLogForDashboard_` in `Code.gs`. `roster`/`activityCatalog`
+exist so the dashboard can show students/activities with **zero**
+submissions (a `Progress`-only view can only ever show rows that already
+exist). `accessLog` is still returned - unused by the dashboard's own UI
+since its one consumer (a "Denied Access" tab) was removed, but kept in
+the response since it costs nothing to include and something might want
+it again later; see "Teacher dashboard" below.
 
 **Per-teacher scoping happens entirely server-side, before any of that
 data leaves `Code.gs`.** `getTeacherScope_(email)` reads the signed-in
@@ -196,23 +199,28 @@ change.
 
 The page visually matches the rest of the site (reuses
 `lesson-shared.css`'s `.app-container`/`.brand-row`/`.nav-tabs`/
-`.tab-btn`/`.panel`/`.section-title` rather than its own one-off styles)
-and has six tabs, all driven by the same `allRows`/`roster`/
-`activityCatalog`/`accessLog` globals and a shared `Grade`/`Teacher`/
-`Activity`/"flagged only" filter bar:
+`.tab-btn`/`.panel`/`.section-title` rather than its own one-off styles
+— including the filter bar, which used to be a dark navy strip that
+didn't match anything else on the page and is now a plain light
+`--bg`/`--border` bar like the rest of the site's cards) and has five
+tabs, all driven by the same `allRows`/`roster`/`activityCatalog`
+globals and a shared `Grade`/`Teacher`/`Activity`/"flagged only" filter
+bar. None of the tab panels carry an explanatory `<p>` under their
+`.section-title` anymore — the tab name plus the table's own column
+headers are the interface; a per-tab paragraph restating "one row per
+X, click a row to see Y" was decided to be redundant with that.
 
 - **Overview** — summary only, deliberately: stat tiles (active
   students, activities, average score, not-started count, flagged
-  submissions, denied access attempts), a "Progress by unit" bar chart,
-  lowest-scoring-activity and lowest-scoring-student bar charts, and a
-  "Flags" card (count plus a breakdown by flag reason) with a "View all
-  flagged submissions" link that checks the flagged-only filter and
-  jumps to All Submissions (`jumpToFlagged()`). It never lists individual
-  students or a raw event feed — that used to live here (a
-  "Students who haven't started" list and a global "Recent activity"
-  feed) but got moved into the per-student/per-activity detail views
-  below, where it's actually about something instead of everyone's
-  events interleaved.
+  submissions), a "Progress by unit" bar chart, lowest-scoring-activity
+  and lowest-scoring-student bar charts, and a "Flags" card (count plus
+  a breakdown by flag reason) with a "View all flagged submissions" link
+  that checks the flagged-only filter and jumps to All Submissions
+  (`jumpToFlagged()`). It never lists individual students or a raw event
+  feed — that used to live here (a "Students who haven't started" list
+  and a global "Recent activity" feed) but got moved into the
+  per-student/per-activity detail views below, where it's actually about
+  something instead of everyone's events interleaved.
 - **By Unit** — one row per `ActivityCatalog.Unit` (+ grade, since two
   grades could reuse a unit name), aggregated from the same per-activity
   numbers `computeActivitySummaries()` produces
@@ -227,12 +235,10 @@ and has six tabs, all driven by the same `allRows`/`roster`/
   from `Progress` alone: no row at all is Not started; a row with
   `reachedEnd` is Completed; a row with graded items but no `reachedEnd`
   is In progress; a row with neither (only tab views logged) is Opened
-  only. This is deliberately not the `AccessLog` sheet/tab (see "Denied
-  Access" below) — the Sheet's own AccessLog is a permission/security
-  log, not an engagement one, and using the same name for both was
-  confusing what each was for. Click an activity to see which student is
-  in which state, with stat tiles for the same four counts scoped to
-  just that activity.
+  only. Click an activity to see which student is in which state, with
+  stat tiles for the same four counts scoped to just that activity. This
+  is the dashboard's only engagement view now - the tab that used to
+  read `AccessLog` (see below) is gone entirely.
 - **By Activity** — one row per catalog activity (including activities
   nobody has started), with a completion percentage computed against
   how many *eligible* roster students exist for that grade (and teacher,
@@ -251,14 +257,37 @@ and has six tabs, all driven by the same `allRows`/`roster`/
   is the one tab that keeps the older inline-expand-a-row pattern
   (`toggleDetail()`) instead of a separate detail view — it's already
   the raw per-item layer, not a summary that would otherwise dead-end.
-- **Denied Access** (tab id still `access-log` internally, only the
-  visible label changed) — every `AccessLog` row, joined against
-  `roster` (for student name) and `activityCatalog` (for activity
-  title) client-side via `joinRosterName()`/`joinActivityTitle()`, with
-  its own denied-count and most-common-denial-reason stat tiles. This is
-  purely the security/troubleshooting log now that Activity Status
-  covers "did they open it" — see that tab's entry above for why the two
-  were split.
+
+**There is no Access Log / Denied Access tab anymore** — it was removed
+outright, not just renamed a second time. It read the backend's
+`AccessLog` data (still returned by `teacher-data`, still perfectly
+valid — this is a front-end-only removal, no `Code.gs` change) to show
+denied sign-in attempts, but the Activity Status tab above already
+answers the actually-useful version of that question ("is this being
+opened"), and a separate denial log added a tab for a case nobody was
+asking to see routinely. If denial data is ever needed again, it's still
+in `result.accessLog` from the backend - only the dashboard's own
+`renderAccessLog()`/`joinRosterName()`/`joinActivityTitle()` and the
+`access-log` panel were deleted.
+
+**Loading is hardened against the exact failure that once left the
+spinner spinning forever with no way to recover short of a hard
+reload.** Two independent gaps used to exist: (1) `onGoogleLibraryLoad()`
+ran as a bare `<script onload>` handler with nothing catching a throw -
+if `token-cache.js` failed to load (a bad path, a CDN hiccup) so
+`TokenCache` was undefined, or anything else inside threw, the handler
+died mid-execution and nothing ever called `hideLoadingIndicator()`.
+(2) There was no fallback at all for Google's own script failing to
+load in the first place (network filter, ad blocker, dead connection) -
+`onload` simply never fires in that case, so `onGoogleLibraryLoad()`
+never runs. Fixed on both sides: `onGoogleLibraryLoad()`'s body is now
+wrapped in try/catch (`showGateWithError()` on failure - deliberately
+touches only the DOM, never `google.accounts.id.*`, since that object
+may not exist yet either), and a 10-second `setTimeout` fallback shows
+the same error state if `googleLibraryLoaded` never got set. `onDataLoaded()`'s
+`populateFilters()`/`renderAll()` call is also wrapped in try/catch now,
+so a future bug in any render function surfaces as a visible message on
+an otherwise-usable page instead of a silent partial render.
 
 Both By Student's and By Activity's per-row tables (`studentDetailTable()`/
 `activityDetailTable()`) have their own "Attempts" column using that
@@ -347,10 +376,11 @@ surface instead as their own `Tabs viewed` / `Reached end` columns.
 Same 5-page pattern (Review/Vocabulary-Literacy/Practice-Set/Word-Problems/
 Test-Prep wired, Explanation/Teacher-Guide left alone) now applied to six
 units across Sixth, Seventh, and Eighth grade, in addition to Rational
-Numbers — **every grade is wired now**. A page-specific extra some units
-have (Guided-Solving-Ladder, on Seventh/Operations-with-Rationals and
-Eighth/Literal-Equations) is left alone too, same as Explanation/
-Teacher-Guide — don't assume a page has any of this without checking for
+Numbers — **every grade is wired now**. Two units also have a
+Guided-Solving-Ladder page (Seventh/Operations-with-Rationals,
+Eighth/Literal-Equations); those are wired too (see the table below) -
+Explanation/Teacher-Guide are the only pages still deliberately left
+alone. Don't assume a page has any of this without checking for
 `gsi/client` in its `<head>` first, in case a new unit gets added later
 without being wired yet.
 
@@ -360,13 +390,14 @@ without being wired yet.
 | Sixth/Decimal-Operations | `6-decimal-operations-*` | Practice-Set, Word-Problems, Review use `window.listRegistry` (local var `checkListRegistry`). Vocabulary-Literacy and Test-Prep are hand-written — Test-Prep has *two* separate registries (`estExactRegistry` for two-field estimate+exact items, `submitListRegistry` for single-field submit-only items) plus several one-off items (concept check, two critical-thinking textareas, extra credit, readiness check), none of it merged into `window.listRegistry`. |
 | Sixth/Operations-with-Fractions | `6-operations-with-fractions-*` | Same shape as Decimal-Operations, except Test-Prep's `checkListRegistry`/`submitListRegistry` **are** merged into `window.listRegistry` (`Object.assign`) since both already use the single-input convention — only the remaining one-offs (concept check, critical thinking, extra credit, readiness) are hand-written. |
 | Seventh/Integers | `7-integers-*` | Practice-Set/Word-Problems use `window.listRegistry` (local var `listRegistry`), Review uses `checkListRegistry`. Vocabulary-Literacy and Test-Prep are hand-written; Test-Prep also has a checkbox multi-select pattern (`checkQCMulti`) and a 4-select sign-group pattern (`checkQCSigns`) with their own reveal logic. |
-| Seventh/Operations-with-Rationals | `7-operations-with-rationals-*` | Same shape as Integers (including a `checkQCMulti` checkbox group in Test-Prep), but no sign-group pattern. |
+| Seventh/Operations-with-Rationals | `7-operations-with-rationals-*` | Same shape as Integers (including a `checkQCMulti` checkbox group in Test-Prep), but no sign-group pattern. Its Guided-Solving-Ladder page has one flat `ladderExercises` array (not grouped by key prefix like every other registry here) - exposed as `window.listRegistry = { lex: { problems: ... } }` to fit the same generic reveal mechanism, with `mc`-type items given a synthesized `displayAnswer` (the generic reveal only knows `displayAnswer`/`a`/`accepted`, not this page's own `p.answer`) so a `<select>` gets set to the right option like any other item. |
 | Eighth/Linear-Equations | `8-linear-equations-*` | Review uses `window.listRegistry` (local var `checkListRegistry`). Vocabulary-Literacy, Practice-Set, and Word-Problems are entirely hand-written `window.revealAnswerKey` (no page has a shared registry covering everything). Test-Prep's `listRegistry` (local var, matching the shared-name convention) covers only its submit-only Mixed Practice tab; the rest (Check Your Understanding, Error Analysis, Readiness Check) is hand-written. Practice-Set's Strategy Challenge tab is student-choice-driven (pick a group first) and has nothing to reveal until a group is picked — `revealAnswerKey` skips it harmlessly if none was. |
-| Eighth/Literal-Equations | `8-literal-equations-*` | Review uses `window.listRegistry` (local var `checkListRegistry`). Practice-Set's `symRegistry` and Word-Problems' `wpRegistry` are both exposed as `window.listRegistry`, covering most of each page; Practice-Set still hand-writes its Tab 4 Live Number Check (targets depend on live slider values, recomputed with the same formula the check functions use) and Tab 5 Error Analysis, and Word-Problems hand-writes its one Tab 3 investment-comparison item. Test-Prep's `submitSymRegistry` (as `window.listRegistry`) covers Mixed Practice parts 1-2 only; part 3 (numeric, separate render/check functions) plus Full Review/Error Analysis/Readiness Check are hand-written. Vocabulary-Literacy is entirely hand-written (two standalone check functions, no registry). |
+| Eighth/Literal-Equations | `8-literal-equations-*` | Review uses `window.listRegistry` (local var `checkListRegistry`). Practice-Set's `symRegistry` and Word-Problems' `wpRegistry` are both exposed as `window.listRegistry`, covering most of each page; Practice-Set still hand-writes its Tab 4 Live Number Check (targets depend on live slider values, recomputed with the same formula the check functions use) and Tab 5 Error Analysis, and Word-Problems hand-writes its one Tab 3 investment-comparison item. Test-Prep's `submitSymRegistry` (as `window.listRegistry`) covers Mixed Practice parts 1-2 only; part 3 (numeric, separate render/check functions) plus Full Review/Error Analysis/Readiness Check are hand-written. Vocabulary-Literacy is entirely hand-written (two standalone check functions, no registry). Its Guided-Solving-Ladder page already used the standard keyed-registry shape (`exRegistry`, covering both its tabs) so it only needed `window.listRegistry = exRegistry` - no hand-written reveal at all. |
 
 Every wired page needs its own row in `ActivityCatalog` (matching
-`Grade`, `Active: TRUE`) before its gate will let anyone in — that's 35
-rows total now (5 pages × 7 units). `index.html`'s `CURRICULUM` also
+`Grade`, `Active: TRUE`) before its gate will let anyone in — that's 37
+rows now (35 from the 5-page pattern across 7 units, plus the 2
+Guided-Solving-Ladder pages). `index.html`'s `CURRICULUM` also
 needs an `activityIds` block per topic (see the existing entries) or a
 signed-in student won't see that topic on the index even once the pages
 themselves work — this has been added for all 7 wired units already.
@@ -377,6 +408,17 @@ and confirm which one it actually defines — the table above summarizes,
 but the two Decimal-Operations vs. Operations-with-Fractions Test-Prep
 pages look nearly identical at a glance and are wired differently
 underneath (unmerged vs. merged registries).
+
+**Guided-Solving-Ladder is a seventh curriculum-index section**, not one
+of the original six (`review`/`vocab`/`explain`/`practice`/`word`/
+`test`/`teacher`) — `index.html`'s `SECTIONS` array has a `ladder` entry
+(`--c-ladder`/`--c-ladder-bg` for its pill color) alongside the rest.
+Only the two topics that actually have the page (Seventh/
+Operations-with-Rationals, Eighth/Literal-Equations) set a `ladder` href
+and `activityIds.ladder` — every other topic simply omits the key, which
+means students never see it (same omission rule as any other section)
+and teachers see a harmless "Guided Solving Ladder: Coming soon" tag on
+the other five topics, same as any genuinely-unbuilt section would show.
 
 ### index.html is also gated now
 

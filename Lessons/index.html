@@ -37,6 +37,7 @@
       --c-word: #7c3aed;       --c-word-bg: #ede9fe;
       --c-test: #b91c1c;       --c-test-bg: #fee2e2;
       --c-teacher: #92400e;    --c-teacher-bg: #fef3c7;
+      --c-ladder: #be185d;     --c-ladder-bg: #fce7f3;
     }
     * { box-sizing: border-box; }
     body, input, button {
@@ -190,6 +191,7 @@
     .section-link.word     { background: var(--c-word-bg);     color: var(--c-word);     border-color: var(--c-word); }
     .section-link.test     { background: var(--c-test-bg);     color: var(--c-test);     border-color: var(--c-test); }
     .section-link.teacher  { background: var(--c-teacher-bg);  color: var(--c-teacher);  border-color: var(--c-teacher); }
+    .section-link.ladder   { background: var(--c-ladder-bg);   color: var(--c-ladder);   border-color: var(--c-ladder); }
 
     .empty-tag {
       display: block;
@@ -276,7 +278,8 @@
     { key: "practice", cls: "practice", label: "Practice Set" },
     { key: "word",     cls: "word",     label: "Word Problems" },
     { key: "test",     cls: "test",     label: "Test Prep" },
-    { key: "teacher",  cls: "teacher",  label: "Teacher's Guide" }
+    { key: "teacher",  cls: "teacher",  label: "Teacher's Guide" },
+    { key: "ladder",   cls: "ladder",   label: "Guided Solving Ladder" }
   ];
 
   const CURRICULUM = {
@@ -382,12 +385,14 @@
           word: "Word-Problems.html",
           test: "Test-Prep.html",
           teacher: "Teacher-Guide.html",
+          ladder: "Guided-Solving-Ladder.html",
           activityIds: {
             review: "7-operations-with-rationals-review",
             vocab: "7-operations-with-rationals-vocabulary-literacy",
             practice: "7-operations-with-rationals-practice-set",
             word: "7-operations-with-rationals-word-problems",
-            test: "7-operations-with-rationals-test-prep"
+            test: "7-operations-with-rationals-test-prep",
+            ladder: "7-operations-with-rationals-guided-solving-ladder"
           }
         }
       ]
@@ -426,12 +431,14 @@
           word: "Word-Problems.html",
           test: "Test-Prep.html",
           teacher: "Teacher-Guide.html",
+          ladder: "Guided-Solving-Ladder.html",
           activityIds: {
             review: "8-literal-equations-review",
             vocab: "8-literal-equations-vocabulary-literacy",
             practice: "8-literal-equations-practice-set",
             word: "8-literal-equations-word-problems",
-            test: "8-literal-equations-test-prep"
+            test: "8-literal-equations-test-prep",
+            ladder: "8-literal-equations-guided-solving-ladder"
           }
         }
       ]

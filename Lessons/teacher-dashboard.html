@@ -22,13 +22,19 @@
 
   .filter-bar {
     display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
-    background: #1e293b; color: white; padding: 14px 24px;
+    background: var(--bg); border-bottom: 4px solid var(--border); padding: 14px 24px;
   }
-  .filter-bar .filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-  .filter-bar label { font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
-  .filter-bar select { padding: 6px 10px; border-radius: 8px; border: 2px solid #475569; font-family: inherit; }
-  .filter-bar .btn-print { background: var(--accent); color: #000; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 800; cursor: pointer; }
-  .filter-bar .btn-print:hover { background: #b45309; color: white; }
+  .filter-bar .filters { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+  .filter-bar label { font-weight: 700; font-size: 0.9rem; color: var(--text); display: flex; align-items: center; gap: 6px; }
+  .filter-bar select {
+    padding: 8px 12px; border-radius: 8px; border: 2px solid var(--border);
+    font-family: inherit; font-weight: 600; background: var(--card); color: var(--text);
+  }
+  .btn-refresh {
+    background: var(--primary); color: white; border: none; padding: 9px 20px;
+    border-radius: 8px; font-weight: 800; cursor: pointer; font-family: inherit; font-size: 0.9rem;
+  }
+  .btn-refresh:hover { background: var(--primary-light); }
 
   .stat-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
   .stat-tile { background: var(--bg); border: 2px solid var(--border); border-radius: 12px; padding: 14px 20px; min-width: 140px; flex: 1; }
@@ -100,7 +106,7 @@
       <label>Activity: <select id="filter-activity"><option value="">All</option></select></label>
       <label><input type="checkbox" id="filter-flagged-only"> Flagged only</label>
     </div>
-    <button class="btn-print" id="refresh-btn">Refresh</button>
+    <button class="btn-refresh" id="refresh-btn">Refresh</button>
   </div>
 
   <nav class="nav-tabs">
@@ -110,7 +116,6 @@
     <button class="tab-btn" data-tab="by-activity" onclick="switchDashTab('by-activity')">By Activity</button>
     <button class="tab-btn" data-tab="by-student" onclick="switchDashTab('by-student')">By Student</button>
     <button class="tab-btn" data-tab="all-submissions" onclick="switchDashTab('all-submissions')">All Submissions</button>
-    <button class="tab-btn" data-tab="access-log" onclick="switchDashTab('access-log')">Denied Access</button>
   </nav>
 
   <div id="overview" class="panel active">
@@ -142,7 +147,6 @@
 
   <div id="by-unit" class="panel">
     <div class="section-title">Progress by Unit</div>
-    <p style="color:#64748b; margin-top:-10px;">One row per curriculum unit - averaged across every activity in it. Click a unit to see how each of its activities is doing.</p>
     <div id="by-unit-list">
       <div class="table-wrap">
         <table>
@@ -165,7 +169,6 @@
 
   <div id="activity-status" class="panel">
     <div class="section-title">Activity Status</div>
-    <p style="color:#64748b; margin-top:-10px;">Are students actually opening each activity? One row per activity, showing how many eligible students haven't started it, opened it but haven't answered anything yet, are partway through, or have reached the end. Click an activity to see which student is in which state.</p>
     <div id="activity-status-list">
       <div class="table-wrap">
         <table>
@@ -188,7 +191,6 @@
 
   <div id="by-activity" class="panel">
     <div class="section-title">Progress by Activity</div>
-    <p style="color:#64748b; margin-top:-10px;">One row per activity - averaged across every student who's touched it, out of everyone in that grade. Click an activity to open its own mini dashboard - every student's score, timestamps and flags for just that page.</p>
     <div id="by-activity-list">
       <div class="table-wrap">
         <table>
@@ -212,7 +214,6 @@
 
   <div id="by-student" class="panel">
     <div class="section-title">Progress by Student</div>
-    <p style="color:#64748b; margin-top:-10px;">One row per student - averaged across every activity they've touched. Click a student to open their full profile.</p>
     <div id="by-student-list">
       <div class="table-wrap">
         <table>
@@ -236,7 +237,6 @@
 
   <div id="all-submissions" class="panel">
     <div class="section-title">All Submissions (detail)</div>
-    <p style="color:#64748b; margin-top:-10px;">One row per (student, activity) - the raw data everything else on this page is summarized from.</p>
     <div class="table-wrap">
       <table>
         <thead>
@@ -258,26 +258,6 @@
     </div>
   </div>
 
-  <div id="access-log" class="panel">
-    <div class="section-title">Denied Access</div>
-    <p style="color:#64748b; margin-top:-10px;">Not "did they open it" - see the Activity Status tab for that. This is purely a security/troubleshooting log: a student attempting an activity their grade doesn't match, or one no longer active. Rows recorded before this was denials-only may still say "Allowed" and are kept for history.</p>
-    <div class="stat-row" id="access-log-stats"></div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th data-table="access-log" data-sort="timestamp">Timestamp</th>
-            <th data-table="access-log" data-sort="studentName">Student</th>
-            <th data-table="access-log" data-sort="activityTitle">Activity</th>
-            <th data-table="access-log" data-sort="result">Result</th>
-            <th data-table="access-log" data-sort="reason">Reason</th>
-          </tr>
-        </thead>
-        <tbody id="access-log-body"></tbody>
-      </table>
-    </div>
-  </div>
-
   <footer style="text-align:center; padding:18px; color:#94a3b8; font-size:0.85rem;">Lincoln International Academy &middot; Teacher Dashboard</footer>
 </div>
 
@@ -289,7 +269,6 @@
   let allRows = [];
   let roster = [];
   let activityCatalog = [];
-  let accessLog = [];
   let teacherScope = null;
 
   // requestGeneration/resolved stop a slow, now-superseded sign-in
@@ -305,8 +284,7 @@
     'activity-status': { key: 'notStarted', dir: -1 },
     'by-student': { key: 'avgScore', dir: 1 },
     'by-activity': { key: 'avgScore', dir: 1 },
-    'all-submissions': { key: 'lastSubmittedAt', dir: -1 },
-    'access-log': { key: 'timestamp', dir: -1 }
+    'all-submissions': { key: 'lastSubmittedAt', dir: -1 }
   };
 
   // Populated by each render*Summaries pass so a clicked row's detail view
@@ -377,6 +355,17 @@
   }
   window.handleGoogleSignIn = handleGoogleSignIn;
 
+  // Reveals the gate without touching Google's own objects - the one
+  // safe fallback when something went wrong before or during Google's
+  // own setup (its script never loaded, or threw), so this never risks
+  // throwing a second time on top of the first failure.
+  function showGateWithError(msg) {
+    hideLoadingIndicator();
+    const gate = document.getElementById('lesson-gate');
+    if (gate) gate.hidden = false;
+    setGateStatus(msg, true);
+  }
+
   function showGateAndPromptSignIn() {
     hideLoadingIndicator();
     const gate = document.getElementById('lesson-gate');
@@ -389,17 +378,41 @@
     google.accounts.id.prompt();
   }
 
+  let googleLibraryLoaded = false;
+
+  // Wrapped in try/catch deliberately: this runs as a <script onload>
+  // handler, so an uncaught throw here (TokenCache undefined because
+  // token-cache.js failed to load, a malformed cached token, anything
+  // unexpected) would leave the spinner spinning forever with no way to
+  // recover short of a hard reload - exactly the "loading and loading"
+  // failure mode this guards against.
   function onGoogleLibraryLoad() {
-    const cached = TokenCache.load();
-    if (cached) proceedWithToken(cached); else showGateAndPromptSignIn();
+    googleLibraryLoaded = true;
+    try {
+      const cached = TokenCache.load();
+      if (cached) proceedWithToken(cached); else showGateAndPromptSignIn();
+    } catch (err) {
+      showGateWithError("Something went wrong loading the sign-in page - try reloading.");
+    }
   }
   window.onGoogleLibraryLoad = onGoogleLibraryLoad;
+
+  // Covers the other half of the same failure mode: if Google's script
+  // itself never finishes loading (blocked by a network filter, an ad
+  // blocker, or just a bad connection), the onload attribute above never
+  // fires at all and onGoogleLibraryLoad() never runs. Nothing else in
+  // this file would ever hide the spinner in that case, so after a
+  // generous wait, show an error state instead of spinning forever.
+  setTimeout(() => {
+    if (!googleLibraryLoaded) {
+      showGateWithError("Couldn't load Google Sign-In - check your connection and reload the page.");
+    }
+  }, 10000);
 
   function onDataLoaded(result) {
     allRows = (result.rows || []).map(decorateRow);
     roster = result.roster || [];
     activityCatalog = result.activityCatalog || [];
-    accessLog = (result.accessLog || []).slice().sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
     teacherScope = result.scope || null;
 
     hideLoadingIndicator();
@@ -408,7 +421,7 @@
     const activeStudents = roster.filter((s) => s.status === 'Active').length;
     const scopeNote = teacherScope ? ` - showing only ${teacherScope}'s students` : '';
     document.getElementById('loaded-as').textContent =
-      `${activeStudents} active students${scopeNote} - ${allRows.length} activity records, ${accessLog.length} access events.`;
+      `${activeStudents} active students${scopeNote} - ${allRows.length} activity records.`;
 
     // A scoped teacher's roster is already pre-filtered to their own
     // students server-side, so a "Teacher" filter would only ever have
@@ -417,8 +430,19 @@
     const teacherFilterLabel = document.getElementById('filter-teacher').closest('label');
     if (teacherFilterLabel) teacherFilterLabel.style.display = teacherScope ? 'none' : '';
 
-    populateFilters();
-    renderAll();
+    // The dashboard is visible by this point regardless of what happens
+    // next - a bug in any render function should show up as a visible
+    // error on an otherwise-usable page, never as a silent partial
+    // render or (worse) leave the spinner up if it threw before ever
+    // getting here.
+    try {
+      populateFilters();
+      renderAll();
+    } catch (err) {
+      console.error('Dashboard render failed:', err);
+      document.getElementById('loaded-as').textContent =
+        'Something went wrong rendering the dashboard - try Refresh, or reload the page. (' + err.message + ')';
+    }
   }
 
   // ===== Analysis (all client-side - see /CLAUDE.md) =====
@@ -718,15 +742,10 @@
     const studentSummaries = computeStudentSummaries();
     const activitySummaries = computeActivitySummaries();
     const unitSummaries = computeUnitSummaries();
-    const f = activeFilters();
 
     const flaggedCount = rows.filter((r) => r.flags.length > 0).length;
     const overallAvg = avg(rows.map((r) => r.scorePct));
     const notStartedCount = studentSummaries.filter((s) => s.activitiesStarted === 0).length;
-    const deniedCount = accessLog.filter((a) =>
-      a.result === 'Denied' &&
-      (!f.grade || String(a.studentGrade) === f.grade || String(a.requiredGrade) === f.grade)
-    ).length;
 
     document.getElementById('overview-stats').innerHTML = `
       <div class="stat-tile"><div class="n">${rosterRows.length}</div><div class="l">Active students (filtered)</div></div>
@@ -734,7 +753,6 @@
       <div class="stat-tile"><div class="n">${overallAvg === null ? '-' : overallAvg + '%'}</div><div class="l">Average score</div></div>
       <div class="stat-tile"><div class="n ${notStartedCount ? 'warn' : ''}">${notStartedCount}</div><div class="l">Not started anything</div></div>
       <div class="stat-tile"><div class="n ${flaggedCount ? 'warn' : ''}">${flaggedCount}</div><div class="l">Flagged submissions</div></div>
-      <div class="stat-tile"><div class="n ${deniedCount ? 'warn' : ''}">${deniedCount}</div><div class="l">Denied access attempts</div></div>
     `;
 
     renderScoreBars('bars-unit-score', unitSummaries, 'unit');
@@ -1073,52 +1091,6 @@
     return `<table><thead><tr><th>Item</th><th>Answer</th><th>Verdict</th><th>Attempt</th><th>Time</th></tr></thead><tbody>${items}</tbody></table>`;
   }
 
-  function joinRosterName(email) {
-    const s = roster.find((r) => r.email === email);
-    return s ? s.studentName : email;
-  }
-  function joinActivityTitle(activityId) {
-    const a = activityCatalog.find((c) => c.activityId === activityId);
-    return a ? a.title : (activityId || '-');
-  }
-
-  function renderAccessLog() {
-    const f = activeFilters();
-    const enriched = accessLog.map((a) => Object.assign({}, a, {
-      studentName: joinRosterName(a.email),
-      activityTitle: joinActivityTitle(a.activityId)
-    })).filter((a) => {
-      const student = roster.find((r) => r.email === a.email);
-      return (!f.grade || String(a.studentGrade) === f.grade || String(a.requiredGrade) === f.grade) &&
-             (!f.teacher || (student && student.teacher === f.teacher)) &&
-             (!f.activity || a.activityTitle === f.activity);
-    });
-
-    const deniedCount = enriched.filter((a) => a.result === 'Denied').length;
-    const reasonCounts = {};
-    enriched.filter((a) => a.result === 'Denied').forEach((a) => { reasonCounts[a.reason] = (reasonCounts[a.reason] || 0) + 1; });
-    const topReason = Object.keys(reasonCounts).sort((a, b) => reasonCounts[b] - reasonCounts[a])[0];
-
-    document.getElementById('access-log-stats').innerHTML = `
-      <div class="stat-tile"><div class="n">${enriched.length}</div><div class="l">Total access events</div></div>
-      <div class="stat-tile"><div class="n ${deniedCount ? 'warn' : ''}">${deniedCount}</div><div class="l">Denied</div></div>
-      <div class="stat-tile"><div class="n" style="font-size:1rem;">${topReason || '-'}</div><div class="l">Most common denial reason</div></div>
-    `;
-
-    const items = sortItems(enriched, 'access-log', 'timestamp');
-    const tbody = document.getElementById('access-log-body');
-    if (!items.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty-note">No access events match the current filter.</td></tr>'; return; }
-    tbody.innerHTML = items.map((a) => `
-      <tr class="${a.result === 'Denied' ? 'flagged' : ''}">
-        <td>${a.timestamp ? new Date(a.timestamp).toLocaleString() : '-'}</td>
-        <td>${a.studentName}</td>
-        <td>${a.activityTitle}</td>
-        <td>${a.result === 'Denied' ? '<span class="pill flag">Denied</span>' : '<span class="pill ok">Allowed</span>'}</td>
-        <td>${a.reason || '-'}</td>
-      </tr>
-    `).join('');
-  }
-
   function renderAll() {
     renderOverview();
     renderByUnit();
@@ -1126,7 +1098,6 @@
     renderByActivity();
     renderByStudent();
     renderAllSubmissions();
-    renderAccessLog();
   }
 
   // All Submissions is the one remaining flat table with an inline
