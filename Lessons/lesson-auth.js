@@ -4,6 +4,12 @@
 // Google sign-in and sync progress; every other lesson page is untouched.
 const LESSON_SYNC_API_URL = 'https://script.google.com/macros/s/AKfycbyC7mb1TKfg3JvhiZftXMf7oXkzrBMWJczZSURC7sIfoIxYnZrrumYfx-j7JYTY0A9i/exec';
 const LESSON_GOOGLE_CLIENT_ID = '478111261772-7l1qamohr0fjsa7ekosuhpj9jum1q4vc.apps.googleusercontent.com';
+// document.currentScript is only valid while this script is first
+// evaluating - captured here, at load time, rather than inside a later
+// callback where it would be null. teacher-dashboard.html always lives
+// next to lesson-auth.js regardless of how deeply nested the calling
+// lesson page is, so this resolves correctly from any page depth.
+const TEACHER_DASHBOARD_URL = new URL('teacher-dashboard.html', document.currentScript.src).href;
 
 const LessonSync = (() => {
   let activityId = null;
@@ -95,7 +101,8 @@ const LessonSync = (() => {
     }
     const banner = document.createElement('div');
     banner.style.cssText = 'background:var(--accent);color:#fff;font-weight:700;text-align:center;padding:10px;border-radius:10px;margin:0 24px 16px 24px;';
-    banner.textContent = 'TEACHER VIEW - answer key shown below, not a student submission.';
+    banner.innerHTML = `TEACHER VIEW - answer key shown below, not a student submission.
+      &nbsp;&nbsp;<a href="${TEACHER_DASHBOARD_URL}" target="_blank" style="color:#fff;text-decoration:underline;">Open Teacher Dashboard &rarr;</a>`;
     document.querySelector('.app-container').prepend(banner);
 
     const registry = window.listRegistry || {};
