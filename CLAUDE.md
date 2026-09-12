@@ -69,9 +69,19 @@ shipping new backend code.
   A failed attempt that isn't a retry yet gets exactly one retry with a
   longer timeout (25s vs 15s) before actually giving up, since a lot of
   "failures" are really just a cold Apps Script container. A plain
-  `#lesson-loading` element (visible by default, hidden once either the
-  gate or the real content is shown) covers the silent-check window so
-  the page never just looks blank/frozen while this plays out.
+  `#lesson-loading` element (a small CSS spinner, visible by default,
+  hidden once either the gate or the real content is shown) covers the
+  silent-check window so the page never just looks blank/frozen while
+  this plays out.
+- **Cache-bust `token-cache.js`/`lesson-auth.js` on every change.** Every
+  page references them as `token-cache.js?v=2` / `lesson-auth.js?v=2` —
+  bump that `?v=` number on **every page that includes them** whenever
+  either file's contents change. Without it, GitHub Pages' CDN and
+  browsers can keep serving an old cached copy of the file for a while
+  after a push, so the live behavior can lag the committed code by an
+  unpredictable amount - confusing to debug, since it looks like a bug
+  that "sometimes" happens when it's really just staleness. Current
+  version: `2`.
 - **The backend lock is scoped to writes only.** `identify` and
   `teacher-data` never write to the Sheet, so they run before
   `LockService.getScriptLock()` is ever acquired in `doPost` — only
