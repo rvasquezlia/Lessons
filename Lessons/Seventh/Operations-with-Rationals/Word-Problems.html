@@ -20,6 +20,8 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
@@ -66,7 +68,7 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Every item here is a word problem involving fractions, decimals, or both. Use the clue words to decide the sign and the operation, then compute with the rules you already know - converting forms whenever that makes the arithmetic easier. This is quiz-style - you submit each answer once, and your teacher reviews it from the dashboard rather than on screen. Enter dollar and decimal answers as decimals; enter fraction answers as decimals too. Finish all 3 tabs. <strong>Calculators are not allowed this quarter.</strong>
+    Every item here is a word problem involving fractions, decimals, or both. Use the clue words to decide the sign and the operation, then compute with the rules you already know - converting forms whenever that makes the arithmetic easier. This is quiz-style - you submit each answer once, and your teacher reviews it from the dashboard rather than on screen. <strong>Match the answer format to the problem:</strong> a problem using only fractions wants a fraction answer, a problem using only decimals (dollars included) wants a decimal, and a problem mixing both accepts either. Finish all 3 tabs. <strong>Calculators are not allowed this quarter.</strong>
   </div>
 
   <nav class="nav-tabs">
@@ -131,14 +133,14 @@
     <div class="step-box" style="margin-top:24px;">
       <h3 style="margin-top:0; color:var(--primary);">Temperature Change (multi-step)</h3>
       <p>The temperature at sunrise was \(-1\frac{1}{2}\)&deg;C. By afternoon it rose \(4\frac{3}{4}\)&deg;C. By night it had dropped \(2.25\)&deg;C from its afternoon value.</p>
-      <p><strong>Task:</strong> find the afternoon temperature and the night temperature.</p>
+      <p><strong>Task:</strong> find the afternoon temperature and the night temperature. (fraction or decimal)</p>
       <div class="form-group">
         <label>Afternoon temperature:</label>
-        <input type="text" id="temp-noon" class="form-control-lg" style="max-width:200px;" placeholder="&deg;C">
+        <math-field id="temp-noon" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="\text{°C}"></math-field>
       </div>
       <div class="form-group">
         <label>Night temperature:</label>
-        <input type="text" id="temp-evening" class="form-control-lg" style="max-width:200px;" placeholder="&deg;C">
+        <math-field id="temp-evening" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="\text{°C}"></math-field>
       </div>
       <button class="btn-lg" onclick="checkTemp()">Submit</button>
       <div id="temp-feedback" class="feedback-msg"></div>
@@ -239,15 +241,61 @@
     triggerMathJax();
   }
 
+  // ASCIIMath always double-parenthesizes every fraction (e.g. \frac{5}{6}
+  // reads back as "(5)/(6)"), so a typed math-field answer needs its
+  // redundant parens stripped before comparing against a plain "5/6" in
+  // accepted[] - see /CLAUDE.md's "Visual math input" note.
+  function stripRedundantParens(s) {
+    let prev;
+    do {
+      prev = s;
+      s = s.replace(/\(([^()+-]+)\)/g, '$1');
+    } while (s !== prev);
+    return s;
+  }
+
+  function normalizeExpr(s) {
+    return stripRedundantParens(String(s || '').toLowerCase().replace(/\s+/g, ''));
+  }
+
+  function answerMatches(val, accepted) {
+    const norm = normalizeExpr(val);
+    return (accepted || []).some((a) => normalizeExpr(a) === norm);
+  }
+
+  // Reads a <math-field>'s answer as ASCIIMath text, guarded against the
+  // MathLive script never loading (blocked network, ad blocker, cold CDN
+  // failure).
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
+  // Checks a raw answer against a problem's format: 'fraction' (only the
+  // exact fraction/whole-number in accepted[] counts - the problem uses
+  // only fractions, so no decimal credit), 'decimal' (only
+  // LessonCheck.numericMatch against p.a counts - the default, for
+  // problems using only decimals/dollars), or 'mixed' (either counts,
+  // since the problem itself combines both forms).
+  function formatMatches(format, raw, p) {
+    if (format === 'fraction') return answerMatches(raw, p.accepted);
+    if (format === 'mixed') return LessonCheck.numericMatch(raw, p.a, p.tol || 0.01) || answerMatches(raw, p.accepted || []);
+    return LessonCheck.numericMatch(raw, p.a, p.tol || 0.01);
+  }
+
   // ==========================================
   // REUSABLE SINGLE-FIELD WORD PROBLEM LIST (submit mode - quiz-style)
+  // format defaults to 'decimal' (a plain <input>) when a problem doesn't
+  // set one; 'fraction'/'mixed' problems get a <math-field> instead.
   // ==========================================
   function renderList(containerId, problems, keyPrefix, section) {
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
         <strong>${i + 1}.</strong> ${p.q}
         <div style="margin-top:10px;">
-          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+          ${(!p.format || p.format === 'decimal')
+            ? `<input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">`
+            : `<math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:220px; display:inline-block;" placeholder="\\text{Answer}"></math-field>`
+          }
           <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkItem('${keyPrefix}', ${i})">Submit</button>
         </div>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:8px;"></div>
@@ -255,6 +303,7 @@
     `).join('');
     document.getElementById(containerId).innerHTML = html;
     problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, `${section} #${i + 1}: ${p.label}`, section));
+    triggerMathJax();
   }
 
   const listRegistry = {};
@@ -263,10 +312,11 @@
   function checkItem(keyPrefix, idx) {
     const cfg = listRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const raw = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const field = document.getElementById(`${keyPrefix}-${idx}-input`);
+    const raw = (!p.format || p.format === 'decimal') ? field.value : readMathField(field);
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
-    LessonCheck.submit(fb, { key: `${keyPrefix}-${idx}`, label: `${cfg.section} #${idx + 1}: ${p.label}`, answer: raw, section: cfg.section, correct: LessonCheck.numericMatch(raw, p.a, p.tol || 0.01) });
+    LessonCheck.submit(fb, { key: `${keyPrefix}-${idx}`, label: `${cfg.section} #${idx + 1}: ${p.label}`, answer: raw, section: cfg.section, correct: formatMatches(p.format || 'decimal', raw, p) });
   }
 
   function setup(containerId, problems, keyPrefix, section) {
@@ -278,13 +328,13 @@
   // TAB 1: ADDITION & SUBTRACTION
   // ==========================================
   const asProblems = [
-    { q: "Temperature: It was \\(-\\frac{3}{4}\\)&deg;F at dawn. By noon it had risen \\(2\\frac{1}{4}\\)&deg;F. What was the noon temperature?", a: 1.5, label: "Dawn-to-noon temperature" },
+    { q: "Temperature: It was \\(-\\frac{3}{4}\\)&deg;F at dawn. By noon it had risen \\(2\\frac{1}{4}\\)&deg;F. What was the noon temperature? (fraction, simplest form)", a: 1.5, format: 'fraction', accepted: ["3/2", "1 1/2"], label: "Dawn-to-noon temperature" },
     { q: "Banking: Sarah's balance was \\(-\\$45.25\\) (overdrawn). She deposits \\$60.50. What is her new balance?", a: 15.25, label: "Sarah's new balance" },
     { q: "Diving: A diver is at \\(-18.5\\) ft. She descends another \\(6.75\\) ft. What is her new depth?", a: -25.25, label: "Diver's new depth" },
     { q: "Banking: An account has \\$32.40. The owner withdraws \\$50.75. What is the new balance?", a: -18.35, label: "New balance after withdrawal" },
-    { q: "Temperature: It was \\(-2.5\\)&deg;C, then dropped another \\(1\\frac{3}{4}\\)&deg;C. What is the new temperature?", a: -4.25, label: "Temperature after second drop" },
+    { q: "Temperature: It was \\(-2.5\\)&deg;C, then dropped another \\(1\\frac{3}{4}\\)&deg;C. What is the new temperature? (fraction or decimal)", a: -4.25, format: 'mixed', accepted: ["-17/4"], label: "Temperature after second drop" },
     { q: "Hiking: A trail's elevation is \\(245.6\\) ft. It descends \\(89.25\\) ft over the next mile. What is the new elevation?", a: 156.35, label: "Trail elevation after descent" },
-    { q: "Temperature: It was \\(-\\frac{5}{8}\\)&deg;F, then rose \\(\\frac{3}{8}\\)&deg;F. What is the new temperature (as a decimal)?", a: -0.25, label: "Fractional temperature change" },
+    { q: "Temperature: It was \\(-\\frac{5}{8}\\)&deg;F, then rose \\(\\frac{3}{8}\\)&deg;F. What is the new temperature? (fraction, simplest form)", a: -0.25, format: 'fraction', accepted: ["-1/4"], label: "Fractional temperature change" },
     { q: "Banking: Marcus owes \\$12.75. He earns \\$20.00. What is his balance now (positive if he has money left over, negative if he still owes)?", a: 7.25, label: "Marcus's balance" }
   ];
   setup('as-list', asProblems, 'as', '1. Addition & Subtraction');
@@ -296,11 +346,13 @@
     LessonCheck.submit(fb, { key: 'wp-bank', label: '1. Addition & Subtraction: Bank Balance -62.50, +45.75, +15, -10.25', answer: val, section: '1. Addition & Subtraction', correct: LessonCheck.numericMatch(val, -12.0, 0.1) });
   }
   function checkTemp() {
-    const noon = document.getElementById('temp-noon').value;
-    const evening = document.getElementById('temp-evening').value;
+    const noon = readMathField(document.getElementById('temp-noon'));
+    const evening = readMathField(document.getElementById('temp-evening'));
     const fb = document.getElementById('temp-feedback');
     if (!noon.trim() || !evening.trim()) { LessonCheck.incomplete(fb, "Enter both the afternoon and night temperatures before submitting."); return; }
-    LessonCheck.submit(fb, { key: 'wp-temp', label: '1. Addition & Subtraction: Temperature Change sunrise -1.5, +4.75, -2.25', answer: `afternoon=${noon}, night=${evening}`, section: '1. Addition & Subtraction', correct: LessonCheck.numericMatch(noon, 3.25, 0.1) && LessonCheck.numericMatch(evening, 1.0, 0.1) });
+    const noonCorrect = LessonCheck.numericMatch(noon, 3.25, 0.1) || answerMatches(noon, ["13/4"]);
+    const eveningCorrect = LessonCheck.numericMatch(evening, 1.0, 0.1) || answerMatches(evening, ["1"]);
+    LessonCheck.submit(fb, { key: 'wp-temp', label: '1. Addition & Subtraction: Temperature Change sunrise -1.5, +4.75, -2.25', answer: `afternoon=${noon}, night=${evening}`, section: '1. Addition & Subtraction', correct: noonCorrect && eveningCorrect });
   }
   LessonProgress.preRegister('wp-bank', '1. Addition & Subtraction: Bank Balance -62.50, +45.75, +15, -10.25', '1. Addition & Subtraction');
   LessonProgress.preRegister('wp-temp', '1. Addition & Subtraction: Temperature Change sunrise -1.5, +4.75, -2.25', '1. Addition & Subtraction');
@@ -312,8 +364,8 @@
     { q: "Bank Fees: A bank charges a \\$2.50 monthly service fee for 6 months. What is the total change to the account balance?", a: -15, label: "Total bank fees" },
     { q: "Temperature: Over 5 hours, the temperature dropped a total of \\(7.5\\)&deg;F at a constant rate. What was the average hourly change?", a: -1.5, label: "Average hourly temperature drop" },
     { q: "Banking: Four friends split a \\$37 restaurant debt equally. What signed number represents each friend's share?", a: -9.25, label: "Each friend's share of the debt" },
-    { q: "Cooling: A chemical solution's temperature dropped \\(\\frac{3}{4}\\)&deg;C every 10 minutes for 40 minutes (a constant rate). What was the total temperature change?", a: -3, label: "Total chemical cooling" },
-    { q: "Hiking: A hiker's elevation dropped \\(18.75\\) m over a \\(\\frac{1}{4}\\)-hour hike at a constant rate. What was the rate of change in meters per hour?", a: -75, label: "Hiking rate of elevation change" }
+    { q: "Cooling: A chemical solution's temperature dropped \\(\\frac{3}{4}\\)&deg;C every 10 minutes for 40 minutes (a constant rate). What was the total temperature change? (fraction or whole number)", a: -3, format: 'fraction', accepted: ["-3"], label: "Total chemical cooling" },
+    { q: "Hiking: A hiker's elevation dropped \\(18.75\\) m over a \\(\\frac{1}{4}\\)-hour hike at a constant rate. What was the rate of change in meters per hour? (fraction or decimal)", a: -75, format: 'mixed', accepted: ["-75"], label: "Hiking rate of elevation change" }
   ];
   setup('md-list', mdProblems, 'md', '2. Multiplication & Division');
 
@@ -337,14 +389,14 @@
   // TAB 3: MIXED & MULTI-STEP
   // ==========================================
   const mixedProblems = [
-    { q: "A scuba diver descends \\(12\\) m, then descends an additional \\(\\frac{1}{4}\\) of that distance, then ascends \\(5\\) m. What is her final depth relative to the surface?", a: -10, label: "Diver's final depth" },
-    { q: "A company's profit changed by \\(-\\$1{,}200\\) in Q1. In Q2, it recovered \\(\\frac{3}{4}\\) of that loss. What was the net change over the two quarters?", a: -300, label: "Company's two-quarter net change" },
+    { q: "A scuba diver descends \\(12\\) m, then descends an additional \\(\\frac{1}{4}\\) of that distance, then ascends \\(5\\) m. What is her final depth relative to the surface? (fraction or whole number)", a: -10, format: 'fraction', accepted: ["-10"], label: "Diver's final depth" },
+    { q: "A company's profit changed by \\(-\\$1{,}200\\) in Q1. In Q2, it recovered \\(\\frac{3}{4}\\) of that loss. What was the net change over the two quarters? (fraction or whole number)", a: -300, format: 'fraction', accepted: ["-300"], label: "Company's two-quarter net change" },
     { q: "A hot air balloon's altitude changed from \\(850.5\\) ft to \\(662.25\\) ft over a 15-minute descent. What was the average rate of change in altitude, in feet per minute?", a: -12.55, label: "Balloon's average rate of change" },
-    { q: "Malena's account starts at \\(-\\$32.50\\). She deposits \\(\\frac{1}{2}\\) of \\$75, then withdraws \\$19.80, then a \\$4.25 bank fee is charged. What is her final balance?", a: -19.05, label: "Malena's final balance" },
-    { q: "A weather balloon is at an altitude of \\(\\frac{3}{4}\\) km. It descends \\(0.9\\) km. What is its new altitude, in km?", a: -0.15, label: "Weather balloon's new altitude" },
-    { q: "A stock opened at \\$52.40, dropped by \\(\\frac{1}{4}\\) of its value, then gained back \\$8.60. What is the closing price?", a: 47.90, label: "Stock closing price" },
-    { q: "A submarine's depth changes by \\(\\frac{1}{3}\\) of \\(90\\) ft (a descent), then it rises \\(12.5\\) ft. What is its final depth relative to where it started?", a: -17.5, label: "Submarine's final depth" },
-    { q: "A charity fundraiser's total changed by \\(-\\$125.60\\) on day 1. On day 2, new donations made up \\(\\frac{1}{2}\\) of that loss. What is the net change after day 2?", a: -62.8, label: "Fundraiser's two-day net change" }
+    { q: "Malena's account starts at \\(-\\$32.50\\). She deposits \\(\\frac{1}{2}\\) of \\$75, then withdraws \\$19.80, then a \\$4.25 bank fee is charged. What is her final balance? (fraction or decimal)", a: -19.05, format: 'mixed', accepted: ["-381/20"], label: "Malena's final balance" },
+    { q: "A weather balloon is at an altitude of \\(\\frac{3}{4}\\) km. It descends \\(0.9\\) km. What is its new altitude, in km? (fraction or decimal)", a: -0.15, format: 'mixed', accepted: ["-3/20"], label: "Weather balloon's new altitude" },
+    { q: "A stock opened at \\$52.40, dropped by \\(\\frac{1}{4}\\) of its value, then gained back \\$8.60. What is the closing price? (fraction or decimal)", a: 47.90, format: 'mixed', accepted: ["479/10"], label: "Stock closing price" },
+    { q: "A submarine's depth changes by \\(\\frac{1}{3}\\) of \\(90\\) ft (a descent), then it rises \\(12.5\\) ft. What is its final depth relative to where it started? (fraction or decimal)", a: -17.5, format: 'mixed', accepted: ["-35/2"], label: "Submarine's final depth" },
+    { q: "A charity fundraiser's total changed by \\(-\\$125.60\\) on day 1. On day 2, new donations made up \\(\\frac{1}{2}\\) of that loss. What is the net change after day 2? (fraction or decimal)", a: -62.8, format: 'mixed', accepted: ["-314/5"], label: "Fundraiser's two-day net change" }
   ];
   setup('mixed-list', mixedProblems, 'mixed', '3. Mixed & Multi-Step');
 </script>
