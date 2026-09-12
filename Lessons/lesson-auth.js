@@ -165,8 +165,12 @@ const LessonSync = (() => {
     if (typeof window.revealAnswerKey === 'function') window.revealAnswerKey();
   }
 
-  async function handleGoogleSignIn(response) {
-    idToken = response.credential;
+  // Shared by a fresh button click/One Tap response and a cached token
+  // resumed silently on page load - both end up here with just the raw
+  // JWT string, so unlock()/unlockTeacherView() don't need to know which
+  // path got them here.
+  async function proceedWithToken(rawToken) {
+    idToken = rawToken;
     setStatus('Checking access...', false);
     try {
       const res = await fetchWithTimeout(LESSON_SYNC_API_URL, {
@@ -174,13 +178,22 @@ const LessonSync = (() => {
         body: JSON.stringify({ idToken, type: 'access-check', activityId })
       });
       const result = await res.json();
-      if (!result.ok) { setStatus(result.error || 'Could not verify your account.', true); return; }
+      if (!result.ok) {
+        TokenCache.clear(); // token was rejected outright (expired/invalid) - don't keep retrying it silently
+        setStatus(result.error || 'Could not verify your account.', true);
+        return;
+      }
+      TokenCache.save(rawToken);
       if (!result.allowed) { setStatus(result.reason || 'Access denied.', true); return; }
       if (result.role === 'teacher') { unlockTeacherView(result.student && result.student.name); return; }
       unlock(result.student, result.progress);
     } catch (err) {
       setStatus("Couldn't reach the roster - check your connection and try again.", true);
     }
+  }
+
+  async function handleGoogleSignIn(response) {
+    await proceedWithToken(response.credential);
   }
   window.handleGoogleSignIn = handleGoogleSignIn;
 
@@ -204,6 +217,10 @@ const LessonSync = (() => {
   function init(id) {
     activityId = id;
     patchSwitchTab();
+    // Try a cached token before ever showing the sign-in button - this is
+    // what avoids asking again within the token's ~1 hour lifetime.
+    const cached = TokenCache.load();
+    if (cached) proceedWithToken(cached);
   }
 
   return { init };

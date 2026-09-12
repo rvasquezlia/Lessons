@@ -26,6 +26,21 @@ shipping new backend code.
 - Every request to the backend is verified server-side (Apps Script calls
   Google's `tokeninfo` endpoint) — the front-end's claimed identity is never
   trusted directly.
+- **Persisted sign-in**: `Lessons/token-cache.js` (shared by `lesson-auth.js`
+  and `index.html`, no other dependencies) caches the raw ID token in
+  `localStorage` after a successful check, and every page tries that cache
+  before ever showing the sign-in button. A token is only reused while its
+  own `exp` claim says it's still valid (~1 hour from issue, Google's own
+  lifetime for these tokens — this never extends access beyond what Google
+  itself already granted). Any backend response rejecting the token clears
+  the cache immediately, so a revoked/expired token doesn't get retried
+  forever. `data-auto_select="true"` is also set on every gate's
+  `g_id_onload` div as a second line of defense — if there's no cached
+  token but the browser still has a live Google session, One Tap can
+  silently resume it without a click. Any new gated page must include
+  `token-cache.js` **before** `lesson-auth.js` in its `<head>` — leaving it
+  out doesn't break the page, it just silently disables persistence and
+  the student is asked to sign in on every visit.
 
 ### The shared Sheet
 

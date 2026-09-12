@@ -227,6 +227,7 @@
     #lesson-gate-status { min-height: 1.2em; font-weight: 600; }
   </style>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="token-cache.js"></script>
 </head>
 <body>
 
@@ -235,7 +236,8 @@
   <p>Sign in with your school Google account to see your lessons.</p>
   <div id="g_id_onload"
        data-client_id="478111261772-7l1qamohr0fjsa7ekosuhpj9jum1q4vc.apps.googleusercontent.com"
-       data-callback="handleGoogleSignIn">
+       data-callback="handleGoogleSignIn"
+       data-auto_select="true">
   </div>
   <div class="g_id_signin" data-type="standard"></div>
   <p id="lesson-gate-status"></p>
@@ -506,16 +508,23 @@
     el.style.color = isError ? "#b91c1c" : "var(--primary)";
   }
 
-  async function handleGoogleSignIn(response) {
+  // Shared by a fresh button click/One Tap response and a cached token
+  // resumed silently on load.
+  async function proceedWithToken(rawToken) {
     setGateStatus("Checking your account...", false);
     try {
       const res = await fetchWithTimeout(LESSON_SYNC_API_URL, {
         method: "POST",
-        body: JSON.stringify({ idToken: response.credential, type: "identify" })
+        body: JSON.stringify({ idToken: rawToken, type: "identify" })
       });
       const result = await res.json();
-      if (!result.ok) { setGateStatus(result.error || "Could not verify your account.", true); return; }
+      if (!result.ok) {
+        TokenCache.clear(); // token was rejected outright (expired/invalid) - don't keep retrying it silently
+        setGateStatus(result.error || "Could not verify your account.", true);
+        return;
+      }
       if (result.role === "unknown") { setGateStatus(result.reason, true); return; }
+      TokenCache.save(rawToken);
 
       if (result.role === "teacher") {
         document.getElementById("lesson-gate").hidden = true;
@@ -532,7 +541,16 @@
       setGateStatus("Couldn't reach the roster - check your connection and try again.", true);
     }
   }
+
+  async function handleGoogleSignIn(response) {
+    await proceedWithToken(response.credential);
+  }
   window.handleGoogleSignIn = handleGoogleSignIn;
+
+  // Try a cached token before ever showing the sign-in button - avoids
+  // asking again within the token's ~1 hour lifetime.
+  const cachedToken = TokenCache.load();
+  if (cachedToken) proceedWithToken(cachedToken);
 </script>
 
 </body>

@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="../../token-cache.js"></script>
   <script src="../../lesson-auth.js"></script>
   <style>
     .lesson-gate { max-width: 480px; margin: 80px auto; padding: 32px; background: var(--card); border: 2px solid var(--border); border-radius: 16px; text-align: center; }
@@ -61,7 +62,8 @@
   <p>Sign in with your Lincoln International Academy Google account to begin.</p>
   <div id="g_id_onload"
        data-client_id="478111261772-7l1qamohr0fjsa7ekosuhpj9jum1q4vc.apps.googleusercontent.com"
-       data-callback="handleGoogleSignIn">
+       data-callback="handleGoogleSignIn"
+       data-auto_select="true">
   </div>
   <div class="g_id_signin" data-type="standard"></div>
   <p id="lesson-gate-status"></p>
