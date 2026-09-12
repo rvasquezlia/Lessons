@@ -152,9 +152,22 @@ function doPost(e) {
   // or flagging rapid bursts lives in the dashboard page's own JS, so
   // those rules can be tuned without redeploying this script. Never
   // writes - no lock needed.
+  //
+  // roster/activityCatalog are included alongside Progress rows so the
+  // dashboard can compute real completion rates (attempted vs. everyone
+  // enrolled) and show students/activities with zero submissions - not
+  // just aggregate over whoever happened to submit something.
+  // accessLog is included so denied/allowed access attempts are visible
+  // too, not just graded work.
   if (body.type === 'teacher-data') {
     if (!isTeacher_(auth.email)) return jsonOut_({ ok: false, error: 'Not authorized' });
-    return jsonOut_({ ok: true, rows: getAllProgressForDashboard_() });
+    return jsonOut_({
+      ok: true,
+      rows: getAllProgressForDashboard_(),
+      roster: getRosterForDashboard_(),
+      activityCatalog: getActivityCatalogForDashboard_(),
+      accessLog: getAccessLogForDashboard_()
+    });
   }
 
   // Everything below this line can write to Progress/AccessLog - only
@@ -305,5 +318,59 @@ function getAllProgressForDashboard_() {
   const data = sheet.getDataRange().getValues();
   const rows = [];
   for (let r = 1; r < data.length; r++) rows.push(rowToDashboardRow_(data[r], map));
+  return rows;
+}
+
+function getRosterForDashboard_() {
+  const sheet = ss_().getSheetByName('Roster');
+  const map = colMap_(sheet);
+  const data = sheet.getDataRange().getValues();
+  const rows = [];
+  for (let r = 1; r < data.length; r++) {
+    rows.push({
+      email: data[r][map['Email']],
+      studentName: data[r][map['StudentName']],
+      grade: data[r][map['Grade']],
+      teacher: data[r][map['Teacher']],
+      section: data[r][map['Section']],
+      status: data[r][map['Status']]
+    });
+  }
+  return rows;
+}
+
+function getActivityCatalogForDashboard_() {
+  const sheet = ss_().getSheetByName('ActivityCatalog');
+  const map = colMap_(sheet);
+  const data = sheet.getDataRange().getValues();
+  const rows = [];
+  for (let r = 1; r < data.length; r++) {
+    rows.push({
+      activityId: data[r][map['ActivityId']],
+      title: data[r][map['Title']],
+      grade: data[r][map['Grade']],
+      unit: data[r][map['Unit']],
+      active: data[r][map['Active']] === true || data[r][map['Active']] === 'TRUE'
+    });
+  }
+  return rows;
+}
+
+function getAccessLogForDashboard_() {
+  const sheet = ss_().getSheetByName('AccessLog');
+  const map = colMap_(sheet);
+  const data = sheet.getDataRange().getValues();
+  const rows = [];
+  for (let r = 1; r < data.length; r++) {
+    rows.push({
+      timestamp: data[r][map['Timestamp']],
+      email: data[r][map['Email']],
+      activityId: data[r][map['ActivityId']],
+      studentGrade: data[r][map['StudentGrade']],
+      requiredGrade: data[r][map['RequiredGrade']],
+      result: data[r][map['Result']],
+      reason: data[r][map['Reason']]
+    });
+  }
   return rows;
 }

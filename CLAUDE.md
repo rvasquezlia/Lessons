@@ -122,19 +122,72 @@ Manage deployments → edit the existing deployment → New version, so the
 ### Teacher dashboard
 
 `Lessons/teacher-dashboard.html` — a standalone, teacher-only page (not
-linked from any lesson). Signs in the same way as a lesson page, but
-calls the backend with `type: 'teacher-data'` instead of
-`access-check`/`submission`; the backend checks the signed-in email
-against the `Teachers` tab and, if authorized, returns every `Progress`
-row as-is (including the raw `SubmissionsLog` JSON).
+linked from any lesson). Signs in **exactly like a lesson page** now
+(same `token-cache.js`-backed persistent sign-in, imperative GIS init
+gated by `onGoogleLibraryLoad()`, `requestGeneration`/`resolved`
+stale-request guards, one retry with a longer timeout, `#lesson-loading`
+spinner hidden via `style.display` — see "Persisted sign-in" above; this
+used to be a plain declarative `data-client_id` gate with no caching,
+which is why it looked and behaved differently from every other gated
+page until this was fixed). It calls the backend with
+`type: 'teacher-data'` instead of `access-check`/`submission`; the
+backend checks the signed-in email against the `Teachers` tab and, if
+authorized, returns four things in one response: `rows` (every
+`Progress` row, including the raw `SubmissionsLog` JSON — same as
+before), plus now also `roster` (every `Roster` row), `activityCatalog`
+(every `ActivityCatalog` row), and `accessLog` (every `AccessLog` row) —
+see `getRosterForDashboard_`/`getActivityCatalogForDashboard_`/
+`getAccessLogForDashboard_` in `Code.gs`. The extra three exist so the
+dashboard can show students/activities with **zero** submissions (a
+`Progress`-only view can only ever show rows that already exist) and
+real access-attempt history, not just graded answers.
 
 Deliberately, **all analysis happens in the dashboard's own JS, not in
 Apps Script**: average time between answers, the "3 answers within 60
-seconds" rapid-burst flag, sorting, filtering. Tune or add rules by
-editing `teacher-dashboard.html` directly — that never requires touching
-`Code.gs` or redeploying the backend. Only touch the backend if the data
-being *returned* needs to change (a new column, a new tab to join
-against), not when the flagging rules change.
+seconds" rapid-burst flag, sorting, filtering, every aggregate below.
+Tune or add rules by editing `teacher-dashboard.html` directly — that
+never requires touching `Code.gs` or redeploying the backend. Only touch
+the backend if the data being *returned* needs to change (a new column,
+a new tab to join against), not when the flagging/aggregation rules
+change.
+
+The page visually matches the rest of the site (reuses
+`lesson-shared.css`'s `.app-container`/`.brand-row`/`.nav-tabs`/
+`.tab-btn`/`.panel`/`.section-title` rather than its own one-off styles)
+and has five tabs, all driven by the same `allRows`/`roster`/
+`activityCatalog`/`accessLog` globals and a shared `Grade`/`Teacher`/
+`Activity`/"flagged only" filter bar:
+
+- **Overview** — class-wide stat tiles (active students, activities,
+  average score, students who haven't started anything, flagged
+  submissions, denied access attempts), lowest-scoring activities/
+  students as bar charts, and short lists of at-risk students/
+  submissions.
+- **By Student** — one row per roster student (including students with
+  zero `Progress` rows, so "hasn't started anything" is visible instead
+  of just absent), averaged across every activity they've touched;
+  expandable to a per-activity breakdown.
+- **By Activity** — one row per catalog activity (including activities
+  nobody has started), with a completion percentage computed against
+  how many *eligible* roster students exist for that grade (and teacher,
+  if filtered); expandable to see who has/hasn't completed it.
+- **All Submissions** — the original flat one-row-per-(student,activity)
+  table, kept as the detail view everything else summarizes from.
+- **Access Log** — every `AccessLog` row, joined against `roster` (for
+  student name) and `activityCatalog` (for activity title) client-side
+  via `joinRosterName()`/`joinActivityTitle()`, with its own denied-count
+  and most-common-denial-reason stat tiles.
+
+**Data-quality note**: the raw `Progress` columns
+(`ItemsAttempted`/`ItemsCorrect`/`ScorePct`) count *every* logged
+`SubmissionsLog` item, including the `tab-*`/`reached-end` engagement
+items (see "Engagement tracking" below) — since every wired page now
+logs those, trusting those raw columns directly would inflate "attempted"
+and produce a misleading score on every activity. The dashboard's
+`decorateRow()` recomputes all three client-side from the submissions
+log itself, filtering out `tab-*`/`reached-end` keys first, and uses
+`null` (not `0`) when nothing graded exists yet so an engagement-only
+page doesn't drag an average down as if it scored zero.
 
 - **Spreadsheet ID**: `1-HLtX5AwskPx8hy_Ip2kjGMz5OUIS91M2x0FgEt75zA`
 - **Apps Script Web App URL**: `https://script.google.com/macros/s/AKfycbyC7mb1TKfg3JvhiZftXMf7oXkzrBMWJczZSURC7sIfoIxYnZrrumYfx-j7JYTY0A9i/exec`

@@ -4,90 +4,246 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Teacher Dashboard - Lessons Progress</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="lesson-shared.css">
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+<script src="token-cache.js?v=2"></script>
 <style>
-  body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 24px; }
-  h1 { margin: 0 0 4px 0; }
-  .lesson-gate { max-width: 480px; margin: 80px auto; padding: 32px; background: var(--card); border: 2px solid var(--border); border-radius: 16px; text-align: center; }
+  body { padding: 20px; }
+  .lesson-gate { max-width: 480px; margin: 80px auto; padding: 32px; background: var(--card); border: 2px solid var(--border); border-radius: 16px; text-align: center; box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
+  .lesson-gate h2 { margin-top: 0; }
   .lesson-gate .g_id_signin { display: flex; justify-content: center; margin: 20px 0; }
-  #gate-status { min-height: 1.2em; font-weight: 600; }
+  #lesson-gate-status { min-height: 1.2em; font-weight: 600; }
+  #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 120px 20px; }
+  .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+  @keyframes lesson-spin { to { transform: rotate(360deg); } }
 
-  #dashboard { max-width: 1200px; margin: 0 auto; }
-  .controls { display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0; align-items: center; }
-  .controls select, .controls input { padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; }
-  .stat-row { display: flex; gap: 16px; flex-wrap: wrap; margin: 16px 0; }
-  .stat-tile { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 18px; min-width: 140px; }
-  .stat-tile .n { font-size: 1.6rem; font-weight: 800; color: var(--primary); }
-  .stat-tile .l { font-size: 0.8rem; color: var(--text); opacity: 0.7; }
+  .filter-bar {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+    background: #1e293b; color: white; padding: 14px 24px;
+  }
+  .filter-bar .filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .filter-bar label { font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
+  .filter-bar select { padding: 6px 10px; border-radius: 8px; border: 2px solid #475569; font-family: inherit; }
+  .filter-bar .btn-print { background: var(--accent); color: #000; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 800; cursor: pointer; }
+  .filter-bar .btn-print:hover { background: #b45309; color: white; }
 
-  table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; font-size: 0.9rem; }
+  .stat-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+  .stat-tile { background: var(--bg); border: 2px solid var(--border); border-radius: 12px; padding: 14px 20px; min-width: 140px; flex: 1; }
+  .stat-tile .n { font-size: 1.7rem; font-weight: 800; color: var(--primary); }
+  .stat-tile .n.warn { color: var(--error); }
+  .stat-tile .l { font-size: 0.8rem; opacity: 0.75; }
+
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; margin-bottom: 24px; }
+  .card { background: var(--bg); border: 2px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+  .card h3 { margin: 0 0 14px 0; font-size: 1.1rem; color: var(--primary); }
+
+  .bar-row { margin-bottom: 10px; }
+  .bar-row .bar-label { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 3px; gap: 8px; }
+  .bar-row .bar-label span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-track { background: #e2e8f0; border-radius: 6px; height: 10px; overflow: hidden; }
+  .bar-fill { background: var(--primary-light); height: 100%; }
+  .bar-fill.low { background: var(--error); }
+  .bar-fill.mid { background: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; background: var(--card); font-size: 0.88rem; }
   th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
-  th { background: var(--primary); color: white; cursor: pointer; user-select: none; }
+  th { background: var(--primary); color: white; cursor: pointer; user-select: none; white-space: nowrap; }
+  th:hover { background: var(--primary-light); }
   tr.flagged { background: var(--error-bg); }
   tr.flagged td:first-child { border-left: 4px solid var(--error); }
-  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+  tr.zero-activity td:first-child { border-left: 4px solid var(--accent); }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
   .pill.flag { background: var(--error-bg); color: var(--error); }
   .pill.ok { background: var(--success-bg); color: var(--success); }
+  .pill.neutral { background: #e2e8f0; color: #475569; }
   .detail-row td { background: #f8fafc; }
   .detail-row table { font-size: 0.82rem; }
   .expand-btn { cursor: pointer; color: var(--primary-light); font-weight: 700; }
+  .table-wrap { overflow-x: auto; }
+  .empty-note { color: #64748b; font-style: italic; padding: 12px 0; }
 </style>
 </head>
 <body>
 
-<div id="lesson-gate" class="lesson-gate">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+
+<div id="lesson-gate" class="lesson-gate" hidden>
   <h2>Teacher Dashboard</h2>
   <p>Sign in with your Lincoln International Academy Google account.</p>
-  <div id="g_id_onload"
-       data-client_id="478111261772-7l1qamohr0fjsa7ekosuhpj9jum1q4vc.apps.googleusercontent.com"
-       data-callback="handleGoogleSignIn">
-  </div>
-  <div class="g_id_signin" data-type="standard"></div>
-  <p id="gate-status"></p>
+  <div class="g_id_signin"></div>
+  <p id="lesson-gate-status"></p>
 </div>
 
-<div id="dashboard" hidden>
-  <h1>Lessons Progress Dashboard</h1>
-  <p id="loaded-as"></p>
+<div class="app-container" id="dashboard" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Teacher Dashboard</span>
+    <h1>Class Progress Overview</h1>
+    <p class="subtitle" id="loaded-as"></p>
+  </header>
 
-  <div class="stat-row" id="stat-row"></div>
-
-  <div class="controls">
-    <label>Grade: <select id="filter-grade"><option value="">All</option></select></label>
-    <label>Teacher: <select id="filter-teacher"><option value="">All</option></select></label>
-    <label>Activity: <select id="filter-activity"><option value="">All</option></select></label>
-    <label><input type="checkbox" id="filter-flagged-only"> Flagged only</label>
-    <button id="refresh-btn">Refresh</button>
+  <div class="filter-bar">
+    <div class="filters">
+      <label>Grade: <select id="filter-grade"><option value="">All</option></select></label>
+      <label>Teacher: <select id="filter-teacher"><option value="">All</option></select></label>
+      <label>Activity: <select id="filter-activity"><option value="">All</option></select></label>
+      <label><input type="checkbox" id="filter-flagged-only"> Flagged only</label>
+    </div>
+    <button class="btn-print" id="refresh-btn">Refresh</button>
   </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th data-sort="studentName">Student</th>
-        <th data-sort="activityTitle">Activity</th>
-        <th data-sort="scorePct">Score</th>
-        <th data-sort="itemsAttempted">Attempted</th>
-        <th data-sort="avgSeconds">Avg sec/answer</th>
-        <th data-sort="tabsViewed">Tabs viewed</th>
-        <th data-sort="reachedEnd">Reached end</th>
-        <th data-sort="lastSubmittedAt">Last submitted</th>
-        <th>Flags</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody id="rows-body"></tbody>
-  </table>
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchDashTab('overview')">Overview</button>
+    <button class="tab-btn" onclick="switchDashTab('by-student')">By Student</button>
+    <button class="tab-btn" onclick="switchDashTab('by-activity')">By Activity</button>
+    <button class="tab-btn" onclick="switchDashTab('all-submissions')">All Submissions</button>
+    <button class="tab-btn" onclick="switchDashTab('access-log')">Access Log</button>
+  </nav>
+
+  <div id="overview" class="panel active">
+    <div class="section-title">Class Overview</div>
+    <div class="stat-row" id="overview-stats"></div>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Lowest average score by activity</h3>
+        <div id="bars-activity-score"></div>
+      </div>
+      <div class="card">
+        <h3>Lowest average score by student</h3>
+        <div id="bars-student-score"></div>
+      </div>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Students who haven't started anything yet</h3>
+        <div id="not-started-list"></div>
+      </div>
+      <div class="card">
+        <h3>Most flagged submissions</h3>
+        <div id="most-flagged-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="by-student" class="panel">
+    <div class="section-title">Progress by Student</div>
+    <p style="color:#64748b; margin-top:-10px;">One row per student - averaged across every activity they've touched. Click a row to see their activity-by-activity breakdown.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-table="by-student" data-sort="studentName">Student</th>
+            <th data-table="by-student" data-sort="grade">Grade</th>
+            <th data-table="by-student" data-sort="teacher">Teacher</th>
+            <th data-table="by-student" data-sort="activitiesStarted">Activities started</th>
+            <th data-table="by-student" data-sort="avgScore">Avg score</th>
+            <th data-table="by-student" data-sort="totalFlags">Flags</th>
+            <th data-table="by-student" data-sort="lastActive">Last active</th>
+          </tr>
+        </thead>
+        <tbody id="by-student-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="by-activity" class="panel">
+    <div class="section-title">Progress by Activity</div>
+    <p style="color:#64748b; margin-top:-10px;">One row per activity - averaged across every student who's touched it, out of everyone in that grade. Click a row to see who's completed it and who hasn't.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-table="by-activity" data-sort="activityTitle">Activity</th>
+            <th data-table="by-activity" data-sort="grade">Grade</th>
+            <th data-table="by-activity" data-sort="startedCount">Started</th>
+            <th data-table="by-activity" data-sort="completionPct">Completion</th>
+            <th data-table="by-activity" data-sort="avgScore">Avg score</th>
+            <th data-table="by-activity" data-sort="avgSeconds">Avg sec/answer</th>
+            <th data-table="by-activity" data-sort="flaggedCount">Flagged</th>
+          </tr>
+        </thead>
+        <tbody id="by-activity-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="all-submissions" class="panel">
+    <div class="section-title">All Submissions (detail)</div>
+    <p style="color:#64748b; margin-top:-10px;">One row per (student, activity) - the raw data everything else on this page is summarized from.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-table="all-submissions" data-sort="studentName">Student</th>
+            <th data-table="all-submissions" data-sort="activityTitle">Activity</th>
+            <th data-table="all-submissions" data-sort="scorePct">Score</th>
+            <th data-table="all-submissions" data-sort="itemsAttempted">Attempted</th>
+            <th data-table="all-submissions" data-sort="avgSeconds">Avg sec/answer</th>
+            <th data-table="all-submissions" data-sort="tabsViewed">Tabs viewed</th>
+            <th data-table="all-submissions" data-sort="reachedEnd">Reached end</th>
+            <th data-table="all-submissions" data-sort="lastSubmittedAt">Last submitted</th>
+            <th>Flags</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="all-submissions-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="access-log" class="panel">
+    <div class="section-title">Access Log</div>
+    <p style="color:#64748b; margin-top:-10px;">Every time a student opened an activity - allowed or denied - plus any denied re-check mid-activity. Not a row per Check-button click.</p>
+    <div class="stat-row" id="access-log-stats"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-table="access-log" data-sort="timestamp">Timestamp</th>
+            <th data-table="access-log" data-sort="studentName">Student</th>
+            <th data-table="access-log" data-sort="activityTitle">Activity</th>
+            <th data-table="access-log" data-sort="result">Result</th>
+            <th data-table="access-log" data-sort="reason">Reason</th>
+          </tr>
+        </thead>
+        <tbody id="access-log-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer style="text-align:center; padding:18px; color:#94a3b8; font-size:0.85rem;">Lincoln International Academy &middot; Teacher Dashboard</footer>
 </div>
 
 <script>
   const LESSON_SYNC_API_URL = 'https://script.google.com/macros/s/AKfycbyC7mb1TKfg3JvhiZftXMf7oXkzrBMWJczZSURC7sIfoIxYnZrrumYfx-j7JYTY0A9i/exec';
+  const GOOGLE_CLIENT_ID = '478111261772-7l1qamohr0fjsa7ekosuhpj9jum1q4vc.apps.googleusercontent.com';
 
   let idToken = null;
   let allRows = [];
-  let sortKey = 'lastSubmittedAt';
-  let sortDir = -1;
+  let roster = [];
+  let activityCatalog = [];
+  let accessLog = [];
+
+  // requestGeneration/resolved stop a slow, now-superseded sign-in
+  // attempt from undoing a later one that already succeeded - see
+  // /CLAUDE.md's "Stale in-flight requests" note. Same pattern as
+  // lesson-auth.js and index.html.
+  let requestGeneration = 0;
+  let resolved = false;
+  let googleInitialized = false;
+
+  const sortState = {
+    'by-student': { key: 'avgScore', dir: 1 },
+    'by-activity': { key: 'avgScore', dir: 1 },
+    'all-submissions': { key: 'lastSubmittedAt', dir: -1 },
+    'access-log': { key: 'timestamp', dir: -1 }
+  };
 
   function fetchWithTimeout(url, opts, timeoutMs) {
     const controller = new AbortController();
@@ -95,36 +251,94 @@
     return fetch(url, Object.assign({}, opts, { signal: controller.signal })).finally(() => clearTimeout(timer));
   }
 
+  function hideLoadingIndicator() {
+    const el = document.getElementById('lesson-loading');
+    // Has its own display:flex rule (to center the spinner), which beats
+    // the browser's default [hidden]{display:none} on specificity -
+    // style.display always wins regardless.
+    if (el) el.style.display = 'none';
+  }
+
   function setGateStatus(msg, isError) {
-    const el = document.getElementById('gate-status');
+    const el = document.getElementById('lesson-gate-status');
     el.textContent = msg;
     el.style.color = isError ? 'var(--error)' : 'var(--primary)';
   }
 
-  async function handleGoogleSignIn(response) {
-    idToken = response.credential;
-    setGateStatus('Loading...', false);
-    await loadData();
-  }
-  window.handleGoogleSignIn = handleGoogleSignIn;
-
-  async function loadData() {
+  async function proceedWithToken(rawToken, isRetry) {
+    const myGeneration = ++requestGeneration;
+    idToken = rawToken;
+    setGateStatus('Checking your account...', false);
     try {
       const res = await fetchWithTimeout(LESSON_SYNC_API_URL, {
         method: 'POST',
-        body: JSON.stringify({ idToken, type: 'teacher-data' })
-      });
+        body: JSON.stringify({ idToken: rawToken, type: 'teacher-data' })
+      }, isRetry ? 25000 : 15000);
       const result = await res.json();
-      if (!result.ok) { setGateStatus(result.error || 'Not authorized for the dashboard.', true); return; }
-      allRows = result.rows.map(decorateRow);
-      document.getElementById('lesson-gate').hidden = true;
-      document.getElementById('dashboard').hidden = false;
-      populateFilters();
-      render();
+      if (resolved || myGeneration !== requestGeneration) return;
+      if (!result.ok) {
+        TokenCache.clear();
+        showGateAndPromptSignIn();
+        setGateStatus(result.error || 'Not authorized for the dashboard.', true);
+        return;
+      }
+      TokenCache.save(rawToken);
+      resolved = true;
+      onDataLoaded(result);
     } catch (err) {
+      if (resolved || myGeneration !== requestGeneration) return;
+      if (!isRetry) {
+        setGateStatus('Still checking - the server is taking a moment...', false);
+        await new Promise((r) => setTimeout(r, 1200));
+        if (resolved || myGeneration !== requestGeneration) return;
+        return proceedWithToken(rawToken, true);
+      }
+      showGateAndPromptSignIn();
       setGateStatus("Couldn't reach the backend - check your connection and try again.", true);
     }
   }
+
+  async function handleGoogleSignIn(response) {
+    resolved = false; // allow a manual re-sign-in (e.g. after a denial) to take over cleanly
+    await proceedWithToken(response.credential);
+  }
+  window.handleGoogleSignIn = handleGoogleSignIn;
+
+  function showGateAndPromptSignIn() {
+    hideLoadingIndicator();
+    const gate = document.getElementById('lesson-gate');
+    if (gate) gate.hidden = false;
+    if (googleInitialized) return;
+    googleInitialized = true;
+    google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleSignIn, auto_select: true });
+    const btnContainer = document.querySelector('#lesson-gate .g_id_signin');
+    if (btnContainer) google.accounts.id.renderButton(btnContainer, { type: 'standard' });
+    google.accounts.id.prompt();
+  }
+
+  function onGoogleLibraryLoad() {
+    const cached = TokenCache.load();
+    if (cached) proceedWithToken(cached); else showGateAndPromptSignIn();
+  }
+  window.onGoogleLibraryLoad = onGoogleLibraryLoad;
+
+  function onDataLoaded(result) {
+    allRows = (result.rows || []).map(decorateRow);
+    roster = result.roster || [];
+    activityCatalog = result.activityCatalog || [];
+    accessLog = (result.accessLog || []).slice().sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    hideLoadingIndicator();
+    document.getElementById('lesson-gate').hidden = true;
+    document.getElementById('dashboard').hidden = false;
+    const activeStudents = roster.filter((s) => s.status === 'Active').length;
+    document.getElementById('loaded-as').textContent =
+      `${activeStudents} active students on roster - ${allRows.length} activity records, ${accessLog.length} access events.`;
+    populateFilters();
+    renderAll();
+  }
+
+  // ===== Analysis (all client-side - see /CLAUDE.md) =====
 
   // All the analysis lives here, not in Apps Script - tune these rules
   // freely without ever touching the backend.
@@ -134,12 +348,23 @@
     allSubmissions.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
     // lesson-auth.js logs tab views and "reached the end" as their own
-    // synced items (key "tab-*" / "reached-end") separate from graded
-    // answers - mixing them into "average time per answer" would be
-    // misleading (a tab view isn't an answer), so they're split out here.
+    // synced items (key "tab-*" / "reached-end"), separate from graded
+    // answers. The backend's own itemsAttempted/itemsCorrect/scorePct
+    // columns count every logged item including those, which inflates
+    // "attempted" and produces a misleading score for any page with
+    // engagement tracking (now every wired page) - recomputed here from
+    // just the graded items instead of trusting those raw columns.
     const submissions = allSubmissions.filter((s) => !s.key.startsWith('tab-') && s.key !== 'reached-end');
     const tabViews = allSubmissions.filter((s) => s.key.startsWith('tab-'));
     const reachedEnd = allSubmissions.some((s) => s.key === 'reached-end');
+
+    const latestByKey = {};
+    submissions.forEach((s) => { latestByKey[s.key] = s.verdict; });
+    const itemsAttempted = Object.keys(latestByKey).length;
+    const itemsCorrect = Object.values(latestByKey).filter((v) => v === 'correct').length;
+    // null (not 0) when nothing graded yet, so an engagement-only page
+    // doesn't drag down averages as if it scored zero.
+    const scorePct = itemsAttempted ? Math.round((itemsCorrect / itemsAttempted) * 100) : null;
 
     const deltas = [];
     for (let i = 1; i < submissions.length; i++) {
@@ -159,81 +384,291 @@
     if (row.flagReason) flags.push(row.flagReason);
     if (rapidBurst) flags.push('3+ answers within 60 seconds');
 
-    return Object.assign({}, row, { submissions, avgSeconds, rapidBurst, flags, tabsViewed: tabViews.length, reachedEnd });
+    return Object.assign({}, row, {
+      submissions, avgSeconds, rapidBurst, flags,
+      tabsViewed: tabViews.length, reachedEnd, itemsAttempted, itemsCorrect, scorePct
+    });
   }
 
   function populateFilters() {
-    fillSelect('filter-grade', [...new Set(allRows.map((r) => r.grade))].sort());
-    fillSelect('filter-teacher', [...new Set(allRows.map((r) => r.teacher))].sort());
-    fillSelect('filter-activity', [...new Set(allRows.map((r) => r.activityTitle))].sort());
+    const gradesFromRoster = roster.map((s) => s.grade);
+    const gradesFromCatalog = activityCatalog.map((a) => a.grade);
+    const teachersFromRoster = roster.map((s) => s.teacher);
+    const activityTitles = activityCatalog.length
+      ? activityCatalog.map((a) => a.title)
+      : [...new Set(allRows.map((r) => r.activityTitle))];
+
+    fillSelect('filter-grade', [...new Set([...gradesFromRoster, ...gradesFromCatalog])].filter(Boolean).sort());
+    fillSelect('filter-teacher', [...new Set(teachersFromRoster)].filter(Boolean).sort());
+    fillSelect('filter-activity', [...new Set(activityTitles)].filter(Boolean).sort());
   }
 
   function fillSelect(id, values) {
     const el = document.getElementById(id);
+    const current = el.value;
+    el.innerHTML = '<option value="">All</option>';
     values.forEach((v) => {
-      if (!v) return;
       const opt = document.createElement('option');
       opt.value = v; opt.textContent = v;
       el.appendChild(opt);
     });
+    if (values.includes(current)) el.value = current;
   }
 
-  function currentRows() {
-    const grade = document.getElementById('filter-grade').value;
-    const teacher = document.getElementById('filter-teacher').value;
-    const activity = document.getElementById('filter-activity').value;
-    const flaggedOnly = document.getElementById('filter-flagged-only').checked;
-    let rows = allRows.filter((r) =>
-      (!grade || String(r.grade) === grade) &&
-      (!teacher || r.teacher === teacher) &&
-      (!activity || r.activityTitle === activity) &&
-      (!flaggedOnly || r.flags.length > 0)
+  function activeFilters() {
+    return {
+      grade: document.getElementById('filter-grade').value,
+      teacher: document.getElementById('filter-teacher').value,
+      activity: document.getElementById('filter-activity').value,
+      flaggedOnly: document.getElementById('filter-flagged-only').checked
+    };
+  }
+
+  function filteredRows() {
+    const f = activeFilters();
+    return allRows.filter((r) =>
+      (!f.grade || String(r.grade) === f.grade) &&
+      (!f.teacher || r.teacher === f.teacher) &&
+      (!f.activity || r.activityTitle === f.activity) &&
+      (!f.flaggedOnly || r.flags.length > 0)
     );
-    rows.sort((a, b) => {
-      const av = a[sortKey], bv = b[sortKey];
+  }
+
+  function filteredRoster() {
+    const f = activeFilters();
+    return roster.filter((s) =>
+      s.status === 'Active' &&
+      (!f.grade || String(s.grade) === f.grade) &&
+      (!f.teacher || s.teacher === f.teacher)
+    );
+  }
+
+  function filteredCatalog() {
+    const f = activeFilters();
+    return activityCatalog.filter((a) =>
+      a.active &&
+      (!f.grade || String(a.grade) === f.grade) &&
+      (!f.activity || a.title === f.activity)
+    );
+  }
+
+  function avg(nums) {
+    const vals = nums.filter((n) => n !== null && n !== undefined);
+    return vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : null;
+  }
+
+  function computeStudentSummaries() {
+    const rows = filteredRows();
+    const byEmail = {};
+    rows.forEach((r) => {
+      if (!byEmail[r.email]) byEmail[r.email] = { email: r.email, studentName: r.studentName, grade: r.grade, teacher: r.teacher, rows: [] };
+      byEmail[r.email].rows.push(r);
+    });
+    // Include roster students with zero rows too, so "hasn't started
+    // anything" is visible rather than just absent from the list.
+    filteredRoster().forEach((s) => {
+      if (!byEmail[s.email]) byEmail[s.email] = { email: s.email, studentName: s.studentName, grade: s.grade, teacher: s.teacher, rows: [] };
+    });
+    return Object.values(byEmail).map((g) => {
+      const avgScore = avg(g.rows.map((r) => r.scorePct));
+      const totalFlags = g.rows.reduce((s, r) => s + r.flags.length, 0);
+      const lastActive = g.rows.reduce((max, r) => {
+        if (!r.lastSubmittedAt) return max;
+        const t = new Date(r.lastSubmittedAt);
+        return (!max || t > max) ? t : max;
+      }, null);
+      return Object.assign({}, g, { activitiesStarted: g.rows.length, avgScore, totalFlags, lastActive });
+    });
+  }
+
+  function computeActivitySummaries() {
+    const rows = filteredRows();
+    const byId = {};
+    rows.forEach((r) => {
+      if (!byId[r.activityId]) byId[r.activityId] = { activityId: r.activityId, activityTitle: r.activityTitle, grade: r.grade, rows: [] };
+      byId[r.activityId].rows.push(r);
+    });
+    // Include catalog activities with zero submissions too - an activity
+    // nobody has touched is exactly the kind of thing worth noticing.
+    filteredCatalog().forEach((a) => {
+      if (!byId[a.activityId]) byId[a.activityId] = { activityId: a.activityId, activityTitle: a.title, grade: a.grade, rows: [] };
+    });
+    const f = activeFilters();
+    return Object.values(byId).map((g) => {
+      const avgScore = avg(g.rows.map((r) => r.scorePct));
+      const avgSeconds = avg(g.rows.map((r) => r.avgSeconds));
+      const flaggedCount = g.rows.filter((r) => r.flags.length > 0).length;
+      const eligible = roster.filter((s) =>
+        s.status === 'Active' && String(s.grade) === String(g.grade) && (!f.teacher || s.teacher === f.teacher)
+      ).length;
+      const startedCount = g.rows.length;
+      const completionPct = eligible ? Math.round((startedCount / eligible) * 100) : null;
+      return Object.assign({}, g, { avgScore, avgSeconds, flaggedCount, eligible, startedCount, completionPct });
+    });
+  }
+
+  function barClass(pct) {
+    if (pct === null) return '';
+    if (pct < 60) return 'low';
+    if (pct < 80) return 'mid';
+    return '';
+  }
+
+  function renderScoreBars(containerId, items, labelKey) {
+    const el = document.getElementById(containerId);
+    const withScores = items.filter((it) => it.avgScore !== null).sort((a, b) => a.avgScore - b.avgScore).slice(0, 8);
+    if (!withScores.length) { el.innerHTML = '<p class="empty-note">No graded activity yet.</p>'; return; }
+    el.innerHTML = withScores.map((it) => `
+      <div class="bar-row">
+        <div class="bar-label"><span>${it[labelKey]}</span><span><strong>${it.avgScore}%</strong></span></div>
+        <div class="bar-track"><div class="bar-fill ${barClass(it.avgScore)}" style="width:${it.avgScore}%;"></div></div>
+      </div>
+    `).join('');
+  }
+
+  function renderOverview() {
+    const rows = filteredRows();
+    const rosterRows = filteredRoster();
+    const studentSummaries = computeStudentSummaries();
+    const activitySummaries = computeActivitySummaries();
+    const f = activeFilters();
+
+    const flaggedCount = rows.filter((r) => r.flags.length > 0).length;
+    const overallAvg = avg(rows.map((r) => r.scorePct));
+    const notStarted = studentSummaries.filter((s) => s.activitiesStarted === 0);
+    const deniedCount = accessLog.filter((a) =>
+      a.result === 'Denied' &&
+      (!f.grade || String(a.studentGrade) === f.grade || String(a.requiredGrade) === f.grade)
+    ).length;
+
+    document.getElementById('overview-stats').innerHTML = `
+      <div class="stat-tile"><div class="n">${rosterRows.length}</div><div class="l">Active students (filtered)</div></div>
+      <div class="stat-tile"><div class="n">${activitySummaries.length}</div><div class="l">Activities (filtered)</div></div>
+      <div class="stat-tile"><div class="n">${overallAvg === null ? '-' : overallAvg + '%'}</div><div class="l">Average score</div></div>
+      <div class="stat-tile"><div class="n ${notStarted.length ? 'warn' : ''}">${notStarted.length}</div><div class="l">Not started anything</div></div>
+      <div class="stat-tile"><div class="n ${flaggedCount ? 'warn' : ''}">${flaggedCount}</div><div class="l">Flagged submissions</div></div>
+      <div class="stat-tile"><div class="n ${deniedCount ? 'warn' : ''}">${deniedCount}</div><div class="l">Denied access attempts</div></div>
+    `;
+
+    renderScoreBars('bars-activity-score', activitySummaries, 'activityTitle');
+    renderScoreBars('bars-student-score', studentSummaries, 'studentName');
+
+    const notStartedEl = document.getElementById('not-started-list');
+    notStartedEl.innerHTML = notStarted.length
+      ? '<ul style="margin:0; padding-left:18px;">' + notStarted.slice(0, 12).map((s) => `<li>${s.studentName} <span class="pill neutral">Grade ${s.grade}</span></li>`).join('') + '</ul>' +
+        (notStarted.length > 12 ? `<p class="empty-note">+ ${notStarted.length - 12} more</p>` : '')
+      : '<p class="empty-note">Everyone in the current filter has started at least one activity.</p>';
+
+    const flaggedRows = rows.filter((r) => r.flags.length > 0).sort((a, b) => b.flags.length - a.flags.length).slice(0, 8);
+    const mostFlaggedEl = document.getElementById('most-flagged-list');
+    mostFlaggedEl.innerHTML = flaggedRows.length
+      ? '<ul style="margin:0; padding-left:18px;">' + flaggedRows.map((r) => `<li>${r.studentName} - ${r.activityTitle}: ${r.flags.map((fl) => `<span class="pill flag">${fl}</span>`).join(' ')}</li>`).join('') + '</ul>'
+      : '<p class="empty-note">Nothing flagged in the current filter.</p>';
+  }
+
+  function sortItems(items, tableKey, keyFallback) {
+    const s = sortState[tableKey] || { key: keyFallback, dir: 1 };
+    return items.slice().sort((a, b) => {
+      let av = a[s.key], bv = b[s.key];
+      if (av instanceof Date || bv instanceof Date) { av = av ? av.getTime() : null; bv = bv ? bv.getTime() : null; }
       if (av === bv) return 0;
       if (av === null || av === undefined) return 1;
       if (bv === null || bv === undefined) return -1;
-      return av > bv ? sortDir : -sortDir;
+      return av > bv ? s.dir : -s.dir;
     });
-    return rows;
   }
 
-  function renderStats() {
-    const rows = currentRows();
-    const flaggedCount = rows.filter((r) => r.flags.length > 0).length;
-    const avgScore = rows.length ? Math.round(rows.reduce((s, r) => s + (r.scorePct || 0), 0) / rows.length) : 0;
-    document.getElementById('stat-row').innerHTML = `
-      <div class="stat-tile"><div class="n">${rows.length}</div><div class="l">Rows shown</div></div>
-      <div class="stat-tile"><div class="n">${flaggedCount}</div><div class="l">Flagged</div></div>
-      <div class="stat-tile"><div class="n">${avgScore}%</div><div class="l">Average score</div></div>
-    `;
+  function renderByStudent() {
+    const items = sortItems(computeStudentSummaries(), 'by-student', 'studentName');
+    const tbody = document.getElementById('by-student-body');
+    if (!items.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-note">No students match the current filter.</td></tr>'; return; }
+    tbody.innerHTML = items.map((s, i) => `
+      <tr class="${s.totalFlags ? 'flagged' : (s.activitiesStarted === 0 ? 'zero-activity' : '')}">
+        <td><span class="expand-btn" onclick="toggleDetail('student-${i}')">${s.studentName}</span></td>
+        <td>${s.grade}</td>
+        <td>${s.teacher || '-'}</td>
+        <td>${s.activitiesStarted}</td>
+        <td>${s.avgScore === null ? '-' : s.avgScore + '%'}</td>
+        <td>${s.totalFlags ? `<span class="pill flag">${s.totalFlags}</span>` : '<span class="pill ok">0</span>'}</td>
+        <td>${s.lastActive ? s.lastActive.toLocaleString() : '-'}</td>
+      </tr>
+      <tr class="detail-row" id="detail-student-${i}" hidden><td colspan="7">${studentDetailTable(s)}</td></tr>
+    `).join('');
   }
 
-  function render() {
-    renderStats();
-    const rows = currentRows();
-    const tbody = document.getElementById('rows-body');
-    tbody.innerHTML = rows.map((r, i) => `
+  function studentDetailTable(s) {
+    if (!s.rows.length) return '<em>Hasn\'t started any activity yet.</em>';
+    const rows = s.rows.map((r) => `
+      <tr class="${r.flags.length ? 'flagged' : ''}">
+        <td>${r.activityTitle}</td>
+        <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
+        <td>${r.itemsAttempted}</td>
+        <td>${r.tabsViewed}</td>
+        <td>${r.reachedEnd ? 'yes' : 'no'}</td>
+        <td>${r.lastSubmittedAt ? new Date(r.lastSubmittedAt).toLocaleString() : '-'}</td>
+        <td>${r.flags.map((f) => `<span class="pill flag">${f}</span>`).join(' ') || '-'}</td>
+      </tr>
+    `).join('');
+    return `<table><thead><tr><th>Activity</th><th>Score</th><th>Attempted</th><th>Tabs</th><th>Reached end</th><th>Last submitted</th><th>Flags</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  function renderByActivity() {
+    const items = sortItems(computeActivitySummaries(), 'by-activity', 'activityTitle');
+    const tbody = document.getElementById('by-activity-body');
+    if (!items.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-note">No activities match the current filter.</td></tr>'; return; }
+    tbody.innerHTML = items.map((a, i) => `
+      <tr class="${a.flaggedCount ? 'flagged' : (a.startedCount === 0 ? 'zero-activity' : '')}">
+        <td><span class="expand-btn" onclick="toggleDetail('activity-${i}')">${a.activityTitle}</span></td>
+        <td>${a.grade}</td>
+        <td>${a.startedCount} / ${a.eligible || '?'}</td>
+        <td>${a.completionPct === null ? '-' : a.completionPct + '%'}</td>
+        <td>${a.avgScore === null ? '-' : a.avgScore + '%'}</td>
+        <td>${a.avgSeconds === null ? '-' : a.avgSeconds + 's'}</td>
+        <td>${a.flaggedCount ? `<span class="pill flag">${a.flaggedCount}</span>` : '<span class="pill ok">0</span>'}</td>
+      </tr>
+      <tr class="detail-row" id="detail-activity-${i}" hidden><td colspan="7">${activityDetailTable(a)}</td></tr>
+    `).join('');
+  }
+
+  function activityDetailTable(a) {
+    if (!a.rows.length) return '<em>No student has started this activity yet.</em>';
+    const rows = a.rows.map((r) => `
+      <tr class="${r.flags.length ? 'flagged' : ''}">
+        <td>${r.studentName}</td>
+        <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
+        <td>${r.itemsAttempted}</td>
+        <td>${r.tabsViewed}</td>
+        <td>${r.reachedEnd ? 'yes' : 'no'}</td>
+        <td>${r.lastSubmittedAt ? new Date(r.lastSubmittedAt).toLocaleString() : '-'}</td>
+        <td>${r.flags.map((f) => `<span class="pill flag">${f}</span>`).join(' ') || '-'}</td>
+      </tr>
+    `).join('');
+    return `<table><thead><tr><th>Student</th><th>Score</th><th>Attempted</th><th>Tabs</th><th>Reached end</th><th>Last submitted</th><th>Flags</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  function renderAllSubmissions() {
+    const items = sortItems(filteredRows(), 'all-submissions', 'lastSubmittedAt');
+    const tbody = document.getElementById('all-submissions-body');
+    if (!items.length) { tbody.innerHTML = '<tr><td colspan="10" class="empty-note">No submissions match the current filter.</td></tr>'; return; }
+    tbody.innerHTML = items.map((r, i) => `
       <tr class="${r.flags.length ? 'flagged' : ''}">
         <td>${r.studentName}</td>
         <td>${r.activityTitle}</td>
-        <td>${r.scorePct}%</td>
+        <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
         <td>${r.itemsAttempted}</td>
         <td>${r.avgSeconds === null ? '-' : r.avgSeconds + 's'}</td>
         <td>${r.tabsViewed}</td>
-        <td>${r.reachedEnd ? '<span class="pill ok">yes</span>' : '<span class="pill flag">no</span>'}</td>
+        <td>${r.reachedEnd ? '<span class="pill ok">yes</span>' : '<span class="pill neutral">no</span>'}</td>
         <td>${r.lastSubmittedAt ? new Date(r.lastSubmittedAt).toLocaleString() : '-'}</td>
         <td>${r.flags.map((f) => `<span class="pill flag">${f}</span>`).join(' ') || '<span class="pill ok">none</span>'}</td>
-        <td><span class="expand-btn" onclick="toggleDetail(${i})">Details</span></td>
+        <td><span class="expand-btn" onclick="toggleDetail('submission-${i}')">Details</span></td>
       </tr>
-      <tr class="detail-row" id="detail-${i}" hidden><td colspan="10">${detailTable(r)}</td></tr>
+      <tr class="detail-row" id="detail-submission-${i}" hidden><td colspan="10">${submissionDetailTable(r)}</td></tr>
     `).join('');
-    window._currentRows = rows;
   }
 
-  function detailTable(r) {
-    if (!r.submissions.length) return '<em>No submissions logged.</em>';
+  function submissionDetailTable(r) {
+    if (!r.submissions.length) return '<em>No graded items logged.</em>';
     const items = r.submissions.map((s) => `
       <tr>
         <td>${s.label}</td>
@@ -246,23 +681,89 @@
     return `<table><thead><tr><th>Item</th><th>Answer</th><th>Verdict</th><th>Attempt</th><th>Time</th></tr></thead><tbody>${items}</tbody></table>`;
   }
 
-  function toggleDetail(i) {
-    const row = document.getElementById(`detail-${i}`);
-    row.hidden = !row.hidden;
+  function joinRosterName(email) {
+    const s = roster.find((r) => r.email === email);
+    return s ? s.studentName : email;
+  }
+  function joinActivityTitle(activityId) {
+    const a = activityCatalog.find((c) => c.activityId === activityId);
+    return a ? a.title : (activityId || '-');
+  }
+
+  function renderAccessLog() {
+    const f = activeFilters();
+    const enriched = accessLog.map((a) => Object.assign({}, a, {
+      studentName: joinRosterName(a.email),
+      activityTitle: joinActivityTitle(a.activityId)
+    })).filter((a) => {
+      const student = roster.find((r) => r.email === a.email);
+      return (!f.grade || String(a.studentGrade) === f.grade || String(a.requiredGrade) === f.grade) &&
+             (!f.teacher || (student && student.teacher === f.teacher)) &&
+             (!f.activity || a.activityTitle === f.activity);
+    });
+
+    const deniedCount = enriched.filter((a) => a.result === 'Denied').length;
+    const reasonCounts = {};
+    enriched.filter((a) => a.result === 'Denied').forEach((a) => { reasonCounts[a.reason] = (reasonCounts[a.reason] || 0) + 1; });
+    const topReason = Object.keys(reasonCounts).sort((a, b) => reasonCounts[b] - reasonCounts[a])[0];
+
+    document.getElementById('access-log-stats').innerHTML = `
+      <div class="stat-tile"><div class="n">${enriched.length}</div><div class="l">Total access events</div></div>
+      <div class="stat-tile"><div class="n ${deniedCount ? 'warn' : ''}">${deniedCount}</div><div class="l">Denied</div></div>
+      <div class="stat-tile"><div class="n" style="font-size:1rem;">${topReason || '-'}</div><div class="l">Most common denial reason</div></div>
+    `;
+
+    const items = sortItems(enriched, 'access-log', 'timestamp');
+    const tbody = document.getElementById('access-log-body');
+    if (!items.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty-note">No access events match the current filter.</td></tr>'; return; }
+    tbody.innerHTML = items.map((a) => `
+      <tr class="${a.result === 'Denied' ? 'flagged' : ''}">
+        <td>${a.timestamp ? new Date(a.timestamp).toLocaleString() : '-'}</td>
+        <td>${a.studentName}</td>
+        <td>${a.activityTitle}</td>
+        <td>${a.result === 'Denied' ? '<span class="pill flag">Denied</span>' : '<span class="pill ok">Allowed</span>'}</td>
+        <td>${a.reason || '-'}</td>
+      </tr>
+    `).join('');
+  }
+
+  function renderAll() {
+    renderOverview();
+    renderByStudent();
+    renderByActivity();
+    renderAllSubmissions();
+    renderAccessLog();
+  }
+
+  function toggleDetail(id) {
+    const row = document.getElementById(`detail-${id}`);
+    if (row) row.hidden = !row.hidden;
   }
   window.toggleDetail = toggleDetail;
 
+  function switchDashTab(tabId) {
+    document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+  window.switchDashTab = switchDashTab;
+
   document.addEventListener('change', (e) => {
-    if (['filter-grade', 'filter-teacher', 'filter-activity', 'filter-flagged-only'].includes(e.target.id)) render();
+    if (['filter-grade', 'filter-teacher', 'filter-activity', 'filter-flagged-only'].includes(e.target.id)) renderAll();
   });
   document.addEventListener('click', (e) => {
     const th = e.target.closest('th[data-sort]');
     if (!th) return;
+    const tableKey = th.dataset.table;
     const key = th.dataset.sort;
-    if (sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = 1; }
-    render();
+    const s = sortState[tableKey];
+    if (s.key === key) s.dir *= -1; else { s.key = key; s.dir = 1; }
+    renderAll();
   });
-  document.getElementById('refresh-btn').addEventListener('click', loadData);
+  document.getElementById('refresh-btn').addEventListener('click', () => {
+    if (idToken) { resolved = false; proceedWithToken(idToken); }
+  });
 </script>
 </body>
 </html>
