@@ -20,6 +20,8 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
@@ -158,9 +160,40 @@
     return String(s || '').toLowerCase().replace(/\s+/g, '');
   }
 
+  // ASCIIMath always double-parenthesizes every fraction (e.g. \dfrac{2}{3}
+  // reads back as "(2)/(3)"), so a typed math-field answer needs its
+  // redundant parens stripped before comparing against a plain "2/3" in
+  // accepted[] - see /CLAUDE.md's "Visual math input" note.
+  function stripRedundantParens(s) {
+    let prev;
+    do {
+      prev = s;
+      s = s.replace(/\(([^()+-]+)\)/g, '$1');
+    } while (s !== prev);
+    return s;
+  }
+
+  function normalizeExpr(s) {
+    return stripRedundantParens(normalizeFrac(s));
+  }
+
+  function answerMatches(val, accepted) {
+    const norm = normalizeExpr(val);
+    return (accepted || []).some((a) => normalizeExpr(a) === norm);
+  }
+
+  // Reads a <math-field>'s answer as ASCIIMath text, guarded against the
+  // MathLive script never loading (blocked network, ad blocker, cold CDN
+  // failure).
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
   // ==========================================
   // REUSABLE SINGLE-FIELD PRACTICE LIST (check mode: 2 tries then reveal)
-  // problems: { q, a (number) | accepted (array of strings), tol, hint, displayAnswer, label }
+  // problems: { q, a (number) | accepted (array of strings), tol, hint, displayAnswer, label, text }
+  // "text: true" (yes/no judgment calls) keeps a plain text input; everything
+  // else (numbers, fractions, comparison symbols) uses the math-field editor.
   // ==========================================
   const listRegistry = {};
   window.listRegistry = listRegistry; // read by lesson-auth.js's teacher answer-key view
@@ -169,26 +202,33 @@
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
-        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+        ${p.text
+          ? `<input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">`
+          : `<math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="\\text{Answer}"></math-field>`
+        }
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkPractice('${keyPrefix}', ${i})">Check</button>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
     `).join('');
     document.getElementById(containerId).innerHTML = html;
     problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, `${section} #${i + 1}: ${p.label || p.q.replace(/\\\(|\\\)/g, '')}`, section));
+    triggerMathJax();
   }
 
   function checkPractice(keyPrefix, idx) {
     const cfg = listRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const raw = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const field = document.getElementById(`${keyPrefix}-${idx}-input`);
+    const raw = p.text ? field.value : readMathField(field);
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet."); return; }
     let correct;
     if (p.a !== undefined) {
       correct = LessonCheck.numericMatch(raw, p.a, p.tol !== undefined ? p.tol : 0.001);
-    } else {
+    } else if (p.text) {
       correct = (p.accepted || []).includes(normalizeFrac(raw));
+    } else {
+      correct = answerMatches(raw, p.accepted);
     }
     const answerText = p.displayAnswer || (p.a !== undefined ? String(p.a) : (p.accepted ? p.accepted[0] : ''));
     const label = `${cfg.section} #${idx + 1}: ${p.label || p.q.replace(/\\\(|\\\)/g, '')}`;
@@ -208,10 +248,10 @@
   // TAB 1: CLASSIFY & SIMPLIFY
   // ==========================================
   const classifyProblems = [
-    { q: "Is 7 a rational number?", accepted: ["yes"], displayAnswer: "yes", label: "Is 7 rational?" },
-    { q: "Is -12 a rational number?", accepted: ["yes"], displayAnswer: "yes", label: "Is -12 rational?" },
-    { q: "Is 0.454545... (repeating) a rational number?", accepted: ["yes"], displayAnswer: "yes", label: "Is 0.454545... rational?" },
-    { q: "Is \\(\\pi = 3.14159265\\ldots\\) a rational number?", accepted: ["no"], displayAnswer: "no", label: "Is π rational?" },
+    { q: "Is 7 a rational number?", accepted: ["yes"], displayAnswer: "yes", label: "Is 7 rational?", text: true },
+    { q: "Is -12 a rational number?", accepted: ["yes"], displayAnswer: "yes", label: "Is -12 rational?", text: true },
+    { q: "Is 0.454545... (repeating) a rational number?", accepted: ["yes"], displayAnswer: "yes", label: "Is 0.454545... rational?", text: true },
+    { q: "Is \\(\\pi = 3.14159265\\ldots\\) a rational number?", accepted: ["no"], displayAnswer: "no", label: "Is π rational?", text: true },
     { q: "Simplify \\(\\dfrac{8}{12}\\)", accepted: ["2/3"], displayAnswer: "2/3", label: "Simplify 8/12" },
     { q: "Simplify \\(\\dfrac{15}{20}\\)", accepted: ["3/4"], displayAnswer: "3/4", label: "Simplify 15/20" },
     { q: "Simplify \\(\\dfrac{9}{24}\\)", accepted: ["3/8"], displayAnswer: "3/8", label: "Simplify 9/24" },
