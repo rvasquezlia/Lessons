@@ -22,10 +22,30 @@
 
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=3"></script>
+  <style>
+    .lesson-gate { max-width: 480px; margin: 80px auto; padding: 32px; background: var(--card); border: 2px solid var(--border); border-radius: 16px; text-align: center; }
+    .lesson-gate h2 { margin-top: 0; }
+    .lesson-gate .g_id_signin { display: flex; justify-content: center; margin: 20px 0; }
+    #lesson-gate-status { min-height: 1.2em; font-weight: 600; }
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <h2>Sign in to start this activity</h2>
+  <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+  <div class="g_id_signin"></div>
+  <p id="lesson-gate-status"></p>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -178,6 +198,8 @@
 </div>
 
 <script>
+  LessonSync.init('8-literal-equations-test-prep');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -429,6 +451,7 @@
     triggerMathJax();
   }
   const submitSymRegistry = {};
+  window.listRegistry = submitSymRegistry; // read by lesson-auth.js's teacher answer-key view - covers Tab 3's Mixed Practice parts 1 & 2
   function checkSubmitSym(keyPrefix, idx) {
     const cfg = submitSymRegistry[keyPrefix];
     const p = cfg.problems[idx];
@@ -506,6 +529,83 @@
   renderSubmitSymList('mixed-part2-list', mixedPart2, 'mp2', '3. Mixed Practice');
   renderMixedPart3();
   LessonProgress.preRegister('exit-ticket', 'Exit Ticket: solve d=rt for t and A=P+Prt for P', '4. Readiness Check');
+
+  // Teacher answer key for what window.listRegistry doesn't already cover
+  // (Tab 3's Mixed Practice parts 1 & 2) - see /CLAUDE.md's "Role
+  // differentiation on lesson pages". The Guided Solving ladder (Tab 1)
+  // has no right/wrong to reveal - it's a click-through worked-example
+  // tool - so it's left alone here.
+  window.revealAnswerKey = function () {
+    const fillExplainOnly = (id, feedbackId) => {
+      const input = document.getElementById(id);
+      const fb = document.getElementById(feedbackId);
+      if (!input || !fb) return;
+      input.value = '(Any reasonable explanation.)';
+      input.disabled = true;
+      const container = input.closest('.step-box') || input.closest('.guided-practice') || input.closest('.challenge-box');
+      const btn = container && container.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = 'Answer key: open-ended - any reasonable, on-topic explanation.';
+    };
+
+    fillExplainOnly('fund-q1', 'fund-q1-feedback');
+    const q2 = document.getElementById('fund-q2'), q2Fb = document.getElementById('fund-q2-feedback');
+    if (q2 && q2Fb) {
+      q2.value = 6; q2.disabled = true;
+      const btn = document.querySelector('button[onclick="checkFundQ2()"]');
+      if (btn) btn.disabled = true;
+      q2Fb.style.display = 'block';
+      q2Fb.className = 'feedback-msg success locked';
+      q2Fb.innerHTML = 'Answer key: <strong>x = 6</strong> for both.';
+    }
+    fillExplainOnly('guided-critical', 'guided-critical-feedback');
+
+    erroranalysisProblems.forEach((p, i) => {
+      const answer = document.getElementById(`ea-${i}-answer`);
+      const fb = document.getElementById(`ea-${i}-feedback`);
+      if (!answer || !fb) return;
+      answer.value = p.accepted[0];
+      answer.disabled = true;
+      const container = answer.closest('.guided-practice');
+      const btn = container && container.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${p.target} = ${p.displayAnswer}</strong>`;
+    });
+
+    mixedPart3.forEach((p, i) => {
+      const input = document.getElementById(`mp3-${i}-input`);
+      const fb = document.getElementById(`mp3-${i}-feedback`);
+      if (!input || !fb) return;
+      input.value = p.a;
+      input.disabled = true;
+      const container = input.closest('.guided-practice');
+      const btn = container && container.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${p.a}</strong>`;
+    });
+
+    const exit1 = document.getElementById('exit-1'), exit2 = document.getElementById('exit-2');
+    const exitExplain = document.getElementById('exit-explain'), exitReflect = document.getElementById('exit-reflect');
+    const exitFb = document.getElementById('exit-feedback');
+    if (exit1 && exit2 && exitFb) {
+      exit1.value = 'd/r'; exit2.value = 'A/(1+rt)';
+      exit1.disabled = true; exit2.disabled = true;
+      if (exitExplain) { exitExplain.value = '(Any reasonable explanation.)'; exitExplain.disabled = true; }
+      if (exitReflect) { exitReflect.value = '(Any reasonable reflection.)'; exitReflect.disabled = true; }
+      const form = exit1.closest('form') || exit1.closest('.step-box');
+      const submitBtn = form && form.querySelector('button[type="submit"], button');
+      if (submitBtn) submitBtn.disabled = true;
+      exitFb.style.display = 'block';
+      exitFb.className = 'feedback-msg success locked';
+      exitFb.innerHTML = 'Answer key: <strong>t = d/r, P = A/(1+rt)</strong>';
+    }
+  };
 </script>
 <div id="print-report"></div>
 </body>
