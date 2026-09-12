@@ -535,16 +535,42 @@ the teacher-view reveal) and a reflected `.disabled` boolean (so
 `unlockTeacherView`'s generic `window.listRegistry` reveal loop needed
 **zero** changes). The one real change is how `checkSymItem()` reads
 the student's answer: `field.getValue('ascii-math')` instead of
-`field.value` - ASCIIMath linearizes `\frac{d}{t}` as `"d/t"`, close
-enough to the existing `accepted[]` spellings that `normalizeExpr()`
-still does the rest of the comparison unchanged. `getValue` is guarded
-with `typeof field.getValue === 'function'` first: if the MathLive
-script never loaded (blocked network, ad blocker, a cold CDN failure),
+`field.value`. `getValue` is guarded with
+`typeof field.getValue === 'function'` first: if the MathLive script
+never loaded (blocked network, ad blocker, a cold CDN failure),
 `<math-field>` stays an undefined custom element with no such method,
 and this treats that the same as an empty answer instead of throwing -
 the same "degrade to a clear message, never a silent crash" instinct
 behind this project's other loading-robustness fixes (see "Loading is
 hardened..." above).
+
+**ASCIIMath always double-parenthesizes every fraction - `normalizeExpr()`
+has to undo that, not just lowercase/strip whitespace.** Checked
+directly against MathLive's own source (`atomToAsciiMath`'s `genfrac`
+case): `\frac{d}{t}` is *always* serialized as `"(d)/(t)"`, with both
+sides wrapped regardless of how simple they are - there's no "only
+parenthesize if needed" case. A first version of this pilot didn't
+account for that and compared the raw ASCIIMath string directly, so
+typing the visually-correct fraction `d/t` came back as `"(d)/(t)"`,
+never matched the plain `"d/t"` in `accepted[]`, and got marked wrong
+every time - a real bug that shipped and was caught by hand-testing
+this exact problem, not a hypothetical. Fixed by adding
+`stripRedundantParens()`, which strips a `(...)` pair only when its
+content has no top-level `+`/`-` - exactly the convention this file's
+own `accepted[]` lists already followed by hand (e.g. `"(p-2w)/2"`
+keeps parens around the multi-term numerator but not around the
+single-term denominator), so `"(d)/(t)"` collapses to `"d/t"` while
+`"(P-2w)/(2)"` correctly stays `"(p-2w)/2"` and isn't over-simplified
+into something that would change its meaning. Verified against every
+problem in `warmupProblems`/`multistepProblems`/`factoringProblems` by
+simulating each one's `displayAnswer` shape through the real
+`normalizeExpr()` - all match one of their own `accepted[]` spellings.
+If this pattern is ever extended to a page with problems outside this
+exact convention (e.g. an accepted spelling that deliberately keeps
+parens around a single-term side, or a fraction nested inside another
+fraction), re-verify by hand the same way rather than assuming the
+regex generalizes - it was derived from what these 18 problems actually
+need, not a general algebraic simplifier.
 
 **This is a pilot, not the new site-wide pattern yet.** Every other
 page's fraction/expression answers - including this same unit's own

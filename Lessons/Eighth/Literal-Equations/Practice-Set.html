@@ -276,8 +276,28 @@
     triggerMathJax();
   }
 
+  // ASCIIMath (MathLive's getValue('ascii-math') format - see
+  // checkSymItem() below) always wraps BOTH sides of every fraction in
+  // parens, even a single-variable side: \frac{d}{t} always comes back
+  // as "(d)/(t)", never "d/t" - MathLive's own genfrac-to-ASCIIMath
+  // serializer has no "only if it needs grouping" case. Stripping a
+  // paren pair only when its content has no top-level + or - matches
+  // the convention this file's own accepted[] lists already use (parens
+  // kept only where a multi-term numerator/denominator actually needs
+  // them, e.g. "(p-2w)/2" keeps them, "(d)/(t)" doesn't need them at
+  // all) - without this, a correctly-built fraction like d/t was marked
+  // wrong every time, since "(d)/(t)" never matched the plain "d/t" in
+  // accepted[]. Looped to a fixed point in case stripping one pair ever
+  // exposes another (not needed for any problem in this registry today,
+  // but harmless and future-proof).
+  function stripRedundantParens(s) {
+    let prev;
+    do { prev = s; s = s.replace(/\(([^()+-]+)\)/g, '$1'); } while (s !== prev);
+    return s;
+  }
+
   function normalizeExpr(s) {
-    return String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, '');
+    return stripRedundantParens(String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, ''));
   }
 
   // ==========================================
