@@ -189,7 +189,16 @@ const LessonSync = (() => {
         // instead of double-wrapping the second one into invalid,
         // unrenderable LaTeX (a literal stray \( inside the math itself).
         const answer = rawAnswer.replace(/^\\\(|\\\)$/g, '');
-        input.value = answer;
+        // A plain <input>/<select> can't render LaTeX at all - only a
+        // <math-field> parses it as real math. Several numeric-answer
+        // items (p.a defined) also carry a richer displayAnswer meant for
+        // the feedback text below (e.g. "-\frac{5}{6} \approx -0.83", the
+        // fraction-equivalent shown alongside a decimal answer) - filling
+        // that raw LaTeX into a plain input just showed the literal
+        // unrendered source, cut off by the box's width. On anything but
+        // a <math-field>, fall back to the bare numeric p.a instead - the
+        // feedback text below still gets the richer `answer` either way.
+        input.value = (input.tagName !== 'MATH-FIELD' && p.a !== undefined) ? String(p.a) : answer;
         input.disabled = true;
         const btn = input.parentElement && input.parentElement.querySelector('button');
         if (btn) { btn.disabled = true; btn.style.cursor = 'not-allowed'; }

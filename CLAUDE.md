@@ -82,7 +82,7 @@ shipping new backend code.
   committed code by an unpredictable amount - confusing to debug, since
   it looks like a bug that "sometimes" happens when it's really just
   staleness. Current versions: `token-cache.js` → `2`, `lesson-auth.js` →
-  `6`.
+  `7`.
 - **`hidden` doesn't always mean hidden — check for a competing CSS rule
   first.** `#lesson-loading` has its own `display: flex` (to center the
   spinner), and an ID selector beats the browser's default
@@ -459,6 +459,29 @@ strip before using it as a `<math-field>`'s `.value`, and before
 wrapping it for feedback text - check which convention that specific
 page already uses (grep the file for `displayAnswer: "\(` ) rather than
 assuming.
+
+**A plain `<input>`/`<select>` can never render LaTeX at all - only a
+`<math-field>` parses it as real math.** A numeric-answer item (`p.a`
+defined) can still carry a richer `displayAnswer` meant for the
+feedback text (e.g. `"-\frac{5}{6} \approx -0.83"`, the fraction
+equivalent shown alongside a decimal answer, from Seventh/Operations-
+with-Rationals' Practice-Set). `unlockTeacherView`'s generic reveal
+used to fill the answer INPUT with that same rich string unconditionally
+- harmless on a `<math-field>` (renders it as real math), but on a
+plain `<input>` (this page's answer boxes were never converted - every
+item there is graded as a decimal, see "Visual math input" above) it
+just showed the literal, unrendered LaTeX source, cut off by the box's
+width (real bug, reported via screenshot, fixed in `lesson-auth.js`
+`v7`). Fixed generically: when the target element isn't a `<math-field>`
+and `p.a` is defined, its `.value` is now the bare `String(p.a)` instead
+- the feedback text below still shows the richer `displayAnswer` either
+way, since MathJax renders that fine regardless of what's in the input
+above it. Any new hand-written `revealAnswerKey` that fills a plain
+`<input>`/`<select>` needs the same care: never assign a `displayAnswer`
+(or any other field) straight to `.value` without first checking it's
+free of LaTeX commands (`\frac`, `\sqrt`, `\approx`, `\pi`, `\times`,
+etc.) - prefer a plain numeric/text fallback for the input itself when
+one exists, same as the generic fix does.
 
 **The `TEACHER VIEW` banner is styled via `.teacher-view-banner` in
 `lesson-shared.css`, not inline.** `unlockTeacherView` just sets
