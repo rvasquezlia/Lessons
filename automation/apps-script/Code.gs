@@ -6,7 +6,7 @@
 // editor for the shared Sheet (Extensions -> Apps Script) and redeploy -
 // this file is the source of truth, the Apps Script editor copy is not.
 
-const SPREADSHEET_ID = 'PASTE_YOUR_SPREADSHEET_ID_HERE'; // from the sheet's URL
+const SPREADSHEET_ID = '1-HLtX5AwskPx8hy_Ip2kjGMz5OUIS91M2x0FgEt75zA';
 const GOOGLE_CLIENT_ID = '478111261772-7l1qamohr0fjsa7ekosuhpj9jum1q4vc.apps.googleusercontent.com';
 const ALLOWED_DOMAIN = 'lincoln.edu.ni';
 

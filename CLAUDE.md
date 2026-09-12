@@ -41,7 +41,7 @@ Script, from the Sheet) whenever it changes, then redeploy.
 | `Progress` | **Automatic** — written entirely by Apps Script | One row per (student, activity), upserted on every save. Columns: `Email, StudentName, Grade, Teacher, ActivityId, ActivityTitle, FirstStartedAt, LastSubmittedAt, ItemsTotal, ItemsAttempted, ItemsCorrect, ScorePct, Status, SubmissionsLog (JSON), FlagReason, ReviewedByTeacher, ReviewedAt`. The last two are the only cells a teacher should hand-edit (checking off a flagged row after review). |
 | `AccessLog` | **Automatic** — written entirely by Apps Script | Every access attempt, allowed or denied, for audit: `Timestamp, Email, ActivityId, StudentGrade, RequiredGrade, Result, Reason`. Read-only. |
 
-- **Spreadsheet ID**: `TODO — fill in once the Sheet is created`
+- **Spreadsheet ID**: `1-HLtX5AwskPx8hy_Ip2kjGMz5OUIS91M2x0FgEt75zA`
 - **Apps Script Web App URL**: `TODO — fill in once deployed`
 
 ### Flow
