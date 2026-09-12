@@ -517,7 +517,11 @@
 
   function hideLoadingIndicator() {
     const el = document.getElementById("lesson-loading");
-    if (el) el.hidden = true;
+    // #lesson-loading has its own `display: flex` CSS rule (to center the
+    // spinner) which beats the browser's default [hidden] { display:none }
+    // on specificity - the hidden attribute alone doesn't hide it. Setting
+    // style.display directly always wins.
+    if (el) el.style.display = "none";
   }
 
   // Shared by a fresh button click/One Tap response and a cached token

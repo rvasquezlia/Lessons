@@ -74,14 +74,25 @@ shipping new backend code.
   silent-check window so the page never just looks blank/frozen while
   this plays out.
 - **Cache-bust `token-cache.js`/`lesson-auth.js` on every change.** Every
-  page references them as `token-cache.js?v=2` / `lesson-auth.js?v=2` —
-  bump that `?v=` number on **every page that includes them** whenever
-  either file's contents change. Without it, GitHub Pages' CDN and
-  browsers can keep serving an old cached copy of the file for a while
-  after a push, so the live behavior can lag the committed code by an
-  unpredictable amount - confusing to debug, since it looks like a bug
-  that "sometimes" happens when it's really just staleness. Current
-  version: `2`.
+  page references them with a `?v=` query string — bump that number on
+  **every page that includes the file that changed** (they can be at
+  different versions; only bump the one you actually edited). Without it,
+  GitHub Pages' CDN and browsers can keep serving an old cached copy of
+  the file for a while after a push, so the live behavior can lag the
+  committed code by an unpredictable amount - confusing to debug, since
+  it looks like a bug that "sometimes" happens when it's really just
+  staleness. Current versions: `token-cache.js` → `2`, `lesson-auth.js` →
+  `3`.
+- **`hidden` doesn't always mean hidden — check for a competing CSS rule
+  first.** `#lesson-loading` has its own `display: flex` (to center the
+  spinner), and an ID selector beats the browser's default
+  `[hidden] { display: none }` on specificity - setting `el.hidden = true`
+  on it silently does nothing, so the spinner stayed visible forever even
+  after content unlocked (real bug, fixed by setting `el.style.display =
+  'none'` directly in `hideLoadingIndicator()` instead). Before adding
+  `.hidden`/`[hidden]` toggling to any new element, check whether that
+  element already has an explicit `display` rule on an equal-or-higher-
+  specificity selector — if so, toggle `style.display` directly instead.
 - **The backend lock is scoped to writes only.** `identify` and
   `teacher-data` never write to the Sheet, so they run before
   `LockService.getScriptLock()` is ever acquired in `doPost` — only
