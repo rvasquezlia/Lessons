@@ -250,7 +250,8 @@
               <th data-table="activity-status" data-sort="notStarted">Not started</th>
               <th data-table="activity-status" data-sort="opened">Opened only</th>
               <th data-table="activity-status" data-sort="inProgress">In progress</th>
-              <th data-table="activity-status" data-sort="completed">Completed</th>
+              <th data-table="activity-status" data-sort="completedPassed">Completed - Passed</th>
+              <th data-table="activity-status" data-sort="completedLockedOut">Completed - Locked Out</th>
             </tr>
           </thead>
           <tbody id="activity-status-body"></tbody>
@@ -763,20 +764,39 @@
     });
   }
 
-  // Four-state engagement funnel, distinct from AccessLog's allow/deny
-  // security log (which the Sheet already owns) - this answers "did they
-  // actually open it," derived entirely from Progress: no row at all
-  // means they never opened the activity; a row with reachedEnd means
-  // they clicked through every tab; a row with graded items but no
-  // reachedEnd means they're partway through; a row with neither just
-  // means they opened it (tab views logged) but haven't answered
-  // anything gradeable yet.
-  const STATUS_LABEL = { 'not-started': 'Not started', opened: 'Opened only', 'in-progress': 'In progress', completed: 'Completed' };
-  const STATUS_PILL = { 'not-started': 'neutral', opened: 'neutral', 'in-progress': 'progress', completed: 'ok' };
+  // Five-state engagement/mastery funnel, distinct from AccessLog's
+  // allow/deny security log (which the Sheet already owns) - this
+  // answers "did they actually open it, and did they pass it," derived
+  // entirely from Progress: no row at all means they never opened the
+  // activity; a row with neither graded items nor reachedEnd just means
+  // they opened it (tab views logged) but haven't answered anything
+  // gradeable yet; a row with graded items but no reachedEnd means
+  // they're partway through. Once reachedEnd is true (every tab
+  // visited), the activity is done either way, but "done" splits in
+  // two: Completed - Passed (every graded item they ever touched was
+  // eventually answered correctly, or there were no graded items at
+  // all - an engagement-only page) vs Completed - Locked Out (at least
+  // one graded item was never answered correctly - decorateRow()'s
+  // itemsCorrect < itemsAttempted is exactly that case, since itemsCorrect
+  // only counts a key with a 'correct' entry anywhere in its history).
+  // This treats "still has one unresolved wrong attempt but could
+  // technically retry" the same as "definitely locked after 2 tries" -
+  // SubmissionsLog doesn't record which UI pattern (2-try check vs
+  // 1-shot submit) produced a given 'incomplete' verdict, and once a
+  // student has clicked through every tab they're unlikely to circle
+  // back to fix it anyway - see /CLAUDE.md's grading note.
+  const STATUS_LABEL = {
+    'not-started': 'Not started', opened: 'Opened only', 'in-progress': 'In progress',
+    'completed-passed': 'Completed - Passed', 'completed-locked-out': 'Completed - Locked Out'
+  };
+  const STATUS_PILL = {
+    'not-started': 'neutral', opened: 'neutral', 'in-progress': 'progress',
+    'completed-passed': 'ok', 'completed-locked-out': 'flag'
+  };
 
   function progressStatus(row) {
     if (!row) return 'not-started';
-    if (row.reachedEnd) return 'completed';
+    if (row.reachedEnd) return (row.itemsCorrect < row.itemsAttempted) ? 'completed-locked-out' : 'completed-passed';
     if (row.itemsAttempted > 0) return 'in-progress';
     return 'opened';
   }
@@ -794,11 +814,12 @@
       const row = rowsByEmail[s.email];
       return { email: s.email, studentName: s.studentName, teacher: s.teacher, row, status: progressStatus(row) };
     });
-    const counts = { 'not-started': 0, opened: 0, 'in-progress': 0, completed: 0 };
+    const counts = { 'not-started': 0, opened: 0, 'in-progress': 0, 'completed-passed': 0, 'completed-locked-out': 0 };
     perStudent.forEach((p) => { counts[p.status]++; });
     return {
       activityId: a.activityId, activityTitle: a.activityTitle, grade: a.grade, perStudent,
-      notStarted: counts['not-started'], opened: counts.opened, inProgress: counts['in-progress'], completed: counts.completed,
+      notStarted: counts['not-started'], opened: counts.opened, inProgress: counts['in-progress'],
+      completedPassed: counts['completed-passed'], completedLockedOut: counts['completed-locked-out'],
       total: eligible.length
     };
   }
@@ -1068,14 +1089,16 @@
   function renderActivityStatusChart(items) {
     const totals = items.reduce((acc, a) => {
       acc.notStarted += a.notStarted; acc.opened += a.opened;
-      acc.inProgress += a.inProgress; acc.completed += a.completed;
+      acc.inProgress += a.inProgress; acc.completedPassed += a.completedPassed;
+      acc.completedLockedOut += a.completedLockedOut;
       return acc;
-    }, { notStarted: 0, opened: 0, inProgress: 0, completed: 0 });
-    const total = totals.notStarted + totals.opened + totals.inProgress + totals.completed;
+    }, { notStarted: 0, opened: 0, inProgress: 0, completedPassed: 0, completedLockedOut: 0 });
+    const total = totals.notStarted + totals.opened + totals.inProgress + totals.completedPassed + totals.completedLockedOut;
     const el = document.getElementById('activity-status-chart');
     if (!total) { el.innerHTML = '<p class="empty-note">No eligible students in the current filter.</p>'; return; }
     const segments = [
-      { label: 'Completed', color: '#16a34a', n: totals.completed },
+      { label: 'Completed - Passed', color: '#16a34a', n: totals.completedPassed },
+      { label: 'Completed - Locked Out', color: '#dc2626', n: totals.completedLockedOut },
       { label: 'In progress', color: '#f59e0b', n: totals.inProgress },
       { label: 'Opened only', color: '#94a3b8', n: totals.opened },
       { label: 'Not started', color: '#e2e8f0', n: totals.notStarted }
@@ -1094,7 +1117,7 @@
     lastActivityStatus = items;
     renderActivityStatusChart(items);
     const tbody = document.getElementById('activity-status-body');
-    if (!items.length) { tbody.innerHTML = '<tr><td colspan="6" class="empty-note">No activities match the current filter.</td></tr>'; }
+    if (!items.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-note">No activities match the current filter.</td></tr>'; }
     else {
       tbody.innerHTML = items.map((a, i) => `
         <tr class="${a.total > 0 && a.notStarted === a.total ? 'zero-activity' : ''}">
@@ -1103,7 +1126,8 @@
           <td>${a.notStarted}</td>
           <td>${a.opened}</td>
           <td>${a.inProgress}</td>
-          <td>${a.completed}</td>
+          <td>${a.completedPassed}</td>
+          <td>${a.completedLockedOut}</td>
         </tr>
       `).join('');
     }
@@ -1130,7 +1154,8 @@
         <div class="stat-tile"><div class="n ${a.notStarted ? 'warn' : ''}">${a.notStarted}</div><div class="l">Not started</div></div>
         <div class="stat-tile"><div class="n">${a.opened}</div><div class="l">Opened only</div></div>
         <div class="stat-tile"><div class="n">${a.inProgress}</div><div class="l">In progress</div></div>
-        <div class="stat-tile"><div class="n">${a.completed}</div><div class="l">Completed</div></div>
+        <div class="stat-tile"><div class="n">${a.completedPassed}</div><div class="l">Completed - Passed</div></div>
+        <div class="stat-tile"><div class="n ${a.completedLockedOut ? 'warn' : ''}">${a.completedLockedOut}</div><div class="l">Completed - Locked Out</div></div>
       </div>
       ${groupLegendHtml(a.perStudent.map((p) => ({ grade: a.grade, teacher: p.teacher })))}
       <div class="table-wrap"><table><thead><tr><th>Student</th><th>Teacher</th><th>Status</th><th>Score</th><th>Tabs viewed</th><th>Last activity</th></tr></thead><tbody>${rowsHtml}</tbody></table></div>

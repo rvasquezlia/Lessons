@@ -261,21 +261,32 @@ click.
   a student for their full profile: stat tiles, a score-by-activity bar
   chart, the full per-activity table, and their own "Recent activity"
   timeline across everything they've touched.
-- **Activity Status** — "are students actually opening this?", answered
-  with a four-state funnel per activity (Not started / Opened only / In
-  progress / Completed), computed by `computeActivityStatusBreakdown()`
-  from `Progress` alone: no row at all is Not started; a row with
-  `reachedEnd` is Completed; a row with graded items but no `reachedEnd`
-  is In progress; a row with neither (only tab views logged) is Opened
-  only. Above the per-activity table, `renderActivityStatusChart()`
-  draws one aggregate stacked bar (plus a count legend) summing every
-  filtered activity's own breakdown into a single "how's the whole
-  filtered set doing" graph — the table alone only shows this per
-  activity, one row at a time. Click an activity row to see which
-  student is in which state, with stat tiles for the same four counts
-  scoped to just that activity. This is the dashboard's only engagement
-  view now - the tab that used to read `AccessLog` (see below) is gone
-  entirely.
+- **Activity Status** — "are students actually opening this, and are
+  they passing it?", answered with a five-state funnel per activity
+  (Not started / Opened only / In progress / Completed - Passed /
+  Completed - Locked Out), computed by `computeActivityStatusBreakdown()`
+  from `Progress` alone via `progressStatus(row)`: no row at all is Not
+  started; a row with neither graded items nor `reachedEnd` (only tab
+  views logged) is Opened only; a row with graded items but no
+  `reachedEnd` is In progress. Once `reachedEnd` is true, the split is
+  Completed - Locked Out (`itemsCorrect < itemsAttempted` - at least one
+  graded item was never answered correctly) vs Completed - Passed
+  (everything they touched was eventually correct, or there were no
+  graded items at all - an engagement-only page). This treats any
+  never-fixed wrong item as "locked out" once the student has clicked
+  through every tab, whether or not the UI pattern behind that specific
+  item technically still allowed a retry - `SubmissionsLog` doesn't
+  record which pattern (2-try check vs 1-shot submit) produced a given
+  `incomplete` verdict, and a student who's already reached the end
+  isn't going to circle back anyway. Above the per-activity table,
+  `renderActivityStatusChart()` draws one aggregate stacked bar (plus a
+  count legend) summing every filtered activity's own breakdown into a
+  single "how's the whole filtered set doing" graph — the table alone
+  only shows this per activity, one row at a time. Click an activity row
+  to see which student is in which state, with stat tiles for the same
+  five counts scoped to just that activity. This is the dashboard's only
+  engagement view now - the tab that used to read `AccessLog` (see
+  below) is gone entirely.
 - **All Submissions** — the original flat one-row-per-(student,activity)
   table, kept as the detail view everything else summarizes from. This
   is the one tab that keeps the older inline-expand-a-row pattern
