@@ -504,13 +504,51 @@
       verdict: s.verdict, timestamp: s.timestamp
     }));
 
-    const latestByKey = {};
-    submissions.forEach((s) => { latestByKey[s.key] = s.verdict; });
-    const itemsAttempted = Object.keys(latestByKey).length;
-    const itemsCorrect = Object.values(latestByKey).filter((v) => v === 'correct').length;
+    // Score every graded item by WHEN it was first answered correctly, not
+    // just whether it ever was: correct on attempt 1 = 1 point, correct on
+    // a later attempt = 0.5, never correct = 0. Code.gs's recordSubmission_
+    // appends every attempt as its own SubmissionsLog entry (never
+    // overwrites), tagged with its own attemptNumber, so the full attempt
+    // history for each item key is already sitting right here - grouping
+    // by key (submissions is already sorted ascending by timestamp) is all
+    // that's needed. A key whose final verdict is 'reflection' (open-ended,
+    // no right answer) is completion-tracked, not scored - excluded from
+    // both the numerator and denominator so an activity that's mostly
+    // reflections doesn't look artificially low-scoring.
+    //
+    // Test-Prep pages are the one exception: they're graded attempt-1-only,
+    // with no partial credit for a correct 2nd try, even though the
+    // on-screen check flow still allows a retry on some of their tabs -
+    // see /CLAUDE.md's grading note.
+    const isTestPrep = /-test-prep$/.test(row.activityId || '');
+    const byKey = {};
+    submissions.forEach((s) => { (byKey[s.key] = byKey[s.key] || []).push(s); });
+
+    let gradedCount = 0;
+    let itemsCorrect = 0;
+    let pointsEarned = 0;
+    let reflectionSubmitted = 0;
+    Object.keys(byKey).forEach((key) => {
+      const entries = byKey[key];
+      if (entries[entries.length - 1].verdict === 'reflection') {
+        reflectionSubmitted++;
+        return;
+      }
+      gradedCount++;
+      const correctEntry = entries.find((e) => e.verdict === 'correct');
+      if (!correctEntry) return; // never correct - 0 points
+      itemsCorrect++;
+      if (isTestPrep) {
+        pointsEarned += (correctEntry.attemptNumber || 1) === 1 ? 1 : 0;
+      } else {
+        pointsEarned += (correctEntry.attemptNumber || 1) === 1 ? 1 : 0.5;
+      }
+    });
+
+    const itemsAttempted = gradedCount;
     // null (not 0) when nothing graded yet, so an engagement-only page
     // doesn't drag down averages as if it scored zero.
-    const scorePct = itemsAttempted ? Math.round((itemsCorrect / itemsAttempted) * 100) : null;
+    const scorePct = gradedCount ? Math.round((pointsEarned / gradedCount) * 100) : null;
 
     const deltas = [];
     for (let i = 1; i < submissions.length; i++) {
@@ -532,7 +570,8 @@
 
     return Object.assign({}, row, {
       submissions, avgSeconds, rapidBurst, flags, allEvents,
-      tabsViewed: tabViews.length, reachedEnd, itemsAttempted, itemsCorrect, scorePct
+      tabsViewed: tabViews.length, reachedEnd, itemsAttempted, itemsCorrect, scorePct,
+      pointsEarned, pointsPossible: gradedCount, isTestPrep, reflectionSubmitted
     });
   }
 

@@ -388,6 +388,36 @@ log itself, filtering out `tab-*`/`reached-end` keys first, and uses
 `null` (not `0`) when nothing graded exists yet so an engagement-only
 page doesn't drag an average down as if it scored zero.
 
+**Scoring formula: 1st-try correct = 1 point, 2nd-try correct = 0.5,
+never correct = 0 - except Test-Prep pages, which are attempt-1-only.**
+`Code.gs`'s `recordSubmission_` appends every attempt as its own
+`SubmissionsLog` entry (never overwrites), each tagged with its own
+`attemptNumber` - the full attempt history for every item is already
+sitting in the log, so this needed no backend or lesson-page changes at
+all, only a rewrite of `decorateRow()`'s scoring math (consistent with
+"all analysis happens in the dashboard's own JS" above). For each item
+key: group its entries (already sorted ascending by timestamp), find
+the entry (if any) with verdict `'correct'`, and award 1 point if its
+`attemptNumber` is 1, else 0.5; a key with no correct entry earns 0. A
+key whose *final* verdict is `'reflection'` (open-ended, no right
+answer) is excluded entirely from both the score's numerator and
+denominator - completion-tracked instead (`reflectionSubmitted`), not
+graded, so an activity that's mostly reflections doesn't read as
+low-scoring. **Test-Prep pages are graded attempt-1-only, with no
+partial credit for a correct 2nd try** - `isTestPrep` checks
+`row.activityId` for the `-test-prep` suffix every wired unit's
+Test-Prep page uses; for those, only a correct *first* attempt scores
+(1 point), a correct 2nd attempt scores 0, same as never getting it
+right. This intentionally diverges from what the on-screen check flow
+shows a student (several Test-Prep tabs still visually allow 2 tries
+with a reveal) - the gradebook simply doesn't credit a 2nd-try recovery
+on those pages, by design. `itemsAttempted` changed meaning as a side
+effect (now counts only graded items, excluding reflections) - this
+actually *fixes* a pre-existing mismatch with `progressStatus()`'s own
+doc comment, which already claimed "a row with graded items but no
+reachedEnd means they're partway through" while the old code counted
+reflections toward that same number.
+
 - **Spreadsheet ID**: `1-HLtX5AwskPx8hy_Ip2kjGMz5OUIS91M2x0FgEt75zA`
 - **Apps Script Web App URL**: `https://script.google.com/macros/s/AKfycbyC7mb1TKfg3JvhiZftXMf7oXkzrBMWJczZSURC7sIfoIxYnZrrumYfx-j7JYTY0A9i/exec`
 
