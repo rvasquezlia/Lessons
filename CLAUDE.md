@@ -772,6 +772,47 @@ three `displayAnswer` conventions) - its hand-written `fillInput` set
 while leaving the feedback `innerHTML` (which still wants the delimiters
 for MathJax) untouched.
 
+**Seventh/Operations-with-Rationals' Practice-Set/Test-Prep/Word-Problems
+originally forced every answer to a decimal - including on problems that
+are pure fraction computation - and that was a design mistake, not a
+deliberate "numeric-only" exclusion.** The first rollout pass (see
+"Rolled out site-wide" above) noticed these three pages checked every
+answer with `LessonCheck.numericMatch()` and concluded they needed no
+math-field conversion at all, under the "is this answer a plain number"
+rule. That was too literal a reading: several of those "decimal" answers
+were actually decimal-forced conversions of a pure-fraction problem
+(e.g. `-\frac{1}{2} + (-\frac{1}{3})`, answer `-\frac{5}{6}`, forced to
+`-0.83`) with no way to type the fraction at all - reported live via a
+screenshot of a student stuck on exactly this. Fixed by giving every
+problem across all three pages an explicit `format`: `'fraction'`
+(the problem uses only fractions - `<math-field>`, and **only** the
+exact fraction/whole-number in `accepted[]` counts, no decimal credit),
+`'decimal'` (the problem uses only decimals/dollar amounts - unchanged
+plain `<input>`), or `'mixed'` (the problem itself combines a fraction
+and a decimal quantity - `<math-field>`, and *either* form is accepted,
+via `formatMatches(format, raw, p)`: `numericMatch(raw, p.a)` for
+decimal, `answerMatches(raw, p.accepted)` for fraction, both OR'd for
+mixed). `format` defaults to `'decimal'` where a problem array doesn't
+set one (Word-Problems' shared `renderList`/`checkItem`), so most items
+on a page needed zero changes - only the pure-fraction and genuinely-
+mixed items got a `format` key added. Every fraction value across all
+three pages was independently recomputed with exact rational arithmetic
+(gcd-reduced numerator/denominator, not eyeballed from an existing
+decimal) before being wired into an `accepted[]` list - this is real
+grading data, worth the extra step. One answer (Word-Problems' "noon
+temperature", `-\frac{3}{4} + 2\frac{1}{4} = \frac{3}{2}`) exceeds
+magnitude 1, so its `accepted[]` carries both the improper-fraction
+spelling (`"3/2"`, for a student who types it as one fraction) and the
+mixed-number spelling (`"1 1/2"`, which normalizes the same way a
+math-field's own mixed-number ASCIIMath output does - see the
+Sixth/Operations-with-Fractions mixed-number note further up) - don't
+assume a single spelling covers both ways a student might type a
+magnitude-over-1 fraction answer. **If another unit's page was written
+with the same "just force everything to a decimal" pattern, don't
+assume it's intentional** - check whether any of its problems are pure
+fraction computation with no decimal in sight, the same way these three
+were.
+
 ### index.html is also gated now
 
 Unlike a lesson page, the index links to many activities rather than
