@@ -85,7 +85,7 @@
     <ul style="margin:6px 0 0 0;">
       <li><strong>Computation only</strong> - no word problems (those are on the Word Problems page).</li>
       <li>Work the tabs in any order - each groups problems by type and difficulty.</li>
-      <li>Type answers as a fraction like <code>3/4</code> or a mixed number like <code>2 1/3</code>, always in <strong>simplest form</strong>. Click Check - <strong>2 tries</strong> before the method is shown.</li>
+      <li>Enter answers in the math box as a fraction like <code>3/4</code> or a mixed number like <code>2 1/3</code>, always in <strong>simplest form</strong>. Click Check - <strong>2 tries</strong> before the method is shown.</li>
     </ul>
   </div>
 
@@ -280,7 +280,7 @@
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
-        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:150px; display:inline-block;" placeholder="e.g. 2 1/3">
+        <math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:170px; display:inline-block;"></math-field>
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
@@ -294,7 +294,7 @@
   function checkListItem(keyPrefix, idx) {
     const cfg = checkListRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`${keyPrefix}-${idx}-input`));
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
@@ -483,7 +483,7 @@
         </div>
         <div class="form-group">
           <label>What is the correct answer? (simplest form)</label>
-          <input type="text" id="ea-answer-${currentEA}" class="form-control-lg" style="max-width:200px;" placeholder="e.g. 2 1/3">
+          <math-field id="ea-answer-${currentEA}" class="form-control-lg" style="max-width:200px; display:inline-block;"></math-field>
         </div>
         <button class="btn-lg" onclick="checkErrorAnalysis(${currentEA})">Submit My Work</button>
         <div id="ea-feedback-${currentEA}" class="feedback-msg" style="margin-top:14px;"></div>
@@ -500,7 +500,7 @@
   function checkErrorAnalysis(idx) {
     const ex = errorExamples[idx];
     const verdict = document.getElementById(`ea-verdict-${idx}`).value;
-    const val = document.getElementById(`ea-answer-${idx}`).value;
+    const val = readMathField(document.getElementById(`ea-answer-${idx}`));
     const fb = document.getElementById(`ea-feedback-${idx}`);
     if (!verdict || !val.trim()) {
       LessonCheck.incomplete(fb, "Choose a verdict and enter the correct answer before submitting.");
