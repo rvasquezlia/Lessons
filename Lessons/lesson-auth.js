@@ -9,6 +9,11 @@ const LessonSync = (() => {
   let activityId = null;
   let idToken = null;
   let ready = false;
+  // Captured before the patch below replaces LessonProgress.record, so
+  // restoreSubmissions() can update the printed-report log directly
+  // without going back through onRecord() and re-posting to the backend
+  // every time the page loads.
+  const originalRecord = LessonProgress.record;
 
   // Apps Script cold-starts can take a few seconds - without a timeout, a
   // slow or stuck response leaves the gate showing "Checking access..."
@@ -26,7 +31,40 @@ const LessonSync = (() => {
     el.style.color = isError ? 'var(--error)' : 'var(--primary)';
   }
 
-  function unlock(student) {
+  // Re-locks and re-displays every previously answered problem on reload.
+  // Only works for the common single-input-per-problem pattern (an input
+  // and a feedback div both id'd "<key>-input" / "<key>-feedback", sharing
+  // a parent with the Check button) - that's what renderPracticeList()
+  // produces, and covers this pilot page's six tabs. A page with a
+  // different DOM shape (radio-button groups, multi-field problems) would
+  // silently skip restoring those items until this is extended.
+  function restoreSubmissions(submissionsLogJson) {
+    let submissions;
+    try { submissions = JSON.parse(submissionsLogJson || '[]'); } catch (e) { submissions = []; }
+    const latestByKey = {};
+    submissions.forEach((s) => { latestByKey[s.key] = s; }); // log is append-only; last entry per key wins
+    Object.keys(latestByKey).forEach((key) => {
+      const s = latestByKey[key];
+      const input = document.getElementById(`${key}-input`);
+      const feedback = document.getElementById(`${key}-feedback`);
+      if (!input || !feedback) return;
+      input.value = s.answer;
+      input.disabled = true;
+      const btn = input.parentElement && input.parentElement.querySelector('button');
+      if (btn) { btn.disabled = true; btn.style.cursor = 'not-allowed'; }
+      feedback.style.display = 'block';
+      if (s.verdict === 'correct') {
+        feedback.className = 'feedback-msg success locked';
+        feedback.innerHTML = 'Correct! <span style="opacity:.75;">(restored from your last session)</span>';
+      } else {
+        feedback.className = 'feedback-msg error locked';
+        feedback.innerHTML = 'Recorded from your last session - your teacher can review it on your printed report. <span style="opacity:.75;">(restored)</span>';
+      }
+      originalRecord(key, s.label, s.answer, s.verdict, s.section);
+    });
+  }
+
+  function unlock(student, progress) {
     ready = true;
     document.getElementById('lesson-gate').hidden = true;
     document.querySelector('.app-container').hidden = false;
@@ -35,6 +73,7 @@ const LessonSync = (() => {
       nameField.value = student.name;
       nameField.disabled = true;
     }
+    if (progress && progress.SubmissionsLog) restoreSubmissions(progress.SubmissionsLog);
   }
 
   async function handleGoogleSignIn(response) {
@@ -48,17 +87,13 @@ const LessonSync = (() => {
       const result = await res.json();
       if (!result.ok) { setStatus(result.error || 'Could not verify your account.', true); return; }
       if (!result.allowed) { setStatus(result.reason || 'Access denied.', true); return; }
-      unlock(result.student);
+      unlock(result.student, result.progress);
     } catch (err) {
       setStatus("Couldn't reach the roster - check your connection and try again.", true);
     }
   }
   window.handleGoogleSignIn = handleGoogleSignIn;
 
-  // Fired on every LessonProgress.record() call (see the patch below) -
-  // pushes that same item to the backend so SubmissionsLog stays in sync
-  // with what the printed report shows, without every lesson page needing
-  // its own explicit sync call at each Check button.
   function onRecord(item) {
     if (!ready || !idToken) return;
     fetchWithTimeout(LESSON_SYNC_API_URL, {
@@ -67,19 +102,18 @@ const LessonSync = (() => {
     }).catch((err) => console.warn('Progress sync failed (kept on this page only):', err));
   }
 
+  // LessonProgress.record() already exists (lesson-shared.js) and is
+  // called by every LessonCheck.check()/submit() - wrapping it here, only
+  // on pages that load this script, means no per-page call site needs to
+  // change to get synced.
+  LessonProgress.record = function (key, label, answer, verdict, section) {
+    originalRecord(key, label, answer, verdict, section);
+    onRecord({ key, label, answer, verdict, section });
+  };
+
   function init(id) {
     activityId = id;
   }
 
-  return { init, onRecord };
+  return { init };
 })();
-
-// LessonProgress.record() already exists (lesson-shared.js) and is called
-// by every LessonCheck.check()/submit() - wrapping it here, only on pages
-// that load this script, means no per-page call site needs to change to
-// get synced.
-const _lessonProgressRecord = LessonProgress.record;
-LessonProgress.record = function (key, label, answer, verdict, section) {
-  _lessonProgressRecord(key, label, answer, verdict, section);
-  LessonSync.onRecord({ key, label, answer, verdict, section });
-};
