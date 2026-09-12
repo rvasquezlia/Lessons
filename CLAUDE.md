@@ -555,11 +555,15 @@ means students never see it (same omission rule as any other section)
 and teachers see a harmless "Guided Solving Ladder: Coming soon" tag on
 the other five topics, same as any genuinely-unbuilt section would show.
 
-### Visual math input (Eighth/Literal-Equations unit only, all 4 answer-bearing pages)
+### Visual math input (site-wide now, except Lessons/Projects)
 
-Piloted first on just Practice-Set's Tabs 1-3, then rolled out to every
-math/expression answer across this one unit once the pilot proved out
-live. **Every math-related answer input in this unit** - fractions,
+Piloted first on just Eighth/Literal-Equations' Practice-Set Tabs 1-3,
+then rolled out to every math/expression answer across that one unit
+once the pilot proved out live, and from there to every other wired
+unit site-wide (see further down for that later rollout - this next
+paragraph documents the original single-unit pilot, whose mechanics and
+gotchas still apply everywhere). **Every math-related answer input in
+this unit** - fractions,
 algebraic expressions, and plain numbers alike - now uses
 [MathLive](https://cortexjs.io/mathlive/)'s `<math-field>` custom
 element instead of `<input type="text">`, loaded via
@@ -667,16 +671,83 @@ good a place to type a plain number as a text box, and using it
 everywhere on a page (not just where fractions appear) keeps one
 consistent input experience per page instead of mixing two.
 
-**Not yet rolled out beyond this unit.** Every other unit's pages
-(Sixth/Seventh/other-Eighth topics) are still plain `<input type="text">`
-- this was a deliberate one-topic rollout, not a site-wide change yet.
-Don't assume `<math-field>` is available on a page outside
-Eighth/Literal-Equations; check for the MathLive `<script>` tag in that
-specific page's own `<head>` first. Extending further means repeating
-the same pattern per page: markup swap, `readMathField()`, and (only
-where the answer is a fraction/expression, not a plain number)
-`answerMatches()` + fixing any hand-written `revealAnswerKey` that
-still sets `.value` to a plain-text `accepted[0]`.
+**Rolled out site-wide, except `Lessons/Projects/*` (left untouched on
+purpose - a separate, older pattern entirely, see the top of this file).**
+What started as an Eighth/Literal-Equations-only pilot was extended to
+every other wired unit: Sixth/Decimal-Operations, Sixth/Operations-with-
+Fractions, Seventh/Rational-Numbers, Seventh/Integers, Seventh/
+Operations-with-Rationals, and Eighth/Linear-Equations. Don't assume
+`<math-field>` is available on a page just because its unit is listed
+here, though - check for the MathLive `<script>` tag in that specific
+page's own `<head>` first, since several pages in these units needed
+**zero** changes (see below).
+
+**The dividing line is "is this answer a plain number," not "does the
+question involve fractions."** Per the explicit rule this rollout
+followed: an answer like `-1`, `5`, `66`, `-56`, `0.25`, or `-9.56`
+(however the question got there) stays a plain `<input type="text">`;
+an answer that's a fraction, an algebraic expression, an equation, or
+anything else with real math notation gets the `<math-field>` editor.
+This is a property of the **answer format**, not the question - several
+pages ask a fraction-heavy question (e.g. "\(-\frac{1}{2} + (-\frac{1}{3})\)")
+but grade the student's answer as a rounded decimal
+(`LessonCheck.numericMatch`), and those inputs correctly stayed plain
+text (e.g. all of Seventh/Operations-with-Rationals' Practice-Set,
+Test-Prep, and Word-Problems - every answer field on those three pages
+is decimal-only by the page's own design, confirmed by grepping for
+`accepted:`/fraction notation in an actual answer field before touching
+anything). Similarly, Seventh/Integers needed no changes anywhere -
+every answer across all 5 pages is a plain integer, a comparison
+symbol, a word, or a comma-separated list of plain integers, even
+though some questions display exponents or fraction-form work.
+
+**A shared render/check template mixing a plain-number/word/symbol
+answer with math-notation answers gets one new per-item flag,
+`text: true`, rather than being split into two templates or converted
+wholesale.** This matters when one shared template (a `listRegistry`/
+`checkListRegistry`-style loop) serves a mix of item shapes - e.g.
+Seventh/Rational-Numbers' Practice-Set mixes yes/no classification
+items with fraction-simplification items under one `renderPracticeList`/
+`checkPractice`; Seventh/Rational-Numbers' Word-Problems has one
+word-answer item ("yesterday"/"today") and one comma-separated
+ordered-list item alongside plain fraction/number word problems;
+Eighth/Linear-Equations' Review mixes yes/no like-terms judgment calls
+with algebraic-expression combine/distribute answers. Marking the
+non-math items `p.text = true` in their data and branching the render
+function (`p.text ? <input> : <math-field>`) and the check function
+(`p.text ? field.value : readMathField(field)`) keeps the rest of the
+shared template's logic and structure completely unchanged. Don't
+convert a yes/no or open-ended free-text item to `<math-field>` just
+because it lives in the same array as fraction items - the exclusion
+rule is per-answer, not per-template.
+
+**Algebraic expressions need two more normalizeExpr steps beyond
+fraction paren-stripping: stripping an explicit multiplication mark,
+and (rarely) leaving a meaningfully-signed parenthesized group alone.**
+MathLive's ASCIIMath export can render a coefficient-times-variable
+product with an explicit `*` (e.g. `8x` back as `8*x`), which a plain
+`accepted: ["8x"]` won't match without also stripping `*`/`·` in
+`normalizeExpr()` (Eighth/Literal-Equations' Practice-Set already did
+this for `symRegistry`; Eighth/Linear-Equations' Review and Vocabulary-
+Literacy needed the same treatment added). Separately,
+`stripRedundantParens()`'s `[^()+-]+` pattern already refuses to strip
+a parenthesized group that itself contains a `+`/`-` (e.g. the `(-2.9)`
+in a Keep-Change-Change rewrite like `-6.4+(-2.9)`, from Seventh/
+Operations-with-Rationals' Guided-Solving-Ladder) - that's intentional,
+not a gap, since collapsing that paren would change the expression's
+meaning, not just its redundant grouping.
+
+**A hand-written `revealAnswerKey` needs checking even when it isn't
+the one being converted, if it fills a field that *is* being converted.**
+Eighth/Linear-Equations' Vocabulary-Literacy's `displayAnswer` uses the
+pre-delimited `"\(n + 12\)"` convention (see the note above on the
+three `displayAnswer` conventions) - its hand-written `fillInput` set
+`input.value = answer` directly, harmless on the old plain `<input>`
+(showed literal `\(n + 12\)` as flat text) but would make a
+`<math-field>` try to parse that string as LaTeX. Fixed the same way as
+`unlockTeacherView`: strip the `\( \)` wrapper before assigning `.value`,
+while leaving the feedback `innerHTML` (which still wants the delimiters
+for MathJax) untouched.
 
 ### index.html is also gated now
 
