@@ -22,10 +22,30 @@
 
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=3"></script>
+  <style>
+    .lesson-gate { max-width: 480px; margin: 80px auto; padding: 32px; background: var(--card); border: 2px solid var(--border); border-radius: 16px; text-align: center; }
+    .lesson-gate h2 { margin-top: 0; }
+    .lesson-gate .g_id_signin { display: flex; justify-content: center; margin: 20px 0; }
+    #lesson-gate-status { min-height: 1.2em; font-weight: 600; }
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <h2>Sign in to start this activity</h2>
+  <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+  <div class="g_id_signin"></div>
+  <p id="lesson-gate-status"></p>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -250,6 +270,8 @@
 </div>
 
 <script>
+  LessonSync.init('7-integers-test-prep');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -460,6 +482,92 @@
     // submit-only: recorded for the printed report, never revealed on screen.
     LessonCheck.submit(fb, { key: `mp-${idx}`, label: `4. Mixed Practice #${idx + 1}: ${p.label}`, answer: raw, section: '4. Mixed Practice', correct });
   }
+
+  // This page has several problem shapes, none using window.listRegistry
+  // (including checkbox multi-select groups checkQCMulti() introduces),
+  // so the teacher reveal fills in every tab's answer key directly.
+  window.revealAnswerKey = function () {
+    const fillInput = (id, feedbackId, answer) => {
+      const input = document.getElementById(id);
+      const fb = document.getElementById(feedbackId);
+      if (!input || !fb) return;
+      input.value = answer;
+      input.disabled = true;
+      const btn = input.parentElement && input.parentElement.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
+    };
+
+    cuProblems.forEach((p, i) => fillInput(`cu-${i}-input`, `cu-${i}-feedback`, p.a));
+
+    errorAnalysisProblems.forEach((p, i) => {
+      const explainEl = document.getElementById(`ea-${i}-explain`);
+      const answerEl = document.getElementById(`ea-${i}-answer`);
+      const fb = document.getElementById(`ea-${i}-feedback`);
+      if (!explainEl || !answerEl || !fb) return;
+      explainEl.value = p.rule;
+      answerEl.value = p.correctAnswer;
+      explainEl.disabled = true;
+      answerEl.disabled = true;
+      const btn = answerEl.closest('.guided-practice') && answerEl.closest('.guided-practice').querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${p.correctAnswer}</strong>`;
+    });
+
+    const auditSel = document.getElementById('audit-choice');
+    const auditFb = document.getElementById('audit-feedback');
+    if (auditSel && auditFb) {
+      auditSel.value = 'incorrect';
+      auditSel.disabled = true;
+      auditFb.style.display = 'block';
+      auditFb.className = 'feedback-msg success locked';
+      auditFb.innerHTML = "Answer key: She's incorrect.";
+      document.getElementById('audit-explain').style.display = 'block';
+    }
+
+    Object.keys(qcAnswers).forEach((set) => {
+      Object.keys(qcAnswers[set]).forEach((idx) => {
+        fillInput(`qc-${set}${idx}`, `qc-${set}${idx}-feedback`, String(qcAnswers[set][idx]));
+      });
+    });
+
+    [{ name: 'a1', correctSet: [0, 3, 4], count: 6 }, { name: 'c2', correctSet: [1, 2], count: 5 }].forEach(({ name, correctSet, count }) => {
+      for (let i = 0; i < count; i++) {
+        const cb = document.getElementById(`qc-${name}-cb${i}`);
+        if (cb) { cb.checked = correctSet.includes(i); cb.disabled = true; }
+      }
+      const btn = document.querySelector(`button[onclick^="checkQCMulti('${name}'"]`);
+      if (btn) btn.disabled = true;
+      const fb = document.getElementById(`qc-${name}-feedback`);
+      if (fb) {
+        fb.style.display = 'block';
+        fb.className = 'feedback-msg success locked';
+        fb.innerHTML = `Answer key: choices ${correctSet.map((i) => i + 1).join(', ')}.`;
+      }
+    });
+
+    const signAnswers = { 'qc-c0a': 'positive', 'qc-c0b': 'negative', 'qc-c0c': 'negative', 'qc-c0d': 'negative' };
+    Object.keys(signAnswers).forEach((id) => {
+      const sel = document.getElementById(id);
+      if (sel) { sel.value = signAnswers[id]; sel.disabled = true; }
+    });
+    const signsBtn = document.querySelector('button[onclick="checkQCSigns()"]');
+    if (signsBtn) signsBtn.disabled = true;
+    const signsFb = document.getElementById('qc-c0-feedback');
+    if (signsFb) {
+      signsFb.style.display = 'block';
+      signsFb.className = 'feedback-msg success locked';
+      signsFb.innerHTML = 'Answer key: Positive, Negative, Negative, Negative.';
+    }
+
+    mpProblems.forEach((p, i) => fillInput(`mp-${i}-input`, `mp-${i}-feedback`, p.a !== undefined ? String(p.a) : p.accepted[0]));
+
+    triggerMathJax();
+  };
 </script>
 <div id="print-report"></div>
 </body>

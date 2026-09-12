@@ -24,6 +24,18 @@
 
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=3"></script>
+  <style>
+    .lesson-gate { max-width: 480px; margin: 80px auto; padding: 32px; background: var(--card); border: 2px solid var(--border); border-radius: 16px; text-align: center; }
+    .lesson-gate h2 { margin-top: 0; }
+    .lesson-gate .g_id_signin { display: flex; justify-content: center; margin: 20px 0; }
+    #lesson-gate-status { min-height: 1.2em; font-weight: 600; }
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
 
   <style>
     .glossary-term {
@@ -42,7 +54,15 @@
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <h2>Sign in to start this activity</h2>
+  <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+  <div class="g_id_signin"></div>
+  <p id="lesson-gate-status"></p>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -54,7 +74,7 @@
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Copy each glossary box into your notebook. Fraction answers: enter as a decimal. Not graded - no print button.
+    Copy each glossary box into your notebook. Fraction answers: enter as a decimal. Not graded - no print button. Your teacher can still see that you worked through it (which tabs you opened and whether you reached the end).
   </div>
 
   <nav class="nav-tabs">
@@ -246,6 +266,8 @@
 </div>
 
 <script>
+  LessonSync.init('7-operations-with-rationals-vocabulary-literacy');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -449,6 +471,62 @@
     if (explain.length <= 5) { LessonCheck.incomplete(fb, "Write your explanation before submitting."); return; }
     LessonCheck.submit(fb, { key: 'vocab-critical', label: 'Critical Thinking: why line up decimals / find an LCD before adding or subtracting?', answer: explain });
   }
+
+  // No window.listRegistry on this page - several unrelated problem
+  // shapes (single inputs, multi-select match groups), so the teacher
+  // reveal is built by hand for each.
+  window.revealAnswerKey = function () {
+    const fillInput = (id, feedbackId, answer) => {
+      const input = document.getElementById(id);
+      const fb = document.getElementById(feedbackId);
+      if (!input || !fb) return;
+      input.value = answer;
+      input.disabled = true;
+      const btn = input.parentElement && input.parentElement.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
+    };
+    const fillMatchGroup = (idPrefix, count, expectedByIndex, feedbackId, buttonSelector, summary) => {
+      for (let i = 0; i < count; i++) {
+        const sel = document.getElementById(`${idPrefix}-${i}`);
+        if (sel) { sel.value = expectedByIndex(i); sel.disabled = true; }
+      }
+      const btn = document.querySelector(buttonSelector);
+      if (btn) btn.disabled = true;
+      const fb = document.getElementById(feedbackId);
+      if (fb) {
+        fb.style.display = 'block';
+        fb.className = 'feedback-msg success locked';
+        fb.innerHTML = `Answer key: ${summary}`;
+      }
+    };
+
+    refresherProblems.forEach((p, i) => {
+      const displayAnswer = p.type === 'number' ? p.a : p.accepted[0];
+      fillInput(`qr-${i}-input`, `qr-${i}-feedback`, displayAnswer);
+    });
+
+    fillMatchGroup('sv', 4, (i) => ['kcc', 'kcf', 'lcd', 'ssr'][i], 'sv-feedback',
+      'button[onclick="checkSignVocab()"]', 'Rewriting subtraction = Keep-Change-Change, Rewriting division = Keep-Change-Flip, Sharing one denominator = LCD, Matching-sign product/quotient = Same Signs Rule.');
+
+    fillMatchGroup('cw', clueWords.length, (i) => clueWords[i].sign, 'cluewords-feedback',
+      'button[onclick="checkClueWords()"]', 'Positive (+) = Gain, Increase, Rise, Credit, Deposit, Profit. Negative (-) = Loss, Decrease, Drop, Debit, Withdrawal, Deficit.');
+
+    fillMatchGroup('om', opMatchWords.length, (i) => opMatchWords[i].op, 'opmatch-feedback',
+      'button[onclick="checkOpMatch()"]', 'Multiplication = per, each, rate. Division = split evenly, average, divided among.');
+
+    translateProblems.forEach((p, i) => fillInput(`tr-${i}-input`, `tr-${i}-feedback`, p.a));
+    realworldProblems.forEach((p, i) => fillInput(`rw-${i}-input`, `rw-${i}-feedback`, p.a));
+
+    const criticalFb = document.getElementById('vocab-critical-feedback');
+    if (criticalFb) {
+      criticalFb.style.display = 'block';
+      criticalFb.className = 'feedback-msg success locked';
+      criticalFb.innerHTML = 'Open-ended - grade from the student\'s own explanation, no single correct answer.';
+    }
+  };
 </script>
 </body>
 </html>

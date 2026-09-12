@@ -182,19 +182,36 @@ answers before computing "avg seconds per answer" or the rapid-burst
 flag — a tab view isn't an answer, and would otherwise skew both. They
 surface instead as their own `Tabs viewed` / `Reached end` columns.
 
-### Rational Numbers unit — current activity IDs
+### Wired units — current activity IDs
 
-| Page | ActivityId | Notes |
+Same 5-page pattern (Review/Vocabulary-Literacy/Practice-Set/Word-Problems/
+Test-Prep wired, Explanation/Teacher-Guide left alone) now applied to four
+units across Sixth and Seventh grade, in addition to Rational Numbers.
+**Eighth grade is not wired yet** — do not assume Linear-Equations or
+Literal-Equations pages have any of this; check for `gsi/client` in a
+page's `<head>` before trusting that they do.
+
+| Unit | ActivityId prefix | listRegistry / revealAnswerKey |
 |---|---|---|
-| Practice-Set.html | `7-rational-numbers-practice-set` | Full grading + teacher answer key (`window.listRegistry`). |
-| Word-Problems.html | `7-rational-numbers-word-problems` | Submit-only (graded from printed report), `window.listRegistry` + a small `window.revealAnswerKey` for the one open-ended item (`hike-order`) it doesn't cover. |
-| Test-Prep.html | `7-rational-numbers-test-prep` | Four different problem shapes, all via a hand-written `window.revealAnswerKey`. |
-| Vocabulary-Literacy.html | `7-rational-numbers-vocabulary-literacy` | Not graded for a score by design — tracked for engagement (tab views, reached-end) plus its own answer checks. Hand-written `window.revealAnswerKey`. |
-| Review.html | `7-rational-numbers-review` | Same as Vocabulary-Literacy: framed as an ungraded warm-up, still tracked. Uses `window.listRegistry` (its local var is `checkListRegistry`). |
-| Explanation.html, Teacher-Guide.html | *(none)* | No checkable content — not wired to auth/sync at all. |
+| Seventh/Rational-Numbers | `7-rational-numbers-*` | Practice-Set, Word-Problems, Review use `window.listRegistry`; Test-Prep and Vocabulary-Literacy use hand-written `window.revealAnswerKey`. |
+| Sixth/Decimal-Operations | `6-decimal-operations-*` | Practice-Set, Word-Problems, Review use `window.listRegistry` (local var `checkListRegistry`). Vocabulary-Literacy and Test-Prep are hand-written — Test-Prep has *two* separate registries (`estExactRegistry` for two-field estimate+exact items, `submitListRegistry` for single-field submit-only items) plus several one-off items (concept check, two critical-thinking textareas, extra credit, readiness check), none of it merged into `window.listRegistry`. |
+| Sixth/Operations-with-Fractions | `6-operations-with-fractions-*` | Same shape as Decimal-Operations, except Test-Prep's `checkListRegistry`/`submitListRegistry` **are** merged into `window.listRegistry` (`Object.assign`) since both already use the single-input convention — only the remaining one-offs (concept check, critical thinking, extra credit, readiness) are hand-written. |
+| Seventh/Integers | `7-integers-*` | Practice-Set/Word-Problems use `window.listRegistry` (local var `listRegistry`), Review uses `checkListRegistry`. Vocabulary-Literacy and Test-Prep are hand-written; Test-Prep also has a checkbox multi-select pattern (`checkQCMulti`) and a 4-select sign-group pattern (`checkQCSigns`) with their own reveal logic. |
+| Seventh/Operations-with-Rationals | `7-operations-with-rationals-*` | Same shape as Integers (including a `checkQCMulti` checkbox group in Test-Prep), but no sign-group pattern. |
 
-Each of the five wired pages needs its own row in `ActivityCatalog`
-(`Grade: 7`, `Active: TRUE`) before its gate will let anyone in.
+Every wired page needs its own row in `ActivityCatalog` (matching
+`Grade`, `Active: TRUE`) before its gate will let anyone in — that's 25
+rows total now (5 pages × 5 units). `index.html`'s `CURRICULUM` also
+needs an `activityIds` block per topic (see the existing entries) or a
+signed-in student won't see that topic on the index even once the pages
+themselves work — this has been added for all 5 wired units already.
+
+**Before trusting `window.revealAnswerKey` or `window.listRegistry` works
+on a specific page you haven't checked**, open that page's own `<script>`
+and confirm which one it actually defines — the table above summarizes,
+but the two Decimal-Operations vs. Operations-with-Fractions Test-Prep
+pages look nearly identical at a glance and are wired differently
+underneath (unmerged vs. merged registries).
 
 ### index.html is also gated now
 
