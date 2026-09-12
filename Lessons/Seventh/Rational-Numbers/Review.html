@@ -20,6 +20,8 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
@@ -269,12 +271,41 @@
   const checkListRegistry = {};
   window.listRegistry = checkListRegistry; // read by lesson-auth.js's teacher answer-key view
 
+  // ASCIIMath always double-parenthesizes every fraction (e.g. \frac{4}{5}
+  // reads back as "(4)/(5)"), so a typed math-field answer needs its
+  // redundant parens stripped before comparing against a plain "4/5" in
+  // accepted[] - see /CLAUDE.md's "Visual math input" note.
+  function stripRedundantParens(s) {
+    let prev;
+    do {
+      prev = s;
+      s = s.replace(/\(([^()+-]+)\)/g, '$1');
+    } while (s !== prev);
+    return s;
+  }
+
+  function normalizeExpr(s) {
+    return stripRedundantParens(String(s || '').toLowerCase().replace(/\s+/g, ''));
+  }
+
+  function answerMatches(val, accepted) {
+    const norm = normalizeExpr(val);
+    return (accepted || []).some((a) => normalizeExpr(a) === norm);
+  }
+
+  // Reads a <math-field>'s answer as ASCIIMath text, guarded against the
+  // MathLive script never loading (blocked network, ad blocker, cold CDN
+  // failure).
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
   function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
     checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
-        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:170px; display:inline-block;" placeholder="Answer">
+        <math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="\\text{Answer}"></math-field>
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
@@ -286,16 +317,15 @@
   function checkListItem(keyPrefix, idx) {
     const cfg = checkListRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`${keyPrefix}-${idx}-input`));
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
       return;
     }
-    const norm = (s) => String(s || '').toLowerCase().replace(/[\s,]/g, '');
     const correct = p.numeric
       ? LessonCheck.numericMatch(val, p.a, p.tol || 0.01)
-      : (p.accepted || [String(p.a)]).map(norm).includes(norm(val));
+      : answerMatches(val, p.accepted || [String(p.a)]);
     LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
       correct: `Correct! ${p.displayAnswer || ('The answer is ' + p.a + '.')}`,
       retry: cfg.retry,
