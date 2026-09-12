@@ -45,6 +45,36 @@ body {
   overflow: hidden;
 }
 
+/* Teacher-view-only banner, prepended as .app-container's first child by
+   lesson-auth.js's unlockTeacherView(). Deliberately full-width with no
+   margin so .app-container's own overflow:hidden clips it into the same
+   rounded top corners as everything else - it used to carry its own
+   margin/border-radius, which left a gap revealing the white background
+   behind it and made the header below look disconnected from the card. */
+.teacher-view-banner {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+  padding: 12px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.teacher-view-banner a {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 800;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 2px solid rgba(255,255,255,0.7);
+  white-space: nowrap;
+}
+.teacher-view-banner a:hover { background: rgba(255,255,255,0.32); }
+
 header {
   background: var(--primary);
   color: white;
@@ -59,7 +89,17 @@ header {
   gap: 10px;
   margin-bottom: 12px;
 }
-.brand-logo { height: 68px; width: auto; display: block; }
+/* The logo's own artwork (wordmark, "35th" numeral) is navy blue on a
+   transparent background - almost the same color as this header, so it
+   nearly vanished without a light backdrop of its own to sit on
+   regardless of what's behind it. */
+.brand-logo {
+  height: 68px; width: auto; display: block;
+  background: #fff;
+  padding: 6px 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
 .brand-name {
   font-size: 0.78rem;
   font-weight: 700;

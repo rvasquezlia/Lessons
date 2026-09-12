@@ -157,10 +157,18 @@ const LessonSync = (() => {
       nameField.value = `Answer Key (viewed by ${teacherName || 'teacher'})`;
       nameField.disabled = true;
     }
+    // Full-width and flush against the container's own edges (no margin)
+    // so it sits inside .app-container's rounded top corners instead of
+    // floating above them - margins here used to leave a gap that broke
+    // the rounded-corner illusion and made the header look disconnected
+    // from the rest of the card. Styled via the .teacher-view-banner
+    // class in lesson-shared.css rather than inline, including a real
+    // pill-button treatment for the dashboard link instead of a plain
+    // underlined link.
     const banner = document.createElement('div');
-    banner.style.cssText = 'background:var(--accent);color:#fff;font-weight:700;text-align:center;padding:10px;border-radius:10px;margin:0 24px 16px 24px;';
-    banner.innerHTML = `TEACHER VIEW - answer key shown below, not a student submission.
-      &nbsp;&nbsp;<a href="${TEACHER_DASHBOARD_URL}" target="_blank" style="color:#fff;text-decoration:underline;">Open Teacher Dashboard &rarr;</a>`;
+    banner.className = 'teacher-view-banner';
+    banner.innerHTML = `<span>TEACHER VIEW - answer key shown below, not a student submission.</span>
+      <a href="${TEACHER_DASHBOARD_URL}" target="_blank">Open Teacher Dashboard &rarr;</a>`;
     document.querySelector('.app-container').prepend(banner);
 
     const registry = window.listRegistry || {};

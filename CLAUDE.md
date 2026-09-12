@@ -82,7 +82,7 @@ shipping new backend code.
   committed code by an unpredictable amount - confusing to debug, since
   it looks like a bug that "sometimes" happens when it's really just
   staleness. Current versions: `token-cache.js` → `2`, `lesson-auth.js` →
-  `3`.
+  `4`.
 - **`hidden` doesn't always mean hidden — check for a competing CSS rule
   first.** `#lesson-loading` has its own `display: flex` (to center the
   spinner), and an ID selector beats the browser's default
@@ -314,6 +314,27 @@ Score bars (`scoreBarsHtml()`) and the recent-activity timeline
 specifically so Overview's compact cards and each detail view's larger
 ones can share the same rendering without duplicating it.
 
+**`scoreBarsHtml(items, labelKey, scoreKey)` takes an explicit
+`scoreKey`** (defaults to `'avgScore'`) precisely because it's called
+with two different shapes of object: Overview passes the aggregate
+summaries (`computeUnitSummaries()`/`computeActivitySummaries()`/
+`computeStudentSummaries()`), which really do have `.avgScore`, but
+`openActivityDetail()`/`openStudentDetail()` pass raw per-row
+`decorateRow()` output for their "Score by student"/"Score by activity"
+cards, which only has `.scorePct` - passing `'scorePct'` there is
+required, and a real bug once existed where both call sites read
+`.avgScore` off rows that never had it: `undefined !== null` is `true`,
+so nothing got filtered out, and the bar rendered a literal "undefined%"
+label with `style="width:undefined%;"` - invalid CSS, which browsers
+simply ignore, so the `bar-fill` div fell back to its default block-level
+width (100% of its container) instead of an actual percentage. That's
+why the bug looked like "a full bar next to the word undefined%" rather
+than an empty one. A null score is never hidden
+either way - it renders with whatever progress signal exists instead
+(`itemsAttempted`/`tabsViewed` if the item has them) rather than being
+silently dropped, since an unscored-but-touched activity is exactly the
+kind of thing worth seeing here.
+
 **Data-quality note**: the raw `Progress` columns
 (`ItemsAttempted`/`ItemsCorrect`/`ScorePct`) count *every* logged
 `SubmissionsLog` item, including the `tab-*`/`reached-end` engagement
@@ -352,6 +373,34 @@ function that fills in and locks every one of its own problems by hand;
 works on a new page** until it has either `window.listRegistry` exposed
 or its own `window.revealAnswerKey` — check the page's own script for
 one of those two before trusting the answer key to show anything.
+
+**The `TEACHER VIEW` banner is styled via `.teacher-view-banner` in
+`lesson-shared.css`, not inline.** `unlockTeacherView` just sets
+`banner.className = 'teacher-view-banner'` and prepends it as
+`.app-container`'s first child. It used to carry its own inline
+`margin`/`border-radius`, which left a gap around it revealing the
+white background behind it and made the blue `<header>` below look
+disconnected from the rest of the rounded card - fixed by making it
+full-width and flush with no margin, so `.app-container`'s own
+`overflow:hidden` + `border-radius:16px` clips it into the same rounded
+top corners as everything else. The "Open Teacher Dashboard" link is a
+real pill-button (`.teacher-view-banner a`) now instead of a plain
+underlined link.
+
+**`assets/lia-logo.png` needs a light backdrop of its own wherever it's
+used.** The file is a transparent PNG whose ink (the wordmark, the
+"35th" numeral) is navy blue (`rgb(27,28,106)`) - almost the same color
+as `--primary` (`#1e3a8a`), the header background every page places it
+on. Without something light behind it, the logo nearly disappears into
+the header rather than just looking slightly off. `.brand-logo` (in
+`lesson-shared.css`, and separately in `index.html`'s own inline
+styles - it doesn't link `lesson-shared.css`) now gives the `<img>`
+itself a white background, padding, and rounded corners, so it reads
+as a small white badge regardless of what's behind it. If this logo
+(or any other transparent asset in a similar dark navy) shows up
+somewhere new, check contrast against its actual background before
+trusting it'll be visible - "the file has transparency" doesn't mean
+"the file has contrast."
 
 ### Engagement tracking (tab views, not just graded answers)
 

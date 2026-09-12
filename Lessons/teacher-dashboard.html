@@ -697,19 +697,54 @@
     return '';
   }
 
-  function scoreBarsHtml(items, labelKey) {
-    const withScores = items.filter((it) => it.avgScore !== null).sort((a, b) => a.avgScore - b.avgScore).slice(0, 8);
-    if (!withScores.length) return '<p class="empty-note">No graded activity yet.</p>';
-    return withScores.map((it) => `
-      <div class="bar-row">
-        <div class="bar-label"><span>${it[labelKey]}</span><span><strong>${it.avgScore}%</strong></span></div>
-        <div class="bar-track"><div class="bar-fill ${barClass(it.avgScore)}" style="width:${it.avgScore}%;"></div></div>
-      </div>
-    `).join('');
+  // scoreKey defaults to 'avgScore' (the aggregate summaries Overview's
+  // cards use - computeUnitSummaries()/computeActivitySummaries()/
+  // computeStudentSummaries()); the two detail views instead pass raw
+  // Progress rows (decorateRow() output), which carry the score as
+  // 'scorePct' - passing the wrong key here used to silently render
+  // "undefined%" and a full-width bar (undefined as a CSS width is
+  // simply ignored, so the browser fell back to 100%) instead of
+  // throwing, which is why it went unnoticed.
+  //
+  // An item with no score yet (null) is never hidden - it's genuinely
+  // useful to see that a student has touched an activity even before
+  // anything's graded, so it renders with whatever progress signal is
+  // available (items answered, tabs viewed) instead of a percentage.
+  function scoreBarsHtml(items, labelKey, scoreKey) {
+    scoreKey = scoreKey || 'avgScore';
+    if (!items.length) return '<p class="empty-note">Nothing here yet.</p>';
+    const sorted = items.slice().sort((a, b) => {
+      const av = a[scoreKey], bv = b[scoreKey];
+      if (av === null && bv === null) return 0;
+      if (av === null) return 1;
+      if (bv === null) return -1;
+      return av - bv;
+    }).slice(0, 8);
+    return sorted.map((it) => {
+      const score = it[scoreKey];
+      if (score === null) {
+        const hasProgressInfo = typeof it.itemsAttempted === 'number' || typeof it.tabsViewed === 'number';
+        const detail = hasProgressInfo
+          ? `${it.itemsAttempted || 0} answered &middot; ${it.tabsViewed || 0} tab${(it.tabsViewed || 0) === 1 ? '' : 's'} viewed`
+          : 'Not yet graded';
+        return `
+          <div class="bar-row">
+            <div class="bar-label"><span>${it[labelKey]}</span><span class="empty-note" style="font-size:0.78rem;">${detail}</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:0%;"></div></div>
+          </div>
+        `;
+      }
+      return `
+        <div class="bar-row">
+          <div class="bar-label"><span>${it[labelKey]}</span><span><strong>${score}%</strong></span></div>
+          <div class="bar-track"><div class="bar-fill ${barClass(score)}" style="width:${score}%;"></div></div>
+        </div>
+      `;
+    }).join('');
   }
 
-  function renderScoreBars(containerId, items, labelKey) {
-    document.getElementById(containerId).innerHTML = scoreBarsHtml(items, labelKey);
+  function renderScoreBars(containerId, items, labelKey, scoreKey) {
+    document.getElementById(containerId).innerHTML = scoreBarsHtml(items, labelKey, scoreKey);
   }
 
   const EVENT_PILL = { graded: 'neutral', tab: 'ok', 'reached-end': 'flag' };
@@ -954,7 +989,7 @@
         <div class="stat-tile"><div class="n">${a.avgSeconds === null ? '-' : a.avgSeconds + 's'}</div><div class="l">Avg sec/answer</div></div>
         <div class="stat-tile"><div class="n ${a.flaggedCount ? 'warn' : ''}">${a.flaggedCount}</div><div class="l">Flagged</div></div>
       </div>
-      <div class="card"><h3>Score by student</h3><div>${scoreBarsHtml(a.rows, 'studentName')}</div></div>
+      <div class="card"><h3>Score by student</h3><div>${scoreBarsHtml(a.rows, 'studentName', 'scorePct')}</div></div>
       <div class="table-wrap">${activityDetailTable(a)}</div>
       <div class="card"><h3>Recent activity on this page</h3>${recentActivityHtml(events)}</div>
     `);
@@ -1028,7 +1063,7 @@
         <div class="stat-tile"><div class="n ${s.totalFlags ? 'warn' : ''}">${s.totalFlags}</div><div class="l">Flags</div></div>
         <div class="stat-tile"><div class="n" style="font-size:1rem;">${s.lastActive ? s.lastActive.toLocaleString() : '-'}</div><div class="l">Last active</div></div>
       </div>
-      <div class="card"><h3>Score by activity</h3><div>${scoreBarsHtml(s.rows, 'activityTitle')}</div></div>
+      <div class="card"><h3>Score by activity</h3><div>${scoreBarsHtml(s.rows, 'activityTitle', 'scorePct')}</div></div>
       <div class="table-wrap">${studentDetailTable(s)}</div>
       <div class="card"><h3>Recent activity</h3>${recentActivityHtml(events)}</div>
     `);

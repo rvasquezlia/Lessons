@@ -72,7 +72,17 @@
       gap: 18px;
       margin-bottom: 16px;
     }
-    .brand-logo { height: 110px; width: auto; display: block; }
+    /* The logo's own artwork (wordmark, "35th" numeral) is navy blue on a
+       transparent background - almost the same color as this header, so
+       it nearly vanished without a light backdrop of its own to sit on
+       regardless of what's behind it. */
+    .brand-logo {
+      height: 110px; width: auto; display: block;
+      background: #fff;
+      padding: 8px 14px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
     .brand-name {
       font-size: 1.05rem;
       font-weight: 700;
