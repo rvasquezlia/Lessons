@@ -239,6 +239,16 @@ and has six tabs, all driven by the same `allRows`/`roster`/
   is the one tab that keeps the older inline-expand-a-row pattern
   (`toggleDetail()`) instead of a separate detail view — it's already
   the raw per-item layer, not a summary that would otherwise dead-end.
+
+Both By Student's and By Activity's per-row tables (`studentDetailTable()`/
+`activityDetailTable()`) have their own "Attempts" column using that
+same inline-expand pattern, reusing `submissionDetailTable()` — the
+item/answer/verdict/attempt-number/timestamp breakdown already built for
+All Submissions — so drilling from a student into one of their
+activities (or an activity into one of its students) reaches the exact
+same attempt-level detail without a third full-panel view. Generated ids
+run through `safeId()` first since an email or activityId can contain
+characters (`@`, `.`) that aren't safe unescaped inside an HTML `id`.
 - **Access Log** — every `AccessLog` row, joined against `roster` (for
   student name) and `activityCatalog` (for activity title) client-side
   via `joinRosterName()`/`joinActivityTitle()`, with its own denied-count

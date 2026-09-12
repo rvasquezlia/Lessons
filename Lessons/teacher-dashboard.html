@@ -825,9 +825,18 @@
   }
   window.openActivityDetail = openActivityDetail;
 
+  // A-Z, 0-9, - and _ are always safe inside an HTML id; everything else
+  // (an email's @/., punctuation in an activityId) gets flattened so the
+  // generated detail-row ids toggleDetail() looks up are never malformed.
+  function safeId(str) {
+    return String(str).replace(/[^A-Za-z0-9_-]/g, '_');
+  }
+
   function activityDetailTable(a) {
     if (!a.rows.length) return '<em>No student has started this activity yet.</em>';
-    const rows = a.rows.map((r) => `
+    const rows = a.rows.map((r, i) => {
+      const id = `activity-${safeId(a.activityId)}-${i}`;
+      return `
       <tr class="${r.flags.length ? 'flagged' : ''}">
         <td>${r.studentName}</td>
         <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
@@ -836,9 +845,12 @@
         <td>${r.reachedEnd ? 'yes' : 'no'}</td>
         <td>${r.lastSubmittedAt ? new Date(r.lastSubmittedAt).toLocaleString() : '-'}</td>
         <td>${r.flags.map((f) => `<span class="pill flag">${f}</span>`).join(' ') || '-'}</td>
+        <td><span class="expand-btn" onclick="toggleDetail('${id}')">Attempts</span></td>
       </tr>
-    `).join('');
-    return `<table><thead><tr><th>Student</th><th>Score</th><th>Attempted</th><th>Tabs</th><th>Reached end</th><th>Last submitted</th><th>Flags</th></tr></thead><tbody>${rows}</tbody></table>`;
+      <tr class="detail-row" id="detail-${id}" hidden><td colspan="8">${submissionDetailTable(r)}</td></tr>
+    `;
+    }).join('');
+    return `<table><thead><tr><th>Student</th><th>Score</th><th>Attempted</th><th>Tabs</th><th>Reached end</th><th>Last submitted</th><th>Flags</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   function renderByStudent() {
@@ -889,7 +901,9 @@
 
   function studentDetailTable(s) {
     if (!s.rows.length) return '<em>Hasn\'t started any activity yet.</em>';
-    const rows = s.rows.map((r) => `
+    const rows = s.rows.map((r, i) => {
+      const id = `student-${safeId(s.email)}-${i}`;
+      return `
       <tr class="${r.flags.length ? 'flagged' : ''}">
         <td>${r.activityTitle}</td>
         <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
@@ -898,9 +912,12 @@
         <td>${r.reachedEnd ? 'yes' : 'no'}</td>
         <td>${r.lastSubmittedAt ? new Date(r.lastSubmittedAt).toLocaleString() : '-'}</td>
         <td>${r.flags.map((f) => `<span class="pill flag">${f}</span>`).join(' ') || '-'}</td>
+        <td><span class="expand-btn" onclick="toggleDetail('${id}')">Attempts</span></td>
       </tr>
-    `).join('');
-    return `<table><thead><tr><th>Activity</th><th>Score</th><th>Attempted</th><th>Tabs</th><th>Reached end</th><th>Last submitted</th><th>Flags</th></tr></thead><tbody>${rows}</tbody></table>`;
+      <tr class="detail-row" id="detail-${id}" hidden><td colspan="8">${submissionDetailTable(r)}</td></tr>
+    `;
+    }).join('');
+    return `<table><thead><tr><th>Activity</th><th>Score</th><th>Attempted</th><th>Tabs</th><th>Reached end</th><th>Last submitted</th><th>Flags</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   function renderAllSubmissions() {
