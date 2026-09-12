@@ -606,7 +606,12 @@
     const ecB = document.getElementById('mp-ec-b');
     const ecFb = document.getElementById('mp-ec-feedback');
     if (ecA && ecB && ecFb) {
-      ecA.value = '3 3/4'; ecB.value = '3 1/4';
+      // A <math-field>'s .value setter parses LaTeX, which collapses
+      // inter-digit spaces - "3 3/4" as LaTeX fuses into "33/4" (=8.25)
+      // instead of the mixed number 3¾ (=3.75). Needs real LaTeX
+      // mixed-number notation here; the plain "3 3/4" spelling below is
+      // fine since that's just literal feedback text, not a math-field value.
+      ecA.value = '3\\frac{3}{4}'; ecB.value = '3\\frac{1}{4}';
       ecA.disabled = true; ecB.disabled = true;
       ecFb.style.display = 'block';
       ecFb.className = 'feedback-msg success locked';
@@ -617,8 +622,10 @@
     const exit2 = document.getElementById('exit-2');
     const exitFb = document.getElementById('exit-feedback');
     if (exit1 && exit2 && exitFb) {
-      exit1.value = '1 1/12';
-      exit2.value = '2 1/2';
+      // Same LaTeX-space-collapsing issue as the Extra Credit fields above -
+      // needs real mixed-number LaTeX, not "1 1/12" as a literal string.
+      exit1.value = '1\\frac{1}{12}';
+      exit2.value = '2\\frac{1}{2}';
       exit1.disabled = true;
       exit2.disabled = true;
       const explainEl = document.getElementById('exit-explain');

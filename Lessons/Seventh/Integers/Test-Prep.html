@@ -510,7 +510,11 @@
       const answerEl = document.getElementById(`ea-${i}-answer`);
       const fb = document.getElementById(`ea-${i}-feedback`);
       if (!explainEl || !answerEl || !fb) return;
-      explainEl.value = p.rule;
+      // p.rule is plain prose for 4 of the 5 items, but one embeds \( \)
+      // delimiters (meant for MathJax) mid-string - a plain <textarea>
+      // can't render those at all, so strip them rather than showing the
+      // literal backslash-paren characters to the teacher.
+      explainEl.value = p.rule.replace(/\\\(|\\\)/g, '');
       answerEl.value = p.correctAnswer;
       explainEl.disabled = true;
       answerEl.disabled = true;
