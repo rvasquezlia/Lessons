@@ -359,6 +359,24 @@ either way - it renders with whatever progress signal exists instead
 silently dropped, since an unscored-but-touched activity is exactly the
 kind of thing worth seeing here.
 
+**Students are color-coded by grade+teacher wherever a list can mix
+groups.** By Activity's detail table, All Submissions, and Activity
+Status's detail table can all show students from more than one
+teacher (an unrestricted "All"-scope teacher sees every section; one
+activity can be opened by several sections in the same grade) with no
+other visual grouping otherwise. `groupColor(grade, teacher)` hashes
+the combo into a small fixed palette (`GROUP_COLORS`) so the same
+combo always gets the same color everywhere it appears; `groupDot()`
+renders that as a small circle before the student's name
+(`activityDetailTable()`, `renderAllSubmissions()`,
+`openActivityStatusDetail()`), and `groupLegendHtml()` renders a
+compact "Grade G · Teacher" legend above each of those tables -
+skipped entirely when the rows passed in are all the same group, since
+there's nothing to disambiguate. Tables that already show an explicit
+Teacher/Grade column for a single fixed group (By Student's own list,
+any single-student detail view) don't get the dot - it only earns its
+place where groups are actually mixed in the same table.
+
 **Data-quality note**: the raw `Progress` columns
 (`ItemsAttempted`/`ItemsCorrect`/`ScorePct`) count *every* logged
 `SubmissionsLog` item, including the `tab-*`/`reached-end` engagement
