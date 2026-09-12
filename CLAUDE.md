@@ -1041,16 +1041,18 @@ but the two Decimal-Operations vs. Operations-with-Fractions Test-Prep
 pages look nearly identical at a glance and are wired differently
 underneath (unmerged vs. merged registries).
 
-**Guided-Solving-Ladder is a seventh curriculum-index section**, not one
-of the original six (`review`/`vocab`/`explain`/`practice`/`word`/
-`test`/`teacher`) — `index.html`'s `SECTIONS` array has a `ladder` entry
-(`--c-ladder`/`--c-ladder-bg` for its pill color) alongside the rest.
-Only the two topics that actually have the page (Seventh/
-Operations-with-Rationals, Eighth/Literal-Equations) set a `ladder` href
-and `activityIds.ladder` — every other topic simply omits the key, which
-means students never see it (same omission rule as any other section)
-and teachers see a harmless "Guided Solving Ladder: Coming soon" tag on
-the other five topics, same as any genuinely-unbuilt section would show.
+**Guided-Solving-Ladder is deliberately not indexed on `index.html`.**
+It briefly existed as a seventh curriculum-index section (a `ladder`
+entry in `SECTIONS`, plus a `ladder` href/`activityIds.ladder` on the
+two topics that have the page) but was removed by explicit request —
+neither the link nor its "Coming soon" placeholder should show up on
+the index for any topic, wired or not. The two `Guided-Solving-Ladder.html`
+pages themselves (Seventh/Operations-with-Rationals,
+Eighth/Literal-Equations) still exist, are still gated/wired exactly as
+described in the table below, and are still linked from their unit's
+own `Teacher-Guide.html` — only the `index.html` navigation entry was
+removed. Don't reintroduce the `ladder` `SECTIONS` entry without
+checking with the teacher first.
 
 ### Visual math input (site-wide now, except Lessons/Projects)
 
