@@ -91,6 +91,21 @@
   .btn-back:hover { background: var(--border); }
   .detail-view h3 { margin: 16px 0 4px 0; }
   .detail-view .card { margin-bottom: 24px; }
+
+  /* Secondary-level tabs inside a merged top-level tab (Unit & Lesson
+     Deep Dive's Units/Activities, Integrity & Behavior Monitor's
+     Engagement/Flags/Submission Log) - visually one step down from
+     .nav-tabs so a teacher can tell at a glance which level they're on,
+     not a second identical row of primary tabs. */
+  .sub-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; border-bottom: 2px solid var(--border); }
+  .sub-tab-btn {
+    padding: 9px 16px; border: none; background: none; border-bottom: 3px solid transparent;
+    font-weight: 700; font-size: 0.92rem; color: #64748b; cursor: pointer; font-family: inherit;
+  }
+  .sub-tab-btn:hover { color: var(--text); }
+  .sub-tab-btn.active { color: var(--primary); border-bottom-color: var(--primary-light); }
+  .sub-panel { display: none; }
+  .sub-panel.active { display: block; }
 </style>
 </head>
 <body>
@@ -135,13 +150,9 @@
 
   <nav class="nav-tabs">
     <button class="tab-btn active" data-tab="overview" onclick="switchDashTab('overview')">Overview</button>
-    <button class="tab-btn" data-tab="by-unit" onclick="switchDashTab('by-unit')">By Unit</button>
-    <button class="tab-btn" data-tab="by-activity" onclick="switchDashTab('by-activity')">By Activity</button>
-    <button class="tab-btn" data-tab="by-student" onclick="switchDashTab('by-student')">By Student</button>
-    <button class="tab-btn" data-tab="activity-status" onclick="switchDashTab('activity-status')">Activity Status</button>
-    <button class="tab-btn" data-tab="roster" onclick="switchDashTab('roster')">Roster</button>
-    <button class="tab-btn" data-tab="integrity" onclick="switchDashTab('integrity')">Integrity Monitor</button>
-    <button class="tab-btn" data-tab="all-submissions" onclick="switchDashTab('all-submissions')">All Submissions</button>
+    <button class="tab-btn" data-tab="unit-lesson" onclick="switchDashTab('unit-lesson')">Unit &amp; Lesson Deep Dive</button>
+    <button class="tab-btn" data-tab="students" onclick="switchDashTab('students')">Student Roster &amp; Profiles</button>
+    <button class="tab-btn" data-tab="integrity" onclick="switchDashTab('integrity')">Integrity &amp; Behavior Monitor</button>
   </nav>
 
   <div id="overview" class="panel active">
@@ -171,53 +182,65 @@
     </div>
   </div>
 
-  <div id="by-unit" class="panel">
-    <div class="section-title">Progress by Unit</div>
-    <div id="by-unit-list">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th data-table="by-unit" data-sort="unit">Unit</th>
-              <th data-table="by-unit" data-sort="grade">Grade</th>
-              <th data-table="by-unit" data-sort="activityCount">Activities</th>
-              <th data-table="by-unit" data-sort="avgCompletion">Avg completion</th>
-              <th data-table="by-unit" data-sort="avgScore">Avg score</th>
-              <th data-table="by-unit" data-sort="flaggedCount">Flagged</th>
-            </tr>
-          </thead>
-          <tbody id="by-unit-body"></tbody>
-        </table>
-      </div>
+  <!-- Merges the former By Unit / By Activity tabs into one "deep dive"
+       tab with two sub-views - same underlying tables/detail panes,
+       nothing lost, just grouped under one nav item instead of two. -->
+  <div id="unit-lesson" class="panel">
+    <div class="section-title">Unit &amp; Lesson Deep Dive</div>
+    <div class="sub-nav">
+      <button class="sub-tab-btn active" data-subtab="units" onclick="switchSubTab('unit-lesson', 'units')">By Unit</button>
+      <button class="sub-tab-btn" data-subtab="activities" onclick="switchSubTab('unit-lesson', 'activities')">By Activity</button>
     </div>
-    <div id="by-unit-detail" class="detail-view" hidden></div>
+
+    <div id="unit-lesson-units" class="sub-panel active">
+      <div id="by-unit-list">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-table="by-unit" data-sort="unit">Unit</th>
+                <th data-table="by-unit" data-sort="grade">Grade</th>
+                <th data-table="by-unit" data-sort="activityCount">Activities</th>
+                <th data-table="by-unit" data-sort="avgCompletion">Avg completion</th>
+                <th data-table="by-unit" data-sort="avgScore">Avg score</th>
+                <th data-table="by-unit" data-sort="flaggedCount">Flagged</th>
+              </tr>
+            </thead>
+            <tbody id="by-unit-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="by-unit-detail" class="detail-view" hidden></div>
+    </div>
+
+    <div id="unit-lesson-activities" class="sub-panel">
+      <div id="by-activity-list">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-table="by-activity" data-sort="activityTitle">Activity</th>
+                <th data-table="by-activity" data-sort="grade">Grade</th>
+                <th data-table="by-activity" data-sort="startedCount">Started</th>
+                <th data-table="by-activity" data-sort="completionPct">Completion</th>
+                <th data-table="by-activity" data-sort="avgScore">Avg score</th>
+                <th data-table="by-activity" data-sort="avgSeconds">Avg sec/answer</th>
+                <th data-table="by-activity" data-sort="flaggedCount">Flagged</th>
+              </tr>
+            </thead>
+            <tbody id="by-activity-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="by-activity-detail" class="detail-view" hidden></div>
+    </div>
   </div>
 
-  <div id="by-activity" class="panel">
-    <div class="section-title">Progress by Activity</div>
-    <div id="by-activity-list">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th data-table="by-activity" data-sort="activityTitle">Activity</th>
-              <th data-table="by-activity" data-sort="grade">Grade</th>
-              <th data-table="by-activity" data-sort="startedCount">Started</th>
-              <th data-table="by-activity" data-sort="completionPct">Completion</th>
-              <th data-table="by-activity" data-sort="avgScore">Avg score</th>
-              <th data-table="by-activity" data-sort="avgSeconds">Avg sec/answer</th>
-              <th data-table="by-activity" data-sort="flaggedCount">Flagged</th>
-            </tr>
-          </thead>
-          <tbody id="by-activity-body"></tbody>
-        </table>
-      </div>
-    </div>
-    <div id="by-activity-detail" class="detail-view" hidden></div>
-  </div>
-
-  <div id="by-student" class="panel">
-    <div class="section-title">Progress by Student</div>
+  <!-- Merges the former standalone Roster tab straight into this list -
+       it was the same student list as By Student with a few extra
+       columns, just shown twice; those columns now live here instead. -->
+  <div id="students" class="panel">
+    <div class="section-title">Student Roster &amp; Profiles</div>
     <div id="by-student-list">
       <div class="table-wrap">
         <table>
@@ -226,10 +249,13 @@
               <th data-table="by-student" data-sort="studentName">Student</th>
               <th data-table="by-student" data-sort="grade">Grade</th>
               <th data-table="by-student" data-sort="teacher">Teacher</th>
-              <th data-table="by-student" data-sort="activitiesStarted">Activities started</th>
+              <th data-table="by-student" data-sort="activitiesStarted">Started</th>
               <th data-table="by-student" data-sort="avgScore">Avg score</th>
+              <th data-table="by-student" data-sort="effortScore">Effort Score</th>
+              <th data-table="by-student" data-sort="overallCompletionPct">Completion</th>
+              <th data-table="by-student" data-sort="recoveryIndex">Attempt-2 recovery</th>
               <th data-table="by-student" data-sort="totalFlags">Flags</th>
-              <th data-table="by-student" data-sort="lastActive">Last active</th>
+              <th data-table="by-student" data-sort="daysSinceLastActive">Last activity</th>
             </tr>
           </thead>
           <tbody id="by-student-body"></tbody>
@@ -239,101 +265,90 @@
     <div id="by-student-detail" class="detail-view" hidden></div>
   </div>
 
-  <div id="activity-status" class="panel">
-    <div class="section-title">Activity Status</div>
-    <div id="activity-status-list">
-      <div class="card" id="activity-status-chart" style="margin-bottom:20px;"></div>
+  <!-- Merges the former Activity Status / Integrity Monitor / All
+       Submissions tabs into one "Integrity & Behavior Monitor" tab with
+       three sub-views - the engagement funnel, the flags/scatter/ledger,
+       and the flat raw log everything else summarizes from, all in one
+       place instead of scattered across three separate top-level tabs. -->
+  <div id="integrity" class="panel">
+    <div class="section-title">Integrity &amp; Behavior Monitor</div>
+    <div class="sub-nav">
+      <button class="sub-tab-btn active" data-subtab="engagement" onclick="switchSubTab('integrity', 'engagement')">Engagement Funnel</button>
+      <button class="sub-tab-btn" data-subtab="flags" onclick="switchSubTab('integrity', 'flags')">Flags &amp; Behavior</button>
+      <button class="sub-tab-btn" data-subtab="submissions" onclick="switchSubTab('integrity', 'submissions')">Full Submission Log</button>
+    </div>
+
+    <div id="integrity-engagement" class="sub-panel active">
+      <div id="activity-status-list">
+        <div class="card" id="activity-status-chart" style="margin-bottom:20px;"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-table="activity-status" data-sort="activityTitle">Activity</th>
+                <th data-table="activity-status" data-sort="grade">Grade</th>
+                <th data-table="activity-status" data-sort="notStarted">Not started</th>
+                <th data-table="activity-status" data-sort="opened">Opened only</th>
+                <th data-table="activity-status" data-sort="inProgress">In progress</th>
+                <th data-table="activity-status" data-sort="completedPassed">Completed - Passed</th>
+                <th data-table="activity-status" data-sort="completedLockedOut">Completed - Locked Out</th>
+              </tr>
+            </thead>
+            <tbody id="activity-status-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="activity-status-detail" class="detail-view" hidden></div>
+    </div>
+
+    <div id="integrity-flags" class="sub-panel">
+      <div class="stat-row" id="integrity-stats"></div>
+      <div class="card-grid">
+        <div class="card" style="grid-column: 1 / -1;">
+          <h3>Time on task vs. score</h3>
+          <div id="integrity-scatter"></div>
+        </div>
+      </div>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th data-table="activity-status" data-sort="activityTitle">Activity</th>
-              <th data-table="activity-status" data-sort="grade">Grade</th>
-              <th data-table="activity-status" data-sort="notStarted">Not started</th>
-              <th data-table="activity-status" data-sort="opened">Opened only</th>
-              <th data-table="activity-status" data-sort="inProgress">In progress</th>
-              <th data-table="activity-status" data-sort="completedPassed">Completed - Passed</th>
-              <th data-table="activity-status" data-sort="completedLockedOut">Completed - Locked Out</th>
+              <th data-table="integrity" data-sort="studentName">Student</th>
+              <th data-table="integrity" data-sort="activityTitle">Activity</th>
+              <th>Flags</th>
+              <th data-table="integrity" data-sort="scorePct">Score</th>
+              <th data-table="integrity" data-sort="totalMinutes">Time on task</th>
+              <th data-table="integrity" data-sort="lastSubmittedAt">Last submitted</th>
+              <th></th>
             </tr>
           </thead>
-          <tbody id="activity-status-body"></tbody>
+          <tbody id="integrity-body"></tbody>
         </table>
       </div>
     </div>
-    <div id="activity-status-detail" class="detail-view" hidden></div>
-  </div>
 
-  <div id="roster" class="panel">
-    <div class="section-title">Roster</div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th data-table="roster" data-sort="studentName">Student</th>
-            <th data-table="roster" data-sort="grade">Grade</th>
-            <th data-table="roster" data-sort="teacher">Teacher</th>
-            <th data-table="roster" data-sort="avgScore">Avg score</th>
-            <th data-table="roster" data-sort="effortScore">Effort Score</th>
-            <th data-table="roster" data-sort="overallCompletionPct">Completion</th>
-            <th data-table="roster" data-sort="recoveryIndex">Attempt-2 recovery</th>
-            <th data-table="roster" data-sort="totalFlags">Flags</th>
-            <th data-table="roster" data-sort="daysSinceLastActive">Last activity</th>
-          </tr>
-        </thead>
-        <tbody id="roster-body"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div id="integrity" class="panel">
-    <div class="section-title">Integrity Monitor</div>
-    <div class="stat-row" id="integrity-stats"></div>
-    <div class="card-grid">
-      <div class="card" style="grid-column: 1 / -1;">
-        <h3>Time on task vs. score</h3>
-        <div id="integrity-scatter"></div>
+    <div id="integrity-submissions" class="sub-panel">
+      <div id="all-submissions-legend"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-table="all-submissions" data-sort="studentName">Student</th>
+              <th data-table="all-submissions" data-sort="activityTitle">Activity</th>
+              <th data-table="all-submissions" data-sort="scorePct">Score</th>
+              <th data-table="all-submissions" data-sort="itemsAttempted">Attempted</th>
+              <th data-table="all-submissions" data-sort="avgSeconds">Avg sec/answer</th>
+              <th data-table="all-submissions" data-sort="tabsViewed">Tabs viewed</th>
+              <th data-table="all-submissions" data-sort="totalMinutes">Time on task</th>
+              <th data-table="all-submissions" data-sort="reachedEnd">Reached end</th>
+              <th data-table="all-submissions" data-sort="lastSubmittedAt">Last submitted</th>
+              <th>Flags</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="all-submissions-body"></tbody>
+        </table>
       </div>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th data-table="integrity" data-sort="studentName">Student</th>
-            <th data-table="integrity" data-sort="activityTitle">Activity</th>
-            <th>Flags</th>
-            <th data-table="integrity" data-sort="scorePct">Score</th>
-            <th data-table="integrity" data-sort="totalMinutes">Time on task</th>
-            <th data-table="integrity" data-sort="lastSubmittedAt">Last submitted</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="integrity-body"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div id="all-submissions" class="panel">
-    <div class="section-title">All Submissions (detail)</div>
-    <div id="all-submissions-legend"></div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th data-table="all-submissions" data-sort="studentName">Student</th>
-            <th data-table="all-submissions" data-sort="activityTitle">Activity</th>
-            <th data-table="all-submissions" data-sort="scorePct">Score</th>
-            <th data-table="all-submissions" data-sort="itemsAttempted">Attempted</th>
-            <th data-table="all-submissions" data-sort="avgSeconds">Avg sec/answer</th>
-            <th data-table="all-submissions" data-sort="tabsViewed">Tabs viewed</th>
-            <th data-table="all-submissions" data-sort="totalMinutes">Time on task</th>
-            <th data-table="all-submissions" data-sort="reachedEnd">Reached end</th>
-            <th data-table="all-submissions" data-sort="lastSubmittedAt">Last submitted</th>
-            <th>Flags</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="all-submissions-body"></tbody>
-      </table>
     </div>
   </div>
 
@@ -367,7 +382,6 @@
     'activity-status': { key: 'activityTitle', dir: 1 },
     'by-student': { key: 'studentName', dir: 1 },
     'by-activity': { key: 'activityTitle', dir: 1 },
-    'roster': { key: 'studentName', dir: 1 },
     'integrity': { key: 'lastSubmittedAt', dir: -1 },
     'all-submissions': { key: 'studentName', dir: 1 }
   };
@@ -380,7 +394,6 @@
   let lastActivityStatus = [];
   let lastActivitySummaries = [];
   let lastStudentSummaries = [];
-  let lastRosterSummaries = [];
 
   function fetchWithTimeout(url, opts, timeoutMs) {
     const controller = new AbortController();
@@ -556,6 +569,7 @@
   const IDLE_GAP_MIN_MINUTES = 3;    // a gap at least this long (but still under SESSION_GAP_MINUTES, so still one session) reads as a pause, not just normal pacing
   const TAB_SKIP_SECONDS = 2;        // moving to the next tab this fast reads as clicking through without reading
   const STALLED_DAYS = 7;            // days since a student's last logged event, with unfinished work outstanding, before calling them "stalled"
+  const FOCUS_LOSS_FLAG_THRESHOLD = 3; // briefly switching away once or twice is normal; flag only once it happens repeatedly in one activity
 
   // A reflection answer is "padded" when it's long enough to judge (at
   // least 12 words - short real answers shouldn't be flagged just for
@@ -584,6 +598,8 @@
     if (/padded/.test(flagText)) return 'Reflection padding';
     if (/Idle/.test(flagText)) return 'Idle gap';
     if (/tab-skipping/i.test(flagText)) return 'Tab-skipping';
+    if (/Pasted/.test(flagText)) return 'Paste detected';
+    if (/Left the tab/.test(flagText)) return 'Left the tab repeatedly';
     return 'Teacher-flagged';
   }
 
@@ -632,15 +648,36 @@
     // "attempted" and produces a misleading score for any page with
     // engagement tracking (now every wired page) - recomputed here from
     // just the graded items instead of trusting those raw columns.
-    const submissions = allSubmissions.filter((s) => !s.key.startsWith('tab-') && s.key !== 'reached-end');
+    // "paste-*"/"focus-lost-*"/"focus-back-*" are lesson-auth.js's own
+    // integrity events (see /CLAUDE.md) - each one is unique per
+    // occurrence (not a repeated attempt on one item), so they're
+    // excluded from graded-item scoring the same way tab-*/reached-end
+    // already are, or they'd wrongly count as "graded items never
+    // answered correctly."
+    const isIntegrityKey = (key) => key.startsWith('paste-') || key.startsWith('focus-lost-') || key.startsWith('focus-back-');
+    const submissions = allSubmissions.filter((s) => !s.key.startsWith('tab-') && s.key !== 'reached-end' && !isIntegrityKey(s.key));
     const tabViews = allSubmissions.filter((s) => s.key.startsWith('tab-'));
     const reachedEnd = allSubmissions.some((s) => s.key === 'reached-end');
+    const pasteEvents = allSubmissions.filter((s) => s.verdict === 'paste-detected');
+    const focusLostEvents = allSubmissions.filter((s) => s.verdict === 'focus-lost');
+    const focusBackEvents = allSubmissions.filter((s) => s.verdict === 'focus-regained');
+    // Pairs each "left this tab" event with the next "returned" event (if
+    // any - a student who never comes back, or is still away as of the
+    // last sync, simply doesn't close that pair) to get real away-time,
+    // rather than inferring it from answer-gap heuristics the way
+    // idleGapCount below has to for pages without this signal yet.
+    let awayMinutes = 0;
+    focusLostEvents.forEach((lost) => {
+      const back = focusBackEvents.find((b) => new Date(b.timestamp) > new Date(lost.timestamp));
+      if (back) awayMinutes += (new Date(back.timestamp) - new Date(lost.timestamp)) / 60000;
+    });
+    awayMinutes = Math.round(awayMinutes);
     // Every logged event, typed, for the Overview "Recent activity" feed -
     // this is the "other activity log with timestamps" AccessLog's noisy
     // allowed-rows were replaced with: it's already deduped (one entry per
     // real interaction) and timestamped by the backend itself.
     const allEvents = allSubmissions.map((s) => ({
-      type: s.key === 'reached-end' ? 'reached-end' : (s.key.startsWith('tab-') ? 'tab' : 'graded'),
+      type: s.key === 'reached-end' ? 'reached-end' : (s.key.startsWith('tab-') ? 'tab' : (isIntegrityKey(s.key) ? 'integrity' : 'graded')),
       label: s.key === 'reached-end' ? 'Reached the end' : (s.key.startsWith('tab-') ? `Viewed tab: ${s.label || s.key.slice(4)}` : s.label),
       verdict: s.verdict, timestamp: s.timestamp
     }));
@@ -757,6 +794,8 @@
     if (paddedReflectionCount > 0) flags.push(`Reflection may be padded (${paddedReflectionCount})`);
     if (idleGapCount > 0) flags.push(`Idle gap${idleGapCount === 1 ? '' : 's'} during session (${idleGapCount})`);
     if (tabSkipCount > 0) flags.push(`Rapid tab-skipping (${tabSkipCount})`);
+    if (pasteEvents.length > 0) flags.push(`Pasted into an answer field (${pasteEvents.length})`);
+    if (focusLostEvents.length >= FOCUS_LOSS_FLAG_THRESHOLD) flags.push(`Left the tab ${focusLostEvents.length} times`);
 
     // Sessions are built from every logged event (tab views and
     // reached-end included, not just graded answers) - a student reading
@@ -771,7 +810,8 @@
       pointsEarned, pointsPossible: gradedCount, isTestPrep, reflectionSubmitted,
       sessions, totalMinutes,
       fastGuessCount, sacrificeCount, paddedReflectionCount, idleGapCount, tabSkipCount,
-      failedFirstTry, correctSecondTry
+      failedFirstTry, correctSecondTry,
+      pasteCount: pasteEvents.length, focusLossCount: focusLostEvents.length, awayMinutes
     });
   }
 
@@ -1174,7 +1214,7 @@
     document.getElementById(containerId).innerHTML = scoreBarsHtml(items, labelKey, scoreKey);
   }
 
-  const EVENT_PILL = { graded: 'neutral', tab: 'ok', 'reached-end': 'flag' };
+  const EVENT_PILL = { graded: 'neutral', tab: 'ok', 'reached-end': 'flag', integrity: 'flag' };
 
   // Shared by the student and activity detail views - a per-row timeline
   // built from Progress.SubmissionsLog timestamps (see decorateRow's
@@ -1246,16 +1286,23 @@
         ${Object.keys(categoryCounts).map((c) => `<div class="stat-tile"><div class="n">${categoryCounts[c]}</div><div class="l">${c}</div></div>`).join('')}
       </div>
       <span class="expand-btn" onclick="jumpToFlagged()">View all flagged submissions &rarr;</span>
-      <span class="expand-btn" style="margin-left:16px;" onclick="switchDashTab('integrity')">Open Integrity Monitor &rarr;</span>
+      <span class="expand-btn" style="margin-left:16px;" onclick="jumpToIntegrityFlags()">Open Integrity Monitor &rarr;</span>
     `;
   }
 
   function jumpToFlagged() {
     document.getElementById('filter-flagged-only').checked = true;
     renderAll();
-    switchDashTab('all-submissions');
+    switchDashTab('integrity');
+    switchSubTab('integrity', 'submissions');
   }
   window.jumpToFlagged = jumpToFlagged;
+
+  function jumpToIntegrityFlags() {
+    switchDashTab('integrity');
+    switchSubTab('integrity', 'flags');
+  }
+  window.jumpToIntegrityFlags = jumpToIntegrityFlags;
 
   function sortItems(items, tableKey, keyFallback) {
     const s = sortState[tableKey] || { key: keyFallback, dir: 1 };
@@ -1335,17 +1382,18 @@
   // dead end - it's one click from "this unit is struggling" to "here's
   // exactly who and why."
   function jumpToActivity(activityId) {
-    switchDashTab('by-activity');
+    switchDashTab('unit-lesson');
+    switchSubTab('unit-lesson', 'activities');
     const idx = lastActivitySummaries.findIndex((a) => a.activityId === activityId);
     if (idx !== -1) openActivityDetail(idx); else showListView('by-activity');
   }
   window.jumpToActivity = jumpToActivity;
 
-  // Same pattern as jumpToActivity above, but into By Student - the
-  // Roster and Integrity Monitor tabs both link into a student's existing
-  // profile view rather than building a second one.
+  // Same pattern as jumpToActivity above, but into the Student Roster &
+  // Profiles tab - the Integrity Monitor's ledger links into a student's
+  // existing profile view rather than building a second one.
   function jumpToStudentDetail(email) {
-    switchDashTab('by-student');
+    switchDashTab('students');
     const idx = lastStudentSummaries.findIndex((s) => s.email === email);
     if (idx !== -1) openStudentDetail(idx); else showListView('by-student');
   }
@@ -1509,44 +1557,22 @@
     return `<table><thead><tr><th>Student</th><th>Score</th><th>Attempted</th><th>Tabs</th><th>Time on task</th><th>Reached end</th><th>Last submitted</th><th>Flags</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
+  // Student Roster & Profiles' list view - this used to be two separate
+  // tabs (By Student, and a compact Roster with a few extra columns) that
+  // showed nearly the same student list twice; the Roster columns
+  // (Effort Score, Completion %, Recovery Index, Stalled) are folded in
+  // here instead, so there's exactly one student list, not two.
   function renderByStudent() {
     const items = sortItems(computeStudentSummaries(), 'by-student', 'studentName');
     lastStudentSummaries = items;
     const tbody = document.getElementById('by-student-body');
-    if (!items.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-note">No students match the current filter.</td></tr>'; }
-    else {
-      tbody.innerHTML = items.map((s, i) => `
-        <tr class="${s.totalFlags ? 'flagged' : (s.activitiesStarted === 0 ? 'zero-activity' : '')}">
-          <td><span class="expand-btn" onclick="openStudentDetail(${i})">${s.studentName}</span></td>
-          <td>${s.grade}</td>
-          <td>${s.teacher || '-'}</td>
-          <td>${s.activitiesStarted}</td>
-          <td>${s.avgScore === null ? '-' : s.avgScore + '%'}</td>
-          <td>${s.totalFlags ? `<span class="pill flag">${s.totalFlags}</span>` : '<span class="pill ok">0</span>'}</td>
-          <td>${s.lastActive ? s.lastActive.toLocaleString() : '-'}</td>
-        </tr>
-      `).join('');
-    }
-    showListView('by-student');
-  }
-
-  // Roster is the compact "everyone at a glance" view: the same
-  // per-student aggregates computeStudentSummaries() already produces
-  // (so it can never disagree with By Student), surfaced with the
-  // effort/completion/recovery/stalled columns that don't fit in By
-  // Student's own list without crowding it. Clicking a name jumps into
-  // that same student's full profile on By Student rather than building
-  // a second detail view.
-  function renderRoster() {
-    const items = sortItems(computeStudentSummaries(), 'roster', 'studentName');
-    lastRosterSummaries = items;
-    const tbody = document.getElementById('roster-body');
-    if (!items.length) { tbody.innerHTML = '<tr><td colspan="9" class="empty-note">No students match the current filter.</td></tr>'; return; }
-    tbody.innerHTML = items.map((s) => `
-      <tr class="${s.stalled ? 'flagged' : (s.activitiesStarted === 0 ? 'zero-activity' : '')}">
-        <td><span class="expand-btn" onclick="jumpToStudentDetail('${s.email}')">${s.studentName}</span></td>
+    if (!items.length) { tbody.innerHTML = '<tr><td colspan="10" class="empty-note">No students match the current filter.</td></tr>'; return; }
+    tbody.innerHTML = items.map((s, i) => `
+      <tr class="${s.stalled || s.totalFlags ? 'flagged' : (s.activitiesStarted === 0 ? 'zero-activity' : '')}">
+        <td><span class="expand-btn" onclick="openStudentDetail(${i})">${s.studentName}</span></td>
         <td>${s.grade}</td>
         <td>${s.teacher || '-'}</td>
+        <td>${s.activitiesStarted}</td>
         <td>${s.avgScore === null ? '-' : s.avgScore + '%'}</td>
         <td>${s.effortScore === null ? '-' : s.effortScore}</td>
         <td>${s.overallCompletionPct === null ? '-' : s.overallCompletionPct + '%'}</td>
@@ -1555,6 +1581,7 @@
         <td>${s.stalled ? `<span class="pill flag">Stalled - ${s.daysSinceLastActive}d</span>` : (s.daysSinceLastActive === null ? '-' : s.daysSinceLastActive + 'd ago')}</td>
       </tr>
     `).join('');
+    showListView('by-student');
   }
 
   // Integrity Monitor: every row carrying at least one recorded-data flag
@@ -1754,7 +1781,6 @@
     renderActivityStatus();
     renderByActivity();
     renderByStudent();
-    renderRoster();
     renderIntegrityMonitor();
     renderAllSubmissions();
   }
@@ -1781,6 +1807,23 @@
     if (btn) btn.classList.add('active');
   }
   window.switchDashTab = switchDashTab;
+
+  // Second-level tab switch inside one merged top-level panel (Unit &
+  // Lesson Deep Dive's Units/Activities, Integrity & Behavior Monitor's
+  // Engagement/Flags/Submission Log) - scoped to that panel's own direct
+  // children so switching a sub-tab in one top-level tab never touches
+  // another's sub-tab state.
+  function switchSubTab(panelId, subId) {
+    const panel = document.getElementById(panelId);
+    if (!panel) return;
+    panel.querySelectorAll(':scope > .sub-panel').forEach((p) => p.classList.remove('active'));
+    panel.querySelectorAll(':scope > .sub-nav > .sub-tab-btn').forEach((b) => b.classList.remove('active'));
+    const sub = document.getElementById(`${panelId}-${subId}`);
+    if (sub) sub.classList.add('active');
+    const btn = panel.querySelector(`.sub-tab-btn[data-subtab="${subId}"]`);
+    if (btn) btn.classList.add('active');
+  }
+  window.switchSubTab = switchSubTab;
 
   document.addEventListener('change', (e) => {
     if (['filter-grade', 'filter-teacher', 'filter-activity', 'filter-flagged-only'].includes(e.target.id)) renderAll();

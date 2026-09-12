@@ -83,6 +83,69 @@ const LessonSync = (() => {
     });
   }
 
+  // One sentence, injected once per page rather than requiring an edit to
+  // every gated page's own HTML - "activity on this page is recorded" per
+  // the teacher's own wording, deliberately generic so it covers every
+  // listener below (paste/focus/tab-view/answer submissions) without
+  // having to spell each one out or update this text every time a new
+  // signal is added. Idempotent (checks for its own class first) so a
+  // page that somehow calls init() twice never duplicates it.
+  function injectDisclosure() {
+    const body = document.querySelector('#lesson-gate .lesson-gate-body');
+    if (!body || body.querySelector('.lesson-gate-disclosure')) return;
+    const p = document.createElement('p');
+    p.className = 'lesson-gate-disclosure';
+    p.textContent = 'Activity performed on this page is recorded so your teacher can review your work.';
+    const status = document.getElementById('lesson-gate-status');
+    body.insertBefore(p, status || null);
+  }
+
+  // Paste detection - one shared listener (paste events bubble, including
+  // across a <math-field>'s shadow DOM, since clipboard events are
+  // "composed") instead of wiring every individual answer field on every
+  // page. Deliberately logs only the fact that a paste happened, never
+  // the clipboard content itself - a "did they paste" signal for the
+  // teacher, not a way to read what a student typed or copied elsewhere.
+  // Debounced to at most one logged event per 2 seconds so a single
+  // paste action that fires more than one browser paste event (some
+  // IME/clipboard-manager setups do this) doesn't log a duplicate burst.
+  // Every logged key is unique (`paste-<timestamp>`) rather than a fixed
+  // key, since each paste is its own occurrence, not a repeated attempt
+  // on one item - decorateRow() in teacher-dashboard.html excludes
+  // anything starting with "paste-" from graded-item scoring, the same
+  // way it already excludes "tab-*"/"reached-end".
+  let lastPasteLoggedAt = 0;
+  function onPaste(e) {
+    if (!ready || !idToken) return;
+    const tag = e.target && e.target.tagName;
+    if (!tag || !['INPUT', 'TEXTAREA', 'MATH-FIELD'].includes(tag)) return;
+    const now = Date.now();
+    if (now - lastPasteLoggedAt < 2000) return;
+    lastPasteLoggedAt = now;
+    onRecord({ key: `paste-${now}`, label: 'Pasted into an answer field', answer: '', verdict: 'paste-detected', section: 'Integrity' });
+  }
+
+  // Tab-focus tracking - logs when a student navigates away from this
+  // browser tab (switches apps/tabs, minimizes) and when they come back,
+  // as a matched pair of timestamped events. This is the Page Visibility
+  // API, not anything reading what's on another tab or app - it only
+  // ever knows "this tab is/isn't the visible one right now." The very
+  // first "visible" state on page load isn't a "return" from anywhere,
+  // so it's deliberately not logged. Recorded the same retrospective way
+  // as everything else here: nothing is evaluated live, a teacher only
+  // ever sees this later by opening the dashboard.
+  function onVisibilityChange() {
+    if (!ready || !idToken) return;
+    const now = Date.now();
+    if (document.visibilityState === 'hidden') {
+      onRecord({ key: `focus-lost-${now}`, label: 'Left this tab', answer: '', verdict: 'focus-lost', section: 'Integrity' });
+    } else {
+      onRecord({ key: `focus-back-${now}`, label: 'Returned to this tab', answer: '', verdict: 'focus-regained', section: 'Integrity' });
+    }
+  }
+  document.addEventListener('paste', onPaste);
+  document.addEventListener('visibilitychange', onVisibilityChange);
+
   function hideLoadingIndicator() {
     const el = document.getElementById('lesson-loading');
     // #lesson-loading has its own `display: flex` CSS rule (to center the
@@ -352,6 +415,7 @@ const LessonSync = (() => {
 
   function init(id) {
     activityId = id;
+    injectDisclosure();
     patchSwitchTab();
     initCalled = true;
     tryStart();

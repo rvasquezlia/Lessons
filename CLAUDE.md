@@ -82,7 +82,7 @@ shipping new backend code.
   committed code by an unpredictable amount - confusing to debug, since
   it looks like a bug that "sometimes" happens when it's really just
   staleness. Current versions: `token-cache.js` → `2`, `lesson-auth.js` →
-  `7`.
+  `8`.
 - **`hidden` doesn't always mean hidden — check for a competing CSS rule
   first.** `#lesson-loading` has its own `display: flex` (to center the
   spinner), and an ID selector beats the browser's default
@@ -202,37 +202,47 @@ The page visually matches the rest of the site (reuses
 `.tab-btn`/`.panel`/`.section-title` rather than its own one-off styles
 — including the filter bar, which used to be a dark navy strip that
 didn't match anything else on the page and is now a plain light
-`--bg`/`--border` bar like the rest of the site's cards) and has eight
-tabs, all driven by the same `allRows`/`roster`/`activityCatalog`
-globals and a shared `Grade`/`Teacher`/`Activity`/"flagged only" filter
-bar. None of the tab panels carry an explanatory `<p>` under their
-`.section-title` anymore — the tab name plus the table's own column
-headers are the interface; a per-tab paragraph restating "one row per
-X, click a row to see Y" was decided to be redundant with that.
+`--bg`/`--border` bar like the rest of the site's cards) and has **four**
+top-level tabs, all driven by the same `allRows`/`roster`/
+`activityCatalog` globals and a shared `Grade`/`Teacher`/`Activity`/
+"flagged only" filter bar. None of the tab panels carry an explanatory
+`<p>` under their `.section-title` anymore — the tab name plus the
+table's own column headers are the interface; a per-tab paragraph
+restating "one row per X, click a row to see Y" was decided to be
+redundant with that.
 
-Tab order is **Overview, By Unit, By Activity, By Student, Activity
-Status, Roster, Integrity Monitor, All Submissions** — the three "By X"
-drill-downs sit together, Activity Status (engagement funnel) comes
-right after them, Roster and Integrity Monitor (both added in the same
-pass as the retrospective integrity/effort signals below) sit after
-that as the two "whole-class-at-a-glance" views built from those new
-numbers, and All Submissions (the flat raw log) stays last since it's
-the destination everything else summarizes from, not a place to land
-first. Activity Status used to sit between By Unit and By Activity,
-which read as an arbitrary interruption of the "By X" group; moving it
-after them was a front-end-only reorder (nav buttons + matching
-`.panel` divs), nothing in `Code.gs` or the data shapes changed.
+**This was cut down from eight top-level tabs to four, after the
+teacher reported the eight-tab layout as "stacked on" and "not user
+friendly."** The eight-tab layout (Overview, By Unit, By Activity, By
+Student, Activity Status, Roster, Integrity Monitor, All Submissions)
+was the result of adding each new capability as its own top-level tab
+one phase at a time - functionally complete, but nothing about it read
+as one coherent dashboard. The fix was reorganization, not
+re-implementation: every table, chart, and detail view built in those
+phases is still here, none of the underlying `compute*`/`render*`
+functions changed, and no data was dropped - rows just got grouped
+under fewer, better-named top-level tabs (deliberately matching the
+"Executive Overview / Unit-Lesson Deep Dive / Student Roster & Profiles
+/ Academic Integrity & Behavior Monitor" naming from the platform spec
+the teacher originally shared, minus the pieces of that spec already
+deferred - see "Deliberately deferred" further down). **Never
+re-introduce a fifth+ top-level tab as the default way to add a new
+view** - if a new capability doesn't obviously belong under one of the
+four tabs below, it likely belongs as a new sub-tab inside one of them
+instead (see `switchSubTab()` below), or is a sign the new capability
+needs its own product decision about where it fits, not just "add a
+tab."
 
-**Every list tab defaults to alphabetical order**, not a score/date
-ranking — `sortState` in `teacher-dashboard.html` sets By Unit/By
-Activity/Activity Status/Roster to `activityTitle`/`unit`/`studentName`
-ascending and By Student/All Submissions to `studentName` ascending
-(Integrity Monitor is the one exception, defaulting to `lastSubmittedAt`
-descending - most-recent-incident-first reads better for a ledger than
-alphabetical). A teacher scanning for one specific student or activity
-shouldn't have to hunt through a ranked list first; clicking any column
-header still re-sorts by that column exactly as before, this only
-changes what a tab shows before any click.
+Tab order is **Overview, Unit & Lesson Deep Dive, Student Roster &
+Profiles, Integrity & Behavior Monitor**. Two of these are themselves
+split into secondary tabs via a small `switchSubTab(panelId, subId)`
+helper (mirrors `switchDashTab()`, but scoped to one top-level panel's
+own direct-child `.sub-nav`/`.sub-panel` elements via `:scope`, so
+switching a sub-tab in one top-level tab never touches another's
+sub-tab state) - visually one level down from the primary
+`.nav-tabs`/`.tab-btn` styling (`.sub-nav`/`.sub-tab-btn`/`.sub-panel`
+in the page's own `<style>` block) so a teacher can tell at a glance
+which level of navigation they're looking at:
 
 - **Overview** — summary only, deliberately: stat tiles (active
   students, activities, average score, average Effort Score Index,
@@ -242,38 +252,61 @@ changes what a tab shows before any click.
   breakdown by flag *category* - see `flagCategory()` below - not the
   raw flag string, most of which carry their own per-row count and so
   are never identical across rows) with links to jump into either the
-  flagged-only All Submissions view (`jumpToFlagged()`) or straight to
-  the Integrity Monitor tab. It never lists individual students or a raw
-  event feed — that used to live here (a "Students who haven't started"
-  list and a global "Recent activity" feed) but got moved into the
-  per-student/per-activity detail views below, where it's actually about
+  flagged-only submission log (`jumpToFlagged()`) or straight to the
+  Integrity & Behavior Monitor tab's Flags sub-tab
+  (`jumpToIntegrityFlags()`). It never lists individual students or a
+  raw event feed — that used to live here (a "Students who haven't
+  started" list and a global "Recent activity" feed) but got moved into
+  the per-student/per-activity detail views, where it's actually about
   something instead of everyone's events interleaved.
-- **By Unit** — one row per `ActivityCatalog.Unit` (+ grade, since two
-  grades could reuse a unit name), aggregated from the same per-activity
-  numbers `computeActivitySummaries()` produces
-  (`computeUnitSummaries()` just groups those instead of re-deriving
-  anything, so it can't disagree with By Activity). Click a unit to see
-  every activity in it; click an activity there and it jumps straight to
-  that activity's own detail view on the By Activity tab
-  (`jumpToActivity()`) — a unit number is never a dead end.
-- **By Activity** — one row per catalog activity (including activities
-  nobody has started), with a completion percentage computed against
-  how many *eligible* roster students exist for that grade (and teacher,
-  if filtered). Click an activity for its own mini dashboard: stat
-  tiles, a score-by-student bar chart, the full per-student table, and
-  that activity's own "Recent activity" timeline (built from
-  `Progress.SubmissionsLog` timestamps, scoped to just this activity).
-- **By Student** — one row per roster student (including students with
-  zero `Progress` rows, so "hasn't started anything" is visible instead
-  of just absent), averaged across every activity they've touched. Click
-  a student for their full profile: stat tiles (activities started, avg
-  score, flags, last active, plus a second row for Effort Score Index,
-  average Lesson Completion %, Attempt-2 Recovery Index, and
-  days-since-last-activity/Stalled - see the Roster/Integrity notes
-  below for what each one means), a score-by-activity bar chart, a
-  **"Lesson completion by unit"** card, the full per-activity table, and
-  their own "Recent activity" timeline across everything they've
-  touched.
+- **Unit & Lesson Deep Dive** — merges the former standalone By Unit and
+  By Activity tabs into one tab with two sub-tabs, **By Unit** and **By
+  Activity** (`switchSubTab('unit-lesson', 'units'|'activities')`) -
+  same two tables/detail panes as before, under one nav item instead of
+  two, since they're two granularities of the exact same drill-down
+  rather than genuinely separate questions.
+  - *By Unit*: one row per `ActivityCatalog.Unit` (+ grade, since two
+    grades could reuse a unit name), aggregated from the same
+    per-activity numbers `computeActivitySummaries()` produces
+    (`computeUnitSummaries()` just groups those instead of re-deriving
+    anything, so it can't disagree with By Activity). Click a unit to
+    see every activity in it; click an activity there and it jumps
+    straight to that activity's own detail view on the By Activity
+    sub-tab (`jumpToActivity()`, which now also calls
+    `switchSubTab('unit-lesson', 'activities')`) — a unit number is
+    never a dead end.
+  - *By Activity*: one row per catalog activity (including activities
+    nobody has started), with a completion percentage computed against
+    how many *eligible* roster students exist for that grade (and
+    teacher, if filtered). Click an activity for its own mini dashboard:
+    stat tiles, a score-by-student bar chart, the full per-student
+    table, and that activity's own "Recent activity" timeline (built
+    from `Progress.SubmissionsLog` timestamps, scoped to just this
+    activity).
+- **Student Roster & Profiles** — merges the former standalone By
+  Student and Roster tabs, which had drifted into showing nearly the
+  same student list twice (By Student's own columns, plus a handful of
+  extra ones only on Roster) with no separate detail view of Roster's
+  own - now exactly **one** list (`renderByStudent()`), one row per
+  roster student (including students with zero `Progress` rows, so
+  "hasn't started anything" is visible instead of just absent), with
+  every column either list used to show on its own: Student, Grade,
+  Teacher, Activities started, Avg score, Effort Score Index, Lesson
+  Completion % (averaged across the student's own wired units,
+  formerly Roster-only), Attempt-2 Recovery Index (formerly
+  Roster-only), Flags, and a "Last activity" column that reads
+  "Stalled - Nd" once `STALLED_DAYS` (7) is crossed (formerly
+  Roster-only). Click a student for their full profile: stat tiles
+  (activities started, avg score, flags, last active, plus a second row
+  for Effort Score Index, average Lesson Completion %, Attempt-2
+  Recovery Index, and days-since-last-activity/Stalled), a
+  score-by-activity bar chart, a **"Lesson completion by unit"** card,
+  the full per-activity table, and their own "Recent activity" timeline
+  across everything they've touched. `jumpToStudentDetail(email)` (used
+  by the Integrity Monitor's ledger) still works exactly as before,
+  just targeting `switchDashTab('students')` instead of a `'by-student'`
+  tab id - the underlying `by-student-list`/`by-student-detail` element
+  ids, and every `compute`/`render`/`open` function name, are unchanged.
 
 **"Lesson Completion %" (`computeStudentUnitCompletion()`) is a
 per-student, per-unit metric - not to be confused with
@@ -284,71 +317,85 @@ activity. `computeStudentUnitCompletion()` answers a different
 question for one specific student: of a unit's wired activities (for
 that student's own grade), what fraction has *this student* actually
 finished - status `completed-passed` or `completed-locked-out` from the
-five-state funnel above, either way counts as "done" toward completion
+five-state funnel below, either way counts as "done" toward completion
 even though only Passed counts toward mastery. Grouped by
 `ActivityCatalog.Unit` using the same `unit`/`'Unassigned'` fallback
 convention as `computeUnitSummaries()`, so a unit name always matches
-between the two views. Rendered as its own table in the By Student
-detail drawer (`lessonCompletionHtml()`), listing every wired unit for
-that student's grade with its Completion %, Passed count, Locked Out
-count, and total activity count.
-- **Activity Status** — "are students actually opening this, and are
-  they passing it?", answered with a five-state funnel per activity
-  (Not started / Opened only / In progress / Completed - Passed /
-  Completed - Locked Out), computed by `computeActivityStatusBreakdown()`
-  from `Progress` alone via `progressStatus(row)`: no row at all is Not
-  started; a row with neither graded items nor `reachedEnd` (only tab
-  views logged) is Opened only; a row with graded items but no
-  `reachedEnd` is In progress. Once `reachedEnd` is true, the split is
-  Completed - Locked Out (`itemsCorrect < itemsAttempted` - at least one
-  graded item was never answered correctly) vs Completed - Passed
-  (everything they touched was eventually correct, or there were no
-  graded items at all - an engagement-only page). This treats any
-  never-fixed wrong item as "locked out" once the student has clicked
-  through every tab, whether or not the UI pattern behind that specific
-  item technically still allowed a retry - `SubmissionsLog` doesn't
-  record which pattern (2-try check vs 1-shot submit) produced a given
-  `incomplete` verdict, and a student who's already reached the end
-  isn't going to circle back anyway. Above the per-activity table,
-  `renderActivityStatusChart()` draws one aggregate stacked bar (plus a
-  count legend) summing every filtered activity's own breakdown into a
-  single "how's the whole filtered set doing" graph — the table alone
-  only shows this per activity, one row at a time. Click an activity row
-  to see which student is in which state, with stat tiles for the same
-  five counts scoped to just that activity. This is the dashboard's only
-  engagement view now - the tab that used to read `AccessLog` (see
-  below) is gone entirely.
-- **Roster** — every roster student in one flat table (reusing
-  `computeStudentSummaries()` as-is, so it can never disagree with By
-  Student), with the columns that don't fit in By Student's own list
-  without crowding it: Avg score, Effort Score Index, Lesson Completion
-  % (averaged across the student's own wired units), Attempt-2 Recovery
-  Index, Flags, and a "Last activity" column that reads "Stalled - Nd"
-  once `STALLED_DAYS` (7) is crossed. No separate detail view of its own
-  - clicking a name calls `jumpToStudentDetail(email)` (same pattern as
-  `jumpToActivity()`), which switches to By Student and opens that same
-  student's existing profile rather than building a second one.
-- **Integrity Monitor** — every row carrying at least one flag (stat
-  tiles for the total plus a per-category breakdown via `flagCategory()`),
-  a time-on-task-vs-score scatter plot (`renderIntegrityScatter()`, one
-  dot per scored row, red if flagged - built as a small inline SVG, no
-  charting library), and a flagged-only ledger table
-  (`renderIntegrityMonitor()`) using the same inline-expand
-  `submissionDetailTable()` pattern as All Submissions. This is a
-  **retrospective read of already-recorded activity, never live
-  monitoring** - see the "Recorded-data integrity signals" note below
-  for exactly what is and isn't computed here, and why.
-- **All Submissions** — the original flat one-row-per-(student,activity)
-  table, kept as the detail view everything else summarizes from. This
-  is the one tab that keeps the older inline-expand-a-row pattern
-  (`toggleDetail()`) instead of a separate detail view — it's already
-  the raw per-item layer, not a summary that would otherwise dead-end.
+between the two views. Rendered as its own table in the Student Roster
+& Profiles detail drawer (`lessonCompletionHtml()`), listing every
+wired unit for that student's grade with its Completion %, Passed
+count, Locked Out count, and total activity count.
+
+- **Integrity & Behavior Monitor** — merges the former standalone
+  Activity Status, Integrity Monitor, and All Submissions tabs into one
+  tab with three sub-tabs (`switchSubTab('integrity', 'engagement'|
+  'flags'|'submissions')`), grouped together because all three are
+  ultimately the same question ("what actually happened, and is any of
+  it concerning") at three different levels of aggregation - the funnel,
+  the flagged incidents, and the raw log everything else summarizes
+  from.
+  - *Engagement Funnel* (formerly the standalone Activity Status tab) —
+    "are students actually opening this, and are they passing it?",
+    answered with a five-state funnel per activity (Not started / Opened
+    only / In progress / Completed - Passed / Completed - Locked Out),
+    computed by `computeActivityStatusBreakdown()` from `Progress` alone
+    via `progressStatus(row)`: no row at all is Not started; a row with
+    neither graded items nor `reachedEnd` (only tab views logged) is
+    Opened only; a row with graded items but no `reachedEnd` is In
+    progress. Once `reachedEnd` is true, the split is Completed - Locked
+    Out (`itemsCorrect < itemsAttempted` - at least one graded item was
+    never answered correctly) vs Completed - Passed (everything they
+    touched was eventually correct, or there were no graded items at all
+    - an engagement-only page). This treats any never-fixed wrong item
+    as "locked out" once the student has clicked through every tab,
+    whether or not the UI pattern behind that specific item technically
+    still allowed a retry - `SubmissionsLog` doesn't record which
+    pattern (2-try check vs 1-shot submit) produced a given `incomplete`
+    verdict, and a student who's already reached the end isn't going to
+    circle back anyway. Above the per-activity table,
+    `renderActivityStatusChart()` draws one aggregate stacked bar (plus
+    a count legend) summing every filtered activity's own breakdown into
+    a single "how's the whole filtered set doing" graph — the table
+    alone only shows this per activity, one row at a time. Click an
+    activity row to see which student is in which state, with stat
+    tiles for the same five counts scoped to just that activity. The
+    tab that used to read `AccessLog` for this same "is this being
+    opened" question (see below) is gone entirely, replaced by this.
+  - *Flags & Behavior* (formerly the standalone Integrity Monitor tab) —
+    every row carrying at least one flag (stat tiles for the total plus
+    a per-category breakdown via `flagCategory()`), a
+    time-on-task-vs-score scatter plot (`renderIntegrityScatter()`, one
+    dot per scored row, red if flagged - built as a small inline SVG, no
+    charting library), and a flagged-only ledger table
+    (`renderIntegrityMonitor()`) using the same inline-expand
+    `submissionDetailTable()` pattern as the Submission Log sub-tab.
+    This is a **retrospective read of already-recorded activity, never
+    live monitoring** - see "Recorded-data integrity/effort signals"
+    further down for exactly what is and isn't computed here, and why.
+  - *Full Submission Log* (formerly the standalone All Submissions tab)
+    — the original flat one-row-per-(student,activity) table, kept as
+    the detail view everything else summarizes from. This is the one
+    view that keeps the older inline-expand-a-row pattern
+    (`toggleDetail()`) instead of a separate detail view — it's already
+    the raw per-item layer, not a summary that would otherwise dead-end.
+
+**Every list defaults to alphabetical order**, not a score/date
+ranking — `sortState` in `teacher-dashboard.html` sets By Unit/By
+Activity/Activity Status/Student Roster & Profiles to
+`activityTitle`/`unit`/`studentName` ascending (the Submission Log sub-
+tab also defaults to `studentName` ascending), except the Flags &
+Behavior sub-tab, which defaults to `lastSubmittedAt` descending -
+most-recent-incident-first reads better for a ledger than alphabetical.
+A teacher scanning for one specific student or activity shouldn't have
+to hunt through a ranked list first; clicking any column header still
+re-sorts by that column exactly as before, this only changes what a
+list shows before any click.
 
 **There is no Access Log / Denied Access tab anymore** — it was removed
 outright, not just renamed a second time. It read the backend's
 `AccessLog` data (still returned by `teacher-data`, still perfectly
 valid — this is a front-end-only removal, no `Code.gs` change) to show
-denied sign-in attempts, but the Activity Status tab above already
+denied sign-in attempts, but the Engagement Funnel sub-tab above already
 answers the actually-useful version of that question ("is this being
 opened"), and a separate denial log added a tab for a case nobody was
 asking to see routinely. If denial data is ever needed again, it's still
@@ -523,16 +570,27 @@ every other tab.
   own timestamps specifically (not the row-wide `_thinkSeconds`, which
   could span a graded answer in between) - reads as clicking through the
   nav without reading a tab's content.
-- Each of the five signals above appends its own descriptive string (with
-  its own per-row count baked in, e.g. `"Fast-guessing on 2 items (<3s)"`)
-  to the same `flags` array the pre-existing `flagReason`/rapid-burst
-  flags already used - every place that already rendered `flags` (row
-  styling, the Flags columns, per-activity/per-student detail tables)
-  picked these up with no further changes. `flagCategory(flagText)`
-  buckets a flag string back into one of six human-scale categories
-  (matched by substring, since the strings themselves are never
-  identical row-to-row) for the Overview/Integrity Monitor summary
-  counts.
+- **Paste detection** (`pasteCount`) and **tab-focus tracking**
+  (`focusLossCount`/`awayMinutes`) - see "Paste detection and tab-focus
+  tracking" under "Engagement tracking" further down for the full design
+  (what's logged, what's deliberately never logged, and the student-
+  facing disclosure that goes with it). Both are logged by
+  `lesson-auth.js` as their own `SubmissionsLog` item types
+  (`paste-*`/`focus-lost-*`/`focus-back-*`), excluded from graded-item
+  scoring in `decorateRow()` the same way `tab-*`/`reached-end` already
+  are (`isIntegrityKey()`), and reach `teacher-dashboard.html` through
+  the exact same channel every other signal on this page uses - no
+  special-casing anywhere else in the pipeline.
+- Each of the seven signals above appends its own descriptive string
+  (with its own per-row count baked in, e.g. `"Fast-guessing on 2 items
+  (<3s)"`) to the same `flags` array the pre-existing `flagReason`/
+  rapid-burst flags already used - every place that already rendered
+  `flags` (row styling, the Flags columns, per-activity/per-student
+  detail tables) picked these up with no further changes.
+  `flagCategory(flagText)` buckets a flag string back into one of eight
+  human-scale categories (matched by substring, since the strings
+  themselves are never identical row-to-row) for the Overview/Integrity
+  Monitor summary counts.
 - **Effort Score Index** (`computeEffortScore(rows)`, per-student
   aggregate) - a 0-100 composite: 40% how far they get into each
   activity on average (`reachedEnd` = 100, any engagement at all = 50,
@@ -559,11 +617,16 @@ every other tab.
 either genuinely new client-side instrumentation beyond what's already
 logged, or is inherently a live feature the "no live monitoring" rule
 rules out outright: a Printable PDF/Report Generator, Item Diagnostics
-(per-distractor wrong-answer analysis), true clipboard/DevTools/
-concurrent-session detection, Vocabulary flashcard rapid-flip tracking,
-and any Live Classroom View. Revisit these only on explicit request, and
-only after confirming what new instrumentation (if any) each would
-actually require.
+(per-distractor wrong-answer analysis), true DevTools/concurrent-session
+detection, Vocabulary flashcard rapid-flip tracking, and any Live
+Classroom View. Revisit these only on explicit request, and only after
+confirming what new instrumentation (if any) each would actually
+require. **Paste detection has since been added** (see above) - narrower
+and more ethically bounded than the original spec's "clipboard
+monitoring": it logs only the fact and rough location of a paste, never
+clipboard content, so it's no longer in this deferred list on its own,
+but genuine DevTools/concurrent-session detection remain deferred for
+the reasons above.
 
 - **Spreadsheet ID**: `1-HLtX5AwskPx8hy_Ip2kjGMz5OUIS91M2x0FgEt75zA`
 - **Apps Script Web App URL**: `https://script.google.com/macros/s/AKfycbyC7mb1TKfg3JvhiZftXMf7oXkzrBMWJczZSURC7sIfoIxYnZrrumYfx-j7JYTY0A9i/exec`
@@ -729,6 +792,83 @@ work. If a genuinely live view is ever wanted, that's a separate,
 much bigger architectural decision (Apps Script/Sheets has no
 push/websocket mechanism) - don't casually extend this retrospective
 computation into one.
+
+**Student-facing disclosure**: every gated page's sign-in gate shows one
+sentence - *"Activity performed on this page is recorded so your
+teacher can review your work."* - covering every listener on this page
+(graded answers, tab views, paste detection, tab-focus tracking) without
+having to enumerate each one or edit this text every time a new signal
+is added. `lesson-auth.js`'s `injectDisclosure()` inserts it as a
+`<p class="lesson-gate-disclosure">` into `#lesson-gate .lesson-gate-body`
+once per page load (idempotent - checks for its own class first), called
+from `init()` - which only runs after the gate's HTML already exists in
+the DOM, since `LessonSync.init(...)` is always called from a page's own
+inline script near the end of `<body>`, well after `<head>`'s
+`lesson-auth.js` include has already run. `index.html` has its own
+separate, non-shared gate implementation (see "index.html is also gated
+now" below) and so hand-carries the identical sentence and
+`.lesson-gate-disclosure` CSS rule directly in its own markup instead -
+if this sentence ever changes, update both places. **Any new gated page
+gets this for free automatically** as long as it calls `LessonSync.init()`
+- no per-page HTML edit needed, same as every other shared-file
+mechanism in this doc.
+
+**Paste detection and tab-focus tracking** (added alongside the
+integrity signals above, per an explicit teacher request for
+"ethical means" comparable to what tools like EdPuzzle already do - flag
+*that* a paste happened or a tab was left, never capture *what* was
+typed/copied or *where* a student went): both are single shared
+listeners in `lesson-auth.js`, wired once and covering every page that
+loads it, with zero per-page changes needed for a new answer field or a
+new page to be covered.
+- `onPaste(e)` listens for `paste` on `document` (paste events bubble,
+  including out of a `<math-field>`'s Shadow DOM, since clipboard events
+  are `composed`) and, only when the target is an `INPUT`/`TEXTAREA`/
+  `MATH-FIELD`, logs `{key: 'paste-<timestamp>', verdict:
+  'paste-detected', label: 'Pasted into an answer field'}` with an empty
+  `answer` field - **the clipboard content itself is never read or
+  logged, by design**; this is a "did they paste" flag for the teacher,
+  not a way to see what was pasted or where it came from. Debounced to
+  at most one logged event per 2 seconds so a single paste action that
+  fires more than one browser paste event doesn't log a duplicate burst.
+- `onVisibilityChange()` listens for `visibilitychange` on `document`
+  (the Page Visibility API - this only ever knows "is this browser tab
+  the visible one right now," nothing about what's on another tab or
+  app) and logs a matched pair of events: `focus-lost-<timestamp>`
+  (verdict `focus-lost`) when the tab becomes hidden, and
+  `focus-back-<timestamp>` (verdict `focus-regained`) when it becomes
+  visible again. The very first "visible" state on page load isn't a
+  "return" from anywhere, so it's deliberately never logged.
+- Both use a **unique key per occurrence** (`paste-<timestamp>`, not a
+  fixed key like a graded item would use) since each paste/focus-change
+  is its own event, not a repeated attempt on one item -
+  `teacher-dashboard.html`'s `decorateRow()` has an `isIntegrityKey(key)`
+  helper (`key.startsWith('paste-'|'focus-lost-'|'focus-back-')`) that
+  excludes all of them from `submissions`/graded-item scoring the exact
+  same way `tab-*`/`reached-end` already are excluded - without this,
+  every paste/focus event would wrongly count as "a graded item that was
+  never answered correctly" and drag down `scorePct` and inflate
+  `failedFirstTry` on any activity that logged one.
+- `decorateRow()` computes `pasteCount` (raw count), `focusLossCount`
+  (raw count), and `awayMinutes` - the latter by pairing each
+  `focus-lost` event with the next `focus-regained` event *after* it
+  (a student who never returns, or is still away as of the last sync,
+  simply leaves that one pair unclosed) for real elapsed away-time,
+  rather than inferring it from answer-gap heuristics the way
+  `idleGapCount` has to for pages/moments this signal doesn't cover
+  (visibilitychange only fires on an actual tab-hide/switch/minimize,
+  never on "sitting on the page but not doing anything" - the two
+  signals are complementary, not redundant). A paste of any count is
+  flagged (`"Pasted into an answer field (N)"`); tab-focus loss is only
+  flagged once it happens repeatedly in one activity
+  (`FOCUS_LOSS_FLAG_THRESHOLD`, 3) since briefly switching away once or
+  twice during a class period is normal, not itself suspicious - the
+  raw `focusLossCount`/`awayMinutes` numbers are still available even
+  when nothing gets flagged.
+- **Cache-bust note**: this shipped as `lesson-auth.js` → `v8` - bumped
+  across all 37 referencing pages (same mechanical `?v=` bump described
+  in "Persisted sign-in" above; `token-cache.js` is unaffected and stays
+  at `v2`).
 
 ### Wired units — current activity IDs
 

@@ -150,6 +150,7 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
 .lesson-gate-body p { margin: 0; }
 .lesson-gate .g_id_signin { display: flex; justify-content: center; margin: 20px 0; }
 #lesson-gate-status { min-height: 1.2em; font-weight: 600; margin: 0; }
+.lesson-gate-disclosure { margin-top: 10px !important; font-size: 0.82rem; opacity: 0.75; }
 
 /* Signed-in-student identity bar (name field, auto-filled and locked by
    lesson-auth.js's unlock()), shown under the header */
