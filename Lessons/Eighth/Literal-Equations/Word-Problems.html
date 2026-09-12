@@ -20,6 +20,11 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <!-- Visual math input (rolled out from the Practice-Set pilot - see
+       /CLAUDE.md's "Visual math input pilot" note): registers the
+       <math-field> custom element used for this page's answer inputs. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
@@ -142,11 +147,11 @@
       <p><strong>Task:</strong> find the interest earned by each investment, then say which one earns more and by how much.</p>
       <div class="form-group">
         <label>Interest earned by Investment A:</label>
-        <input type="text" id="fin-a" class="form-control-lg" style="max-width:160px;" placeholder="$">
+        <math-field id="fin-a" class="form-control-lg" style="max-width:160px; display:inline-block;"></math-field>
       </div>
       <div class="form-group">
         <label>Interest earned by Investment B:</label>
-        <input type="text" id="fin-b" class="form-control-lg" style="max-width:160px;" placeholder="$">
+        <math-field id="fin-b" class="form-control-lg" style="max-width:160px; display:inline-block;"></math-field>
       </div>
       <div class="form-group">
         <label>Which investment earns more, and by how much?</label>
@@ -206,7 +211,7 @@
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
         <strong>${i + 1}.</strong> ${p.q}
         <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+          <math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;"></math-field>
           <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkWpItem('${keyPrefix}', ${i})">Check</button>
         </div>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
@@ -217,10 +222,20 @@
     triggerMathJax();
   }
 
+  // Reads a <math-field>'s answer as ASCIIMath text, guarded against the
+  // MathLive script never loading - see Practice-Set.html's identical
+  // helper and /CLAUDE.md's "Visual math input pilot" note.
+  // numericMatch() already strips anything but digits/./- before
+  // parsing, so a plain number typed in the math editor works exactly
+  // like it did from a plain input.
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
   function checkWpItem(keyPrefix, idx) {
     const cfg = wpRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`${keyPrefix}-${idx}-input`));
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!val.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
     const correct = LessonCheck.numericMatch(val, p.a, p.tol || 0.05);
@@ -264,8 +279,8 @@
   ];
 
   function checkFinCompare() {
-    const a = document.getElementById('fin-a').value;
-    const b = document.getElementById('fin-b').value;
+    const a = readMathField(document.getElementById('fin-a'));
+    const b = readMathField(document.getElementById('fin-b'));
     const explain = document.getElementById('fin-explain').value.trim();
     const fb = document.getElementById('fin-compare-feedback');
     if (!a.trim() || !b.trim() || explain.length <= 5) {

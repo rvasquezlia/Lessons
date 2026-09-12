@@ -180,7 +180,7 @@
       <div class="live-given" id="lc1-given"></div>
       <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
         <label style="font-weight:700;">Your answer for \(l\):</label>
-        <input type="text" id="lc1-input" class="form-control-lg" style="max-width:140px; display:inline-block;">
+        <math-field id="lc1-input" class="form-control-lg" style="max-width:160px; display:inline-block;"></math-field>
         <button class="btn-lg" onclick="checkLc1()">Check</button>
       </div>
       <div id="lc1-feedback" class="feedback-msg"></div>
@@ -203,7 +203,7 @@
       <div class="live-given" id="lc2-given"></div>
       <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
         <label style="font-weight:700;">Your answer for \(r\) (as a percent):</label>
-        <input type="text" id="lc2-input" class="form-control-lg" style="max-width:140px; display:inline-block;">
+        <math-field id="lc2-input" class="form-control-lg" style="max-width:160px; display:inline-block;"></math-field>
         <button class="btn-lg" onclick="checkLc2()">Check</button>
       </div>
       <div id="lc2-feedback" class="feedback-msg"></div>
@@ -222,7 +222,7 @@
       <div class="live-given" id="lc3-given"></div>
       <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
         <label style="font-weight:700;">Your answer for \(r\):</label>
-        <input type="text" id="lc3-input" class="form-control-lg" style="max-width:140px; display:inline-block;">
+        <math-field id="lc3-input" class="form-control-lg" style="max-width:160px; display:inline-block;"></math-field>
         <button class="btn-lg" onclick="checkLc3()">Check</button>
       </div>
       <div id="lc3-feedback" class="feedback-msg"></div>
@@ -241,7 +241,7 @@
       <div class="live-given" id="lc4-given"></div>
       <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
         <label style="font-weight:700;">Your answer for \(w\):</label>
-        <input type="text" id="lc4-input" class="form-control-lg" style="max-width:140px; display:inline-block;">
+        <math-field id="lc4-input" class="form-control-lg" style="max-width:160px; display:inline-block;"></math-field>
         <button class="btn-lg" onclick="checkLc4()">Check</button>
       </div>
       <div id="lc4-feedback" class="feedback-msg"></div>
@@ -300,6 +300,28 @@
     return stripRedundantParens(String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, ''));
   }
 
+  // Normalizes BOTH sides before comparing, instead of trusting accepted[]'s
+  // own raw spelling to already be in normalized form - e.g. accepted
+  // entries like "v/(pir^2)" (parens kept around a single-term denominator,
+  // just for human readability) still match a math-field answer that
+  // normalizes to "v/pir^2", since the accepted entry gets normalized the
+  // same way before comparing. Removes an entire class of "technically
+  // correct but marked wrong" mismatches without having to hand-audit
+  // every accepted[] list's exact parenthesization.
+  function answerMatches(val, accepted) {
+    const nv = normalizeExpr(val);
+    return accepted.some((a) => normalizeExpr(a) === nv);
+  }
+
+  // Reads a <math-field>'s answer as ASCIIMath text. Guarded with a
+  // typeof check: if the MathLive script never loaded (blocked network,
+  // ad blocker, cold CDN failure), the element stays an undefined custom
+  // element with no getValue method - treated the same as an empty
+  // answer instead of throwing.
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
   // ==========================================
   // REUSABLE SYMBOLIC-ANSWER LIST
   // ==========================================
@@ -329,21 +351,12 @@
     const p = cfg.problems[idx];
     const field = document.getElementById(`${keyPrefix}-${idx}-input`);
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
-    // A <math-field> (see the "Visual math input pilot" note above)
-    // exposes getValue('ascii-math') instead of a plain .value string -
-    // ASCIIMath renders \frac{d}{t} as "d/t", which matches the existing
-    // accepted[] spellings closely enough that normalizeExpr() below
-    // still does the rest of the comparison work unchanged. If the
-    // MathLive script never loaded (blocked network, ad blocker, cold
-    // CDN failure), <math-field> stays an undefined custom element with
-    // no getValue - treat that the same as an empty answer instead of
-    // throwing on a missing method.
-    const val = typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+    const val = readMathField(field);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter an expression before checking - this won't count as an attempt yet.");
       return;
     }
-    const correct = p.accepted.includes(normalizeExpr(val));
+    const correct = answerMatches(val, p.accepted);
     LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
       correct: `Correct! \\(${p.target} = ${p.displayAnswer}\\)`,
       retry: p.hint || "Not quite yet. Recheck which operation undoes which, and try again.",
@@ -405,7 +418,7 @@
     const A = parseFloat(document.getElementById('lc1-A').value);
     const w = parseFloat(document.getElementById('lc1-w').value);
     const target = A / w;
-    const val = document.getElementById('lc1-input').value;
+    const val = readMathField(document.getElementById('lc1-input'));
     const fb = document.getElementById('lc1-feedback');
     if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking."); return; }
     const correct = LessonCheck.numericMatch(val, target, 0.05);
@@ -432,7 +445,7 @@
     const P = parseFloat(document.getElementById('lc2-P').value);
     const t = parseFloat(document.getElementById('lc2-t').value);
     const target = (I / (P * t)) * 100;
-    const val = document.getElementById('lc2-input').value;
+    const val = readMathField(document.getElementById('lc2-input'));
     const fb = document.getElementById('lc2-feedback');
     if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking."); return; }
     const correct = LessonCheck.numericMatch(val, target, 0.1);
@@ -456,7 +469,7 @@
     const d = parseFloat(document.getElementById('lc3-d').value);
     const t = parseFloat(document.getElementById('lc3-t').value);
     const target = d / t;
-    const val = document.getElementById('lc3-input').value;
+    const val = readMathField(document.getElementById('lc3-input'));
     const fb = document.getElementById('lc3-feedback');
     if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking."); return; }
     const correct = LessonCheck.numericMatch(val, target, 0.05);
@@ -480,7 +493,7 @@
     const P = parseFloat(document.getElementById('lc4-P').value);
     const l = parseFloat(document.getElementById('lc4-l').value);
     const target = (P - 2 * l) / 2;
-    const val = document.getElementById('lc4-input').value;
+    const val = readMathField(document.getElementById('lc4-input'));
     const fb = document.getElementById('lc4-feedback');
     if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking."); return; }
     const correct = LessonCheck.numericMatch(val, target, 0.05);
@@ -543,7 +556,7 @@
         </div>
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
           <label style="font-weight:700;">\\(${p.target} = \\)</label>
-          <input type="text" id="ea-${i}-answer" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="expression">
+          <math-field id="ea-${i}-answer" class="form-control-lg" style="max-width:220px; display:inline-block;" placeholder="\\text{expression}"></math-field>
           <button class="btn-lg" onclick="checkErrorAnalysis(${i})">Check</button>
         </div>
         <div id="ea-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
@@ -557,13 +570,13 @@
   function checkErrorAnalysis(idx) {
     const p = errorItems[idx];
     const explain = document.getElementById(`ea-${idx}-explain`).value.trim();
-    const answer = document.getElementById(`ea-${idx}-answer`).value;
+    const answer = readMathField(document.getElementById(`ea-${idx}-answer`));
     const fb = document.getElementById(`ea-${idx}-feedback`);
     if (explain.length <= 5 || !answer.trim()) {
       LessonCheck.incomplete(fb, "Explain the mistake and give the correct rearrangement before checking.");
       return;
     }
-    const correct = p.accepted.includes(normalizeExpr(answer));
+    const correct = answerMatches(answer, p.accepted);
     LessonCheck.check(`ea-${idx}`, correct, fb, {
       correct: `Correct! \\(${p.target} = ${p.displayAnswer}\\)`,
       retry: "Not quite yet. Look again at which operation the student skipped or misapplied. Try again.",
@@ -610,7 +623,7 @@
       const fb = document.getElementById(`ea-${i}-feedback`);
       if (!explain || !answer || !fb) return;
       explain.value = '(See the flawed step above - the correct rearrangement is at right.)';
-      answer.value = p.accepted[0];
+      answer.value = p.displayAnswer;
       explain.disabled = true;
       answer.disabled = true;
       const container = answer.closest('.step-box');

@@ -511,79 +511,128 @@ means students never see it (same omission rule as any other section)
 and teachers see a harmless "Guided Solving Ladder: Coming soon" tag on
 the other five topics, same as any genuinely-unbuilt section would show.
 
-### Visual math input pilot (Eighth/Literal-Equations/Practice-Set.html only)
+### Visual math input (Eighth/Literal-Equations unit only, all 4 answer-bearing pages)
 
-Every other page's "solve for a variable" answers are typed as plain
-text (e.g. `d/t`) into a normal `<input>`, string-compared after
-`normalizeExpr()` against a hardcoded `accepted[]` list of equivalent
-spellings per problem. As a pilot for a real visual math editor (built
-by dragging/typing into an actual fraction/expression structure, not
-typing slash-delimited text), Practice-Set's Tabs 1-3 (`renderSymList()`
-/ `checkSymItem()`, the `symRegistry` also exposed as `window.listRegistry`)
-now use [MathLive](https://cortexjs.io/mathlive/)'s `<math-field>` custom
+Piloted first on just Practice-Set's Tabs 1-3, then rolled out to every
+math/expression answer across this one unit once the pilot proved out
+live. **Every math-related answer input in this unit** - fractions,
+algebraic expressions, and plain numbers alike - now uses
+[MathLive](https://cortexjs.io/mathlive/)'s `<math-field>` custom
 element instead of `<input type="text">`, loaded via
 `<script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js">`
-in the `<head>` (pin the version on any future upgrade — same convention
-as this page's existing pinned `mathjax@3` include just above it).
+in each page's `<head>` (pin the version on any future upgrade — same
+convention as each page's existing pinned `mathjax@3` include just
+above it): **Practice-Set** (Tabs 1-3's `symRegistry`, Tab 4's Live
+Number Check `lc1`-`lc4`, Tab 5's `errorItems`), **Test-Prep** (Tab 1's
+`fund-q2`, Tab 2's `erroranalysisProblems`, Tab 3's `mixedPart1`/
+`mixedPart2`/`mixedPart3`, Tab 4's exit-ticket `exit-1`/`exit-2`),
+**Review** (`onetwoPractice`/`multistepPractice` via the shared
+`checkListRegistry`/`renderCheckList`/`checkListItem`), and
+**Word-Problems** (`geometryProblems`/`scienceProblems`/
+`financeProblems`/`moreProblems`/`challengeProblems` via `wpRegistry`,
+plus the standalone `fin-a`/`fin-b` investment-comparison fields).
+**Vocabulary-Literacy is the deliberate exception** - none of its
+answers are math notation (single variable letters like `"t"`/`"r"`, or
+vocabulary terms like `"literalequation"`/`"distribute"`), so it stays
+plain `<input type="text">`; a math editor would be worse UX there, not
+better, so "every math-related answer" was read to exclude it on
+purpose. If this unit's other pages ever gain a genuinely mathematical
+answer, wire it in with the same pattern below - don't leave it as a
+plain input just because Vocabulary-Literacy is the precedent for
+*not* converting something.
 
-**Why this page didn't need much rework.** `<math-field>` happens to
-mirror the exact two things `checkSymItem()` and `unlockTeacherView()`
+**Why most of this needed so little rework.** `<math-field>` happens to
+mirror the exact two things a check function and `unlockTeacherView()`
 (in `lesson-auth.js`) already relied on from a plain `<input>`: a
 settable `.value` property (MathLive's default LaTeX form, so
-`displayAnswer` strings like `\dfrac{d}{t}` still work unchanged for
-the teacher-view reveal) and a reflected `.disabled` boolean (so
-`unlockTeacherView`'s generic `window.listRegistry` reveal loop needed
-**zero** changes). The one real change is how `checkSymItem()` reads
-the student's answer: `field.getValue('ascii-math')` instead of
-`field.value`. `getValue` is guarded with
-`typeof field.getValue === 'function'` first: if the MathLive script
+`displayAnswer` strings like `\dfrac{d}{t}` work for the teacher-view
+reveal) and a reflected `.disabled` boolean (so `unlockTeacherView`'s
+generic `window.listRegistry` reveal loop needed **zero** changes on
+any page using it). Every converted page defines its own copy of two
+small helpers (no shared JS module across these static pages, so each
+page's `<script>` carries its own): `readMathField(field)` returns
+`field.getValue('ascii-math')`, guarded with
+`typeof field.getValue === 'function'` first - if the MathLive script
 never loaded (blocked network, ad blocker, a cold CDN failure),
 `<math-field>` stays an undefined custom element with no such method,
-and this treats that the same as an empty answer instead of throwing -
-the same "degrade to a clear message, never a silent crash" instinct
-behind this project's other loading-robustness fixes (see "Loading is
-hardened..." above).
+and this treats that the same as an empty answer instead of throwing;
+and (on pages with fraction/expression answers) `answerMatches(val, accepted)`
+(see below).
 
-**ASCIIMath always double-parenthesizes every fraction - `normalizeExpr()`
-has to undo that, not just lowercase/strip whitespace.** Checked
-directly against MathLive's own source (`atomToAsciiMath`'s `genfrac`
-case): `\frac{d}{t}` is *always* serialized as `"(d)/(t)"`, with both
-sides wrapped regardless of how simple they are - there's no "only
-parenthesize if needed" case. A first version of this pilot didn't
-account for that and compared the raw ASCIIMath string directly, so
-typing the visually-correct fraction `d/t` came back as `"(d)/(t)"`,
-never matched the plain `"d/t"` in `accepted[]`, and got marked wrong
-every time - a real bug that shipped and was caught by hand-testing
-this exact problem, not a hypothetical. Fixed by adding
-`stripRedundantParens()`, which strips a `(...)` pair only when its
-content has no top-level `+`/`-` - exactly the convention this file's
-own `accepted[]` lists already followed by hand (e.g. `"(p-2w)/2"`
-keeps parens around the multi-term numerator but not around the
-single-term denominator), so `"(d)/(t)"` collapses to `"d/t"` while
-`"(P-2w)/(2)"` correctly stays `"(p-2w)/2"` and isn't over-simplified
-into something that would change its meaning. Verified against every
-problem in `warmupProblems`/`multistepProblems`/`factoringProblems` by
-simulating each one's `displayAnswer` shape through the real
-`normalizeExpr()` - all match one of their own `accepted[]` spellings.
-If this pattern is ever extended to a page with problems outside this
-exact convention (e.g. an accepted spelling that deliberately keeps
-parens around a single-term side, or a fraction nested inside another
-fraction), re-verify by hand the same way rather than assuming the
-regex generalizes - it was derived from what these 18 problems actually
-need, not a general algebraic simplifier.
+**ASCIIMath always double-parenthesizes every fraction, and `accepted[]`'s
+own spelling can't be trusted to already anticipate that - normalize
+BOTH sides, not just the student's answer.** Checked directly against
+MathLive's own source (`atomToAsciiMath`'s `genfrac` case): `\frac{d}{t}`
+is *always* serialized as `"(d)/(t)"`, both sides wrapped regardless of
+how simple they are. `normalizeExpr()`'s `stripRedundantParens()` step
+strips a `(...)` pair only when its content has no top-level `+`/`-`,
+matching the convention most `accepted[]` entries follow by hand (e.g.
+`"(p-2w)/2"` keeps parens around the multi-term numerator, not the
+single-term denominator) - but not every entry follows it: Test-Prep's
+`"v/(pir^2)"` keeps parens around a single-term denominator anyway
+(for a human reader's clarity), which `stripRedundantParens()` would
+still strip from a *typed* answer, producing `"v/pir^2"` - a mismatch
+against the unstripped accepted string. Rather than hand-auditing every
+`accepted[]` entry's exact parenthesization on every page (fragile, and
+the next new problem could reintroduce the same gap), every check
+function compares via `answerMatches(val, p.accepted)` -
+`accepted.some((a) => normalizeExpr(a) === normalizeExpr(val))` -
+normalizing the accepted spelling too, so however it happens to be
+written, it collapses to the same canonical form as a correctly-typed
+answer. `p.accepted.includes(normalizeExpr(val))` (the pilot's first
+version) is the wrong pattern now; don't reintroduce it on a new page.
+Verified by simulating every fraction/expression problem across all
+four pages (Practice-Set's `errorItems` and Tabs 1-3, Test-Prep's
+`erroranalysisProblems`/`mixedPart1`/`mixedPart2`/exit-ticket) through
+the real `normalizeExpr()`/`answerMatches()` - all match. If a future
+problem's `accepted[]` deliberately keeps parens around a single-term
+side for a reason `stripRedundantParens()` can't infer (or nests one
+fraction inside another), `answerMatches()` already covers the normal
+case above; re-verify by hand the same way for anything unusual rather
+than assuming the regex generalizes further than these problems needed.
 
-**This is a pilot, not the new site-wide pattern yet.** Every other
-page's fraction/expression answers - including this same unit's own
-Word-Problems, Test-Prep, Review, and Vocabulary-Literacy, and every
-other unit's Practice-Set - are still plain `<input type="text">` and
-untouched. Don't assume `<math-field>` is available on a page just
-because it's in the same unit; check for the MathLive `<script>` tag
-in that specific page's own `<head>` first. If the pilot proves out,
-rolling it out further means repeating this same swap (markup +
-`getValue('ascii-math')` read + the `typeof` guard) on each additional
-page's own check function - `unlockTeacherView`'s reveal loop already
-works generically for any `window.listRegistry` page, so it needs no
-changes to support more pages doing this.
+**A hand-written `revealAnswerKey` has to fill `.value` with LaTeX
+(`p.displayAnswer`), not the plain-text `accepted[0]`.** Any page whose
+fraction answers aren't part of the generic `window.listRegistry` loop
+(Practice-Set's Tab 5 `errorItems`, Test-Prep's Tab 2
+`erroranalysisProblems`, Test-Prep's Tab 4 exit ticket) has its own
+hand-written reveal code. Before this rollout those set
+`answer.value = p.accepted[0]` (or a hardcoded plain string like
+`'d/r'`) - harmless on a plain `<input>`, but on a `<math-field>` a
+plain-text string like `"v/(pir^2)"` just displays as flat unstyled
+characters instead of a real fraction, since MathLive's `.value`
+setter expects LaTeX. Fixed by pointing each of these at
+`p.displayAnswer` (or, for the exit ticket's two hardcoded checks,
+literal LaTeX like `'\dfrac{d}{r}'`) instead. Test-Prep's `mixedPart2`
+had no `displayAnswer` field at all (its check never needed one, being
+submit-only with no immediate reveal) - added one to each of its two
+items so the generic `window.listRegistry` reveal loop has something
+correct to show a teacher. Rolling this pattern out further: search a
+new page's own `revealAnswerKey` for `.accepted[0]` before assuming its
+reveal already works — an unfixed one won't crash, it'll just look
+wrong.
+
+**Numeric-only answers went along for the ride, not just fractions.**
+Review, Word-Problems, and the numeric portions of Practice-Set (Tab 4)
+and Test-Prep (`fund-q2`, `mixedPart3`) never had `accepted[]`/
+`normalizeExpr()` at all - they check with `LessonCheck.numericMatch()`,
+which already strips anything but digits/`.`/`-` before parsing. These
+only needed the input swap and a `readMathField()` read, no
+`answerMatches()`/`stripRedundantParens()` - a `<math-field>` is just as
+good a place to type a plain number as a text box, and using it
+everywhere on a page (not just where fractions appear) keeps one
+consistent input experience per page instead of mixing two.
+
+**Not yet rolled out beyond this unit.** Every other unit's pages
+(Sixth/Seventh/other-Eighth topics) are still plain `<input type="text">`
+- this was a deliberate one-topic rollout, not a site-wide change yet.
+Don't assume `<math-field>` is available on a page outside
+Eighth/Literal-Equations; check for the MathLive `<script>` tag in that
+specific page's own `<head>` first. Extending further means repeating
+the same pattern per page: markup swap, `readMathField()`, and (only
+where the answer is a fraction/expression, not a plain number)
+`answerMatches()` + fixing any hand-written `revealAnswerKey` that
+still sets `.value` to a plain-text `accepted[0]`.
 
 ### index.html is also gated now
 

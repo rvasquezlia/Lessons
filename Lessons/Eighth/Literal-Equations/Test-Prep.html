@@ -20,6 +20,12 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <!-- Visual math input (rolled out from the Practice-Set pilot - see
+       /CLAUDE.md's "Visual math input pilot" note): registers the
+       <math-field> custom element used throughout this page in place
+       of plain text inputs, for every math/expression answer. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
@@ -120,7 +126,7 @@
 
       <div class="form-group" style="margin-top:20px;">
         <label>2. Solve \(2x+7=19\) numerically. Then use \(y=mx+b\) solved for \(x\) with \(y=19\), \(m=2\), \(b=7\). Do you get the same value of \(x\)?</label>
-        <input type="text" id="fund-q2" class="form-control-lg" style="max-width:180px;" placeholder="x =">
+        <math-field id="fund-q2" class="form-control-lg" style="max-width:180px; display:inline-block;"></math-field>
       </div>
       <button class="btn-lg" onclick="checkFundQ2()">Check</button>
       <div id="fund-q2-feedback" class="feedback-msg"></div>
@@ -180,11 +186,11 @@
     <form id="exit-form" onsubmit="submitExitTicket(event)">
       <div class="form-group">
         <label>1. Solve \(d = rt\) for \(t\).</label>
-        <input type="text" id="exit-1" class="form-control-lg" style="max-width:200px;" placeholder="t =">
+        <math-field id="exit-1" class="form-control-lg" style="max-width:220px; display:inline-block;" placeholder="\\text{expression}"></math-field>
       </div>
       <div class="form-group">
         <label>2. Solve \(A = P + Prt\) for \(P\).</label>
-        <input type="text" id="exit-2" class="form-control-lg" style="max-width:220px;" placeholder="P =">
+        <math-field id="exit-2" class="form-control-lg" style="max-width:220px; display:inline-block;" placeholder="\\text{expression}"></math-field>
       </div>
       <div class="form-group">
         <label>3. In your own words, explain the "treat it like a number" rule for solving literal equations.</label>
@@ -217,8 +223,36 @@
     triggerMathJax();
   }
 
+  // See Practice-Set.html's identical helpers (and /CLAUDE.md's "Visual
+  // math input pilot" note) for the full explanation: MathLive's
+  // getValue('ascii-math') always wraps both sides of a fraction in
+  // parens even when trivial (\frac{d}{t} -> "(d)/(t)"), so
+  // stripRedundantParens() undoes that (only when the content has no
+  // top-level + or -, matching this file's own accepted[] convention)
+  // before comparing.
+  function stripRedundantParens(s) {
+    let prev;
+    do { prev = s; s = s.replace(/\(([^()+-]+)\)/g, '$1'); } while (s !== prev);
+    return s;
+  }
+
   function normalizeExpr(s) {
-    return String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, '');
+    return stripRedundantParens(String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, ''));
+  }
+
+  // Normalizes BOTH sides before comparing - see Practice-Set.html's
+  // answerMatches() for why this matters more than it looks (an
+  // accepted[] entry's own raw spelling doesn't have to already be in
+  // normalized form for this to work).
+  function answerMatches(val, accepted) {
+    const nv = normalizeExpr(val);
+    return accepted.some((a) => normalizeExpr(a) === nv);
+  }
+
+  // Reads a <math-field>'s answer as ASCIIMath text, guarded against the
+  // MathLive script never loading (see Practice-Set.html's readMathField()).
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
   }
 
   // ==========================================
@@ -232,7 +266,7 @@
   }
 
   function checkFundQ2() {
-    const val = document.getElementById('fund-q2').value;
+    const val = readMathField(document.getElementById('fund-q2'));
     const fb = document.getElementById('fund-q2-feedback');
     if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking."); return; }
     const correct = LessonCheck.numericMatch(val, 6, 0.01);
@@ -402,7 +436,7 @@
         <span style="color:#475569;">Student's result: ${p.wrong}</span>
         <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
           <label style="font-weight:700;">\\(${p.target} = \\)</label>
-          <input type="text" id="ea-${i}-answer" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="expression">
+          <math-field id="ea-${i}-answer" class="form-control-lg" style="max-width:220px; display:inline-block;" placeholder="\\text{expression}"></math-field>
           <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkErrorAnalysis(${i})">Check</button>
         </div>
         <div id="ea-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
@@ -415,10 +449,10 @@
 
   function checkErrorAnalysis(idx) {
     const p = erroranalysisProblems[idx];
-    const answer = document.getElementById(`ea-${idx}-answer`).value;
+    const answer = readMathField(document.getElementById(`ea-${idx}-answer`));
     const fb = document.getElementById(`ea-${idx}-feedback`);
     if (!answer.trim()) { LessonCheck.incomplete(fb, "Enter the correct rearrangement before checking."); return; }
-    const correct = p.accepted.includes(normalizeExpr(answer));
+    const correct = answerMatches(answer, p.accepted);
     LessonCheck.check(`ea-${idx}`, correct, fb, {
       correct: `Correct! \\(${p.target} = ${p.displayAnswer}\\)`,
       retry: "Not quite yet. Look again at which operation the student skipped. Try again.",
@@ -442,7 +476,7 @@
         <strong>${i + 1}.</strong> ${p.q}
         <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
           <label style="font-weight:700;">\\(${p.target} = \\)</label>
-          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="expression">
+          <math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:220px; display:inline-block;" placeholder="\\text{expression}"></math-field>
           <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkSubmitSym('${keyPrefix}', ${i})">Submit</button>
         </div>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
@@ -458,16 +492,16 @@
   function checkSubmitSym(keyPrefix, idx) {
     const cfg = submitSymRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`${keyPrefix}-${idx}-input`));
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!val.trim()) { LessonCheck.incomplete(fb, "Enter an expression before submitting - this won't count as an attempt yet."); return; }
-    const correct = p.accepted.includes(normalizeExpr(val));
+    const correct = answerMatches(val, p.accepted);
     LessonCheck.submit(fb, { key: `${keyPrefix}-${idx}`, label: p.label, answer: val, section: cfg.section, correct });
   }
 
   const mixedPart2 = [
-    { q: "\\(P = 2l + 2w\\), solve for \\(w\\). Student's result: \\(w = P - 2l\\). What is the correct rearrangement?", target: "w", accepted: ["(p-2l)/2"], label: "Mixed 5: error analysis P=2l+2w for w" },
-    { q: "\\(A = P + Prt\\), solve for \\(r\\). Student's result: \\(r = \\dfrac{A}{Pt}\\) (they forgot to subtract \\(P\\) first). What is the correct rearrangement?", target: "r", accepted: ["(a-p)/(pt)"], label: "Mixed 6: error analysis A=P+Prt for r" }
+    { q: "\\(P = 2l + 2w\\), solve for \\(w\\). Student's result: \\(w = P - 2l\\). What is the correct rearrangement?", target: "w", accepted: ["(p-2l)/2"], displayAnswer: "\\dfrac{P-2l}{2}", label: "Mixed 5: error analysis P=2l+2w for w" },
+    { q: "\\(A = P + Prt\\), solve for \\(r\\). Student's result: \\(r = \\dfrac{A}{Pt}\\) (they forgot to subtract \\(P\\) first). What is the correct rearrangement?", target: "r", accepted: ["(a-p)/(pt)"], displayAnswer: "\\dfrac{A-P}{Pt}", label: "Mixed 6: error analysis A=P+Prt for r" }
   ];
 
   const mixedPart3 = [
@@ -482,7 +516,7 @@
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px;">
         <strong>${i + 1}.</strong> ${p.q}
         <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-          <input type="text" id="mp3-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+          <math-field id="mp3-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;"></math-field>
           <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkMixedPart3(${i})">Submit</button>
         </div>
         <div id="mp3-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
@@ -495,7 +529,7 @@
 
   function checkMixedPart3(idx) {
     const p = mixedPart3[idx];
-    const val = document.getElementById(`mp3-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`mp3-${idx}-input`));
     const fb = document.getElementById(`mp3-${idx}-feedback`);
     if (!val.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting - this won't count as an attempt yet."); return; }
     const correct = LessonCheck.numericMatch(val, p.a, 0.05);
@@ -507,8 +541,8 @@
   // ==========================================
   function submitExitTicket(e) {
     e.preventDefault();
-    const a1 = document.getElementById('exit-1').value;
-    const a2 = document.getElementById('exit-2').value;
+    const a1 = readMathField(document.getElementById('exit-1'));
+    const a2 = readMathField(document.getElementById('exit-2'));
     const exp = document.getElementById('exit-explain').value.trim();
     const ref = document.getElementById('exit-reflect').value.trim();
     const fb = document.getElementById('exit-feedback');
@@ -518,8 +552,8 @@
       return;
     }
 
-    const a1ok = ['d/r'].includes(normalizeExpr(a1));
-    const a2ok = ['a/(1+rt)'].includes(normalizeExpr(a2));
+    const a1ok = answerMatches(a1, ['d/r']);
+    const a2ok = answerMatches(a2, ['a/(1+rt)']);
     LessonCheck.submit(fb, { key: 'exit-ticket', label: 'Exit Ticket: solve d=rt for t and A=P+Prt for P', answer: `t=${a1}, P=${a2}`, section: '4. Readiness Check', correct: a1ok && a2ok }, "Exit Ticket submitted and logged successfully!");
     LessonProgress.recordText('Exit Ticket: treat it like a number explanation', exp, '4. Readiness Check');
     LessonProgress.recordText('Exit Ticket: metacognition reflection', ref, '4. Readiness Check');
@@ -569,7 +603,7 @@
       const answer = document.getElementById(`ea-${i}-answer`);
       const fb = document.getElementById(`ea-${i}-feedback`);
       if (!answer || !fb) return;
-      answer.value = p.accepted[0];
+      answer.value = p.displayAnswer;
       answer.disabled = true;
       const container = answer.closest('.guided-practice');
       const btn = container && container.querySelector('button');
@@ -597,7 +631,7 @@
     const exitExplain = document.getElementById('exit-explain'), exitReflect = document.getElementById('exit-reflect');
     const exitFb = document.getElementById('exit-feedback');
     if (exit1 && exit2 && exitFb) {
-      exit1.value = 'd/r'; exit2.value = 'A/(1+rt)';
+      exit1.value = '\\dfrac{d}{r}'; exit2.value = '\\dfrac{A}{1+rt}';
       exit1.disabled = true; exit2.disabled = true;
       if (exitExplain) { exitExplain.value = '(Any reasonable explanation.)'; exitExplain.disabled = true; }
       if (exitReflect) { exitReflect.value = '(Any reasonable reflection.)'; exitReflect.disabled = true; }
