@@ -73,7 +73,6 @@
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Math 6 - Decimal Operations - Practice Set')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -82,7 +81,6 @@
       <li><strong>Computation only</strong> - no word problems (those are on the Word Problems page).</li>
       <li>Work the tabs in any order - each groups problems by type and difficulty.</li>
       <li>Type your answer, click Check - <strong>2 tries</strong> before the method is shown.</li>
-      <li>When you finish, type your name above and click <strong>Print My Progress</strong>.</li>
     </ul>
   </div>
 
@@ -620,6 +618,5 @@
   checkListRegistry['chdiv'] = { problems: challengeDivision, section: '6. Challenge Tier', retry: "Not quite yet. If dividing by a decimal, shift both decimal points right by the same number of places until you're dividing by a whole number, then divide." };
   renderCheckList('challenge-division-list', challengeDivision, 'chdiv', '6. Challenge Tier');
 </script>
-<div id="print-report"></div>
 </body>
 </html>

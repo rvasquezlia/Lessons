@@ -73,7 +73,6 @@
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Math 6 - Decimal Operations - Word Problems')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -81,7 +80,6 @@
     <ul style="margin:6px 0 0 0;">
       <li>Every problem is a <strong>word problem</strong> - decide which operation it needs, watching for keywords like "total," "difference," "product," or "split evenly."</li>
       <li>Work the tabs in any order: estimate first by rounding, then calculate the exact answer, then type it in and check.</li>
-      <li>When you finish, type your name above and click <strong>Print My Progress</strong>.</li>
     </ul>
   </div>
 
@@ -541,6 +539,5 @@
   checkListRegistry['challenge'] = { problems: challengeProblems, section: '7. Challenge Tier' };
   renderCheckList('challenge-list', challengeProblems, 'challenge', '7. Challenge Tier');
 </script>
-<div id="print-report"></div>
 </body>
 </html>

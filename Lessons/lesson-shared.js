@@ -7,16 +7,18 @@
 // message for each outcome.
 //
 // LessonCheck also keeps a running log of every item a student has
-// answered (LessonProgress) so the page can print a "proof of completion"
-// summary - see printProgressReport() below.
+// answered (LessonProgress) - lesson-auth.js patches LessonProgress.record
+// to sync each one to the shared backend as it happens (see
+// /CLAUDE.md's progress-tracking architecture notes).
 const LessonProgress = (() => {
   const items = []; // ordered list of {key, label, section, answer, verdict}
 
   // Records/updates one practice item. verdict is 'correct', 'incomplete'
   // (never got it right), 'reflection' (open-ended or submit-only, no
   // right answer graded on screen), or 'not-attempted' (pre-registered,
-  // never touched). `section` is the tab/section name shown on the
-  // printed report - pass it every time an item is first registered.
+  // never touched). `section` is the tab/section name synced to the
+  // backend alongside this item - pass it every time an item is first
+  // registered.
   function record(key, label, answer, verdict, section) {
     const idx = items.findIndex((i) => i.key === key);
     const entry = {
@@ -33,17 +35,17 @@ const LessonProgress = (() => {
   // For open-ended reflection fields that don't go through LessonCheck.
   // Key is derived from the label, not a call counter - a counter-based
   // key made every re-submission of the same field (clicking Submit
-  // twice, or re-visiting a tab) create a brand-new report row instead
-  // of updating the existing one, duplicating it on the printed report.
+  // twice, or re-visiting a tab) create a brand-new synced entry instead
+  // of updating the existing one, duplicating it in SubmissionsLog.
   function recordText(label, text, section) {
     record(`text-${label}`, label, text, 'reflection', section);
   }
 
-  // Pre-registers a question as "not attempted" so it always shows up on
-  // the printed report, in its correct section and position, even if the
-  // student never touches it. Call once per question at render time -
-  // record()/submit() later update this same entry in place once the
-  // student actually answers, without disturbing its position.
+  // Pre-registers a question as "not attempted" so it's tracked from the
+  // moment a page renders, even if the student never touches it. Call
+  // once per question at render time - record()/submit() later update
+  // this same entry in place once the student actually answers, without
+  // disturbing its position.
   function preRegister(key, label, section) {
     if (!items.find((i) => i.key === key)) {
       items.push({ key, label, section: section || '', answer: '', verdict: 'not-attempted' });
@@ -317,92 +319,6 @@ function renderNumberLine(containerId, opts) {
   });
 
   el.innerHTML = `<svg viewBox="0 0 ${width} ${height}" style="width:100%; max-width:600px; display:block; margin:12px auto;" role="img" aria-label="Number line diagram from ${min} to ${max}"><defs>${defs}</defs>${body}</svg>`;
-}
-
-// ==========================================
-// PRINTABLE PROGRESS / PROOF OF COMPLETION
-// ==========================================
-// Builds a print-only report (name, date, lesson title, every logged
-// item with the student's answer and result) into a hidden #print-report
-// element, then opens the browser print dialog. Students can print it or
-// "Save as PDF" to submit as proof of completion to Google Classroom.
-function printProgressReport(lessonTitle) {
-  const nameField = document.getElementById('student-name');
-  const name = (nameField && nameField.value.trim()) || '';
-
-  if (!name) {
-    if (nameField) nameField.focus();
-    alert('Type your name before printing your progress report.');
-    return;
-  }
-  const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  const items = LessonProgress.all();
-
-  const verdictLabel = (v) => v === 'correct' ? 'Correct'
-    : v === 'reflection' ? 'Submitted'
-    : v === 'not-attempted' ? 'Not attempted'
-    : 'Needs review';
-
-  let rows = '';
-  if (items.length === 0) {
-    rows = '<tr><td colspan="3" style="text-align:center; padding:16px;">No activities on this page yet - work through the tabs, then come back and print.</td></tr>';
-  } else {
-    // Group by section, then order sections by their leading "N." number
-    // (matching tab/page order) rather than insertion order - insertion
-    // order depends on each page's init-script call sequence, which is
-    // easy to get wrong and shouldn't be load-bearing for report order.
-    const sectionOrder = [];
-    const bySection = {};
-    items.forEach((item) => {
-      const sec = item.section || 'This Page';
-      if (!bySection[sec]) { bySection[sec] = []; sectionOrder.push(sec); }
-      bySection[sec].push(item);
-    });
-    sectionOrder.sort((a, b) => {
-      const na = parseInt(a, 10);
-      const nb = parseInt(b, 10);
-      const aHas = !isNaN(na), bHas = !isNaN(nb);
-      if (aHas && bHas) return na - nb;
-      if (aHas) return -1;
-      if (bHas) return 1;
-      return 0;
-    });
-
-    let n = 0;
-    sectionOrder.forEach((sec) => {
-      rows += `<tr class="print-section-row"><td colspan="3">${sec}</td></tr>`;
-      bySection[sec].forEach((item) => {
-        n++;
-        const answerText = item.verdict === 'not-attempted'
-          ? '<span class="print-blank">&mdash;</span>'
-          : item.answer;
-        rows += `
-          <tr>
-            <td>${n}. ${item.label}</td>
-            <td>${answerText}</td>
-            <td>${verdictLabel(item.verdict)}</td>
-          </tr>`;
-      });
-    });
-  }
-
-  const total = items.length;
-  const attempted = items.filter((i) => i.verdict !== 'not-attempted').length;
-  const correct = items.filter((i) => i.verdict === 'correct').length;
-
-  const report = document.getElementById('print-report');
-  report.innerHTML = `
-    <h1>${lessonTitle}</h1>
-    <p class="print-meta"><strong>Student:</strong> ${name} &nbsp;&nbsp; <strong>Date:</strong> ${today}</p>
-    <p class="print-meta"><strong>Questions on this page:</strong> ${total} &nbsp;&nbsp; <strong>Attempted:</strong> ${attempted} &nbsp;&nbsp; <strong>Correct on first or second try:</strong> ${correct}</p>
-    <table class="print-table">
-      <thead><tr><th>Activity</th><th>Answer Given</th><th>Result</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    <p class="print-footer">Printed from the interactive lesson page as a full record of this student's work, section by section.</p>
-  `;
-
-  window.print();
 }
 
 // ============================================================

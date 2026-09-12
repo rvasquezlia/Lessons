@@ -29,9 +29,9 @@ const LessonSync = (() => {
   let requestGeneration = 0;
   let resolved = false;
   // Captured before the patch below replaces LessonProgress.record, so
-  // restoreSubmissions() can update the printed-report log directly
-  // without going back through onRecord() and re-posting to the backend
-  // every time the page loads.
+  // restoreSubmissions() can update the on-page log directly without
+  // going back through onRecord() and re-posting to the backend every
+  // time the page loads.
   const originalRecord = LessonProgress.record;
 
   // Apps Script cold-starts can take a few seconds - without a timeout, a
@@ -77,7 +77,7 @@ const LessonSync = (() => {
         feedback.innerHTML = 'Correct! <span style="opacity:.75;">(restored from your last session)</span>';
       } else {
         feedback.className = 'feedback-msg error locked';
-        feedback.innerHTML = 'Recorded from your last session - your teacher can review it on your printed report. <span style="opacity:.75;">(restored)</span>';
+        feedback.innerHTML = 'Recorded from your last session - your teacher can review it on the dashboard. <span style="opacity:.75;">(restored)</span>';
       }
       originalRecord(key, s.label, s.answer, s.verdict, s.section);
     });

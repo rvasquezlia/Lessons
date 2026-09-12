@@ -58,7 +58,6 @@
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Algebra I - Solving Linear Equations - Word Problems')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -66,7 +65,7 @@
     <ul style="margin:0; padding-left:20px;">
       <li>Every item is a word problem - use the <strong>4-Step Method</strong>: define, write, solve, interpret.</li>
       <li>Some items check on screen (2 tries); others record your written recommendation for your teacher.</li>
-      <li>Finish every tab, then type your name above and click <strong>Print My Progress</strong>.</li>
+      <li>Finish every tab.</li>
       <li><strong>Calculators are allowed</strong> this year.</li>
     </ul>
   </div>
@@ -644,6 +643,5 @@
     challengeWordProblems.forEach((p, i) => fillInput(`cwp-${i}-input`, `cwp-${i}-feedback`, p.a));
   };
 </script>
-<div id="print-report"></div>
 </body>
 </html>

@@ -75,7 +75,6 @@
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Math 6 - Operations with Fractions - Test Prep')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -83,7 +82,6 @@
     <ul style="margin:6px 0 0 0;">
       <li>Work the tabs in order: review, review, concept check, mixed practice, then the readiness check.</li>
       <li>Type answers as a fraction like <code>3/4</code> or a mixed number like <code>2 1/3</code>, always in <strong>simplest form</strong>.</li>
-      <li>When you finish, type your name above and click <strong>Print My Progress</strong>.</li>
     </ul>
   </div>
 
@@ -214,7 +212,7 @@
     <div class="section-title">Readiness Check: Operations with Fractions</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Answer all four questions, then click Submit. This is the last step before you print your progress - go back to the Student Name box in the blue bar at the top of the page, type your name, and click Print My Progress.
+      Answer all four questions, then click Submit.
     </div>
 
     <form id="exit-form" onsubmit="submitReadiness(event)">
@@ -608,6 +606,5 @@
     triggerMathJax();
   };
 </script>
-<div id="print-report"></div>
 </body>
 </html>

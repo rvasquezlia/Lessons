@@ -85,7 +85,8 @@ header {
 h1 { margin: 8px 0; font-size: 2.3rem; font-weight: 800; }
 p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
 
-/* Print-progress utility bar (name field + print button), shown under the header */
+/* Signed-in-student identity bar (name field, auto-filled and locked by
+   lesson-auth.js's unlock()), shown under the header */
 .progress-bar {
   display: flex;
   flex-wrap: wrap;
@@ -111,19 +112,6 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
   min-width: 220px;
 }
 
-.progress-bar .btn-print {
-  background: var(--accent);
-  color: #000;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 800;
-  cursor: pointer;
-  font-size: 0.95rem;
-}
-
-.progress-bar .btn-print:hover { background: #b45309; color: white; }
-
 /* Human-readable "what to do" callout at the top of each panel */
 .howto-box {
   background: #ecfdf5;
@@ -144,9 +132,6 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
   margin-bottom: 6px;
 }
 
-/* Printable progress report - hidden on screen, shown only when printing */
-#print-report { display: none; }
-
 /* Real margin on every printed page - without this the browser falls back
    to whatever margin it last remembered (can be "None"), leaving content
    flush against the paper edge with the auto header/footer crowding it. */
@@ -165,28 +150,11 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
   margin: 0.65in 0.6in;
 }
 
+/* Generic "hide this when printing" escape hatch - used by the
+   standalone printables/ worksheet pages (their own local .btn-print,
+   unrelated to the .progress-bar one above) and available for anything
+   else that shouldn't show up on paper. */
 @media print {
-  /* Default print behavior: only the student's progress report prints.
-     Teacher Print Mode (below) overrides this to print the actual lesson
-     content instead, when the teacher is generating a "what we covered"
-     handout via TeacherPrint in lesson-shared.js. */
-  body:not(.teacher-print-mode) > *:not(#print-report) { display: none !important; }
-  #print-report {
-    display: block !important;
-    font-family: 'Montserrat', sans-serif;
-    color: #000;
-    padding: 0;
-  }
-  #print-report h1 { font-size: 1.6rem; margin-bottom: 4px; }
-  #print-report .print-meta { font-size: 1rem; margin: 4px 0; }
-  .print-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-  .print-table th, .print-table td { border: 1px solid #000; padding: 8px 10px; text-align: left; font-size: 0.9rem; }
-  .print-table th { background: #e2e8f0; }
-  .print-table tr { page-break-inside: avoid; break-inside: avoid; }
-  .print-table .print-section-row td { background: #cbd5e1; font-weight: 800; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.03em; }
-  .print-blank { color: #888; }
-  .print-footer { margin-top: 20px; font-size: 0.85rem; font-style: italic; color: #444; }
-
   .no-print { display: none !important; }
 }
 
