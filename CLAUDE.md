@@ -82,7 +82,7 @@ shipping new backend code.
   committed code by an unpredictable amount - confusing to debug, since
   it looks like a bug that "sometimes" happens when it's really just
   staleness. Current versions: `token-cache.js` → `2`, `lesson-auth.js` →
-  `5`.
+  `6`.
 - **`hidden` doesn't always mean hidden — check for a competing CSS rule
   first.** `#lesson-loading` has its own `display: flex` (to center the
   spinner), and an ID selector beats the browser's default
@@ -438,6 +438,27 @@ sets its own feedback text from a LaTeX `displayAnswer`. Any new
 hand-written reveal that shows a LaTeX answer as feedback text needs
 the same two things: delimiters around it, and a `triggerMathJax()`
 call somewhere before the function returns.
+
+**`displayAnswer` isn't stored the same way on every page - some already
+carry their own `\( \)` wrapper.** Most units store bare LaTeX
+(`"\dfrac{V}{\pi r^2}"`), but every `Review.html` plus one
+`Vocabulary-Literacy.html` (`Eighth/Linear-Equations`) bakes the
+delimiters in already (`"\(\frac{6}{9}\)"`), since that same string
+also gets interpolated directly into a `"Correct! ..."` message
+elsewhere on those pages - it has to be pre-delimited there since
+nothing else would wrap it. `unlockTeacherView` strips a leading `\(`/
+trailing `\)` (`rawAnswer.replace(/^\\\(|\\\)$/g, '')`) before doing
+anything else with it, so both conventions end up at the same bare
+form: safe to assign directly to a `<math-field>`'s `.value`, and safe
+to wrap exactly once for the feedback text. Skipping this strip step
+double-wraps the second convention into invalid LaTeX (a literal stray
+`\(` inside the math content itself, since MathJax's delimiter scanner
+doesn't nest) - unrenderable, not just cosmetically wrong. Any new
+hand-written reveal reading a page's own `displayAnswer` needs the same
+strip before using it as a `<math-field>`'s `.value`, and before
+wrapping it for feedback text - check which convention that specific
+page already uses (grep the file for `displayAnswer: "\(` ) rather than
+assuming.
 
 **The `TEACHER VIEW` banner is styled via `.teacher-view-banner` in
 `lesson-shared.css`, not inline.** `unlockTeacherView` just sets

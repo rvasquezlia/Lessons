@@ -178,23 +178,32 @@ const LessonSync = (() => {
         const input = document.getElementById(`${keyPrefix}-${i}-input`);
         const feedback = document.getElementById(`${keyPrefix}-${i}-feedback`);
         if (!input || !feedback) return;
-        const answer = p.displayAnswer || (p.a !== undefined ? String(p.a) : (p.accepted ? p.accepted[0] : ''));
+        const rawAnswer = p.displayAnswer || (p.a !== undefined ? String(p.a) : (p.accepted ? p.accepted[0] : ''));
+        // displayAnswer isn't stored consistently site-wide: most units
+        // store bare LaTeX ("\dfrac{V}{\pi r^2}"), but every Review.html
+        // (plus one Vocabulary-Literacy) bakes its own \( \) delimiters
+        // in already ("\(\frac{6}{9}\)"), since that string is also used
+        // directly inside a "Correct! ..." message elsewhere on those
+        // pages. Stripping any existing wrapper before using it either
+        // way means both conventions produce the same result here,
+        // instead of double-wrapping the second one into invalid,
+        // unrenderable LaTeX (a literal stray \( inside the math itself).
+        const answer = rawAnswer.replace(/^\\\(|\\\)$/g, '');
         input.value = answer;
         input.disabled = true;
         const btn = input.parentElement && input.parentElement.querySelector('button');
         if (btn) { btn.disabled = true; btn.style.cursor = 'not-allowed'; }
         feedback.style.display = 'block';
         feedback.className = 'feedback-msg success locked';
-        // Wrapped in \( \) so MathJax actually typesets it - `answer` is
-        // raw LaTeX (p.displayAnswer, e.g. "\dfrac{V}{\pi r^2}") on any
-        // page using a math-field, and unlike input.value (which a
-        // math-field renders directly from raw LaTeX with no MathJax
-        // involved), this is plain innerHTML text with no renderer of its
-        // own - without delimiters it used to show the literal LaTeX
-        // source instead of a rendered fraction, easy to miss on a plain
-        // <input> (which showed the exact same unrendered LaTeX as its
-        // value) but glaring next to a math-field rendering the same
-        // answer correctly right above it.
+        // Wrapped in \( \) so MathJax actually typesets it - unlike
+        // input.value (which a math-field renders directly from raw
+        // LaTeX with no MathJax involved), this is plain innerHTML text
+        // with no renderer of its own - without delimiters it used to
+        // show the literal LaTeX source instead of a rendered fraction,
+        // easy to miss on a plain <input> (which showed that same
+        // unrendered LaTeX as its own value, so nothing looked
+        // inconsistent) but glaring next to a math-field rendering the
+        // same answer correctly right above it.
         feedback.innerHTML = `Answer key: <strong>\\(${answer}\\)</strong>`;
       });
     });
