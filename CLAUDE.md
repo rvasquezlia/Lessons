@@ -202,13 +202,32 @@ The page visually matches the rest of the site (reuses
 `.tab-btn`/`.panel`/`.section-title` rather than its own one-off styles
 — including the filter bar, which used to be a dark navy strip that
 didn't match anything else on the page and is now a plain light
-`--bg`/`--border` bar like the rest of the site's cards) and has five
+`--bg`/`--border` bar like the rest of the site's cards) and has six
 tabs, all driven by the same `allRows`/`roster`/`activityCatalog`
 globals and a shared `Grade`/`Teacher`/`Activity`/"flagged only" filter
 bar. None of the tab panels carry an explanatory `<p>` under their
 `.section-title` anymore — the tab name plus the table's own column
 headers are the interface; a per-tab paragraph restating "one row per
 X, click a row to see Y" was decided to be redundant with that.
+
+Tab order is **Overview, By Unit, By Activity, By Student, Activity
+Status, All Submissions** — the three "By X" drill-downs sit together,
+Activity Status (engagement funnel) comes right after them, and All
+Submissions (the flat raw log) stays last since it's the destination
+everything else summarizes from, not a place to land first. Activity
+Status used to sit between By Unit and By Activity, which read as an
+arbitrary interruption of the "By X" group; moving it after them was a
+front-end-only reorder (nav buttons + matching `.panel` divs), nothing
+in `Code.gs` or the data shapes changed.
+
+**Every list tab defaults to alphabetical order**, not a score/date
+ranking — `sortState` in `teacher-dashboard.html` sets By Unit/By
+Activity/Activity Status to `activityTitle`/`unit` ascending and By
+Student/All Submissions to `studentName` ascending. A teacher scanning
+for one specific student or activity shouldn't have to hunt through a
+ranked list first; clicking any column header still re-sorts by that
+column exactly as before, this only changes what a tab shows before any
+click.
 
 - **Overview** — summary only, deliberately: stat tiles (active
   students, activities, average score, not-started count, flagged
@@ -229,16 +248,6 @@ X, click a row to see Y" was decided to be redundant with that.
   every activity in it; click an activity there and it jumps straight to
   that activity's own detail view on the By Activity tab
   (`jumpToActivity()`) — a unit number is never a dead end.
-- **Activity Status** — "are students actually opening this?", answered
-  with a four-state funnel per activity (Not started / Opened only / In
-  progress / Completed), computed by `computeActivityStatusBreakdown()`
-  from `Progress` alone: no row at all is Not started; a row with
-  `reachedEnd` is Completed; a row with graded items but no `reachedEnd`
-  is In progress; a row with neither (only tab views logged) is Opened
-  only. Click an activity to see which student is in which state, with
-  stat tiles for the same four counts scoped to just that activity. This
-  is the dashboard's only engagement view now - the tab that used to
-  read `AccessLog` (see below) is gone entirely.
 - **By Activity** — one row per catalog activity (including activities
   nobody has started), with a completion percentage computed against
   how many *eligible* roster students exist for that grade (and teacher,
@@ -252,6 +261,21 @@ X, click a row to see Y" was decided to be redundant with that.
   a student for their full profile: stat tiles, a score-by-activity bar
   chart, the full per-activity table, and their own "Recent activity"
   timeline across everything they've touched.
+- **Activity Status** — "are students actually opening this?", answered
+  with a four-state funnel per activity (Not started / Opened only / In
+  progress / Completed), computed by `computeActivityStatusBreakdown()`
+  from `Progress` alone: no row at all is Not started; a row with
+  `reachedEnd` is Completed; a row with graded items but no `reachedEnd`
+  is In progress; a row with neither (only tab views logged) is Opened
+  only. Above the per-activity table, `renderActivityStatusChart()`
+  draws one aggregate stacked bar (plus a count legend) summing every
+  filtered activity's own breakdown into a single "how's the whole
+  filtered set doing" graph — the table alone only shows this per
+  activity, one row at a time. Click an activity row to see which
+  student is in which state, with stat tiles for the same four counts
+  scoped to just that activity. This is the dashboard's only engagement
+  view now - the tab that used to read `AccessLog` (see below) is gone
+  entirely.
 - **All Submissions** — the original flat one-row-per-(student,activity)
   table, kept as the detail view everything else summarizes from. This
   is the one tab that keeps the older inline-expand-a-row pattern
