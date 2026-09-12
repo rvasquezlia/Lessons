@@ -47,15 +47,19 @@ function logAccess_(email, activityId, studentGrade, requiredGrade, result, reas
   sheet.appendRow([new Date(), email, activityId, studentGrade, requiredGrade, result, reason]);
 }
 
-// Core access-gate check: verified email must be on the roster, and the
-// roster's grade must match the activity's required grade.
-function checkAccess_(email, activityId) {
+// Pure access computation - no logging here. Verified email must be on
+// the roster, and the roster's grade must match the activity's required
+// grade. Called both when a student opens an activity (logged every time,
+// see checkAccessAndLog_) and on every submission to re-verify nothing
+// changed mid-session (logged only on denial, see verifyStillAllowed_) -
+// logging every submission's routine re-check would flood AccessLog with
+// one row per Check-button click instead of one row per real event.
+function resolveAccess_(email, activityId) {
   const roster = ss_().getSheetByName('Roster');
   const rMap = colMap_(roster);
   const studentRow = findRow_(roster, rMap['Email'], email);
   if (!studentRow || studentRow.row[rMap['Status']] !== 'Active') {
-    logAccess_(email, activityId, '', '', 'Denied', 'Not found on roster');
-    return { allowed: false, reason: 'Your account is not on the class roster yet - check with your teacher.' };
+    return { allowed: false, reason: 'Your account is not on the class roster yet - check with your teacher.', logReason: 'Not found on roster' };
   }
   const student = {
     name: studentRow.row[rMap['StudentName']],
@@ -67,17 +71,28 @@ function checkAccess_(email, activityId) {
   const cMap = colMap_(catalog);
   const activityRow = findRow_(catalog, cMap['ActivityId'], activityId);
   if (!activityRow || (activityRow.row[cMap['Active']] !== true && activityRow.row[cMap['Active']] !== 'TRUE')) {
-    logAccess_(email, activityId, student.grade, '', 'Denied', 'Unknown or inactive activity');
-    return { allowed: false, reason: 'This activity is not available.' };
+    return { allowed: false, reason: 'This activity is not available.', logReason: 'Unknown or inactive activity', studentGrade: student.grade };
   }
   const requiredGrade = activityRow.row[cMap['Grade']];
   if (String(student.grade) !== String(requiredGrade)) {
-    logAccess_(email, activityId, student.grade, requiredGrade, 'Denied', 'Grade mismatch');
-    return { allowed: false, reason: 'This activity is not assigned to your grade.' };
+    return { allowed: false, reason: 'This activity is not assigned to your grade.', logReason: 'Grade mismatch', studentGrade: student.grade, requiredGrade };
   }
 
-  logAccess_(email, activityId, student.grade, requiredGrade, 'Allowed', '');
-  return { allowed: true, student, activityTitle: activityRow.row[cMap['Title']] };
+  return { allowed: true, student, activityTitle: activityRow.row[cMap['Title']], studentGrade: student.grade, requiredGrade };
+}
+
+function checkAccessAndLog_(email, activityId) {
+  const result = resolveAccess_(email, activityId);
+  logAccess_(email, activityId, result.studentGrade || '', result.requiredGrade || '', result.allowed ? 'Allowed' : 'Denied', result.allowed ? '' : result.logReason);
+  return result;
+}
+
+function verifyStillAllowed_(email, activityId) {
+  const result = resolveAccess_(email, activityId);
+  if (!result.allowed) {
+    logAccess_(email, activityId, result.studentGrade || '', result.requiredGrade || '', 'Denied', result.logReason);
+  }
+  return result;
 }
 
 // Simple first-pass flags - tune thresholds once real pilot data exists.
@@ -105,14 +120,14 @@ function doPost(e) {
     if (!auth.ok) return jsonOut_({ ok: false, error: auth.error });
 
     if (body.type === 'access-check') {
-      const access = checkAccess_(auth.email, body.activityId);
+      const access = checkAccessAndLog_(auth.email, body.activityId);
       if (!access.allowed) return jsonOut_({ ok: true, allowed: false, reason: access.reason });
       const progress = getOrCreateProgressRow_(auth.email, body.activityId, access.student, access.activityTitle);
       return jsonOut_({ ok: true, allowed: true, student: access.student, progress });
     }
 
     if (body.type === 'submission') {
-      const access = checkAccess_(auth.email, body.activityId);
+      const access = verifyStillAllowed_(auth.email, body.activityId);
       if (!access.allowed) return jsonOut_({ ok: false, error: access.reason });
       const updated = recordSubmission_(auth.email, body.activityId, access.student, access.activityTitle, body.item);
       return jsonOut_({ ok: true, progress: updated });
