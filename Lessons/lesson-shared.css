@@ -125,6 +125,32 @@ header {
 h1 { margin: 8px 0; font-size: 2.3rem; font-weight: 800; }
 p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
 
+/* Sign-in gate - shown before any lesson content while a cached-token
+   resume is tried (or there was none to try). Built like a miniature
+   .app-container (rounded, bordered, its own branded <header>) so it's
+   the first thing a student sees and already looks like the rest of
+   the site, instead of a plain unbranded box. This used to be
+   duplicated, unbranded, in every single gated page's own <style>
+   block - centralized here instead, so every page gets the fix at
+   once and there's one place left to tune it. */
+.lesson-gate {
+  max-width: 440px;
+  margin: 80px auto;
+  background: var(--card);
+  border-radius: 16px;
+  border: 4px solid var(--primary);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  overflow: hidden;
+  text-align: center;
+}
+.lesson-gate header { padding: 22px 24px 16px; }
+.lesson-gate .brand-row { margin-bottom: 0; }
+.lesson-gate-body { padding: 26px 32px 32px; }
+.lesson-gate-body h2 { margin: 0 0 8px 0; color: var(--primary); font-size: 1.3rem; }
+.lesson-gate-body p { margin: 0; }
+.lesson-gate .g_id_signin { display: flex; justify-content: center; margin: 20px 0; }
+#lesson-gate-status { min-height: 1.2em; font-weight: 600; margin: 0; }
+
 /* Signed-in-student identity bar (name field, auto-filled and locked by
    lesson-auth.js's unlock()), shown under the header */
 .progress-bar {
