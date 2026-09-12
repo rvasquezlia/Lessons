@@ -111,14 +111,57 @@ function computeFlag_(row) {
   return '';
 }
 
+// Token verification is a network call to Google - it doesn't touch the
+// Sheet at all, so it happens before any lock is acquired. Same for
+// identify/teacher-data below: neither ever writes, so they never wait on
+// the lock that access-check/submission need for their writes. Every
+// request used to share one lock regardless of type, which meant a
+// simple read (e.g. index.html's identify, fired on every page load)
+// could sit blocked behind a slow write from a completely unrelated
+// request - a real source of the "sometimes fast, sometimes times out"
+// inconsistency.
 function doPost(e) {
+  const body = JSON.parse(e.postData.contents);
+  const auth = verifyIdToken_(body.idToken);
+  if (!auth.ok) return jsonOut_({ ok: false, error: auth.error });
+
+  // Identity-only, no activity attached - used by index.html, which
+  // links to many activities rather than gating one. Same
+  // Teachers-before-Roster order as access-check, but never checks
+  // ActivityCatalog/grade-match against anything, since there's no
+  // single activity here to match against. Never writes - no lock needed.
+  if (body.type === 'identify') {
+    if (isTeacher_(auth.email)) {
+      return jsonOut_({ ok: true, role: 'teacher', student: { name: auth.name } });
+    }
+    const roster = ss_().getSheetByName('Roster');
+    const rMap = colMap_(roster);
+    const studentRow = findRow_(roster, rMap['Email'], auth.email);
+    if (!studentRow || studentRow.row[rMap['Status']] !== 'Active') {
+      return jsonOut_({ ok: true, role: 'unknown', reason: 'Your account is not on the class roster yet - check with your teacher.' });
+    }
+    return jsonOut_({
+      ok: true, role: 'student',
+      student: { name: studentRow.row[rMap['StudentName']], grade: studentRow.row[rMap['Grade']], teacher: studentRow.row[rMap['Teacher']] }
+    });
+  }
+
+  // Read-only, teacher-dashboard-facing. Deliberately hands back raw rows
+  // (SubmissionsLog included as-is) rather than pre-computed stats -
+  // decoding it and computing things like average time between answers
+  // or flagging rapid bursts lives in the dashboard page's own JS, so
+  // those rules can be tuned without redeploying this script. Never
+  // writes - no lock needed.
+  if (body.type === 'teacher-data') {
+    if (!isTeacher_(auth.email)) return jsonOut_({ ok: false, error: 'Not authorized' });
+    return jsonOut_({ ok: true, rows: getAllProgressForDashboard_() });
+  }
+
+  // Everything below this line can write to Progress/AccessLog - only
+  // these two hold the lock.
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
-    const body = JSON.parse(e.postData.contents);
-    const auth = verifyIdToken_(body.idToken);
-    if (!auth.ok) return jsonOut_({ ok: false, error: auth.error });
-
     if (body.type === 'access-check') {
       // Teachers bypass the grade-gate entirely and never get a Progress
       // row - they're viewing the answer key, not doing the activity.
@@ -134,42 +177,11 @@ function doPost(e) {
       return jsonOut_({ ok: true, allowed: true, role: 'student', student: access.student, progress });
     }
 
-    // Identity-only, no activity attached - used by index.html, which
-    // links to many activities rather than gating one. Same
-    // Teachers-before-Roster order as access-check, but never checks
-    // ActivityCatalog/grade-match against anything, since there's no
-    // single activity here to match against.
-    if (body.type === 'identify') {
-      if (isTeacher_(auth.email)) {
-        return jsonOut_({ ok: true, role: 'teacher', student: { name: auth.name } });
-      }
-      const roster = ss_().getSheetByName('Roster');
-      const rMap = colMap_(roster);
-      const studentRow = findRow_(roster, rMap['Email'], auth.email);
-      if (!studentRow || studentRow.row[rMap['Status']] !== 'Active') {
-        return jsonOut_({ ok: true, role: 'unknown', reason: 'Your account is not on the class roster yet - check with your teacher.' });
-      }
-      return jsonOut_({
-        ok: true, role: 'student',
-        student: { name: studentRow.row[rMap['StudentName']], grade: studentRow.row[rMap['Grade']], teacher: studentRow.row[rMap['Teacher']] }
-      });
-    }
-
     if (body.type === 'submission') {
       const access = verifyStillAllowed_(auth.email, body.activityId);
       if (!access.allowed) return jsonOut_({ ok: false, error: access.reason });
       const updated = recordSubmission_(auth.email, body.activityId, access.student, access.activityTitle, body.item);
       return jsonOut_({ ok: true, progress: updated });
-    }
-
-    // Read-only, teacher-dashboard-facing. Deliberately hands back raw
-    // rows (SubmissionsLog included as-is) rather than pre-computed
-    // stats - decoding it and computing things like average time between
-    // answers or flagging rapid bursts lives in the dashboard page's own
-    // JS, so those rules can be tuned without redeploying this script.
-    if (body.type === 'teacher-data') {
-      if (!isTeacher_(auth.email)) return jsonOut_({ ok: false, error: 'Not authorized' });
-      return jsonOut_({ ok: true, rows: getAllProgressForDashboard_() });
     }
 
     return jsonOut_({ ok: false, error: 'Unknown request type' });

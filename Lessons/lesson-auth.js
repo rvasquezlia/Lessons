@@ -18,6 +18,16 @@ const LessonSync = (() => {
   let googleLoaded = false;
   let initCalled = false;
   let googleInitialized = false;
+  // Guards against a slow, stale request "winning" after a faster later
+  // one already resolved things - without this, an earlier attempt that
+  // times out AFTER a second attempt already unlocked the page can still
+  // run its failure handler and re-reveal the sign-in gate on top of
+  // already-unlocked content. Every call into proceedWithToken() captures
+  // the generation at its start and checks it's still current before
+  // touching the DOM; resolved permanently retires all of them once one
+  // attempt actually succeeds.
+  let requestGeneration = 0;
+  let resolved = false;
   // Captured before the patch below replaces LessonProgress.record, so
   // restoreSubmissions() can update the printed-report log directly
   // without going back through onRecord() and re-posting to the backend
@@ -73,7 +83,13 @@ const LessonSync = (() => {
     });
   }
 
+  function hideLoadingIndicator() {
+    const el = document.getElementById('lesson-loading');
+    if (el) el.hidden = true;
+  }
+
   function showAppContainer() {
+    hideLoadingIndicator();
     document.getElementById('lesson-gate').hidden = true;
     document.querySelector('.app-container').hidden = false;
   }
@@ -175,15 +191,25 @@ const LessonSync = (() => {
   // until this actually fails, so a successful cached-token resume never
   // flashes any sign-in UI at all - only a failure reveals the gate and
   // brings up the real Google button/One Tap as a fallback.
-  async function proceedWithToken(rawToken) {
+  //
+  // Apps Script's response time is genuinely variable (cold starts can
+  // take several seconds) - isRetry lets a single transient failure retry
+  // once with a longer timeout before actually giving up, instead of
+  // immediately showing an error for what's often just a slow first
+  // request. The generation check after every await is what stops a
+  // slow, now-superseded attempt from undoing a later one that already
+  // succeeded (see requestGeneration/resolved above).
+  async function proceedWithToken(rawToken, isRetry) {
+    const myGeneration = ++requestGeneration;
     idToken = rawToken;
     setStatus('Checking access...', false);
     try {
       const res = await fetchWithTimeout(LESSON_SYNC_API_URL, {
         method: 'POST',
         body: JSON.stringify({ idToken, type: 'access-check', activityId })
-      });
+      }, isRetry ? 25000 : 15000);
       const result = await res.json();
+      if (resolved || myGeneration !== requestGeneration) return; // superseded - ignore this stale result entirely
       if (!result.ok) {
         TokenCache.clear(); // token was rejected outright (expired/invalid) - don't keep retrying it silently
         showGateAndPromptSignIn();
@@ -196,9 +222,17 @@ const LessonSync = (() => {
         setStatus(result.reason || 'Access denied.', true);
         return;
       }
+      resolved = true;
       if (result.role === 'teacher') { unlockTeacherView(result.student && result.student.name); return; }
       unlock(result.student, result.progress);
     } catch (err) {
+      if (resolved || myGeneration !== requestGeneration) return;
+      if (!isRetry) {
+        setStatus('Still checking - the server is taking a moment...', false);
+        await new Promise((r) => setTimeout(r, 1200));
+        if (resolved || myGeneration !== requestGeneration) return;
+        return proceedWithToken(rawToken, true);
+      }
       showGateAndPromptSignIn();
       setStatus("Couldn't reach the roster - check your connection and try again.", true);
     }
@@ -211,10 +245,13 @@ const LessonSync = (() => {
 
   // Reveals the gate and brings up Google's real sign-in UI (button +
   // One Tap) - only called once we know a silent cached-token resume
-  // isn't going to work (none cached, or one failed). Guarded so a
-  // second call (e.g. one failure path triggering another) doesn't
-  // re-initialize or re-prompt on top of an already-visible button.
+  // isn't going to work (none cached, or one failed after its retry).
+  // Guarded so a second call (e.g. one failure path triggering another)
+  // doesn't re-initialize or re-prompt on top of an already-visible
+  // button.
   function showGateAndPromptSignIn() {
+    if (resolved) return; // a later attempt already succeeded - never reveal the gate over already-unlocked content
+    hideLoadingIndicator();
     const gate = document.getElementById('lesson-gate');
     if (gate) gate.hidden = false;
     if (googleInitialized) return;

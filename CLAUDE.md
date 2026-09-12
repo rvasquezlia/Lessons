@@ -54,6 +54,32 @@ shipping new backend code.
   it or touches Google's sign-in UI at all. Don't reintroduce a
   `data-client_id`/`data-auto_select` div on a gated page — it would
   re-create the exact race this was built to avoid.
+- **Stale in-flight requests are explicitly discarded, not just raced.**
+  Apps Script's response time is genuinely variable (a cold start can take
+  several seconds), so a slow first attempt and a faster second one (e.g.
+  a manual click after the first attempt already looked stuck) can both
+  be in flight at once. Every `proceedWithToken()` call (in
+  `lesson-auth.js` and `index.html`) captures a `requestGeneration` number
+  at its start and checks it's still current before touching the DOM;
+  `resolved` permanently retires every attempt once one actually succeeds.
+  Without this, an earlier attempt timing out *after* a later one already
+  unlocked the page would still run its failure handler and re-reveal the
+  sign-in gate on top of already-unlocked content — this exact bug
+  happened once (visible in git history) before the guard was added.
+  A failed attempt that isn't a retry yet gets exactly one retry with a
+  longer timeout (25s vs 15s) before actually giving up, since a lot of
+  "failures" are really just a cold Apps Script container. A plain
+  `#lesson-loading` element (visible by default, hidden once either the
+  gate or the real content is shown) covers the silent-check window so
+  the page never just looks blank/frozen while this plays out.
+- **The backend lock is scoped to writes only.** `identify` and
+  `teacher-data` never write to the Sheet, so they run before
+  `LockService.getScriptLock()` is ever acquired in `doPost` — only
+  `access-check`/`submission` (which can append/update `Progress` or
+  `AccessLog`) hold it. Before this, every request type shared one lock,
+  so a plain read (like `identify`, fired on every index.html page load)
+  could sit blocked behind a slow, unrelated write and time out on the
+  client for no real reason.
 
 ### The shared Sheet
 
