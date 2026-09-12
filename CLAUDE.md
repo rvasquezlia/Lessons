@@ -82,7 +82,7 @@ shipping new backend code.
   committed code by an unpredictable amount - confusing to debug, since
   it looks like a bug that "sometimes" happens when it's really just
   staleness. Current versions: `token-cache.js` → `2`, `lesson-auth.js` →
-  `4`.
+  `5`.
 - **`hidden` doesn't always mean hidden — check for a competing CSS rule
   first.** `#lesson-loading` has its own `display: flex` (to center the
   spinner), and an ID selector beats the browser's default
@@ -415,6 +415,29 @@ function that fills in and locks every one of its own problems by hand;
 works on a new page** until it has either `window.listRegistry` exposed
 or its own `window.revealAnswerKey` — check the page's own script for
 one of those two before trusting the answer key to show anything.
+
+**The reveal's feedback text needs `\( \)` delimiters and a `triggerMathJax()`
+call - the field's own `.value` doesn't.** `unlockTeacherView`'s generic
+loop (and every page's hand-written `revealAnswerKey`) sets two things
+per problem: the input/math-field's `.value` (raw LaTeX like
+`\dfrac{V}{\pi r^2}` - a `<math-field>` renders that directly with no
+MathJax involved) and a `feedback.innerHTML` string announcing the
+answer. That second one *is* plain HTML text with no renderer of its
+own, so the same raw LaTeX has to be wrapped in `\(...\)` before MathJax
+will touch it, and something has to call `triggerMathJax()` afterward
+since this is new DOM content MathJax has never scanned - `unlockTeacherView`
+never did either, a real bug that shipped silently for a while: on a
+plain `<input>` the field's own value showed that same raw LaTeX too, so
+nothing looked inconsistent, but once a page's answers moved to
+`<math-field>` (see "Visual math input" below) the input rendered a real
+fraction while the text right below it kept showing literal
+`\dfrac{...}` source - much more obviously broken side by side. Fixed in
+`unlockTeacherView` (wraps `answer` in `\(...\)`, calls `triggerMathJax()`
+once after the loop) and in every hand-written `revealAnswerKey` that
+sets its own feedback text from a LaTeX `displayAnswer`. Any new
+hand-written reveal that shows a LaTeX answer as feedback text needs
+the same two things: delimiters around it, and a `triggerMathJax()`
+call somewhere before the function returns.
 
 **The `TEACHER VIEW` banner is styled via `.teacher-view-banner` in
 `lesson-shared.css`, not inline.** `unlockTeacherView` just sets
