@@ -20,6 +20,12 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <!-- Visual math input (site-wide rollout from the Eighth/Literal-Equations
+       pilot - see /CLAUDE.md's "Visual math input" note): registers the
+       <math-field> custom element used for the Translate Phrases section's
+       fraction-expression answers. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
@@ -394,15 +400,35 @@
     { phrase: "\\(\\frac{1}{3}\\) less than \\(\\frac{5}{6}\\)", accepted: ["5/6-1/3"], answer: "\\(\\frac{5}{6} - \\frac{1}{3}\\)" }
   ];
 
+  // Also strips a fraction's own redundant parens (MathLive's
+  // getValue('ascii-math') always wraps both sides of every fraction in
+  // parens even when trivial) and normalizes the accepted spelling too,
+  // not just the typed answer - see Eighth/Literal-Equations'
+  // Practice-Set.html for the full explanation of both.
   function normalizeExpr(s) {
-    return String(s || '').toLowerCase().replace(/\s+/g, '');
+    let out = String(s || '').toLowerCase().replace(/\s+/g, '');
+    let prev;
+    do { prev = out; out = out.replace(/\(([^()+-]+)\)/g, '$1'); } while (out !== prev);
+    return out;
+  }
+
+  function answerMatches(val, accepted) {
+    const nv = normalizeExpr(val);
+    return accepted.some((a) => normalizeExpr(a) === nv);
+  }
+
+  // Reads a <math-field>'s answer as ASCIIMath text, guarded against the
+  // MathLive script never loading - see Eighth/Literal-Equations'
+  // Practice-Set.html for the identical helper.
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
   }
 
   function renderTranslateList() {
     const html = translateItems.map((item, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${item.phrase}
-        <input type="text" id="translate-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="e.g. 1/4+5/8">
+        <math-field id="translate-${i}-input" class="form-control-lg" style="max-width:220px; display:inline-block;"></math-field>
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkTranslate(${i})">Check</button>
         <div id="translate-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
@@ -413,13 +439,13 @@
 
   function checkTranslate(idx) {
     const item = translateItems[idx];
-    const val = document.getElementById(`translate-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`translate-${idx}-input`));
     const fb = document.getElementById(`translate-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter an expression before checking.");
       return;
     }
-    const correct = item.accepted.includes(normalizeExpr(val));
+    const correct = answerMatches(val, item.accepted);
     LessonCheck.show(fb, correct ? 'correct' : 'reveal', {
       correct: `Correct! ${item.answer}`,
       reveal: `The expression is ${item.answer}`
@@ -496,7 +522,15 @@
       const input = document.getElementById(`translate-${i}-input`);
       const fb = document.getElementById(`translate-${i}-feedback`);
       if (!input || !fb) return;
-      input.value = item.accepted[0];
+      // item.answer already carries its own \( \) wrapper (used directly
+      // in the "Correct!"/feedback messages elsewhere on this page) -
+      // strip it for the math-field, which wants bare LaTeX, same as
+      // unlockTeacherView does in lesson-auth.js for this exact
+      // convention (see /CLAUDE.md's "displayAnswer isn't stored the
+      // same way..." note). Using item.accepted[0] here (the old
+      // plain-text form, e.g. "1/4+5/8") would show as flat unstyled
+      // text instead of a real stacked fraction.
+      input.value = item.answer.replace(/^\\\(|\\\)$/g, '');
       input.disabled = true;
       const btn = input.parentElement && input.parentElement.querySelector('button');
       if (btn) btn.disabled = true;
