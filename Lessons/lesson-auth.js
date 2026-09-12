@@ -15,6 +15,9 @@ const LessonSync = (() => {
   let activityId = null;
   let idToken = null;
   let ready = false;
+  let googleLoaded = false;
+  let initCalled = false;
+  let googleInitialized = false;
   // Captured before the patch below replaces LessonProgress.record, so
   // restoreSubmissions() can update the printed-report log directly
   // without going back through onRecord() and re-posting to the backend
@@ -168,7 +171,10 @@ const LessonSync = (() => {
   // Shared by a fresh button click/One Tap response and a cached token
   // resumed silently on page load - both end up here with just the raw
   // JWT string, so unlock()/unlockTeacherView() don't need to know which
-  // path got them here.
+  // path got them here. The gate stays hidden (see init()/tryStart())
+  // until this actually fails, so a successful cached-token resume never
+  // flashes any sign-in UI at all - only a failure reveals the gate and
+  // brings up the real Google button/One Tap as a fallback.
   async function proceedWithToken(rawToken) {
     idToken = rawToken;
     setStatus('Checking access...', false);
@@ -180,14 +186,20 @@ const LessonSync = (() => {
       const result = await res.json();
       if (!result.ok) {
         TokenCache.clear(); // token was rejected outright (expired/invalid) - don't keep retrying it silently
+        showGateAndPromptSignIn();
         setStatus(result.error || 'Could not verify your account.', true);
         return;
       }
       TokenCache.save(rawToken);
-      if (!result.allowed) { setStatus(result.reason || 'Access denied.', true); return; }
+      if (!result.allowed) {
+        showGateAndPromptSignIn();
+        setStatus(result.reason || 'Access denied.', true);
+        return;
+      }
       if (result.role === 'teacher') { unlockTeacherView(result.student && result.student.name); return; }
       unlock(result.student, result.progress);
     } catch (err) {
+      showGateAndPromptSignIn();
       setStatus("Couldn't reach the roster - check your connection and try again.", true);
     }
   }
@@ -196,6 +208,47 @@ const LessonSync = (() => {
     await proceedWithToken(response.credential);
   }
   window.handleGoogleSignIn = handleGoogleSignIn;
+
+  // Reveals the gate and brings up Google's real sign-in UI (button +
+  // One Tap) - only called once we know a silent cached-token resume
+  // isn't going to work (none cached, or one failed). Guarded so a
+  // second call (e.g. one failure path triggering another) doesn't
+  // re-initialize or re-prompt on top of an already-visible button.
+  function showGateAndPromptSignIn() {
+    const gate = document.getElementById('lesson-gate');
+    if (gate) gate.hidden = false;
+    if (googleInitialized) return;
+    googleInitialized = true;
+    google.accounts.id.initialize({
+      client_id: LESSON_GOOGLE_CLIENT_ID,
+      callback: handleGoogleSignIn,
+      auto_select: true
+    });
+    const btnContainer = document.querySelector('#lesson-gate .g_id_signin');
+    if (btnContainer) google.accounts.id.renderButton(btnContainer, { type: 'standard' });
+    google.accounts.id.prompt();
+  }
+
+  // Only starts once both the page's own script has called init() (so
+  // activityId is known) and the GIS library has actually finished
+  // loading (it's async, so this can resolve before or after init() -
+  // see the onload="onGoogleLibraryLoad()" attribute on the gsi/client
+  // script tag). Whichever happens second runs this.
+  function tryStart() {
+    if (!googleLoaded || !initCalled) return;
+    const cached = TokenCache.load();
+    if (cached) {
+      proceedWithToken(cached);
+    } else {
+      showGateAndPromptSignIn();
+    }
+  }
+
+  function onGoogleLibraryLoad() {
+    googleLoaded = true;
+    tryStart();
+  }
+  window.onGoogleLibraryLoad = onGoogleLibraryLoad;
 
   function onRecord(item) {
     if (!ready || !idToken) return;
@@ -217,10 +270,8 @@ const LessonSync = (() => {
   function init(id) {
     activityId = id;
     patchSwitchTab();
-    // Try a cached token before ever showing the sign-in button - this is
-    // what avoids asking again within the token's ~1 hour lifetime.
-    const cached = TokenCache.load();
-    if (cached) proceedWithToken(cached);
+    initCalled = true;
+    tryStart();
   }
 
   return { init };

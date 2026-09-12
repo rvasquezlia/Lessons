@@ -226,20 +226,15 @@
     .lesson-gate .g_id_signin { display: flex; justify-content: center; margin: 20px 0; }
     #lesson-gate-status { min-height: 1.2em; font-weight: 600; }
   </style>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
   <script src="token-cache.js"></script>
 </head>
 <body>
 
-<div id="lesson-gate" class="lesson-gate">
+<div id="lesson-gate" class="lesson-gate" hidden>
   <h2>Lincoln International Academy</h2>
   <p>Sign in with your school Google account to see your lessons.</p>
-  <div id="g_id_onload"
-       data-client_id="478111261772-7l1qamohr0fjsa7ekosuhpj9jum1q4vc.apps.googleusercontent.com"
-       data-callback="handleGoogleSignIn"
-       data-auto_select="true">
-  </div>
-  <div class="g_id_signin" data-type="standard"></div>
+  <div class="g_id_signin"></div>
   <p id="lesson-gate-status"></p>
 </div>
 
@@ -509,7 +504,10 @@
   }
 
   // Shared by a fresh button click/One Tap response and a cached token
-  // resumed silently on load.
+  // resumed silently on load. The gate stays hidden until this actually
+  // fails, so a successful cached-token resume never flashes any sign-in
+  // UI - only a failure reveals the gate and brings up the real Google
+  // button/One Tap as a fallback.
   async function proceedWithToken(rawToken) {
     setGateStatus("Checking your account...", false);
     try {
@@ -520,10 +518,11 @@
       const result = await res.json();
       if (!result.ok) {
         TokenCache.clear(); // token was rejected outright (expired/invalid) - don't keep retrying it silently
+        showGateAndPromptSignIn();
         setGateStatus(result.error || "Could not verify your account.", true);
         return;
       }
-      if (result.role === "unknown") { setGateStatus(result.reason, true); return; }
+      if (result.role === "unknown") { showGateAndPromptSignIn(); setGateStatus(result.reason, true); return; }
       TokenCache.save(rawToken);
 
       if (result.role === "teacher") {
@@ -533,11 +532,16 @@
         return;
       }
       const gradeKey = GRADE_KEY_BY_NUMBER[Number(result.student.grade)] || result.student.grade;
-      if (!CURRICULUM[gradeKey]) { setGateStatus(`No lessons are set up for grade ${result.student.grade} yet.`, true); return; }
+      if (!CURRICULUM[gradeKey]) {
+        showGateAndPromptSignIn();
+        setGateStatus(`No lessons are set up for grade ${result.student.grade} yet.`, true);
+        return;
+      }
       document.getElementById("lesson-gate").hidden = true;
       document.querySelector(".app-container").hidden = false;
       renderForStudent(gradeKey);
     } catch (err) {
+      showGateAndPromptSignIn();
       setGateStatus("Couldn't reach the roster - check your connection and try again.", true);
     }
   }
@@ -547,10 +551,40 @@
   }
   window.handleGoogleSignIn = handleGoogleSignIn;
 
-  // Try a cached token before ever showing the sign-in button - avoids
-  // asking again within the token's ~1 hour lifetime.
-  const cachedToken = TokenCache.load();
-  if (cachedToken) proceedWithToken(cachedToken);
+  // Reveals the gate and brings up Google's real sign-in UI (button +
+  // One Tap) - only called once a silent cached-token resume isn't going
+  // to work (none cached, or one failed). Guarded so a second call
+  // doesn't re-initialize or re-prompt on top of an already-visible
+  // button.
+  let googleInitialized = false;
+  function showGateAndPromptSignIn() {
+    const gate = document.getElementById("lesson-gate");
+    if (gate) gate.hidden = false;
+    if (googleInitialized) return;
+    googleInitialized = true;
+    google.accounts.id.initialize({
+      client_id: "478111261772-7l1qamohr0fjsa7ekosuhpj9jum1q4vc.apps.googleusercontent.com",
+      callback: handleGoogleSignIn,
+      auto_select: true
+    });
+    const btnContainer = document.querySelector("#lesson-gate .g_id_signin");
+    if (btnContainer) google.accounts.id.renderButton(btnContainer, { type: "standard" });
+    google.accounts.id.prompt();
+  }
+
+  // Runs once the GIS library has actually finished loading (it's async,
+  // triggered via onload="onGoogleLibraryLoad()" on the gsi/client script
+  // tag) - unlike a lesson page, index.html has no separate init() step
+  // gating this, so the library load is the only thing to wait for.
+  function onGoogleLibraryLoad() {
+    const cached = TokenCache.load();
+    if (cached) {
+      proceedWithToken(cached);
+    } else {
+      showGateAndPromptSignIn();
+    }
+  }
+  window.onGoogleLibraryLoad = onGoogleLibraryLoad;
 </script>
 
 </body>

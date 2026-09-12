@@ -34,13 +34,26 @@ shipping new backend code.
   lifetime for these tokens — this never extends access beyond what Google
   itself already granted). Any backend response rejecting the token clears
   the cache immediately, so a revoked/expired token doesn't get retried
-  forever. `data-auto_select="true"` is also set on every gate's
-  `g_id_onload` div as a second line of defense — if there's no cached
-  token but the browser still has a live Google session, One Tap can
-  silently resume it without a click. Any new gated page must include
-  `token-cache.js` **before** `lesson-auth.js` in its `<head>` — leaving it
-  out doesn't break the page, it just silently disables persistence and
-  the student is asked to sign in on every visit.
+  forever. Any new gated page must include `token-cache.js` **before**
+  `lesson-auth.js` in its `<head>` — leaving it out doesn't break the page,
+  it just silently disables persistence and the student is asked to sign
+  in on every visit.
+- **GIS is initialized imperatively, not via the declarative
+  `g_id_onload`/`data-*` div.** That's deliberate: the declarative form
+  auto-fires Google's own sign-in UI (including a One Tap popup) on every
+  page load regardless of whether a cached token is about to resume
+  silently, which raced against the cache check and could flash a scary
+  "couldn't reach the roster" error moments before a One Tap login quietly
+  succeeded anyway. Instead: the `<script src=".../gsi/client">` tag on
+  every gated page carries `onload="onGoogleLibraryLoad()"`, and
+  `lesson-auth.js`/`index.html` only call `google.accounts.id.initialize()`
+  + `renderButton()` + `prompt()` themselves, inside `showGateAndPromptSignIn()`
+  — and only once a cached-token resume has actually failed or there was
+  none to try. `#lesson-gate` starts with the `hidden` attribute in the
+  HTML for exactly this reason: a successful silent resume never reveals
+  it or touches Google's sign-in UI at all. Don't reintroduce a
+  `data-client_id`/`data-auto_select` div on a gated page — it would
+  re-create the exact race this was built to avoid.
 
 ### The shared Sheet
 
