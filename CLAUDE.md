@@ -64,6 +64,28 @@ against), not when the flagging rules change.
 - **Spreadsheet ID**: `1-HLtX5AwskPx8hy_Ip2kjGMz5OUIS91M2x0FgEt75zA`
 - **Apps Script Web App URL**: `https://script.google.com/macros/s/AKfycbyC7mb1TKfg3JvhiZftXMf7oXkzrBMWJczZSURC7sIfoIxYnZrrumYfx-j7JYTY0A9i/exec`
 
+### Role differentiation on lesson pages
+
+`access-check` checks `Teachers` before it ever looks at `Roster`. An
+email on `Teachers` gets `role: "teacher"` back — grade-gate skipped
+entirely, no `Progress` row created — and the front-end
+(`lesson-auth.js`'s `unlockTeacherView`) fills in every problem with its
+correct answer instead of the interactive check flow, reading
+`window.listRegistry` that the page itself exposes. Anyone else gets
+`role: "student"` through the normal `Roster`/`ActivityCatalog` grade
+check as before.
+
+This currently only works on pages using the `renderPracticeList()` /
+`checkPractice()` pattern (single text-input-per-problem, like the
+Rational Numbers Practice Set pilot) because that's what
+`window.listRegistry` and the `<key>-input`/`<key>-feedback` id
+convention come from. A page with a different problem shape (radio-button
+groups, multi-field answers) needs its own reveal logic added to
+`unlockTeacherView` before this will show anything for it — don't assume
+teacher view works on a page until it's been wired the same way this
+pilot page was (`window.listRegistry = listRegistry;` after that
+constant's declaration).
+
 ### Flow
 
 1. Teacher shares an activity link.

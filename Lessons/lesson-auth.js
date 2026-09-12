@@ -64,16 +64,57 @@ const LessonSync = (() => {
     });
   }
 
-  function unlock(student, progress) {
-    ready = true;
+  function showAppContainer() {
     document.getElementById('lesson-gate').hidden = true;
     document.querySelector('.app-container').hidden = false;
+  }
+
+  function unlock(student, progress) {
+    ready = true;
+    showAppContainer();
     const nameField = document.getElementById('student-name');
     if (nameField && student && student.name) {
       nameField.value = student.name;
       nameField.disabled = true;
     }
     if (progress && progress.SubmissionsLog) restoreSubmissions(progress.SubmissionsLog);
+  }
+
+  // Fills in every problem with its correct answer instead of the
+  // interactive check flow. Reads window.listRegistry, which pages using
+  // the renderPracticeList()/checkPractice() pattern expose for exactly
+  // this - a page with a different DOM shape (radio groups, multi-field
+  // problems) won't have anything filled in until this is extended for
+  // that pattern too.
+  function unlockTeacherView(teacherName) {
+    showAppContainer();
+    const nameField = document.getElementById('student-name');
+    if (nameField) {
+      nameField.value = `Answer Key (viewed by ${teacherName || 'teacher'})`;
+      nameField.disabled = true;
+    }
+    const banner = document.createElement('div');
+    banner.style.cssText = 'background:var(--accent);color:#fff;font-weight:700;text-align:center;padding:10px;border-radius:10px;margin:0 24px 16px 24px;';
+    banner.textContent = 'TEACHER VIEW - answer key shown below, not a student submission.';
+    document.querySelector('.app-container').prepend(banner);
+
+    const registry = window.listRegistry || {};
+    Object.keys(registry).forEach((keyPrefix) => {
+      const problems = registry[keyPrefix].problems || [];
+      problems.forEach((p, i) => {
+        const input = document.getElementById(`${keyPrefix}-${i}-input`);
+        const feedback = document.getElementById(`${keyPrefix}-${i}-feedback`);
+        if (!input || !feedback) return;
+        const answer = p.displayAnswer || (p.a !== undefined ? String(p.a) : (p.accepted ? p.accepted[0] : ''));
+        input.value = answer;
+        input.disabled = true;
+        const btn = input.parentElement && input.parentElement.querySelector('button');
+        if (btn) { btn.disabled = true; btn.style.cursor = 'not-allowed'; }
+        feedback.style.display = 'block';
+        feedback.className = 'feedback-msg success locked';
+        feedback.innerHTML = `Answer key: <strong>${answer}</strong>`;
+      });
+    });
   }
 
   async function handleGoogleSignIn(response) {
@@ -87,6 +128,7 @@ const LessonSync = (() => {
       const result = await res.json();
       if (!result.ok) { setStatus(result.error || 'Could not verify your account.', true); return; }
       if (!result.allowed) { setStatus(result.reason || 'Access denied.', true); return; }
+      if (result.role === 'teacher') { unlockTeacherView(result.student && result.student.name); return; }
       unlock(result.student, result.progress);
     } catch (err) {
       setStatus("Couldn't reach the roster - check your connection and try again.", true);

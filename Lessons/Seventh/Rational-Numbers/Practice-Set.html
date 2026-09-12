@@ -160,6 +160,7 @@
   // problems: { q, a (number) | accepted (array of strings), tol, hint, displayAnswer, label }
   // ==========================================
   const listRegistry = {};
+  window.listRegistry = listRegistry; // read by lesson-auth.js's teacher answer-key view
 
   function renderPracticeList(containerId, problems, keyPrefix, section) {
     const html = problems.map((p, i) => `

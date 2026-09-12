@@ -120,10 +120,18 @@ function doPost(e) {
     if (!auth.ok) return jsonOut_({ ok: false, error: auth.error });
 
     if (body.type === 'access-check') {
+      // Teachers bypass the grade-gate entirely and never get a Progress
+      // row - they're viewing the answer key, not doing the activity.
+      // Checked before the roster lookup since a teacher's email has no
+      // reason to be in Roster (which is grade/student-specific).
+      if (isTeacher_(auth.email)) {
+        logAccess_(auth.email, body.activityId, '', '', 'Allowed', 'Teacher answer-key view');
+        return jsonOut_({ ok: true, allowed: true, role: 'teacher', student: { name: auth.name } });
+      }
       const access = checkAccessAndLog_(auth.email, body.activityId);
       if (!access.allowed) return jsonOut_({ ok: true, allowed: false, reason: access.reason });
       const progress = getOrCreateProgressRow_(auth.email, body.activityId, access.student, access.activityTitle);
-      return jsonOut_({ ok: true, allowed: true, student: access.student, progress });
+      return jsonOut_({ ok: true, allowed: true, role: 'student', student: access.student, progress });
     }
 
     if (body.type === 'submission') {
