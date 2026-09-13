@@ -1667,36 +1667,63 @@
     return ` <span class="pill ok" title="${r.resetEvents.length} reset${r.resetEvents.length === 1 ? '' : 's'} applied by a teacher">Reset applied${scopeLabel}</span>`;
   }
 
+  // Bumped once per recentActivityHtml() call so its "Load more" button
+  // (see below) always targets its own instance's rows - both call sites
+  // (activity detail, student detail) can have rendered a copy into the
+  // DOM at once (a different tab's detail view isn't necessarily torn
+  // down when another tab's is opened), so a fixed/static id would let
+  // one instance's button reveal another instance's rows.
+  let recentActivityInstanceCounter = 0;
+  const RECENT_ACTIVITY_PAGE_SIZE = 10;
+
   // Shared by the student and activity detail views - a per-row timeline
   // built from Progress.SubmissionsLog timestamps (see decorateRow's
   // allEvents), not from AccessLog. studentName/activityTitle are only
   // shown when present, so the same renderer works whether the caller
-  // already knows which student/activity it's looking at.
+  // already knows which student/activity it's looking at. Renders as a
+  // real table (matching every other table on this page) rather than a
+  // width-capped flex list - the old max-width:640px cap was meant to
+  // keep a short line's timestamp close to its text, but next to this
+  // card's actual full width it just read as a narrow column stacked to
+  // the left with dead space on the right, worse now that reset-summary
+  // lines ("X reset N items (scope)") run longer than a typical entry.
+  // Only the most recent RECENT_ACTIVITY_PAGE_SIZE rows show at first -
+  // a "Load more" button reveals the rest in the same page-sized batches,
+  // instead of dumping the full (up to `limit`) list at once.
   function recentActivityHtml(events, limit) {
     if (!events.length) return '<p class="empty-note">No interactions logged yet.</p>';
-    const sorted = events.slice().sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-    // max-width keeps the timestamp (pushed right via margin-left:auto)
-    // close to the row's actual content - without it, a short line inside
-    // this card's full page width just reads as mostly blank space with
-    // a date floating off on the far right.
-    return '<ul style="margin:0; padding-left:0; list-style:none; max-width:640px;">' + sorted.slice(0, limit || 20).map((e) => {
+    const sorted = events.slice().sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).slice(0, limit || 200);
+    const id = `recent-activity-${++recentActivityInstanceCounter}`;
+    const rows = sorted.map((e, i) => {
       const pillClass = e.type === 'graded' ? (GRADED_PILL[e.verdict] || 'neutral') : (EVENT_PILL[e.type] || 'neutral');
       const pillText = e.type === 'graded' ? (e.verdict || 'answer') : e.type;
-      // Pill and description are one flex item (nowrap between them) so
-      // the pill can never end up alone on its own line with the text
-      // wrapping below it - only the whole [pill+text] group wraps onto
-      // its own line, away from the timestamp, when the row is narrow.
       return `
-      <li style="padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:10px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap;">
-        <span style="display:flex; gap:8px; align-items:baseline; flex:1 1 260px; min-width:0;">
-          <span class="pill ${pillClass}" style="flex-shrink:0;">${pillText}</span>
-          <span>${e.studentName ? `<strong>${e.studentName}</strong> - ` : ''}${e.activityTitle ? e.activityTitle + ' - ' : ''}${e.label || ''}</span>
-        </span>
-        <span style="color:#94a3b8; font-size:0.8rem; white-space:nowrap; flex-shrink:0;">${e.timestamp ? new Date(e.timestamp).toLocaleString() : ''}</span>
-      </li>
-    `;
-    }).join('') + '</ul>';
+      <tr class="${id}-row"${i >= RECENT_ACTIVITY_PAGE_SIZE ? ' hidden' : ''}>
+        <td><span class="pill ${pillClass}">${pillText}</span></td>
+        <td>${e.studentName ? `<strong>${e.studentName}</strong> - ` : ''}${e.activityTitle ? e.activityTitle + ' - ' : ''}${e.label || ''}</td>
+        <td style="white-space:nowrap; color:#94a3b8; font-size:0.8rem;">${e.timestamp ? new Date(e.timestamp).toLocaleString() : ''}</td>
+      </tr>`;
+    }).join('');
+    const hiddenCount = sorted.length - RECENT_ACTIVITY_PAGE_SIZE;
+    const loadMoreBtn = hiddenCount > 0
+      ? `<button class="btn-lg" style="margin-top:10px; padding:6px 12px; font-size:0.85rem;" onclick="loadMoreRecentActivity('${id}', this)">Load ${Math.min(hiddenCount, RECENT_ACTIVITY_PAGE_SIZE)} more</button>`
+      : '';
+    return `<div class="table-wrap"><table><thead><tr><th>Type</th><th>Description</th><th>Time</th></tr></thead><tbody>${rows}</tbody></table></div>${loadMoreBtn}`;
   }
+
+  // Reveals the next page-sized batch of a recentActivityHtml() instance's
+  // hidden rows and relabels/removes the button once nothing's left -
+  // [hidden] is plain attribute removal here (no competing display rule
+  // on a `.<id>-row` class selector, unlike #lesson-loading's own gotcha
+  // documented in /CLAUDE.md), so toggling the attribute is enough.
+  function loadMoreRecentActivity(id, btn) {
+    const hidden = Array.from(document.querySelectorAll(`.${id}-row[hidden]`));
+    hidden.slice(0, RECENT_ACTIVITY_PAGE_SIZE).forEach((row) => row.removeAttribute('hidden'));
+    const remaining = hidden.length - RECENT_ACTIVITY_PAGE_SIZE;
+    if (remaining > 0) btn.textContent = `Load ${Math.min(remaining, RECENT_ACTIVITY_PAGE_SIZE)} more`;
+    else btn.remove();
+  }
+  window.loadMoreRecentActivity = loadMoreRecentActivity;
 
   // Overview is deliberately a summary-only landing page - stat tiles and
   // score bars a teacher can read at a glance, nothing that dumps every

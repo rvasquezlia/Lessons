@@ -920,6 +920,32 @@ needs its own entry in whichever of `VERDICT_TEXT`/`GRADED_PILL`/
 `EVENT_PILL` applies, or it'll render with a generic/neutral fallback
 instead of a readable label.
 
+**`recentActivityHtml()` renders as a real `<table>` now, paginated 10
+rows at a time - it used to be a `max-width:640px`-capped `<ul>`/`<li>`
+flex list.** Reported live as "weird and stacked to the left, not
+taking the whole part, not rendering as a table" - the width cap was a
+deliberate choice (see the function's own comment history) to keep a
+short single-line entry's timestamp close to its text rather than
+floating off across a wide card, but next to the card's actual full
+width it just read as a narrow column with dead space on the right,
+worse once the reset-grouping fix above started producing longer
+combined lines ("X reset N items (scope)"). Fixed by matching every
+other table on this page (`Type`/`Description`/`Time` columns, wrapped
+in `.table-wrap` for the same horizontal-scroll-on-overflow the rest of
+the page's tables get) instead of a bespoke flex layout, and by only
+rendering the most recent `RECENT_ACTIVITY_PAGE_SIZE` (10) rows visible
+at first - the caller was previously dumping up to `limit` (default 20,
+now 200 since pagination handles display volume instead) rows into the
+DOM and onto the screen at once, `loadMoreRecentActivity(id, btn)`
+un-hides the next 10 `<tr class="<id>-row" hidden>` rows on each click,
+relabeling the button with however many remain or removing it entirely
+once none are left. `id` is a per-call instance counter
+(`recentActivityInstanceCounter`), not a fixed string, since a different
+tab's detail view isn't necessarily torn out of the DOM when another
+tab's is opened - two `recentActivityHtml()` instances can coexist, and
+a fixed id would let one instance's "Load more" button reveal another
+instance's rows.
+
 **`scoreBarsHtml(items, labelKey, scoreKey)` takes an explicit
 `scoreKey`** (defaults to `'avgScore'`) precisely because it's called
 with two different shapes of object: Overview passes the aggregate
