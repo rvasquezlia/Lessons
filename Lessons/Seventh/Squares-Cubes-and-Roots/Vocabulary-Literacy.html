@@ -181,9 +181,14 @@
     <div class="section-title">Quick Vocabulary Check</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Type the vocabulary word that matches each definition or example. Two tries per item, then the correct term is shown.
+      Drag each term onto its matching <strong>definition</strong>, and onto its matching <strong>example</strong>, too - or tap a term and then tap a definition or example. A term only earns full credit once both its definition and its example are matched. There's no limit on tries.
     </div>
-    <div id="vocab-check-list"></div>
+    <div class="match-wrap">
+      <div class="match-col"><div class="match-col-heading">Term</div><div id="vocab-terms"></div></div>
+      <div class="match-col"><div class="match-col-heading">Definition</div><div id="vocab-definitions"></div></div>
+      <div class="match-col"><div class="match-col-heading">Example</div><div id="vocab-examples"></div></div>
+    </div>
+    <div class="feedback-msg" id="vocabmatch-feedback"></div>
   </div>
 </div>
 
@@ -252,53 +257,37 @@
   }
 
   // ==========================================
-  // QUICK VOCABULARY CHECK
+  // QUICK VOCABULARY CHECK (drag-and-drop match-up - see createVocabMatch()
+  // in lesson-shared.js and /CLAUDE.md's "Standards line" section's
+  // neighboring vocabulary-check notes)
   // ==========================================
-  const vocabCheckItems = [
-    { q: "This is the number underneath a radical symbol.", accepted: ["radicand"] },
-    { q: "This is the small number in a radical showing which root to take, like the 3 in a cube root.", accepted: ["index"] },
-    { q: "This word describes a number that is the square of a whole number, like 49.", accepted: ["perfectsquare"] },
-    { q: "This word describes a number that is the cube of a whole number, like 27.", accepted: ["perfectcube"] },
-    { q: "This is the name for the number being multiplied by itself, like the 7 in 7².", accepted: ["base"] },
-    { q: "This symbol, and any expression using it, is called this.", accepted: ["radical"] }
+  // Definitions/examples are the same text as Tab 1's glossary cards, so
+  // this stays self-consistent with the reference material by construction.
+  const VOCAB_TERMS = [
+    { key: 'radicand', term: 'Radicand', def: 'The number underneath the radical symbol - the number a root is being taken of.', example: 'In \\(\\sqrt{81}\\), the radicand is 81' },
+    { key: 'index', term: 'Index', def: "The small number tucked into the radical's checkmark showing which root to take - 2 (square root) is usually left off.", example: 'The 3 in \\(\\sqrt[3]{64}\\) is the index' },
+    { key: 'perfectsquare', term: 'Perfect Square', def: 'A number that is the square of a whole number.', example: '36 is a perfect square' },
+    { key: 'perfectcube', term: 'Perfect Cube', def: 'A number that is the cube of a whole number.', example: '64 is a perfect cube' },
+    { key: 'base', term: 'Base', def: 'The number being multiplied by itself in a square or cube.', example: 'In \\(7^2\\), the base is 7' },
+    { key: 'radical', term: 'Radical', def: 'The root symbol (\\(\\sqrt{\\phantom{x}}\\) or \\(\\sqrt[3]{\\phantom{x}}\\)), and any expression that uses it.', example: '\\(\\sqrt{49}\\) is a radical expression' }
   ];
 
-  function renderVocabCheck() {
-    const html = vocabCheckItems.map((p, i) => `
-      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
-        <strong>${i + 1}.</strong> ${p.q}
-        <div style="margin-top:10px;">
-          <input type="text" id="vc-${i}-input" class="form-control-lg" style="max-width:260px; display:inline-block;" placeholder="Type the term">
-          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVocab(${i})">Check</button>
-        </div>
-        <div id="vc-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
-      </div>
-    `).join('');
-    document.getElementById('vocab-check-list').innerHTML = html;
-  }
-
-  function checkVocab(idx) {
-    const p = vocabCheckItems[idx];
-    const val = document.getElementById(`vc-${idx}-input`).value;
-    const fb = document.getElementById(`vc-${idx}-feedback`);
-    if (!val.trim()) {
-      LessonCheck.incomplete(fb, "Type a term before checking.");
-      return;
-    }
-    const correct = p.accepted.map(normalizeWord).includes(normalizeWord(val));
-    LessonCheck.check(`vc-${idx}`, correct, fb, {
-      correct: `Correct! That's <strong>${p.accepted[0]}</strong>.`,
-      retry: "Not quite yet. Look back at the glossary tab and try again.",
-      reveal: `The correct term is <strong>${p.accepted[0]}</strong>.`
-    });
-  }
+  const vocabMatch = createVocabMatch({
+    termsId: 'vocab-terms', defsId: 'vocab-definitions', exsId: 'vocab-examples',
+    feedbackId: 'vocabmatch-feedback',
+    terms: VOCAB_TERMS,
+    progressKey: 'vocabmatch', progressLabel: 'Key Vocabulary Match-Up',
+    section: '3. Quick Vocabulary Check'
+  });
 
   renderTranslate();
-  renderVocabCheck();
+  vocabMatch.render();
 
-  // Two separate hand-written render/check functions, not a shared keyed
-  // registry, so the teacher answer key is hand-written too - see
-  // /CLAUDE.md's "Role differentiation on lesson pages".
+  // Tab 2 is a hand-written render/check function (no shared keyed
+  // registry), so the teacher answer key is hand-written too - see
+  // /CLAUDE.md's "Role differentiation on lesson pages". Tab 3 delegates
+  // to vocabMatch.reveal() instead, since the match-up widget owns its
+  // own reveal state.
   window.revealAnswerKey = function () {
     const fillInput = (id, feedbackId, answer) => {
       const input = document.getElementById(id);
@@ -314,7 +303,7 @@
       fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
     };
     translateItems.forEach((p, i) => fillInput(`tr-${i}-input`, `tr-${i}-feedback`, p.displayAnswer));
-    vocabCheckItems.forEach((p, i) => fillInput(`vc-${i}-input`, `vc-${i}-feedback`, p.accepted[0]));
+    vocabMatch.reveal();
     triggerMathJax();
   };
 </script>

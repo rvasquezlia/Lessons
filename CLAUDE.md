@@ -1579,6 +1579,91 @@ assume it's intentional** - check whether any of its problems are pure
 fraction computation with no decimal in sight, the same way these three
 were.
 
+### Vocabulary Match-Up (drag-and-drop term/definition/example widget)
+
+The old "Quick Vocabulary Check"/"Check Your Understanding" self-check
+pattern on `Vocabulary-Literacy.html` — a stack of fill-in-the-blank
+boxes ("Type the vocabulary word that matches...") or, on two Sixth
+pages, a stack of `<select>` multiple-choice boxes — was reported as
+looking cramped and awkward on screen (a teacher screenshot showed
+several nearly-identical "Locked - Answer key" boxes stacked one after
+another). Replaced with a 3-column drag-and-drop match-up, modeled on
+an existing activity in `Lessons/Projects/Ethical-Auditor-Community-
+Engineer/index.html` (that file's `VOCAB_TERMS`/`renderVocabMatch()`/
+`onVocabDrop()` pattern) but reimplemented as a shared, reusable factory
+rather than copied per-page.
+
+**`createVocabMatch(config)` in `lesson-shared.js`** is the shared
+factory — one call per page, returns one instance a page keeps as a
+page-level `const vocabMatch` (the identifier name is fixed: the
+instance's own rendered `onclick`/`ondrop` handlers call back through
+the literal string `vocabMatch`, not a name read from `config`, so
+renaming the variable breaks the handlers). Config: `{termsId, defsId,
+exsId, feedbackId, terms: [{key, term, def, example}], progressKey,
+progressLabel, section}`. `def`/`example` render as raw `innerHTML`
+(same convention as every glossary card) so they can carry LaTeX
+(`\\(...\\)`) or `<strong>` — author them, never populate them from
+student input. Drag a term onto its matching definition and onto its
+matching example (both required for that term to earn credit); tap-to-
+select (tap a term, then tap a definition/example) is the touch
+fallback for devices where drag doesn't work reliably. On full
+completion, calls `LessonProgress.record(progressKey, progressLabel,
+"All N terms matched...", 'correct', section)` directly (not through
+`LessonCheck.check()`, since this isn't a single right/wrong answer) —
+see "Saving student progress" above for why this call is what actually
+makes an attempt reach the backend. `vocabMatch.reveal()` is the
+teacher-view hook: call it from the page's own `window.revealAnswerKey`
+alongside whatever else that function already reveals (a page can mix
+a match-up tab with hand-written reveal logic for its other tabs, as
+several already do).
+
+**CSS lives in `lesson-shared.css`**: `.match-wrap`/`.match-col`/
+`.match-col-heading`/`.match-card` (+`.selected`/`.matched`)/
+`.match-badges`/`.match-badge` (+`.done`)/`.match-slot` (+`.matched`/
+`.wrong-flash`). **`.match-slot`'s definition/example content is
+wrapped in a `<span>`, not dropped straight into the flex container** -
+a real bug this surfaced once: `.match-slot` is `display:flex;
+align-items:center` for vertical centering, and CSS flexbox turns each
+direct child into its own flex item - a definition string containing
+plain text plus an inline element (e.g. `"...the graph is
+<strong>not</strong> a function."`) split into three separate flex
+items (text, `<strong>`, text) that laid out as a broken multi-column
+row instead of one wrapped paragraph. Wrapping the whole thing in one
+`<span>` makes it a single flex item again, so its own inline content
+wraps normally. Don't strip that wrapper without re-verifying against a
+definition that actually contains inline markup (most don't, which is
+why this went unnoticed in the original Projects-folder version this
+was modeled on).
+
+**Rolled out to 6 of the 9 `Vocabulary-Literacy.html` pages** — every
+one whose old self-check tab was a single, standalone "match the term"
+tab: `Eighth/Linear-Functions`, `Eighth/Linear-Equations`,
+`Eighth/Literal-Equations`, `Seventh/Squares-Cubes-and-Roots`,
+`Sixth/Decimal-Operations`, `Sixth/Operations-with-Fractions`. Term/def/
+example content was sourced directly from each page's own Tab 1
+glossary (never invented fresh), so the match-up stays word-for-word
+consistent with the reference material a student already read. Two
+pages' term sets got a small edit rather than a straight port: Eighth/
+Literal-Equations dropped a letter-identification item ("in \(I=Prt\),
+which letter is principal?" - no def/example to match against) in favor
+of the glossary's own "Formula" term; Sixth/Decimal-Operations and
+Sixth/Operations-with-Fractions (both originally multiple-choice
+`<select>` quizzes, not fill-in-the-blank) reused their existing
+"correct choice" text as the definition and pulled a matching example
+from Tab 1's Word Bank cards.
+
+**NOT rolled out to `Seventh/Integers`, `Seventh/Operations-with-
+Rationals`, `Seventh/Rational-Numbers`** — these three never had a
+standalone "match the term" self-check tab to begin with; their
+vocabulary practice (select-dropdown classification, clue-word
+matching, operation-vocabulary matching) is spread across all of that
+page's tabs as a different, already-varied interaction shape, not the
+repetitive stacked-box pattern that prompted this change. Converting
+those would mean redesigning that page's whole tab structure, not
+swapping one tab's widget - a bigger, separate decision nobody has
+asked for yet. Don't assume these three need the same treatment without
+checking with the teacher first.
+
 ### index.html is also gated now
 
 Unlike a lesson page, the index links to many activities rather than

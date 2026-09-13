@@ -1206,3 +1206,39 @@ button:disabled {
 .color-key { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 10px; font-size: 0.92rem; }
 .color-key span { display: inline-flex; align-items: center; gap: 6px; }
 .color-key i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; flex-shrink: 0; }
+
+/* Vocabulary Match-Up (drag-and-drop: term -> definition, term -> example).
+   Shared by every Vocabulary-Literacy.html "Quick Vocabulary Check" tab via
+   createVocabMatch() in lesson-shared.js - see /CLAUDE.md. */
+.match-wrap { display: flex; flex-wrap: wrap; gap: 18px; margin: 16px 0; }
+.match-col { flex: 1 1 220px; display: flex; flex-direction: column; gap: 10px; }
+.match-col-heading { text-align: center; font-weight: 800; color: var(--primary); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: -2px; }
+.match-card {
+  background: #eff6ff;
+  border: 3px solid var(--primary-light);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-weight: 800;
+  color: var(--primary);
+  cursor: grab;
+  text-align: center;
+  transition: transform 0.1s ease;
+}
+.match-card.selected { outline: 3px solid #f59e0b; outline-offset: 2px; }
+.match-card.matched { background: var(--success-bg); border-color: var(--success); color: var(--success); cursor: default; opacity: 0.85; }
+.match-badges { display: flex; gap: 6px; justify-content: center; margin-top: 6px; }
+.match-badge { font-size: 0.68rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: #e2e8f0; color: #64748b; }
+.match-badge.done { background: var(--success); color: #fff; }
+.match-slot {
+  border: 3px dashed var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  font-size: 0.88rem;
+  color: #334155;
+  cursor: pointer;
+}
+.match-slot.matched { border-style: solid; border-color: var(--success); background: var(--success-bg); cursor: default; }
+.match-slot.wrong-flash { border-color: var(--error); background: var(--error-bg); }

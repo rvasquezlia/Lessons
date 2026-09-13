@@ -299,13 +299,18 @@
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
       <ul style="margin:6px 0 0 0;">
-        <li>Choose the correct definition for each term - <strong>2 tries</strong> per question.</li>
-        <li>After a second miss, the correct definition is shown and it locks.</li>
+        <li>Drag each term onto its matching <strong>definition</strong>, and onto its matching <strong>example</strong>, too - or tap a term and then tap a definition or example.</li>
+        <li>A term only earns full credit once both its definition and its example are matched. There's no limit on tries.</li>
         <li>Quick check only - it doesn't print a progress report.</li>
       </ul>
     </div>
 
-    <div id="vocab-quiz-list"></div>
+    <div class="match-wrap">
+      <div class="match-col"><div class="match-col-heading">Term</div><div id="vocab-terms"></div></div>
+      <div class="match-col"><div class="match-col-heading">Definition</div><div id="vocab-definitions"></div></div>
+      <div class="match-col"><div class="match-col-heading">Example</div><div id="vocab-examples"></div></div>
+    </div>
+    <div class="feedback-msg" id="vocabmatch-feedback"></div>
   </div>
 </div>
 
@@ -454,57 +459,36 @@
   }
 
   // ==========================================
-  // VOCABULARY QUIZ (Check Your Understanding)
+  // VOCABULARY MATCH-UP (Check Your Understanding) - drag-and-drop, see
+  // createVocabMatch() in lesson-shared.js and /CLAUDE.md's "Standards
+  // line" section's neighboring vocabulary-check notes.
   // ==========================================
-  const vocabQuiz = [
-    { term: "Like Denominators", choices: ["Fractions whose denominators are the same", "Fractions whose numerators are the same", "Fractions that simplify to whole numbers"], correct: 0 },
-    { term: "Butterfly Method", choices: ["Simplifying a fraction by dividing out a common factor", "Cross-multiplying for the wings, then multiplying the denominators for the new one", "Converting a mixed number to an improper fraction"], correct: 1 },
-    { term: "Improper Fraction", choices: ["A fraction that is not in simplest form", "A fraction whose numerator is greater than or equal to its denominator", "A fraction with a denominator of 1"], correct: 1 },
-    { term: "Regroup (Fraction Subtraction)", choices: ["Simplifying a fraction after subtracting", "Borrowing 1 whole and rewriting it as an extra fraction when the fraction being subtracted is bigger", "Finding a common denominator before subtracting"], correct: 1 },
-    { term: "Benchmark Fraction", choices: ["A fraction used to estimate before calculating exactly", "The final simplified answer to a problem", "A fraction with the same numerator and denominator"], correct: 0 },
-    { term: "Mixed Number", choices: ["A fraction with two different denominators", "A whole number and a fraction written together", "A fraction that has been simplified"], correct: 1 }
+  // Definitions are the same "correct choice" text this quiz already used
+  // when it was multiple-choice; examples are pulled from Tab 1's Word
+  // Bank cards for the same terms, so this stays self-consistent with the
+  // reference material by construction.
+  const VOCAB_TERMS = [
+    { key: 'likedenominators', term: 'Like Denominators', def: 'Fractions whose denominators are the same', example: '\\(\\frac{2}{7}\\) and \\(\\frac{4}{7}\\) have like denominators.' },
+    { key: 'butterflymethod', term: 'Butterfly Method', def: 'Cross-multiplying for the wings, then multiplying the denominators for the new one', example: '\\(\\frac{1}{4}+\\frac{1}{6}\\) &rarr; wings \\(6\\) and \\(4\\), new denominator \\(24\\).' },
+    { key: 'improperfraction', term: 'Improper Fraction', def: 'A fraction whose numerator is greater than or equal to its denominator', example: '\\(\\frac{17}{5}\\) is the same amount as \\(3\\frac{2}{5}\\).' },
+    { key: 'regroupfracsub', term: 'Regroup (Fraction Subtraction)', def: 'Borrowing 1 whole and rewriting it as an extra fraction when the fraction being subtracted is bigger', example: '\\(5\\frac{1}{4}\\) regroups to \\(4\\frac{5}{4}\\) before subtracting \\(\\frac{3}{4}\\).' },
+    { key: 'benchmarkfraction', term: 'Benchmark Fraction', def: 'A fraction used to estimate before calculating exactly', example: '\\(\\frac{5}{9} + \\frac{4}{7}\\) is close to \\(\\frac{1}{2} + \\frac{1}{2} = 1\\).' },
+    { key: 'mixednumber', term: 'Mixed Number', def: 'A whole number and a fraction written together', example: '\\(3\\frac{2}{5}\\)' }
   ];
 
-  function renderVocabQuiz() {
-    const html = vocabQuiz.map((item, i) => `
-      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
-        <strong>${i + 1}. What is the correct definition of "${item.term}"?</strong>
-        <div style="margin-top:10px;">
-          <select id="vocab-${i}" class="form-control-lg">
-            <option value="">Select a definition...</option>
-            ${item.choices.map((c, ci) => `<option value="${ci}">${c}</option>`).join('')}
-          </select>
-        </div>
-        <div style="margin-top:10px;">
-          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVocabQuiz(${i})">Check</button>
-        </div>
-        <div id="vocab-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
-      </div>
-    `).join('');
-    document.getElementById('vocab-quiz-list').innerHTML = html;
-  }
-  renderVocabQuiz();
+  const vocabMatch = createVocabMatch({
+    termsId: 'vocab-terms', defsId: 'vocab-definitions', exsId: 'vocab-examples',
+    feedbackId: 'vocabmatch-feedback',
+    terms: VOCAB_TERMS,
+    progressKey: 'vocabmatch', progressLabel: 'Key Vocabulary Match-Up',
+    section: '4. Check Your Understanding'
+  });
+  vocabMatch.render();
 
-  function checkVocabQuiz(idx) {
-    const item = vocabQuiz[idx];
-    const val = document.getElementById(`vocab-${idx}`).value;
-    const fb = document.getElementById(`vocab-${idx}-feedback`);
-    if (val === '') {
-      LessonCheck.incomplete(fb, "Choose a definition before checking.");
-      return;
-    }
-    const correct = Number(val) === item.correct;
-    LessonCheck.check(`vocab-${idx}`, correct, fb, {
-      correct: `Correct! "${item.term}" means: ${item.choices[item.correct]}`,
-      retry: "Not quite yet. Re-read the Word Bank tab and try again.",
-      reveal: `"${item.term}" means: ${item.choices[item.correct]}`
-    });
-  }
-
-
-  // No window.listRegistry on this page - three different problem shapes
-  // (select dropdowns for word sort, text inputs for translations, select
-  // dropdowns for the vocab quiz), so the teacher reveal is built by hand.
+  // No window.listRegistry on this page - word sort (select dropdowns) and
+  // translations (text inputs) are two different hand-written problem
+  // shapes, so the teacher reveal is built by hand; Tab 4 delegates to
+  // vocabMatch.reveal() since the match-up widget owns its own reveal state.
   window.revealAnswerKey = function () {
     wordSortItems.forEach((item, i) => {
       const sel = document.getElementById(`wordsort-${i}`);
@@ -540,18 +524,7 @@
       fb.innerHTML = `Answer key: <strong>${item.answer}</strong>`;
     });
 
-    vocabQuiz.forEach((item, i) => {
-      const sel = document.getElementById(`vocab-${i}`);
-      const fb = document.getElementById(`vocab-${i}-feedback`);
-      if (!sel || !fb) return;
-      sel.value = String(item.correct);
-      sel.disabled = true;
-      const btn = sel.closest('.guided-practice') && sel.closest('.guided-practice').querySelector('button');
-      if (btn) btn.disabled = true;
-      fb.style.display = 'block';
-      fb.className = 'feedback-msg success locked';
-      fb.innerHTML = `Answer key: <strong>${item.choices[item.correct]}</strong>`;
-    });
+    vocabMatch.reveal();
 
     triggerMathJax();
   };

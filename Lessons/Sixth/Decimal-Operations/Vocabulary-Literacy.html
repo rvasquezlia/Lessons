@@ -384,13 +384,18 @@
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
       <ul style="margin:6px 0 0 0;">
-        <li>Match each term to its correct definition - <strong>2 tries</strong> per question.</li>
-        <li>After a second miss, the correct definition is shown and it locks.</li>
+        <li>Drag each term onto its matching <strong>definition</strong>, and onto its matching <strong>example</strong>, too - or tap a term and then tap a definition or example.</li>
+        <li>A term only earns full credit once both its definition and its example are matched. There's no limit on tries.</li>
         <li>Quick check only - it doesn't print a progress report.</li>
       </ul>
     </div>
 
-    <div id="vocab-quiz-list"></div>
+    <div class="match-wrap">
+      <div class="match-col"><div class="match-col-heading">Term</div><div id="vocab-terms"></div></div>
+      <div class="match-col"><div class="match-col-heading">Definition</div><div id="vocab-definitions"></div></div>
+      <div class="match-col"><div class="match-col-heading">Example</div><div id="vocab-examples"></div></div>
+    </div>
+    <div class="feedback-msg" id="vocabmatch-feedback"></div>
   </div>
 </div>
 
@@ -520,59 +525,39 @@
   }
 
   // ==========================================
-  // VOCABULARY QUIZ (Check Your Understanding)
+  // VOCABULARY MATCH-UP (Check Your Understanding) - drag-and-drop, see
+  // createVocabMatch() in lesson-shared.js and /CLAUDE.md's "Standards
+  // line" section's neighboring vocabulary-check notes.
   // ==========================================
-  const vocabQuiz = [
-    { term: "Decimal Point", choices: ["The dot separating whole quantities from fractional parts", "The answer to a multiplication problem", "An approximate answer found by rounding"], correct: 0 },
-    { term: "Estimate", choices: ["The answer to an addition problem", "An approximate answer found by rounding, used to check reasonableness", "A digit's value based on its position"], correct: 1 },
-    { term: "Partial Product", choices: ["One piece of a multiplication problem before the pieces are added together", "The number of digits right of the decimal point", "The value a digit has because of its position"], correct: 0 },
-    { term: "Regroup (Borrow)", choices: ["Carrying a 1 into the next column when a sum is 10 or more", "Taking 1 from the column to the left when subtraction would go negative", "Rounding a number to the nearest tenth"], correct: 1 },
-    { term: "Product", choices: ["The answer to a subtraction problem", "The answer to an addition problem", "The answer to a multiplication problem"], correct: 2 },
-    { term: "Decimal Places", choices: ["The number of digits written to the right of the decimal point", "The columns to the left of the decimal point", "Another name for the decimal point itself"], correct: 0 },
-    { term: "Divisor", choices: ["The number being divided", "The number you divide by", "The answer to a division problem"], correct: 1 },
-    { term: "Quotient", choices: ["The number being divided", "The number you divide by", "The answer to a division problem"], correct: 2 },
-    { term: "Move the Decimal Point (Division)", choices: ["Round both numbers to the nearest whole number before dividing", "Multiply both the divisor and the dividend by the same power of 10 until the divisor is a whole number", "Ignore the decimal points and divide the digits only"], correct: 1 }
+  // Definitions are the same "correct choice" text this quiz already used
+  // when it was multiple-choice; examples are pulled from Tab 1's Word
+  // Bank cards for the same terms, so this stays self-consistent with the
+  // reference material by construction.
+  const VOCAB_TERMS = [
+    { key: 'decimalpoint', term: 'Decimal Point', def: 'The dot separating whole quantities from fractional parts', example: 'In \\(14.9\\), the decimal point sits between the ones and the tenths.' },
+    { key: 'estimate', term: 'Estimate', def: 'An approximate answer found by rounding, used to check reasonableness', example: 'Before computing \\(14.25 + 8.7\\) exactly, estimate \\(14 + 9 = 23\\).' },
+    { key: 'partialproduct', term: 'Partial Product', def: 'One piece of a multiplication problem before the pieces are added together', example: 'In \\(245 \\times 32\\), \\(245 \\times 2 = 490\\) and \\(245 \\times 30 = 7350\\) are the two partial products.' },
+    { key: 'regroupborrow', term: 'Regroup (Borrow)', def: 'Taking 1 from the column to the left when subtraction would go negative', example: 'In \\(20.00 - 13.45\\), the hundredths column borrows all the way from the tens.' },
+    { key: 'product', term: 'Product', def: 'The answer to a multiplication problem', example: 'The product of \\(3.5\\) and \\(1.25\\) is \\(4.375\\).' },
+    { key: 'decimalplaces', term: 'Decimal Places', def: 'The number of digits written to the right of the decimal point', example: '\\(3.5\\) has 1 decimal place; \\(1.25\\) has 2 decimal places.' },
+    { key: 'divisor', term: 'Divisor', def: 'The number you divide by', example: 'In \\(45 \\div 1.5\\), \\(1.5\\) is the divisor.' },
+    { key: 'quotient', term: 'Quotient', def: 'The answer to a division problem', example: 'The quotient of \\(45\\) and \\(1.5\\) is \\(30\\).' },
+    { key: 'movedecimal', term: 'Move the Decimal Point (Division)', def: 'Multiply both the divisor and the dividend by the same power of 10 until the divisor is a whole number', example: '\\(3.75 \\div 0.25\\) becomes \\(375 \\div 25\\) once both decimal points shift 2 places right.' }
   ];
 
-  function renderVocabQuiz() {
-    const html = vocabQuiz.map((item, i) => `
-      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
-        <strong>${i + 1}. What is the correct definition of "${item.term}"?</strong>
-        <div style="margin-top:10px;">
-          <select id="vocab-${i}" class="form-control-lg">
-            <option value="">Select a definition...</option>
-            ${item.choices.map((c, ci) => `<option value="${ci}">${c}</option>`).join('')}
-          </select>
-        </div>
-        <div style="margin-top:10px;">
-          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVocabQuiz(${i})">Check</button>
-        </div>
-        <div id="vocab-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
-      </div>
-    `).join('');
-    document.getElementById('vocab-quiz-list').innerHTML = html;
-  }
-  renderVocabQuiz();
+  const vocabMatch = createVocabMatch({
+    termsId: 'vocab-terms', defsId: 'vocab-definitions', exsId: 'vocab-examples',
+    feedbackId: 'vocabmatch-feedback',
+    terms: VOCAB_TERMS,
+    progressKey: 'vocabmatch', progressLabel: 'Key Vocabulary Match-Up',
+    section: '4. Check Your Understanding'
+  });
+  vocabMatch.render();
 
-  function checkVocabQuiz(idx) {
-    const item = vocabQuiz[idx];
-    const val = document.getElementById(`vocab-${idx}`).value;
-    const fb = document.getElementById(`vocab-${idx}-feedback`);
-    if (val === '') {
-      LessonCheck.incomplete(fb, "Choose a definition before checking.");
-      return;
-    }
-    const correct = Number(val) === item.correct;
-    LessonCheck.check(`vocab-${idx}`, correct, fb, {
-      correct: `Correct! "${item.term}" means: ${item.choices[item.correct]}`,
-      retry: "Not quite yet. Re-read the Word Bank tab and try again.",
-      reveal: `"${item.term}" means: ${item.choices[item.correct]}`
-    });
-  }
-
-  // No window.listRegistry on this page - three different problem shapes
-  // (select dropdowns for word sort, text inputs for translations, select
-  // dropdowns for the vocab quiz), so the teacher reveal is built by hand.
+  // No window.listRegistry on this page - word sort (select dropdowns) and
+  // translations (text inputs) are two different hand-written problem
+  // shapes, so the teacher reveal is built by hand; Tab 4 delegates to
+  // vocabMatch.reveal() since the match-up widget owns its own reveal state.
   window.revealAnswerKey = function () {
     wordSortItems.forEach((item, i) => {
       const sel = document.getElementById(`wordsort-${i}`);
@@ -600,18 +585,7 @@
       fb.innerHTML = `Answer key: <strong>${item.answer}</strong>`;
     });
 
-    vocabQuiz.forEach((item, i) => {
-      const sel = document.getElementById(`vocab-${i}`);
-      const fb = document.getElementById(`vocab-${i}-feedback`);
-      if (!sel || !fb) return;
-      sel.value = String(item.correct);
-      sel.disabled = true;
-      const btn = sel.closest('.guided-practice') && sel.closest('.guided-practice').querySelector('button');
-      if (btn) btn.disabled = true;
-      fb.style.display = 'block';
-      fb.className = 'feedback-msg success locked';
-      fb.innerHTML = `Answer key: <strong>${item.choices[item.correct]}</strong>`;
-    });
+    vocabMatch.reveal();
 
     triggerMathJax();
   };

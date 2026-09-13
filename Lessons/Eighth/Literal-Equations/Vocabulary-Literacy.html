@@ -198,9 +198,14 @@
     <div class="section-title">Quick Vocabulary Check</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Type the vocabulary word that matches each definition or example. You get two tries per item, then the correct term is shown.
+      Drag each term onto its matching <strong>definition</strong>, and onto its matching <strong>example</strong>, too - or tap a term and then tap a definition or example. A term only earns full credit once both its definition and its example are matched. There's no limit on tries.
     </div>
-    <div id="vocab-check-list"></div>
+    <div class="match-wrap">
+      <div class="match-col"><div class="match-col-heading">Term</div><div id="vocab-terms"></div></div>
+      <div class="match-col"><div class="match-col-heading">Definition</div><div id="vocab-definitions"></div></div>
+      <div class="match-col"><div class="match-col-heading">Example</div><div id="vocab-examples"></div></div>
+    </div>
+    <div class="feedback-msg" id="vocabmatch-feedback"></div>
   </div>
 </div>
 
@@ -268,50 +273,40 @@
   }
 
   // ==========================================
-  // QUICK VOCABULARY CHECK
+  // QUICK VOCABULARY CHECK (drag-and-drop match-up - see createVocabMatch()
+  // in lesson-shared.js and /CLAUDE.md's "Standards line" section's
+  // neighboring vocabulary-check notes)
   // ==========================================
-  const vocabCheckItems = [
-    { q: "This is the name for an equation with two or more variables, like d = rt.", accepted: ["literalequation", "literal"] },
-    { q: "This word describes what a formula becomes solved for once you've isolated it - the letter alone on one side.", accepted: ["subject", "subjectoftheformula"] },
-    { q: "This is the rule for handling every letter you are NOT solving for.", accepted: ["treatitlikeanumber", "treatlikeanumber"] },
-    { q: "This move turns a(b + c) into ab + ac.", accepted: ["distribute", "distributiveproperty"] },
-    { q: "This move turns P + Prt into P(1 + rt) - the reverse of distributing.", accepted: ["factor", "factoring", "factorout"] },
-    { q: "In the formula I = Prt, this letter stands for the amount of money originally invested.", accepted: ["p"] }
+  // Definitions/examples are the same text as Tab 1's glossary cards, so
+  // this stays self-consistent with the reference material by construction.
+  // ("In I = Prt, this letter stands for principal" was dropped in favor of
+  // the genuine vocabulary term "Formula" - a letter-identification item
+  // doesn't have a definition/example to match against, and Tab 2 already
+  // covers reading-a-formula practice.)
+  const VOCAB_TERMS = [
+    { key: 'literalequation', term: 'Literal Equation', def: 'An equation with two or more variables (letters), instead of just one.', example: 'Example: \\(d = rt\\)' },
+    { key: 'formula', term: 'Formula', def: "A literal equation that describes a real relationship between quantities - it's a rule, not a one-time equation.", example: '\\(A = lw\\) is the formula for the area of a rectangle' },
+    { key: 'subject', term: 'Subject of the Formula', def: 'The variable that ends up alone. Once you\'ve solved for it, that variable is "the subject."', example: '\\(t = \\frac{d}{r}\\) has \\(t\\) as its subject' },
+    { key: 'treatlikeanumber', term: 'Treat It Like a Number', def: "Every letter you're <strong>not</strong> solving for: move it like a number. Never combine mismatched letters.", example: 'Solving \\(y=mx+b\\) for \\(x\\): \\(m\\) and \\(b\\) act like numbers' },
+    { key: 'distribute', term: 'Distribute', def: 'Multiply a factor by every term inside parentheses - works the same with letters as with numbers.', example: '\\(a(b + c) = ab + ac\\)' },
+    { key: 'factor', term: 'Factor Out', def: 'Pull a shared variable out front, turning a sum into a product - the reverse of distributing.', example: '\\(P + Prt = P(1 + rt)\\)' }
   ];
 
-  function renderVocabCheck() {
-    const html = vocabCheckItems.map((p, i) => `
-      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
-        <strong>${i + 1}.</strong> ${p.q}
-        <div style="margin-top:10px;">
-          <input type="text" id="vc-${i}-input" class="form-control-lg" style="max-width:260px; display:inline-block;" placeholder="Type the term">
-          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVocab(${i})">Check</button>
-        </div>
-        <div id="vc-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
-      </div>
-    `).join('');
-    document.getElementById('vocab-check-list').innerHTML = html;
-  }
-
-  function checkVocab(idx) {
-    const p = vocabCheckItems[idx];
-    const val = document.getElementById(`vc-${idx}-input`).value;
-    const fb = document.getElementById(`vc-${idx}-feedback`);
-    if (!val.trim()) { LessonCheck.incomplete(fb, "Type an answer before checking."); return; }
-    const correct = p.accepted.includes(normalizeExpr(val));
-    LessonCheck.check(`vc-${idx}`, correct, fb, {
-      correct: `Correct! That's <strong>${p.accepted[0]}</strong>.`,
-      retry: "Not quite yet. Look back at Tab 1 and try again.",
-      reveal: `The correct answer is <strong>${p.accepted[0]}</strong>.`
-    });
-  }
+  const vocabMatch = createVocabMatch({
+    termsId: 'vocab-terms', defsId: 'vocab-definitions', exsId: 'vocab-examples',
+    feedbackId: 'vocabmatch-feedback',
+    terms: VOCAB_TERMS,
+    progressKey: 'vocabmatch', progressLabel: 'Key Vocabulary Match-Up',
+    section: '3. Quick Vocabulary Check'
+  });
 
   renderReading();
-  renderVocabCheck();
+  vocabMatch.render();
 
   // Teacher answer key - see /CLAUDE.md's "Role differentiation on lesson
-  // pages". checkReading/checkVocab are two separate functions rather
-  // than a shared keyed registry, so this is hand-written.
+  // pages". Tab 2 (checkReading) is hand-written, so this stays
+  // hand-written too; Tab 3 delegates to vocabMatch.reveal() since the
+  // match-up widget owns its own reveal state.
   window.revealAnswerKey = function () {
     const fillInput = (id, feedbackId, answer) => {
       const input = document.getElementById(id);
@@ -327,7 +322,7 @@
       fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
     };
     readingItems.forEach((p, i) => fillInput(`rd-${i}-input`, `rd-${i}-feedback`, p.accepted[0]));
-    vocabCheckItems.forEach((p, i) => fillInput(`vc-${i}-input`, `vc-${i}-feedback`, p.accepted[0]));
+    vocabMatch.reveal();
   };
 </script>
 </body>

@@ -194,6 +194,183 @@ const LessonCheck = (() => {
 })();
 
 // ==========================================
+// VOCABULARY MATCH-UP (drag-and-drop, shared by every Vocabulary-Literacy.html
+// page's "Quick Vocabulary Check" tab)
+// ==========================================
+// A 3-way match: drag each term onto its matching definition, and onto its
+// matching example. A term earns full credit only once both are matched -
+// this replaces the old type-the-term-into-a-box self-check, which read as
+// cramped stacked boxes on screen (see git history/CLAUDE.md). Drag-and-drop
+// is the primary interaction; tap-to-select (tap a term, then tap a
+// definition or example) is the touch-friendly fallback, since a phone/
+// tablet can't always drag reliably.
+//
+// createVocabMatch(config) returns one instance - a page calls it once per
+// "Quick Vocabulary Check" tab (there's only ever one per page). Its
+// rendered onclick/ondrop attributes call back through the fixed
+// identifier `vocabMatch` (evaluated in the shared script-scope, same
+// convention every other page's inline handlers already rely on), so the
+// returned instance MUST be assigned to a page-level `const vocabMatch` -
+// not renamed - or the rendered handlers won't resolve to anything:
+//   const vocabMatch = createVocabMatch({
+//     termsId: 'vocab-terms', defsId: 'vocab-definitions', exsId: 'vocab-examples',
+//     feedbackId: 'vocabmatch-feedback',
+//     terms: [{ key, term, def, example }, ...],   // def/example may contain
+//                                                   // HTML/LaTeX \\(...\\) -
+//                                                   // call vocabMatch.render()
+//                                                   // again after MathJax is
+//                                                   // ready if typeset late
+//     progressKey: 'vocabmatch', progressLabel: 'Key Vocabulary Match-Up',
+//     section: '3. Quick Vocabulary Check'
+//   });
+//   vocabMatch.render();
+// and its markup (three <div id="..."></div> columns inside a .match-wrap,
+// plus a feedback <div>) - see any Vocabulary-Literacy.html Tab 3 for the
+// exact shape. def/example strings render as raw innerHTML (same convention
+// every glossary card on Tab 1 already uses) - author them, don't accept
+// student input into them.
+function createVocabMatch(config) {
+  const defMatched = {};
+  const exMatched = {};
+  let selected = null;
+  let attempts = 0;
+  // Definitions and examples each render in their own shuffled order,
+  // chosen once, so neither column visibly reshuffles after an attempt.
+  let defOrder = null;
+  let exOrder = null;
+  let revealed = false;
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function escText(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function termDone(key) {
+    return !!(defMatched[key] && exMatched[key]);
+  }
+
+  function allDone() {
+    return config.terms.every((t) => termDone(t.key));
+  }
+
+  function render() {
+    if (!defOrder) defOrder = shuffle(config.terms.map((t) => t.key));
+    if (!exOrder) exOrder = shuffle(config.terms.map((t) => t.key));
+
+    const termsEl = document.getElementById(config.termsId);
+    const defsEl = document.getElementById(config.defsId);
+    const exsEl = document.getElementById(config.exsId);
+    if (!termsEl || !defsEl || !exsEl) return;
+
+    termsEl.innerHTML = config.terms.map((t) => {
+      const done = termDone(t.key);
+      const sel = selected === t.key;
+      const handlers = (done || revealed) ? '' :
+        `onclick="vocabMatch.onTermClick('${t.key}')" draggable="true" ondragstart="vocabMatch.onDragStart(event,'${t.key}')"`;
+      const badges = `<div class="match-badges">
+        <span class="match-badge${defMatched[t.key] ? ' done' : ''}">Def${defMatched[t.key] ? ' &#10003;' : ''}</span>
+        <span class="match-badge${exMatched[t.key] ? ' done' : ''}">Ex${exMatched[t.key] ? ' &#10003;' : ''}</span>
+      </div>`;
+      return `<div class="match-card${done ? ' matched' : ''}${sel ? ' selected' : ''}" ${handlers}>${escText(t.term)}${done ? ' &#10003;' : badges}</div>`;
+    }).join('');
+
+    defsEl.innerHTML = defOrder.map((key) => {
+      const t = config.terms.find((x) => x.key === key);
+      const matched = defMatched[key];
+      const handlers = (matched || revealed) ? '' :
+        `onclick="vocabMatch.onSlotClick('def','${key}')" ondragover="event.preventDefault()" ondrop="vocabMatch.onDrop(event,'def','${key}')"`;
+      return `<div class="match-slot${matched ? ' matched' : ''}" id="${config.defsId}-${key}" ${handlers}><span>${t.def}</span></div>`;
+    }).join('');
+
+    exsEl.innerHTML = exOrder.map((key) => {
+      const t = config.terms.find((x) => x.key === key);
+      const matched = exMatched[key];
+      const handlers = (matched || revealed) ? '' :
+        `onclick="vocabMatch.onSlotClick('ex','${key}')" ondragover="event.preventDefault()" ondrop="vocabMatch.onDrop(event,'ex','${key}')"`;
+      return `<div class="match-slot${matched ? ' matched' : ''}" id="${config.exsId}-${key}" ${handlers}><span>${t.example}</span></div>`;
+    }).join('');
+
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise([termsEl, defsEl, exsEl]).catch((err) => console.log(err));
+    }
+  }
+
+  function showFeedback(cls, html) {
+    const fb = document.getElementById(config.feedbackId);
+    if (!fb) return;
+    fb.style.display = 'block';
+    fb.className = `feedback-msg ${cls}`;
+    fb.innerHTML = html;
+  }
+
+  function attemptMatch(termKey, col, targetKey) {
+    if (!termKey || termDone(termKey)) return;
+    const matchedMap = col === 'def' ? defMatched : exMatched;
+    if (matchedMap[termKey]) return;
+    attempts++;
+    if (termKey === targetKey) {
+      matchedMap[termKey] = true;
+      selected = null;
+      render();
+      if (allDone()) {
+        showFeedback('success locked', `All ${config.terms.length} terms fully matched! <span style="opacity:.75; font-weight:700;">(${attempts} attempt${attempts === 1 ? '' : 's'})</span>`);
+        LessonProgress.record(config.progressKey, config.progressLabel, `All ${config.terms.length} terms matched (definitions and examples) in ${attempts} attempts`, 'correct', config.section);
+      } else {
+        showFeedback('success', `Matched! Keep going. <span style="opacity:.75;">(attempt ${attempts})</span>`);
+      }
+    } else {
+      selected = null;
+      document.querySelectorAll(`#${config.termsId} .match-card.selected`).forEach((el) => el.classList.remove('selected'));
+      const slotId = col === 'def' ? `${config.defsId}-${targetKey}` : `${config.exsId}-${targetKey}`;
+      const slot = document.getElementById(slotId);
+      if (slot) {
+        slot.classList.add('wrong-flash');
+        setTimeout(() => slot.classList.remove('wrong-flash'), 500);
+      }
+      showFeedback('error', `That's not a match yet - try again. <span style="opacity:.75;">(attempt ${attempts})</span>`);
+    }
+  }
+
+  function onTermClick(key) {
+    selected = selected === key ? null : key;
+    render();
+  }
+  function onDragStart(e, key) {
+    e.dataTransfer.setData('text/plain', key);
+  }
+  function onDrop(e, col, targetKey) {
+    e.preventDefault();
+    attemptMatch(e.dataTransfer.getData('text/plain'), col, targetKey);
+  }
+  function onSlotClick(col, targetKey) {
+    if (!selected) return;
+    attemptMatch(selected, col, targetKey);
+  }
+
+  // Called from a page's window.revealAnswerKey for the teacher view - marks
+  // every term matched (so every slot shows the locked/solved styling).
+  // Teacher view never writes to LessonProgress at all (no Progress row
+  // exists for a teacher - see /CLAUDE.md's "Role differentiation on
+  // lesson pages"), so this only touches local render state.
+  function reveal() {
+    revealed = true;
+    config.terms.forEach((t) => { defMatched[t.key] = true; exMatched[t.key] = true; });
+    render();
+    showFeedback('success locked', `Answer key: every term is shown matched to its definition and example above.`);
+  }
+
+  return { render, onTermClick, onDragStart, onDrop, onSlotClick, reveal };
+}
+
+// ==========================================
 // NUMBER LINE DIAGRAM (reusable, no external library)
 // ==========================================
 // Renders a horizontal number line into the element with id `containerId`.

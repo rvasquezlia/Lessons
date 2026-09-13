@@ -255,9 +255,14 @@
     <div class="section-title">Quick Vocabulary Check</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Type the vocabulary word that matches each definition or example. You get two tries per item, then the correct term is shown.
+      Drag each term onto its matching <strong>definition</strong>, and onto its matching <strong>example</strong>, too - or tap a term and then tap a definition or example. A term only earns full credit once both its definition and its example are matched. There's no limit on tries.
     </div>
-    <div id="vocab-check-list"></div>
+    <div class="match-wrap">
+      <div class="match-col"><div class="match-col-heading">Term</div><div id="vocab-terms"></div></div>
+      <div class="match-col"><div class="match-col-heading">Definition</div><div id="vocab-definitions"></div></div>
+      <div class="match-col"><div class="match-col-heading">Example</div><div id="vocab-examples"></div></div>
+    </div>
+    <div class="feedback-msg" id="vocabmatch-feedback"></div>
   </div>
 </div>
 
@@ -348,53 +353,36 @@
   }
 
   // ==========================================
-  // QUICK VOCABULARY CHECK
+  // QUICK VOCABULARY CHECK (drag-and-drop match-up - see createVocabMatch()
+  // in lesson-shared.js and /CLAUDE.md's "Standards line" section's
+  // neighboring vocabulary-check notes)
   // ==========================================
-  const vocabCheckItems = [
-    { q: "This word names a fixed number in an expression with no variable attached, like the 9 in 3x + 9.", accepted: ["constant"] },
-    { q: "This is the name for the number multiplied by a variable, like the 6 in 6x.", accepted: ["coefficient"] },
-    { q: "This property lets you multiply a(b + c) to get ab + ac.", accepted: ["distributiveproperty", "distributive"] },
-    { q: "This is the name for terms like 5x and -2x, which share the same variable part.", accepted: ["liketerms", "like"] },
-    { q: "When an equation simplifies to a false statement like 6 = 7, it has this many solutions.", accepted: ["nosolution", "none", "no"] },
-    { q: "When an equation simplifies to a true statement like 4 = 4, it has this many solutions.", accepted: ["infinitelymanysolutions", "infinite", "infinitelymany"] }
+  // Definitions/examples are the same text as Tab 1's glossary cards, so
+  // this stays self-consistent with the reference material by construction.
+  const VOCAB_TERMS = [
+    { key: 'constant', term: 'Constant', def: 'A term that is just a fixed number, with no variable attached.', example: 'In \\(3x + 9\\), \\(9\\) is the constant' },
+    { key: 'coefficient', term: 'Coefficient', def: 'The number multiplied by a variable in a term.', example: 'In \\(6x\\), the coefficient is \\(6\\)' },
+    { key: 'distributive', term: 'Distributive Property', def: 'Multiplying a factor by every term inside a set of parentheses.', example: '\\(a(b + c) = ab + ac\\)' },
+    { key: 'liketerms', term: 'Like Terms', def: 'Terms with the exact same variable part, so they can be combined by adding or subtracting their coefficients.', example: '\\(5x\\) and \\(-2x\\) are like terms; \\(5x\\) and \\(5x^2\\) are not' },
+    { key: 'nosolution', term: 'No Solution', def: 'The variable cancels out completely, leaving a <strong>false</strong> statement. No value of the variable works.', example: '\\(2(x+3) = 2x + 7 \\rightarrow 6 = 7\\)' },
+    { key: 'infinite', term: 'Infinitely Many Solutions', def: 'The variable cancels out completely, leaving a <strong>true</strong> statement. Every real number works.', example: '\\(4(x+1) = 4x + 4 \\rightarrow 4 = 4\\)' }
   ];
 
-  function renderVocabCheck() {
-    const html = vocabCheckItems.map((p, i) => `
-      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
-        <strong>${i + 1}.</strong> ${p.q}
-        <div style="margin-top:10px;">
-          <input type="text" id="vc-${i}-input" class="form-control-lg" style="max-width:260px; display:inline-block;" placeholder="Type the term">
-          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVocab(${i})">Check</button>
-        </div>
-        <div id="vc-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
-      </div>
-    `).join('');
-    document.getElementById('vocab-check-list').innerHTML = html;
-  }
-
-  function checkVocab(idx) {
-    const p = vocabCheckItems[idx];
-    const val = document.getElementById(`vc-${idx}-input`).value;
-    const fb = document.getElementById(`vc-${idx}-feedback`);
-    if (!val.trim()) {
-      LessonCheck.incomplete(fb, "Type a term before checking.");
-      return;
-    }
-    const correct = p.accepted.includes(normalizeExpr(val));
-    LessonCheck.check(`vc-${idx}`, correct, fb, {
-      correct: `Correct! That's <strong>${p.accepted[0]}</strong>.`,
-      retry: "Not quite yet. Look back at the glossary tab and try again.",
-      reveal: `The correct term is <strong>${p.accepted[0]}</strong>.`
-    });
-  }
+  const vocabMatch = createVocabMatch({
+    termsId: 'vocab-terms', defsId: 'vocab-definitions', exsId: 'vocab-examples',
+    feedbackId: 'vocabmatch-feedback',
+    terms: VOCAB_TERMS,
+    progressKey: 'vocabmatch', progressLabel: 'Key Vocabulary Match-Up',
+    section: '3. Quick Vocabulary Check'
+  });
 
   renderTranslate();
-  renderVocabCheck();
+  vocabMatch.render();
 
   // Teacher answer key - see /CLAUDE.md's "Role differentiation on lesson
-  // pages". checkTranslate/checkVocab are two separate functions rather
-  // than a shared keyed registry, so this is hand-written.
+  // pages". Tab 2 (checkTranslate) is hand-written, so this stays
+  // hand-written too; Tab 3 delegates to vocabMatch.reveal() since the
+  // match-up widget owns its own reveal state.
   window.revealAnswerKey = function () {
     const fillInput = (id, feedbackId, answer) => {
       const input = document.getElementById(id);
@@ -415,7 +403,7 @@
       fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
     };
     translateItems.forEach((p, i) => fillInput(`tr-${i}-input`, `tr-${i}-feedback`, p.displayAnswer));
-    vocabCheckItems.forEach((p, i) => fillInput(`vc-${i}-input`, `vc-${i}-feedback`, p.accepted[0]));
+    vocabMatch.reveal();
   };
 </script>
 </body>
