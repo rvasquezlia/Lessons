@@ -1145,6 +1145,26 @@ include every page's content yet** - write the missing content
 yourself (as here) or ask first, rather than quietly shipping fewer
 pages than the established pattern.
 
+**Both new units also got their `Explanation.html`/`Teacher-Guide.html`
+pair** — the two pages every other unit has that are deliberately never
+gated or wired (no `token-cache.js`/`lesson-auth.js`/GIS scripts, no
+`LessonSync.init()`, no `ActivityId`, no `ActivityCatalog` row needed).
+This was a real gap the first time these two units shipped: "5-page
+pattern wired" was read as "the whole unit," but every existing unit
+actually ships **7** files (the 5 wired ones plus these 2). Both new
+`Explanation.html` pages follow the existing carousel pattern
+(`makeCarousel()`, `flow-row`/`qa-list`/`resolve-box`, `TeacherPrint.
+registerCarousel()`); both new `Teacher-Guide.html` pages follow the
+existing pacing-plus-full-answer-key pattern, condensed to 3 tabs
+(Overview, then two Answer-Keys tabs) instead of the 5-6 seen on older
+units. **Deliberately deferred, not overlooked:** a dedicated
+`printables/` folder (standalone print-only Test Prep/Challenge Bank
+pages) and an IXL Practice tab with real, verified skill codes — every
+existing unit's IXL tab links to codes hand-verified against IXL's own
+published alignment guide for that exact grade/lesson, which takes
+real research per unit; don't fabricate codes or URLs to fill this in
+later without doing that same verification first.
+
 Every wired page needs its own row in `ActivityCatalog` (matching
 `Grade`, `Active: TRUE`) before its gate will let anyone in — that's 47
 rows now (35 from the 5-page pattern across 7 grade-6/7/8 units, the 2

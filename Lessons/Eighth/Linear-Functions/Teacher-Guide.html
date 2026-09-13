@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-AP Algebra I: Linear Functions - Teacher Guide</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <style>
+    .answer-day-heading {
+      background: var(--primary);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 28px 0 12px 0;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Pre-AP Algebra I &middot; Linear Functions - Teacher Guide</span>
+    <h1>Teacher Guide: Linear Functions</h1>
+    <p class="subtitle">Pacing and Answer Keys for All Five Sections</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">This page is for you, not students</strong>
+    Keep this link away from students - there's no student-facing print button. Use the tabs for pacing/standards and a full digital answer key for every graded item on this topic.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('overview')">1. Topic Overview &amp; Pacing</button>
+    <button class="tab-btn" onclick="switchTab('keys-vp')">2. Answer Keys: Vocabulary &amp; Practice Set</button>
+    <button class="tab-btn" onclick="switchTab('keys-wp-tp')">3. Answer Keys: Word Problems &amp; Test Prep</button>
+  </nav>
+
+  <!-- PANEL 1: TOPIC OVERVIEW & PACING -->
+  <div id="overview" class="panel active">
+    <div class="section-title">Topic Overview: Linear Functions</div>
+
+    <div class="explainer-box">
+      <strong>8-PreAP only - distinct from Solving Linear Equations and Literal Equations.</strong> Those two units solve equations for one unknown; this unit treats a linear equation as a function - an input/output rule - and covers domain/range, slope, function notation, and slope-intercept form.
+      <ul style="margin:8px 0 0 0;">
+        <li>Five standalone pages: Vocabulary &amp; Literacy, Explanation, Practice Set, Word Problems, Test Prep.</li>
+        <li>Pages don't link to each other - share each one directly (e.g. one Google Classroom post per page) in the order you want.</li>
+        <li><strong>Calculators are allowed.</strong></li>
+      </ul>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Section</th><th>Suggested Time</th><th>Focus</th></tr></thead>
+      <tbody>
+        <tr><td>Vocabulary &amp; Literacy</td><td>~30-40 min</td><td>Function/relation/domain/range vocabulary, the vertical line test, function notation, slope-intercept/point-slope form - plus domain/range classification practice.</td></tr>
+        <tr><td>Explanation</td><td>~1-2 class periods</td><td>Worked examples: finding slope, writing slope-intercept equations, evaluating function notation, and writing a rule from a table.</td></tr>
+        <tr><td>Practice Set</td><td>~1-2 class periods</td><td>Four tabs: slope &amp; rate of change, slope-intercept form (algebraic answers), function notation, and writing function rules from data.</td></tr>
+        <tr><td>Word Problems</td><td>~1 class period</td><td>Modeling real scenarios with function notation, cost/savings models, and challenge problems that work backward from an output.</td></tr>
+        <tr><td>Test Prep</td><td>~1 class period + assessment</td><td>Concept review, error analysis, a timed review quiz, and a submit-only Mixed Practice worksheet that doubles as a paper-equivalent assessment.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Standards &amp; Objectives</div>
+      <p style="margin:0 0 8px 0;"><strong>HSF.IF.A.1, HSF.IF.A.2, HSF.IF.B.5, HAS.CED.A.2, HSS.ID.C.7</strong> &amp; <strong>MP.4, MP.6, MP.7</strong>.</p>
+      <ul style="margin-bottom:0;">
+        <li>Determine whether a relation is a function; identify domain and range.</li>
+        <li>Find the slope between two points and interpret it as a rate of change.</li>
+        <li>Write and graph linear equations in slope-intercept form.</li>
+        <li>Use function notation to evaluate functions and to model real-world situations.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Common Misconceptions to Watch For</div>
+      <ul style="margin-bottom:0;">
+        <li>Substituting into the wrong place in \(f(x)\), or skipping order of operations after substituting.</li>
+        <li>Flipping which coordinate is \((x_1,y_1)\) vs. \((x_2,y_2)\) in the slope formula and losing the sign.</li>
+        <li>Assuming any table of ordered pairs is automatically a function, without checking for a repeated input.</li>
+        <li>Confusing a proportional relationship (\(y=kx\)) with every linear relationship (\(y=mx+b\)).</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Source Material</div>
+      <p style="margin:0;">Built from the Pre-AP Algebra 1 Unit 1 (Lessons 1.2 &amp; 1.5) student/teacher handouts, the Savvas enVision Additional Practice sheets (2-1: Slope-Intercept Form, 3-2: Linear Functions), and the Functions &amp; Linear Relationships comprehensive study guide (see <code>Materials/8-PreAP/</code> in the repo).</p>
+    </div>
+  </div>
+
+  <!-- PANEL 2: ANSWER KEYS - VOCABULARY & PRACTICE SET -->
+  <div id="keys-vp" class="panel">
+    <div class="section-title">Answer Keys: Vocabulary &amp; Literacy, Explanation &amp; Practice Set</div>
+    <p>Explanation's carousels are fully worked examples with the final answer shown in each last step - nothing further to key.</p>
+
+    <div class="answer-day-heading">Vocabulary &amp; Literacy - Tab 2: Domain &amp; Range</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Is \(\{(-3,-1),(-1,2),(0,0),(4,-2),(8,-4)\}\) a function?</td><td><strong>Yes</strong></td></tr>
+        <tr><td>2. Is \(\{(1,5),(2,10),(2,20),(3,15)\}\) a function?</td><td><strong>No</strong></td></tr>
+        <tr><td>3. Domain of \(\{(-3,-1),(-1,2),(0,0),(4,-2)\}\)</td><td>\(\mathbf{-3,-1,0,4}\)</td></tr>
+        <tr><td>4. Range of \(\{(-3,-1),(-1,2),(0,0),(4,-2)\}\)</td><td>\(\mathbf{-1,2,0,-2}\)</td></tr>
+        <tr><td>5. Vertical line crosses a graph twice - function?</td><td><strong>No</strong></td></tr>
+        <tr><td>6. Range of \(y=7\)</td><td>\(\mathbf{7}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Vocabulary &amp; Literacy - Tab 3: Quick Vocabulary Check</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Complete set of possible inputs</td><td><strong>domain</strong></td></tr>
+        <tr><td>2. Complete set of possible outputs</td><td><strong>range</strong></td></tr>
+        <tr><td>3. Vertical line used to test for a function</td><td><strong>vertical line test</strong></td></tr>
+        <tr><td>4. Notation like f(x)</td><td><strong>function notation</strong></td></tr>
+        <tr><td>5. Point where a line crosses the y-axis</td><td><strong>y-intercept</strong></td></tr>
+        <tr><td>6. Form \(y-y_1=m(x-x_1)\)</td><td><strong>point-slope form</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Practice Set - Tab 1: Slope &amp; Rate of Change</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Slope through \((4,-2),(-1,8)\)</td><td>\(\mathbf{-2}\)</td></tr>
+        <tr><td>2. Slope through \((1.2,5.4),(3.2,8.6)\)</td><td>\(\mathbf{1.6}\)</td></tr>
+        <tr><td>3. Slope through \((-3,-0.6),(1,0.2)\)</td><td>\(\mathbf{0.2}\)</td></tr>
+        <tr><td>4. Slope through \((7,-3),(7,5)\)</td><td><strong>undefined</strong></td></tr>
+        <tr><td>5. Slope through \((2,6),(9,6)\)</td><td>\(\mathbf{0}\)</td></tr>
+        <tr><td>6. Gas station rate of change</td><td>\(\mathbf{\$3.60}\)/gallon</td></tr>
+        <tr><td>7. Road trip rate of change</td><td>\(\mathbf{-60}\) mph</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Practice Set - Tab 2: Slope-Intercept Form</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Line through \((-1,3),(-3,1)\)</td><td>\(\mathbf{y=x+4}\)</td></tr>
+        <tr><td>2. Line through \((-4,8),(4,6)\)</td><td>\(\mathbf{y=-\frac{1}{4}x+7}\)</td></tr>
+        <tr><td>3. Line through \((9,2),(-3,-2)\)</td><td>\(\mathbf{y=\frac{1}{3}x-1}\)</td></tr>
+        <tr><td>4. Convert \(4x+2y=12\)</td><td>\(\mathbf{y=-2x+6}\)</td></tr>
+        <tr><td>5. Slope \(-3\) through \((2,5)\)</td><td>\(\mathbf{y=-3x+11}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Practice Set - Tab 3: Function Notation</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(f(x)=4x-9\), \(f(-3)\)</td><td>\(\mathbf{-21}\)</td></tr>
+        <tr><td>2. \(f(x)=-\frac{1}{3}x+13\), \(f(-3)\)</td><td>\(\mathbf{14}\)</td></tr>
+        <tr><td>3. \(f(x)=-2x-11\), \(f(-3)\)</td><td>\(\mathbf{-5}\)</td></tr>
+        <tr><td>4. \(f(x)=2x-3\), \(f(0)\)</td><td>\(\mathbf{-3}\)</td></tr>
+        <tr><td>5. \(f(x)=2x-3\), \(f(2)\)</td><td>\(\mathbf{1}\)</td></tr>
+        <tr><td>6. \(g(x)=\frac{1}{2}x+1\), \(g(-4)\)</td><td>\(\mathbf{-1}\)</td></tr>
+        <tr><td>7. \(g(x)=\frac{1}{2}x+1\), \(g(3)\)</td><td>\(\mathbf{2.5}\)</td></tr>
+        <tr><td>8. \(f(x)=4x+5\), domain \(0\le x\le50\), \(f(50)\)</td><td>\(\mathbf{205}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Practice Set - Tab 4: Writing Function Rules</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \((0,1),(1,3),(-1,-1)\)</td><td>\(\mathbf{f(x)=2x+1}\)</td></tr>
+        <tr><td>2. \((1,0),(3,3),(-1,-3)\)</td><td>\(\mathbf{f(x)=\frac{3}{2}x-\frac{3}{2}}\)</td></tr>
+        <tr><td>3. \((0,0),(4,1),(-4,-1)\)</td><td>\(\mathbf{f(x)=\frac{1}{4}x}\)</td></tr>
+        <tr><td>4. \((0,3),(2,2),(-2,4)\)</td><td>\(\mathbf{f(x)=-\frac{1}{2}x+3}\)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 3: ANSWER KEYS - WORD PROBLEMS & TEST PREP -->
+  <div id="keys-wp-tp" class="panel">
+    <div class="section-title">Answer Keys: Word Problems &amp; Test Prep</div>
+
+    <div class="answer-day-heading">Word Problems - Tab 1: Modeling With Function Notation</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Gift card, \(f(3)\)</td><td>\(\mathbf{\$30.50}\)</td></tr>
+        <tr><td>2. Pumpkin patch, \(C(20)\)</td><td>\(\mathbf{\$10}\)</td></tr>
+        <tr><td>3. Ski slope, \(d(15)\)</td><td>\(\mathbf{450}\) m</td></tr>
+        <tr><td>4. Elevator, \(h(10)\)</td><td>\(\mathbf{10}\) ft</td></tr>
+        <tr><td>5. Book stack, \(s(8)\)</td><td>\(\mathbf{10}\) in</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Word Problems - Tab 2: Cost &amp; Savings Models</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Tech repair, 3.5 hrs</td><td>\(\mathbf{\$312.50}\)</td></tr>
+        <tr><td>2. Savings account, weeks to \$650</td><td>\(\mathbf{15}\) weeks</td></tr>
+        <tr><td>3. Fuel tank after 100 mi</td><td>\(\mathbf{15}\) gallons</td></tr>
+        <tr><td>4. Cable subscription, 2 years</td><td>\(\mathbf{\$3{,}060}\)</td></tr>
+        <tr><td>5. Zachary's balance after 8 months</td><td>\(\mathbf{\$600}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Word Problems - Tab 3: Challenge Problems</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Fuel tank, miles to empty</td><td>\(\mathbf{200}\) miles</td></tr>
+        <tr><td>2. \(f(x)=12-5x=6\), solve for x</td><td>\(\mathbf{1.2}\)</td></tr>
+        <tr><td>3. Fuel tank equation \(G(d)\)</td><td>\(\mathbf{G(d)=30-0.15d}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Test Prep - Tab 1: Concept Review</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>A. \(f(x)=5x-2\), \(f(3)\)</td><td>\(\mathbf{13}\)</td></tr>
+        <tr><td>B. \(f(x)=-x+6\), \(f(-4)\)</td><td>\(\mathbf{10}\)</td></tr>
+        <tr><td>C. Slope through \((0,2),(5,17)\)</td><td>\(\mathbf{3}\)</td></tr>
+        <tr><td>D. Is \(\{(2,3),(4,3),(6,3)\}\) a function?</td><td><strong>Yes</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Test Prep - Tab 2: Error Analysis</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(f(4)=3(2)+4=10\)</td><td>Substitute into f(x)=3x+2 correctly: \(\mathbf{14}\)</td></tr>
+        <tr><td>2. Slope \(6/-3=2\)</td><td>Division sign error: \(\mathbf{-2}\)</td></tr>
+        <tr><td>3. \(\{(2,3),(2,5),(4,7)\}\) called a function</td><td>Input 2 has two outputs - <strong>not a function</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Test Prep - Tab 3: Timed Review Quiz</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Is \(\{(1,5),(2,10),(2,20),(3,15)\}\) a function?</td><td><strong>No</strong></td></tr>
+        <tr><td>2. Range of \(\{(-2,4),(0,0),(2,4),(4,16)\}\)</td><td>\(\mathbf{4,0,4,16}\)</td></tr>
+        <tr><td>3. Slope through \((2,-1),(6,7)\)</td><td>\(\mathbf{2}\)</td></tr>
+        <tr><td>4. Slope 4, b=-3, y at x=2</td><td>\(\mathbf{5}\)</td></tr>
+        <tr><td>5. Which is proportional?</td><td><strong>B</strong> \((y=5x)\)</td></tr>
+        <tr><td>6. \(f(x)=-2x+9\), \(f(4)\)</td><td>\(\mathbf{1}\)</td></tr>
+        <tr><td>7. \(f(x)=3x-4=11\), solve for x</td><td>\(\mathbf{5}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Test Prep - Tab 4: Mixed Practice (submit-only)</div>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Problem</th><th>Answer</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>\(f(x)=6x-1\), \(f(2)\)</td><td>\(\mathbf{11}\)</td></tr>
+        <tr><td>2</td><td>\(f(x)=-3x+4\), \(f(-2)\)</td><td>\(\mathbf{10}\)</td></tr>
+        <tr><td>3</td><td>Slope through \((0,4),(6,0)\)</td><td>\(\mathbf{-0.667}\)</td></tr>
+        <tr><td>4</td><td>Slope through \((3,3),(3,-2)\)</td><td><strong>undefined</strong></td></tr>
+        <tr><td>5</td><td>Is \(\{(0,1),(1,1),(2,1)\}\) a function?</td><td><strong>Yes</strong></td></tr>
+        <tr><td>6</td><td>Domain of \(\{(-2,5),(0,3),(2,1)\}\)</td><td>\(\mathbf{-2,0,2}\)</td></tr>
+        <tr><td>7</td><td>Slope 2 through \((1,4)\)</td><td>\(\mathbf{y=2x+2}\)</td></tr>
+        <tr><td>8</td><td>Rideshare \$5 base + \$2/mile, C(m)</td><td>\(\mathbf{C(m)=2m+5}\)</td></tr>
+        <tr><td>9</td><td>\(C(12)\)</td><td>\(\mathbf{29}\)</td></tr>
+        <tr><td>10</td><td>Candle 10in, -0.5in/hr, h(t)</td><td>\(\mathbf{h(t)=10-0.5t}\)</td></tr>
+        <tr><td>11</td><td>Candle burns out, h(t)=0</td><td>\(\mathbf{20}\) hours</td></tr>
+        <tr><td>12</td><td>\(f(3)+g(3)\), f(x)=2x+3, g(x)=x-1</td><td>\(\mathbf{11}\)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+</script>
+</body>
+</html>

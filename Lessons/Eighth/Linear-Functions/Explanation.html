@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-AP Algebra I: Linear Functions - Explanation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Pre-AP Algebra I &middot; Linear Functions - Explanation</span>
+    <h1>Explanation: Linear Functions</h1>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Every worked example: <strong>math on the left</strong>, <strong>questions on the right</strong> - only the green box is the final answer. Use <strong>Previous / Next</strong> to browse examples. <strong>Calculators are allowed.</strong>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('slope')">1. Slope &amp; Rate of Change</button>
+    <button class="tab-btn" onclick="switchTab('sif')">2. Slope-Intercept Form</button>
+    <button class="tab-btn" onclick="switchTab('notation')">3. Function Notation</button>
+    <button class="tab-btn" onclick="switchTab('rules')">4. Writing Function Rules</button>
+  </nav>
+
+  <!-- TAB 1: SLOPE & RATE OF CHANGE -->
+  <div id="slope" class="panel active">
+    <div class="section-title">Finding Slope</div>
+    <div class="notebook-box">
+      <div class="notebook-header">The Formula</div>
+      <p style="margin:0;">\(m = \dfrac{y_2 - y_1}{x_2 - x_1}\)</p>
+    </div>
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="slope-prev-btn" onclick="changeSlope(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="slope-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="slope-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="slope-next-btn" onclick="changeSlope(1)">Next &rarr;</button>
+      </div>
+      <div id="slope-content" style="min-height: 160px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: SLOPE-INTERCEPT FORM -->
+  <div id="sif" class="panel">
+    <div class="section-title">Writing Equations in Slope-Intercept Form</div>
+    <div class="notebook-box">
+      <div class="notebook-header">The Form</div>
+      <p style="margin:0;">\(y = mx + b\) - find \(m\) first, then substitute one point to solve for \(b\).</p>
+    </div>
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="sif-prev-btn" onclick="changeSif(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="sif-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="sif-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="sif-next-btn" onclick="changeSif(1)">Next &rarr;</button>
+      </div>
+      <div id="sif-content" style="min-height: 160px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: FUNCTION NOTATION -->
+  <div id="notation" class="panel">
+    <div class="section-title">Evaluating Functions</div>
+    <div class="notebook-box">
+      <div class="notebook-header">The Idea</div>
+      <p style="margin:0;">\(f(a)\) means: substitute \(a\) for \(x\) in the function's rule, then simplify.</p>
+    </div>
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="notation-prev-btn" onclick="changeNotation(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="notation-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 2</span>
+          <div class="carousel-indicators" id="notation-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="notation-next-btn" onclick="changeNotation(1)">Next &rarr;</button>
+      </div>
+      <div id="notation-content" style="min-height: 160px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: WRITING FUNCTION RULES -->
+  <div id="rules" class="panel">
+    <div class="section-title">Writing a Function Rule From a Table</div>
+    <div class="notebook-box">
+      <div class="notebook-header">The Method</div>
+      <p style="margin:0;">Find the rate of change (slope) between any two rows, then use the row where \(x=0\) to read off the initial value (\(b\)).</p>
+    </div>
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="rules-prev-btn" onclick="changeRules(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="rules-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 2</span>
+          <div class="carousel-indicators" id="rules-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="rules-next-btn" onclick="changeRules(1)">Next &rarr;</button>
+      </div>
+      <div id="rules-content" style="min-height: 160px;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  function makeCarousel(prefix, examples) {
+    let current = 0;
+    function render() {
+      const ex = examples[current];
+      document.getElementById(`${prefix}-title`).innerText = `Example ${current + 1} of ${examples.length}`;
+      document.getElementById(`${prefix}-dots`).innerHTML = examples.map((_, i) =>
+        `<div class="dot ${i === current ? 'active' : ''}" onclick="${prefix}Jump(${i})"></div>`
+      ).join('');
+      document.getElementById(`${prefix}-content`).innerHTML = ex.html;
+      document.getElementById(`${prefix}-prev-btn`).disabled = current === 0;
+      document.getElementById(`${prefix}-next-btn`).disabled = current === examples.length - 1;
+      triggerMathJax();
+    }
+    function change(dir) { current = Math.max(0, Math.min(examples.length - 1, current + dir)); render(); }
+    function jump(idx) { current = idx; render(); }
+    function showAt(i) { current = i; render(); }
+    window[`change${cap(prefix)}`] = change;
+    window[`${prefix}Jump`] = jump;
+    render();
+    if (window.TeacherPrint) TeacherPrint.registerCarousel(`${prefix}-content`, examples.length, showAt);
+  }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  // ==========================================
+  // TAB 1: SLOPE & RATE OF CHANGE
+  // ==========================================
+  const slopeExamples = [
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Find the slope through \\((2,5)\\) and \\((6,13)\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(m = \\dfrac{13-5}{6-2}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Subtract the y's, then the x's</div><div class="qa-a">\\(\\dfrac{8}{4}\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(m = 2\\)</span></div>
+        </div>`
+    },
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Find the slope through \\((0,10)\\) and \\((4,2)\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(m = \\dfrac{2-10}{4-0}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Subtract the y's, then the x's</div><div class="qa-a">\\(\\dfrac{-8}{4}\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(m = -2\\)</span></div>
+        </div>`
+    },
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">A driver pays \\$15 for 4 gallons, \\$30 for 8 gallons. Find the rate of change. <span class="type-tag word">Word Problem</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(m = \\dfrac{30-15}{8-4}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Which is the independent variable?</div><div class="qa-a">Gallons purchased</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">Rate: \\(\\$3.75\\)/gallon</span></div>
+        </div>`
+    }
+  ];
+  makeCarousel('slope', slopeExamples);
+
+  // ==========================================
+  // TAB 2: SLOPE-INTERCEPT FORM
+  // ==========================================
+  const sifExamples = [
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Write the equation through \\((1,4)\\) and \\((3,10)\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(m = \\dfrac{10-4}{3-1} = 3\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Now substitute a point to find b</div><div class="qa-a">\\(4 = 3(1) + b\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(y = 3x + 1\\)</span></div>
+        </div>`
+    },
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Convert \\(2x + y = 8\\) to slope-intercept form</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(2x + y = 8\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Isolate y</div><div class="qa-a">Subtract \\(2x\\) from both sides</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(y = -2x + 8\\)</span></div>
+        </div>`
+    },
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Write the equation with slope 4 through \\((-1,2)\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(2 = 4(-1) + b\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Solve for b</div><div class="qa-a">\\(2 = -4 + b \\rightarrow b = 6\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(y = 4x + 6\\)</span></div>
+        </div>`
+    }
+  ];
+  makeCarousel('sif', sifExamples);
+
+  // ==========================================
+  // TAB 3: FUNCTION NOTATION
+  // ==========================================
+  const notationExamples = [
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(f(x) = 5x - 7\\). Find \\(f(4)\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(f(4) = 5(4) - 7\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Substitute 4 for x</div><div class="qa-a">\\(20 - 7\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(f(4) = 13\\)</span></div>
+        </div>`
+    },
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">\\(g(x) = -2x + 9\\). Find \\(g(-3)\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(g(-3) = -2(-3) + 9\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Substitute -3 for x</div><div class="qa-a">\\(6 + 9\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(g(-3) = 15\\)</span></div>
+        </div>`
+    }
+  ];
+  makeCarousel('notation', notationExamples);
+
+  // ==========================================
+  // TAB 4: WRITING FUNCTION RULES
+  // ==========================================
+  const rulesExamples = [
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">A function passes through \\((0,4), (2,10), (-2,-2)\\). Write \\(f(x)\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(m = \\dfrac{10-4}{2-0} = 3\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">What is b, the value when x=0?</div><div class="qa-a">\\(4\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(f(x) = 3x + 4\\)</span></div>
+        </div>`
+    },
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">A function passes through \\((0,-1), (4,7)\\). Write \\(f(x)\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(m = \\dfrac{7-(-1)}{4-0} = 2\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">What is b, the value when x=0?</div><div class="qa-a">\\(-1\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(f(x) = 2x - 1\\)</span></div>
+        </div>`
+    }
+  ];
+  makeCarousel('rules', rulesExamples);
+</script>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7 Honors: Squares, Cubes &amp; Roots - Teacher Guide</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <style>
+    .answer-day-heading {
+      background: var(--primary);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 28px 0 12px 0;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">7 Honors &middot; Squares, Cubes &amp; Roots - Teacher Guide</span>
+    <h1>Teacher Guide: Squares, Cubes &amp; Roots</h1>
+    <p class="subtitle">Pacing and Answer Keys for All Five Sections</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">This page is for you, not students</strong>
+    Keep this link away from students - there's no student-facing print button. Use the tabs for pacing/context and a full digital answer key for every graded item on this topic.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('overview')">1. Topic Overview &amp; Pacing</button>
+    <button class="tab-btn" onclick="switchTab('keys-practice')">2. Answer Keys: Vocabulary &amp; Practice Set</button>
+    <button class="tab-btn" onclick="switchTab('keys-wp-tp')">3. Answer Keys: Word Problems &amp; Test Prep</button>
+  </nav>
+
+  <!-- PANEL 1: TOPIC OVERVIEW & PACING -->
+  <div id="overview" class="panel active">
+    <div class="section-title">Topic Overview: Squares, Cubes &amp; Roots</div>
+
+    <div class="explainer-box">
+      <strong>7-Honors only - no regular-7th equivalent.</strong> This is the bridge from the Rational Numbers unit (which Honors shares with regular 7th, at a faster pace) to irrational numbers: recognizing perfect squares/cubes and taking square/cube roots.
+      <ul style="margin:8px 0 0 0;">
+        <li>Five standalone pages: Vocabulary &amp; Literacy, Explanation, Practice Set, Word Problems, Test Prep.</li>
+        <li>Pages don't link to each other - share each one directly (e.g. one Google Classroom post per page) in the order you want.</li>
+        <li><strong>Calculators are not allowed</strong> - every fact in this topic (squares 1&ndash;20, cubes 1&ndash;15) should come from memory or quick multiplication.</li>
+      </ul>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Section</th><th>Suggested Time</th><th>Focus</th></tr></thead>
+      <tbody>
+        <tr><td>Vocabulary &amp; Literacy</td><td>~20-30 min</td><td>Base, radicand, index, perfect square/cube, radical - plus translating between plain-English phrasing and radical/power notation.</td></tr>
+        <tr><td>Explanation</td><td>~1 class period</td><td>Worked examples: computing a square/cube, taking a square/cube root, and area/volume real-world applications.</td></tr>
+        <tr><td>Practice Set</td><td>~1 class period</td><td>Three tiers: fill in a mastery table, identify the base from a square/cube, and solve missing-value radical equations - plus three short critical-thinking reflections.</td></tr>
+        <tr><td>Word Problems</td><td>~1 class period</td><td>Area-from-square-root and volume-from-cube-root scenarios, plus mixed/scaling challenge problems.</td></tr>
+        <tr><td>Test Prep</td><td>~1 class period + assessment</td><td>Concept review, error analysis, a timed review quiz, and a submit-only Mixed Practice worksheet that doubles as a paper-equivalent assessment.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Standards &amp; Objectives</div>
+      <p style="margin:0 0 8px 0;"><strong>CCSS.Math.Content.8.EE.A.2</strong> (introduced early, ahead of pace, for the Honors track) &amp; <strong>MP.1, MP.7, MP.8</strong>.</p>
+      <ul style="margin-bottom:0;">
+        <li>Compute the square and cube of a whole number.</li>
+        <li>Evaluate square roots of perfect squares and cube roots of perfect cubes.</li>
+        <li>Apply squares/cubes and their roots to real-world area and volume problems.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Common Misconceptions to Watch For</div>
+      <ul style="margin-bottom:0;">
+        <li>Confusing squaring (\(n \times n\)) with doubling (\(n \times 2\)).</li>
+        <li>Confusing a cube (three factors) with a square (two factors).</li>
+        <li>Treating a root as "divide by the index" instead of "find the number that produces this result" (e.g. thinking \(\sqrt{64} = 32\)).</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Source Material</div>
+      <p style="margin:0;">Built from the teacher-provided Squares/Cubes/Roots reference chart and three tiered practice sets (see <code>Materials/7-Honors/</code> in the repo). Vocabulary &amp; Literacy and Word Problems were written from scratch, since the source material was pure computation with neither - see <code>/CLAUDE.md</code>'s "Squares-Cubes-and-Roots was initially built as a 3-page set" note for why.</p>
+    </div>
+  </div>
+
+  <!-- PANEL 2: ANSWER KEYS - VOCABULARY & PRACTICE SET -->
+  <div id="keys-practice" class="panel">
+    <div class="section-title">Answer Keys: Vocabulary &amp; Literacy, Explanation &amp; Practice Set</div>
+    <p>Explanation's carousels are fully worked examples with the final answer shown in each last step - nothing further to key.</p>
+
+    <div class="answer-day-heading">Vocabulary &amp; Literacy - Tab 2: Reading &amp; Writing Radical Notation</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. "the square of 8"</td><td>\(\mathbf{8^2}\)</td></tr>
+        <tr><td>2. "the cube of 6"</td><td>\(\mathbf{6^3}\)</td></tr>
+        <tr><td>3. "the square root of 81"</td><td>\(\mathbf{\sqrt{81}}\)</td></tr>
+        <tr><td>4. "the cube root of 125"</td><td>\(\mathbf{\sqrt[3]{125}}\)</td></tr>
+        <tr><td>5. Radicand in \(\sqrt{144}\)</td><td><strong>144</strong></td></tr>
+        <tr><td>6. Base in \(9^2\)</td><td><strong>9</strong></td></tr>
+        <tr><td>7. Index in \(\sqrt[3]{27}\)</td><td><strong>3</strong></td></tr>
+        <tr><td>8. What does \(\sqrt{100}\) ask?</td><td>What number times itself equals 100?</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Vocabulary &amp; Literacy - Tab 3: Quick Vocabulary Check</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Number underneath a radical</td><td><strong>radicand</strong></td></tr>
+        <tr><td>2. Small number showing which root, e.g. 3 in a cube root</td><td><strong>index</strong></td></tr>
+        <tr><td>3. A number that is the square of a whole number</td><td><strong>perfect square</strong></td></tr>
+        <tr><td>4. A number that is the cube of a whole number</td><td><strong>perfect cube</strong></td></tr>
+        <tr><td>5. The number being multiplied by itself, e.g. 7 in 7²</td><td><strong>base</strong></td></tr>
+        <tr><td>6. The root symbol and any expression using it</td><td><strong>radical</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Practice Set - Tab 1: Squares &amp; Cubes Table</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Base 4, Square 16 &rarr; Cube?</td><td>\(\mathbf{64}\)</td></tr>
+        <tr><td>2. Square 81, Cube 729 &rarr; Base?</td><td>\(\mathbf{9}\)</td></tr>
+        <tr><td>3. Base 12, Cube 1,728 &rarr; Square?</td><td>\(\mathbf{144}\)</td></tr>
+        <tr><td>4. Square 225, Cube 3,375 &rarr; Base?</td><td>\(\mathbf{15}\)</td></tr>
+        <tr><td>5. Base 7, Square 49 &rarr; Cube?</td><td>\(\mathbf{343}\)</td></tr>
+        <tr><td>6. Base 20, Square 400 &rarr; Cube?</td><td>\(\mathbf{8{,}000}\)</td></tr>
+        <tr><td>7. Square 121, Cube 1,331 &rarr; Base?</td><td>\(\mathbf{11}\)</td></tr>
+        <tr><td>8. Base 13, Cube 2,197 &rarr; Square?</td><td>\(\mathbf{169}\)</td></tr>
+        <tr><td>9. Square 256, Cube 4,096 &rarr; Base?</td><td>\(\mathbf{16}\)</td></tr>
+        <tr><td>10. Base 14, Square 196 &rarr; Cube?</td><td>\(\mathbf{2{,}744}\)</td></tr>
+        <tr><td>11. Base 8, Cube 512 &rarr; Square?</td><td>\(\mathbf{64}\)</td></tr>
+        <tr><td>12. Square 289 &rarr; Base?</td><td>\(\mathbf{17}\)</td></tr>
+        <tr><td>13. Square 289 (Base 17) &rarr; Cube?</td><td>\(\mathbf{4{,}913}\)</td></tr>
+        <tr><td>Critical Thinking: \(4^3\) vs \(8^2\)</td><td>Both equal 64 - a coincidence worth discussing, not a general rule.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Practice Set - Tab 2: Identify the Base Number</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>Squares: \(x^2=49, 144, 289, 324, 256, 400\)</td><td>\(\mathbf{7, 12, 17, 18, 16, 20}\)</td></tr>
+        <tr><td>Cubes: \(x^3=27, 125, 1{,}000, 1{,}331, 2{,}197, 3{,}375\)</td><td>\(\mathbf{3, 5, 10, 11, 13, 15}\)</td></tr>
+        <tr><td>Critical Thinking: side length from area 361</td><td>\(\sqrt{361} = \mathbf{19}\) units</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Practice Set - Tab 3: Missing Value Equations</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(\sqrt{144}\)</td><td>\(\mathbf{12}\)</td></tr>
+        <tr><td>2. \(\sqrt[3]{?}=6\)</td><td>\(\mathbf{216}\)</td></tr>
+        <tr><td>3. \(14^2\)</td><td>\(\mathbf{196}\)</td></tr>
+        <tr><td>4. \(\sqrt[3]{3{,}375}\)</td><td>\(\mathbf{15}\)</td></tr>
+        <tr><td>5. \(\sqrt{?}=17\)</td><td>\(\mathbf{289}\)</td></tr>
+        <tr><td>6. \(9^3\)</td><td>\(\mathbf{729}\)</td></tr>
+        <tr><td>7. \(\sqrt[3]{729}\)</td><td>\(\mathbf{9}\)</td></tr>
+        <tr><td>8. \(20^2\)</td><td>\(\mathbf{400}\)</td></tr>
+        <tr><td>9. \(\sqrt{?}=13\)</td><td>\(\mathbf{169}\)</td></tr>
+        <tr><td>10. \(\sqrt[3]{1{,}331}\)</td><td>\(\mathbf{11}\)</td></tr>
+        <tr><td>Critical Thinking: \(8^2\) vs \(\sqrt{64}\)</td><td>Inverse operations - \(8^2=64\) and \(\sqrt{64}=8\), each undoes the other.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 3: ANSWER KEYS - WORD PROBLEMS & TEST PREP -->
+  <div id="keys-wp-tp" class="panel">
+    <div class="section-title">Answer Keys: Word Problems &amp; Test Prep</div>
+
+    <div class="answer-day-heading">Word Problems - Tab 1: Area &amp; Square Roots</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Garden, area 225 sq ft</td><td>\(\mathbf{15}\) ft</td></tr>
+        <tr><td>2. Window pane, area 144 sq in</td><td>\(\mathbf{12}\) in</td></tr>
+        <tr><td>3. Rug, area 196 sq ft</td><td>\(\mathbf{14}\) ft</td></tr>
+        <tr><td>4. Frame, area 81 sq in</td><td>\(\mathbf{9}\) in</td></tr>
+        <tr><td>5. Parking lot, area 400 sq m</td><td>\(\mathbf{20}\) m</td></tr>
+        <tr><td>6. Quilt panel, area 256 sq in</td><td>\(\mathbf{16}\) in</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Word Problems - Tab 2: Volume &amp; Cube Roots</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Storage box, volume 216 cu in</td><td>\(\mathbf{6}\) in</td></tr>
+        <tr><td>2. Fish tank, volume 1,000 cu cm</td><td>\(\mathbf{10}\) cm</td></tr>
+        <tr><td>3. Gift box, volume 125 cu in</td><td>\(\mathbf{5}\) in</td></tr>
+        <tr><td>4. Water tank, volume 512 cu ft</td><td>\(\mathbf{8}\) ft</td></tr>
+        <tr><td>5. Die, volume 27 cu cm</td><td>\(\mathbf{3}\) cm</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Word Problems - Tab 3: Mixed &amp; Challenge</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. Rooms 100 vs 144 sq ft, side difference</td><td>\(\mathbf{2}\) ft</td></tr>
+        <tr><td>2. Field, area 324 sq yd, fence perimeter</td><td>\(\mathbf{72}\) yd</td></tr>
+        <tr><td>3. Box, volume 729 cu in, edge length</td><td>\(\mathbf{9}\) in</td></tr>
+        <tr><td>4. Aquarium 343 cu ft, edges doubled &rarr; new volume</td><td>\(\mathbf{2{,}744}\) cu ft</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Test Prep - Tab 1: Concept Review</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>A. \(8^2\)</td><td>\(\mathbf{64}\)</td></tr>
+        <tr><td>B. \(3^3\)</td><td>\(\mathbf{27}\)</td></tr>
+        <tr><td>C. \(\sqrt{121}\)</td><td>\(\mathbf{11}\)</td></tr>
+        <tr><td>D. \(\sqrt[3]{343}\)</td><td>\(\mathbf{7}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Test Prep - Tab 2: Error Analysis</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(5^2=10\)</td><td>Squaring multiplies by itself, not 2: \(\mathbf{25}\)</td></tr>
+        <tr><td>2. \(2^3=6\)</td><td>Cubing multiplies by itself three times, not 3: \(\mathbf{8}\)</td></tr>
+        <tr><td>3. \(\sqrt{64}=32\)</td><td>A root is not "divide by 2": \(\mathbf{8}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Test Prep - Tab 3: Timed Review Quiz</div>
+    <table class="data-table">
+      <tbody>
+        <tr><td>1. \(11^2\)</td><td>\(\mathbf{121}\)</td></tr>
+        <tr><td>2. \(6^3\)</td><td>\(\mathbf{216}\)</td></tr>
+        <tr><td>3. Garden, area 169 sq ft, side</td><td>\(\mathbf{13}\) ft</td></tr>
+        <tr><td>4. \(\sqrt{81}\)</td><td>\(\mathbf{9}\)</td></tr>
+        <tr><td>5. \(\sqrt[3]{216}\)</td><td>\(\mathbf{6}\)</td></tr>
+        <tr><td>6. Which is true about \(\sqrt{100}\)?</td><td><strong>B</strong> - \(\sqrt{100}=10\)</td></tr>
+        <tr><td>7. \(4^3\) and \(8^2\) equal?</td><td><strong>True</strong></td></tr>
+        <tr><td>8. Cube box, volume 1,000 cu in, edge</td><td>\(\mathbf{10}\) in</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Test Prep - Tab 4: Mixed Practice (submit-only)</div>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Problem</th><th>Answer</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>\(7^2\)</td><td>\(\mathbf{49}\)</td></tr>
+        <tr><td>2</td><td>\(10^3\)</td><td>\(\mathbf{1{,}000}\)</td></tr>
+        <tr><td>3</td><td>\(15^2\)</td><td>\(\mathbf{225}\)</td></tr>
+        <tr><td>4</td><td>\(9^3\)</td><td>\(\mathbf{729}\)</td></tr>
+        <tr><td>5</td><td>\(\sqrt{169}\)</td><td>\(\mathbf{13}\)</td></tr>
+        <tr><td>6</td><td>\(\sqrt{225}\)</td><td>\(\mathbf{15}\)</td></tr>
+        <tr><td>7</td><td>\(\sqrt[3]{125}\)</td><td>\(\mathbf{5}\)</td></tr>
+        <tr><td>8</td><td>\(\sqrt[3]{1{,}728}\)</td><td>\(\mathbf{12}\)</td></tr>
+        <tr><td>9</td><td>\(x^2=361\)</td><td>\(\mathbf{19}\)</td></tr>
+        <tr><td>10</td><td>\(x^3=2{,}744\)</td><td>\(\mathbf{14}\)</td></tr>
+        <tr><td>11</td><td>Rug, area 144 sq ft, side</td><td>\(\mathbf{12}\) ft</td></tr>
+        <tr><td>12</td><td>Crate, volume 64 cu ft, edge</td><td>\(\mathbf{4}\) ft</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+</script>
+</body>
+</html>
