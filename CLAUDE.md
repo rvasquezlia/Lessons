@@ -119,6 +119,88 @@ Manage deployments → edit the existing deployment → New version, so the
 | `Progress` | **Automatic** — written entirely by Apps Script | One row per (student, activity), upserted on every save. Columns: `Email, StudentName, Grade, Teacher, ActivityId, ActivityTitle, FirstStartedAt, LastSubmittedAt, ItemsTotal, ItemsAttempted, ItemsCorrect, ScorePct, Status, SubmissionsLog (JSON), FlagReason, ReviewedByTeacher, ReviewedAt`. The last two are the only cells a teacher should hand-edit (checking off a flagged row after review). |
 | `AccessLog` | **Automatic** — written entirely by Apps Script | **Denied access attempts only** — a student opening an activity their grade doesn't match, or one no longer active. Routine allowed re-checks on every Check-button click were never logged here (an earlier bug, see git history, that flooded this tab); **allowed opens stopped being logged here at all** in a later pass (see below) since they were both redundant with `Progress` and a source of duplicate rows in their own right. Rows from before that change may still say `Allowed` and are kept for history, not backfilled away. |
 
+### Grade tracks beyond 6/7/8
+
+Not every student fits a plain numeric grade. **7th Grade Honors** and
+**8th Grade Pre-AP** are additional tracks, identified by non-numeric
+`Grade` codes: `7-Honors` and `8-PreAP` (exact spelling — `Roster.Grade`,
+`ActivityCatalog.Grade`, and `index.html`'s `CURRICULUM` keys all have to
+match this string character-for-character). Neither collides with a
+plain `"7"`/`"8"` student, and both were validated live against a real
+`7-Honors` test account before any content existed for it — see
+`resolveAccess_`'s grade-mismatch denial and `index.html`'s
+`GRADE_KEY_BY_NUMBER` fallback below.
+
+**`GRADE_KEY_BY_NUMBER` only maps numeric grades (6/7/8) to a readable
+`CURRICULUM` key ("Sixth"/"Seventh"/"Eighth")** — `Number("7-Honors")` is
+`NaN`, so `index.html`'s `gradeKey = GRADE_KEY_BY_NUMBER[Number(grade)]
+|| grade` falls through to the raw grade string itself. This is why
+`CURRICULUM["7-Honors"]` and `CURRICULUM["8-PreAP"]` are spelled to match
+the Grade code exactly — no further code change was needed to make a
+non-numeric grade resolve to its own top-level panel. `GRADE_ORDER` (used
+only for the unrestricted teacher view) lists both non-numeric codes
+alongside the three grade names, or a teacher would never see either
+track's topics on the index at all.
+
+**`ActivityCatalog.Grade` can list more than one grade, comma-separated
+(e.g. `7,7-Honors`), when two tracks share one activity verbatim** —
+`resolveAccess_` in `Code.gs` splits on `,`, trims each value, and checks
+whether the student's own grade is in that list, rather than requiring
+an exact single-value match. This is what lets **7th Grade Honors reuse
+the existing `Seventh/Rational-Numbers` pages outright** — Honors covers
+the identical skill (converting rational numbers to decimals, then
+adding/subtracting/multiplying/dividing them) at a faster pace, so
+rather than duplicating five pages verbatim, `Seventh/Rational-Numbers`'s
+five `ActivityCatalog` rows are shared by both grade codes and
+`CURRICULUM["7-Honors"]`'s own "Rational Numbers" topic entry points at
+the exact same `base`/`activityIds` as `CURRICULUM["Seventh"]`'s. A
+`7-Honors` student and a `7` student opening the same URL get the exact
+same page, the exact same `Progress` row shape, and the exact same
+teacher-view answer key — there is no Honors-specific fork of this
+content anywhere. Never split a shared value like `"7"` into two rows
+with different `ActivityId`s just to give Honors its own copy — extend
+the existing row's `Grade` cell instead, unless the content genuinely
+needs to differ.
+
+**Known limitation:** `teacher-dashboard.html`'s completion-rate math
+(`computeActivitySummaries()`'s `completionPct`, and any per-grade
+grouping that compares `ActivityCatalog.Grade` against `Roster.Grade`)
+still does an exact-string comparison, not the same comma-list
+membership check `resolveAccess_` uses. A shared row's raw
+`Grade` value (`"7,7-Honors"`) won't exactly equal either roster grade,
+so completion-rate/eligible-roster-size numbers for a shared activity
+are not yet reliable in the dashboard — only the student-facing
+access-gate was updated. Fix `getScopedEmailSet_`-adjacent dashboard
+grouping logic before trusting those specific numbers for a shared
+activity.
+
+**7th Grade Honors** (`Seventh/Squares-Cubes-and-Roots/`, `Grade:
+7-Honors` only, not shared) — a genuinely new topic with no regular-7th
+equivalent: perfect squares/cubes (1–20 / 1–15), and working backward
+with square and cube roots, the bridge to irrational numbers later in
+the sequence. Three pages only (Review, Practice-Set, Test-Prep) rather
+than the full five-page pattern — Vocabulary-Literacy and Word-Problems
+were skipped since the source material (a reference chart plus three
+tiered practice sets) doesn't include real-world word problems or a
+distinct vocabulary lesson worth a whole page of its own. All three
+pages use plain `<input>` fields throughout, no `<math-field>` — every
+answer in this topic (a base, a square, or a cube) is a plain integer.
+
+**8th Grade Pre-AP** (`Eighth/Linear-Functions/`, `Grade: 8-PreAP` only,
+not shared) — a new unit distinct from the existing `Linear-Equations`
+(solving for a single unknown) and `Literal-Equations` (solving a
+formula for a specified variable): domain/range and the definition of a
+function, the slope formula, slope-intercept form, function notation
+(evaluating \(f(x)\) and writing a rule from a table), and real-world
+linear modeling. Full five-page pattern. `Practice-Set.html` and
+`Word-Problems.html` mix plain-number answers (evaluating a function at
+a given input, a slope between two points) with algebraic-rule answers
+(writing \(y=mx+b\) or \(f(x)=mx+b\) from data) — the algebraic items use
+`<math-field>` + the same `normalizeExpr()`/`answerMatches()` pattern
+documented under "Visual math input" below, and sit outside
+`window.listRegistry` with their own hand-written `revealAnswerKey`
+fill-in, exactly like Literal-Equations' Tab 4/Tab 5 items.
+
 **Why `AccessLog` shrank to denials-only.** Even after the Check-button
 flood was fixed, `AccessLog` could still show a burst of rows for a
 single real visit: an `access-check`/`submission` call that Apps
@@ -1025,14 +1107,22 @@ without being wired yet.
 | Seventh/Operations-with-Rationals | `7-operations-with-rationals-*` | Same shape as Integers (including a `checkQCMulti` checkbox group in Test-Prep), but no sign-group pattern. Its Guided-Solving-Ladder page has one flat `ladderExercises` array (not grouped by key prefix like every other registry here) - exposed as `window.listRegistry = { lex: { problems: ... } }` to fit the same generic reveal mechanism, with `mc`-type items given a synthesized `displayAnswer` (the generic reveal only knows `displayAnswer`/`a`/`accepted`, not this page's own `p.answer`) so a `<select>` gets set to the right option like any other item. |
 | Eighth/Linear-Equations | `8-linear-equations-*` | Review uses `window.listRegistry` (local var `checkListRegistry`). Vocabulary-Literacy, Practice-Set, and Word-Problems are entirely hand-written `window.revealAnswerKey` (no page has a shared registry covering everything). Test-Prep's `listRegistry` (local var, matching the shared-name convention) covers only its submit-only Mixed Practice tab; the rest (Check Your Understanding, Error Analysis, Readiness Check) is hand-written. Practice-Set's Strategy Challenge tab is student-choice-driven (pick a group first) and has nothing to reveal until a group is picked — `revealAnswerKey` skips it harmlessly if none was. |
 | Eighth/Literal-Equations | `8-literal-equations-*` | Review uses `window.listRegistry` (local var `checkListRegistry`). Practice-Set's `symRegistry` and Word-Problems' `wpRegistry` are both exposed as `window.listRegistry`, covering most of each page; Practice-Set still hand-writes its Tab 4 Live Number Check (targets depend on live slider values, recomputed with the same formula the check functions use) and Tab 5 Error Analysis, and Word-Problems hand-writes its one Tab 3 investment-comparison item. Test-Prep's `submitSymRegistry` (as `window.listRegistry`) covers Mixed Practice parts 1-2 only; part 3 (numeric, separate render/check functions) plus Full Review/Error Analysis/Readiness Check are hand-written. Vocabulary-Literacy is entirely hand-written (two standalone check functions, no registry). Its Guided-Solving-Ladder page already used the standard keyed-registry shape (`exRegistry`, covering both its tabs) so it only needed `window.listRegistry = exRegistry` - no hand-written reveal at all. |
+| Seventh/Squares-Cubes-and-Roots (**7-Honors only**, 3 pages) | `7-squares-cubes-and-roots-*` | Practice-Set uses `window.listRegistry` for all three tabs' plain-number items (`checkPractice`), plus three critical-thinking textareas (`checkCT1`/`checkCT2`/`checkCT3`, submit-only, outside the registry). Review's "Are You Ready?" tab uses the `checkListRegistry`/`renderCheckList` pattern. Test-Prep is entirely hand-written `window.revealAnswerKey` (four problem shapes, none sharing a registry). |
+| Eighth/Linear-Functions (**8-PreAP only**, 5 pages) | `8-linear-functions-*` | Practice-Set's Tabs 1 & 3 (plain-number: slope, function evaluation) use `window.listRegistry`; Tabs 2 & 4 (algebraic-rule answers via `<math-field>`: slope-intercept form, writing a function rule from a table) sit outside the registry with their own hand-written reveal, same pattern as Literal-Equations. Word-Problems' two numeric tabs use `window.listRegistry`; its one algebraic item (writing the fuel-tank equation) is hand-written. Vocabulary-Literacy and Test-Prep are entirely hand-written (no page-wide registry). |
 
 Every wired page needs its own row in `ActivityCatalog` (matching
-`Grade`, `Active: TRUE`) before its gate will let anyone in — that's 37
-rows now (35 from the 5-page pattern across 7 units, plus the 2
-Guided-Solving-Ladder pages). `index.html`'s `CURRICULUM` also
-needs an `activityIds` block per topic (see the existing entries) or a
-signed-in student won't see that topic on the index even once the pages
-themselves work — this has been added for all 7 wired units already.
+`Grade`, `Active: TRUE`) before its gate will let anyone in — that's 45
+rows now (35 from the 5-page pattern across 7 grade-6/7/8 units, the 2
+Guided-Solving-Ladder pages, 3 for Seventh/Squares-Cubes-and-Roots, and
+5 for Eighth/Linear-Functions). The five `7-rational-numbers-*` rows
+also need their `Grade` cell widened to `7,7-Honors` (see "Grade tracks
+beyond 6/7/8" above) so Honors can open the same rows — that's an edit
+to five existing rows, not five new ones. `index.html`'s `CURRICULUM`
+also needs an `activityIds` block per topic (see the existing entries)
+or a signed-in student won't see that topic on the index even once the
+pages themselves work — this has been added for every wired topic
+already, across all five top-level grade keys (`Sixth`, `Seventh`,
+`Eighth`, `7-Honors`, `8-PreAP`).
 
 **Before trusting `window.revealAnswerKey` or `window.listRegistry` works
 on a specific page you haven't checked**, open that page's own `<script>`
@@ -1308,11 +1398,13 @@ activity — see `Code.gs`'s `identify` branch).
   omitted.
 
 **Every topic in `CURRICULUM` now has an `activityIds` block** — all
-seven wired units (Sixth's two, Seventh's three, Eighth's two) are
-visible to a signed-in student on the index, in addition to Rational
-Numbers. As new units get added and wired the same way, add their
-`activityId`s to `CURRICULUM` the same way, or a signed-in student won't
-see them on the index even once the pages themselves work.
+seven grade-6/7/8 units (Sixth's two, Seventh's three, Eighth's two) are
+visible to a signed-in student on the index, plus the two Honors/Pre-AP
+topics under the `7-Honors`/`8-PreAP` grade keys (see "Grade tracks
+beyond 6/7/8" further up). As new units get added and wired the same
+way, add their `activityId`s to `CURRICULUM` the same way, or a
+signed-in student won't see them on the index even once the pages
+themselves work.
 
 ### Flow
 

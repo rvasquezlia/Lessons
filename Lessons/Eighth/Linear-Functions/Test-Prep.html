@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-AP Algebra I: Linear Functions - Test Prep</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=9"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Pre-AP Algebra I &middot; Linear Functions</span>
+    <h1>Test Prep: Linear Functions</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Work tabs 1-3 in order (2 tries + reveal). Tab 4 is a graded printable check (nothing revealed). <strong>Calculators are allowed.</strong>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('concepts')">1. Concept Review</button>
+    <button class="tab-btn" onclick="switchTab('errors')">2. Error Analysis</button>
+    <button class="tab-btn" onclick="switchTab('quickcheck')">3. Timed Review Quiz</button>
+    <button class="tab-btn" onclick="switchTab('mixedpractice')">4. Mixed Practice</button>
+  </nav>
+
+  <!-- TAB 1: CONCEPT REVIEW -->
+  <div id="concepts" class="panel active">
+    <div class="section-title">Concept Review: Every Rule in One Place</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Skim the rules below, then answer the 4 Check Your Understanding problems.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">1. Function &amp; Domain/Range</div>
+      <p style="margin:0;">A relation is a <strong>function</strong> only if every input has exactly one output. The <strong>domain</strong> is every possible input; the <strong>range</strong> is every possible output.</p>
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">2. Slope</div>
+      <p style="margin:0;">\(m = \dfrac{y_2-y_1}{x_2-x_1}\). Horizontal line: \(m=0\). Vertical line: undefined.</p>
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">3. Function Notation</div>
+      <p style="margin:0;">\(f(a)\) means substitute \(a\) for \(x\) and simplify.</p>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Check Your Understanding</h3>
+      <p>Use the rules above to solve these four problems.</p>
+      <div id="cu-list"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: ERROR ANALYSIS -->
+  <div id="errors" class="panel">
+    <div class="section-title">Error Analysis: Spot the Mistake</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Name the error, the correct rule, and the right answer. Submit once - reviewed from your printed report.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Common Misconceptions to Watch For</div>
+      <ul style="margin-bottom:0;">
+        <li>Substituting into the wrong place in \(f(x)\), or forgetting order of operations.</li>
+        <li>Mixing up which coordinate is \(x_1\)/\(x_2\) in the slope formula, flipping the sign.</li>
+        <li>Assuming any table of ordered pairs is automatically a function.</li>
+      </ul>
+    </div>
+
+    <div id="errors-list"></div>
+  </div>
+
+  <!-- TAB 3: TIMED REVIEW QUIZ -->
+  <div id="quickcheck" class="panel">
+    <div class="section-title">Timed Review Quiz</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Solve in your notebook, then type and check. Two tries per problem.
+    </div>
+
+    <div class="notebook-box"><div class="notebook-header">Set A: Functions, Domain &amp; Range</div></div>
+    <div class="step-box"><p><strong>1.</strong> Relation: \(\{(1,5), (2,10), (2,20), (3,15)\}\). Is this a function? Type yes or no.</p>
+      <input type="text" id="qc-a0" class="form-control-lg" style="max-width:150px;" placeholder="Answer">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('a', 0)">Check</button>
+      <div id="qc-a0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;"><p><strong>2.</strong> What is the range of \(\{(-2,4), (0,0), (2,4), (4,16)\}\)? Type the y-values separated by commas.</p>
+      <input type="text" id="qc-a1" class="form-control-lg" style="max-width:220px;" placeholder="e.g. 1,2,3">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('a', 1)">Check</button>
+      <div id="qc-a1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:24px;"><div class="notebook-header">Set B: Slope &amp; Equations</div></div>
+    <div class="step-box"><p><strong>3.</strong> Find the slope through \((2,-1)\) and \((6,7)\).</p>
+      <input type="text" id="qc-b0" class="form-control-lg" style="max-width:150px;" placeholder="Answer">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('b', 0)">Check</button>
+      <div id="qc-b0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;"><p><strong>4.</strong> A line has slope \(4\) and y-intercept \(-3\). What is \(y\) when \(x = 2\)?</p>
+      <input type="text" id="qc-b1" class="form-control-lg" style="max-width:150px;" placeholder="Answer">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('b', 1)">Check</button>
+      <div id="qc-b1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;"><p><strong>5.</strong> Which equation represents a proportional relationship?<br>
+      A. \(y = 5x + 2\)&nbsp;&nbsp; B. \(y = 5x\)&nbsp;&nbsp; C. \(y = x + 5\)&nbsp;&nbsp; D. \(y = -5\)</p>
+      <select id="qc-b2" class="form-control-lg" style="max-width:150px;">
+        <option value="">Choose...</option>
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+      </select>
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('b', 2)">Check</button>
+      <div id="qc-b2-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="notebook-box" style="margin-top:24px;"><div class="notebook-header">Set C: Function Notation</div></div>
+    <div class="step-box"><p><strong>6.</strong> \(f(x) = -2x + 9\). Find \(f(4)\).</p>
+      <input type="text" id="qc-c0" class="form-control-lg" style="max-width:150px;" placeholder="Answer">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('c', 0)">Check</button>
+      <div id="qc-c0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="step-box" style="margin-top:16px;"><p><strong>7.</strong> \(f(x) = 3x - 4\). For what value of \(x\) is \(f(x) = 11\)?</p>
+      <input type="text" id="qc-c1" class="form-control-lg" style="max-width:150px;" placeholder="Answer">
+      <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('c', 1)">Check</button>
+      <div id="qc-c1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: MIXED PRACTICE (submit-only, no reveal) -->
+  <div id="mixedpractice" class="panel">
+    <div class="section-title">Mixed Practice: Printable Worksheet</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Solve on paper, submit once. <strong>Not checked on screen</strong> - graded from your printed report.
+    </div>
+    <div id="mp-list"></div>
+  </div>
+</div>
+
+<script>
+  LessonSync.init('8-linear-functions-test-prep');
+
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // TAB 1: CONCEPT REVIEW
+  // ==========================================
+  const cuProblems = [
+    { q: "Problem A: \\(f(x) = 5x - 2\\). Find \\(f(3)\\).", a: 13, hint: "Substitute 3 for x, then simplify." },
+    { q: "Problem B: \\(f(x) = -x + 6\\). Find \\(f(-4)\\).", a: 10, hint: "Substitute -4 for x, then simplify." },
+    { q: "Problem C: Find the slope through \\((0,2)\\) and \\((5,17)\\).", a: 3, hint: "Use the slope formula." },
+    { q: "Problem D: Relation \\(\\{(2,3), (4,3), (6,3)\\}\\). Is it a function? Type yes or no.", accepted: ["yes"], displayAnswer: "yes", hint: "Does every input have exactly one output?" }
+  ];
+  function renderCU() {
+    const html = cuProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="cu-${i}-input" class="form-control-lg" style="max-width:150px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkCU(${i})">Check</button>
+        <div id="cu-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('cu-list').innerHTML = html;
+    cuProblems.forEach((p, i) => LessonProgress.preRegister(`cu-${i}`, `1. Concept Review #${i + 1}`, '1. Concept Review'));
+  }
+  renderCU();
+  function checkCU(idx) {
+    const p = cuProblems[idx];
+    const raw = document.getElementById(`cu-${idx}-input`).value;
+    const fb = document.getElementById(`cu-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
+    const correct = p.a !== undefined ? LessonCheck.numericMatch(raw, p.a, 0.01) : (p.accepted || []).map((s) => s.toLowerCase()).includes(raw.trim().toLowerCase());
+    const answerText = p.a !== undefined ? p.a : p.displayAnswer;
+    LessonCheck.check(`cu-${idx}`, correct, fb, {
+      correct: `Correct! Answer: \\(\\mathbf{${answerText}}\\)`,
+      retry: p.hint,
+      reveal: `Here's the correct answer: \\(\\mathbf{${answerText}}\\)`
+    }, { label: `1. Concept Review #${idx + 1}`, answer: raw, section: '1. Concept Review' });
+  }
+
+  // ==========================================
+  // TAB 2: ERROR ANALYSIS
+  // ==========================================
+  const errorAnalysisProblems = [
+    { student: "\\(f(x) = 3x + 2\\), student says \\(f(4) = 3(2) + 4 = 10\\)", rule: "Substitute the input for x directly: f(4) = 3(4) + 2.", correctAnswer: "14" },
+    { student: "Slope through \\((1,5)\\) and \\((4,-1)\\), student says \\(m = \\dfrac{5-(-1)}{1-4} = \\dfrac{6}{-3}\\), so \\(m=2\\)", rule: "The sign is correct but the division is wrong: 6/-3 = -2, not 2.", correctAnswer: "-2" },
+    { student: "Relation \\(\\{(2,3), (2,5), (4,7)\\}\\), student says this is a function", rule: "The input 2 maps to two different outputs (3 and 5), so it fails the definition of a function.", correctAnswer: "not a function" }
+  ];
+  function renderErrorAnalysis() {
+    const html = errorAnalysisProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>Problem ${i + 1}.</strong> Student work: ${p.student}
+        <div style="margin-top:10px;">
+          <label style="font-weight:700; font-size:0.95rem; display:block; margin-bottom:6px;">Identify the error and name the correct rule:</label>
+          <textarea id="ea-${i}-explain" class="form-control-lg" rows="2" placeholder="What did the student do wrong?"></textarea>
+        </div>
+        <div style="margin-top:10px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <label style="font-weight:700; font-size:0.95rem;">Correct Answer: <input type="text" id="ea-${i}-answer" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Correct value"></label>
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkErrorAnalysis(${i})">Submit</button>
+        </div>
+        <div id="ea-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('errors-list').innerHTML = html;
+    errorAnalysisProblems.forEach((p, i) => LessonProgress.preRegister(`ea-${i}`, `2. Error Analysis #${i + 1}`, '2. Error Analysis'));
+  }
+  renderErrorAnalysis();
+  function checkErrorAnalysis(idx) {
+    const p = errorAnalysisProblems[idx];
+    const explain = document.getElementById(`ea-${idx}-explain`).value.trim();
+    const answer = document.getElementById(`ea-${idx}-answer`).value.trim();
+    const fb = document.getElementById(`ea-${idx}-feedback`);
+    if (explain.length <= 5 || !answer) { LessonCheck.incomplete(fb, "Explain the error and give the correct answer before submitting."); return; }
+    const correct = answer.toLowerCase() === p.correctAnswer.toLowerCase() || LessonCheck.numericMatch(answer, parseFloat(p.correctAnswer), 0.01);
+    LessonCheck.submit(fb, { key: `ea-${idx}`, label: `2. Error Analysis #${idx + 1}`, answer: `${explain} | Correct answer given: ${answer}`, section: '2. Error Analysis', correct });
+  }
+
+  // ==========================================
+  // TAB 3: TIMED REVIEW QUIZ
+  // ==========================================
+  const qcAnswers = {
+    a: { 0: "no", 1: "4,0,4,16" },
+    b: { 0: 2, 1: 5, 2: "B" },
+    c: { 0: 1, 1: 5 }
+  };
+  function checkQC(set, idx) {
+    const id = `qc-${set}${idx}`;
+    const raw = document.getElementById(id).value;
+    const fb = document.getElementById(`${id}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
+    const expected = qcAnswers[set][idx];
+    const norm = (s) => String(s || '').toLowerCase().replace(/\s+/g, '');
+    const correct = typeof expected === "number" ? LessonCheck.numericMatch(raw, expected, 0.01) : norm(raw) === norm(expected);
+    LessonCheck.check(id, correct, fb, {
+      correct: "Correct!",
+      retry: "Not quite yet. Review the problem and try again.",
+      reveal: `The correct answer is \\(\\mathbf{${expected}}\\).`
+    }, { label: `3. Timed Review Quiz: ${id}`, answer: raw, section: '3. Timed Review Quiz' });
+  }
+  ['a0','a1','b0','b1','b2','c0','c1'].forEach(id => LessonProgress.preRegister(`qc-${id}`, `3. Timed Review Quiz: ${id}`, '3. Timed Review Quiz'));
+
+  // ==========================================
+  // TAB 4: MIXED PRACTICE (submit-only, no reveal - LessonCheck.submit only)
+  // ==========================================
+  const mpProblems = [
+    { q: "\\(f(x) = 6x - 1\\). Find \\(f(2)\\).", a: 11, label: "f(2), f(x)=6x-1" },
+    { q: "\\(f(x) = -3x + 4\\). Find \\(f(-2)\\).", a: 10, label: "f(-2), f(x)=-3x+4" },
+    { q: "Find the slope through \\((0,4)\\) and \\((6,0)\\).", a: -0.6667, tol: 0.01, label: "Slope through (0,4),(6,0)" },
+    { q: "Find the slope through \\((3,3)\\) and \\((3,-2)\\). Type \"undefined\" if there is no slope.", accepted: ["undefined"], label: "Slope through (3,3),(3,-2)" },
+    { q: "Is \\(\\{(0,1), (1,1), (2,1)\\}\\) a function? Type yes or no.", accepted: ["yes"], label: "Is {(0,1),(1,1),(2,1)} a function" },
+    { q: "What is the domain of \\(\\{(-2,5), (0,3), (2,1)\\}\\)? Type the x-values separated by commas.", accepted: ["-2,0,2"], label: "Domain of {(-2,5),(0,3),(2,1)}" },
+    { q: "Write the equation of the line with slope 2 through \\((1,4)\\), in the form y=mx+b.", accepted: ["y=2x+2"], label: "Equation: slope 2 through (1,4)" },
+    { q: "A rideshare charges a \\$5 base fee plus \\$2 per mile. Write \\(C(m)\\).", accepted: ["c(m)=2m+5", "c(m)=5+2m"], label: "Rideshare equation C(m)" },
+    { q: "Using \\(C(m) = 2m + 5\\) from the previous problem, find \\(C(12)\\).", a: 29, label: "C(12) rideshare" },
+    { q: "Word Problem: A candle is 10 inches tall and burns down 0.5 inches per hour. Write \\(h(t)\\) for its height after \\(t\\) hours.", accepted: ["h(t)=10-0.5t", "h(t)=-0.5t+10"], label: "Candle equation h(t)" },
+    { q: "Using \\(h(t) = 10 - 0.5t\\) from the previous problem, how many hours until the candle burns out (\\(h(t)=0\\))?", a: 20, label: "Candle burns out" },
+    { q: "Multi-Step: \\(f(x) = 2x + 3\\) and \\(g(x) = x - 1\\). Find \\(f(3) + g(3)\\).", a: 11, label: "f(3)+g(3)" }
+  ];
+  function renderMP() {
+    const html = mpProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px;">
+          <input type="text" id="mp-${i}-input" class="form-control-lg" style="max-width:220px; display:inline-block;" placeholder="Answer">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkMP(${i})">Submit</button>
+        </div>
+        <div id="mp-${i}-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('mp-list').innerHTML = html;
+    mpProblems.forEach((p, i) => LessonProgress.preRegister(`mp-${i}`, `4. Mixed Practice #${i + 1}: ${p.label}`, '4. Mixed Practice'));
+  }
+  renderMP();
+  function checkMP(idx) {
+    const p = mpProblems[idx];
+    const raw = document.getElementById(`mp-${idx}-input`).value;
+    const fb = document.getElementById(`mp-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
+    const norm = (s) => String(s || '').toLowerCase().replace(/\s+/g, '');
+    const correct = p.a !== undefined ? LessonCheck.numericMatch(raw, p.a, p.tol || 0.01) : (p.accepted || []).map(norm).includes(norm(raw));
+    LessonCheck.submit(fb, { key: `mp-${idx}`, label: `4. Mixed Practice #${idx + 1}: ${p.label}`, answer: raw, section: '4. Mixed Practice', correct });
+  }
+
+  // This page has several problem shapes, none using window.listRegistry,
+  // so the teacher reveal fills in every tab's answer key directly.
+  window.revealAnswerKey = function () {
+    const fillInput = (id, feedbackId, answer) => {
+      const input = document.getElementById(id);
+      const fb = document.getElementById(feedbackId);
+      if (!input || !fb) return;
+      input.value = answer;
+      input.disabled = true;
+      const btn = input.parentElement && input.parentElement.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
+    };
+
+    cuProblems.forEach((p, i) => fillInput(`cu-${i}-input`, `cu-${i}-feedback`, p.a !== undefined ? p.a : p.displayAnswer));
+
+    errorAnalysisProblems.forEach((p, i) => {
+      const explainEl = document.getElementById(`ea-${i}-explain`);
+      const answerEl = document.getElementById(`ea-${i}-answer`);
+      const fb = document.getElementById(`ea-${i}-feedback`);
+      if (!explainEl || !answerEl || !fb) return;
+      explainEl.value = p.rule;
+      answerEl.value = p.correctAnswer;
+      explainEl.disabled = true;
+      answerEl.disabled = true;
+      const btn = answerEl.closest('.guided-practice') && answerEl.closest('.guided-practice').querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${p.correctAnswer}</strong>`;
+    });
+
+    Object.keys(qcAnswers).forEach((set) => {
+      Object.keys(qcAnswers[set]).forEach((idx) => {
+        fillInput(`qc-${set}${idx}`, `qc-${set}${idx}-feedback`, String(qcAnswers[set][idx]));
+      });
+    });
+
+    mpProblems.forEach((p, i) => fillInput(`mp-${i}-input`, `mp-${i}-feedback`, p.a !== undefined ? String(p.a) : p.accepted[0]));
+
+    triggerMathJax();
+  };
+</script>
+</body>
+</html>

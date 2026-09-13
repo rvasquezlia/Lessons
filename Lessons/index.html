@@ -463,10 +463,77 @@
           }
         }
       ]
+    },
+    // "7-Honors" / "8-PreAP" are non-numeric Grade codes (see /CLAUDE.md's
+    // "Grade tracks beyond 6/7/8" note) - GRADE_KEY_BY_NUMBER only maps
+    // numeric grades, so a student whose Roster.Grade is one of these
+    // falls through to using the raw string itself as the CURRICULUM key,
+    // which is exactly why these two top-level keys are spelled to match
+    // those Grade values verbatim.
+    "7-Honors": {
+      label: "7th Grade Honors",
+      subject: "Pre-Algebra Honors",
+      topics: [
+        {
+          title: "Rational Numbers",
+          summary: "Same Rational Numbers unit as regular Seventh grade - Honors moves through it at an accelerated pace, on the identical pages.",
+          base: "Seventh/Rational-Numbers/",
+          review: "Review.html",
+          vocab: "Vocabulary-Literacy.html",
+          explain: "Explanation.html",
+          practice: "Practice-Set.html",
+          word: "Word-Problems.html",
+          test: "Test-Prep.html",
+          teacher: "Teacher-Guide.html",
+          activityIds: {
+            review: "7-rational-numbers-review",
+            vocab: "7-rational-numbers-vocabulary-literacy",
+            practice: "7-rational-numbers-practice-set",
+            word: "7-rational-numbers-word-problems",
+            test: "7-rational-numbers-test-prep"
+          }
+        },
+        {
+          title: "Squares, Cubes & Roots",
+          summary: "Compute perfect squares and cubes, then work backward with square roots and cube roots - the bridge to irrational numbers.",
+          base: "Seventh/Squares-Cubes-and-Roots/",
+          review: "Review.html",
+          practice: "Practice-Set.html",
+          test: "Test-Prep.html",
+          activityIds: {
+            review: "7-squares-cubes-and-roots-review",
+            practice: "7-squares-cubes-and-roots-practice-set",
+            test: "7-squares-cubes-and-roots-test-prep"
+          }
+        }
+      ]
+    },
+    "8-PreAP": {
+      label: "8th Grade Pre-AP",
+      subject: "Pre-AP Algebra I",
+      topics: [
+        {
+          title: "Linear Functions",
+          summary: "Read and write linear functions in function notation, find domain, range, and slope, and write equations in slope-intercept form.",
+          base: "Eighth/Linear-Functions/",
+          review: "Review.html",
+          vocab: "Vocabulary-Literacy.html",
+          practice: "Practice-Set.html",
+          word: "Word-Problems.html",
+          test: "Test-Prep.html",
+          activityIds: {
+            review: "8-linear-functions-review",
+            vocab: "8-linear-functions-vocabulary-literacy",
+            practice: "8-linear-functions-practice-set",
+            word: "8-linear-functions-word-problems",
+            test: "8-linear-functions-test-prep"
+          }
+        }
+      ]
     }
   };
 
-  const GRADE_ORDER = ["Sixth", "Seventh", "Eighth"];
+  const GRADE_ORDER = ["Sixth", "Seventh", "Eighth", "7-Honors", "8-PreAP"];
   const GRADE_KEY_BY_NUMBER = { 6: "Sixth", 7: "Seventh", 8: "Eighth" };
 
   // restrictToWired = true (student view): a section only ever shows as a

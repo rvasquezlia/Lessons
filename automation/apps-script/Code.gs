@@ -99,8 +99,15 @@ function resolveAccess_(email, activityId) {
   if (!activityRow || (activityRow.row[cMap['Active']] !== true && activityRow.row[cMap['Active']] !== 'TRUE')) {
     return { allowed: false, reason: 'This activity is not available.', logReason: 'Unknown or inactive activity', studentGrade: student.grade };
   }
+  // ActivityCatalog.Grade can list more than one grade, comma-separated
+  // (e.g. "7,7-Honors"), for an activity two tracks share verbatim - a
+  // regular-track and an accelerated/honors-track student opening the
+  // exact same page. Each listed value is compared as a whole string
+  // (trimmed), never a substring match, so "7" never accidentally matches
+  // a student whose grade is "7-Honors" or vice versa.
   const requiredGrade = activityRow.row[cMap['Grade']];
-  if (String(student.grade) !== String(requiredGrade)) {
+  const allowedGrades = String(requiredGrade).split(',').map((g) => g.trim());
+  if (!allowedGrades.includes(String(student.grade))) {
     return { allowed: false, reason: 'This activity is not assigned to your grade.', logReason: 'Grade mismatch', studentGrade: student.grade, requiredGrade };
   }
 

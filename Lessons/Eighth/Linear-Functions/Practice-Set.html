@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-AP Algebra I: Linear Functions - Practice Set</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=9"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Pre-AP Algebra I &middot; Linear Functions</span>
+    <h1>Practice Set</h1>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Pure computation, no word problems - work the tabs in any order. Each item gives <strong>2 tries</strong>, then shows the method and locks. <strong>Calculators are allowed.</strong>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('slope')">1. Slope &amp; Rate of Change</button>
+    <button class="tab-btn" onclick="switchTab('sif')">2. Slope-Intercept Form</button>
+    <button class="tab-btn" onclick="switchTab('notation')">3. Function Notation</button>
+    <button class="tab-btn" onclick="switchTab('rules')">4. Writing Function Rules</button>
+  </nav>
+
+  <!-- TAB 1: SLOPE & RATE OF CHANGE -->
+  <div id="slope" class="panel active">
+    <div class="section-title">Slope &amp; Rate of Change</div>
+    <div class="notebook-box">
+      <div class="notebook-header">The Slope Formula</div>
+      <p style="margin:0;">To find the slope \(m\) between two points \((x_1,y_1)\) and \((x_2,y_2)\): \(m = \dfrac{y_2 - y_1}{x_2 - x_1}\). A horizontal line has slope 0. A vertical line has an undefined slope.</p>
+    </div>
+    <div id="slope-list"></div>
+  </div>
+
+  <!-- TAB 2: SLOPE-INTERCEPT FORM -->
+  <div id="sif" class="panel">
+    <div class="section-title">Writing Equations in Slope-Intercept Form</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Slope-Intercept Form</div>
+      <p style="margin:0;">\(y = mx + b\), where \(m\) is the slope and \(b\) is the y-intercept. Find \(m\) first, then substitute one point to solve for \(b\).</p>
+    </div>
+    <div id="sif-list"></div>
+  </div>
+
+  <!-- TAB 3: FUNCTION NOTATION -->
+  <div id="notation" class="panel">
+    <div class="section-title">Function Notation: Evaluating Functions</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Evaluating a Function</div>
+      <p style="margin:0;">\(f(a)\) means: substitute \(a\) for \(x\) in the function's rule, then simplify.</p>
+    </div>
+    <div id="notation-list"></div>
+  </div>
+
+  <!-- TAB 4: WRITING FUNCTION RULES -->
+  <div id="rules" class="panel">
+    <div class="section-title">Writing Function Rules From a Table</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Guided Practice</div>
+      <p style="margin:0;">Each table below comes from a linear function \(f(x) = mx + b\). Find the rate of change and initial value, then type the full rule.</p>
+    </div>
+    <div id="rules-list"></div>
+  </div>
+</div>
+
+<script>
+  LessonSync.init('8-linear-functions-practice-set');
+
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ASCIIMath always double-parenthesizes every fraction - see
+  // /CLAUDE.md's "Visual math input" note. Normalize both sides before
+  // comparing rather than trusting accepted[]'s own spelling.
+  function stripRedundantParens(s) {
+    let prev;
+    do { prev = s; s = s.replace(/\(([^()+-]+)\)/g, '$1'); } while (s !== prev);
+    return s;
+  }
+  function normalizeExpr(s) {
+    return stripRedundantParens(String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, ''));
+  }
+  function answerMatches(val, accepted) {
+    const nv = normalizeExpr(val);
+    return accepted.some((a) => normalizeExpr(a) === nv);
+  }
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
+  // ==========================================
+  // REUSABLE SINGLE-FIELD NUMERIC PRACTICE LIST (check mode: 2 tries then reveal)
+  // ==========================================
+  function renderPracticeList(containerId, problems, keyPrefix, section) {
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:150px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkPractice('${keyPrefix}', ${i})">Check</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, `${section} #${i + 1}: ${p.label || p.q.replace(/\\\(|\\\)/g, '')}`, section));
+  }
+
+  const listRegistry = {};
+  window.listRegistry = listRegistry; // read by lesson-auth.js's teacher answer-key view - covers Tabs 1 & 3 (plain-number answers)
+
+  function checkPractice(keyPrefix, idx) {
+    const cfg = listRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const raw = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet."); return; }
+    const correct = p.a !== undefined ? LessonCheck.numericMatch(raw, p.a, p.tol || 0.01) : (p.accepted || []).map((s) => s.toLowerCase()).includes(String(raw).trim().toLowerCase());
+    const answerText = p.displayAnswer || (p.a !== undefined ? String(p.a) : (p.accepted ? p.accepted[0] : ''));
+    const label = `${cfg.section} #${idx + 1}: ${p.label || p.q.replace(/\\\(|\\\)/g, '')}`;
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! Answer: \\(\\mathbf{${answerText}}\\)`,
+      retry: p.hint || "Not quite yet. Review the rule and try again.",
+      reveal: `Here's the correct answer: \\(\\mathbf{${answerText}}\\)`
+    }, { label, answer: raw, section: cfg.section });
+  }
+
+  function setup(containerId, problems, keyPrefix, section) {
+    listRegistry[keyPrefix] = { problems, section };
+    renderPracticeList(containerId, problems, keyPrefix, section);
+  }
+
+  // ==========================================
+  // TAB 1: SLOPE & RATE OF CHANGE
+  // ==========================================
+  const slopeProblems = [
+    { q: "Find the slope through \\((4,-2)\\) and \\((-1,8)\\).", a: -2 },
+    { q: "Find the slope through \\((1.2,5.4)\\) and \\((3.2,8.6)\\).", a: 1.6 },
+    { q: "Find the slope through \\((-3,-0.6)\\) and \\((1,0.2)\\).", a: 0.2 },
+    { q: "Find the slope through \\((7,-3)\\) and \\((7,5)\\). Type \"undefined\" if there is no slope.", accepted: ["undefined"], displayAnswer: "undefined", hint: "Both points share the same x-value - the line is vertical." },
+    { q: "Find the slope through \\((2,6)\\) and \\((9,6)\\).", a: 0, hint: "Both points share the same y-value - the line is horizontal." },
+    { q: "A driver pays \\$18.00 for 5 gallons, then \\$32.40 for 9 gallons. What is the rate of change (cost per gallon)?", a: 3.6, label: "Gas station rate of change" },
+    { q: "A family has 180 miles left after 2 hours, and 60 miles left after 4 hours. What is the rate of change?", a: -60, label: "Road trip rate of change" }
+  ];
+  setup('slope-list', slopeProblems, 'slope', '1. Slope & Rate of Change');
+
+  // ==========================================
+  // TAB 3: FUNCTION NOTATION
+  // ==========================================
+  const notationProblems = [
+    { q: "\\(f(x) = 4x - 9\\). Find \\(f(-3)\\).", a: -21 },
+    { q: "\\(f(x) = -\\dfrac{1}{3}x + 13\\). Find \\(f(-3)\\).", a: 14 },
+    { q: "\\(f(x) = -2x - 11\\). Find \\(f(-3)\\).", a: -5 },
+    { q: "\\(f(x) = 2x - 3\\). Find \\(f(0)\\).", a: -3 },
+    { q: "\\(f(x) = 2x - 3\\). Find \\(f(2)\\).", a: 1 },
+    { q: "\\(g(x) = \\dfrac{1}{2}x + 1\\). Find \\(g(-4)\\).", a: -1 },
+    { q: "\\(g(x) = \\dfrac{1}{2}x + 1\\). Find \\(g(3)\\).", a: 2.5 },
+    { q: "\\(f(x) = 4x + 5\\) has domain \\(0 \\le x \\le 50\\). What is \\(f(50)\\) (the top of its range)?", a: 205, label: "f(50) with domain 0-50" }
+  ];
+  setup('notation-list', notationProblems, 'notation', '3. Function Notation');
+
+  // ==========================================
+  // TAB 2: SLOPE-INTERCEPT FORM (math-field, algebraic answer)
+  // ==========================================
+  const sifRegistry = {};
+  function renderSifList() {
+    sifRegistry.problems = sifProblems;
+    const html = sifProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <label style="font-weight:700;">\\(y = \\)</label>
+          <math-field id="sif-${i}-input" class="form-control-lg" style="max-width:220px; display:inline-block;" placeholder="\\text{expression}"></math-field>
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkSif(${i})">Check</button>
+        </div>
+        <div id="sif-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('sif-list').innerHTML = html;
+    sifProblems.forEach((p, i) => LessonProgress.preRegister(`sif-${i}`, `2. Slope-Intercept Form #${i + 1}: ${p.label}`, '2. Slope-Intercept Form'));
+    triggerMathJax();
+  }
+  const sifProblems = [
+    { q: "Write the equation of the line through \\((-1,3)\\) and \\((-3,1)\\).", accepted: ["x+4"], displayAnswer: "y = x + 4", label: "Line through (-1,3),(-3,1)" },
+    { q: "Write the equation of the line through \\((-4,8)\\) and \\((4,6)\\).", accepted: ["-1/4x+7", "-x/4+7"], displayAnswer: "y = -\\dfrac{1}{4}x + 7", label: "Line through (-4,8),(4,6)" },
+    { q: "Write the equation of the line through \\((9,2)\\) and \\((-3,-2)\\).", accepted: ["1/3x-1", "x/3-1"], displayAnswer: "y = \\dfrac{1}{3}x - 1", label: "Line through (9,2),(-3,-2)" },
+    { q: "Convert to slope-intercept form: \\(4x + 2y = 12\\).", accepted: ["-2x+6"], displayAnswer: "y = -2x + 6", label: "Convert 4x+2y=12" },
+    { q: "Write the equation with slope \\(-3\\) through \\((2,5)\\).", accepted: ["-3x+11"], displayAnswer: "y = -3x + 11", label: "Slope -3 through (2,5)" }
+  ];
+  function checkSif(idx) {
+    const p = sifProblems[idx];
+    const val = readMathField(document.getElementById(`sif-${idx}-input`));
+    const fb = document.getElementById(`sif-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter an expression before checking - this won't count as an attempt yet."); return; }
+    const correct = answerMatches(val, p.accepted);
+    LessonCheck.check(`sif-${idx}`, correct, fb, {
+      correct: `Correct! \\(${p.displayAnswer}\\)`,
+      retry: "Not quite yet. Find the slope first, then substitute a point to solve for b.",
+      reveal: `Here's the correct equation: \\(${p.displayAnswer}\\)`
+    }, { label: `2. Slope-Intercept Form #${idx + 1}: ${p.label}`, answer: val, section: '2. Slope-Intercept Form' });
+  }
+  renderSifList();
+
+  // ==========================================
+  // TAB 4: WRITING FUNCTION RULES (math-field, algebraic answer)
+  // ==========================================
+  const rulesProblems = [
+    { q: "A function passes through \\((0,1), (1,3), (-1,-1)\\). Write \\(f(x)\\).", accepted: ["2x+1"], displayAnswer: "f(x) = 2x + 1", label: "Rule from (0,1),(1,3),(-1,-1)" },
+    { q: "A function passes through \\((1,0), (3,3), (-1,-3)\\). Write \\(f(x)\\).", accepted: ["3/2x-3/2", "1.5x-1.5"], displayAnswer: "f(x) = \\dfrac{3}{2}x - \\dfrac{3}{2}", label: "Rule from (1,0),(3,3),(-1,-3)" },
+    { q: "A function passes through \\((0,0), (4,1), (-4,-1)\\). Write \\(f(x)\\).", accepted: ["1/4x", "x/4", "0.25x"], displayAnswer: "f(x) = \\dfrac{1}{4}x", label: "Rule from (0,0),(4,1),(-4,-1)" },
+    { q: "A function passes through \\((0,3), (2,2), (-2,4)\\). Write \\(f(x)\\).", accepted: ["-1/2x+3", "-x/2+3"], displayAnswer: "f(x) = -\\dfrac{1}{2}x + 3", label: "Rule from (0,3),(2,2),(-2,4)" }
+  ];
+  function renderRulesList() {
+    const html = rulesProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <label style="font-weight:700;">\\(f(x) = \\)</label>
+          <math-field id="rules-${i}-input" class="form-control-lg" style="max-width:220px; display:inline-block;" placeholder="\\text{expression}"></math-field>
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkRules(${i})">Check</button>
+        </div>
+        <div id="rules-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('rules-list').innerHTML = html;
+    rulesProblems.forEach((p, i) => LessonProgress.preRegister(`rules-${i}`, `4. Writing Function Rules #${i + 1}: ${p.label}`, '4. Writing Function Rules'));
+    triggerMathJax();
+  }
+  function checkRules(idx) {
+    const p = rulesProblems[idx];
+    const val = readMathField(document.getElementById(`rules-${idx}-input`));
+    const fb = document.getElementById(`rules-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter an expression before checking - this won't count as an attempt yet."); return; }
+    const correct = answerMatches(val, p.accepted);
+    LessonCheck.check(`rules-${idx}`, correct, fb, {
+      correct: `Correct! \\(${p.displayAnswer}\\)`,
+      retry: "Not quite yet. Find the rate of change between two points, then the initial value at x=0.",
+      reveal: `Here's the correct rule: \\(${p.displayAnswer}\\)`
+    }, { label: `4. Writing Function Rules #${idx + 1}: ${p.label}`, answer: val, section: '4. Writing Function Rules' });
+  }
+  renderRulesList();
+
+  // window.listRegistry (Tabs 1 & 3) is filled by the generic teacher
+  // reveal loop in lesson-auth.js; Tabs 2 & 4 use <math-field>s outside
+  // that registry, so they get their own reveal here.
+  window.revealAnswerKey = function () {
+    sifProblems.forEach((p, i) => {
+      const input = document.getElementById(`sif-${i}-input`);
+      const fb = document.getElementById(`sif-${i}-feedback`);
+      if (!input || !fb) return;
+      input.value = p.displayAnswer.replace(/^y = /, '');
+      input.disabled = true;
+      const btn = input.closest('.guided-practice').querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>\\(${p.displayAnswer}\\)</strong>`;
+    });
+    rulesProblems.forEach((p, i) => {
+      const input = document.getElementById(`rules-${i}-input`);
+      const fb = document.getElementById(`rules-${i}-feedback`);
+      if (!input || !fb) return;
+      input.value = p.displayAnswer.replace(/^f\(x\) = /, '');
+      input.disabled = true;
+      const btn = input.closest('.guided-practice').querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>\\(${p.displayAnswer}\\)</strong>`;
+    });
+    triggerMathJax();
+  };
+</script>
+</body>
+</html>
