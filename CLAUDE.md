@@ -196,11 +196,15 @@ one would write an entry with nothing to actually unlock.
 
 **A reset is an appended log entry, never a deletion or overwrite** —
 consistent with `SubmissionsLog`'s existing append-only design. Resetting
-a key writes one new entry: `{key, label: "Reset by teacher (<scope>)",
-answer: '', verdict: 'reset', section, resetScope, resetBy, timestamp}`.
-The full prior history (every wrong attempt, the reset itself) stays in
-the log — nothing is ever lost, and the dashboard's Attempts table shows
-the reset inline, styled distinctly (`<span class="pill ok">reset
+a key writes one new entry: `{key, label, answer: '', verdict: 'reset',
+section, resetScope, resetBy, timestamp}` — `label` is the item's own
+real label (`latestByKey[key].label`), **not** a generic "Reset by
+teacher (item)" string; an earlier version used that generic string and
+it read as redundant/confusing next to the Verdict column's own `reset
+(item)` pill, which already says what happened. The full prior history
+(every wrong attempt, the reset itself) stays in the log — nothing is
+ever lost, and the dashboard's Attempts table shows the reset inline,
+styled distinctly (`<span class="pill ok">reset
 (item)</span>`, light green row) rather than looking like just another
 attempt.
 
@@ -257,6 +261,17 @@ reopens that student's own detail view — `renderAll()` always resets
 every tab back to its list view (see "Teacher dashboard" above), which
 would otherwise bounce a teacher back to the student list after every
 single reset click.
+
+**A visible "Reset applied" tag sits next to the score itself**
+(`resetTagHtml(r)`, applied in `studentDetailTable()`,
+`activityDetailTable()`, `renderIntegrityMonitor()`, and
+`renderAllSubmissions()` — every per-row table that shows a `scorePct`
+cell) so a teacher scanning a list sees that a reset happened without
+opening that row's Attempts table to find the inline reset entry. Reads
+`row.resetEvents` (every `'reset'`-verdict entry decorateRow() already
+collected) and shows the scope in parentheses when every reset on that
+row shares one (`Reset applied (item)`), or without it when a row has
+been reset at more than one scope.
 
 **Authorization reuses the exact same scoping as every other write** -
 `isTeacher_`/`getTeacherScope_`/`getScopedEmailSet_` in `Code.gs`, so a

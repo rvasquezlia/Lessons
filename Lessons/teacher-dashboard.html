@@ -824,7 +824,11 @@
     const allEvents = allSubmissions.map((s) => {
       const type = s.verdict === 'reset' ? 'reset' : (s.key === 'reached-end' ? 'reached-end' : (s.key.startsWith('tab-') ? 'tab' : (isIntegrityKey(s.key) ? 'integrity' : 'graded')));
       let label;
-      if (type === 'reset') label = `${s.label} - ${s.resetBy || 'a teacher'} gave "${s.key}" a fresh start`;
+      // s.label is now the item's own real label (Code.gs stopped writing
+      // a generic "Reset by teacher (item)" string here - see
+      // applyTeacherReset_), so this reads as "<item name> - <teacher>
+      // reset this item" instead of repeating a raw internal key.
+      if (type === 'reset') label = `${s.label} - ${s.resetBy || 'A teacher'} reset this ${s.resetScope || 'item'}`;
       else if (type === 'reached-end') label = 'Reached the end';
       // s.label already comes prefixed "Viewed tab: ..." from lesson-auth.js
       // itself - re-adding the prefix here used to double it up.
@@ -1627,6 +1631,19 @@
   // pill, indistinguishable at a glance.
   const GRADED_PILL = { correct: 'ok', incomplete: 'flag', reflection: 'neutral' };
 
+  // A visible "Reset applied" tag next to a row's own score, so a teacher
+  // scanning a list (Student Roster's per-activity rows, By Activity's
+  // per-student rows, Full Submission Log) can tell at a glance that a
+  // reset happened here without opening the Attempts table to find the
+  // inline reset row - see /CLAUDE.md's reset-mechanism notes. `r` is any
+  // decorateRow() output (they all carry `resetEvents`).
+  function resetTagHtml(r) {
+    if (!r.resetEvents || !r.resetEvents.length) return '';
+    const scopes = [...new Set(r.resetEvents.map((e) => e.resetScope || 'item'))];
+    const scopeLabel = scopes.length === 1 ? ` (${scopes[0]})` : '';
+    return ` <span class="pill ok" title="${r.resetEvents.length} reset${r.resetEvents.length === 1 ? '' : 's'} applied by a teacher">Reset applied${scopeLabel}</span>`;
+  }
+
   // Shared by the student and activity detail views - a per-row timeline
   // built from Progress.SubmissionsLog timestamps (see decorateRow's
   // allEvents), not from AccessLog. studentName/activityTitle are only
@@ -2087,7 +2104,7 @@
       return `
       <tr class="${r.flags.length ? 'flagged' : ''}">
         <td class="row-label">${groupDot(r.grade, r.teacher)}${r.studentName}</td>
-        <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
+        <td>${r.scorePct === null ? '-' : r.scorePct + '%'}${resetTagHtml(r)}</td>
         <td>${r.itemsAttempted}</td>
         <td>${r.tabsViewed}</td>
         <td>${r.totalMinutes} min</td>
@@ -2181,7 +2198,7 @@
         <td class="row-label">${groupDot(r.grade, r.teacher)}${r.studentName}</td>
         <td>${r.activityTitle}</td>
         <td>${r.flags.map((f) => `<span class="pill flag">${f}</span>`).join(' ')}</td>
-        <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
+        <td>${r.scorePct === null ? '-' : r.scorePct + '%'}${resetTagHtml(r)}</td>
         <td>${r.totalMinutes} min</td>
         <td>${r.lastSubmittedAt ? new Date(r.lastSubmittedAt).toLocaleString() : '-'}</td>
         <td><span class="expand-btn" onclick="toggleDetail('integrity-${i}')">Details</span></td>
@@ -2249,7 +2266,7 @@
       return `
       <tr class="${r.flags.length ? 'flagged' : ''}">
         <td class="row-label">${r.activityTitle}</td>
-        <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
+        <td>${r.scorePct === null ? '-' : r.scorePct + '%'}${resetTagHtml(r)}</td>
         <td>${r.itemsAttempted}</td>
         <td>${r.tabsViewed}</td>
         <td>${r.totalMinutes} min</td>
@@ -2273,7 +2290,7 @@
       <tr class="${r.flags.length ? 'flagged' : ''}">
         <td class="row-label">${groupDot(r.grade, r.teacher)}${r.studentName}</td>
         <td>${r.activityTitle}</td>
-        <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
+        <td>${r.scorePct === null ? '-' : r.scorePct + '%'}${resetTagHtml(r)}</td>
         <td>${r.itemsAttempted}</td>
         <td>${r.avgSeconds === null ? '-' : r.avgSeconds + 's'}</td>
         <td>${r.tabsViewed}</td>

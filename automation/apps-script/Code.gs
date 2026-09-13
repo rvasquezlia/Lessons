@@ -440,8 +440,13 @@ function applyTeacherReset_(teacherEmail, studentEmail, activityId, scope, targe
   const now = new Date().toISOString();
   targetKeys.forEach((key) => {
     submissions.push({
+      // The item's own real label (not a generic "Reset by teacher (item)"
+      // string) - keeps the Item column consistent with every other row
+      // for this key, since the dashboard's Verdict pill (`reset (<scope>)`)
+      // already says what happened; repeating the scope in both columns
+      // read as redundant/confusing (see /CLAUDE.md's reset-mechanism notes).
       key,
-      label: `Reset by teacher (${scope})`,
+      label: latestByKey[key].label || key,
       answer: '',
       verdict: 'reset',
       section: latestByKey[key].section || '',
