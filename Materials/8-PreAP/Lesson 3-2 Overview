@@ -1,0 +1,87 @@
+# LESSON 3-2: Linear Functions
+
+---
+
+## Lesson Overview
+
+### Objective
+**Students will be able to:**
+* Write and evaluate linear functions using function notation.
+* Graph a linear function and relate the domain of a function to its graph.
+* Interpret functions represented by graphs, tables, verbal descriptions, and function notation in terms of a context.
+
+### Essential Understanding
+Linear functions can be represented in multiple ways, using words, tables, graphs, and rules. Function notation is a way to write the rule for a function $f$. The output of the function $f(x)$, read "f of x," means that $f$ is a function of the input variable $x$.
+
+---
+
+### Coherence
+
+#### Previously in this course, students:
+* Wrote and solved linear equations.
+* Distinguished between relations and functions.
+
+#### In this lesson, students:
+* Use function notation to represent linear functions.
+* Evaluate linear functions for inputs in their domains.
+
+#### Later in this topic, students will:
+* Represent transformations of linear functions using function notation.
+
+---
+
+### Rigor
+**This lesson emphasizes a blend of procedural skill and fluency and application.**
+* Students write the rule of a linear function using function notation and evaluate functions in function notation.
+* Students relate the domain of a function to the quantitative relationship it describes; for example, by limiting the domain of a function about time to $0 < x < 24$, since there are 24 hours in a day.
+
+---
+
+## Vocabulary Builder
+
+**Glossary is available at SavvasRealize.com.**
+
+### REVIEW VOCABULARY
+* **domain** | *dominio*
+* **element** | *elemento*
+* **range** | *rango*
+
+*(English | Spanish)*
+
+### NEW VOCABULARY
+* **function notation** | *notación de una función*
+* **linear function** | *función lineal*
+
+### VOCABULARY ACTIVITY
+Review the term *function* as a rule that maps an element in the domain to an element in the range.
+
+Show students the graph of the line $y = x + 1$.
+
+Have students use the graph to identify an element in the domain and then use the graph to show how it is mapped to an element in the range. Then show students how to represent the same function shown by the graph, using function notation, $f(x) = x + 1$.
+
+---
+
+## Student Companion
+
+Students can do their work for the lesson in their Student Companion or on Savvas Realize.
+
+---
+
+## Mathematics Overview | COMMON CORE STANDARDS
+
+### Content Standards
+In this lesson, students focus on these standards:
+
+* **HSF.IF.A.2** Use function notation, evaluate functions for inputs in their domains, and interpret statements that use function notation in terms of a context.
+* **HSF.IF.B.5** Relate the domain of a function to its graph and, where applicable, to the quantitative relationship it describes.
+
+They also work with concepts related to these standards:
+* **HSF.IF.A.1**, **HSF.LE.A.2**, and **HSN.Q.A.2**
+
+### Mathematical Practice Standards
+These standards are highlighted in this lesson:
+
+* **MP.4 Model With Mathematics**  
+  Students use tables, graphs, and rules to represent linear relationships in real-world situations, such as finding temperature, which increases at a steady rate over a 24-hour time period.
+* **MP.6 Attend to Precision**  
+  Students understand the meanings of the symbols used in function notation and see the advantage of choosing letters that relate to the problem, such as choosing $d(t)$ to represent distance as a function of time.
