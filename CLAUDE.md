@@ -193,13 +193,16 @@ formatting needed.
 7-Honors` only, not shared) — a genuinely new topic with no regular-7th
 equivalent: perfect squares/cubes (1–20 / 1–15), and working backward
 with square and cube roots, the bridge to irrational numbers later in
-the sequence. Three pages only (Review, Practice-Set, Test-Prep) rather
-than the full five-page pattern — Vocabulary-Literacy and Word-Problems
-were skipped since the source material (a reference chart plus three
-tiered practice sets) doesn't include real-world word problems or a
-distinct vocabulary lesson worth a whole page of its own. All three
-pages use plain `<input>` fields throughout, no `<math-field>` — every
-answer in this topic (a base, a square, or a cube) is a plain integer.
+the sequence. Full five-page pattern, matching every other unit —
+Vocabulary-Literacy (radical/root vocabulary, translating between
+plain-English phrasing and radical notation) and Word-Problems
+(area-from-square-root and volume-from-cube-root real-world scenarios)
+were both written from scratch, since the source Honors material was
+pure computation with neither; see "Squares-Cubes-and-Roots was
+initially built as a 3-page set" further down for why this wasn't the
+original shape. Every page uses plain `<input>` fields throughout, no
+`<math-field>` — every answer in this topic (a base, a square, a cube,
+or a real-world length/volume) is a plain integer.
 
 **8th Grade Pre-AP** (`Eighth/Linear-Functions/`, `Grade: 8-PreAP` only,
 not shared) — a new unit distinct from the existing `Linear-Equations`
@@ -1122,13 +1125,30 @@ without being wired yet.
 | Seventh/Operations-with-Rationals | `7-operations-with-rationals-*` | Same shape as Integers (including a `checkQCMulti` checkbox group in Test-Prep), but no sign-group pattern. Its Guided-Solving-Ladder page has one flat `ladderExercises` array (not grouped by key prefix like every other registry here) - exposed as `window.listRegistry = { lex: { problems: ... } }` to fit the same generic reveal mechanism, with `mc`-type items given a synthesized `displayAnswer` (the generic reveal only knows `displayAnswer`/`a`/`accepted`, not this page's own `p.answer`) so a `<select>` gets set to the right option like any other item. |
 | Eighth/Linear-Equations | `8-linear-equations-*` | Review uses `window.listRegistry` (local var `checkListRegistry`). Vocabulary-Literacy, Practice-Set, and Word-Problems are entirely hand-written `window.revealAnswerKey` (no page has a shared registry covering everything). Test-Prep's `listRegistry` (local var, matching the shared-name convention) covers only its submit-only Mixed Practice tab; the rest (Check Your Understanding, Error Analysis, Readiness Check) is hand-written. Practice-Set's Strategy Challenge tab is student-choice-driven (pick a group first) and has nothing to reveal until a group is picked — `revealAnswerKey` skips it harmlessly if none was. |
 | Eighth/Literal-Equations | `8-literal-equations-*` | Review uses `window.listRegistry` (local var `checkListRegistry`). Practice-Set's `symRegistry` and Word-Problems' `wpRegistry` are both exposed as `window.listRegistry`, covering most of each page; Practice-Set still hand-writes its Tab 4 Live Number Check (targets depend on live slider values, recomputed with the same formula the check functions use) and Tab 5 Error Analysis, and Word-Problems hand-writes its one Tab 3 investment-comparison item. Test-Prep's `submitSymRegistry` (as `window.listRegistry`) covers Mixed Practice parts 1-2 only; part 3 (numeric, separate render/check functions) plus Full Review/Error Analysis/Readiness Check are hand-written. Vocabulary-Literacy is entirely hand-written (two standalone check functions, no registry). Its Guided-Solving-Ladder page already used the standard keyed-registry shape (`exRegistry`, covering both its tabs) so it only needed `window.listRegistry = exRegistry` - no hand-written reveal at all. |
-| Seventh/Squares-Cubes-and-Roots (**7-Honors only**, 3 pages) | `7-squares-cubes-and-roots-*` | Practice-Set uses `window.listRegistry` for all three tabs' plain-number items (`checkPractice`), plus three critical-thinking textareas (`checkCT1`/`checkCT2`/`checkCT3`, submit-only, outside the registry). Review's "Are You Ready?" tab uses the `checkListRegistry`/`renderCheckList` pattern. Test-Prep is entirely hand-written `window.revealAnswerKey` (four problem shapes, none sharing a registry). |
+| Seventh/Squares-Cubes-and-Roots (**7-Honors only**, 5 pages) | `7-squares-cubes-and-roots-*` | Practice-Set uses `window.listRegistry` for all three tabs' plain-number items (`checkPractice`), plus three critical-thinking textareas (`checkCT1`/`checkCT2`/`checkCT3`, submit-only, outside the registry). Word-Problems also uses `window.listRegistry` (plain-number real-world answers across all three tabs). Review's "Are You Ready?" tab and Vocabulary-Literacy's "Quick Vocabulary Check"/translation tabs both use the `checkListRegistry`-style pattern (two separate hand-written render/check functions on Vocabulary-Literacy, so its own `window.revealAnswerKey` covers both). Test-Prep is entirely hand-written `window.revealAnswerKey` (four problem shapes, none sharing a registry). |
 | Eighth/Linear-Functions (**8-PreAP only**, 5 pages) | `8-linear-functions-*` | Practice-Set's Tabs 1 & 3 (plain-number: slope, function evaluation) use `window.listRegistry`; Tabs 2 & 4 (algebraic-rule answers via `<math-field>`: slope-intercept form, writing a function rule from a table) sit outside the registry with their own hand-written reveal, same pattern as Literal-Equations. Word-Problems' two numeric tabs use `window.listRegistry`; its one algebraic item (writing the fuel-tank equation) is hand-written. Vocabulary-Literacy and Test-Prep are entirely hand-written (no page-wide registry). |
 
+**Squares-Cubes-and-Roots was initially built as a 3-page set** (Review,
+Practice-Set, Test-Prep only, skipping Vocabulary-Literacy/Word-Problems)
+since the source Honors materials were pure computation with no
+real-world word problems or dedicated vocabulary exercise - reasonable
+on its own, but it was an unrequested, unconfirmed deviation from every
+other unit's 5-page pattern, and was corrected once questioned rather
+than left as a standing exception. Vocabulary-Literacy's radical
+notation (translating "the square root of 81" to \(\sqrt{81}\) and
+back) and Word-Problems' area/volume-from-perfect-square/cube scenarios
+were both written from scratch — original problems, not sourced from
+the provided materials, verified by hand against the same 1–20/1–15
+reference chart the rest of the unit uses. **Don't default to a reduced
+page set for a future unit just because the source material doesn't
+include every page's content yet** - write the missing content
+yourself (as here) or ask first, rather than quietly shipping fewer
+pages than the established pattern.
+
 Every wired page needs its own row in `ActivityCatalog` (matching
-`Grade`, `Active: TRUE`) before its gate will let anyone in — that's 45
+`Grade`, `Active: TRUE`) before its gate will let anyone in — that's 47
 rows now (35 from the 5-page pattern across 7 grade-6/7/8 units, the 2
-Guided-Solving-Ladder pages, 3 for Seventh/Squares-Cubes-and-Roots, and
+Guided-Solving-Ladder pages, 5 for Seventh/Squares-Cubes-and-Roots, and
 5 for Eighth/Linear-Functions). The five `7-rational-numbers-*` rows
 also need their `Grade` cell widened to `7,7-Honors` (see "Grade tracks
 beyond 6/7/8" above) so Honors can open the same rows — that's an edit
