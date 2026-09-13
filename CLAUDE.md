@@ -1105,16 +1105,49 @@ new page to be covered.
 
 ### Wired units — current activity IDs
 
-Same 5-page pattern (Review/Vocabulary-Literacy/Practice-Set/Word-Problems/
-Test-Prep wired, Explanation/Teacher-Guide left alone) now applied to six
-units across Sixth, Seventh, and Eighth grade, in addition to Rational
-Numbers — **every grade is wired now**. Two units also have a
+Same pattern (Review/Vocabulary-Literacy/Explanation/Practice-Set/
+Word-Problems/Test-Prep all wired, Teacher-Guide left alone) now applied
+to six units across Sixth, Seventh, and Eighth grade, in addition to
+Rational Numbers — **every grade is wired now**. Two units also have a
 Guided-Solving-Ladder page (Seventh/Operations-with-Rationals,
 Eighth/Literal-Equations); those are wired too (see the table below) -
-Explanation/Teacher-Guide are the only pages still deliberately left
-alone. Don't assume a page has any of this without checking for
-`gsi/client` in its `<head>` first, in case a new unit gets added later
-without being wired yet.
+`Teacher-Guide.html` is the only page still deliberately left alone
+(see "Explanation is gated too" further down for why `Explanation.html`
+isn't on that list anymore). Don't assume a page has any of this without
+checking for `gsi/client` in its `<head>` first, in case a new unit gets
+added later without being wired yet.
+
+**Explanation is gated too — this was a real correction, not always the
+design.** Every `Explanation.html` originally shipped ungated (no
+sign-in, no `ActivityId`, no `Progress` row) on the reasoning that it's
+read-only worked examples with nothing to check an answer against - the
+same reasoning that still holds for `Teacher-Guide.html`. That reasoning
+missed the actual requirement: **the per-grade access gate itself** is
+the point, not just "is there something to grade" - a 6th-grader opening
+an 8th-grade Explanation page (or a regular-track student opening an
+Honors/Pre-AP one) should be denied exactly like any other activity, and
+a teacher should be able to see on the dashboard whether a student even
+opened it. `Teacher-Guide.html` stays ungated because it's genuinely
+role-restricted a different way: it's never linked from the student
+index at all (no `activityIds.teacher` ever exists, matching every
+other page in that role), so a student has no path to it regardless.
+`Explanation.html`, by contrast, sits right alongside the other
+student-facing pages in `CURRICULUM` - gating it is just consistency
+with those.
+
+Every `Explanation.html` was retrofitted with the exact same gate
+markup/scripts as every other lesson page (`token-cache.js`/
+`lesson-auth.js`/GIS `<script>`, `#lesson-loading`, `#lesson-gate`,
+`<div class="app-container" hidden>`) and a `LessonSync.init('<unit>-
+explanation')` call. None of them define `window.listRegistry` or
+`window.revealAnswerKey` - a worked-example carousel already shows the
+same fully-solved content to a teacher and a student alike, so
+`unlockTeacherView`'s generic reveal loop simply has nothing to fill in
+(harmless - it still shows the `TEACHER VIEW` banner, same as any other
+page). Engagement tracking (`tab-<panelId>`/`reached-end`) needs no
+special handling either - it's already generic in `lesson-auth.js`'s
+`patchSwitchTab()`, keyed off any page's own `switchTab()`/`.tab-btn`/
+`.panel` markup, which every Explanation page already has.
 
 | Unit | ActivityId prefix | listRegistry / revealAnswerKey |
 |---|---|---|
@@ -1146,38 +1179,41 @@ yourself (as here) or ask first, rather than quietly shipping fewer
 pages than the established pattern.
 
 **Both new units also got their `Explanation.html`/`Teacher-Guide.html`
-pair** — the two pages every other unit has that are deliberately never
-gated or wired (no `token-cache.js`/`lesson-auth.js`/GIS scripts, no
-`LessonSync.init()`, no `ActivityId`, no `ActivityCatalog` row needed).
+pair** — the two pages every other unit has beyond the wired
+Review/Vocabulary-Literacy/Practice-Set/Word-Problems/Test-Prep set.
 This was a real gap the first time these two units shipped: "5-page
-pattern wired" was read as "the whole unit," but every existing unit
-actually ships **7** files (the 5 wired ones plus these 2). Both new
-`Explanation.html` pages follow the existing carousel pattern
-(`makeCarousel()`, `flow-row`/`qa-list`/`resolve-box`, `TeacherPrint.
-registerCarousel()`); both new `Teacher-Guide.html` pages follow the
-existing pacing-plus-full-answer-key pattern, condensed to 3 tabs
-(Overview, then two Answer-Keys tabs) instead of the 5-6 seen on older
-units. **Deliberately deferred, not overlooked:** a dedicated
-`printables/` folder (standalone print-only Test Prep/Challenge Bank
-pages) and an IXL Practice tab with real, verified skill codes — every
-existing unit's IXL tab links to codes hand-verified against IXL's own
-published alignment guide for that exact grade/lesson, which takes
-real research per unit; don't fabricate codes or URLs to fill this in
-later without doing that same verification first.
+pattern wired" was read as "the whole unit," but every unit actually
+ships 7 files (see "Explanation is gated too" above — `Explanation.html`
+was ungated when these two units first shipped it, then retrofitted with
+the same gate as every other page once that was corrected too; only
+`Teacher-Guide.html` stays ungated). Both new `Explanation.html` pages
+follow the existing carousel pattern (`makeCarousel()`, `flow-row`/
+`qa-list`/`resolve-box`, `TeacherPrint.registerCarousel()`); both new
+`Teacher-Guide.html` pages follow the existing pacing-plus-full-answer-
+key pattern, condensed to 3 tabs (Overview, then two Answer-Keys tabs)
+instead of the 5-6 seen on older units. **Deliberately deferred, not
+overlooked:** a dedicated `printables/` folder (standalone print-only
+Test Prep/Challenge Bank pages) and an IXL Practice tab with real,
+verified skill codes — every existing unit's IXL tab links to codes
+hand-verified against IXL's own published alignment guide for that
+exact grade/lesson, which takes real research per unit; don't fabricate
+codes or URLs to fill this in later without doing that same
+verification first.
 
 Every wired page needs its own row in `ActivityCatalog` (matching
-`Grade`, `Active: TRUE`) before its gate will let anyone in — that's 47
-rows now (35 from the 5-page pattern across 7 grade-6/7/8 units, the 2
-Guided-Solving-Ladder pages, 5 for Seventh/Squares-Cubes-and-Roots, and
-5 for Eighth/Linear-Functions). The five `7-rational-numbers-*` rows
-also need their `Grade` cell widened to `7,7-Honors` (see "Grade tracks
-beyond 6/7/8" above) so Honors can open the same rows — that's an edit
-to five existing rows, not five new ones. `index.html`'s `CURRICULUM`
-also needs an `activityIds` block per topic (see the existing entries)
-or a signed-in student won't see that topic on the index even once the
-pages themselves work — this has been added for every wired topic
-already, across all five top-level grade keys (`Sixth`, `Seventh`,
-`Eighth`, `7-Honors`, `8-PreAP`).
+`Grade`, `Active: TRUE`) before its gate will let anyone in — that's 56
+rows now (42 from the 6-page pattern — Review/Vocabulary-Literacy/
+Explanation/Practice-Set/Word-Problems/Test-Prep — across 7 grade-6/7/8
+units, the 2 Guided-Solving-Ladder pages, 6 for Seventh/Squares-Cubes-
+and-Roots, and 6 for Eighth/Linear-Functions). The six `7-rational-
+numbers-*` rows (including `-explanation`) also need their `Grade` cell
+widened to `7,7-Honors` (see "Grade tracks beyond 6/7/8" above) so
+Honors can open the same rows — that's an edit to six existing rows, not
+six new ones. `index.html`'s `CURRICULUM` also needs an `activityIds`
+block per topic (see the existing entries) or a signed-in student won't
+see that topic on the index even once the pages themselves work — this
+has been added for every wired topic already, across all five top-level
+grade keys (`Sixth`, `Seventh`, `Eighth`, `7-Honors`, `8-PreAP`).
 
 **Before trusting `window.revealAnswerKey` or `window.listRegistry` works
 on a specific page you haven't checked**, open that page's own `<script>`
