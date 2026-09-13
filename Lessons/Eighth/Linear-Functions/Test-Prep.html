@@ -305,6 +305,25 @@
   }
   ['a0','a1','b0','b1','b2','c0','c1'].forEach(id => LessonProgress.preRegister(`qc-${id}`, `3. Timed Review Quiz: ${id}`, '3. Timed Review Quiz'));
 
+  // Same helper trio Practice-Set.html uses for its own algebraic-rule
+  // items (Tabs 2/4) - needed here too since three Mixed Practice items
+  // below ask for a written equation, not a plain number/word.
+  function stripRedundantParens(s) {
+    let prev;
+    do { prev = s; s = s.replace(/\(([^()+-]+)\)/g, '$1'); } while (s !== prev);
+    return s;
+  }
+  function normalizeExpr(s) {
+    return stripRedundantParens(String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, ''));
+  }
+  function answerMatches(val, accepted) {
+    const nv = normalizeExpr(val);
+    return accepted.some((a) => normalizeExpr(a) === nv);
+  }
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
   // ==========================================
   // TAB 4: MIXED PRACTICE (submit-only, no reveal - LessonCheck.submit only)
   // ==========================================
@@ -315,10 +334,16 @@
     { q: "Find the slope through \\((3,3)\\) and \\((3,-2)\\). Type \"undefined\" if there is no slope.", accepted: ["undefined"], label: "Slope through (3,3),(3,-2)" },
     { q: "Is \\(\\{(0,1), (1,1), (2,1)\\}\\) a function? Type yes or no.", accepted: ["yes"], label: "Is {(0,1),(1,1),(2,1)} a function" },
     { q: "What is the domain of \\(\\{(-2,5), (0,3), (2,1)\\}\\)? Type the x-values separated by commas.", accepted: ["-2,0,2"], label: "Domain of {(-2,5),(0,3),(2,1)}" },
-    { q: "Write the equation of the line with slope 2 through \\((1,4)\\), in the form y=mx+b.", accepted: ["y=2x+2"], label: "Equation: slope 2 through (1,4)" },
-    { q: "A rideshare charges a \\$5 base fee plus \\$2 per mile. Write \\(C(m)\\).", accepted: ["c(m)=2m+5", "c(m)=5+2m"], label: "Rideshare equation C(m)" },
+    // These three ask for a written equation (not a plain number/word),
+    // same as Practice-Set's Tabs 2/4 - math: true switches the field
+    // and check function below to the <math-field> editor instead of a
+    // plain <input>. displayAnswer is the LaTeX shown in the reveal;
+    // these three happen to be valid LaTeX as plain text already (no
+    // fractions), so no \dfrac-style rewrite was needed.
+    { q: "Write the equation of the line with slope 2 through \\((1,4)\\), in the form y=mx+b.", accepted: ["y=2x+2"], displayAnswer: "y=2x+2", math: true, label: "Equation: slope 2 through (1,4)" },
+    { q: "A rideshare charges a \\$5 base fee plus \\$2 per mile. Write \\(C(m)\\).", accepted: ["c(m)=2m+5", "c(m)=5+2m"], displayAnswer: "C(m)=2m+5", math: true, label: "Rideshare equation C(m)" },
     { q: "Using \\(C(m) = 2m + 5\\) from the previous problem, find \\(C(12)\\).", a: 29, label: "C(12) rideshare" },
-    { q: "Word Problem: A candle is 10 inches tall and burns down 0.5 inches per hour. Write \\(h(t)\\) for its height after \\(t\\) hours.", accepted: ["h(t)=10-0.5t", "h(t)=-0.5t+10"], label: "Candle equation h(t)" },
+    { q: "Word Problem: A candle is 10 inches tall and burns down 0.5 inches per hour. Write \\(h(t)\\) for its height after \\(t\\) hours.", accepted: ["h(t)=10-0.5t", "h(t)=-0.5t+10"], displayAnswer: "h(t)=10-0.5t", math: true, label: "Candle equation h(t)" },
     { q: "Using \\(h(t) = 10 - 0.5t\\) from the previous problem, how many hours until the candle burns out (\\(h(t)=0\\))?", a: 20, label: "Candle burns out" },
     { q: "Multi-Step: \\(f(x) = 2x + 3\\) and \\(g(x) = x - 1\\). Find \\(f(3) + g(3)\\).", a: 11, label: "f(3)+g(3)" }
   ];
@@ -327,7 +352,9 @@
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
         <strong>${i + 1}.</strong> ${p.q}
         <div style="margin-top:10px;">
-          <input type="text" id="mp-${i}-input" class="form-control-lg" style="max-width:220px; display:inline-block;" placeholder="Answer">
+          ${p.math
+            ? `<math-field id="mp-${i}-input" style="max-width:260px; display:inline-block; font-size:1.1rem; border:2px solid var(--border); border-radius:8px; padding:6px 10px;"></math-field>`
+            : `<input type="text" id="mp-${i}-input" class="form-control-lg" style="max-width:220px; display:inline-block;" placeholder="Answer">`}
           <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkMP(${i})">Submit</button>
         </div>
         <div id="mp-${i}-feedback" class="feedback-msg" style="margin-top:8px;"></div>
@@ -339,11 +366,14 @@
   renderMP();
   function checkMP(idx) {
     const p = mpProblems[idx];
-    const raw = document.getElementById(`mp-${idx}-input`).value;
+    const field = document.getElementById(`mp-${idx}-input`);
+    const raw = p.math ? readMathField(field) : field.value;
     const fb = document.getElementById(`mp-${idx}-feedback`);
     if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
     const norm = (s) => String(s || '').toLowerCase().replace(/\s+/g, '');
-    const correct = p.a !== undefined ? LessonCheck.numericMatch(raw, p.a, p.tol || 0.01) : (p.accepted || []).map(norm).includes(norm(raw));
+    const correct = p.math ? answerMatches(raw, p.accepted)
+      : p.a !== undefined ? LessonCheck.numericMatch(raw, p.a, p.tol || 0.01)
+      : (p.accepted || []).map(norm).includes(norm(raw));
     LessonCheck.submit(fb, { key: `mp-${idx}`, label: `4. Mixed Practice #${idx + 1}: ${p.label}`, answer: raw, section: '4. Mixed Practice', correct });
   }
 
@@ -387,7 +417,7 @@
       });
     });
 
-    mpProblems.forEach((p, i) => fillInput(`mp-${i}-input`, `mp-${i}-feedback`, p.a !== undefined ? String(p.a) : p.accepted[0]));
+    mpProblems.forEach((p, i) => fillInput(`mp-${i}-input`, `mp-${i}-feedback`, p.a !== undefined ? String(p.a) : (p.math ? p.displayAnswer : p.accepted[0])));
 
     triggerMathJax();
   };
