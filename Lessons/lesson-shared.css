@@ -124,6 +124,11 @@ header {
 
 h1 { margin: 8px 0; font-size: 2.3rem; font-weight: 800; }
 p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
+/* The standard(s) a page addresses, from the Math Department Curriculum
+   Map & Year Plan - a small muted line under the H1/subtitle, not
+   another loud .badge pill, since a topic badge already sits above the
+   title and this is reference info, not a label. */
+p.standards-line { margin: 6px 0 0 0; font-size: 0.85rem; font-weight: 700; opacity: 0.82; letter-spacing: 0.02em; }
 
 /* Sign-in gate - shown before any lesson content while a cached-token
    resume is tried (or there was none to try). Built like a miniature
