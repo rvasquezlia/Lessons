@@ -119,6 +119,59 @@ Manage deployments → edit the existing deployment → New version, so the
 | `Progress` | **Automatic** — written entirely by Apps Script | One row per (student, activity), upserted on every save. Columns: `Email, StudentName, Grade, Teacher, ActivityId, ActivityTitle, FirstStartedAt, LastSubmittedAt, ItemsTotal, ItemsAttempted, ItemsCorrect, ScorePct, Status, SubmissionsLog (JSON), FlagReason, ReviewedByTeacher, ReviewedAt`. The last two are the only cells a teacher should hand-edit (checking off a flagged row after review). |
 | `AccessLog` | **Automatic** — written entirely by Apps Script | **Denied access attempts only** — a student opening an activity their grade doesn't match, or one no longer active. Routine allowed re-checks on every Check-button click were never logged here (an earlier bug, see git history, that flooded this tab); **allowed opens stopped being logged here at all** in a later pass (see below) since they were both redundant with `Progress` and a source of duplicate rows in their own right. Rows from before that change may still say `Allowed` and are kept for history, not backfilled away. |
 
+### Saving student progress — `lesson-shared.js` and the `record` argument
+
+`Lessons/lesson-shared.js` is the client-side library every lesson page
+includes for the actual check/save mechanics (separate from
+`lesson-auth.js`, which only handles sign-in/gating/teacher-view — see
+"Identity" above). Three pieces matter for any new problem/page:
+
+- `LessonSync.init(activityId)` — called once, near the end of `<body>`,
+  after the gate's HTML already exists. Wires up the backend connection
+  for this specific `ActivityCatalog` row and is the thing that makes
+  `LessonProgress`/`LessonCheck` below actually reach the Sheet.
+- `LessonProgress.record({label, answer, section})` /
+  `LessonProgress.preRegister(...)` — the actual call that appends an
+  entry to that student's `Progress.SubmissionsLog` for this activity.
+  Nothing reaches the Sheet, the dashboard, or a teacher's view of a
+  student's work unless this gets called.
+- `LessonCheck.check(key, isCorrect, feedbackEl, messages, record)` /
+  `.submit(...)` / `.incomplete(...)` — the usual per-problem entry
+  point a check function calls. **The 5th argument, `record`, is what
+  actually triggers `LessonProgress.record(...)` under the hood — it is
+  optional in the function signature, and omitting it does not error or
+  visibly break anything.** A problem checked without a `record` object
+  still shows correct/incorrect feedback on-screen, still locks the
+  field, still looks completely normal to the student — but nothing
+  about that attempt is ever saved, so it never shows up in `Progress`,
+  never appears on the teacher dashboard, and is functionally invisible
+  to a teacher forever.
+
+**This bug shipped silently, site-wide, for a while.** The
+`checkListRegistry`/`renderCheckList(containerId, problems, keyPrefix,
+retryMsg)` pattern used by every `Review.html`'s "Are You Ready?" tab
+(see the wired-units table below) was missing the `record` argument in
+its `checkListItem()` call in 8 of that pattern's 9 pages — every
+student who ever completed that tab on those 8 pages had their attempts
+show correct feedback and then vanish. Fixed by giving
+`renderCheckList()` a `section` param stored per-registry-entry and
+extending each `checkListItem()`'s `LessonCheck.check()` call with a
+proper 5th argument (`{label: p.label || p.q.replace(/\\\(|\\\)/g,
+''), answer: val, section: cfg.section}`), with each page's own
+`renderCheckList()` call site given its own distinct `section` string.
+
+**Any time a new problem type, check function, or page pattern is
+added, confirm it actually reaches the backend — don't trust on-screen
+feedback alone.** The fastest check: open the teacher dashboard after
+completing the new problem as a test student and confirm the attempt
+shows up in Full Submission Log / that activity's detail view. A
+problem that "checks" but was never wired to `LessonCheck.check(...,
+record)` (or, for a page with its own bespoke save logic, never calls
+`LessonProgress.record(...)` at all) will look completely finished in
+manual testing and still save nothing — this is exactly the kind of gap
+that doesn't surface until a teacher asks "why don't I see this
+student's answers."
+
 ### Grade tracks beyond 6/7/8
 
 Not every student fits a plain numeric grade. **7th Grade Honors** and
@@ -314,11 +367,49 @@ teacher can still click "All Grades" explicitly at any time, this only
 changes what's shown before that first click. A later Refresh leaves
 whatever grade/teacher the teacher has since selected alone, resetting
 only if that value no longer exists in the freshly-loaded data (e.g. a
-student's grade changed in the Sheet). The Activity filter stays a
-`<select>` (too many activities for a button row to make sense); the
-Teacher pill group (`#teacher-filter-group`) is hidden entirely for a
-scoped account exactly as the old dropdown was, since such an account
-only ever has one teacher value worth picking anyway.
+student's grade changed in the Sheet). The Teacher pill group
+(`#teacher-filter-group`) is hidden entirely for a scoped account
+exactly as the old dropdown was, since such an account only ever has
+one teacher value worth picking anyway.
+
+**Grade/Activity pill values are coerced through `String()` before
+being deduped or compared, because Google Sheets doesn't format a
+numeric-looking cell consistently.** `Roster.Grade`/`ActivityCatalog.Grade`
+cells like `"6"`/`"7"`/`"8"` can come back from the API as either a JS
+number or a string depending on how that specific cell happens to be
+formatted in the Sheet — mixing both for the same grade produced two
+visually-identical but separately-tracked pills (`6` and `"6"` are
+different `Set` members). `populateFilters()`'s `gradesFromRoster`/
+`gradesFromCatalog` both map every value through `String(...)` before
+building their dedup `Set`, and every filter comparison
+(`filteredRows()`/`filteredRoster()`/`filteredCatalog()`/
+`gradeListIncludes()`) does the same on both sides before comparing —
+don't reintroduce a bare `===`/`.includes()` against a Sheet-sourced
+grade value without it.
+
+**The Activity filter is a multi-select toggle panel, not a `<select>`
+or a single pill row** (`currentActivityFilter` is an array, not a
+single string) — too many activities for a button row, and a teacher
+sometimes wants to compare 2-3 specific activities at once rather than
+one at a time. `renderActivityOptions()` builds a searchable checkbox
+list into a popover, `toggleActivityPanel()` shows/hides it,
+`updateActivityToggleLabel()` keeps the toggle button's own text in
+sync ("All Activities" / the one selected title / "N activities
+selected"). `availableActivityTitles` (the full unique set, independent
+of the current selection) is what the search box filters against, kept
+deliberately separate from `currentActivityFilter` so typing in the
+search box never discards an existing selection.
+
+**By Unit/By Activity/Engagement Funnel group their rows by an implicit
+key even when sorted by another column, via `GROUP_KEYS`/`sortItems()`/
+`compareValues()`** (`GROUP_KEYS`: By Unit and By Student group by
+`grade`, By Activity and Engagement Funnel group by `unit`) —
+`sortItems()` always sorts by the group field first, then by whatever
+column the teacher actually clicked, so a table that's nominally sorted
+by score/name still reads as clusters of one grade/unit at a time
+instead of interleaved. `withUnitGroupHeaders()` renders that grouping
+as an actual divider row between groups (By Activity, Engagement
+Funnel) rather than leaving it implicit in the sort order alone.
 
 Deliberately, **all analysis happens in the dashboard's own JS, not in
 Apps Script**: average time between answers, the "3 answers within 60
@@ -600,6 +691,24 @@ Score bars (`scoreBarsHtml()`) and the recent-activity timeline
 (`recentActivityHtml()`) are both extracted as plain string-builders
 specifically so Overview's compact cards and each detail view's larger
 ones can share the same rendering without duplicating it.
+
+**`recentActivityHtml()` decodes each raw `SubmissionsLog` entry into a
+readable line instead of dumping its raw `label`/`verdict`.** A tab-view
+event's own `s.label` already comes prefixed as `"Viewed tab: ..."` by
+`lesson-auth.js` — the timeline used to prepend that same prefix a
+second time (`"Viewed tab: Viewed tab: ..."`) before rendering it; fixed
+by using `s.label` as-is for tab-type events instead of re-wrapping it.
+A graded event is decoded via `VERDICT_TEXT` (`{correct: 'Correct',
+incomplete: 'Incorrect', reflection: 'Reflection submitted'}`) plus
+`ordinal(s.attemptNumber || 1)`, rendered as e.g. `"<label> - 2nd
+attempt - Correct"` rather than a bare verdict string, and colored via
+`GRADED_PILL` (`{correct: 'ok', incomplete: 'flag', reflection:
+'neutral'}`) so right/wrong/reflection are visually distinct at a
+glance the same way every other pill on the dashboard is. Any future
+event type added to `SubmissionsLog` (a new integrity signal, say)
+needs its own entry in whichever of `VERDICT_TEXT`/`GRADED_PILL`/
+`EVENT_PILL` applies, or it'll render with a generic/neutral fallback
+instead of a readable label.
 
 **`scoreBarsHtml(items, labelKey, scoreKey)` takes an explicit
 `scoreKey`** (defaults to `'avgScore'`) precisely because it's called
@@ -1536,11 +1645,91 @@ realizing `IXL/` already existed locally with real, pre-verified data).
   HSF/etc. codes, often several per week, each with its full official
   text — not just the bare code). This is the source of truth for which
   standard(s) a given lesson/unit addresses — cross-reference by
-  matching a site unit's actual lesson numbers/content against a row's
-  `Theme / Unit Title` (which usually names the Savvas lesson number
-  directly, e.g. "2-4: Evaluate Square Roots and Cube Roots") rather
-  than assuming a 1:1 week-to-unit mapping, since one site unit can span
-  several weeks' rows (and one week can straddle two lessons).
+  matching a site unit's actual lesson **name**/content against a row's
+  `Theme / Unit Title` text, **never by the embedded lesson number**
+  (e.g. "2-4") — the book's own numbering was updated this year, so a
+  number in the map row can't be trusted to line up with a number
+  anywhere else (not the site's own unit, not last year's map, not a
+  teacher's memory of "that used to be lesson 3"). Two map rows can
+  legitimately share a name almost verbatim while meaning different
+  content (see the Linear Equations/Topic-2 example above) — resolve
+  that by reading the row's full lesson title and description, not by
+  trusting whichever number sits in front of it. Read the **full,
+  untruncated** cell text before concluding a match — a first pass at
+  this that truncated cells to 200 characters for display silently
+  dropped extra standard sub-parts sitting later in the same cell
+  (`7.NS.A.1c`/`1d` on an add/subtract row, `7.NS.A.2c` on a multiply/
+  divide row, `HSF-IF.B.5`/`HSF-LE.A.2` on a functions row) — always
+  read the raw cell value (e.g. via `openpyxl` — not preinstalled, `pip
+  install openpyxl` first) rather than any pre-summarized or truncated
+  dump of it. One site unit can span several of the map's weekly rows,
+  and one row can straddle two lessons — collect every standard from
+  every row whose name/content genuinely matches the unit before
+  finalizing its list, don't stop at the first hit.
+
+### Standards line (the citation under every lesson page's title)
+
+Every lesson page (`Review.html`, `Vocabulary-Literacy.html`,
+`Explanation.html`, `Practice-Set.html`, `Word-Problems.html`,
+`Test-Prep.html`, `Teacher-Guide.html`, and both `Guided-Solving-
+Ladder.html` pages — every page type, not just the student-facing five)
+has a one-line standards citation immediately under its `<h1>`:
+`<p class="standards-line">Standards: <code(s)>, <code(s)>...</p>`,
+styled via `.standards-line` in `lesson-shared.css` (`margin: 6px 0 0
+0; font-size: 0.85rem; font-weight: 700; opacity: 0.82; letter-spacing:
+0.02em;` — deliberately a plain styled line, not another `.badge`
+pill). It's inserted once per file, right after that file's single
+`</h1>`, identical text across every page in one unit (a whole unit
+teaches the same standard(s), not a different subset per page type).
+
+**The codes must come from `Math Department Curriculum Map & Year Plan.xlsx`
+(see "Reference materials" above), matched by lesson name/content —
+never by lesson number, and never fabricated or guessed from the
+standard's own title/number alone.** If a unit's content doesn't
+cleanly match anything in the map, say so and leave a gap noted rather
+than forcing the nearest-sounding standard onto it — same rule as the
+IXL codes above.
+
+**Current per-unit citations** (as of the most recent correction pass —
+verify against the map again before trusting these blindly on a future
+edit, don't just copy this table forward indefinitely):
+
+| Unit | Standards line |
+|---|---|
+| Sixth/Decimal-Operations | `6.NS.B.2, 6.NS.B.3` |
+| Sixth/Operations-with-Fractions | `5.NF.A.1, 6.NS.A.1` |
+| Seventh/Integers | `7.NS.A.1a, 7.NS.A.1b, 7.NS.A.1c, 7.NS.A.1d` |
+| Seventh/Rational-Numbers | `7.NS.A.1b, 7.NS.A.1c, 7.NS.A.1d, 7.NS.A.2a, 7.NS.A.2b, 7.NS.A.2c, 7.NS.A.2d` |
+| Seventh/Operations-with-Rationals | `7.NS.A.1b, 7.NS.A.1c, 7.NS.A.1d, 7.NS.A.2a, 7.NS.A.2b, 7.NS.A.2c` |
+| Seventh/Squares-Cubes-and-Roots (7-Honors) | `8.EE.A.2` |
+| Eighth/Linear-Equations | `HSA.CED.A.1, HSA.REI.A.1, HSA.REI.B.3` |
+| Eighth/Literal-Equations | `HSA.CED.A.4` |
+| Eighth/Linear-Functions (8-PreAP) | `HSA.CED.A.2, HSS.ID.C.7, HSF-IF.A.1, HSF-IF.B.5, HSF-LE.A.2` |
+
+Notes worth knowing before touching any of these again:
+- Rational-Numbers and Operations-with-Rationals deliberately do **not**
+  carry `7.NS.A.1a` ("opposite quantities combine to make 0") — the
+  map ties that specific sub-standard to the Integers-flavored
+  add/subtract lessons, not the Rational-Numbers-flavored ones, even
+  though both units add/subtract signed numbers.
+  `Seventh/Integers` is the only unit that carries it.
+- Eighth/Linear-Functions' citation is deliberately broader than the
+  older, pre-existing "Standards & Objectives" text on its own
+  Teacher-Guide Overview tab (which cites `HSF.IF.A.2`, function
+  notation) — that older text was written before this session had
+  access to the map and was never itself verified against it;
+  `HSF.IF.A.2` does not appear anywhere in the map's Algebra I or
+  Algebra I Honors sheets, so it was deliberately **not** carried into
+  this standards-line badge. That older Overview-tab text itself was
+  left alone (out of scope for this feature) — don't assume the two
+  are supposed to match, and don't "fix" one to match the other without
+  re-verifying both against the map first.
+- A brand-new unit gets this the same way any of the above did: find
+  its lessons' name-matching row(s) in the map, pull every standard
+  those rows cite (full untruncated text), union them, and add the
+  `<p class="standards-line">` line to every one of that unit's page
+  types — this table needs a new row too, or the next session won't
+  know the citation exists without re-deriving it from scratch.
 
 ### Flow
 
