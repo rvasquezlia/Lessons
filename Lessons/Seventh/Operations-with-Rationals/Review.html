@@ -305,8 +305,8 @@
     return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
   }
 
-  function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
-    checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg, section) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg, section: section || '5. Are You Ready?' };
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
@@ -335,7 +335,7 @@
       correct: `Correct! ${p.displayAnswer || ('The answer is ' + p.a + '.')}`,
       retry: cfg.retry,
       reveal: `Here's the correct answer: ${p.displayAnswer || p.a}`
-    });
+    }, { label: p.label || p.q.replace(/\\\(|\\\)/g, ''), answer: val, section: cfg.section });
   }
 
   const convertPractice = [
@@ -343,20 +343,20 @@
     { q: "Convert \\(\\frac{1}{6}\\) to a decimal, rounded to 3 places.", a: 0.167, numeric: true, tol: 0.002 },
     { q: "Convert \\(0.24\\) to a fraction in simplest form. Type as a/b.", accepted: ["6/25"], displayAnswer: "\\(\\frac{6}{25}\\)" }
   ];
-  renderCheckList('convert-practice-list', convertPractice, 'convert', "Not quite yet. Divide the numerator by the denominator, or write the decimal over its place-value power of 10.");
+  renderCheckList('convert-practice-list', convertPractice, 'convert', "Not quite yet. Divide the numerator by the denominator, or write the decimal over its place-value power of 10.", "5. Are You Ready? - Fraction \u2194 Decimal Recap");
 
   const unlikePractice = [
     { q: "\\(\\frac{1}{2} + \\frac{1}{5}\\). Type as a/b.", accepted: ["7/10"], displayAnswer: "\\(\\frac{7}{10}\\)" },
     { q: "\\(\\frac{3}{4} - \\frac{1}{3}\\). Type as a/b.", accepted: ["5/12"], displayAnswer: "\\(\\frac{5}{12}\\)" },
     { q: "\\(\\frac{2}{3} + \\frac{1}{6}\\). Type as a/b, simplified.", accepted: ["5/6"], displayAnswer: "\\(\\frac{5}{6}\\)" }
   ];
-  renderCheckList('unlike-practice-list', unlikePractice, 'unlike', "Not quite yet. Find a common denominator first, rewrite both fractions, then combine only the numerators.");
+  renderCheckList('unlike-practice-list', unlikePractice, 'unlike', "Not quite yet. Find a common denominator first, rewrite both fractions, then combine only the numerators.", "5. Are You Ready? - Unlike Denominators");
 
   const signsPractice = [
     { q: "\\(-4.5 + (-2.3)\\)", a: -6.8, numeric: true, tol: 0.01 },
     { q: "\\(-\\frac{1}{2} \\times \\frac{2}{3}\\). Type as a/b (include the sign).", accepted: ["-1/3"], displayAnswer: "\\(-\\frac{1}{3}\\)" }
   ];
-  renderCheckList('signs-practice-list', signsPractice, 'signs', "Not quite yet. Ask yourself: same signs, or different signs? Then apply that rule.");
+  renderCheckList('signs-practice-list', signsPractice, 'signs', "Not quite yet. Ask yourself: same signs, or different signs? Then apply that rule.", "5. Are You Ready? - Integer Sign Rules");
 </script>
 </body>
 </html>

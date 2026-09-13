@@ -432,8 +432,8 @@
   const checkListRegistry = {};
   window.listRegistry = checkListRegistry; // read by lesson-auth.js's teacher answer-key view
 
-  function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
-    checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg, section) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg, section: section || '5. Are You Ready?' };
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
@@ -463,7 +463,7 @@
       correct: `Correct! ${p.displayAnswer || ('The answer is ' + p.a + '.')}`,
       retry: cfg.retry,
       reveal: `Here's the correct answer: ${p.displayAnswer || p.a}`
-    });
+    }, { label: p.label || p.q.replace(/\\\(|\\\)/g, ''), answer: val, section: cfg.section });
   }
 
   // ==========================================
@@ -475,7 +475,7 @@
     { q: "Which is greater: 7.4 or 7.36? Type the larger number.", a: 7.4, numeric: true, tol: 0.001 },
     { q: "Write 2,000 + 300 + 40 + 6 in standard form.", a: 2346, numeric: true, tol: 0 }
   ];
-  renderCheckList('pv-practice-list', pvPractice, 'pv', "Not quite yet. Re-check which place value column that digit sits in, then try again.");
+  renderCheckList('pv-practice-list', pvPractice, 'pv', "Not quite yet. Re-check which place value column that digit sits in, then try again.", "5. Are You Ready? - Place Value");
 
   const addsubPractice = [
     { q: "\\(468 + 275\\)", a: 743, numeric: true, tol: 0 },
@@ -483,7 +483,7 @@
     { q: "\\(1{,}045 + 987\\)", a: 2032, numeric: true, tol: 0 },
     { q: "\\(3{,}200 - 1{,}465\\)", a: 1735, numeric: true, tol: 0 }
   ];
-  renderCheckList('addsub-practice-list', addsubPractice, 'addsub', "Not quite yet. Line up your columns by place value, and double check every carry or borrow.");
+  renderCheckList('addsub-practice-list', addsubPractice, 'addsub', "Not quite yet. Line up your columns by place value, and double check every carry or borrow.", "5. Are You Ready? - Whole-Number Operations");
 
   const multdivPractice = [
     { q: "\\(36 \\times 24\\)", a: 864, numeric: true, tol: 0 },
@@ -491,7 +491,7 @@
     { q: "\\(624 \\div 8\\)", a: 78, numeric: true, tol: 0 },
     { q: "\\(455 \\div 5\\)", a: 91, numeric: true, tol: 0 }
   ];
-  renderCheckList('multdiv-practice-list', multdivPractice, 'multdiv', "Not quite yet. Walk back through the steps one at a time - for multiplication, check each partial product; for division, check each divide-multiply-subtract-bring down cycle.");
+  renderCheckList('multdiv-practice-list', multdivPractice, 'multdiv', "Not quite yet. Walk back through the steps one at a time - for multiplication, check each partial product; for division, check each divide-multiply-subtract-bring down cycle.", "5. Are You Ready? - Whole-Number Operations");
 </script>
 </body>
 </html>

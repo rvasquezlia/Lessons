@@ -300,8 +300,8 @@
     return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
   }
 
-  function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
-    checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg, section) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg, section: section || '5. Are You Ready?' };
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
@@ -330,7 +330,7 @@
       correct: `Correct! ${p.displayAnswer || ('The answer is ' + p.a + '.')}`,
       retry: cfg.retry,
       reveal: `Here's the correct answer: ${p.displayAnswer || p.a}`
-    });
+    }, { label: p.label || p.q.replace(/\\\(|\\\)/g, ''), answer: val, section: cfg.section });
   }
 
   const signsPractice = [
@@ -339,14 +339,14 @@
     { q: "\\((-7) \\times 4\\)", a: -28, numeric: true, tol: 0 },
     { q: "\\((-36) \\div (-9)\\)", a: 4, numeric: true, tol: 0 }
   ];
-  renderCheckList('signs-practice-list', signsPractice, 'signs', "Not quite yet. Ask yourself: same signs, or different signs? Then apply that rule.");
+  renderCheckList('signs-practice-list', signsPractice, 'signs', "Not quite yet. Ask yourself: same signs, or different signs? Then apply that rule.", "5. Are You Ready? - Integer Sign Rules");
 
   const fractionsPractice = [
     { q: "Simplify \\(\\frac{16}{20}\\) to lowest terms. Type as a/b.", accepted: ["4/5"], displayAnswer: "\\(\\frac{4}{5}\\)" },
     { q: "Convert \\(\\frac{23}{6}\\) to a mixed number. Type as a b/c.", accepted: ["3 5/6", "35/6"], displayAnswer: "\\(3\\frac{5}{6}\\)" },
     { q: "Convert \\(5\\frac{1}{2}\\) to an improper fraction. Type as a/b.", accepted: ["11/2"], displayAnswer: "\\(\\frac{11}{2}\\)" }
   ];
-  renderCheckList('fractions-practice-list', fractionsPractice, 'fractions', "Not quite yet. Walk through the steps one at a time and try again.");
+  renderCheckList('fractions-practice-list', fractionsPractice, 'fractions', "Not quite yet. Walk through the steps one at a time and try again.", "5. Are You Ready? - Fraction Mechanics");
 </script>
 </body>
 </html>

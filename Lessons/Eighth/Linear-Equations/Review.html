@@ -394,8 +394,8 @@
     return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
   }
 
-  function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
-    checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg, section) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg, section: section || '6. Are You Ready?' };
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
@@ -428,7 +428,7 @@
       correct: `Correct! ${p.displayAnswer || ('The answer is ' + p.a + '.')}`,
       retry: cfg.retry,
       reveal: `Here's the correct answer: ${p.displayAnswer || p.a}`
-    });
+    }, { label: p.label || p.q.replace(/\\\(|\\\)/g, ''), answer: val, section: cfg.section });
   }
 
   const identifyPractice = [
@@ -437,21 +437,21 @@
     { q: "Are \\(7\\) and \\(-2\\) like terms? Type yes or no.", accepted: ["yes"], displayAnswer: "Yes - both are constants.", text: true },
     { q: "Are \\(3xy\\) and \\(3x\\) like terms? Type yes or no.", accepted: ["no"], displayAnswer: "No - \\(xy\\) and \\(x\\) are different variable parts.", text: true }
   ];
-  renderCheckList('identify-practice-list', identifyPractice, 'identify', "Not quite yet. Compare the variable parts exactly - same letters, same exponents.");
+  renderCheckList('identify-practice-list', identifyPractice, 'identify', "Not quite yet. Compare the variable parts exactly - same letters, same exponents.", "6. Are You Ready? - Like Terms");
 
   const combinePractice = [
     { q: "Simplify \\(5x + 3x\\).", accepted: ["8x"], displayAnswer: "\\(8x\\)" },
     { q: "Simplify \\(9x - 2x + 4\\).", accepted: ["7x+4", "4+7x"], displayAnswer: "\\(7x + 4\\)" },
     { q: "Simplify \\(6 + 2x - 5 - x\\).", accepted: ["x+1", "1+x"], displayAnswer: "\\(x + 1\\)" }
   ];
-  renderCheckList('combine-practice-list', combinePractice, 'combine', "Not quite yet. Sort the terms into groups first (x-terms together, constants together), then combine each group.");
+  renderCheckList('combine-practice-list', combinePractice, 'combine', "Not quite yet. Sort the terms into groups first (x-terms together, constants together), then combine each group.", "6. Are You Ready? - Like Terms");
 
   const distributePractice = [
     { q: "Simplify \\(2(3x + 4)\\).", accepted: ["6x+8", "8+6x"], displayAnswer: "\\(6x + 8\\)" },
     { q: "Simplify \\(-3(x - 5)\\).", accepted: ["-3x+15", "15-3x"], displayAnswer: "\\(-3x + 15\\)" },
     { q: "Simplify \\(4(2x + 1) - 3x\\).", accepted: ["5x+4", "4+5x"], displayAnswer: "\\(5x + 4\\)" }
   ];
-  renderCheckList('distribute-practice-list', distributePractice, 'distribute', "Not quite yet. Distribute into every term inside the parentheses first - watch the sign - then combine like terms.");
+  renderCheckList('distribute-practice-list', distributePractice, 'distribute', "Not quite yet. Distribute into every term inside the parentheses first - watch the sign - then combine like terms.", "6. Are You Ready? - Distributive Property");
 </script>
 </body>
 </html>

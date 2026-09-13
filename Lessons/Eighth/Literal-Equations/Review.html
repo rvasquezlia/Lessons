@@ -348,8 +348,8 @@
   const checkListRegistry = {};
   window.listRegistry = checkListRegistry; // read by lesson-auth.js's teacher answer-key view
 
-  function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
-    checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg, section) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg, section: section || '6. Are You Ready?' };
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
@@ -386,7 +386,7 @@
       correct: `Correct! \\(x = ${p.a}\\)`,
       retry: cfg.retry,
       reveal: `Here's the correct answer: \\(x = ${p.a}\\)`
-    });
+    }, { label: p.label || p.q.replace(/\\\(|\\\)/g, ''), answer: val, section: cfg.section });
   }
 
   const onetwoPractice = [
@@ -395,14 +395,14 @@
     { q: "Solve: \\(2x - 5 = 11\\)", a: 8 },
     { q: "Solve: \\(-4x + 7 = -9\\)", a: 4 }
   ];
-  renderCheckList('onetwo-practice-list', onetwoPractice, 'onetwo', "Not quite yet. Identify what's being done to x, then undo it with the inverse operation on both sides.");
+  renderCheckList('onetwo-practice-list', onetwoPractice, 'onetwo', "Not quite yet. Identify what's being done to x, then undo it with the inverse operation on both sides.", "6. Are You Ready? - One- & Two-Step Equations");
 
   const multistepPractice = [
     { q: "Solve: \\(3(x - 2) + 4 = 10\\)", a: 4 },
     { q: "Solve: \\(7x - 4 = 3x + 16\\)", a: 5 },
     { q: "Solve: \\(9x - 2 = 4x + 23\\)", a: 5 }
   ];
-  renderCheckList('multistep-practice-list', multistepPractice, 'multistep', "Not quite yet. Simplify each side first (distribute, combine like terms), then isolate the variable.");
+  renderCheckList('multistep-practice-list', multistepPractice, 'multistep', "Not quite yet. Simplify each side first (distribute, combine like terms), then isolate the variable.", "6. Are You Ready? - Multi-Step Equations");
 </script>
 </body>
 </html>

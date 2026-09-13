@@ -351,8 +351,8 @@
   const checkListRegistry = {};
   window.listRegistry = checkListRegistry; // read by lesson-auth.js's teacher answer-key view
 
-  function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
-    checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg, section) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg, section: section || '5. Are You Ready?' };
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
@@ -398,7 +398,7 @@
       correct: `Correct! ${p.displayAnswer || ('The answer is ' + p.a + '.')}`,
       retry: cfg.retry,
       reveal: `Here's the correct answer: ${p.displayAnswer || p.a}`
-    });
+    }, { label: p.label || p.q.replace(/\\\(|\\\)/g, ''), answer: val, section: cfg.section });
   }
 
   // ==========================================
@@ -410,7 +410,7 @@
     { q: "Write an equivalent fraction for \\(\\frac{3}{5}\\) with a denominator of 20.", accepted: ["12/20"], displayAnswer: "\\(\\frac{12}{20}\\)" },
     { q: "Simplify \\(\\frac{10}{15}\\) to simplest form.", accepted: ["2/3"], displayAnswer: "\\(\\frac{2}{3}\\)" }
   ];
-  renderCheckList('eq-practice-list', eqPractice, 'eq', "Not quite yet. Multiply or divide the numerator AND denominator by the same number, then try again.");
+  renderCheckList('eq-practice-list', eqPractice, 'eq', "Not quite yet. Multiply or divide the numerator AND denominator by the same number, then try again.", "5. Are You Ready? - Equivalent Fractions");
 
   const butterflyPractice = [
     { q: "Using the Butterfly Method, what is the new denominator for \\(\\frac{1}{3} + \\frac{1}{5}\\)?", accepted: ["15"], displayAnswer: "15" },
@@ -418,7 +418,7 @@
     { q: "Using the Butterfly Method, what is the new denominator for \\(\\frac{1}{2} + \\frac{1}{8}\\)?", accepted: ["16"], displayAnswer: "16" },
     { q: "Using the Butterfly Method, what is the new denominator for \\(\\frac{1}{6} - \\frac{1}{9}\\)?", accepted: ["54"], displayAnswer: "54" }
   ];
-  renderCheckList('butterfly-practice-list', butterflyPractice, 'butterfly', "Not quite yet. Cross-multiply each numerator by the denominator across from it for the wings, then multiply the two denominators for the new one.");
+  renderCheckList('butterfly-practice-list', butterflyPractice, 'butterfly', "Not quite yet. Cross-multiply each numerator by the denominator across from it for the wings, then multiply the two denominators for the new one.", "5. Are You Ready? - Butterfly Method & Mixed Numbers");
 
   const mixedPractice = [
     { q: "Convert \\(3\\frac{2}{5}\\) to an improper fraction.", accepted: ["17/5"], displayAnswer: "\\(\\frac{17}{5}\\)" },
@@ -426,7 +426,7 @@
     { q: "Convert \\(2\\frac{3}{7}\\) to an improper fraction.", accepted: ["17/7"], displayAnswer: "\\(\\frac{17}{7}\\)" },
     { q: "Convert \\(\\frac{22}{6}\\) to a mixed number (simplest form).", accepted: ["3 2/3", "32/3", "3,2/3"], displayAnswer: "\\(3\\frac{2}{3}\\)" }
   ];
-  renderCheckList('mixed-practice-list', mixedPractice, 'mixed', "Not quite yet. Remember: multiply the whole number by the denominator and add the numerator - or divide numerator by denominator to go the other way.");
+  renderCheckList('mixed-practice-list', mixedPractice, 'mixed', "Not quite yet. Remember: multiply the whole number by the denominator and add the numerator - or divide numerator by denominator to go the other way.", "5. Are You Ready? - Butterfly Method & Mixed Numbers");
 </script>
 </body>
 </html>

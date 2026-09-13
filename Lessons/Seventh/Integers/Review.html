@@ -309,8 +309,8 @@
   const checkListRegistry = {};
   window.listRegistry = checkListRegistry; // read by lesson-auth.js's teacher answer-key view
 
-  function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
-    checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg, section) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg, section: section || '5. Are You Ready?' };
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
@@ -340,7 +340,7 @@
       correct: `Correct! ${p.displayAnswer || ('The answer is ' + p.a + '.')}`,
       retry: cfg.retry,
       reveal: `Here's the correct answer: ${p.displayAnswer || p.a}`
-    });
+    }, { label: p.label || p.q.replace(/\\\(|\\\)/g, ''), answer: val, section: cfg.section });
   }
 
   const nlPractice = [
@@ -348,7 +348,7 @@
     { q: "On a number line, is 30 to the left or right of 12?", accepted: ["right"], displayAnswer: "Right (30 is greater than 12)" },
     { q: "Which is greater: 6.2 or 6.19? Type the larger number.", a: 6.2, numeric: true, tol: 0.001 }
   ];
-  renderCheckList('nl-practice-list', nlPractice, 'nl', "Not quite yet. Picture both numbers on a number line - further right always means greater.");
+  renderCheckList('nl-practice-list', nlPractice, 'nl', "Not quite yet. Picture both numbers on a number line - further right always means greater.", "5. Are You Ready? - Number Line");
 
   const fluencyPractice = [
     { q: "\\(38 + 47\\)", a: 85, numeric: true, tol: 0 },
@@ -358,7 +358,7 @@
     { q: "\\(14.5 + 6.75\\)", a: 21.25, numeric: true, tol: 0.01 },
     { q: "\\(3.2 \\times 4\\)", a: 12.8, numeric: true, tol: 0.01 }
   ];
-  renderCheckList('fluency-practice-list', fluencyPractice, 'fluency', "Not quite yet. Slow down and work through the standard algorithm one step at a time.");
+  renderCheckList('fluency-practice-list', fluencyPractice, 'fluency', "Not quite yet. Slow down and work through the standard algorithm one step at a time.", "5. Are You Ready? - Number Fluency");
 </script>
 </body>
 </html>
