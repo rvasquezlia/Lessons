@@ -813,11 +813,25 @@
     // this is the "other activity log with timestamps" AccessLog's noisy
     // allowed-rows were replaced with: it's already deduped (one entry per
     // real interaction) and timestamped by the backend itself.
-    const allEvents = allSubmissions.map((s) => ({
-      type: s.key === 'reached-end' ? 'reached-end' : (s.key.startsWith('tab-') ? 'tab' : (isIntegrityKey(s.key) ? 'integrity' : 'graded')),
-      label: s.key === 'reached-end' ? 'Reached the end' : (s.key.startsWith('tab-') ? `Viewed tab: ${s.label || s.key.slice(4)}` : s.label),
-      verdict: s.verdict, timestamp: s.timestamp
-    }));
+    //
+    // Graded events spell out which attempt it was and what happened
+    // ("Practice item 8 - 1st attempt - Correct") instead of leaving a
+    // teacher to infer that from a bare item label plus a one-word verdict
+    // pill - attemptNumber/verdict are already sitting on every submission
+    // (see Code.gs's recordSubmission_), this just surfaces them as text.
+    const VERDICT_TEXT = { correct: 'Correct', incomplete: 'Incorrect', reflection: 'Reflection submitted' };
+    const ordinal = (n) => (n === 1 ? '1st' : n === 2 ? '2nd' : n === 3 ? '3rd' : `${n}th`);
+    const allEvents = allSubmissions.map((s) => {
+      const type = s.key === 'reached-end' ? 'reached-end' : (s.key.startsWith('tab-') ? 'tab' : (isIntegrityKey(s.key) ? 'integrity' : 'graded'));
+      let label;
+      if (type === 'reached-end') label = 'Reached the end';
+      // s.label already comes prefixed "Viewed tab: ..." from lesson-auth.js
+      // itself - re-adding the prefix here used to double it up.
+      else if (type === 'tab') label = s.label || `Viewed tab: ${s.key.slice(4)}`;
+      else if (type === 'integrity') label = s.label;
+      else label = `${s.label || s.key} - ${ordinal(s.attemptNumber || 1)} attempt - ${VERDICT_TEXT[s.verdict] || s.verdict || 'answered'}`;
+      return { type, label, verdict: s.verdict, timestamp: s.timestamp };
+    });
 
     // Score every graded item by WHEN it was first answered correctly, not
     // just whether it ever was: correct on attempt 1 = 1 point, correct on
@@ -1588,6 +1602,10 @@
   }
 
   const EVENT_PILL = { graded: 'neutral', tab: 'ok', 'reached-end': 'flag', integrity: 'flag' };
+  // A graded event's own verdict, not its generic type, decides its pill
+  // color - correct/incomplete used to render as the same gray "neutral"
+  // pill, indistinguishable at a glance.
+  const GRADED_PILL = { correct: 'ok', incomplete: 'flag', reflection: 'neutral' };
 
   // Shared by the student and activity detail views - a per-row timeline
   // built from Progress.SubmissionsLog timestamps (see decorateRow's
@@ -1601,13 +1619,23 @@
     // close to the row's actual content - without it, a short line inside
     // this card's full page width just reads as mostly blank space with
     // a date floating off on the far right.
-    return '<ul style="margin:0; padding-left:0; list-style:none; max-width:640px;">' + sorted.slice(0, limit || 20).map((e) => `
-      <li style="padding:5px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:baseline; flex-wrap:wrap;">
-        <span class="pill ${EVENT_PILL[e.type] || 'neutral'}">${e.type === 'graded' ? (e.verdict || 'answer') : e.type}</span>
-        ${e.studentName ? `<strong>${e.studentName}</strong> - ` : ''}${e.activityTitle ? e.activityTitle + ' - ' : ''}${e.label || ''}
-        <span style="margin-left:auto; color:#94a3b8; font-size:0.8rem;">${e.timestamp ? new Date(e.timestamp).toLocaleString() : ''}</span>
+    return '<ul style="margin:0; padding-left:0; list-style:none; max-width:640px;">' + sorted.slice(0, limit || 20).map((e) => {
+      const pillClass = e.type === 'graded' ? (GRADED_PILL[e.verdict] || 'neutral') : (EVENT_PILL[e.type] || 'neutral');
+      const pillText = e.type === 'graded' ? (e.verdict || 'answer') : e.type;
+      // Pill and description are one flex item (nowrap between them) so
+      // the pill can never end up alone on its own line with the text
+      // wrapping below it - only the whole [pill+text] group wraps onto
+      // its own line, away from the timestamp, when the row is narrow.
+      return `
+      <li style="padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:10px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap;">
+        <span style="display:flex; gap:8px; align-items:baseline; flex:1 1 260px; min-width:0;">
+          <span class="pill ${pillClass}" style="flex-shrink:0;">${pillText}</span>
+          <span>${e.studentName ? `<strong>${e.studentName}</strong> - ` : ''}${e.activityTitle ? e.activityTitle + ' - ' : ''}${e.label || ''}</span>
+        </span>
+        <span style="color:#94a3b8; font-size:0.8rem; white-space:nowrap; flex-shrink:0;">${e.timestamp ? new Date(e.timestamp).toLocaleString() : ''}</span>
       </li>
-    `).join('') + '</ul>';
+    `;
+    }).join('') + '</ul>';
   }
 
   // Overview is deliberately a summary-only landing page - stat tiles and
