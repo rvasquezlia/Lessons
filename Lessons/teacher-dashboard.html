@@ -975,7 +975,13 @@
   }
 
   function populateFilters() {
-    const gradesFromRoster = roster.map((s) => s.grade);
+    // Google Sheets can auto-format a plain "6"/"7"/"8" cell as a number
+    // while another identical-looking cell stays text - String() here
+    // keeps the dedup Set below from treating 6 and "6" as two different
+    // grades (only numeric-looking codes are affected; "7-Honors"/
+    // "8-PreAP" can never be auto-numbered, which is why only 6/7/8 ever
+    // showed as duplicate pills).
+    const gradesFromRoster = roster.map((s) => String(s.grade || ''));
     // A shared row's raw Grade cell ("7,7-Honors") must be split back into
     // its individual grades here - otherwise it shows up as its own
     // bogus, unclickable pill instead of folding into the real "7"/
