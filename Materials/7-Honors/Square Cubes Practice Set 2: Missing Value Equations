@@ -1,0 +1,34 @@
+# Squares and Cubes Practice
+
+Complete the table below by calculating the missing values[cite: 9]. Use your knowledge of perfect squares (up to 20) and perfect cubes (up to 15) to find the base numbers and their powers[cite: 9].
+
+> **Remember:**
+> - To find a Square ($n^2$), multiply the base by itself: $n \times n$[cite: 9].
+> - To find a Cube ($n^3$), multiply the base by itself three times: $n \times n \times n$[cite: 9].
+
+---
+
+## Squares and Cubes Mastery Chart
+
+| Base ($n$) | Square ($n^2$) | Cube ($n^3$) |
+| :---: | :---: | :---: |
+| 4 | 16 | $\underline{\hspace{1.5cm}}$ |
+| $\underline{\hspace{1.5cm}}$ | 81 | 729 |
+| 12 | $\underline{\hspace{1.5cm}}$ | 1,728 |
+| $\underline{\hspace{1.5cm}}$ | 225 | 3,375 |
+| 7 | 49 | $\underline{\hspace{1.5cm}}$ |
+| 20 | 400 | $\underline{\hspace{1.5cm}}$ |
+| $\underline{\hspace{1.5cm}}$ | 121 | 1,331 |
+| 6 | 36 | 216 |
+| 13 | $\underline{\hspace{1.5cm}}$ | 2,197 |
+| $\underline{\hspace{1.5cm}}$ | 256 | 4,096 |
+| 5 | 25 | 125 |
+| 14 | 196 | $\underline{\hspace{1.5cm}}$ |
+| 8 | $\underline{\hspace{1.5cm}}$ | 512 |
+| $\underline{\hspace{1.5cm}}$ | 289 | $\underline{\hspace{1.5cm}}$ |
+| 10 | 100 | 1,000 |
+
+---
+
+## Critical Thinking
+Look at the row for Base 4 and Base 8[cite: 9]. What do you notice about the relationship between $4^3$ and $8^2$?[cite: 9] Explain why this happens[cite: 9].
