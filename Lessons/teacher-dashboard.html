@@ -988,8 +988,15 @@
     // "7-Honors" pills roster students already produce.
     const gradesFromCatalog = activityCatalog.flatMap((a) => String(a.grade || '').split(',').map((g) => g.trim()));
     const teachersFromRoster = roster.map((s) => s.teacher);
-    const activityTitles = activityCatalog.length
-      ? activityCatalog.map((a) => a.title)
+    // Narrowed to the selected grade so the Activity dropdown doesn't show
+    // every activity across every grade at once - this was the actual gap
+    // (currentGradeFilter was never applied here at all), not something
+    // fillSelect()'s own current-value preservation could fix on its own.
+    const catalogForGrade = currentGradeFilter
+      ? activityCatalog.filter((a) => gradeListIncludes(a.grade, currentGradeFilter))
+      : activityCatalog;
+    const activityTitles = catalogForGrade.length
+      ? catalogForGrade.map((a) => a.title)
       : [...new Set(allRows.map((r) => r.activityTitle))];
 
     const grades = [...new Set([...gradesFromRoster, ...gradesFromCatalog])].filter(Boolean).sort();
