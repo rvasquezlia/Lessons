@@ -1230,14 +1230,14 @@
     rows.forEach((r) => {
       if (!byId[r.activityId]) {
         const catalogEntry = catalogById[r.activityId];
-        byId[r.activityId] = { activityId: r.activityId, activityTitle: r.activityTitle, grade: catalogEntry ? catalogEntry.grade : r.grade, rows: [] };
+        byId[r.activityId] = { activityId: r.activityId, activityTitle: r.activityTitle, grade: catalogEntry ? catalogEntry.grade : r.grade, unit: catalogEntry ? catalogEntry.unit : 'Unassigned', rows: [] };
       }
       byId[r.activityId].rows.push(r);
     });
     // Include catalog activities with zero submissions too - an activity
     // nobody has touched is exactly the kind of thing worth noticing.
     filteredCatalog().forEach((a) => {
-      if (!byId[a.activityId]) byId[a.activityId] = { activityId: a.activityId, activityTitle: a.title, grade: a.grade, rows: [] };
+      if (!byId[a.activityId]) byId[a.activityId] = { activityId: a.activityId, activityTitle: a.title, grade: a.grade, unit: a.unit || 'Unassigned', rows: [] };
     });
     const f = activeFilters();
     return Object.values(byId).map((g) => {
@@ -1359,7 +1359,7 @@
     const counts = { 'not-started': 0, opened: 0, 'in-progress': 0, 'completed-passed': 0, 'completed-locked-out': 0 };
     perStudent.forEach((p) => { counts[p.status]++; });
     return {
-      activityId: a.activityId, activityTitle: a.activityTitle, grade: a.grade, perStudent,
+      activityId: a.activityId, activityTitle: a.activityTitle, grade: a.grade, unit: a.unit, perStudent,
       notStarted: counts['not-started'], opened: counts.opened, inProgress: counts['in-progress'],
       completedPassed: counts['completed-passed'], completedLockedOut: counts['completed-locked-out'],
       total: eligible.length
@@ -1594,15 +1594,34 @@
   }
   window.jumpToIntegrityFlags = jumpToIntegrityFlags;
 
+  // A table that can mix rows from several grades/units groups by that
+  // dimension first, always - a teacher scanning By Student for a 6th
+  // grader shouldn't have to pick them out of a list interleaved with
+  // 7th and 8th graders, and By Unit/By Activity read better grouped by
+  // grade/unit than purely alphabetically. Grouping stays in effect even
+  // when a different column is clicked (e.g. sorting By Student by Avg
+  // score still ranks within each grade, not across all grades at once) -
+  // only clicking the group column itself (Grade/Unit) turns this into a
+  // plain single-key sort, so its own direction toggle still works.
+  const GROUP_KEYS = { 'by-unit': 'grade', 'by-activity': 'unit', 'activity-status': 'unit', 'by-student': 'grade' };
+
+  function compareValues(av, bv, dir) {
+    if (av instanceof Date || bv instanceof Date) { av = av ? av.getTime() : null; bv = bv ? bv.getTime() : null; }
+    if (av === bv) return 0;
+    if (av === null || av === undefined) return 1;
+    if (bv === null || bv === undefined) return -1;
+    return av > bv ? dir : -dir;
+  }
+
   function sortItems(items, tableKey, keyFallback) {
     const s = sortState[tableKey] || { key: keyFallback, dir: 1 };
+    const groupField = GROUP_KEYS[tableKey];
     return items.slice().sort((a, b) => {
-      let av = a[s.key], bv = b[s.key];
-      if (av instanceof Date || bv instanceof Date) { av = av ? av.getTime() : null; bv = bv ? bv.getTime() : null; }
-      if (av === bv) return 0;
-      if (av === null || av === undefined) return 1;
-      if (bv === null || bv === undefined) return -1;
-      return av > bv ? s.dir : -s.dir;
+      if (groupField && s.key !== groupField) {
+        const groupCmp = compareValues(a[groupField], b[groupField], 1);
+        if (groupCmp !== 0) return groupCmp;
+      }
+      return compareValues(a[s.key], b[s.key], s.dir);
     });
   }
 
