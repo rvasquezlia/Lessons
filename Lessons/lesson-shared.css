@@ -1210,8 +1210,8 @@ button:disabled {
 /* Vocabulary Match-Up (drag-and-drop: term -> definition, term -> example).
    Shared by every Vocabulary-Literacy.html "Quick Vocabulary Check" tab via
    createVocabMatch() in lesson-shared.js - see /CLAUDE.md. */
-.match-wrap { display: flex; flex-wrap: wrap; gap: 18px; margin: 16px 0; }
-.match-col { flex: 1 1 220px; display: flex; flex-direction: column; gap: 10px; }
+.match-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin: 16px 0; }
+.match-col { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .match-col-heading { text-align: center; font-weight: 800; color: var(--primary); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: -2px; }
 .match-card {
   background: #eff6ff;
