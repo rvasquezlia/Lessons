@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Solving Linear Inequalities - Word Problems</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=9"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Algebra I &middot; Solving Linear Inequalities</span>
+    <h1>Word Problems</h1>
+    <p class="standards-line">Standards: HSA.CED.A.1, HSA.REI.A.1, HSA.REI.B.3</p>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    <ul style="margin:0; padding-left:20px;">
+      <li>Use the <strong>4-Step Method</strong> from the Explanation page: define, write, solve, interpret.</li>
+      <li>Watch for the keywords: at least (\(\geq\)), at most (\(\leq\)), more than (\(>\)), fewer than (\(<\)).</li>
+      <li>Each item gives <strong>2 tries</strong>, then shows the method and locks.</li>
+      <li><strong>Calculators are allowed</strong> this year.</li>
+    </ul>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('limits')">1. Budgets &amp; Limits</button>
+    <button class="tab-btn" onclick="switchTab('requirements')">2. Requirement Scenarios</button>
+    <button class="tab-btn" onclick="switchTab('mixed')">3. Mixed &amp; Challenge</button>
+  </nav>
+
+  <!-- TAB 1: BUDGETS & LIMITS -->
+  <div id="limits" class="panel active">
+    <div class="section-title">Budgets &amp; Limits: Set Up and Solve</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      For each scenario, write the inequality <strong>and</strong> answer the question - both parts are checked together.
+    </div>
+    <div id="limits-list"></div>
+  </div>
+
+  <!-- TAB 2: REQUIREMENT SCENARIOS -->
+  <div id="requirements" class="panel">
+    <div class="section-title">Requirement Scenarios: Write the Inequality</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Each scenario describes a requirement or limit - translate it directly into an inequality. No solving needed here, just the setup.
+    </div>
+    <div id="requirements-list"></div>
+  </div>
+
+  <!-- TAB 3: MIXED & CHALLENGE -->
+  <div id="mixed" class="panel">
+    <div class="section-title">Mixed &amp; Challenge</div>
+    <div class="explainer-box">
+      These combine everything - setup, multi-step solving, and (in a couple of problems) rounding your answer to a whole number that makes sense in context.
+    </div>
+    <div id="mixed-list"></div>
+  </div>
+</div>
+
+<script>
+  LessonSync.init('8-linear-inequalities-word-problems');
+
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // Same inequality helpers as Practice-Set.html - see that page's own
+  // copy for full notes on why a plain <input> is used and how the
+  // parser/normalizer work. normalizeIneqExpr/ineqAnswerMatches are for
+  // an UNSOLVED translated inequality (Tab 2); normalizeInequality/
+  // checkInequality are for a SOLVED, canonical "variable op number" form
+  // (Tab 1/3's numeric-interpretation sub-answers use LessonCheck.numericMatch
+  // directly instead, since those ask "how many," not "solve for x").
+  function normalizeIneqExpr(s) {
+    let out = String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, '');
+    out = out.replace(/≥/g, '>=').replace(/≤/g, '<=').replace(/=>/g, '>=').replace(/=</g, '<=');
+    return out;
+  }
+  function ineqAnswerMatches(val, accepted) {
+    const norm = normalizeIneqExpr(val);
+    return (accepted || []).some((a) => normalizeIneqExpr(a) === norm);
+  }
+
+  // ==========================================
+  // TAB 1: BUDGETS & LIMITS (set up + solve, two fields per item)
+  // ==========================================
+  const limitsItems = [
+    {
+      scenario: "A school trip costs \\(\\$45\\) per student, plus a flat \\(\\$150\\) bus fee. The budget is <strong>at most \\(\\$600\\)</strong>. Let \\(n\\) = number of students.",
+      question: "What is the maximum number of students who can go?",
+      accepted: ["45n+150<=600"], answerLabel: "n", answer: 10, unit: "students"
+    },
+    {
+      scenario: "A vending machine snack costs \\(\\$2\\). You have <strong>at most \\(\\$12\\)</strong> to spend on snacks. Let \\(s\\) = number of snacks.",
+      question: "What is the maximum number of snacks you can buy?",
+      accepted: ["2s<=12"], answerLabel: "s", answer: 6, unit: "snacks"
+    },
+    {
+      scenario: "You need <strong>at least 20 points</strong> to pass a class contest. You already have 12 points, and each additional assignment is worth 4 points. Let \\(x\\) = number of additional assignments.",
+      question: "What is the minimum number of additional assignments you need?",
+      accepted: ["12+4x>=20", "4x+12>=20"], answerLabel: "x", answer: 2, unit: "assignments"
+    },
+    {
+      scenario: "An elevator holds <strong>at most 1{,}200 kg</strong>. There is already 400 kg of furniture inside, and each box weighs 40 kg. Let \\(b\\) = number of boxes.",
+      question: "What is the maximum number of boxes that can still be added?",
+      accepted: ["400+40b<=1200", "40b+400<=1200"], answerLabel: "b", answer: 20, unit: "boxes"
+    }
+  ];
+
+  function renderLimits() {
+    const html = limitsItems.map((p, i) => `
+      <div class="step-box" style="margin-top:14px;">
+        <p style="margin:0 0 10px 0;"><strong>${i + 1}.</strong> ${p.scenario}</p>
+        <div class="form-group">
+          <label>Inequality:</label>
+          <input type="text" id="lim-${i}-ineq" class="form-control-lg" style="max-width:220px;" placeholder="e.g. 45n+150<=600">
+        </div>
+        <div class="form-group">
+          <label>${p.question}</label>
+          <input type="text" id="lim-${i}-answer" class="form-control-lg" style="max-width:160px;" placeholder="Number">
+        </div>
+        <button class="btn-lg" onclick="checkLimits(${i})">Check</button>
+        <div id="lim-${i}-feedback" class="feedback-msg"></div>
+      </div>
+    `).join('');
+    document.getElementById('limits-list').innerHTML = html;
+    limitsItems.forEach((p, i) => LessonProgress.preRegister(`lim-${i}`, `Budgets & Limits #${i + 1}`, '1. Budgets & Limits'));
+    triggerMathJax();
+  }
+
+  function checkLimits(idx) {
+    const p = limitsItems[idx];
+    const ineq = document.getElementById(`lim-${idx}-ineq`).value;
+    const ans = document.getElementById(`lim-${idx}-answer`).value;
+    const fb = document.getElementById(`lim-${idx}-feedback`);
+    if (!ineq.trim() || !ans.trim()) {
+      LessonCheck.incomplete(fb, "Enter both the inequality and the final answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const ineqOk = ineqAnswerMatches(ineq, p.accepted);
+    const ansOk = LessonCheck.numericMatch(ans, p.answer, 0.001);
+    const correct = ineqOk && ansOk;
+    const answerText = `<strong>${p.accepted[0]}</strong>, so the answer is <strong>${p.answer} ${p.unit}</strong>`;
+    LessonCheck.check(`lim-${idx}`, correct, fb, {
+      correct: `Correct! ${answerText}`,
+      retry: "Not quite yet. Find the keyword (at least/at most) to set up the inequality, then solve for the variable. Try again.",
+      reveal: `Here's the setup and answer: ${answerText}`
+    }, { label: `Budgets & Limits #${idx + 1}`, answer: `${ineq}, ${p.answerLabel}=${ans}`, section: '1. Budgets & Limits' });
+  }
+
+  // ==========================================
+  // TAB 2: REQUIREMENT SCENARIOS (write only)
+  // ==========================================
+  const requirementItems = [
+    { scenario: "To ride a roller coaster, you must be <strong>at least 42 inches</strong> tall. Let \\(h\\) = height in inches.", accepted: ["h>=42"], displayAnswer: "\\(h \\geq 42\\)" },
+    { scenario: "A speed limit sign says the speed, \\(s\\) (in mph), must be <strong>at most 55</strong>.", accepted: ["s<=55"], displayAnswer: "\\(s \\leq 55\\)" },
+    { scenario: "To qualify for a scholarship, your GPA, \\(g\\), must be <strong>greater than 3.5</strong>.", accepted: ["g>3.5"], displayAnswer: "\\(g > 3.5\\)" },
+    { scenario: "A recipe requires the oven temperature, \\(t\\) (in \\(^\\circ\\)F), to stay <strong>below 375</strong> to avoid burning.", accepted: ["t<375"], displayAnswer: "\\(t < 375\\)" },
+    { scenario: "You must be <strong>older than 16</strong>, in years \\(a\\), to get a driver's permit in this state.", accepted: ["a>16"], displayAnswer: "\\(a > 16\\)" },
+    { scenario: "A shipping box must weigh <strong>no more than 50 pounds</strong>, \\(w\\).", accepted: ["w<=50"], displayAnswer: "\\(w \\leq 50\\)" }
+  ];
+
+  function renderRequirements() {
+    const html = requirementItems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.scenario}
+        <input type="text" id="req-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="e.g. h >= 42">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkRequirement(${i})">Check</button>
+        <div id="req-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('requirements-list').innerHTML = html;
+    requirementItems.forEach((p, i) => LessonProgress.preRegister(`req-${i}`, `Requirement #${i + 1}`, '2. Requirement Scenarios'));
+    triggerMathJax();
+  }
+
+  function checkRequirement(idx) {
+    const p = requirementItems[idx];
+    const val = document.getElementById(`req-${idx}-input`).value;
+    const fb = document.getElementById(`req-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter an inequality before checking - this won't count as an attempt yet."); return; }
+    const correct = ineqAnswerMatches(val, p.accepted);
+    LessonCheck.check(`req-${idx}`, correct, fb, {
+      correct: `Correct! ${p.displayAnswer}`,
+      retry: "Not quite yet. Find the keyword and match it to its symbol. Try again.",
+      reveal: `Here's the correct inequality: ${p.displayAnswer}`
+    }, { label: `Requirement #${idx + 1}`, answer: val, section: '2. Requirement Scenarios' });
+  }
+
+  // ==========================================
+  // TAB 3: MIXED & CHALLENGE (numeric interpretation answers)
+  // ==========================================
+  const mixedItems = [
+    {
+      scenario: "Phone Plan A costs \\(\\$20\\) per month with no per-text fee. Phone Plan B costs \\(\\$10\\) per month plus \\(\\$0.05\\) per text, \\(x\\). What is the minimum number of texts needed for Plan A to cost no more than Plan B?",
+      answer: 200, unit: "texts"
+    },
+    {
+      scenario: "A caterer charges \\(\\$100\\) for setup plus \\(\\$15\\) per guest, \\(g\\). A client's budget is at most \\(\\$1{,}000\\). What is the maximum number of guests?",
+      answer: 60, unit: "guests"
+    },
+    {
+      scenario: "A shipping box must weigh less than 50 pounds total. Packing material weighs 6 pounds, and each identical item weighs 8 pounds. What is the maximum number of whole items, \\(n\\), that can be packed?",
+      answer: 5, unit: "items"
+    },
+    {
+      scenario: "A charity needs to raise at least \\(\\$2{,}500\\). They've raised \\(\\$900\\) so far and sell tickets at \\(\\$25\\) each. What is the minimum number of tickets, \\(t\\), they need to sell?",
+      answer: 64, unit: "tickets"
+    }
+  ];
+
+  function renderMixed() {
+    const html = mixedItems.map((p, i) => `
+      <div class="step-box" style="margin-top:14px;">
+        <p style="margin:0 0 10px 0;"><strong>${i + 1}.</strong> ${p.scenario}</p>
+        <div class="form-group">
+          <label>Answer:</label>
+          <input type="text" id="mix-${i}-input" class="form-control-lg" style="max-width:160px;" placeholder="Number">
+        </div>
+        <button class="btn-lg" onclick="checkMixed(${i})">Check</button>
+        <div id="mix-${i}-feedback" class="feedback-msg"></div>
+      </div>
+    `).join('');
+    document.getElementById('mixed-list').innerHTML = html;
+    mixedItems.forEach((p, i) => LessonProgress.preRegister(`mix-${i}`, `Mixed & Challenge #${i + 1}`, '3. Mixed & Challenge'));
+    triggerMathJax();
+  }
+
+  function checkMixed(idx) {
+    const p = mixedItems[idx];
+    const val = document.getElementById(`mix-${idx}-input`).value;
+    const fb = document.getElementById(`mix-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking - this won't count as an attempt yet."); return; }
+    const correct = LessonCheck.numericMatch(val, p.answer, 0.001);
+    LessonCheck.check(`mix-${idx}`, correct, fb, {
+      correct: `Correct! ${p.answer} ${p.unit}.`,
+      retry: "Not quite yet. Set up the inequality first, solve it, then check whether your answer needs rounding to make sense in context. Try again.",
+      reveal: `The correct answer is ${p.answer} ${p.unit}.`
+    }, { label: `Mixed & Challenge #${idx + 1}`, answer: val, section: '3. Mixed & Challenge' });
+  }
+
+  // Initial render
+  renderLimits();
+  renderRequirements();
+  renderMixed();
+
+  // Teacher answer key - hand-written (no shared listRegistry across
+  // these differently-shaped tabs), matching Linear-Equations' own
+  // Word-Problems page - see /CLAUDE.md's "Role differentiation" note.
+  window.revealAnswerKey = function () {
+    const fillInput = (id, feedbackId, answer) => {
+      const input = document.getElementById(id);
+      const fb = document.getElementById(feedbackId);
+      if (!input || !fb) return;
+      input.value = answer;
+      input.disabled = true;
+      const container = input.closest('.step-box') || input.closest('.guided-practice');
+      const btn = container && container.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
+    };
+
+    limitsItems.forEach((p, i) => {
+      const ineqInput = document.getElementById(`lim-${i}-ineq`);
+      const ansInput = document.getElementById(`lim-${i}-answer`);
+      const fb = document.getElementById(`lim-${i}-feedback`);
+      if (!ineqInput || !ansInput || !fb) return;
+      ineqInput.value = p.accepted[0];
+      ansInput.value = p.answer;
+      ineqInput.disabled = true;
+      ansInput.disabled = true;
+      const container = ineqInput.closest('.step-box');
+      const btn = container && container.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${p.accepted[0]}</strong>, ${p.answer} ${p.unit}`;
+    });
+
+    requirementItems.forEach((p, i) => fillInput(`req-${i}-input`, `req-${i}-feedback`, p.accepted[0]));
+    mixedItems.forEach((p, i) => fillInput(`mix-${i}-input`, `mix-${i}-feedback`, p.answer));
+  };
+</script>
+</body>
+</html>

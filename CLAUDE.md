@@ -1503,6 +1503,7 @@ special handling either - it's already generic in `lesson-auth.js`'s
 | Seventh/Operations-with-Rationals | `7-operations-with-rationals-*` | Same shape as Integers (including a `checkQCMulti` checkbox group in Test-Prep), but no sign-group pattern. Its Guided-Solving-Ladder page has one flat `ladderExercises` array (not grouped by key prefix like every other registry here) - exposed as `window.listRegistry = { lex: { problems: ... } }` to fit the same generic reveal mechanism, with `mc`-type items given a synthesized `displayAnswer` (the generic reveal only knows `displayAnswer`/`a`/`accepted`, not this page's own `p.answer`) so a `<select>` gets set to the right option like any other item. |
 | Eighth/Linear-Equations | `8-linear-equations-*` | Review uses `window.listRegistry` (local var `checkListRegistry`). Vocabulary-Literacy, Practice-Set, and Word-Problems are entirely hand-written `window.revealAnswerKey` (no page has a shared registry covering everything). Test-Prep's `listRegistry` (local var, matching the shared-name convention) covers only its submit-only Mixed Practice tab; the rest (Check Your Understanding, Error Analysis, Readiness Check) is hand-written. Practice-Set's Strategy Challenge tab is student-choice-driven (pick a group first) and has nothing to reveal until a group is picked — `revealAnswerKey` skips it harmlessly if none was. |
 | Eighth/Literal-Equations | `8-literal-equations-*` | Review uses `window.listRegistry` (local var `checkListRegistry`). Practice-Set's `symRegistry` and Word-Problems' `wpRegistry` are both exposed as `window.listRegistry`, covering most of each page; Practice-Set still hand-writes its Tab 4 Live Number Check (targets depend on live slider values, recomputed with the same formula the check functions use) and Tab 5 Error Analysis, and Word-Problems hand-writes its one Tab 3 investment-comparison item. Test-Prep's `submitSymRegistry` (as `window.listRegistry`) covers Mixed Practice parts 1-2 only; part 3 (numeric, separate render/check functions) plus Full Review/Error Analysis/Readiness Check are hand-written. Vocabulary-Literacy is entirely hand-written (two standalone check functions, no registry). Its Guided-Solving-Ladder page already used the standard keyed-registry shape (`exRegistry`, covering both its tabs) so it only needed `window.listRegistry = exRegistry` - no hand-written reveal at all. |
+| Eighth/Linear-Inequalities | `8-linear-inequalities-*` | Review uses `window.listRegistry` (local var `checkListRegistry`, adapted to accept either a solved inequality via `p.ineq`/`checkInequality` or an unsolved translated one via `p.accepted`/`ineqAnswerMatches`). Test-Prep's `listRegistry` covers Tab 1's guided list and Tab 3's Mixed Practice; the rest (both Check Your Understanding items, the critical-thinking reflection, Tab 2's Error Analysis Review, Tab 4's exit ticket) is hand-written. Vocabulary-Literacy, Explanation, Practice-Set, and Word-Problems are entirely hand-written `window.revealAnswerKey` (no shared registry, since almost every tab has its own answer shape - text, a select pair for graphing, or a combined inequality+numeric field). **This is the first unit with no `<math-field>` anywhere on any page** - see "Inequality answers are plain text, not `<math-field>`" below for why. |
 | Seventh/Squares-Cubes-and-Roots (**7-Honors only**, 5 pages) | `7-squares-cubes-and-roots-*` | Practice-Set uses `window.listRegistry` for all three tabs' plain-number items (`checkPractice`), plus three critical-thinking textareas (`checkCT1`/`checkCT2`/`checkCT3`, submit-only, outside the registry). Word-Problems also uses `window.listRegistry` (plain-number real-world answers across all three tabs). Review's "Are You Ready?" tab and Vocabulary-Literacy's "Quick Vocabulary Check"/translation tabs both use the `checkListRegistry`-style pattern (two separate hand-written render/check functions on Vocabulary-Literacy, so its own `window.revealAnswerKey` covers both). Test-Prep is entirely hand-written `window.revealAnswerKey` (four problem shapes, none sharing a registry). |
 | Eighth/Linear-Functions (**8-PreAP only**, 5 pages) | `8-linear-functions-*` | Practice-Set's Tabs 1 & 3 (plain-number: slope, function evaluation) use `window.listRegistry`; Tabs 2 & 4 (algebraic-rule answers via `<math-field>`: slope-intercept form, writing a function rule from a table) sit outside the registry with their own hand-written reveal, same pattern as Literal-Equations. Word-Problems' two numeric tabs use `window.listRegistry`; its one algebraic item (writing the fuel-tank equation) is hand-written. Vocabulary-Literacy and Test-Prep are entirely hand-written (no page-wide registry). |
 
@@ -1546,11 +1547,12 @@ codes or URLs to fill this in later without doing that same
 verification first.
 
 Every wired page needs its own row in `ActivityCatalog` (matching
-`Grade`, `Active: TRUE`) before its gate will let anyone in — that's 56
+`Grade`, `Active: TRUE`) before its gate will let anyone in — that's 62
 rows now (42 from the 6-page pattern — Review/Vocabulary-Literacy/
 Explanation/Practice-Set/Word-Problems/Test-Prep — across 7 grade-6/7/8
 units, the 2 Guided-Solving-Ladder pages, 6 for Seventh/Squares-Cubes-
-and-Roots, and 6 for Eighth/Linear-Functions). The six `7-rational-
+and-Roots, 6 for Eighth/Linear-Functions, and 6 for Eighth/Linear-
+Inequalities). The six `7-rational-
 numbers-*` rows (including `-explanation`) also need their `Grade` cell
 widened to `7,7-Honors` (see "Grade tracks beyond 6/7/8" above) so
 Honors can open the same rows — that's an edit to six existing rows, not
@@ -1815,6 +1817,66 @@ assume it's intentional** - check whether any of its problems are pure
 fraction computation with no decimal in sight, the same way these three
 were.
 
+**Inequality answers (Eighth/Linear-Inequalities) are plain text, not
+`<math-field>` - a deliberate exception to "real math notation gets the
+math-field editor."** Per the rule above, an inequality like `x > 5`
+arguably has "real math notation" (a comparison symbol), which would
+suggest `<math-field>`. It was kept as plain `<input type="text">`
+instead, for the same reason Linear-Equations' own `"no solution"`/
+`"infinite"` classification answers stayed plain text: a solved
+inequality is a short, fixed-shape symbolic token (`variable`,
+`operator`, `number`), not an expression a student builds up visually
+the way a fraction or multi-term expression is - MathLive's ASCIIMath
+export was never verified against inequality symbols specifically
+(`\ge`/`\le`), and there was no way to test that serialization live in
+this environment, so plain text sidesteps an untested assumption
+entirely. Every page in this unit that grades a solved inequality
+defines the identical pair of helpers (duplicated per-page, same
+convention as `readMathField()`/`normalizeExpr()` elsewhere):
+- `normalizeInequality(raw, variable)` - strips whitespace, folds
+  unicode `≥`/`≤` and the sloppy `=>`/`=<` spellings to ASCII `>=`/`<=`,
+  parses either `variable OP number` or `number OP variable` (flipping
+  the operator in the second case so `5 < x` and `x > 5` compare equal),
+  and returns a canonical `"<variable><op><number>"` string or `null` if
+  unparseable.
+- `checkInequality(raw, variable, operator, boundary)` - `true` iff
+  `normalizeInequality(raw, variable)` equals the canonical form of the
+  expected answer.
+Verified with a battery of edge cases (spacing, case, both operand
+orders, unicode vs. ASCII operators, decimal boundaries, garbage input)
+before use in any page. A **separate** pair - `normalizeIneqExpr(s)`/
+`ineqAnswerMatches(val, accepted)` - handles the *other* answer shape
+this unit needs: an **unsolved**, translated inequality (e.g. "at least
+12" → `n>=12`) where the accepted spelling is one specific fixed string
+rather than a canonical solved form; this is the same
+`normalizeExpr`/`answerMatches` pattern used elsewhere on the site, with
+the same unicode/`=>`/`=<` folding added. Don't use the solved-form
+checker for a translation item or vice versa - they're deliberately
+different because their correctness conditions are different (a
+translation has exactly one right spelling; a solved inequality has
+several equivalent typings).
+
+**Graphing uses a static, self-contained SVG number line, not an
+interactive widget.** `numberLineSvg(boundary, type, direction)`
+(duplicated per-page, same as the two helper pairs above) draws a fixed
+\(-10\) to \(10\) number line with tick marks, an open or filled circle
+at `boundary`, and an arrow/ray toward `'left'` or `'right'` - every
+boundary value graphed by this function across the whole unit is a
+whole number in that range, so the fixed range needed no generalization.
+Used two ways: as a worked-example illustration on Explanation.html
+(hard-coded calls, nothing graded), and as the actual graded prompt on
+Practice-Set's "Read the Graph" items (student types the inequality the
+rendered graph shows, checked via `checkInequality`). The reverse skill
+- given an inequality, describe its graph - is graded differently, via
+two `<select>` dropdowns (circle type, direction) checked as two
+independent sub-answers in `checkDescribe()`, rather than asking a
+student to somehow "draw" a graph; open/closed and left/right are
+graded separately because they're two independent mistakes, not one.
+A genuinely interactive, draggable number line was considered and
+rejected for this build - the static-SVG-plus-typed-answer /
+two-dropdown-description approach fully covers the graphing standard
+(HSA.REI.B.3) without needing new drag-and-drop infrastructure.
+
 ### Vocabulary Match-Up (drag-and-drop term/definition/example widget)
 
 The old "Quick Vocabulary Check"/"Check Your Understanding" self-check
@@ -1919,8 +1981,8 @@ activity — see `Code.gs`'s `identify` branch).
   omitted.
 
 **Every topic in `CURRICULUM` now has an `activityIds` block** — all
-seven grade-6/7/8 units (Sixth's two, Seventh's three, Eighth's two) are
-visible to a signed-in student on the index, plus the two Honors/Pre-AP
+eight grade-6/7/8 units (Sixth's two, Seventh's three, Eighth's three)
+are visible to a signed-in student on the index, plus the two Honors/Pre-AP
 topics under the `7-Honors`/`8-PreAP` grade keys (see "Grade tracks
 beyond 6/7/8" further up). As new units get added and wired the same
 way, add their `activityId`s to `CURRICULUM` the same way, or a
@@ -2024,6 +2086,7 @@ edit, don't just copy this table forward indefinitely):
 | Seventh/Operations-with-Rationals | `7.NS.A.1b, 7.NS.A.1c, 7.NS.A.1d, 7.NS.A.2a, 7.NS.A.2b, 7.NS.A.2c` |
 | Seventh/Squares-Cubes-and-Roots (7-Honors) | `8.EE.A.2` |
 | Eighth/Linear-Equations | `HSA.CED.A.1, HSA.REI.A.1, HSA.REI.B.3` |
+| Eighth/Linear-Inequalities | `HSA.CED.A.1, HSA.REI.A.1, HSA.REI.B.3` |
 | Eighth/Literal-Equations | `HSA.CED.A.4` |
 | Eighth/Linear-Functions (8-PreAP) | `HSA.CED.A.2, HSS.ID.C.7, HSF-IF.A.1, HSF-IF.B.5, HSF-LE.A.2` |
 
@@ -2045,6 +2108,17 @@ Notes worth knowing before touching any of these again:
   left alone (out of scope for this feature) — don't assume the two
   are supposed to match, and don't "fix" one to match the other without
   re-verifying both against the map first.
+- Eighth/Linear-Inequalities carries the **identical** standards line to
+  Eighth/Linear-Equations, not a coincidence or a copy-paste error: both
+  units come from the same Algebra I Topic 1 map rows (Q01W02-W05), and
+  the map cites the same `HSA.CED.A.1, HSA.REI.A.1, HSA.REI.B.3` trio on
+  Lesson 1-5's own row (the inequalities lesson) as it does on
+  Lessons 1-2/1-3's rows (the equations lessons) - the standards
+  genuinely don't distinguish equations from inequalities at this grain.
+  `HSA.CED.A.4` (Literal-Equations' own citation, "rearrange formulas")
+  correctly stays off this unit's line, same reasoning as every other
+  exclusion in this list - it belongs to a different lesson (1-4) that
+  this unit doesn't teach.
 - A brand-new unit gets this the same way any of the above did: find
   its lessons' name-matching row(s) in the map, pull every standard
   those rows cite (full untruncated text), union them, and add the

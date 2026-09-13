@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Solving Linear Inequalities - Explanation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=9"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Algebra I &middot; Solving Linear Inequalities</span>
+    <h1>Explanation</h1>
+    <p class="standards-line">Standards: HSA.CED.A.1, HSA.REI.A.1, HSA.REI.B.3</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Read through every tab in order - each one builds on the last. Nothing here is graded; it's worked examples to study before the Practice Set.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('basics')">1. Symbols &amp; Graphing Basics</button>
+    <button class="tab-btn" onclick="switchTab('onetwostep')">2. One-Step &amp; Two-Step</button>
+    <button class="tab-btn" onclick="switchTab('fliprule')">3. The Flip Rule</button>
+    <button class="tab-btn" onclick="switchTab('multistep')">4. Multi-Step Inequalities</button>
+    <button class="tab-btn" onclick="switchTab('applications')">5. Worked Applications</button>
+  </nav>
+
+  <!-- TAB 1: SYMBOLS & GRAPHING BASICS -->
+  <div id="basics" class="panel active">
+    <div class="section-title">Inequality Symbols &amp; Graphing Basics</div>
+    <div class="explainer-box">
+      An inequality compares two expressions instead of setting them equal. Every inequality has a <strong>solution set</strong> - usually infinitely many values - which is why we graph it on a number line instead of naming just one number.
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Symbol</th><th>Meaning</th><th>Real-World Phrase</th><th>Circle</th></tr></thead>
+      <tbody>
+        <tr><td>\(>\)</td><td>Greater than</td><td>More than, exceeds</td><td>Open</td></tr>
+        <tr><td>\(<\)</td><td>Less than</td><td>Fewer than, below</td><td>Open</td></tr>
+        <tr><td>\(\geq\)</td><td>Greater than or equal to</td><td>At least, no less than</td><td>Closed (filled)</td></tr>
+        <tr><td>\(\leq\)</td><td>Less than or equal to</td><td>At most, no more than</td><td>Closed (filled)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The Two Questions Every Graph Answers</div>
+      <p style="margin:0;"><strong>1. What kind of circle?</strong> Open (\(<\) or \(>\)) means the boundary point itself is <em>not</em> a solution. Closed/filled (\(\leq\) or \(\geq\)) means it <em>is</em> a solution.<br><strong>2. Which direction?</strong> "Greater than" points right (toward bigger numbers); "less than" points left (toward smaller numbers).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Graph \(x > 3\)</div>
+      <p style="margin:0 0 6px 0;">\(>\) is strict, so \(3\) is <strong>not</strong> included &rarr; open circle at \(3\). "Greater than" points right.</p>
+      <div id="nl-example-a"></div>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Graph \(x \leq -2\)</div>
+      <p style="margin:0 0 6px 0;">\(\leq\) includes the boundary &rarr; closed (filled) circle at \(-2\). "Less than" points left.</p>
+      <div id="nl-example-b"></div>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Graph \(x \geq -6\)</div>
+      <p style="margin:0 0 6px 0;">\(\geq\) includes the boundary &rarr; closed circle at \(-6\). "Greater than" points right.</p>
+      <div id="nl-example-c"></div>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Reading a Graph Backwards</div>
+      <p style="margin:0;">Given a graph, work the two questions in reverse: an <strong>open</strong> circle means a strict symbol (\(<\) or \(>\)); a filled circle means \(\leq\) or \(\geq\). An arrow pointing <strong>left</strong> means "less than"; pointing <strong>right</strong> means "greater than." An open circle at \(-1\) with an arrow to the left graphs \(x < -1\).</p>
+    </div>
+  </div>
+
+  <!-- TAB 2: ONE-STEP & TWO-STEP -->
+  <div id="onetwostep" class="panel">
+    <div class="section-title">One-Step and Two-Step Inequalities</div>
+    <div class="explainer-box">
+      Solving an inequality uses the <strong>exact same inverse operations</strong> as solving an equation - undo addition/subtraction, then undo multiplication/division. As long as you only add, subtract, multiply, or divide by a <strong>positive</strong> number, the direction of the inequality symbol never changes.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: One-Step (Addition/Subtraction)</div>
+      <p style="margin:0;">Solve \(x + 5 > 12\). Subtract \(5\) from both sides: \(x > 7\).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: One-Step (Subtraction)</div>
+      <p style="margin:0;">Solve \(x - 6 \leq 3\). Add \(6\) to both sides: \(x \leq 9\).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: One-Step (Positive Division)</div>
+      <p style="margin:0;">Solve \(3x < 21\). Divide both sides by \(3\) - a <strong>positive</strong> number, so the symbol stays the same: \(x < 7\).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Two-Step</div>
+      <p style="margin:0 0 6px 0;">Solve \(3x - 4 < 11\).</p>
+      <p style="margin:0 0 4px 0;"><strong>Step 1 - Add 4 to both sides:</strong> \(3x < 15\).</p>
+      <p style="margin:0;"><strong>Step 2 - Divide both sides by 3 (positive):</strong> \(x < 5\).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Two-Step</div>
+      <p style="margin:0 0 6px 0;">Solve \(2x + 7 \geq 15\).</p>
+      <p style="margin:0 0 4px 0;"><strong>Step 1 - Subtract 7 from both sides:</strong> \(2x \geq 8\).</p>
+      <p style="margin:0;"><strong>Step 2 - Divide both sides by 2 (positive):</strong> \(x \geq 4\).</p>
+    </div>
+  </div>
+
+  <!-- TAB 3: THE FLIP RULE -->
+  <div id="fliprule" class="panel">
+    <div class="section-title">The Flip Rule: Multiplying or Dividing by a Negative</div>
+    <div class="explainer-box">
+      This is the <strong>one rule that makes inequalities different from equations.</strong> Whenever you multiply or divide both sides of an inequality by a <strong>negative</strong> number, you must <strong>flip the direction</strong> of the inequality symbol. Forgetting this single step is the most common mistake in this whole topic.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Why Does the Symbol Have to Flip?</div>
+      <p style="margin:0 0 8px 0;">Start with a true statement: \(4 < 9\). Multiply both sides by \(-1\) without changing the symbol: \(-4 < -9\). Is that true? No - \(-4\) is actually <strong>greater</strong> than \(-9\) on the number line. To keep the statement true, the symbol has to flip: \(-4 > -9\). Multiplying by a negative number reverses which side is "bigger," so the inequality symbol has to reverse too.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Dividing by a Negative</div>
+      <p style="margin:0 0 6px 0;">Solve \(-2x > 8\).</p>
+      <p style="margin:0 0 4px 0;">Divide both sides by \(-2\). Because \(-2\) is negative, <strong>flip the symbol</strong>: \(x < -4\).</p>
+      <p style="margin:0; color:#b45309;"><strong>Check it:</strong> try \(x = -5\) (should work): \(-2(-5) = 10 > 8\). True! Try \(x = -3\) (should <em>not</em> work, since it's not less than \(-4\)): \(-2(-3) = 6 > 8\)? False - correctly excluded.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Multiplying by a Negative</div>
+      <p style="margin:0 0 6px 0;">Solve \(-x \leq 5\).</p>
+      <p style="margin:0 0 4px 0;">Multiply both sides by \(-1\) to make the variable positive. Because \(-1\) is negative, <strong>flip the symbol</strong>: \(x \geq -5\).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Two Steps, Flip on the Last One</div>
+      <p style="margin:0 0 6px 0;">Solve \(-3x + 4 > 19\).</p>
+      <p style="margin:0 0 4px 0;"><strong>Step 1 - Subtract 4 from both sides:</strong> \(-3x > 15\).</p>
+      <p style="margin:0;"><strong>Step 2 - Divide by \(-3\) (flip!):</strong> \(x < -5\).</p>
+    </div>
+
+    <div class="notebook-box" style="background: rgba(239, 68, 68, 0.06); border-color: var(--error);">
+      <div class="notebook-header" style="color: var(--error);">The Mistake to Avoid</div>
+      <p style="margin:0;">The flip only happens when you multiply or divide by a negative. <strong>Adding or subtracting a negative number never flips the symbol.</strong> In \(-3x + 4 > 19\) above, subtracting \(4\) doesn't flip anything - only the division by \(-3\) does.</p>
+    </div>
+  </div>
+
+  <!-- TAB 4: MULTI-STEP INEQUALITIES -->
+  <div id="multistep" class="panel">
+    <div class="section-title">Multi-Step Inequalities</div>
+    <div class="explainer-box">
+      Multi-step inequalities combine everything so far: distribute, combine like terms, collect the variable on one side, and isolate it - watching on every step for a multiplication or division by a negative.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Variables on Both Sides (No Flip Needed)</div>
+      <p style="margin:0 0 6px 0;">Solve \(2(x + 3) < 4x - 2\).</p>
+      <p style="margin:0 0 4px 0;"><strong>Step 1 - Distribute:</strong> \(2x + 6 < 4x - 2\).</p>
+      <p style="margin:0 0 4px 0;"><strong>Step 2 - Subtract \(2x\) from both sides:</strong> \(6 < 2x - 2\).</p>
+      <p style="margin:0 0 4px 0;"><strong>Step 3 - Add 2 to both sides:</strong> \(8 < 2x\).</p>
+      <p style="margin:0;"><strong>Step 4 - Divide by 2 (positive):</strong> \(4 < x\), which is the same as \(x > 4\).</p>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Step-by-Step: Distribute, Combine, and Flip</h3>
+      <p style="margin:0 0 10px 0;"><strong>Problem:</strong> \(-3(x - 2) + 5 \leq 2x + 17\)</p>
+      <button class="btn-lg" onclick="revealMsStep()">Reveal Next Step</button>
+      <button class="btn-secondary" onclick="resetMsStep()">Reset</button>
+      <div id="ms-steps" style="margin-top:14px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 5: WORKED APPLICATIONS -->
+  <div id="applications" class="panel">
+    <div class="section-title">Worked Applications: Real-World Inequalities</div>
+    <div class="explainer-box">
+      Word problems that use "at least," "at most," "more than," or "fewer than" are always inequalities, not equations - there's a limit or requirement, not one exact amount.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: A Budget Limit ("At Most")</div>
+      <p style="margin:0 0 6px 0;">A school trip costs \(\$45\) per student, plus a flat \(\$150\) bus fee. The total budget is <strong>at most \(\$600\)</strong>. How many students, \(n\), can go?</p>
+      <p style="margin:0 0 4px 0;"><strong>Write it:</strong> "at most" means \(\leq\). \(45n + 150 \leq 600\).</p>
+      <p style="margin:0 0 4px 0;"><strong>Solve:</strong> subtract 150: \(45n \leq 450\). Divide by 45 (positive): \(n \leq 10\).</p>
+      <p style="margin:0;"><strong>Interpret:</strong> at most \(\mathbf{10}\) students can go.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: A Minimum Requirement ("At Least")</div>
+      <p style="margin:0 0 6px 0;">You need <strong>at least 20 points</strong> to pass a class contest. You already have 12 points, and each additional assignment is worth 4 points. How many more assignments, \(x\), do you need?</p>
+      <p style="margin:0 0 4px 0;"><strong>Write it:</strong> "at least" means \(\geq\). \(12 + 4x \geq 20\).</p>
+      <p style="margin:0 0 4px 0;"><strong>Solve:</strong> subtract 12: \(4x \geq 8\). Divide by 4 (positive): \(x \geq 2\).</p>
+      <p style="margin:0;"><strong>Interpret:</strong> you need at least \(\mathbf{2}\) more assignments.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The 4-Step Method for Word Problems</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Define:</strong> what does the variable represent, and what are its units?</li>
+        <li><strong>Write:</strong> find the limit/requirement phrase and translate it into an inequality.</li>
+        <li><strong>Solve:</strong> isolate the variable, watching for the flip rule.</li>
+        <li><strong>Interpret:</strong> answer the actual question in a full sentence, with units.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  LessonSync.init('8-linear-inequalities-explanation');
+
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // NUMBER-LINE SVG (static diagrams, fixed -10..10 range - every boundary
+  // value on this page is a whole number in that range, so a fixed range
+  // keeps this simple; Practice-Set.html defines its own identical copy
+  // for the same reason every small helper on this site is duplicated
+  // per-page, not shared - see /CLAUDE.md's "Visual math input" note on
+  // readMathField()/normalizeExpr() being copied per page).
+  // ==========================================
+  function numberLineSvg(boundary, type, direction) {
+    const min = -10, max = 10, width = 480, height = 70, padX = 20;
+    const usableW = width - padX * 2;
+    const scale = (n) => padX + ((n - min) / (max - min)) * usableW;
+    const y = 36;
+    let ticks = '';
+    for (let n = min; n <= max; n++) {
+      const x = scale(n);
+      const major = n % 5 === 0;
+      ticks += `<line x1="${x}" y1="${y - (major ? 8 : 5)}" x2="${x}" y2="${y + (major ? 8 : 5)}" stroke="#64748b" stroke-width="${major ? 2 : 1}"/>`;
+      if (major) ticks += `<text x="${x}" y="${y + 24}" font-size="12" text-anchor="middle" fill="#334155">${n}</text>`;
+    }
+    const bx = scale(boundary);
+    const rayX2 = direction === 'right' ? scale(max) : scale(min);
+    const ray = `<line x1="${bx}" y1="${y}" x2="${rayX2}" y2="${y}" stroke="#1e3a8a" stroke-width="5" stroke-linecap="round"/>`;
+    const arrowPoints = direction === 'right'
+      ? `${rayX2 - 10},${y - 7} ${rayX2},${y} ${rayX2 - 10},${y + 7}`
+      : `${rayX2 + 10},${y - 7} ${rayX2},${y} ${rayX2 + 10},${y + 7}`;
+    const arrow = `<polygon points="${arrowPoints}" fill="#1e3a8a"/>`;
+    const circle = type === 'closed'
+      ? `<circle cx="${bx}" cy="${y}" r="7" fill="#1e3a8a" stroke="#1e3a8a" stroke-width="2"/>`
+      : `<circle cx="${bx}" cy="${y}" r="7" fill="#ffffff" stroke="#1e3a8a" stroke-width="2.5"/>`;
+    return `<svg viewBox="0 0 ${width} ${height}" style="width:100%; max-width:480px; display:block; margin:10px auto;">
+      <line x1="${padX}" y1="${y}" x2="${width - padX}" y2="${y}" stroke="#cbd5e1" stroke-width="2"/>
+      ${ticks}${ray}${arrow}${circle}
+    </svg>`;
+  }
+
+  document.getElementById('nl-example-a').innerHTML = numberLineSvg(3, 'open', 'right');
+  document.getElementById('nl-example-b').innerHTML = numberLineSvg(-2, 'closed', 'left');
+  document.getElementById('nl-example-c').innerHTML = numberLineSvg(-6, 'closed', 'right');
+
+  // ==========================================
+  // MULTI-STEP FLIP-RULE STEP-REVEAL
+  // ==========================================
+  const msSteps = [
+    "<strong>Step 1 - Distribute the -3:</strong> \\(-3x + 6 + 5 \\leq 2x + 17\\)",
+    "<strong>Step 2 - Combine like terms on the left:</strong> \\(-3x + 11 \\leq 2x + 17\\)",
+    "<strong>Step 3 - Subtract \\(2x\\) from both sides:</strong> \\(-5x + 11 \\leq 17\\)",
+    "<strong>Step 4 - Subtract 11 from both sides:</strong> \\(-5x \\leq 6\\)",
+    "<strong>Step 5 - Divide by \\(-5\\) (flip!):</strong> \\(\\mathbf{x \\geq -1.2}\\)"
+  ];
+  let msStepCount = 0;
+  function renderMsSteps() {
+    const html = msSteps.slice(0, msStepCount).map(s => `<div class="step-item visible">${s}</div>`).join('');
+    document.getElementById('ms-steps').innerHTML = html;
+    triggerMathJax();
+  }
+  function revealMsStep() {
+    if (msStepCount < msSteps.length) { msStepCount++; renderMsSteps(); }
+  }
+  function resetMsStep() { msStepCount = 0; renderMsSteps(); }
+
+  // No graded problems on this page and no shared listRegistry - a
+  // worked-example page shows the same fully-solved content to a teacher
+  // and a student alike, so there's nothing for window.revealAnswerKey to
+  // fill in (see /CLAUDE.md's "Explanation is gated too" note).
+</script>
+</body>
+</html>
