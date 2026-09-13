@@ -1597,7 +1597,11 @@
   function recentActivityHtml(events, limit) {
     if (!events.length) return '<p class="empty-note">No interactions logged yet.</p>';
     const sorted = events.slice().sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-    return '<ul style="margin:0; padding-left:0; list-style:none;">' + sorted.slice(0, limit || 20).map((e) => `
+    // max-width keeps the timestamp (pushed right via margin-left:auto)
+    // close to the row's actual content - without it, a short line inside
+    // this card's full page width just reads as mostly blank space with
+    // a date floating off on the far right.
+    return '<ul style="margin:0; padding-left:0; list-style:none; max-width:640px;">' + sorted.slice(0, limit || 20).map((e) => `
       <li style="padding:5px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:baseline; flex-wrap:wrap;">
         <span class="pill ${EVENT_PILL[e.type] || 'neutral'}">${e.type === 'graded' ? (e.verdict || 'answer') : e.type}</span>
         ${e.studentName ? `<strong>${e.studentName}</strong> - ` : ''}${e.activityTitle ? e.activityTitle + ' - ' : ''}${e.label || ''}
