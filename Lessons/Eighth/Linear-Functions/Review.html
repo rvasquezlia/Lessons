@@ -265,7 +265,16 @@
     { q: "A table shows: x=1,y=5; x=2,y=9; x=3,y=13. What is the rate of change?", a: 4, numeric: true },
     { q: "Solve for x: \\(3x - 5 = 16\\)", a: 7, numeric: true },
     { q: "Is \\(y = 6x\\) a proportional relationship? Type yes or no.", accepted: ["yes"] },
-    { q: "Is \\(y = 6x + 2\\) a proportional relationship? Type yes or no.", accepted: ["no"] }
+    { q: "Is \\(y = 6x + 2\\) a proportional relationship? Type yes or no.", accepted: ["no"] },
+    // Not every relationship with a pattern is linear at all - these four
+    // classify as proportional / linear (not proportional) / neither, the
+    // third option this tab hadn't practiced yet (a linear relationship is
+    // always proportional or not, but a real-world rate isn't guaranteed
+    // to be constant in the first place).
+    { q: "A coffee shop has $20 in the register. Each hot chocolate sold adds $2.00. Classify this relationship - type one word: proportional, linear, or neither.", accepted: ["linear"], displayAnswer: "Linear (constant $2/cup rate, but the register starts at $20, not $0 - the graph doesn't pass through the origin)" },
+    { q: "A rideshare charges $2.00 per mile after a $5.00 base fee. Classify this relationship - type one word: proportional, linear, or neither.", accepted: ["linear"], displayAnswer: "Linear (constant $2/mile rate, but the $5 base fee means a non-zero intercept)" },
+    { q: "A car travels at a constant speed of 60 mph, starting from mile 0. Classify this relationship - type one word: proportional, linear, or neither.", accepted: ["proportional"], displayAnswer: "Proportional (constant rate, and it passes through (0, 0) - no fee, no head start)" },
+    { q: "A bacteria population doubles every hour. Classify this relationship - type one word: proportional, linear, or neither.", accepted: ["neither"], displayAnswer: "Neither - this is exponential growth, not a constant rate of change, so it isn't linear at all" }
   ];
   renderCheckList('ready-practice-list', readyPractice, 'ready', "Not quite yet. Review the tabs above and try again.");
 </script>
