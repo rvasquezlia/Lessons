@@ -229,6 +229,13 @@ const LessonCheck = (() => {
 // exact shape. def/example strings render as raw innerHTML (same convention
 // every glossary card on Tab 1 already uses) - author them, don't accept
 // student input into them.
+// Fixed, hand-picked palette (not hashed like teacher-dashboard.html's
+// GROUP_COLORS, since here every term needs a distinct, stable color in a
+// small fixed set, not a hash bucket) - used only in the teacher-view
+// reveal below, to make an otherwise unordered 3-column answer key
+// actually readable at a glance.
+const VOCAB_MATCH_REVEAL_PALETTE = ['#1d4ed8', '#b91c1c', '#15803d', '#a16207', '#7c3aed', '#0e7490', '#be185d', '#c2410c'];
+
 function createVocabMatch(config) {
   const defMatched = {};
   const exMatched = {};
@@ -236,6 +243,8 @@ function createVocabMatch(config) {
   let attempts = 0;
   // Definitions and examples each render in their own shuffled order,
   // chosen once, so neither column visibly reshuffles after an attempt.
+  // The teacher-view reveal below ignores this and re-sorts both columns
+  // into the same order as Term instead - see revealDot()/reveal().
   let defOrder = null;
   let exOrder = null;
   let revealed = false;
@@ -261,6 +270,17 @@ function createVocabMatch(config) {
     return config.terms.every((t) => termDone(t.key));
   }
 
+  // Teacher-view only: a small colored dot prefixed onto a term/def/example
+  // once revealed, so a teacher can trace which definition and example
+  // belong to which term even though the three columns are otherwise
+  // unordered relative to each other (see render()'s revealed-order note).
+  function revealDot(key) {
+    if (!revealed) return '';
+    const idx = config.terms.findIndex((t) => t.key === key);
+    const color = VOCAB_MATCH_REVEAL_PALETTE[idx % VOCAB_MATCH_REVEAL_PALETTE.length];
+    return `<span class="reveal-dot" style="background:${color}"></span>`;
+  }
+
   function render() {
     if (!defOrder) defOrder = shuffle(config.terms.map((t) => t.key));
     if (!exOrder) exOrder = shuffle(config.terms.map((t) => t.key));
@@ -269,6 +289,13 @@ function createVocabMatch(config) {
     const defsEl = document.getElementById(config.defsId);
     const exsEl = document.getElementById(config.exsId);
     if (!termsEl || !defsEl || !exsEl) return;
+
+    // Once revealed, definitions/examples drop their independent shuffled
+    // order and line up row-for-row with the Term column instead (plus the
+    // colored revealDot() on all three) - an unordered 3-column answer key
+    // is not something a teacher can actually read at a glance.
+    const defRenderOrder = revealed ? config.terms.map((t) => t.key) : defOrder;
+    const exRenderOrder = revealed ? config.terms.map((t) => t.key) : exOrder;
 
     termsEl.innerHTML = config.terms.map((t) => {
       const done = termDone(t.key);
@@ -279,23 +306,23 @@ function createVocabMatch(config) {
         <span class="match-badge${defMatched[t.key] ? ' done' : ''}">Def${defMatched[t.key] ? ' &#10003;' : ''}</span>
         <span class="match-badge${exMatched[t.key] ? ' done' : ''}">Ex${exMatched[t.key] ? ' &#10003;' : ''}</span>
       </div>`;
-      return `<div class="match-card${done ? ' matched' : ''}${sel ? ' selected' : ''}" ${handlers}>${escText(t.term)}${done ? ' &#10003;' : badges}</div>`;
+      return `<div class="match-card${done ? ' matched' : ''}${sel ? ' selected' : ''}" ${handlers}>${revealDot(t.key)}${escText(t.term)}${done ? ' &#10003;' : badges}</div>`;
     }).join('');
 
-    defsEl.innerHTML = defOrder.map((key) => {
+    defsEl.innerHTML = defRenderOrder.map((key) => {
       const t = config.terms.find((x) => x.key === key);
       const matched = defMatched[key];
       const handlers = (matched || revealed) ? '' :
         `onclick="vocabMatch.onSlotClick('def','${key}')" ondragover="event.preventDefault()" ondrop="vocabMatch.onDrop(event,'def','${key}')"`;
-      return `<div class="match-slot${matched ? ' matched' : ''}" id="${config.defsId}-${key}" ${handlers}><span>${t.def}</span></div>`;
+      return `<div class="match-slot${matched ? ' matched' : ''}" id="${config.defsId}-${key}" ${handlers}><span>${revealDot(key)}${t.def}</span></div>`;
     }).join('');
 
-    exsEl.innerHTML = exOrder.map((key) => {
+    exsEl.innerHTML = exRenderOrder.map((key) => {
       const t = config.terms.find((x) => x.key === key);
       const matched = exMatched[key];
       const handlers = (matched || revealed) ? '' :
         `onclick="vocabMatch.onSlotClick('ex','${key}')" ondragover="event.preventDefault()" ondrop="vocabMatch.onDrop(event,'ex','${key}')"`;
-      return `<div class="match-slot${matched ? ' matched' : ''}" id="${config.exsId}-${key}" ${handlers}><span>${t.example}</span></div>`;
+      return `<div class="match-slot${matched ? ' matched' : ''}" id="${config.exsId}-${key}" ${handlers}><span>${revealDot(key)}${t.example}</span></div>`;
     }).join('');
 
     if (window.MathJax && window.MathJax.typesetPromise) {
@@ -364,7 +391,7 @@ function createVocabMatch(config) {
     revealed = true;
     config.terms.forEach((t) => { defMatched[t.key] = true; exMatched[t.key] = true; });
     render();
-    showFeedback('success locked', `Answer key: every term is shown matched to its definition and example above.`);
+    showFeedback('success locked', `Answer key: each term, its definition, and its example are numbered top-to-bottom in matching order and marked with the same colored dot - row 1 in every column is the same term, row 2 is the same term, and so on.`);
   }
 
   return { render, onTermClick, onDragStart, onDrop, onSlotClick, reveal };

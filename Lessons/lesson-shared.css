@@ -1242,3 +1242,4 @@ button:disabled {
 }
 .match-slot.matched { border-style: solid; border-color: var(--success); background: var(--success-bg); cursor: default; }
 .match-slot.wrong-flash { border-color: var(--error); background: var(--error-bg); }
+.reveal-dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
