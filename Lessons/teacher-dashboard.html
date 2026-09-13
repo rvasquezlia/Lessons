@@ -822,9 +822,10 @@
     const VERDICT_TEXT = { correct: 'Correct', incomplete: 'Incorrect', reflection: 'Reflection submitted' };
     const ordinal = (n) => (n === 1 ? '1st' : n === 2 ? '2nd' : n === 3 ? '3rd' : `${n}th`);
     const allEvents = allSubmissions.map((s) => {
-      const type = s.key === 'reached-end' ? 'reached-end' : (s.key.startsWith('tab-') ? 'tab' : (isIntegrityKey(s.key) ? 'integrity' : 'graded'));
+      const type = s.verdict === 'reset' ? 'reset' : (s.key === 'reached-end' ? 'reached-end' : (s.key.startsWith('tab-') ? 'tab' : (isIntegrityKey(s.key) ? 'integrity' : 'graded')));
       let label;
-      if (type === 'reached-end') label = 'Reached the end';
+      if (type === 'reset') label = `${s.label} - ${s.resetBy || 'a teacher'} gave "${s.key}" a fresh start`;
+      else if (type === 'reached-end') label = 'Reached the end';
       // s.label already comes prefixed "Viewed tab: ..." from lesson-auth.js
       // itself - re-adding the prefix here used to double it up.
       else if (type === 'tab') label = s.label || `Viewed tab: ${s.key.slice(4)}`;
@@ -853,6 +854,13 @@
     const byKey = {};
     submissions.forEach((s) => { (byKey[s.key] = byKey[s.key] || []).push(s); });
 
+    // Every teacher-reset marker on this row (see Code.gs's
+    // applyTeacherReset_) - kept as its own list so the UI can show "this
+    // row includes a teacher reset" without re-scanning allSubmissions,
+    // and so the reset toolbar (submissionDetailTable) knows which
+    // sections currently have something reset-able.
+    const resetEvents = allSubmissions.filter((s) => s.verdict === 'reset');
+
     let gradedCount = 0;
     let itemsCorrect = 0;
     let pointsEarned = 0;
@@ -868,7 +876,18 @@
     let failedFirstTry = 0;       // graded items whose first attempt wasn't correct - the denominator for Attempt-2 Recovery
     let correctSecondTry = 0;     // of those, the ones eventually answered correctly - the numerator for Attempt-2 Recovery
     Object.keys(byKey).forEach((key) => {
-      const entries = byKey[key];
+      let entries = byKey[key];
+      // A teacher reset (verdict 'reset') makes every entry after it count
+      // as a fresh sequence for this key - scoring/attempt-tracking below
+      // only ever looks at entries since the most recent one, matching
+      // Code.gs's attemptsSinceReset_ so a resubmission earns full credit
+      // again instead of permanently reading as "attempt 3". A key that's
+      // been reset but not yet re-attempted has nothing left to score -
+      // that's deliberate (see /CLAUDE.md's reset-mechanism notes): it
+      // shouldn't count against the student at all until they resubmit.
+      const lastResetIdx = entries.reduce((last, e, i) => (e.verdict === 'reset' ? i : last), -1);
+      if (lastResetIdx >= 0) entries = entries.slice(lastResetIdx + 1);
+      if (!entries.length) return;
       if (entries[entries.length - 1].verdict === 'reflection') {
         reflectionSubmitted++;
         const reflectionText = entries[entries.length - 1].answer;
@@ -968,7 +987,8 @@
       fastGuessCount, sacrificeCount, paddedReflectionCount, shortReflectionCount, idleGapCount, tabSkipCount,
       failedFirstTry, correctSecondTry,
       pasteCount: pasteEvents.length, focusLossCount: focusLostEvents.length, awayMinutes,
-      rightClickCount: rightClickEvents.length
+      rightClickCount: rightClickEvents.length,
+      resetEvents
     });
   }
 
@@ -1601,7 +1621,7 @@
     document.getElementById(containerId).innerHTML = scoreBarsHtml(items, labelKey, scoreKey);
   }
 
-  const EVENT_PILL = { graded: 'neutral', tab: 'ok', 'reached-end': 'flag', integrity: 'flag' };
+  const EVENT_PILL = { graded: 'neutral', tab: 'ok', 'reached-end': 'flag', integrity: 'flag', reset: 'ok' };
   // A graded event's own verdict, not its generic type, decides its pill
   // color - correct/incomplete used to render as the same gray "neutral"
   // pill, indistinguishable at a glance.
@@ -2284,19 +2304,90 @@
       <table><thead><tr><th>#</th><th>Start</th><th>End</th><th>Duration</th><th>Events</th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
+  // Teacher-initiated reset (see Code.gs's applyTeacherReset_ and
+  // /CLAUDE.md's reset-mechanism notes): gives a locked item, a whole
+  // section/tab, or the whole activity its attempts back. `label` is only
+  // used for the confirm() prompt. On success, patches this one row in
+  // allRows in place (via the freshly-decorated progress the backend
+  // returns) and re-renders - cheaper and simpler than a full teacher-data
+  // refetch. renderAll() always resets every tab back to its list view
+  // (see /CLAUDE.md), which would otherwise bounce a teacher resetting
+  // several items in one sitting back to the student list after every
+  // single click - reopening this student's own detail view afterward
+  // avoids that, regardless of which view (Student, Activity, All
+  // Submissions) the reset button was actually clicked from.
+  async function teacherReset(email, activityId, scope, target, label, btn) {
+    if (!confirm(`Reset ${label} for this student? They'll see it fresh the next time they open the page.`)) return;
+    if (btn) btn.disabled = true;
+    try {
+      const res = await fetchWithTimeout(LESSON_SYNC_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ idToken, type: 'teacher-reset', studentEmail: email, activityId, scope, target: target || null })
+      }, 15000);
+      const result = await res.json();
+      if (!result.ok) { alert(result.error || 'Reset failed.'); return; }
+      const idx = allRows.findIndex((row) => row.email === email && row.activityId === activityId);
+      if (idx >= 0) allRows[idx] = decorateRow(result.progress);
+      renderAll();
+      const i = lastStudentSummaries.findIndex((s) => s.email === email);
+      if (i >= 0) openStudentDetail(i);
+    } catch (err) {
+      alert('Reset failed - check your connection and try again.');
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+  window.teacherReset = teacherReset;
+
   function submissionDetailTable(r) {
     const sessions = sessionsHtml(r);
     if (!r.submissions.length) return sessions ? `${sessions}<p style="margin-top:14px;"><em>No graded items logged.</em></p>` : '<em>No graded items logged.</em>';
-    const items = r.submissions.map((s) => `
+
+    // The reset toolbar needs to know which sections actually have
+    // something logged for this student+activity - built from this row's
+    // own submissions rather than a static list, so it only ever offers a
+    // section that exists for this student.
+    const sections = [...new Set(r.submissions.map((s) => s.section).filter(Boolean))];
+    const sectionOptions = sections.map((sec) => `<option value="${sec}">${sec}</option>`).join('');
+    const selId = `reset-section-${safeId(r.email)}-${safeId(r.activityId)}`;
+    const toolbar = `
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px; padding:10px 12px; background:#f8fafc; border:1px solid var(--border); border-radius:8px;">
+        <strong style="font-size:0.85rem; color:#475569;">Give attempts back:</strong>
+        ${sections.length ? `
+          <select id="${selId}" class="form-control-lg" style="max-width:220px; padding:6px 10px; font-size:0.85rem;">${sectionOptions}</select>
+          <button class="btn-lg" style="padding:6px 12px; font-size:0.85rem;" onclick="teacherReset('${r.email}','${r.activityId}','section', document.getElementById('${selId}').value, 'the selected section', this)">Reset section</button>
+        ` : ''}
+        <button class="btn-lg" style="padding:6px 12px; font-size:0.85rem;" onclick="teacherReset('${r.email}','${r.activityId}','activity', null, 'the entire activity', this)">Reset entire activity</button>
+      </div>`;
+
+    // A "Reset" link only makes sense on a key's most recent entry (its
+    // current state) - showing it on every past attempt row would be
+    // redundant and confusing about what actually gets reset.
+    const lastIdxByKey = {};
+    r.submissions.forEach((s, i) => { if (s.verdict !== 'reset') lastIdxByKey[s.key] = i; });
+
+    const items = r.submissions.map((s, i) => {
+      if (s.verdict === 'reset') {
+        return `
+      <tr style="background:#f0fdf4;">
+        <td>${s.label}</td>
+        <td>-</td>
+        <td><span class="pill ok">reset (${s.resetScope})</span></td>
+        <td>-</td>
+        <td>${new Date(s.timestamp).toLocaleTimeString()}</td>
+      </tr>`;
+      }
+      const canReset = lastIdxByKey[s.key] === i;
+      return `
       <tr>
         <td>${s.label}</td>
         <td>${s.answer}</td>
         <td>${s.verdict}</td>
         <td>${s.attemptNumber}</td>
-        <td>${new Date(s.timestamp).toLocaleTimeString()}</td>
-      </tr>
-    `).join('');
-    const itemsTable = `<table><thead><tr><th>Item</th><th>Answer</th><th>Verdict</th><th>Attempt</th><th>Time</th></tr></thead><tbody>${items}</tbody></table>`;
+        <td>${new Date(s.timestamp).toLocaleTimeString()}${canReset ? ` <span class="expand-btn" onclick="teacherReset('${r.email}','${r.activityId}','item','${s.key}','this item', this)">Reset</span>` : ''}</td>
+      </tr>`;
+    }).join('');
+    const itemsTable = `${toolbar}<table><thead><tr><th>Item</th><th>Answer</th><th>Verdict</th><th>Attempt</th><th>Time</th></tr></thead><tbody>${items}</tbody></table>`;
     return sessions ? `${sessions}<div style="margin-top:14px;">${itemsTable}</div>` : itemsTable;
   }
 

@@ -18,15 +18,20 @@ const LessonProgress = (() => {
   // right answer graded on screen), or 'not-attempted' (pre-registered,
   // never touched). `section` is the tab/section name synced to the
   // backend alongside this item - pass it every time an item is first
-  // registered.
-  function record(key, label, answer, verdict, section) {
+  // registered. `lockAfterSubmit` (default true/omit) only matters for
+  // LessonCheck.submit()-style items deliberately marked freely-redoable -
+  // see that function's own doc comment and /CLAUDE.md's reset-mechanism
+  // notes; passing `false` here is what tells restoreSubmissions() (in
+  // lesson-auth.js) not to lock this field back up on a later page load.
+  function record(key, label, answer, verdict, section, lockAfterSubmit) {
     const idx = items.findIndex((i) => i.key === key);
     const entry = {
       key,
       label,
       section: section || (idx >= 0 ? items[idx].section : ''),
       answer: (answer === '' || answer === undefined || answer === null) ? '(blank)' : answer,
-      verdict
+      verdict,
+      lockAfterSubmit
     };
     if (idx >= 0) items[idx] = entry;
     else items.push(entry);
@@ -167,17 +172,33 @@ const LessonCheck = (() => {
   // Practice problem) so the printed answer can't be quietly edited
   // afterward.
   //
-  // `record` is required: {key, label, answer, section, correct}.
-  // `correct` is optional - pass true/false when this item has a single
-  // checkable right answer (an equation, a classification, ...) so the
-  // printed audit shows a real Correct/Needs review verdict instead of
-  // just "Submitted". Omit it for genuinely open-ended items (written
-  // explanations, recommendations) that have no one right answer - those
-  // stay "Submitted" and are judged by the teacher from the printout.
+  // `record` is required: {key, label, answer, section, correct,
+  // lockAfterSubmit}. `correct` is optional - pass true/false when this
+  // item has a single checkable right answer (an equation, a
+  // classification, ...) so the printed audit shows a real Correct/Needs
+  // review verdict instead of just "Submitted". Omit it for genuinely
+  // open-ended items (written explanations, recommendations) that have no
+  // one right answer - those stay "Submitted" and are judged by the
+  // teacher from the printout.
+  //
+  // `lockAfterSubmit` defaults to true (unchanged behavior everywhere
+  // existing content already calls submit()) - the fields lock so a
+  // printed answer can't be quietly edited afterward, and a teacher would
+  // need to use the dashboard's reset action to give it back. Pass
+  // `lockAfterSubmit: false` on an item deliberately meant to be
+  // freely redone with no teacher intervention (open practice, not a
+  // point-in-time snapshot) - every resubmission still appends its own
+  // entry to SubmissionsLog (nothing about the audit trail changes,
+  // see /CLAUDE.md), the field just never disables. This is a per-item
+  // authoring choice, not a blanket site behavior - don't flip existing
+  // content to it without deciding, item by item, that a redo genuinely
+  // shouldn't need a teacher's say-so (see /CLAUDE.md's reset-mechanism
+  // notes for the reasoning).
   function submit(feedbackEl, record, message) {
+    const willLock = !record || record.lockAfterSubmit !== false;
     if (feedbackEl) {
       feedbackEl.style.display = 'block';
-      feedbackEl.className = 'feedback-msg success locked';
+      feedbackEl.className = willLock ? 'feedback-msg success locked' : 'feedback-msg success';
       feedbackEl.innerHTML = message || 'Submitted! This will be reviewed from your printed progress report.';
       if (window.MathJax && window.MathJax.typesetPromise) {
         MathJax.typesetPromise([feedbackEl]).catch((err) => console.log(err));
@@ -185,9 +206,9 @@ const LessonCheck = (() => {
     }
     if (record) {
       const verdict = record.correct === true ? 'correct' : record.correct === false ? 'incomplete' : 'reflection';
-      LessonProgress.record(record.key, record.label, record.answer, verdict, record.section);
+      LessonProgress.record(record.key, record.label, record.answer, verdict, record.section, record.lockAfterSubmit);
     }
-    lockControls(feedbackEl);
+    if (willLock) lockControls(feedbackEl);
   }
 
   return { evaluate, reset, show, check, numericMatch, incomplete, submit };

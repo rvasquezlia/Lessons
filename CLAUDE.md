@@ -172,6 +172,142 @@ manual testing and still save nothing — this is exactly the kind of gap
 that doesn't surface until a teacher asks "why don't I see this
 student's answers."
 
+### Teacher resets — giving attempts back
+
+Before this existed, a locked item had no way back for anyone, teacher
+included — not a missing feature so much as an accidental side effect of
+`restoreSubmissions()` (see above): it locks a field the moment **any**
+entry exists for that key, regardless of whether the student had used
+one attempt or two. A student who submits one wrong answer and closes
+the tab returns to a permanently disabled field, having never gotten
+their second try. This is teacher-dashboard-only, by design — nothing
+about it is reachable from a lesson page.
+
+**Three scopes, one mechanism.** A teacher can reset a single **item**
+(one key, e.g. one vocabulary-match term or one Practice-Set question),
+a whole **section** (one tab, e.g. "3. Quick Vocabulary Check" — every
+key most recently logged under that section name), or the whole
+**activity** (every resettable key on that student's Progress row for
+that page). "Resettable" excludes `tab-*`/`reached-end`/`paste-*`/
+`focus-lost-*`/`focus-back-*`/`rightclick-*` keys (`isResettableKey_` in
+`Code.gs`) — `restoreSubmissions()` never locks those in the first
+place (there's no `<key>-input` element for any of them), so resetting
+one would write an entry with nothing to actually unlock.
+
+**A reset is an appended log entry, never a deletion or overwrite** —
+consistent with `SubmissionsLog`'s existing append-only design. Resetting
+a key writes one new entry: `{key, label: "Reset by teacher (<scope>)",
+answer: '', verdict: 'reset', section, resetScope, resetBy, timestamp}`.
+The full prior history (every wrong attempt, the reset itself) stays in
+the log — nothing is ever lost, and the dashboard's Attempts table shows
+the reset inline, styled distinctly (`<span class="pill ok">reset
+(item)</span>`, light green row) rather than looking like just another
+attempt.
+
+**The reset IS the unlock mechanism, and it's almost entirely free.**
+`restoreSubmissions()` (`lesson-auth.js`) already computes "latest entry
+per key wins" — it now also does `if (s.verdict === 'reset') return;`
+before locking anything, meaning a reset key simply has nothing restored
+against it: the student sees a plain, fresh field with their standard 2
+attempts, exactly as if they'd never touched it. No new client-side
+"unlock" logic was needed beyond that one early return, because the
+2-attempt limit (`LessonCheck`'s `attempts`/`locked`) was already
+in-memory and page-load-scoped the whole time — `restoreSubmissions()`'s
+unconditional lock was the only thing actually enforcing anything across
+a reload.
+
+**Attempt numbering restarts after a reset, so a resubmission earns full
+credit again** rather than permanently reading as "attempt 3." Both
+`Code.gs`'s `recordSubmission_` (via `attemptsSinceReset_`, which walks
+a key's entries backward and stops at its most recent `'reset'`) and
+`teacher-dashboard.html`'s `decorateRow()` scoring loop (which slices
+each key's entry list to only what's after its last reset marker before
+doing the existing 1st-try/2nd-try scoring) apply the identical rule —
+if either drifts from the other, a resubmission's score on the dashboard
+would stop matching what the student actually experienced. **A key
+that's been reset but not yet re-attempted contributes nothing to
+`gradedCount`/scoring at all** — it's excluded entirely rather than
+counted as "0 points," so it doesn't drag a score down while a student
+just hasn't gotten to it yet.
+
+**`section` had to start being persisted server-side for this to work
+at all.** Every `LessonProgress.record(key, label, answer, verdict,
+section)` call already sent `section` to the backend (via
+`lesson-auth.js`'s `onRecord`), but `Code.gs`'s `recordSubmission_`
+silently dropped it before this — nothing before this reset feature
+ever consumed it, so the gap went unnoticed. A section-scoped reset
+needs it to find every key belonging to a tab, so it's now stored on
+every new `SubmissionsLog` entry. Entries logged before this change
+have no `section` field and can't be reset by section (only by item or
+whole-activity) — an unavoidable migration gap, not a bug.
+
+**The dashboard UI**: a "Give attempts back" toolbar (a section
+`<select>` + "Reset section" button, plus a "Reset entire activity"
+button) sits above the Attempts table in `submissionDetailTable()` —
+the one function already shared by Student Roster & Profiles' per-
+activity rows, Unit & Lesson Deep Dive's By Activity per-student rows,
+and the Integrity & Behavior Monitor's Full Submission Log, so it
+appears in all three without duplication. A per-item "Reset" link
+appears only on each key's most recent row (never on an older attempt,
+and never on the reset entry itself) via `teacherReset(email,
+activityId, scope, target, label, btn)`, which confirms, POSTs
+`type: 'teacher-reset'`, patches the one affected row in `allRows` from
+the response's freshly-decorated `progress`, then re-renders and
+reopens that student's own detail view — `renderAll()` always resets
+every tab back to its list view (see "Teacher dashboard" above), which
+would otherwise bounce a teacher back to the student list after every
+single reset click.
+
+**Authorization reuses the exact same scoping as every other write** -
+`isTeacher_`/`getTeacherScope_`/`getScopedEmailSet_` in `Code.gs`, so a
+scoped teacher can only reset their own students, identically to how
+their dashboard reads are already filtered. This is the dashboard's
+**first** write path ever — `teacher-data` was, and remains, read-only —
+so `type: 'teacher-reset'` lives inside `doPost`'s existing
+`LockService`-guarded block alongside `access-check`/`submission`, not
+as a separate unlocked branch.
+
+**Not live** — same as everything else in this system, a reset only
+takes effect the next time the student (re)loads that page; there's no
+push mechanism to unlock a field they're already looking at.
+
+**Scoped to locked items for now** — `restoreSubmissions()`'s DOM
+assumptions (`<key>-input`/`<key>-feedback` sharing a parent with the
+Check button) only cover the common `renderPracticeList()`/
+`checkListRegistry` single-input pattern. A reset still writes and
+scores correctly for any item type (the backend/scoring logic doesn't
+care about DOM shape), but on a page using select-dropdown items,
+multi-field Test-Prep questions, or the Vocabulary Match-Up widget, the
+item may not have been visibly locking on reload in the first place (or
+uses its own hand-written reveal logic) — so a reset there writes the
+audit entry correctly but may have nothing visible to "give back." Don't
+assume a reset button does something a student can see without checking
+that specific page's own restore/lock behavior first.
+
+**`LessonCheck.submit()` also grew a `lockAfterSubmit` flag**
+(`record.lockAfterSubmit`, default true/omitted — unchanged behavior
+everywhere existing content already calls `submit()`), for the
+separate, narrower case of a non-graded item that should never need a
+teacher's involvement to redo at all: pass `lockAfterSubmit: false` on
+an item deliberately meant to be freely resubmitted (open practice, not
+a point-in-time snapshot like a "predict before revealing" reflection,
+which should stay locked on purpose). This propagates end-to-end the
+same way `section` does — `LessonProgress.record`'s 6th argument →
+`lesson-auth.js`'s `onRecord`/patched `record` → `Code.gs` stores it
+on the entry only when explicitly `false` → `restoreSubmissions()`
+checks `s.lockAfterSubmit === false` and, instead of locking, pre-fills
+the last answer, leaves the field and button enabled, and shows "Saved
+from your last session - you can edit and resubmit anytime" instead of
+the locked message. Every resubmission still appends its own
+`SubmissionsLog` entry regardless (nothing about the audit trail
+changes) — freely-editable only ever affects whether the *field* locks,
+never whether the record is kept. **This flag exists as infrastructure
+only** — no existing page's content has been switched to it. Deciding
+which specific reflections/submit-only items across the site should
+become freely-editable is a per-item content call for whoever owns that
+page's content to make deliberately, not something to flip site-wide
+just because the mechanism now exists.
+
 ### Grade tracks beyond 6/7/8
 
 Not every student fits a plain numeric grade. **7th Grade Honors** and

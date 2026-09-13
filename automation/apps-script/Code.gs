@@ -245,6 +245,28 @@ function doPost(e) {
       return jsonOut_({ ok: true, progress: updated });
     }
 
+    // Teacher-only, writes. Gives a student's locked item(s) their 2
+    // attempts back - scope is 'item' (body.target = the item's key),
+    // 'section' (body.target = the tab/section name), or 'activity' (every
+    // resettable key on this Progress row, body.target unused). See
+    // applyTeacherReset_ for what actually gets written, and /CLAUDE.md's
+    // reset-mechanism notes for the full design.
+    if (body.type === 'teacher-reset') {
+      if (!isTeacher_(auth.email)) return jsonOut_({ ok: false, error: 'Not authorized' });
+      const scope = getTeacherScope_(auth.email);
+      const emailSet = getScopedEmailSet_(scope);
+      // Same raw (non-normalized) comparison getAllProgressForDashboard_
+      // already uses for this exact emailSet - body.studentEmail comes
+      // straight from a Progress row's own Email cell round-tripped
+      // through the dashboard, so it's already in the same spelling.
+      if (emailSet && !emailSet[body.studentEmail]) {
+        return jsonOut_({ ok: false, error: 'Not authorized for this student' });
+      }
+      const result = applyTeacherReset_(auth.email, body.studentEmail, body.activityId, body.scope, body.target);
+      if (!result.ok) return jsonOut_({ ok: false, error: result.error });
+      return jsonOut_({ ok: true, progress: result.progress });
+    }
+
     return jsonOut_({ ok: false, error: 'Unknown request type' });
   } finally {
     lock.releaseLock();
@@ -283,6 +305,24 @@ function getOrCreateProgressRow_(email, activityId, student, activityTitle) {
   return rowToProgress_(newRow, map);
 }
 
+// How many times this key has already been attempted, counting only
+// attempts since its most recent teacher-reset marker (see
+// applyTeacherReset_) - a reset makes the next attempt "attempt 1" again
+// instead of continuing to count attempt 3, 4, etc. against the item's
+// original 2-attempt/scoring logic. Walking backward and stopping at the
+// first 'reset' verdict for this exact key is cheaper than slicing the
+// whole array and handles a key that was never reset the same way (walks
+// to the start, counts everything).
+function attemptsSinceReset_(submissions, key) {
+  let count = 0;
+  for (let i = submissions.length - 1; i >= 0; i--) {
+    if (submissions[i].key !== key) continue;
+    if (submissions[i].verdict === 'reset') break;
+    count++;
+  }
+  return count;
+}
+
 function recordSubmission_(email, activityId, student, activityTitle, item) {
   const sheet = ss_().getSheetByName('Progress');
   const map = colMap_(sheet);
@@ -298,8 +338,20 @@ function recordSubmission_(email, activityId, student, activityTitle, item) {
 
   const row = sheet.getRange(rowNumber, 1, 1, sheet.getLastColumn()).getValues()[0];
   const submissions = JSON.parse(row[map['SubmissionsLog']] || '[]');
-  const attemptNumber = submissions.filter((s) => s.key === item.key).length + 1;
-  submissions.push({ key: item.key, label: item.label, answer: item.answer, verdict: item.verdict, attemptNumber, timestamp: new Date().toISOString() });
+  const attemptNumber = attemptsSinceReset_(submissions, item.key) + 1;
+  // item.section is sent by every LessonProgress.record() call (see
+  // lesson-auth.js's onRecord) but was never actually persisted here until
+  // now - needed so a teacher's "reset this section" action (see
+  // applyTeacherReset_) can find every key that belongs to a given tab.
+  // item.lockAfterSubmit is only ever explicitly false (LessonCheck.submit()
+  // opted this item out of locking - see lesson-shared.js/CLAUDE.md's
+  // reset-mechanism notes); anything else (undefined for every graded
+  // item and the vast majority of submit-only ones) is left off the
+  // stored entry entirely rather than writing a redundant `true` onto
+  // every single row.
+  const entry = { key: item.key, label: item.label, answer: item.answer, verdict: item.verdict, section: item.section || '', attemptNumber, timestamp: new Date().toISOString() };
+  if (item.lockAfterSubmit === false) entry.lockAfterSubmit = false;
+  submissions.push(entry);
 
   const uniqueKeys = {};
   submissions.forEach((s) => { uniqueKeys[s.key] = s.verdict; });
@@ -318,6 +370,90 @@ function recordSubmission_(email, activityId, student, activityTitle, item) {
 
   sheet.getRange(rowNumber, 1, 1, row.length).setValues([row]);
   return rowToProgress_(row, map);
+}
+
+// A key logged by lesson-auth.js's own engagement/integrity tracking
+// (tab views, reached-end, paste/focus/right-click detection) - see
+// /CLAUDE.md's "Engagement tracking". restoreSubmissions() on the client
+// never locks these (there's no <key>-input element for any of them), so
+// resetting one would write an entry with nothing to actually unlock -
+// excluded from every reset scope below.
+function isResettableKey_(key) {
+  return !(key.startsWith('tab-') || key === 'reached-end' || key.startsWith('paste-') ||
+    key.startsWith('focus-lost-') || key.startsWith('focus-back-') || key.startsWith('rightclick-'));
+}
+
+// Teacher-initiated: gives a student's locked item(s) back their attempts.
+// Never overwrites or deletes prior SubmissionsLog entries - appends one
+// 'reset' verdict entry per affected key instead, so the full history
+// (including who reset what and when) stays intact for the dashboard's
+// audit trail, and attemptsSinceReset_ above naturally treats the next
+// real attempt on that key as a fresh attempt 1.
+//   scope 'item': target is the exact item key to reset.
+//   scope 'section': target is a section/tab name - every resettable key
+//     whose most recent entry was logged under that section gets reset.
+//   scope 'activity': target is ignored - every resettable key on this
+//     Progress row gets reset.
+// Returns { ok: false, error } or { ok: true, progress } (dashboard-shaped,
+// via rowToDashboardRow_ - this endpoint only ever serves the dashboard).
+function applyTeacherReset_(teacherEmail, studentEmail, activityId, scope, target) {
+  if (['item', 'section', 'activity'].indexOf(scope) === -1) {
+    return { ok: false, error: 'Unknown reset scope' };
+  }
+  if ((scope === 'item' || scope === 'section') && !target) {
+    return { ok: false, error: 'Missing reset target' };
+  }
+
+  const sheet = ss_().getSheetByName('Progress');
+  const map = colMap_(sheet);
+  const data = sheet.getDataRange().getValues();
+  let rowNumber = -1;
+  for (let r = 1; r < data.length; r++) {
+    if (data[r][map['Email']] === studentEmail && data[r][map['ActivityId']] === activityId) { rowNumber = r + 1; break; }
+  }
+  if (rowNumber === -1) return { ok: false, error: 'No progress found for that student/activity' };
+
+  const row = sheet.getRange(rowNumber, 1, 1, sheet.getLastColumn()).getValues()[0];
+  const submissions = JSON.parse(row[map['SubmissionsLog']] || '[]');
+
+  // Most recent entry per key, so a key already reset (nothing done since)
+  // isn't reset again, and a section reset knows which section a key's
+  // current attempt actually belongs to.
+  const latestByKey = {};
+  submissions.forEach((s) => { latestByKey[s.key] = s; });
+
+  let targetKeys;
+  if (scope === 'item') {
+    targetKeys = latestByKey[target] ? [target] : [];
+  } else {
+    targetKeys = Object.keys(latestByKey).filter((key) => {
+      if (!isResettableKey_(key)) return false;
+      if (scope === 'section' && latestByKey[key].section !== target) return false;
+      return true;
+    });
+  }
+  targetKeys = targetKeys.filter((key) => latestByKey[key].verdict !== 'reset');
+  if (!targetKeys.length) {
+    return { ok: false, error: 'Nothing to reset - no prior attempts found for that item/section.' };
+  }
+
+  const now = new Date().toISOString();
+  targetKeys.forEach((key) => {
+    submissions.push({
+      key,
+      label: `Reset by teacher (${scope})`,
+      answer: '',
+      verdict: 'reset',
+      section: latestByKey[key].section || '',
+      resetScope: scope,
+      resetBy: teacherEmail,
+      timestamp: now
+    });
+  });
+
+  row[map['SubmissionsLog']] = JSON.stringify(submissions);
+  sheet.getRange(rowNumber, 1, 1, row.length).setValues([row]);
+  return { ok: true, progress: rowToDashboardRow_(row, map) };
 }
 
 function rowToProgress_(row, map) {

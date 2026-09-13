@@ -57,6 +57,15 @@ const LessonSync = (() => {
   // produces, and covers this pilot page's six tabs. A page with a
   // different DOM shape (radio-button groups, multi-field problems) would
   // silently skip restoring those items until this is extended.
+  //
+  // A key whose latest entry is a teacher reset (verdict 'reset' - see
+  // Code.gs's applyTeacherReset_ and /CLAUDE.md's reset-mechanism notes)
+  // is deliberately skipped here instead of restored/locked - that's the
+  // entire mechanism a reset relies on: nothing marks the field disabled,
+  // so the student just sees a normal, fresh field with their standard 2
+  // attempts, exactly as if they'd never touched it. Nothing else about
+  // this function needed to change - nowhere else "knows" a reset
+  // happened, because there's nothing left to lock.
   function restoreSubmissions(submissionsLogJson) {
     let submissions;
     try { submissions = JSON.parse(submissionsLogJson || '[]'); } catch (e) { submissions = []; }
@@ -64,10 +73,24 @@ const LessonSync = (() => {
     submissions.forEach((s) => { latestByKey[s.key] = s; }); // log is append-only; last entry per key wins
     Object.keys(latestByKey).forEach((key) => {
       const s = latestByKey[key];
+      if (s.verdict === 'reset') return;
       const input = document.getElementById(`${key}-input`);
       const feedback = document.getElementById(`${key}-feedback`);
       if (!input || !feedback) return;
       input.value = s.answer;
+      // An item LessonCheck.submit() was called on with
+      // { lockAfterSubmit: false } (see lesson-shared.js) never locks,
+      // including on a later reload - it's meant to be freely redone with
+      // no teacher intervention. Pre-fill the last answer so the student
+      // sees where they left off, but leave the field and button enabled
+      // and skip the rest of this function's locked-styling below.
+      if (s.lockAfterSubmit === false) {
+        feedback.style.display = 'block';
+        feedback.className = 'feedback-msg success';
+        feedback.innerHTML = 'Saved from your last session - you can edit and resubmit anytime. <span style="opacity:.75;">(restored)</span>';
+        originalRecord(key, s.label, s.answer, s.verdict, s.section, s.lockAfterSubmit);
+        return;
+      }
       input.disabled = true;
       const btn = input.parentElement && input.parentElement.querySelector('button');
       if (btn) { btn.disabled = true; btn.style.cursor = 'not-allowed'; }
@@ -431,9 +454,9 @@ const LessonSync = (() => {
   // called by every LessonCheck.check()/submit() - wrapping it here, only
   // on pages that load this script, means no per-page call site needs to
   // change to get synced.
-  LessonProgress.record = function (key, label, answer, verdict, section) {
-    originalRecord(key, label, answer, verdict, section);
-    onRecord({ key, label, answer, verdict, section });
+  LessonProgress.record = function (key, label, answer, verdict, section, lockAfterSubmit) {
+    originalRecord(key, label, answer, verdict, section, lockAfterSubmit);
+    onRecord({ key, label, answer, verdict, section, lockAfterSubmit });
   };
 
   function init(id) {
