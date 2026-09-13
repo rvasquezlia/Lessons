@@ -245,6 +245,39 @@ every new `SubmissionsLog` entry. Entries logged before this change
 have no `section` field and can't be reset by section (only by item or
 whole-activity) — an unavoidable migration gap, not a bug.
 
+**That migration gap used to be invisible, and looked like a broken
+reset rather than a known limitation — fixed by surfacing it instead of
+leaving it silent.** Reported live: a teacher ran a section reset on an
+activity whose items mostly predated the section-persistence fix above,
+and only the *one* item that happened to already carry a `section`
+field (because it had separately been item-reset and resubmitted after
+that fix shipped) actually reset — every older, section-less item in
+that same tab was silently skipped, since `applyTeacherReset_` could
+never match a key with no `section` against any section target,
+whatever section it actually belonged to on the page. Nothing was
+telling the teacher this was happening, so it read as "the section
+reset only did one item" with no explanation. Fixed on both sides
+without being able to fix the underlying gap (there's no way to
+retroactively know which section a pre-migration entry belonged to):
+`applyTeacherReset_` now counts these separately as `skippedNoSection`
+and returns it alongside `resetCount` in every response — including in
+the `error` message itself when a section reset ends up with *nothing*
+left to reset (`"...N item(s)...predate section tracking...Use 'Reset
+entire activity' instead."`) rather than the old generic "nothing to
+reset" text. `teacher-dashboard.html`'s `teacherReset()` shows a
+post-reset `alert()` naming both counts for any multi-item scope
+(section/activity — an item reset is always exactly 1, so nothing needs
+confirming there), and `submissionDetailTable()` computes and shows the
+same warning **before** a teacher even clicks anything: a small note
+under the "Give attempts back" toolbar reading "N item(s) on this
+activity were logged before section tracking and can't be included in
+a section reset - use 'Reset entire activity,' or the per-item Reset
+link below, instead" whenever `lastIdxByKey`'s latest-entry-per-key view
+contains any resettable key with no `section`. `scope === 'activity'`
+was never affected by any of this — it never filters by section in the
+first place, so it's always the correct fallback for a legacy activity
+where "Reset section" can't reach everything.
+
 **The dashboard UI**: a "Give attempts back" toolbar (a section
 `<select>` + "Reset section" button, plus a "Reset entire activity"
 button) sits above the Attempts table in `submissionDetailTable()` —

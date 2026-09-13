@@ -264,7 +264,7 @@ function doPost(e) {
       }
       const result = applyTeacherReset_(auth.email, body.studentEmail, body.activityId, body.scope, body.target);
       if (!result.ok) return jsonOut_({ ok: false, error: result.error });
-      return jsonOut_({ ok: true, progress: result.progress });
+      return jsonOut_({ ok: true, progress: result.progress, resetCount: result.resetCount, skippedNoSection: result.skippedNoSection });
     }
 
     return jsonOut_({ ok: false, error: 'Unknown request type' });
@@ -422,19 +422,38 @@ function applyTeacherReset_(teacherEmail, studentEmail, activityId, scope, targe
   const latestByKey = {};
   submissions.forEach((s) => { latestByKey[s.key] = s; });
 
+  // A key logged before section started being persisted (see /CLAUDE.md's
+  // "section had to start being persisted server-side" note) has no
+  // `section` field at all - it can never match a section-scope target, no
+  // matter which section it actually belongs to on the page. Tracked
+  // separately so the caller can tell a teacher "N item(s) couldn't be
+  // included" instead of a section reset silently doing much less than
+  // expected with no explanation (this is exactly what was reported: a
+  // section reset that only affected the one item logged after this fix
+  // shipped, leaving every older item in that same section untouched).
+  let skippedNoSection = 0;
   let targetKeys;
   if (scope === 'item') {
     targetKeys = latestByKey[target] ? [target] : [];
   } else {
     targetKeys = Object.keys(latestByKey).filter((key) => {
       if (!isResettableKey_(key)) return false;
-      if (scope === 'section' && latestByKey[key].section !== target) return false;
+      if (latestByKey[key].verdict === 'reset') return false;
+      if (scope === 'section') {
+        if (!latestByKey[key].section) { skippedNoSection++; return false; }
+        if (latestByKey[key].section !== target) return false;
+      }
       return true;
     });
   }
-  targetKeys = targetKeys.filter((key) => latestByKey[key].verdict !== 'reset');
+  if (scope === 'item') targetKeys = targetKeys.filter((key) => latestByKey[key].verdict !== 'reset');
   if (!targetKeys.length) {
-    return { ok: false, error: 'Nothing to reset - no prior attempts found for that item/section.' };
+    return {
+      ok: false,
+      error: skippedNoSection
+        ? `Nothing to reset - the ${skippedNoSection} item(s) logged for this activity have no recorded section (they predate section tracking). Use "Reset entire activity" instead.`
+        : 'Nothing to reset - no prior attempts found for that item/section.'
+    };
   }
 
   const now = new Date().toISOString();
@@ -458,7 +477,7 @@ function applyTeacherReset_(teacherEmail, studentEmail, activityId, scope, targe
 
   row[map['SubmissionsLog']] = JSON.stringify(submissions);
   sheet.getRange(rowNumber, 1, 1, row.length).setValues([row]);
-  return { ok: true, progress: rowToDashboardRow_(row, map) };
+  return { ok: true, progress: rowToDashboardRow_(row, map), resetCount: targetKeys.length, skippedNoSection };
 }
 
 function rowToProgress_(row, map) {

@@ -2346,6 +2346,17 @@
       const idx = allRows.findIndex((row) => row.email === email && row.activityId === activityId);
       if (idx >= 0) allRows[idx] = decorateRow(result.progress);
       renderAll();
+      // A count only worth confirming for a multi-item scope - an item
+      // reset is always exactly 1, so saying so would just be noise. This
+      // is also where a section reset that skipped some pre-migration
+      // items (see submissionDetailTable's own upfront note) gets
+      // confirmed after the fact, in case the skip count changed between
+      // when the toolbar rendered and when this reset actually ran.
+      if (scope !== 'item' && typeof result.resetCount === 'number') {
+        let msg = `Reset ${result.resetCount} item(s).`;
+        if (result.skippedNoSection) msg += ` ${result.skippedNoSection} other item(s) on this activity have no recorded section and weren't included - use "Reset entire activity" for those.`;
+        alert(msg);
+      }
       const i = lastStudentSummaries.findIndex((s) => s.email === email);
       if (i >= 0) openStudentDetail(i);
     } catch (err) {
@@ -2360,28 +2371,40 @@
     const sessions = sessionsHtml(r);
     if (!r.submissions.length) return sessions ? `${sessions}<p style="margin-top:14px;"><em>No graded items logged.</em></p>` : '<em>No graded items logged.</em>';
 
+    // A "Reset" link only makes sense on a key's most recent entry (its
+    // current state) - showing it on every past attempt row would be
+    // redundant and confusing about what actually gets reset. Computed
+    // before the toolbar too, since the toolbar's own "can't be reset by
+    // section" note (below) needs the same "latest entry per key" view.
+    const lastIdxByKey = {};
+    r.submissions.forEach((s, i) => { if (s.verdict !== 'reset') lastIdxByKey[s.key] = i; });
+
     // The reset toolbar needs to know which sections actually have
     // something logged for this student+activity - built from this row's
     // own submissions rather than a static list, so it only ever offers a
     // section that exists for this student.
     const sections = [...new Set(r.submissions.map((s) => s.section).filter(Boolean))];
     const sectionOptions = sections.map((sec) => `<option value="${sec}">${sec}</option>`).join('');
+    // Any item logged before section started being persisted server-side
+    // (see /CLAUDE.md's "section had to start being persisted" note) has no
+    // `section` field and can never be matched by a section-scope reset, no
+    // matter which section it actually belongs to on the page - this is why
+    // a section reset can look like it "only did one item" with no
+    // explanation otherwise (a real report). Surfaced here so a teacher
+    // knows upfront rather than being left to guess from the Attempts
+    // table why most of a section didn't reset.
+    const missingSectionCount = Object.values(lastIdxByKey).filter((i) => !r.submissions[i].section).length;
     const selId = `reset-section-${safeId(r.email)}-${safeId(r.activityId)}`;
     const toolbar = `
-      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px; padding:10px 12px; background:#f8fafc; border:1px solid var(--border); border-radius:8px;">
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:${missingSectionCount ? '6px' : '12px'}; padding:10px 12px; background:#f8fafc; border:1px solid var(--border); border-radius:8px;">
         <strong style="font-size:0.85rem; color:#475569;">Give attempts back:</strong>
         ${sections.length ? `
           <select id="${selId}" class="form-control-lg" style="max-width:220px; padding:6px 10px; font-size:0.85rem;">${sectionOptions}</select>
           <button class="btn-lg" style="padding:6px 12px; font-size:0.85rem;" onclick="teacherReset('${r.email}','${r.activityId}','section', document.getElementById('${selId}').value, 'the selected section', this)">Reset section</button>
         ` : ''}
         <button class="btn-lg" style="padding:6px 12px; font-size:0.85rem;" onclick="teacherReset('${r.email}','${r.activityId}','activity', null, 'the entire activity', this)">Reset entire activity</button>
-      </div>`;
-
-    // A "Reset" link only makes sense on a key's most recent entry (its
-    // current state) - showing it on every past attempt row would be
-    // redundant and confusing about what actually gets reset.
-    const lastIdxByKey = {};
-    r.submissions.forEach((s, i) => { if (s.verdict !== 'reset') lastIdxByKey[s.key] = i; });
+      </div>
+      ${missingSectionCount ? `<div style="font-size:0.78rem; color:#b45309; margin-bottom:12px;">${missingSectionCount} item(s) on this activity were logged before section tracking and can't be included in a section reset - use "Reset entire activity," or the per-item Reset link below, instead.</div>` : ''}`;
 
     const items = r.submissions.map((s, i) => {
       if (s.verdict === 'reset') {
