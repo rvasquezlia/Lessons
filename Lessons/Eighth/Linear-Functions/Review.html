@@ -181,6 +181,15 @@
       <strong class="howto-label">What to do on this tab</strong>
       Type your own answer first, then click Check. You get up to <strong>2 tries</strong> per problem before the correct answer is shown.
     </div>
+
+    <div class="notebook-box" style="margin-bottom:20px;">
+      <div class="notebook-header">Multiple Representations Matching</div>
+      <p style="margin:0 0 10px 0;">Each table below shows a set of \((x, y)\) pairs from exactly one of these five equations - match every table to its equation.</p>
+      <div id="matching-list"></div>
+      <button class="btn-lg" style="margin-top:6px;" onclick="checkMatching()">Check Matches</button>
+      <div id="matching-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+    </div>
+
     <div id="ready-practice-list"></div>
   </div>
 
@@ -259,6 +268,54 @@
     });
   }
 
+  // ==========================================
+  // MULTIPLE REPRESENTATIONS MATCHING (table -> equation)
+  // ==========================================
+  // The source handout's own card sort (1.2.B) pairs 5 tables, 5
+  // equations, and 5 graphs, but only the equations survived the PDF
+  // extraction into this repo's Materials folder - the tables/graphs
+  // were images. Rather than guess at the original table values, this
+  // is an original table-matching activity built from the same 5
+  // equations, testing the identical skill (reading a constant rate of
+  // change and an intercept out of a table, then matching it to its
+  // equation).
+  const EQUATION_OPTIONS = ["y = -2x", "y = 2x + 3", "y = (3/4)x", "y = 3x - 5", "y = 5x"];
+  const matchingTables = [
+    { label: "Table A", rows: [[-2, 4], [0, 0], [3, -6]], answer: "y = -2x" },
+    { label: "Table B", rows: [[-1, 1], [0, 3], [2, 7]], answer: "y = 2x + 3" },
+    { label: "Table C", rows: [[0, 0], [4, 3], [8, 6]], answer: "y = (3/4)x" },
+    { label: "Table D", rows: [[0, -5], [1, -2], [3, 4]], answer: "y = 3x - 5" },
+    { label: "Table E", rows: [[0, 0], [1, 5], [3, 15]], answer: "y = 5x" }
+  ];
+  function renderMatching() {
+    const html = matchingTables.map((t, i) => `
+      <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:10px; padding:10px; border:1px solid var(--border); border-radius:8px;">
+        <table class="data-table" style="width:auto;">
+          <thead><tr><th>${t.label}</th>${t.rows.map((r) => `<th>x = ${r[0]}</th>`).join('')}</tr></thead>
+          <tbody><tr><td>y</td>${t.rows.map((r) => `<td>${r[1]}</td>`).join('')}</tr></tbody>
+        </table>
+        <select id="match-${i}" class="form-control-lg" style="max-width:180px;">
+          <option value="">Choose an equation...</option>
+          ${EQUATION_OPTIONS.map((eq) => `<option value="${eq}">${eq}</option>`).join('')}
+        </select>
+      </div>
+    `).join('');
+    document.getElementById('matching-list').innerHTML = html;
+  }
+  renderMatching();
+
+  function checkMatching() {
+    const fb = document.getElementById('matching-feedback');
+    const selections = matchingTables.map((t, i) => document.getElementById(`match-${i}`).value);
+    if (selections.some((s) => !s)) { LessonCheck.incomplete(fb, "Choose an equation for every table before checking."); return; }
+    const allCorrect = matchingTables.every((t, i) => selections[i] === t.answer);
+    LessonCheck.check('matching', allCorrect, fb, {
+      correct: "All 5 matched correctly!",
+      retry: "At least one match is wrong. For each table, find the rate of change (how much y changes per 1 unit of x) and whether it passes through (0, 0).",
+      reveal: `Here are the correct matches: ${matchingTables.map((t) => `${t.label} &rarr; ${t.answer}`).join(', ')}`
+    }, { label: '3. Multiple Representations Matching', answer: selections.join(' | '), section: '3. Linear vs. Proportional' });
+  }
+
   const readyPractice = [
     { q: "A gym membership costs $25 to join, plus $10 per month. What is the independent variable?", accepted: ["months", "numberofmonths"], displayAnswer: "Number of months" },
     { q: "In the same gym scenario, what is the dependent variable?", accepted: ["cost", "totalcost"], displayAnswer: "Total cost" },
@@ -277,6 +334,29 @@
     { q: "A bacteria population doubles every hour. Classify this relationship - type one word: proportional, linear, or neither.", accepted: ["neither"], displayAnswer: "Neither - this is exponential growth, not a constant rate of change, so it isn't linear at all" }
   ];
   renderCheckList('ready-practice-list', readyPractice, 'ready', "Not quite yet. Review the tabs above and try again.");
+
+  // The matching activity's 5 <select>s aren't in window.listRegistry
+  // (checkListRegistry only holds single-input check-style items), so
+  // the generic teacher-view reveal loop in lesson-auth.js never touches
+  // them - this extension point fills them in and locks them. Runs
+  // alongside (not instead of) that generic loop, which still handles
+  // readyPractice on its own.
+  window.revealAnswerKey = function () {
+    matchingTables.forEach((t, i) => {
+      const select = document.getElementById(`match-${i}`);
+      if (select) { select.value = t.answer; select.disabled = true; }
+    });
+    const matchingList = document.getElementById('matching-list');
+    const box = matchingList && matchingList.closest('.notebook-box');
+    const btn = box && box.querySelector('button');
+    if (btn) btn.disabled = true;
+    const fb = document.getElementById('matching-feedback');
+    if (fb) {
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: ${matchingTables.map((t) => `${t.label} &rarr; ${t.answer}`).join(', ')}`;
+    }
+  };
 </script>
 </body>
 </html>
