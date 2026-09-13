@@ -976,7 +976,11 @@
 
   function populateFilters() {
     const gradesFromRoster = roster.map((s) => s.grade);
-    const gradesFromCatalog = activityCatalog.map((a) => a.grade);
+    // A shared row's raw Grade cell ("7,7-Honors") must be split back into
+    // its individual grades here - otherwise it shows up as its own
+    // bogus, unclickable pill instead of folding into the real "7"/
+    // "7-Honors" pills roster students already produce.
+    const gradesFromCatalog = activityCatalog.flatMap((a) => String(a.grade || '').split(',').map((g) => g.trim()));
     const teachersFromRoster = roster.map((s) => s.teacher);
     const activityTitles = activityCatalog.length
       ? activityCatalog.map((a) => a.title)
@@ -1083,7 +1087,7 @@
     const f = activeFilters();
     return activityCatalog.filter((a) =>
       a.active &&
-      (!f.grade || String(a.grade) === f.grade) &&
+      (!f.grade || gradeListIncludes(a.grade, f.grade)) &&
       (!f.activity || a.title === f.activity)
     );
   }
@@ -1096,6 +1100,28 @@
   // Unit/Activity completion percentages) with no error anywhere.
   function isActiveStatus(status) {
     return String(status || '').trim().toLowerCase() === 'active';
+  }
+
+  // ActivityCatalog.Grade can list more than one grade, comma-separated
+  // (e.g. "7,7-Honors"), when one activity is shared verbatim by two
+  // tracks - see /CLAUDE.md's "Grade tracks beyond 6/7/8". Every place
+  // on this page that compares a catalog/activity grade against one
+  // specific student's or filter's grade needs to check list membership,
+  // not exact string equality, mirroring Code.gs's own resolveAccess_ -
+  // a plain "===" here used to silently exclude every Honors/Pre-AP
+  // student (or every regular-track student) from a shared activity's
+  // eligible-roster counts, completion percentages, and the Engagement
+  // Funnel, and made the shared row vanish from By Activity/By Unit
+  // entirely whenever a single-grade filter pill was selected.
+  function gradeListIncludes(gradeField, singleGrade) {
+    return String(gradeField || '').split(',').map((g) => g.trim()).includes(String(singleGrade));
+  }
+
+  // Display-only: a shared unit/activity's raw Grade cell ("7,7-Honors")
+  // reads as a typo rendered bare - insert a space after each comma so
+  // it reads as a list instead.
+  function formatGradeLabel(gradeField) {
+    return String(gradeField || '').split(',').map((g) => g.trim()).join(', ');
   }
 
   function avg(nums) {
@@ -1186,8 +1212,20 @@
   function computeActivitySummaries() {
     const rows = filteredRows();
     const byId = {};
+    // grade is sourced from ActivityCatalog, never from a Progress row -
+    // a Progress row's own `grade` is one student's single grade (e.g.
+    // "7" or "7-Honors"), so keying a shared activity's group off
+    // whichever row happened to be pushed first used to silently drop
+    // the other track's roster from every count below. The catalog's raw
+    // Grade cell (possibly a comma list) is the one authoritative source
+    // of "which grades this activity belongs to."
+    const catalogById = {};
+    activityCatalog.forEach((a) => { catalogById[a.activityId] = a; });
     rows.forEach((r) => {
-      if (!byId[r.activityId]) byId[r.activityId] = { activityId: r.activityId, activityTitle: r.activityTitle, grade: r.grade, rows: [] };
+      if (!byId[r.activityId]) {
+        const catalogEntry = catalogById[r.activityId];
+        byId[r.activityId] = { activityId: r.activityId, activityTitle: r.activityTitle, grade: catalogEntry ? catalogEntry.grade : r.grade, rows: [] };
+      }
       byId[r.activityId].rows.push(r);
     });
     // Include catalog activities with zero submissions too - an activity
@@ -1201,7 +1239,7 @@
       const avgSeconds = avg(g.rows.map((r) => r.avgSeconds));
       const flaggedCount = g.rows.filter((r) => r.flags.length > 0).length;
       const eligible = roster.filter((s) =>
-        isActiveStatus(s.status) && String(s.grade) === String(g.grade) && (!f.teacher || s.teacher === f.teacher)
+        isActiveStatus(s.status) && gradeListIncludes(g.grade, s.grade) && (!f.teacher || s.teacher === f.teacher)
       ).length;
       const startedCount = g.rows.length;
       const completionPct = eligible ? Math.round((startedCount / eligible) * 100) : null;
@@ -1243,7 +1281,7 @@
   // same unit + 'Unassigned' fallback convention as computeUnitSummaries()
   // so a unit name always matches between the two.
   function computeStudentUnitCompletion(s) {
-    const catalogForGrade = activityCatalog.filter((a) => String(a.grade) === String(s.grade));
+    const catalogForGrade = activityCatalog.filter((a) => gradeListIncludes(a.grade, s.grade));
     const byUnit = {};
     catalogForGrade.forEach((a) => {
       const unit = a.unit || 'Unassigned';
@@ -1304,7 +1342,7 @@
   function computeActivityStatusBreakdown(a) {
     const f = activeFilters();
     const eligible = roster.filter((s) =>
-      isActiveStatus(s.status) && String(s.grade) === String(a.grade) && (!f.teacher || s.teacher === f.teacher)
+      isActiveStatus(s.status) && gradeListIncludes(a.grade, s.grade) && (!f.teacher || s.teacher === f.teacher)
     );
     const rowsByEmail = {};
     a.rows.forEach((r) => { rowsByEmail[r.email] = r; });
@@ -1586,7 +1624,7 @@
       tbody.innerHTML = items.map((u, i) => `
         <tr class="${u.flaggedCount ? 'flagged' : (u.startedCount === 0 ? 'zero-activity' : '')}">
           <td><span class="expand-btn" onclick="openUnitDetail(${i})">${u.unit}</span></td>
-          <td>${u.grade}</td>
+          <td>${formatGradeLabel(u.grade)}</td>
           <td>${u.activityCount}</td>
           <td>${u.avgCompletion === null ? '-' : u.avgCompletion + '%'}</td>
           <td>${u.avgScore === null ? '-' : u.avgScore + '%'}</td>
@@ -1611,7 +1649,7 @@
     `).join('');
     showDetailView('by-unit', `
       <button class="btn-back" onclick="showListView('by-unit')">&larr; Back to units</button>
-      <h3>${u.unit} <span class="pill neutral">Grade ${u.grade}</span></h3>
+      <h3>${u.unit} <span class="pill neutral">Grade ${formatGradeLabel(u.grade)}</span></h3>
       <div class="stat-row">
         <div class="stat-tile"><div class="n">${u.activityCount}</div><div class="l">Activities</div></div>
         <div class="stat-tile"><div class="n">${u.avgCompletion === null ? '-' : u.avgCompletion + '%'}</div><div class="l">Avg completion</div></div>
@@ -1712,7 +1750,7 @@
     `).join('');
     showDetailView('activity-status', `
       <button class="btn-back" onclick="showListView('activity-status')">&larr; Back to activities</button>
-      <h3>${a.activityTitle} <span class="pill neutral">Grade ${a.grade}</span></h3>
+      <h3>${a.activityTitle} <span class="pill neutral">Grade ${formatGradeLabel(a.grade)}</span></h3>
       <div class="stat-row">
         <div class="stat-tile"><div class="n ${a.notStarted ? 'warn' : ''}">${a.notStarted}</div><div class="l">Not started</div></div>
         <div class="stat-tile"><div class="n">${a.opened}</div><div class="l">Opened only</div></div>
@@ -1804,7 +1842,7 @@
     a.rows.forEach((r) => r.allEvents.forEach((e) => events.push(Object.assign({}, e, { studentName: r.studentName }))));
     showDetailView('by-activity', `
       <button class="btn-back" onclick="showListView('by-activity')">&larr; Back to activities</button>
-      <h3>${a.activityTitle} <span class="pill neutral">Grade ${a.grade}</span></h3>
+      <h3>${a.activityTitle} <span class="pill neutral">Grade ${formatGradeLabel(a.grade)}</span></h3>
       <div class="stat-row">
         <div class="stat-tile"><div class="n">${a.startedCount} / ${a.eligible || '?'}</div><div class="l">Started</div></div>
         <div class="stat-tile"><div class="n">${a.completionPct === null ? '-' : a.completionPct + '%'}</div><div class="l">Completion</div></div>

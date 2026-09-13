@@ -162,17 +162,32 @@ with different `ActivityId`s just to give Honors its own copy — extend
 the existing row's `Grade` cell instead, unless the content genuinely
 needs to differ.
 
-**Known limitation:** `teacher-dashboard.html`'s completion-rate math
-(`computeActivitySummaries()`'s `completionPct`, and any per-grade
-grouping that compares `ActivityCatalog.Grade` against `Roster.Grade`)
-still does an exact-string comparison, not the same comma-list
-membership check `resolveAccess_` uses. A shared row's raw
-`Grade` value (`"7,7-Honors"`) won't exactly equal either roster grade,
-so completion-rate/eligible-roster-size numbers for a shared activity
-are not yet reliable in the dashboard — only the student-facing
-access-gate was updated. Fix `getScopedEmailSet_`-adjacent dashboard
-grouping logic before trusting those specific numbers for a shared
-activity.
+**`teacher-dashboard.html` uses the same comma-list membership check as
+`resolveAccess_`, via its own `gradeListIncludes(gradeField, singleGrade)`
+helper** — every place on that page that used to compare a catalog/
+activity grade against one student's or filter's grade with a plain
+`===` has been switched to it: `filteredCatalog()` (a single-grade
+filter pill used to make a shared activity vanish from By
+Activity/By Unit entirely), `computeActivitySummaries()`'s `eligible`
+roster count (previously sourced its group's `grade` from whichever
+`Progress` row happened to be pushed first, which for a shared activity
+could be either track's single grade depending on data order — now
+always sourced from `ActivityCatalog` itself, the one authoritative
+multi-value source), `computeStudentUnitCompletion()`'s
+`catalogForGrade` filter, and `computeActivityStatusBreakdown()`'s
+`eligible` filter (`computeUnitSummaries()` needed no separate fix since
+it groups by `computeActivitySummaries()`'s own now-corrected `grade`
+field). `populateFilters()`'s grade-pill list also splits
+`ActivityCatalog.Grade` on comma before building its unique set — a
+shared row used to add its own bogus, unclickable `"7,7-Honors"` pill
+alongside the real `"7"`/`"7-Honors"` ones. Purely for display, a
+separate `formatGradeLabel()` helper (comma-then-space instead of a bare
+comma) is used everywhere a unit/activity's own `Grade` cell is
+rendered as text (`By Unit`'s table and detail heading, `By Activity`'s
+and the Engagement Funnel's detail headings) so `"7,7-Honors"` reads as
+`"7, 7-Honors"` instead of looking like a typo — a roster student's own
+`grade` (always a single value) is displayed as-is everywhere else, no
+formatting needed.
 
 **7th Grade Honors** (`Seventh/Squares-Cubes-and-Roots/`, `Grade:
 7-Honors` only, not shared) — a genuinely new topic with no regular-7th
