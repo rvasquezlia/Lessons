@@ -1497,6 +1497,51 @@ way, add their `activityId`s to `CURRICULUM` the same way, or a
 signed-in student won't see them on the index even once the pages
 themselves work.
 
+### Reference materials for content authoring — check these before building/citing anything
+
+Two local reference sources exist in this repo specifically so content
+work (new units, IXL tabs, standards citations) never has to guess or
+fabricate. **Check both before writing a new unit or adding IXL/standards
+references to an existing one** — this was missed once already (an
+entire session spent researching IXL codes via blocked web access before
+realizing `IXL/` already existed locally with real, pre-verified data).
+
+- **`IXL/` (repo root)** — `IXL/README.md` indexes four grade-level
+  files (`5th/`, `6th/`, `7th-Accelerated/`, `Algebra-1/`), each a
+  snapshot (dated 2026-09-09) of IXL's own published skill-alignment
+  guide for the exact Savvas enVision book/edition this school teaches
+  from, organized Topic → Lesson → IXL skill (name + direct link + the
+  3-character code). This is the *only* source that should ever feed a
+  Teacher-Guide's "IXL Practice" tab — never fabricate a code or guess
+  at IXL's URL slug pattern, and never rely on a web search result's
+  claimed code (tested live: search-engine summaries gave three
+  different codes for the same skill in one query). `ixl.com` itself is
+  blocked by this environment's network egress policy, so `IXL/` is not
+  just a convenience, it's the only way to get real codes at all here.
+  Match a unit's actual lessons to the file's Topic/Lesson headings by
+  content, not by number alone — book Topic/Lesson numbers don't always
+  line up with this site's own unit names (e.g. the "Linear Equations"
+  *site* unit is Topic 1 in the Algebra 1 book, not the book's own
+  Topic 2, which is confusingly also literally titled "Linear
+  Equations" but covers slope-intercept/graphing instead). If a skill a
+  unit teaches has no real match in the relevant file, say so and leave
+  it uncited — don't force the nearest-sounding code onto it (see
+  Squares-Cubes-and-Roots' and Linear-Functions' own IXL panels for two
+  worked examples of exactly this: each names the specific skill it
+  couldn't verify a code for, rather than omitting the gap silently).
+- **`Math Department Curriculum Map & Year Plan.xlsx` (repo root)** —
+  one sheet per course (`Math 6`, `Pre Algebra`, `Pre Algebra Honors`,
+  `Algebra I`, `Algebra I Honors`), one row per teaching week, columns
+  including `Theme / Unit Title` and `Standards` (the exact CCSS/HSA/
+  HSF/etc. codes, often several per week, each with its full official
+  text — not just the bare code). This is the source of truth for which
+  standard(s) a given lesson/unit addresses — cross-reference by
+  matching a site unit's actual lesson numbers/content against a row's
+  `Theme / Unit Title` (which usually names the Savvas lesson number
+  directly, e.g. "2-4: Evaluate Square Roots and Cube Roots") rather
+  than assuming a 1:1 week-to-unit mapping, since one site unit can span
+  several weeks' rows (and one week can straddle two lessons).
+
 ### Flow
 
 1. Teacher shares an activity link.
