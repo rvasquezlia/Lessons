@@ -1,0 +1,175 @@
+Name: ____________________   Date: ____________________
+
+# Functions & Linear Relationships — Comprehensive Study Guide
+
+---
+
+## Part 1: Functions, Domain, and Range
+
+In this activity, you will analyze relations in various forms. For each problem, identify the domain and range using the appropriate notation (set notation for discrete, inequality and interval notation for continuous). Then, determine if the relation is a function and provide a brief justification.
+
+### 1. Mapping Diagram Analysis
+*Relation A*
+
+### 2. Mapping Diagram Analysis
+*Relation B*
+
+### 3. Ordered Pairs
+Analyze the following set of ordered pairs:
+$$\{(-8, 4), (-4, 2), (0, 0), (4, -2), (8, -4)\}$$
+
+### 4. Relation C
+Identify the domain and range of Relation C. Is it a function? Justify your answer.
+
+| $x$ | -3 | -1 | 1 | 3 | 5 |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| $y$ | 10 | 10 | 10 | 10 | 10 |
+
+### 5. Relation E (Discrete)
+Identify the domain and range of Relation E. Is it a function? Justify your answer.
+
+### 6. Relation G (Continuous)
+Identify the domain and range of Relation G using inequality notation. Is it a function?
+
+### 7. Relation H (Continuous)
+Identify the domain and range of Relation H using interval notation. Is it a function? Justify your answer using the Vertical Line Test.
+
+---
+
+## Part 2: Slope and Rate of Change
+
+> **Key Concept: The Slope Formula**  
+> To find the slope ($m$) between two points $(x_1, y_1)$ and $(x_2, y_2)$, use the formula:  
+> $$m = \frac{y_2 - y_1}{x_2 - x_1}$$  
+> *Remember:*  
+> * A horizontal line has a slope of $0$.  
+> * A vertical line has an undefined slope.
+
+### Calculating Slope from Two Points
+Use the slope formula to find the slope of the line passing through the given points. Show all steps of your work.
+
+8. Find the slope of the line passing through $(4, -2)$ and $(-1, 8)$.
+
+9. Find the slope of the line passing through $(1.2, 5.4)$ and $(3.2, 8.6)$. Express your answer as a decimal.
+
+### Special Slopes
+Identify the slope for the following scenarios and justify your answer.
+
+10. Identify the slope of the line shown in the graph. Explain how you determined your answer.
+
+11. Find the slope of the line passing through $(7, -3)$ and $(7, 5)$. Explain what happens when you use the slope formula.
+
+### Real-World Rate of Change
+Identify the rate of change and explain its meaning in the context of the problem.
+
+12. **Gas Station:** A driver pays \$18.00 for 5 gallons of gasoline. Later, they pay \$32.40 for 9 gallons. What is the rate of change (cost per gallon)?
+
+13. **Road Trip:** A family is driving to a city 300 miles away. After 2 hours, they have 180 miles left to go. After 4 hours, they have 60 miles left to go. Calculate the rate of change and explain why it is negative.
+
+---
+
+## Part 3: Writing and Graphing Linear Equations
+
+In this section, you will master writing linear equations in slope-intercept form ($y = mx + b$) and graphing them on the coordinate plane. Ensure all algebraic steps are shown clearly for full credit.
+
+> **Key Concept: Slope-Intercept Form**  
+> The equation of a line is most commonly written as:  
+> $$y = mx + b$$  
+> Where:  
+> * **$m$** is the **slope** (rate of change).  
+> * **$b$** is the **y-intercept** (initial value at $x = 0$).
+
+14. Write the equation of a line in slope-intercept form that has a slope of $-3$ and passes through the point $(2, 5)$.
+
+15. Write the equation of the line that passes through the points $(-4, -7)$ and $(2, 5)$. Show the steps to find both the slope and the y-intercept.
+
+16. Convert the following equation from standard form to slope-intercept form:  
+    $$4x + 2y = 12$$
+
+17. Graph the linear equation $y = 2x - 5$. Identify the slope and y-intercept before plotting.  
+    * **Slope ($m$):** $2$  
+    * **y-intercept ($b$):** $-5$  
+
+    *Steps:*  
+    1. Plot the y-intercept.  
+    2. Use the slope to find a second point.  
+    3. Connect with a straight line.
+
+18. **The Tech Repair Shop:** A computer repair shop charges a flat diagnostic fee of \$50 plus \$75 per hour for labor.  
+    * **Part A:** Write a linear equation $y = mx + b$ to model the total cost $y$ for $x$ hours of labor.  
+    * **Part B:** If a repair takes 3.5 hours, what is the total cost? Show your work.
+
+19. **Savings Account:** Sarah starts a savings account with \$200. Every week, she deposits an additional \$30.  
+    * **Part A:** Write an equation that represents the total amount $S$ in the account after $w$ weeks.  
+    * **Part B:** How many weeks will it take for Sarah to have \$650 in her account? Show the algebraic steps to solve for $w$.
+
+20. **Fuel Consumption:** A truck's fuel tank holds 30 gallons of diesel. The truck uses fuel at a constant rate of 0.15 gallons per mile driven.  
+    * **Part A:** Write an equation for the amount of fuel $G$ remaining in the tank after driving $d$ miles.  
+    * **Part B:** Interpret the slope and the y-intercept in the context of this problem. What does each value tell you about the truck's fuel?
+
+---
+
+## Answer Key
+
+### Part 1: Functions, Domain, and Range
+1. **Relation A (Mapping):**  
+   * **Domain:** $\{-4, 0, 5\}$  
+   * **Range:** $\{2, 8, 10\}$  
+   * **Function?** No. The input `5` maps to both 8 and 10.
+2. **Relation B (Mapping):**  
+   * **Domain:** $\{-2, 1, 4, 7\}$  
+   * **Range:** $\{-3, 0, 5\}$  
+   * **Function?** Yes. Each input has exactly one output.
+3. **Ordered Pairs (Discrete):**  
+   * **Domain:** $\{-8, -4, 0, 4, 8\}$  
+   * **Range:** $\{-4, -2, 0, 2, 4\}$  
+   * **Function?** Yes. Every x-value is unique.
+4. **Relation C (Table):**  
+   * **Domain:** $\{-3, -1, 1, 3, 5\}$  
+   * **Range:** $\{10\}$  
+   * **Function?** Yes. Every x-value is unique.
+5. **Relation E (Discrete Graph):**  
+   * **Domain:** $\{-4, -2, 0, 2, 4\}$  
+   * **Range:** $\{-3, -1, 1, 3\}$  
+   * **Function?** Yes. Passes the Vertical Line Test.
+6. **Relation G (Continuous Graph):**  
+   * **Domain:** $-3 \le x \le 4$  
+   * **Range:** $-2 \le y \le 2$  
+   * **Function?** Yes. It is an absolute value function.
+7. **Relation H (Continuous Graph):**  
+   * **Domain:** $[-3, 3]$  
+   * **Range:** $[-3, 3]$  
+   * **Function?** No. Fails the Vertical Line Test.
+
+### Part 2: Slope and Rate of Change
+8. **Slope Formula:**  
+   $$m = \frac{8 - (-2)}{-1 - 4} = \frac{10}{-5} = -2$$
+9. **Decimal Slope:**  
+   $$m = \frac{8.6 - 5.4}{3.2 - 1.2} = \frac{3.2}{2.0} = 1.6$$
+10. **Horizontal Line:** Slope is $0$. The y-values never change, so the rise is $0$.
+11. **Vertical Line:** Slope is Undefined ($m = \frac{8}{0}$).
+12. **Gas Station:**  
+    $$\frac{32.40 - 18.00}{9 - 5} = \frac{14.40}{4} = 3.60$$  
+    *Rate:* \$3.60 per gallon.
+13. **Road Trip:**  
+    $$\frac{60 - 180}{4 - 2} = \frac{-120}{2} = -60$$  
+    *Rate:* -60 mph (distance remaining is decreasing).
+
+### Part 3: Writing and Graphing Linear Equations
+14. **Point-Slope to Intercept:**  
+    $$5 = -3(2) + b \implies b = 11$$  
+    *Equation:* $y = -3x + 11$
+15. **Two Points:**  
+    $$m = 2$$  
+    $$5 = 2(2) + b \implies b = 1$$  
+    *Equation:* $y = 2x + 1$
+16. **Standard to Intercept:**  
+    $$2y = -4x + 12 \implies y = -2x + 6$$
+17. **Graphing Linear Equation:**  
+    * Plot $(0, -5)$ and use slope $2$ to plot $(1, -3)$.
+18. **Tech Repair:**  
+    * **Part A:** $y = 75x + 50$  
+    * **Part B:** \$312.50
+19. **Savings Account:**  
+    * **Part A:** $S = 30w + 200$  
+    * **Part B:** $w = 15$ weeks.
