@@ -821,22 +821,45 @@
     // (see Code.gs's recordSubmission_), this just surfaces them as text.
     const VERDICT_TEXT = { correct: 'Correct', incomplete: 'Incorrect', reflection: 'Reflection submitted' };
     const ordinal = (n) => (n === 1 ? '1st' : n === 2 ? '2nd' : n === 3 ? '3rd' : `${n}th`);
-    const allEvents = allSubmissions.map((s) => {
-      const type = s.verdict === 'reset' ? 'reset' : (s.key === 'reached-end' ? 'reached-end' : (s.key.startsWith('tab-') ? 'tab' : (isIntegrityKey(s.key) ? 'integrity' : 'graded')));
+    // Every key a single teacher action resets gets pushed with the exact
+    // same timestamp (applyTeacherReset_ stamps one `now` per call) and
+    // stays adjacent here since allSubmissions is already sorted ascending
+    // by timestamp with a stable sort - so a section/activity reset that
+    // touched N items is collapsed into ONE feed line instead of flooding
+    // Recent Activity with N near-identical "<item> - X reset this <scope>"
+    // rows for what was really a single action (a real report from a live
+    // 9-item activity reset). A single-item reset (the common case) still
+    // reads exactly as before, naming that one item.
+    const allEvents = [];
+    for (let i = 0; i < allSubmissions.length; i++) {
+      const s = allSubmissions[i];
+      if (s.verdict === 'reset') {
+        const group = [s];
+        let j = i + 1;
+        while (j < allSubmissions.length && allSubmissions[j].verdict === 'reset' &&
+          allSubmissions[j].timestamp === s.timestamp && allSubmissions[j].resetScope === s.resetScope &&
+          allSubmissions[j].resetBy === s.resetBy) {
+          group.push(allSubmissions[j]);
+          j++;
+        }
+        const who = s.resetBy || 'A teacher';
+        const label = group.length === 1
+          ? `${s.label} - ${who} reset this ${s.resetScope || 'item'}`
+          : `${who} reset ${group.length} items (${s.resetScope || 'item'})`;
+        allEvents.push({ type: 'reset', label, verdict: 'reset', timestamp: s.timestamp });
+        i = j - 1;
+        continue;
+      }
+      const type = s.key === 'reached-end' ? 'reached-end' : (s.key.startsWith('tab-') ? 'tab' : (isIntegrityKey(s.key) ? 'integrity' : 'graded'));
       let label;
-      // s.label is now the item's own real label (Code.gs stopped writing
-      // a generic "Reset by teacher (item)" string here - see
-      // applyTeacherReset_), so this reads as "<item name> - <teacher>
-      // reset this item" instead of repeating a raw internal key.
-      if (type === 'reset') label = `${s.label} - ${s.resetBy || 'A teacher'} reset this ${s.resetScope || 'item'}`;
-      else if (type === 'reached-end') label = 'Reached the end';
+      if (type === 'reached-end') label = 'Reached the end';
       // s.label already comes prefixed "Viewed tab: ..." from lesson-auth.js
       // itself - re-adding the prefix here used to double it up.
       else if (type === 'tab') label = s.label || `Viewed tab: ${s.key.slice(4)}`;
       else if (type === 'integrity') label = s.label;
       else label = `${s.label || s.key} - ${ordinal(s.attemptNumber || 1)} attempt - ${VERDICT_TEXT[s.verdict] || s.verdict || 'answered'}`;
-      return { type, label, verdict: s.verdict, timestamp: s.timestamp };
-    });
+      allEvents.push({ type, label, verdict: s.verdict, timestamp: s.timestamp });
+    }
 
     // Score every graded item by WHEN it was first answered correctly, not
     // just whether it ever was: correct on attempt 1 = 1 point, correct on
@@ -2406,28 +2429,52 @@
       </div>
       ${missingSectionCount ? `<div style="font-size:0.78rem; color:#b45309; margin-bottom:12px;">${missingSectionCount} item(s) on this activity were logged before section tracking and can't be included in a section reset - use "Reset entire activity," or the per-item Reset link below, instead.</div>` : ''}`;
 
-    const items = r.submissions.map((s, i) => {
+    // Every key a single teacher action resets gets pushed with the exact
+    // same timestamp (applyTeacherReset_ stamps one `now` per call) and
+    // stays adjacent here since r.submissions is already sorted ascending
+    // by timestamp - group them into ONE row instead of one row per key,
+    // or a section/activity reset that touched N items floods this table
+    // with N near-identical "reset (scope)" rows for what was really a
+    // single action (a real report from a live 9-item activity reset).
+    // A single-item reset (the common case) still renders exactly as
+    // before, one row naming that one item.
+    const items = [];
+    for (let i = 0; i < r.submissions.length; i++) {
+      const s = r.submissions[i];
       if (s.verdict === 'reset') {
-        return `
+        const group = [s];
+        let j = i + 1;
+        while (j < r.submissions.length && r.submissions[j].verdict === 'reset' &&
+          r.submissions[j].timestamp === s.timestamp && r.submissions[j].resetScope === s.resetScope &&
+          r.submissions[j].resetBy === s.resetBy) {
+          group.push(r.submissions[j]);
+          j++;
+        }
+        const itemLabel = group.length === 1 ? s.label : `${group.length} items reset`;
+        const itemTitle = group.length > 1 ? ` title="${group.map((g) => g.label).join(', ').replace(/"/g, '&quot;')}"` : '';
+        items.push(`
       <tr style="background:#f0fdf4;">
-        <td>${s.label}</td>
+        <td${itemTitle}>${itemLabel}</td>
         <td>-</td>
         <td><span class="pill ok">reset (${s.resetScope})</span></td>
         <td>-</td>
         <td>${new Date(s.timestamp).toLocaleTimeString()}</td>
-      </tr>`;
+      </tr>`);
+        i = j - 1;
+        continue;
       }
       const canReset = lastIdxByKey[s.key] === i;
-      return `
+      items.push(`
       <tr>
         <td>${s.label}</td>
         <td>${s.answer}</td>
         <td>${s.verdict}</td>
         <td>${s.attemptNumber}</td>
         <td>${new Date(s.timestamp).toLocaleTimeString()}${canReset ? ` <span class="expand-btn" onclick="teacherReset('${r.email}','${r.activityId}','item','${s.key}','this item', this)">Reset</span>` : ''}</td>
-      </tr>`;
-    }).join('');
-    const itemsTable = `${toolbar}<table><thead><tr><th>Item</th><th>Answer</th><th>Verdict</th><th>Attempt</th><th>Time</th></tr></thead><tbody>${items}</tbody></table>`;
+      </tr>`);
+    }
+    const itemsHtml = items.join('');
+    const itemsTable = `${toolbar}<table><thead><tr><th>Item</th><th>Answer</th><th>Verdict</th><th>Attempt</th><th>Time</th></tr></thead><tbody>${itemsHtml}</tbody></table>`;
     return sessions ? `${sessions}<div style="margin-top:14px;">${itemsTable}</div>` : itemsTable;
   }
 

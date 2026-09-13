@@ -278,6 +278,32 @@ was never affected by any of this — it never filters by section in the
 first place, so it's always the correct fallback for a legacy activity
 where "Reset section" can't reach everything.
 
+**A multi-item reset (section or activity scope) is one teacher action,
+but used to render as N separate rows/lines — collapsed into one now.**
+Reported live after using "Reset entire activity" as the fallback for
+the migration gap above: a 9-item activity reset flooded both the
+Attempts table and the Overview/per-student/per-activity "Recent
+activity" feeds with 9 near-identical `reset (activity)` rows, all
+carrying the exact same timestamp, reading as noise rather than "one
+reset happened." Every key a single `applyTeacherReset_` call resets
+gets pushed with the *exact same* timestamp (one `now` per call) and
+stays adjacent in `submissions`/`allSubmissions` since both are already
+sorted ascending by timestamp with a stable sort — `submissionDetailTable()`
+and the `allEvents` builder (in `decorateRow()`) both now walk the
+sorted list and group consecutive `'reset'`-verdict entries sharing an
+identical `timestamp`+`resetScope`+`resetBy` into a single rendered
+row/line instead of mapping one-to-one. A group of exactly 1 (the
+common case — an item-scope reset, or a section reset that only ever
+catches one item) still renders exactly as before, naming that one
+item; a group of N > 1 collapses to `"N items reset"` in the Attempts
+table (with a `title` tooltip listing every collapsed item's own label,
+for a teacher who wants to check exactly which ones) and `"<teacher>
+reset N items (<scope>)"` in Recent Activity. This only changes
+rendering — the underlying `SubmissionsLog` still carries one full
+entry per key exactly as before (nothing about the append-only audit
+trail changed), so nothing here can hide or lose an individual reset;
+it only stops re-displaying the same one teacher action N times.
+
 **The dashboard UI**: a "Give attempts back" toolbar (a section
 `<select>` + "Reset section" button, plus a "Reset entire activity"
 button) sits above the Attempts table in `submissionDetailTable()` —
