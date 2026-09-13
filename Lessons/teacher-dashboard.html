@@ -19,6 +19,7 @@
   .filter-bar {
     display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
     background: var(--bg); border-bottom: 4px solid var(--border); padding: 14px 24px;
+    position: sticky; top: 0; z-index: 20; box-shadow: 0 2px 6px rgba(0,0,0,0.04);
   }
   .filter-bar .filters { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
   .filter-bar label { font-weight: 700; font-size: 0.9rem; color: var(--text); display: flex; align-items: center; gap: 6px; }
@@ -26,6 +27,43 @@
     padding: 8px 12px; border-radius: 8px; border: 2px solid var(--border);
     font-family: inherit; font-weight: 600; background: var(--card); color: var(--text);
   }
+
+  /* Activity filter - a search-and-checkbox multiselect instead of a
+     plain <select>, since there are far too many activities for pill
+     buttons and a single-select dropdown can't narrow to more than one
+     activity at a time. Lives in the same .pill-filter-group visual
+     language (and the same .filters flex row) as Grade/Teacher, just
+     with a popover panel instead of inline buttons. */
+  .multiselect { position: relative; }
+  .multiselect-toggle {
+    padding: 6px 14px; border-radius: 999px; border: 2px solid var(--border);
+    background: var(--card); color: var(--text); font-family: inherit;
+    font-weight: 700; font-size: 0.82rem; cursor: pointer; max-width: 220px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .multiselect-toggle:hover { border-color: var(--primary-light); }
+  .multiselect-panel {
+    position: absolute; top: calc(100% + 6px); left: 0; z-index: 30; width: 300px;
+    background: var(--card); border: 2px solid var(--border); border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12); padding: 10px;
+  }
+  .multiselect-search {
+    width: 100%; padding: 7px 10px; border-radius: 8px; border: 2px solid var(--border);
+    font-family: inherit; font-size: 0.85rem; margin-bottom: 8px; box-sizing: border-box;
+  }
+  .multiselect-options { max-height: 260px; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
+  .multiselect-option {
+    display: flex; align-items: center; gap: 8px; padding: 6px 4px; border-radius: 6px;
+    font-size: 0.85rem; font-weight: 500; cursor: pointer;
+  }
+  .multiselect-option:hover { background: var(--bg); }
+  .multiselect-option input { flex-shrink: 0; }
+  .multiselect-actions { margin-top: 8px; border-top: 1px solid var(--border); padding-top: 8px; text-align: right; }
+  .multiselect-actions button {
+    background: none; border: none; color: var(--primary); font-weight: 700;
+    font-family: inherit; font-size: 0.82rem; cursor: pointer; padding: 4px 8px;
+  }
+  .multiselect-actions button:hover { text-decoration: underline; }
   .btn-refresh {
     background: var(--primary); color: white; border: none; padding: 9px 20px;
     border-radius: 8px; font-weight: 800; cursor: pointer; font-family: inherit; font-size: 0.9rem;
@@ -97,12 +135,26 @@
   .legend-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
 
   table { width: 100%; border-collapse: collapse; background: var(--card); font-size: 0.88rem; }
-  th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
-  th { background: var(--primary); color: white; cursor: pointer; user-select: none; white-space: nowrap; }
+  th, td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--border); }
+  /* The row's own identifying link (a unit/activity/student name) reads
+     better left-aligned than centered, wherever it lands in the column
+     order - a class rather than a :first-child rule, since Student
+     Roster puts Grade before the student's name. */
+  td.row-label { text-align: left; }
+  th { background: var(--primary); color: white; cursor: pointer; user-select: none; white-space: normal; line-height: 1.25; }
   th:hover { background: var(--primary-light); }
   tr.flagged { background: var(--error-bg); }
   tr.flagged td:first-child { border-left: 4px solid var(--error); }
   tr.zero-activity td:first-child { border-left: 4px solid var(--accent); }
+  /* A full-width divider row marking where the next Unit/Grade group
+     starts in a table sorted by that dimension - see GROUP_KEYS/
+     sortItems. Makes the grouping visible on its own, instead of relying
+     on the flagged/zero-activity left-border colors to hint at structure
+     they were never meant to carry. */
+  tr.group-header-row td {
+    background: var(--bg); font-weight: 800; color: var(--primary);
+    text-align: left; border-bottom: 2px solid var(--border); padding: 6px 10px;
+  }
   .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
   .pill.flag { background: var(--error-bg); color: var(--error); }
   .pill.ok { background: var(--success-bg); color: var(--success); }
@@ -174,7 +226,17 @@
         <span class="pill-filter-label">Teacher:</span>
         <div class="filter-pills" id="teacher-pills"></div>
       </div>
-      <label>Activity: <select id="filter-activity"><option value="">All</option></select></label>
+      <div class="pill-filter-group">
+        <span class="pill-filter-label">Activity:</span>
+        <div class="multiselect" id="activity-multiselect">
+          <button type="button" class="multiselect-toggle" id="activity-toggle">All Activities</button>
+          <div class="multiselect-panel" id="activity-panel" hidden>
+            <input type="text" id="activity-search" class="multiselect-search" placeholder="Search activities...">
+            <div class="multiselect-options" id="activity-options"></div>
+            <div class="multiselect-actions"><button type="button" id="activity-clear">Clear selection</button></div>
+          </div>
+        </div>
+      </div>
       <label><input type="checkbox" id="filter-flagged-only"> Flagged only</label>
     </div>
     <button class="btn-refresh" id="refresh-btn">Refresh</button>
@@ -232,6 +294,7 @@
 
     <div id="unit-lesson-units" class="sub-panel active">
       <div id="by-unit-list">
+        <div class="legend-row"><span><i class="legend-dot" style="background:var(--error);"></i>Has flagged submissions</span><span><i class="legend-dot" style="background:var(--accent);"></i>Nobody has started yet</span></div>
         <div class="table-wrap">
           <table>
             <thead>
@@ -253,6 +316,7 @@
 
     <div id="unit-lesson-activities" class="sub-panel">
       <div id="by-activity-list">
+        <div class="legend-row"><span><i class="legend-dot" style="background:var(--error);"></i>Has flagged submissions</span><span><i class="legend-dot" style="background:var(--accent);"></i>Nobody has started yet</span></div>
         <div class="table-wrap">
           <table>
             <thead>
@@ -280,12 +344,13 @@
   <div id="students" class="panel">
     <div class="section-title">Student Roster &amp; Profiles</div>
     <div id="by-student-list">
+      <div class="legend-row"><span><i class="legend-dot" style="background:var(--error);"></i>Flagged or stalled</span><span><i class="legend-dot" style="background:var(--accent);"></i>Hasn't started anything yet</span></div>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th data-table="by-student" data-sort="studentName">Student</th>
               <th data-table="by-student" data-sort="grade">Grade</th>
+              <th data-table="by-student" data-sort="studentName">Student</th>
               <th data-table="by-student" data-sort="teacher">Teacher</th>
               <th data-table="by-student" data-sort="activitiesStarted">Started</th>
               <th data-table="by-student" data-sort="avgScore">Avg score</th>
@@ -319,6 +384,7 @@
     <div id="integrity-engagement" class="sub-panel active">
       <div id="activity-status-list">
         <div class="card" id="activity-status-chart" style="margin-bottom:20px;"></div>
+        <div class="legend-row"><span><i class="legend-dot" style="background:var(--accent);"></i>Nobody has started yet</span></div>
         <div class="table-wrap">
           <table>
             <thead>
@@ -414,6 +480,9 @@
   let currentGradeFilter = '';
   let currentTeacherFilter = '';
   let gradeFilterInitialized = false;
+  // Activity filter is multi-select (a checkbox list, not a <select>) -
+  // an empty array means "All", same '' convention as grade/teacher.
+  let currentActivityFilter = [];
 
   // requestGeneration/resolved stop a slow, now-superseded sign-in
   // attempt from undoing a later one that already succeeded - see
@@ -988,10 +1057,8 @@
     // "7-Honors" pills roster students already produce.
     const gradesFromCatalog = activityCatalog.flatMap((a) => String(a.grade || '').split(',').map((g) => g.trim()));
     const teachersFromRoster = roster.map((s) => s.teacher);
-    // Narrowed to the selected grade so the Activity dropdown doesn't show
-    // every activity across every grade at once - this was the actual gap
-    // (currentGradeFilter was never applied here at all), not something
-    // fillSelect()'s own current-value preservation could fix on its own.
+    // Narrowed to the selected grade so the Activity filter doesn't offer
+    // every activity across every grade at once.
     const catalogForGrade = currentGradeFilter
       ? activityCatalog.filter((a) => gradeListIncludes(a.grade, currentGradeFilter))
       : activityCatalog;
@@ -1024,7 +1091,63 @@
     if (teacherGroup) teacherGroup.style.display = teacherScope ? 'none' : '';
     if (!teacherScope) renderFilterPills('teacher-pills', teachers, currentTeacherFilter, 'All Teachers', selectTeacher);
 
-    fillSelect('filter-activity', [...new Set(activityTitles)].filter(Boolean).sort());
+    availableActivityTitles = [...new Set(activityTitles)].filter(Boolean).sort();
+    // Drop any previously-checked activities that no longer exist for the
+    // grade now in view, same "prune what's gone stale" rule grade/teacher
+    // already follow above.
+    currentActivityFilter = currentActivityFilter.filter((t) => availableActivityTitles.includes(t));
+    renderActivityOptions();
+  }
+
+  // The full option list (already grade-narrowed by populateFilters()),
+  // kept separate from currentActivityFilter so the search box can filter
+  // which options are shown without touching what's actually selected.
+  let availableActivityTitles = [];
+
+  function updateActivityToggleLabel() {
+    const btn = document.getElementById('activity-toggle');
+    if (!btn) return;
+    if (!currentActivityFilter.length) btn.textContent = 'All Activities';
+    else if (currentActivityFilter.length === 1) btn.textContent = currentActivityFilter[0];
+    else btn.textContent = `${currentActivityFilter.length} activities selected`;
+  }
+
+  // Rebuilds just the checkbox list (not the whole filter bar) so typing
+  // in the search box stays cheap - called on populateFilters(), on every
+  // keystroke in the search box, and after a checkbox/Clear click.
+  function renderActivityOptions() {
+    const search = (document.getElementById('activity-search').value || '').trim().toLowerCase();
+    const visible = search
+      ? availableActivityTitles.filter((t) => t.toLowerCase().includes(search))
+      : availableActivityTitles;
+    const optionsEl = document.getElementById('activity-options');
+    if (!visible.length) {
+      optionsEl.innerHTML = '<p class="empty-note">No matching activities.</p>';
+    } else {
+      optionsEl.innerHTML = visible.map((t) => {
+        const escaped = t.replace(/"/g, '&quot;');
+        return `<label class="multiselect-option"><input type="checkbox" value="${escaped}" ${currentActivityFilter.includes(t) ? 'checked' : ''}><span>${t}</span></label>`;
+      }).join('');
+      optionsEl.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+        cb.addEventListener('change', () => {
+          if (cb.checked) currentActivityFilter.push(cb.value);
+          else currentActivityFilter = currentActivityFilter.filter((t) => t !== cb.value);
+          updateActivityToggleLabel();
+          renderAll();
+        });
+      });
+    }
+    updateActivityToggleLabel();
+  }
+
+  function toggleActivityPanel() {
+    const panel = document.getElementById('activity-panel');
+    panel.hidden = !panel.hidden;
+    if (!panel.hidden) {
+      document.getElementById('activity-search').value = '';
+      renderActivityOptions();
+      document.getElementById('activity-search').focus();
+    }
   }
 
   // Shared by the Grade and Teacher pill groups - one button per value
@@ -1056,23 +1179,11 @@
     renderAll();
   }
 
-  function fillSelect(id, values) {
-    const el = document.getElementById(id);
-    const current = el.value;
-    el.innerHTML = '<option value="">All</option>';
-    values.forEach((v) => {
-      const opt = document.createElement('option');
-      opt.value = v; opt.textContent = v;
-      el.appendChild(opt);
-    });
-    if (values.includes(current)) el.value = current;
-  }
-
   function activeFilters() {
     return {
       grade: currentGradeFilter,
       teacher: currentTeacherFilter,
-      activity: document.getElementById('filter-activity').value,
+      activity: currentActivityFilter,
       flaggedOnly: document.getElementById('filter-flagged-only').checked
     };
   }
@@ -1082,7 +1193,7 @@
     return allRows.filter((r) =>
       (!f.grade || String(r.grade) === f.grade) &&
       (!f.teacher || r.teacher === f.teacher) &&
-      (!f.activity || r.activityTitle === f.activity) &&
+      (!f.activity.length || f.activity.includes(r.activityTitle)) &&
       (!f.flaggedOnly || r.flags.length > 0)
     );
   }
@@ -1101,7 +1212,7 @@
     return activityCatalog.filter((a) =>
       a.active &&
       (!f.grade || gradeListIncludes(a.grade, f.grade)) &&
-      (!f.activity || a.title === f.activity)
+      (!f.activity.length || f.activity.includes(a.title))
     );
   }
 
@@ -1632,6 +1743,25 @@
     });
   }
 
+  // Makes By Activity/Engagement Funnel's Unit grouping (see GROUP_KEYS/
+  // sortItems above) visible as an actual divider row instead of just an
+  // invisible sort order - inserts one full-width "Unit: X" row whenever
+  // the unit changes between consecutive already-sorted items. Only used
+  // where the table groups by unit - By Unit/By Student group by Grade
+  // instead, which their own Grade column already makes visible per row,
+  // so they don't need a second banner saying the same thing.
+  function withUnitGroupHeaders(items, colspan, rowHtmlFn) {
+    let lastUnit;
+    let out = '';
+    items.forEach((item, i) => {
+      const unit = item.unit || 'Unassigned';
+      if (i === 0 || unit !== lastUnit) out += `<tr class="group-header-row"><td colspan="${colspan}">Unit: ${unit}</td></tr>`;
+      lastUnit = unit;
+      out += rowHtmlFn(item, i);
+    });
+    return out;
+  }
+
   // Shared by every "By X" tab: a table of summary rows plus a hidden
   // detail pane, one visible at a time. Clicking a row swaps to the
   // detail pane instead of expanding a squeezed inline row - there's a
@@ -1655,7 +1785,7 @@
     else {
       tbody.innerHTML = items.map((u, i) => `
         <tr class="${u.flaggedCount ? 'flagged' : (u.startedCount === 0 ? 'zero-activity' : '')}">
-          <td><span class="expand-btn" onclick="openUnitDetail(${i})">${u.unit}</span></td>
+          <td class="row-label"><span class="expand-btn" onclick="openUnitDetail(${i})">${u.unit}</span></td>
           <td>${formatGradeLabel(u.grade)}</td>
           <td>${u.activityCount}</td>
           <td>${u.avgCompletion === null ? '-' : u.avgCompletion + '%'}</td>
@@ -1672,7 +1802,7 @@
     if (!u) return;
     const rowsHtml = u.activities.slice().sort((a, b) => (a.avgScore ?? 999) - (b.avgScore ?? 999)).map((a) => `
       <tr class="${a.flaggedCount ? 'flagged' : (a.startedCount === 0 ? 'zero-activity' : '')}">
-        <td><span class="expand-btn" onclick="jumpToActivity('${a.activityId}')">${a.activityTitle}</span></td>
+        <td class="row-label"><span class="expand-btn" onclick="jumpToActivity('${a.activityId}')">${a.activityTitle}</span></td>
         <td>${a.startedCount} / ${a.eligible || '?'}</td>
         <td>${a.completionPct === null ? '-' : a.completionPct + '%'}</td>
         <td>${a.avgScore === null ? '-' : a.avgScore + '%'}</td>
@@ -1752,17 +1882,17 @@
     const tbody = document.getElementById('activity-status-body');
     if (!items.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-note">No activities match the current filter.</td></tr>'; }
     else {
-      tbody.innerHTML = items.map((a, i) => `
+      tbody.innerHTML = withUnitGroupHeaders(items, 7, (a, i) => `
         <tr class="${a.total > 0 && a.notStarted === a.total ? 'zero-activity' : ''}">
-          <td><span class="expand-btn" onclick="openActivityStatusDetail(${i})">${a.activityTitle}</span></td>
-          <td>${a.grade}</td>
+          <td class="row-label"><span class="expand-btn" onclick="openActivityStatusDetail(${i})">${a.activityTitle}</span></td>
+          <td>${formatGradeLabel(a.grade)}</td>
           <td>${a.notStarted}</td>
           <td>${a.opened}</td>
           <td>${a.inProgress}</td>
           <td>${a.completedPassed}</td>
           <td>${a.completedLockedOut}</td>
         </tr>
-      `).join('');
+      `);
     }
     showListView('activity-status');
   }
@@ -1772,7 +1902,7 @@
     if (!a) return;
     const rowsHtml = a.perStudent.slice().sort((x, y) => x.studentName.localeCompare(y.studentName)).map((p) => `
       <tr>
-        <td>${groupDot(a.grade, p.teacher)}${p.studentName}</td>
+        <td class="row-label">${groupDot(a.grade, p.teacher)}${p.studentName}</td>
         <td>${p.teacher || '-'}</td>
         <td><span class="pill ${STATUS_PILL[p.status]}">${STATUS_LABEL[p.status]}</span></td>
         <td>${p.row && p.row.scorePct !== null ? p.row.scorePct + '%' : '-'}</td>
@@ -1802,17 +1932,17 @@
     const tbody = document.getElementById('by-activity-body');
     if (!items.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-note">No activities match the current filter.</td></tr>'; }
     else {
-      tbody.innerHTML = items.map((a, i) => `
+      tbody.innerHTML = withUnitGroupHeaders(items, 7, (a, i) => `
         <tr class="${a.flaggedCount ? 'flagged' : (a.startedCount === 0 ? 'zero-activity' : '')}">
-          <td><span class="expand-btn" onclick="openActivityDetail(${i})">${a.activityTitle}</span></td>
-          <td>${a.grade}</td>
+          <td class="row-label"><span class="expand-btn" onclick="openActivityDetail(${i})">${a.activityTitle}</span></td>
+          <td>${formatGradeLabel(a.grade)}</td>
           <td>${a.startedCount} / ${a.eligible || '?'}</td>
           <td>${a.completionPct === null ? '-' : a.completionPct + '%'}</td>
           <td>${a.avgScore === null ? '-' : a.avgScore + '%'}</td>
           <td>${a.avgSeconds === null ? '-' : a.avgSeconds + 's'}</td>
           <td>${a.flaggedCount ? `<span class="pill flag">${a.flaggedCount}</span>` : '<span class="pill ok">0</span>'}</td>
         </tr>
-      `).join('');
+      `);
     }
     showListView('by-activity');
   }
@@ -1904,7 +2034,7 @@
       const id = `activity-${safeId(a.activityId)}-${i}`;
       return `
       <tr class="${r.flags.length ? 'flagged' : ''}">
-        <td>${groupDot(r.grade, r.teacher)}${r.studentName}</td>
+        <td class="row-label">${groupDot(r.grade, r.teacher)}${r.studentName}</td>
         <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
         <td>${r.itemsAttempted}</td>
         <td>${r.tabsViewed}</td>
@@ -1932,8 +2062,8 @@
     if (!items.length) { tbody.innerHTML = '<tr><td colspan="10" class="empty-note">No students match the current filter.</td></tr>'; return; }
     tbody.innerHTML = items.map((s, i) => `
       <tr class="${s.stalled || s.totalFlags ? 'flagged' : (s.activitiesStarted === 0 ? 'zero-activity' : '')}">
-        <td><span class="expand-btn" onclick="openStudentDetail(${i})">${s.studentName}</span></td>
-        <td>${s.grade}</td>
+        <td>${formatGradeLabel(s.grade)}</td>
+        <td class="row-label"><span class="expand-btn" onclick="openStudentDetail(${i})">${s.studentName}</span></td>
         <td>${s.teacher || '-'}</td>
         <td>${s.activitiesStarted}</td>
         <td>${s.avgScore === null ? '-' : s.avgScore + '%'}</td>
@@ -1996,7 +2126,7 @@
     if (!items.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-note">Nothing flagged in the current filter.</td></tr>'; return; }
     tbody.innerHTML = items.map((r, i) => `
       <tr class="flagged">
-        <td>${groupDot(r.grade, r.teacher)}${r.studentName}</td>
+        <td class="row-label">${groupDot(r.grade, r.teacher)}${r.studentName}</td>
         <td>${r.activityTitle}</td>
         <td>${r.flags.map((f) => `<span class="pill flag">${f}</span>`).join(' ')}</td>
         <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
@@ -2066,7 +2196,7 @@
       const id = `student-${safeId(s.email)}-${i}`;
       return `
       <tr class="${r.flags.length ? 'flagged' : ''}">
-        <td>${r.activityTitle}</td>
+        <td class="row-label">${r.activityTitle}</td>
         <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
         <td>${r.itemsAttempted}</td>
         <td>${r.tabsViewed}</td>
@@ -2089,7 +2219,7 @@
     if (!items.length) { tbody.innerHTML = '<tr><td colspan="11" class="empty-note">No submissions match the current filter.</td></tr>'; return; }
     tbody.innerHTML = items.map((r, i) => `
       <tr class="${r.flags.length ? 'flagged' : ''}">
-        <td>${groupDot(r.grade, r.teacher)}${r.studentName}</td>
+        <td class="row-label">${groupDot(r.grade, r.teacher)}${r.studentName}</td>
         <td>${r.activityTitle}</td>
         <td>${r.scorePct === null ? '-' : r.scorePct + '%'}</td>
         <td>${r.itemsAttempted}</td>
@@ -2168,6 +2298,11 @@
     document.getElementById(tabId).classList.add('active');
     const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
     if (btn) btn.classList.add('active');
+    // Switching tabs after scrolling deep into a long table used to leave
+    // the new tab's content wherever the old scroll position happened to
+    // land - jumping back to the top makes the switch actually register,
+    // the way a real dashboard's tab navigation would.
+    window.scrollTo({ top: 0, behavior: 'auto' });
   }
   window.switchDashTab = switchDashTab;
 
@@ -2185,19 +2320,35 @@
     if (sub) sub.classList.add('active');
     const btn = panel.querySelector(`.sub-tab-btn[data-subtab="${subId}"]`);
     if (btn) btn.classList.add('active');
+    panel.scrollIntoView({ block: 'start', behavior: 'auto' });
   }
   window.switchSubTab = switchSubTab;
 
   document.addEventListener('change', (e) => {
-    if (['filter-activity', 'filter-flagged-only'].includes(e.target.id)) renderAll();
+    if (e.target.id === 'filter-flagged-only') renderAll();
   });
   document.addEventListener('click', (e) => {
     const th = e.target.closest('th[data-sort]');
-    if (!th) return;
-    const tableKey = th.dataset.table;
-    const key = th.dataset.sort;
-    const s = sortState[tableKey];
-    if (s.key === key) s.dir *= -1; else { s.key = key; s.dir = 1; }
+    if (th) {
+      const tableKey = th.dataset.table;
+      const key = th.dataset.sort;
+      const s = sortState[tableKey];
+      if (s.key === key) s.dir *= -1; else { s.key = key; s.dir = 1; }
+      renderAll();
+      return;
+    }
+    // Close the Activity multiselect panel on any click outside it -
+    // its own toggle/checkboxes/search box are handled by their own
+    // listeners below, so this only ever fires for an outside click.
+    const group = document.getElementById('activity-multiselect');
+    const panel = document.getElementById('activity-panel');
+    if (group && panel && !panel.hidden && !group.contains(e.target)) panel.hidden = true;
+  });
+  document.getElementById('activity-toggle').addEventListener('click', toggleActivityPanel);
+  document.getElementById('activity-search').addEventListener('input', renderActivityOptions);
+  document.getElementById('activity-clear').addEventListener('click', () => {
+    currentActivityFilter = [];
+    renderActivityOptions();
     renderAll();
   });
   document.getElementById('refresh-btn').addEventListener('click', () => {
