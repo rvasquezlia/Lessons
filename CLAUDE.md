@@ -1343,26 +1343,25 @@ fully wired end-to-end — sign-in, grading, progress sync, teacher
 dashboard, teacher-view answer keys — and verified via the checklist
 above.
 
-**Open (needs a team decision, not further engineering)**:
-`Lessons/Projects/*` — all three folders — remains on its own older,
-unmigrated pattern (its own per-project `SHEET_API_URL` instead of the
-shared Sheet/Apps Script backend), completely untouched. **Don't extend
-it and don't hold it to any rule in this file.** A shared-backend,
-paired-activity **port** of each now exists alongside the original as a
-separate page, built new rather than by editing the original:
-`Sixth/Laudato-Si-EcoGarden/index.html` (the canonical example, see §18)
-and `Seventh/Ethical-Auditor-Community-Engineer/index.html`
+**Closed**: `Lessons/Projects/*` — all three folders — remains on its
+own older, unmigrated pattern (its own per-project `SHEET_API_URL`
+instead of the shared Sheet/Apps Script backend), completely untouched.
+**Don't extend it and don't hold it to any rule in this file.** All
+three now have a shared-backend, paired-activity **port** alongside the
+original as a separate page, built new rather than by editing the
+original (§18): `Sixth/Laudato-Si-EcoGarden/index.html` (the canonical
+example), `Seventh/Ethical-Auditor-Community-Engineer/index.html`
 (`7-ethical-auditor-community-engineer`, standards `7.NS.A.1b, 7.NS.A.1c,
 7.NS.A.1d, 7.NS.A.2a, 7.NS.A.2b, 7.NS.A.2c, 7.NS.A.2d` — matches
 Rational-Numbers, since the project is entirely positive/negative
-rational-number budgeting). Like Eco-Garden, it is **deliberately not in
-`index.html`'s `CURRICULUM`** — direct-link-only, same access-control
-choice, for the same reason (see §12) — don't add a `CURRICULUM` entry
-for it without asking first either. `Youth-Festival-Logistics` has no
-port yet; porting it is the one remaining open item, same shape as the
-two ports above (target: `Eighth/Youth-Festival-Logistics/index.html`,
-standards matching Linear-Equations since its content is single-unknown
-algebraic equation solving, not inequalities).
+rational-number budgeting), and `Eighth/Youth-Festival-Logistics/index.html`
+(`8-youth-festival-logistics`, standards `HSA.CED.A.1, HSA.REI.A.1,
+HSA.REI.B.3` — matches Linear-Equations, since its content is
+single-unknown algebraic equation solving, not inequalities). **All
+three ports are deliberately not in `index.html`'s `CURRICULUM`** —
+direct-link-only, same access-control choice as Eco-Garden, for the
+same reason (see §12) — don't add a `CURRICULUM` entry for any of them
+without asking first.
 
 **Closed, by design**: `Vocabulary Match-Up` is intentionally not on
 `Seventh/Integers`/`Operations-with-Rationals`/`Rational-Numbers` — see
@@ -1442,6 +1441,25 @@ meaningful. Its top progress-bar "Print My Progress" button was removed
 the same way Eco-Garden's was (the `printEngineeringReport()` function
 itself is left in place, unused, matching precedent exactly rather than
 deviating).
+
+**Third port**: `Eighth/Youth-Festival-Logistics/index.html` follows
+the same pattern again, including a second Konva.js canvas (the Event
+Flyer Studio, analogous to Eco-Garden's sign studio) with the same
+navigator-lockout treatment (`pointer-events: none` on
+`#flyer-stage-container`/`#flyer-layers` under `.navigator-locked` —
+the sticker picker is real `<button>`s, already covered by the generic
+sweep) and the same genuine-effort fix: `seedDefaultFlyerElements()`
+pre-adds one "Youth Festival" text node on load, so `lockFlyer()`
+blocks locking the exact untouched-starter state (1 element, that
+literal text, default `poster` material, no accent color) the same way
+Eco-Garden's `lockSign()` does. **Deliberate refinement over the
+Eco-Garden precedent**: Eco-Garden's own `lockSign()`/`lockGarden()`
+apply for real even in Teacher Preview (a teacher can genuinely lock
+the canvas there) — both this port and the Ethical-Auditor port instead
+guard the lock itself with `!window.teacherPreviewMode`
+(`applyFlyerLockedUI()` / `lockInfographicArt()`'s `infographicLocked`
+line), so a teacher can keep re-designing after clicking "Lock" too.
+Prefer this guarded version in any future port of this pattern.
 
 ### Two new Sheet tabs (both optional — every function below degrades
 to a no-op/null when the tab doesn't exist yet, so an activity with no
