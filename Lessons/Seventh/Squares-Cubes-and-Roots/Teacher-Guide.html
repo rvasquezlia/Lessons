@@ -31,6 +31,12 @@
       font-weight: 800;
       font-size: 1.2rem;
     }
+    .solution-toggle > summary {
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--primary);
+      padding: 4px 0;
+    }
   </style>
 </head>
 <body>
@@ -44,19 +50,21 @@
     <span class="badge">7 Honors &middot; Squares, Cubes &amp; Roots - Teacher Guide</span>
     <h1>Teacher Guide: Squares, Cubes &amp; Roots</h1>
     <p class="standards-line">Standards: 8.EE.A.2</p>
-    <p class="subtitle">Pacing and Answer Keys for All Five Sections</p>
+    <p class="subtitle">Pacing, Lesson-by-Lesson Notes, Metacognition, Differentiation, and a Challenge Bank for All Six Pages</p>
   </header>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">This page is for you, not students</strong>
-    Keep this link away from students - there's no student-facing print button. Use the tabs for pacing/context and a full digital answer key for every graded item on this topic.
+    Keep this link away from students - there's no student-facing print button. There's no dedicated answer-key tab here anymore - sign in on any student page yourself and it unlocks that page's own answer key inline (see "Role differentiation on lesson pages" in the repo's own notes if you want the mechanism). Use the tabs below instead for pacing/context, a tab-by-tab breakdown of what each of the six pages covers, metacognition and small-group discussion prompts, real differentiation problems, and a digital Challenge Bank - everything here is web-only, no printed materials.
   </div>
 
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('overview')">1. Topic Overview &amp; Pacing</button>
-    <button class="tab-btn" onclick="switchTab('keys-practice')">2. Answer Keys: Vocabulary &amp; Practice Set</button>
-    <button class="tab-btn" onclick="switchTab('keys-wp-tp')">3. Answer Keys: Word Problems &amp; Test Prep</button>
-    <button class="tab-btn" onclick="switchTab('ixl-practice')">4. IXL Practice</button>
+    <button class="tab-btn" onclick="switchTab('lesson-guide')">2. Lesson-by-Lesson Guide</button>
+    <button class="tab-btn" onclick="switchTab('metacognition')">3. Metacognition &amp; Discussion</button>
+    <button class="tab-btn" onclick="switchTab('differentiation')">4. Differentiation</button>
+    <button class="tab-btn" onclick="switchTab('challenge')">5. Challenge Bank</button>
+    <button class="tab-btn" onclick="switchTab('ixl-practice')">6. IXL Practice</button>
   </nav>
 
   <!-- PANEL 1: TOPIC OVERVIEW & PACING -->
@@ -66,7 +74,7 @@
     <div class="explainer-box">
       <strong>7-Honors only - no regular-7th equivalent.</strong> This is the bridge from the Rational Numbers unit (which Honors shares with regular 7th, at a faster pace) to irrational numbers: recognizing perfect squares/cubes and taking square/cube roots.
       <ul style="margin:8px 0 0 0;">
-        <li>Five standalone pages: Vocabulary &amp; Literacy, Explanation, Practice Set, Word Problems, Test Prep.</li>
+        <li>Six standalone pages: Review, Vocabulary &amp; Literacy, Explanation, Practice Set, Word Problems, Test Prep.</li>
         <li>Pages don't link to each other - share each one directly (e.g. one Google Classroom post per page) in the order you want.</li>
         <li><strong>Calculators are not allowed</strong> - every fact in this topic (squares 1&ndash;20, cubes 1&ndash;15) should come from memory or quick multiplication.</li>
       </ul>
@@ -75,11 +83,12 @@
     <table class="data-table">
       <thead><tr><th>Section</th><th>Suggested Time</th><th>Focus</th></tr></thead>
       <tbody>
+        <tr><td>Review</td><td>~20-30 min</td><td>Motivates why this topic matters, refreshes the vocabulary needed first, and introduces the 1-20/1-15 squares/cubes reference chart itself, gated by a graded "Are You Ready?" check.</td></tr>
         <tr><td>Vocabulary &amp; Literacy</td><td>~20-30 min</td><td>Base, radicand, index, perfect square/cube, radical - plus translating between plain-English phrasing and radical/power notation.</td></tr>
         <tr><td>Explanation</td><td>~1 class period</td><td>Worked examples: computing a square/cube, taking a square/cube root, and area/volume real-world applications.</td></tr>
         <tr><td>Practice Set</td><td>~1 class period</td><td>Three tiers: fill in a mastery table, identify the base from a square/cube, and solve missing-value radical equations - plus three short critical-thinking reflections.</td></tr>
         <tr><td>Word Problems</td><td>~1 class period</td><td>Area-from-square-root and volume-from-cube-root scenarios, plus mixed/scaling challenge problems.</td></tr>
-        <tr><td>Test Prep</td><td>~1 class period + assessment</td><td>Concept review, error analysis, a timed review quiz, and a submit-only Mixed Practice worksheet that doubles as a paper-equivalent assessment.</td></tr>
+        <tr><td>Test Prep</td><td>~1 class period + assessment</td><td>Concept review, error analysis, a timed review quiz, and a submit-only Mixed Practice worksheet that doubles as this topic's digital assessment.</td></tr>
       </tbody>
     </table>
 
@@ -108,175 +117,173 @@
     </div>
   </div>
 
-  <!-- PANEL 2: ANSWER KEYS - VOCABULARY & PRACTICE SET -->
-  <div id="keys-practice" class="panel">
-    <div class="section-title">Answer Keys: Vocabulary &amp; Literacy, Explanation &amp; Practice Set</div>
-    <p>Explanation's carousels are fully worked examples with the final answer shown in each last step - nothing further to key.</p>
+  <!-- PANEL 2: LESSON-BY-LESSON GUIDE -->
+  <div id="lesson-guide" class="panel">
+    <div class="section-title">Lesson-by-Lesson Guide</div>
+    <p>What each of the six pages covers, and what each tab inside it is for. Answer keys for every graded item already live inline on the student page itself - sign in there as a teacher and it unlocks automatically (see the howto note above), so this tab is about what to <em>teach</em>, not what to <em>grade</em>.</p>
 
-    <div class="answer-day-heading">Vocabulary &amp; Literacy - Tab 2: Reading &amp; Writing Radical Notation</div>
+    <div class="answer-day-heading">1. Review</div>
+    <p style="margin:0 0 8px 0;">Motivates the topic, refreshes prerequisite vocabulary, and introduces the 1-20/1-15 squares/cubes reference chart itself before any graded content appears. Gate it with Tab 4's graded check before moving on.</p>
     <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
       <tbody>
-        <tr><td>1. "the square of 8"</td><td>\(\mathbf{8^2}\)</td></tr>
-        <tr><td>2. "the cube of 6"</td><td>\(\mathbf{6^3}\)</td></tr>
-        <tr><td>3. "the square root of 81"</td><td>\(\mathbf{\sqrt{81}}\)</td></tr>
-        <tr><td>4. "the cube root of 125"</td><td>\(\mathbf{\sqrt[3]{125}}\)</td></tr>
-        <tr><td>5. Radicand in \(\sqrt{144}\)</td><td><strong>144</strong></td></tr>
-        <tr><td>6. Base in \(9^2\)</td><td><strong>9</strong></td></tr>
-        <tr><td>7. Index in \(\sqrt[3]{27}\)</td><td><strong>3</strong></td></tr>
-        <tr><td>8. What does \(\sqrt{100}\) ask?</td><td>What number times itself equals 100?</td></tr>
+        <tr><td>1. Why This Topic?</td><td>The hook - connects squares/cubes/roots to the Rational Numbers unit Honors students already finished, and previews where this leads (irrational numbers).</td></tr>
+        <tr><td>2. Vocabulary</td><td>Fast recall of the terms this whole topic depends on (base, radicand, index, perfect square/cube, radical).</td></tr>
+        <tr><td>3. Squares &amp; Cubes Reference</td><td>The actual 1-20 squares / 1-15 cubes reference chart - the single most-used resource in this topic, worth pointing students back to constantly.</td></tr>
+        <tr><td>4. Are You Ready?</td><td>The graded checkpoint - this is the one tab worth checking before assigning the rest of the unit.</td></tr>
+        <tr><td>5. Resources</td><td>Optional extra practice/reference material for a student who wants more before moving on - not graded.</td></tr>
       </tbody>
     </table>
 
-    <div class="answer-day-heading">Vocabulary &amp; Literacy - Tab 3: Quick Vocabulary Check</div>
+    <div class="answer-day-heading">2. Vocabulary &amp; Literacy</div>
+    <p style="margin:0 0 8px 0;">Builds the actual language of this unit - translating between plain-English phrasing ("the square root of 81") and radical/power notation (\(\sqrt{81}\)), which the Explanation and Practice Set pages both assume fluency with.</p>
     <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
       <tbody>
-        <tr><td>1. Number underneath a radical</td><td><strong>radicand</strong></td></tr>
-        <tr><td>2. Small number showing which root, e.g. 3 in a cube root</td><td><strong>index</strong></td></tr>
-        <tr><td>3. A number that is the square of a whole number</td><td><strong>perfect square</strong></td></tr>
-        <tr><td>4. A number that is the cube of a whole number</td><td><strong>perfect cube</strong></td></tr>
-        <tr><td>5. The number being multiplied by itself, e.g. 7 in 7²</td><td><strong>base</strong></td></tr>
-        <tr><td>6. The root symbol and any expression using it</td><td><strong>radical</strong></td></tr>
+        <tr><td>1. Key Vocabulary</td><td>Glossary of base/radicand/index/perfect square/perfect cube/radical - the reference the other two tabs draw on.</td></tr>
+        <tr><td>2. Reading &amp; Writing Radical Notation</td><td>Graded practice translating a plain-English phrase into symbolic form and back - the exact skill Explanation's worked examples assume a student already has.</td></tr>
+        <tr><td>3. Quick Vocabulary Check</td><td>A self-check on the same vocabulary before it's tested for real.</td></tr>
       </tbody>
     </table>
 
-    <div class="answer-day-heading">Practice Set - Tab 1: Squares &amp; Cubes Table</div>
+    <div class="answer-day-heading">3. Explanation</div>
+    <p style="margin:0 0 8px 0;">Worked examples only, no grading - the "watch me think through it" page, moving from computing squares/cubes to taking their roots to real-world area/volume applications.</p>
     <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
       <tbody>
-        <tr><td>1. Base 4, Square 16 &rarr; Cube?</td><td>\(\mathbf{64}\)</td></tr>
-        <tr><td>2. Square 81, Cube 729 &rarr; Base?</td><td>\(\mathbf{9}\)</td></tr>
-        <tr><td>3. Base 12, Cube 1,728 &rarr; Square?</td><td>\(\mathbf{144}\)</td></tr>
-        <tr><td>4. Square 225, Cube 3,375 &rarr; Base?</td><td>\(\mathbf{15}\)</td></tr>
-        <tr><td>5. Base 7, Square 49 &rarr; Cube?</td><td>\(\mathbf{343}\)</td></tr>
-        <tr><td>6. Base 20, Square 400 &rarr; Cube?</td><td>\(\mathbf{8{,}000}\)</td></tr>
-        <tr><td>7. Square 121, Cube 1,331 &rarr; Base?</td><td>\(\mathbf{11}\)</td></tr>
-        <tr><td>8. Base 13, Cube 2,197 &rarr; Square?</td><td>\(\mathbf{169}\)</td></tr>
-        <tr><td>9. Square 256, Cube 4,096 &rarr; Base?</td><td>\(\mathbf{16}\)</td></tr>
-        <tr><td>10. Base 14, Square 196 &rarr; Cube?</td><td>\(\mathbf{2{,}744}\)</td></tr>
-        <tr><td>11. Base 8, Cube 512 &rarr; Square?</td><td>\(\mathbf{64}\)</td></tr>
-        <tr><td>12. Square 289 &rarr; Base?</td><td>\(\mathbf{17}\)</td></tr>
-        <tr><td>13. Square 289 (Base 17) &rarr; Cube?</td><td>\(\mathbf{4{,}913}\)</td></tr>
-        <tr><td>Critical Thinking: \(4^3\) vs \(8^2\)</td><td>Both equal 64 - a coincidence worth discussing, not a general rule.</td></tr>
+        <tr><td>1. Squares &amp; Cubes</td><td>Computing \(n^2\)/\(n^3\) for a given base - the forward direction, the more intuitive half of this topic.</td></tr>
+        <tr><td>2. Square &amp; Cube Roots</td><td>Working backward: given a perfect square or cube, find the base - the harder half, and where misconception #3 below (treating a root as "divide by the index") shows up most.</td></tr>
+        <tr><td>3. Real-World Applications</td><td>Area-from-square-root and volume-from-cube-root scenarios worked start to finish - the bridge to Word Problems.</td></tr>
       </tbody>
     </table>
 
-    <div class="answer-day-heading">Practice Set - Tab 2: Identify the Base Number</div>
+    <div class="answer-day-heading">4. Practice Set</div>
+    <p style="margin:0 0 8px 0;">The main graded computation page - fill in a mastery table, identify a base from its square/cube, then solve missing-value radical equations.</p>
     <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
       <tbody>
-        <tr><td>Squares: \(x^2=49, 144, 289, 324, 256, 400\)</td><td>\(\mathbf{7, 12, 17, 18, 16, 20}\)</td></tr>
-        <tr><td>Cubes: \(x^3=27, 125, 1{,}000, 1{,}331, 2{,}197, 3{,}375\)</td><td>\(\mathbf{3, 5, 10, 11, 13, 15}\)</td></tr>
-        <tr><td>Critical Thinking: side length from area 361</td><td>\(\sqrt{361} = \mathbf{19}\) units</td></tr>
+        <tr><td>1. Squares &amp; Cubes Table</td><td>Given one of base/square/cube, fill in the other two - reinforces that all three are connected, not three separate facts to memorize independently.</td></tr>
+        <tr><td>2. Identify the Base Number</td><td>Working backward from a square or cube value to its base - direct practice at the harder "root" direction.</td></tr>
+        <tr><td>3. Missing Value Equations</td><td>Solving \(\sqrt{x}=n\)-style equations in both directions (forward and backward) - the most abstract framing in the unit.</td></tr>
       </tbody>
     </table>
 
-    <div class="answer-day-heading">Practice Set - Tab 3: Missing Value Equations</div>
+    <div class="answer-day-heading">5. Word Problems</div>
+    <p style="margin:0 0 8px 0;">Applies squares/cubes/roots to real area and volume scenarios across three tabs, ending with mixed and scaling challenge problems.</p>
     <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
       <tbody>
-        <tr><td>1. \(\sqrt{144}\)</td><td>\(\mathbf{12}\)</td></tr>
-        <tr><td>2. \(\sqrt[3]{?}=6\)</td><td>\(\mathbf{216}\)</td></tr>
-        <tr><td>3. \(14^2\)</td><td>\(\mathbf{196}\)</td></tr>
-        <tr><td>4. \(\sqrt[3]{3{,}375}\)</td><td>\(\mathbf{15}\)</td></tr>
-        <tr><td>5. \(\sqrt{?}=17\)</td><td>\(\mathbf{289}\)</td></tr>
-        <tr><td>6. \(9^3\)</td><td>\(\mathbf{729}\)</td></tr>
-        <tr><td>7. \(\sqrt[3]{729}\)</td><td>\(\mathbf{9}\)</td></tr>
-        <tr><td>8. \(20^2\)</td><td>\(\mathbf{400}\)</td></tr>
-        <tr><td>9. \(\sqrt{?}=13\)</td><td>\(\mathbf{169}\)</td></tr>
-        <tr><td>10. \(\sqrt[3]{1{,}331}\)</td><td>\(\mathbf{11}\)</td></tr>
-        <tr><td>Critical Thinking: \(8^2\) vs \(\sqrt{64}\)</td><td>Inverse operations - \(8^2=64\) and \(\sqrt{64}=8\), each undoes the other.</td></tr>
+        <tr><td>1. Area &amp; Square Roots</td><td>Given a square's area, find its side length - real-world square-root application.</td></tr>
+        <tr><td>2. Volume &amp; Cube Roots</td><td>Given a cube's volume, find its edge length - real-world cube-root application.</td></tr>
+        <tr><td>3. Mixed &amp; Challenge</td><td>The hardest tab: comparing two areas/volumes, finding a perimeter from an area, or reasoning about how volume scales when every edge is doubled.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">6. Test Prep</div>
+    <p style="margin:0 0 8px 0;">The assessment-prep page - concept review, error analysis, a timed review quiz, and a submit-only Mixed Practice worksheet that serves as this topic's digital assessment.</p>
+    <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
+      <tbody>
+        <tr><td>1. Concept Review</td><td>A fast pass at all four operation types (square, cube, square root, cube root) - the broadest single tab on this page.</td></tr>
+        <tr><td>2. Error Analysis</td><td>Given someone else's wrong answer, find and name the mistake - trains students to catch the exact three misconceptions listed on the Overview tab.</td></tr>
+        <tr><td>3. Timed Review Quiz</td><td>A short, timed mixed-skills quiz - good as a fluency check before the actual assessment.</td></tr>
+        <tr><td>4. Mixed Practice</td><td>Submit-only (no retry) - functions as this topic's real digital assessment, not just practice, since there's no second attempt.</td></tr>
       </tbody>
     </table>
   </div>
 
-  <!-- PANEL 3: ANSWER KEYS - WORD PROBLEMS & TEST PREP -->
-  <div id="keys-wp-tp" class="panel">
-    <div class="section-title">Answer Keys: Word Problems &amp; Test Prep</div>
+  <!-- PANEL 3: METACOGNITION & DISCUSSION -->
+  <div id="metacognition" class="panel">
+    <div class="section-title">Metacognition &amp; Discussion</div>
+    <p>Reflection prompts and small-group discussion questions to use alongside any of the six pages - none of this is graded content on a student page, it's for you to drop into a warm-up, an exit ticket, or a mid-lesson pause.</p>
 
-    <div class="answer-day-heading">Word Problems - Tab 1: Area &amp; Square Roots</div>
-    <table class="data-table">
-      <tbody>
-        <tr><td>1. Garden, area 225 sq ft</td><td>\(\mathbf{15}\) ft</td></tr>
-        <tr><td>2. Window pane, area 144 sq in</td><td>\(\mathbf{12}\) in</td></tr>
-        <tr><td>3. Rug, area 196 sq ft</td><td>\(\mathbf{14}\) ft</td></tr>
-        <tr><td>4. Frame, area 81 sq in</td><td>\(\mathbf{9}\) in</td></tr>
-        <tr><td>5. Parking lot, area 400 sq m</td><td>\(\mathbf{20}\) m</td></tr>
-        <tr><td>6. Quilt panel, area 256 sq in</td><td>\(\mathbf{16}\) in</td></tr>
-      </tbody>
-    </table>
+    <div class="answer-day-heading">Reflection Prompts (use as an exit ticket or journal stem)</div>
+    <ul>
+      <li>"When I found a square or cube today, did I ever catch myself doubling or tripling instead of actually multiplying the number by itself?" (see Misconception #1 on the Overview tab)</li>
+      <li>"If I explained the difference between squaring and cubing to a 5th grader, what's the shortest way I could say it?"</li>
+      <li>"When I took a square root today, what question was I actually answering - and is that the same as 'divide by 2'?"</li>
+      <li>"Which fact from the 1-20 squares / 1-15 cubes chart took me the longest to remember, and what trick finally helped it stick?"</li>
+      <li>"Where might I actually use a square root or cube root outside of math class - construction, art, packaging, anything?"</li>
+    </ul>
 
-    <div class="answer-day-heading">Word Problems - Tab 2: Volume &amp; Cube Roots</div>
+    <div class="answer-day-heading">Leveled Small-Group Discussion Prompts</div>
     <table class="data-table">
+      <thead><tr><th>Tier</th><th>Prompt</th></tr></thead>
       <tbody>
-        <tr><td>1. Storage box, volume 216 cu in</td><td>\(\mathbf{6}\) in</td></tr>
-        <tr><td>2. Fish tank, volume 1,000 cu cm</td><td>\(\mathbf{10}\) cm</td></tr>
-        <tr><td>3. Gift box, volume 125 cu in</td><td>\(\mathbf{5}\) in</td></tr>
-        <tr><td>4. Water tank, volume 512 cu ft</td><td>\(\mathbf{8}\) ft</td></tr>
-        <tr><td>5. Die, volume 27 cu cm</td><td>\(\mathbf{3}\) cm</td></tr>
-      </tbody>
-    </table>
-
-    <div class="answer-day-heading">Word Problems - Tab 3: Mixed &amp; Challenge</div>
-    <table class="data-table">
-      <tbody>
-        <tr><td>1. Rooms 100 vs 144 sq ft, side difference</td><td>\(\mathbf{2}\) ft</td></tr>
-        <tr><td>2. Field, area 324 sq yd, fence perimeter</td><td>\(\mathbf{72}\) yd</td></tr>
-        <tr><td>3. Box, volume 729 cu in, edge length</td><td>\(\mathbf{9}\) in</td></tr>
-        <tr><td>4. Aquarium 343 cu ft, edges doubled &rarr; new volume</td><td>\(\mathbf{2{,}744}\) cu ft</td></tr>
-      </tbody>
-    </table>
-
-    <div class="answer-day-heading">Test Prep - Tab 1: Concept Review</div>
-    <table class="data-table">
-      <tbody>
-        <tr><td>A. \(8^2\)</td><td>\(\mathbf{64}\)</td></tr>
-        <tr><td>B. \(3^3\)</td><td>\(\mathbf{27}\)</td></tr>
-        <tr><td>C. \(\sqrt{121}\)</td><td>\(\mathbf{11}\)</td></tr>
-        <tr><td>D. \(\sqrt[3]{343}\)</td><td>\(\mathbf{7}\)</td></tr>
-      </tbody>
-    </table>
-
-    <div class="answer-day-heading">Test Prep - Tab 2: Error Analysis</div>
-    <table class="data-table">
-      <tbody>
-        <tr><td>1. \(5^2=10\)</td><td>Squaring multiplies by itself, not 2: \(\mathbf{25}\)</td></tr>
-        <tr><td>2. \(2^3=6\)</td><td>Cubing multiplies by itself three times, not 3: \(\mathbf{8}\)</td></tr>
-        <tr><td>3. \(\sqrt{64}=32\)</td><td>A root is not "divide by 2": \(\mathbf{8}\)</td></tr>
-      </tbody>
-    </table>
-
-    <div class="answer-day-heading">Test Prep - Tab 3: Timed Review Quiz</div>
-    <table class="data-table">
-      <tbody>
-        <tr><td>1. \(11^2\)</td><td>\(\mathbf{121}\)</td></tr>
-        <tr><td>2. \(6^3\)</td><td>\(\mathbf{216}\)</td></tr>
-        <tr><td>3. Garden, area 169 sq ft, side</td><td>\(\mathbf{13}\) ft</td></tr>
-        <tr><td>4. \(\sqrt{81}\)</td><td>\(\mathbf{9}\)</td></tr>
-        <tr><td>5. \(\sqrt[3]{216}\)</td><td>\(\mathbf{6}\)</td></tr>
-        <tr><td>6. Which is true about \(\sqrt{100}\)?</td><td><strong>B</strong> - \(\sqrt{100}=10\)</td></tr>
-        <tr><td>7. \(4^3\) and \(8^2\) equal?</td><td><strong>True</strong></td></tr>
-        <tr><td>8. Cube box, volume 1,000 cu in, edge</td><td>\(\mathbf{10}\) in</td></tr>
-      </tbody>
-    </table>
-
-    <div class="answer-day-heading">Test Prep - Tab 4: Mixed Practice (submit-only)</div>
-    <table class="data-table">
-      <thead><tr><th>#</th><th>Problem</th><th>Answer</th></tr></thead>
-      <tbody>
-        <tr><td>1</td><td>\(7^2\)</td><td>\(\mathbf{49}\)</td></tr>
-        <tr><td>2</td><td>\(10^3\)</td><td>\(\mathbf{1{,}000}\)</td></tr>
-        <tr><td>3</td><td>\(15^2\)</td><td>\(\mathbf{225}\)</td></tr>
-        <tr><td>4</td><td>\(9^3\)</td><td>\(\mathbf{729}\)</td></tr>
-        <tr><td>5</td><td>\(\sqrt{169}\)</td><td>\(\mathbf{13}\)</td></tr>
-        <tr><td>6</td><td>\(\sqrt{225}\)</td><td>\(\mathbf{15}\)</td></tr>
-        <tr><td>7</td><td>\(\sqrt[3]{125}\)</td><td>\(\mathbf{5}\)</td></tr>
-        <tr><td>8</td><td>\(\sqrt[3]{1{,}728}\)</td><td>\(\mathbf{12}\)</td></tr>
-        <tr><td>9</td><td>\(x^2=361\)</td><td>\(\mathbf{19}\)</td></tr>
-        <tr><td>10</td><td>\(x^3=2{,}744\)</td><td>\(\mathbf{14}\)</td></tr>
-        <tr><td>11</td><td>Rug, area 144 sq ft, side</td><td>\(\mathbf{12}\) ft</td></tr>
-        <tr><td>12</td><td>Crate, volume 64 cu ft, edge</td><td>\(\mathbf{4}\) ft</td></tr>
+        <tr><td><strong>Building Understanding</strong></td><td>Take turns explaining to your partner: why is \(\sqrt{64}\) asking "what number times itself gives 64," and not "64 divided by 2"? What would \(64 \div 2\) actually give you?</td></tr>
+        <tr><td><strong>Applying</strong></td><td>As a group, find every whole number between 1 and 200 that is a perfect square. How many are there, and how do you know you didn't miss any?</td></tr>
+        <tr><td><strong>Extending</strong></td><td>\(4^3\) and \(8^2\) both equal 64 - is that a coincidence, or does it always happen for some pairs of numbers? Find another pair where a square and a cube are equal, and explain your reasoning to another group.</td></tr>
       </tbody>
     </table>
   </div>
 
-  <!-- PANEL 4: IXL PRACTICE -->
+  <!-- PANEL 4: DIFFERENTIATION -->
+  <div id="differentiation" class="panel">
+    <div class="section-title">Differentiation</div>
+    <p>Real problems, not just links - for a student who needs more scaffolding before the graded pages, or more challenge once they've cleared them.</p>
+
+    <div class="answer-day-heading">Scaffolded Support Problems</div>
+    <p>For a student still shaky on one of the misconceptions from the Overview tab. Read each hint aloud before they attempt the problem.</p>
+    <table class="data-table">
+      <thead><tr><th>Problem</th><th>Hint to give</th><th>Answer</th></tr></thead>
+      <tbody>
+        <tr><td>1. \(9^2\)</td><td>That's \(9 \times 9\), not \(9 \times 2\) - squaring means multiplying a number by itself.</td><td>\(\mathbf{81}\)</td></tr>
+        <tr><td>2. \(4^3\)</td><td>Multiply 4 by itself three times: \(4 \times 4 \times 4\), not just twice.</td><td>\(\mathbf{64}\)</td></tr>
+        <tr><td>3. \(\sqrt{100}\)</td><td>What number times itself gives 100? It's not "100 divided by 2."</td><td>\(\mathbf{10}\)</td></tr>
+        <tr><td>4. \(\sqrt[3]{27}\)</td><td>What number times itself three times gives 27?</td><td>\(\mathbf{3}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Extension / Challenge Problems</div>
+    <p>Stays within this unit's own standard scope (8.EE.A.2, squares/cubes/roots only) while pushing past what's graded on any of the six pages.</p>
+    <table class="data-table">
+      <thead><tr><th>Problem</th><th>Answer / Notes</th></tr></thead>
+      <tbody>
+        <tr><td>1. Find a whole number between 1 and 100 (other than 1) that is both a perfect square and a perfect cube.</td><td>\(\mathbf{64}\) (\(8^2=64\) and \(4^3=64\)) - a genuine dual case, not the same coincidence as \(4^3=8^2\) from the discussion prompt above (that one isn't about one number being both).</td></tr>
+        <tr><td>2. A cube-shaped storage box has a volume of \(1{,}000\) cubic cm. If every edge is doubled, what is the new volume?</td><td>Original edge \(=\sqrt[3]{1000}=10\) cm; doubled edge \(=20\) cm; new volume \(=20^3=\mathbf{8{,}000}\) cubic cm - volume doesn't just double when edges double, it multiplies by \(2^3=8\).</td></tr>
+        <tr><td>3. Which is larger: \(5^3\) or \(\sqrt{2500}\)?</td><td>\(5^3=125\); \(\sqrt{2500}=50\); \(\mathbf{5^3}\) is larger - a direct comparison between the forward and backward operations.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 5: CHALLENGE BANK -->
+  <div id="challenge" class="panel">
+    <div class="section-title">Challenge Bank</div>
+    <p>Extra problems for early finishers or homework extension, harder than anything graded on the six pages - everything below is digital, no printed materials needed. Click a problem to reveal its full solution.</p>
+
+    <div class="challenge-box">
+      <p><strong>C1.</strong> Find the sum of every perfect square between 1 and 200.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>The perfect squares up to 200 are \(1^2\) through \(14^2\) (\(14^2=196\), \(15^2=225\) is too big). Adding \(1+4+9+16+25+36+49+64+81+100+121+144+169+196 = \mathbf{1{,}015}\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> A cube-shaped box has a volume of \(512\) cubic inches. A second cube-shaped box has a volume 8 times larger. What is the edge length of the second box?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>First box's edge: \(\sqrt[3]{512}=8\) in. Second box's volume: \(512 \times 8 = 4{,}096\) cubic in. Second box's edge: \(\sqrt[3]{4{,}096} = \mathbf{16}\) in - exactly double the first box's edge, since multiplying volume by 8 multiplies edge length by \(\sqrt[3]{8}=2\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> Is 200 a perfect square, a perfect cube, both, or neither? Explain.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p><strong>Neither.</strong> \(14^2=196\) and \(15^2=225\), so 200 falls between two consecutive perfect squares. \(5^3=125\) and \(6^3=216\), so 200 falls between two consecutive perfect cubes too.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> Find every whole number \(x\) (other than 0) where \(x^2 = x^3\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>If \(x^2=x^3\), then dividing both sides by \(x^2\) (allowed since \(x \neq 0\)) gives \(1=x\). Check: \(1^2=1\) and \(1^3=1\) - they match. \(\mathbf{x=1}\) is the only whole number (other than 0, which also technically works but is excluded here) where a square and cube of the same base are equal.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> A cube-shaped storage container needs to hold \(1{,}331\) cubic feet. What is the length of one edge, and what is the area of one face of the container?</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Edge length: \(\sqrt[3]{1{,}331}=11\) ft. Area of one face: \(11^2=\mathbf{121}\) square feet - this problem chains a cube root into a square, exactly the kind of two-step reasoning the Mixed &amp; Challenge tab on Word Problems only touches once.</p>
+      </details>
+    </div>
+  </div>
+
+  <!-- PANEL 6: IXL PRACTICE -->
   <div id="ixl-practice" class="panel">
     <div class="section-title">IXL Practice</div>
     <p>Skill codes from IXL's official skill-alignment guide for <a href="https://www.ixl.com/math/skill-plans/envision-mathematics-plus-common-core-2027-accelerated-grade-7" target="_blank" rel="noopener">enVision+ Mathematics (2027), Accelerated Grade 7</a> - Topic 2, Lessons 2-4 through 2-5. Assign any time during Practice Set or Word Problems.</p>
