@@ -342,12 +342,12 @@
   // matching too. A section that matches nothing is simply excluded,
   // never forced into a pillar it doesn't belong to.
   const STREAM_PILLAR_RULES = [
-    { match: /science|sun|shade/i, pillar: 'Science', letter: 'S' },
+    { match: /science|sun|shade|sustainab/i, pillar: 'Science', letter: 'S' },
     { match: /technology|calculator|what-if/i, pillar: 'Technology', letter: 'T' },
-    { match: /religion|stewardship|celebrate|reflection/i, pillar: 'Religion', letter: 'R' },
+    { match: /religion|stewardship|celebrate|reflection|charity/i, pillar: 'Religion', letter: 'R' },
     { match: /engineer|garden|layout|build/i, pillar: 'Engineering', letter: 'E' },
     { match: /art|sign|design|creative|flyer/i, pillar: 'Art', letter: 'A' },
-    { match: /math|ledger|budget|division|decimal|optimization/i, pillar: 'Math', letter: 'M' }
+    { match: /math|ledger|budget|division|decimal|optimization|model|solv/i, pillar: 'Math', letter: 'M' }
   ];
   function pillarForSection(section) {
     const rule = STREAM_PILLAR_RULES.find((r) => r.match.test(section || ''));
@@ -578,7 +578,7 @@
   // so it also recognizes the three known ports by ActivityId prefix as a
   // fallback, purely so a brand-new project still gets a (empty) card
   // instead of silently not appearing until someone starts it.
-  const KNOWN_PROJECT_ID_PREFIXES = ['6-laudato-si-ecogarden', '7-ethical-auditor-community-engineer', '8-youth-festival-logistics'];
+  const KNOWN_PROJECT_ID_PREFIXES = ['6-laudato-si-ecogarden', '7-ethical-auditor-community-engineer', '8-youth-festival-logistics', '8-ethical-linear-budgeting'];
   function isKnownProjectId(activityId) {
     return KNOWN_PROJECT_ID_PREFIXES.some((p) => activityId === p || activityId.startsWith(p + '-'));
   }

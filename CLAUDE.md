@@ -1357,8 +1357,16 @@ Rational-Numbers, since the project is entirely positive/negative
 rational-number budgeting), and `Eighth/Youth-Festival-Logistics/index.html`
 (`8-youth-festival-logistics`, standards `HSA.CED.A.1, HSA.REI.A.1,
 HSA.REI.B.3` — matches Linear-Equations, since its content is
-single-unknown algebraic equation solving, not inequalities). **All
-three ports are deliberately not in `index.html`'s `CURRICULUM`** —
+single-unknown algebraic equation solving, not inequalities). A fourth
+activity, `Eighth/Ethical-Linear-Budgeting/index.html`
+(`8-ethical-linear-budgeting`, standards `HSA.CED.A.2, HSS.ID.C.7,
+HSF-IF.A.1, HSF-IF.B.5, HSF-LE.A.2` — matches Linear-Functions, since
+the project models a charity's budget with `f(x) = mx + b`), sits on
+this exact same shared-backend paired pattern but is **not** a port of
+any `Lessons/Projects/*` original — it's a brand-new 8-PreAP build from
+a teacher-supplied brief, using Ethical-Auditor's mechanical skeleton as
+its template (see §18's own paragraph for the full breakdown). **All
+four are deliberately not in `index.html`'s `CURRICULUM`** —
 direct-link-only, same access-control choice as Eco-Garden, for the
 same reason (see §12) — don't add a `CURRICULUM` entry for any of them
 without asking first.
@@ -1460,6 +1468,60 @@ guard the lock itself with `!window.teacherPreviewMode`
 (`applyFlyerLockedUI()` / `lockInfographicArt()`'s `infographicLocked`
 line), so a teacher can keep re-designing after clicking "Lock" too.
 Prefer this guarded version in any future port of this pattern.
+
+**Fourth build (not a port)**: `Eighth/Ethical-Linear-Budgeting/index.html`
+is the one activity in this family that isn't a port of an existing
+`Lessons/Projects/*` original — there is no older, separate-backend
+version of it anywhere. It's a brand-new 8-PreAP project built from a
+short teacher-supplied worksheet brief (linear function budget modeling
+for a charity: `f(x) = mx + b`, fixed cost as y-intercept, variable cost
+as slope), using `Ethical-Auditor-Community-Engineer`'s mechanical
+skeleton as its template (gate/pairing/Teacher-Preview/certificate+badge
+canvas code/vocab match-up engine, and its SVG-based Infographic Studio
+specifically — chosen over Youth-Festival's Konva canvas since there's
+no drag-and-drop layout content here, only a poster). ActivityId
+`8-ethical-linear-budgeting`; standards line reused verbatim from
+`Eighth/Linear-Functions` (`HSA.CED.A.2, HSS.ID.C.7, HSF-IF.A.1,
+HSF-IF.B.5, HSF-LE.A.2`) since the content directly reinforces that same
+standard set. All content is new: 6-term Vocabulary Match-Up (Linear
+Function/Slope/Y-Intercept/Function Notation/Fixed Cost/Variable Cost),
+a food-bank linear-model station using a real `<math-field>`
+(`f(x) = 2.5x + 1200`, read/compared via `readMathField()`/
+`answerMatches()` exactly like `Eighth/Linear-Functions/Practice-Set.html`
+— see §7's Math input section), evaluate/slope-intercept/eco-packaging
+stations, two 4-and-3-item Mixed Practice sets, a renamed "Linear
+Function Challenge" 2-column drag-match (5 scenario→function pairs,
+replacing Ethical-Auditor's "Rational Number Challenge" engine
+verbatim-but-renamed), an Engineering budget-structure-percent station,
+a Math solve-for-x station, and an ungraded Technology "What-If
+Calculator" sandbox (a slider, no `LessonCheck` call — Technology's
+STREAM pillar here is satisfied by an interactive tool, not a graded
+item, so it has no `SubmissionsLog` section and won't appear in either
+dashboard's pillar breakdown for this activity, which is expected, not
+a bug). The Infographic Studio's two ledger-style cards were repurposed
+from Ethical-Auditor's surplus/deficit framing into "FIXED COST"/
+"VARIABLE COST" cards populated from `solvedKeys` instead. Certificate
+citation is Luke 14:28 ("...does not first sit down and count the
+cost?"), tying directly to the brief's own "Counting the Cost" framing,
+in place of Ethical-Auditor's Matthew 25:21. `printEngineeringReport()`/
+`attemptsText()` and the `<div id="print-report">` element were dropped
+entirely rather than left as unused dead code (the only deliberate
+deviation from the otherwise exact "leave the dead function in place"
+precedent the other three ports follow — justified here because this
+is a new build, not a literal port of an original that already shipped
+with that function). `STREAM_PILLAR_RULES` (`teacher-dashboard.html`
+and `projects-dashboard.html`, kept in sync — see below) gained three
+more keywords this build needed to categorize its own section names:
+`sustainab` (Science, for the eco-packaging/slope-change station's
+`Day 1 - Sustainability` section), `charity` (Religion, for the
+`Day 1 - Research` station), and `model`/`solv` (Math, for
+`Day 1 - Linear Model`/`Day 2 - Solving for Meals`) — same "widen when a
+new project's sections don't hit the existing keywords" precedent as
+the `flyer`/`optimization` additions below (that pass also caught
+`teacher-dashboard.html`'s own copy of `STREAM_PILLAR_RULES` having
+drifted out of sync with `projects-dashboard.html`'s, missing both
+`flyer` and `optimization` — now reconciled, both files carry the
+identical array again).
 
 ### Two new Sheet tabs (both optional — every function below degrades
 to a no-op/null when the tab doesn't exist yet, so an activity with no
@@ -1688,14 +1750,17 @@ gate identical in shape to `teacher-dashboard.html`'s own (same
   `lesson-shared.js`/`lesson-auth.js`). **Keep `STREAM_PILLAR_RULES` in
   sync by hand** between the two files if it's ever tuned in one.
 - **`STREAM_PILLAR_RULES` keywords were widened past the original set**
-  (`flyer` added to Art, `optimization` added to Math) once the second
-  and third project ports' own section names didn't hit the original
-  keywords at all — see each port's own section list before assuming a
-  new project's content will show up here automatically; a section name
-  with no matching keyword is simply excluded, not an error to chase.
-  `deliverableSummaryHtml()` also gained two more optional fields —
-  `state.flyer` (Youth Festival Logistics) and `state.infographicConfig`
-  (Ethical Auditor) — kept in sync with `teacher-dashboard.html`'s own
+  (`flyer` added to Art, `optimization` added to Math for the second and
+  third project ports; `sustainab`/`charity`/`model`/`solv` added for
+  the fourth build, Ethical Linear Budgeting — see §18's own paragraph
+  on it) once each new project's own section names didn't hit the
+  existing keywords at all — see each project's own section list before
+  assuming a new one's content will show up here automatically; a
+  section name with no matching keyword is simply excluded, not an
+  error to chase. `deliverableSummaryHtml()` also gained two more
+  optional fields — `state.flyer` (Youth Festival Logistics) and
+  `state.infographicConfig` (Ethical Auditor, reused as-is by Ethical
+  Linear Budgeting) — kept in sync with `teacher-dashboard.html`'s own
   copy, which gained the identical two fields at the same time.
 
 ### Setting up a new paired activity (teacher/manual steps — Claude

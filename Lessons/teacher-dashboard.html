@@ -2161,12 +2161,12 @@
   // reasonable chance of matching too. Returns null (excluded from the
   // breakdown) rather than guessing when nothing matches.
   const STREAM_PILLAR_RULES = [
-    { match: /science|sun|shade/i, pillar: 'Science (S)' },
+    { match: /science|sun|shade|sustainab/i, pillar: 'Science (S)' },
     { match: /technology|calculator|what-if/i, pillar: 'Technology (T)' },
-    { match: /religion|stewardship|celebrate|reflection/i, pillar: 'Religion (R)' },
+    { match: /religion|stewardship|celebrate|reflection|charity/i, pillar: 'Religion (R)' },
     { match: /engineer|garden|layout|build/i, pillar: 'Engineering (E)' },
-    { match: /art|sign|design|creative/i, pillar: 'Art (A)' },
-    { match: /math|ledger|budget|division|decimal/i, pillar: 'Math (M)' }
+    { match: /art|sign|design|creative|flyer/i, pillar: 'Art (A)' },
+    { match: /math|ledger|budget|division|decimal|optimization|model|solv/i, pillar: 'Math (M)' }
   ];
   function pillarForSection(section) {
     const rule = STREAM_PILLAR_RULES.find((r) => r.match.test(section || ''));
