@@ -468,6 +468,10 @@
   let roster = [];
   let activityCatalog = [];
   let teacherScope = null;
+  // Pairs (see /CLAUDE.md's "Paired activities" section) - empty for
+  // every teacher-data response until a Pairs Sheet tab actually exists,
+  // same degrade-to-no-op pattern as Code.gs's own getPairsForDashboard_.
+  let allPairs = [];
 
   // '' means "All" for both, same convention the old <select>-based
   // filters used - activeFilters()/filteredRows() etc. never needed to
@@ -634,6 +638,7 @@
     roster = result.roster || [];
     activityCatalog = result.activityCatalog || [];
     teacherScope = result.scope || null;
+    allPairs = result.pairs || [];
 
     hideLoadingIndicator();
     document.getElementById('lesson-gate').hidden = true;
@@ -2417,9 +2422,60 @@
   }
   window.teacherReset = teacherReset;
 
+  // Paired activities (see /CLAUDE.md's "Paired activities" section) -
+  // allPairs is empty for every activity that has no Pairs Sheet tab rows
+  // at all, so this is a no-op ('') everywhere else on the site.
+  function pairingForRow(r) {
+    return allPairs.find((p) => p.email === r.email && p.activityId === r.activityId) || null;
+  }
+
+  function partnerNameFor(partnerEmail) {
+    const partnerRow = roster.find((s) => s.email === partnerEmail);
+    return (partnerRow && partnerRow.studentName) || partnerEmail;
+  }
+
+  function pairingHtml(r) {
+    const pairing = pairingForRow(r);
+    if (!pairing) return '';
+    const roleLabel = String(pairing.role || '').trim().toLowerCase() === 'navigator' ? 'Navigator' : 'Driver';
+    return `
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px; padding:10px 12px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px;">
+        <strong style="font-size:0.85rem; color:#1e3a8a;">Paired activity:</strong>
+        <span class="pill neutral">${roleLabel}</span>
+        <span style="font-size:0.85rem;">Partnered with <strong>${partnerNameFor(pairing.partnerEmail)}</strong></span>
+        <button class="btn-lg" style="padding:6px 12px; font-size:0.85rem;" onclick="teacherUnpair('${r.email}','${r.activityId}', this)">Unpair</button>
+      </div>`;
+  }
+
+  // Removes a pairing in both directions (see Code.gs's unpair_) so a
+  // teacher can re-pair a student - the absent partner for the rest of a
+  // project, or two students paired by mistake. Not reachable from a
+  // lesson page, teacher-dashboard-only, same as teacherReset above.
+  async function teacherUnpair(email, activityId, btn) {
+    if (!confirm('Unpair this student from their partner on this activity? Both students will need to be re-paired in the Sheet before either sees mirrored progress again.')) return;
+    if (btn) btn.disabled = true;
+    try {
+      const res = await fetchWithTimeout(LESSON_SYNC_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ idToken, type: 'teacher-unpair', studentEmail: email, activityId })
+      }, 15000);
+      const result = await res.json();
+      if (!result.ok) { alert(result.error || 'Unpair failed.'); if (btn) btn.disabled = false; return; }
+      allPairs = allPairs.filter((p) => !(p.activityId === activityId && (p.email === email || p.partnerEmail === email)));
+      renderAll();
+      const i = lastStudentSummaries.findIndex((s) => s.email === email);
+      if (i >= 0) openStudentDetail(i);
+    } catch (err) {
+      alert('Unpair failed - check your connection and try again.');
+      if (btn) btn.disabled = false;
+    }
+  }
+  window.teacherUnpair = teacherUnpair;
+
   function submissionDetailTable(r) {
+    const pairing = pairingHtml(r);
     const sessions = sessionsHtml(r);
-    if (!r.submissions.length) return sessions ? `${sessions}<p style="margin-top:14px;"><em>No graded items logged.</em></p>` : '<em>No graded items logged.</em>';
+    if (!r.submissions.length) return pairing + (sessions ? `${sessions}<p style="margin-top:14px;"><em>No graded items logged.</em></p>` : '<em>No graded items logged.</em>');
 
     // A "Reset" link only makes sense on a key's most recent entry (its
     // current state) - showing it on every past attempt row would be
@@ -2502,7 +2558,7 @@
     }
     const itemsHtml = items.join('');
     const itemsTable = `${toolbar}<table><thead><tr><th>Item</th><th>Answer</th><th>Verdict</th><th>Attempt</th><th>Time</th></tr></thead><tbody>${itemsHtml}</tbody></table>`;
-    return sessions ? `${sessions}<div style="margin-top:14px;">${itemsTable}</div>` : itemsTable;
+    return pairing + (sessions ? `${sessions}<div style="margin-top:14px;">${itemsTable}</div>` : itemsTable);
   }
 
   function renderAll() {

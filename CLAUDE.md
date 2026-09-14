@@ -13,7 +13,7 @@ alone (marked below as **Why:**).
 
 **Before touching anything, read these two sections first:**
 - [§5 Saving student progress](#5-saving-student-progress--the-one-rule-that-breaks-silently) — the single most common way this codebase breaks
-- [§13 Verification checklist](#13-verification-checklist-run-this-after-any-change) — how to prove your change works before calling it done
+- [§16 Verification checklist](#16-verification-checklist-run-this-after-any-change) — how to prove your change works before calling it done
 
 ## Contents
 1. [Architecture](#1-architecture-one-backend-one-sheet)
@@ -33,6 +33,7 @@ alone (marked below as **Why:**).
 15. [Standards line](#15-standards-line)
 16. [Verification checklist](#16-verification-checklist-run-this-after-any-change)
 17. [Status](#17-status)
+18. [Paired/team activities](#18-pairedteam-activities)
 
 ---
 
@@ -48,6 +49,12 @@ and don't hold it to any rule in this file.
 
 Adding a new activity = one new row in `ActivityCatalog` in the shared
 Sheet. It never requires new backend code.
+
+A **paired/team** activity (two students, one Driver/one Navigator,
+mirrored progress) runs on this exact same one backend — see §18. It is
+a different pattern from `Lessons/Projects/*` above: a paired activity
+lives under its grade folder like any other page and uses this backend
+directly, not a separate `SHEET_API_URL`.
 
 - **Canonical backend source**: `automation/apps-script/Code.gs` in
   this repo. After editing it, paste the full contents into the Apps
@@ -715,6 +722,11 @@ one mechanism, all going through `applyTeacherReset_` in `Code.gs`
   `restoreSubmissions()` pre-fills instead of locking). **This is
   infrastructure only** — deciding which items should use it is a
   per-item content call, never a blanket flip.
+- **Unpairing a team** (a paired activity's own teacher-only mechanism,
+  separate from this reset flow) is §18's `teacher-unpair` — same
+  dashboard-only, next-page-load-only, scoped-authorization shape as
+  the reset above, but removes a `Pairs` row instead of touching
+  `SubmissionsLog`.
 
 ---
 
@@ -1170,13 +1182,20 @@ dashboard, teacher-view answer keys — and verified via the checklist
 above.
 
 **Open (needs a team decision, not further engineering)**:
-`Lessons/Projects/*` remains on its own older, unmigrated pattern (its
-own per-project `SHEET_API_URL` instead of the shared Sheet/Apps
-Script backend). **Don't extend it and don't hold it to any rule in
-this file.** Migrating it onto the shared backend is a real project —
-rewriting each project's save calls to the shared `Code.gs` pipeline —
-and needs to be discussed with the team before anyone starts it. This
-is the only open item; everything else below is closed.
+`Lessons/Projects/*` — all three folders, `Laudato-Si-EcoGarden`
+included — remains on its own older, unmigrated pattern (its own
+per-project `SHEET_API_URL` instead of the shared Sheet/Apps Script
+backend), completely untouched. **Don't extend it and don't hold it to
+any rule in this file.** A shared-backend, paired-activity **port** of
+`Laudato-Si-EcoGarden` now exists alongside it as a separate page —
+`Sixth/Laudato-Si-EcoGarden/index.html` (see §18) — built new rather
+than by editing the original. `Ethical-Auditor-Community-Engineer` and
+`Youth-Festival-Logistics` have no such port yet; porting either is a
+real project — same shape as the Eco-Garden port, rewriting that
+project's own save calls onto the shared `Code.gs` pipeline plus adding
+a pairing UI where relevant — and needs to be discussed with the team
+before anyone starts it. This is the only open item; everything else
+below is closed.
 
 **Closed, by design**: `Vocabulary Match-Up` is intentionally not on
 `Seventh/Integers`/`Operations-with-Rationals`/`Rational-Numbers` — see
@@ -1195,3 +1214,171 @@ once exhausted" treatment every other unit's reveal widgets have,
 verified live via Playwright (each widget's button correctly disables
 at its cap and correctly re-enables on Reset, zero `pageerror` events).
 Deliberately deferred integrity/reporting features are listed in §8.
+
+---
+
+## 18. Paired/team activities
+
+A paired activity is two students working one shared activity together
+on the same one backend as everything else in §1 — no second Sheet, no
+second Apps Script deployment. One student is the **Driver** (types
+answers, drags/builds things, submits); the other is the **Navigator**
+(read-only — sees the same progress mirrored to their own screen, can
+navigate tabs, can never answer or edit). Pairing is **teacher-assigned
+in the Sheet only** — there is no in-app "invite a partner" flow, and a
+pair's role never changes itself; only a teacher can remove one (see
+"Unpairing" below). Mirroring is **refresh-based, not live** — same
+"no push/websocket, retrospective only" principle as §8's engagement
+tracking; a Navigator sees the Driver's latest saved state on their own
+next page load/reload, not instantly as the Driver types.
+
+**Canonical example**: `Sixth/Laudato-Si-EcoGarden/index.html` — a
+2-day STREAM project (decimal rounding/exact operations on a store
+ledger, then a Konva.js canvas garden-layout builder and sign studio).
+It is a from-scratch port of `Lessons/Projects/Laudato-Si-EcoGarden/index.html`
+(the older, separate `SHEET_API_URL` pattern — see §1) onto this
+backend, built as a **new file**; the original under `Projects/` is
+untouched and stays on its own pattern per §1/§17. Only its identity/
+save layer changed — every canvas/drag-drop/certificate/report function
+(`gradeAttempt()`, `restoreState()`'s body, all Garden/Sign Konva code)
+is unchanged from the original, since neither needed to know pairing
+exists at all.
+
+### Two new Sheet tabs (both optional — every function below degrades
+to a no-op/null when the tab doesn't exist yet, so an activity with no
+pairing is completely unaffected)
+- **`Pairs`** — `Email, PartnerEmail, ActivityId, Role`. One row **per
+  student per paired activity** — a pair is two rows, not one (Alex's
+  row names Sam as `PartnerEmail` with `Role` = `Driver`; Sam's row
+  names Alex back with `Role` = `Navigator`). `Role` is matched
+  case-insensitively (`normalizeRole_` lowercases/trims); `Email`/
+  `PartnerEmail` are matched via `normalizeEmail_` too, since a
+  teacher's hand-typed `PartnerEmail` cell won't always match Google's
+  own token-reported casing for that student's future sign-ins exactly
+  — this is also why `getOrCreateProgressRow_`/`recordSubmission_`'s
+  own Email row-matching was hardened from strict `===` to
+  `normalizeEmail_`-based comparison (broadening-only, every existing
+  non-paired activity matches exactly as before).
+- **`ProjectState`** — `Email, ActivityId, StateJSON, UpdatedAt`. Free-
+  form app-state storage (a canvas layout, a cart, anything that
+  doesn't fit the per-item `SubmissionsLog` model) — upsert-only, one
+  row per (student, activity), **never** written into `Progress`/
+  `SubmissionsLog` itself. Used by any activity calling
+  `LessonSync.saveProjectState(stateJson)`, paired or not — pairing and
+  free-form state storage are two independent, separately-optional
+  capabilities that happen to be used together on the canonical
+  example.
+
+### Backend mechanics (`Code.gs`)
+- `access-check`'s response gains two optional fields, both `undefined`
+  (dropped by `JSON.stringify`, so every existing page's response shape
+  is byte-for-byte unchanged) unless the signed-in student has a `Pairs`/
+  `ProjectState` row for this activity: `pairing: {role, partnerEmail,
+  partnerName}` (`partnerName` resolved from `Roster` so the page never
+  has to look it up itself) and `projectState` (the raw `StateJSON`
+  string, or `undefined`).
+- `submission` and `project-state-save` (new request type, mirrors
+  `submission`'s shape) both: (1) reject a Navigator's own write
+  server-side — `{ok:false, error:"..."}` — **defense in depth**, since
+  a Navigator's inputs/buttons are already disabled client-side and
+  never call `LessonCheck.check()`/`.submit()`/`saveProjectState()` in
+  the first place, but the backend never trusts the front-end's claimed
+  role any more than it trusts its claimed identity (§2); (2) on a
+  Driver's successful write, mirror the identical item/state onto the
+  partner's own `Progress`/`ProjectState` row via
+  `mirrorSubmissionToPartner_`/a second `saveProjectState_` call — each
+  partner keeps their own normal row, so the dashboard, `decorateRow()`,
+  scoring, and every other per-student view work completely unchanged
+  for a paired student. Nothing about §5's "the record argument is what
+  saves it" rule changes — a paired page's check functions still call
+  `LessonCheck.check()`/`.submit()` exactly as any other page's would;
+  mirroring happens entirely server-side, after the normal save.
+- `check-day2-code` — read-only, no lock, for an activity that wants
+  the original "teacher gives a short passcode to unlock day 2" UX
+  instead of (or alongside) a graded gate. Compares against that
+  activity's own `ActivityCatalog.Day2Code` cell (a new, optional
+  column — blank for every activity that doesn't use it, including
+  every pre-existing row). `LessonSync.checkDay2Code(code)` is the
+  client-side call.
+- `teacher-unpair` — teacher-only, dashboard-only, removes a pairing in
+  both directions (`unpair_()`) so a teacher can re-pair a student (an
+  absent partner, or two students paired by mistake). Reuses
+  `isTeacher_`/`getTeacherScope_`/`getScopedEmailSet_` — a scoped
+  teacher can only unpair their own students. Not live — the freed
+  students just have no `Pairs` row on their next page load, and the
+  page treats that exactly like "never paired" (see below). Removing a
+  pairing never touches `Progress`/`SubmissionsLog`/`ProjectState` —
+  everything already mirrored stays exactly as it was.
+- `teacher-data`'s response gains `pairs: getPairsForDashboard_(emailSet)`
+  — every `Pairs` row for the scoped teacher's own students (or every
+  row, unrestricted scope), same shape as one `Pairs` Sheet row.
+
+### Client-side mechanics
+- **`window.onLessonUnlock(result)`** — a new, optional hook in
+  `lesson-auth.js`'s `proceedWithToken()`, called once right after the
+  existing `unlock(student, progress)` call succeeds (never for a
+  teacher — teachers return earlier via `unlockTeacherView()` and never
+  reach this hook). `undefined` on every page that doesn't define it —
+  a no-op everywhere else on the site. A paired/project page defines it
+  to read `result.pairing`/`result.projectState` and apply whatever its
+  own page needs (restore free-form state, lock out a Navigator) — see
+  the canonical example's own handler for the full pattern.
+- **`LessonSync.saveProjectState(stateJson)`** / **`LessonSync.checkDay2Code(code)`**
+  — the two generic helpers exposed alongside `LessonSync.init`, for
+  exactly the two new request types above. Both no-op/fail gracefully
+  if called before sign-in resolves; both keep `idToken` inside
+  `lesson-auth.js`'s own closure, so a page can't build a competing
+  request shape against it.
+- **Navigator lockout is client-side UX only** (the backend rejection
+  above is the real boundary) — the canonical example's
+  `lockForNavigator()` disables every `<input>`/`<select>`/`<textarea>`/
+  `<math-field>` and every `<button>` whose `onclick` doesn't match
+  §6's `SAFE_ONCLICK` list (so tab navigation and Print still work),
+  then adds a `navigator-locked` class to `.app-container`. A page with
+  raw-pointer surfaces that sweep can't reach — native HTML5
+  drag-and-drop, a Konva canvas, a click-driven tray/pool of items —
+  adds a page-local CSS rule scoping `pointer-events: none` to just
+  those containers under `.navigator-locked`, rather than touching the
+  drag/canvas code itself. **Never gate a Navigator by reusing an
+  activity's own "this section is finished" lock flag** (e.g. forcing
+  `day1Locked`/`gardenLocked` true) — that would misrepresent the
+  Driver's real progress to anything reading those flags; gate on
+  `pairing.role === 'navigator'` directly instead.
+- **No pairing row is a fully supported, non-error state** — a signed-in
+  student with no `Pairs` row for that activity (not yet paired by the
+  teacher, or just unpaired) is treated as a **solo Driver**: full
+  read/write access, its own `Progress`/`ProjectState` row, nothing
+  lost once the teacher does pair them later. A page should say so
+  plainly (see the canonical example's `pairing-status` text) rather
+  than erroring or blocking.
+
+### Teacher dashboard
+- `allPairs` (populated from `teacher-data`'s new `pairs` field) is
+  looked up per detail row via `pairingForRow(r)` — matches on
+  `r.email`/`r.activityId`, same key shape as a `Progress` row.
+- `submissionDetailTable(r)` (Student Roster & Profiles' per-activity
+  rows, By Activity's per-student rows, Full Submission Log — same
+  shared function as §9/§13) prepends a "Paired activity" block — role
+  pill, partner's name (via `partnerNameFor()`, resolved from `roster`),
+  and an **Unpair** button (`teacherUnpair(email, activityId, btn)`) —
+  whenever a pairing exists for that row, **before** the "no graded
+  items logged yet" early return, so it still shows even if the Driver
+  hasn't submitted anything yet. Nothing renders for a non-paired row —
+  `allPairs` is `[]` for every activity/teacher with no `Pairs` tab
+  rows at all.
+
+### Setting up a new paired activity (teacher/manual steps — Claude
+cannot edit the live Sheet or redeploy Apps Script itself; see §1)
+1. Add the activity's row to `ActivityCatalog` as normal (§3) — set
+   `Day2Code` only if that activity uses the typed-passcode Day-2-style
+   unlock; leave it blank otherwise.
+2. For each pair, add **two** rows to `Pairs`: each student's own
+   `Email`, the other's `PartnerEmail`, the shared `ActivityId`, and
+   that student's own `Role` (`Driver` or `Navigator`).
+3. Create the `ProjectState` tab (headers: `Email, ActivityId, StateJSON,
+   UpdatedAt`) if this activity saves free-form state — skip it for a
+   paired activity that only ever uses normal `LessonCheck`-graded
+   items.
+4. Paste the current `automation/apps-script/Code.gs` into the Apps
+   Script editor and redeploy (New version, same `/exec` URL) — this
+   whole section's backend mechanics require that redeploy to be live.

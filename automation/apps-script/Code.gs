@@ -137,6 +137,166 @@ function checkAccess_(email, activityId) {
   return result;
 }
 
+// ================================================================
+// PAIRED/TEAM ACTIVITIES (Pairs + ProjectState tabs) - see /CLAUDE.md's
+// "Paired activities" section for the full design. Both tabs are
+// optional additions a teacher creates only for an activity that needs
+// them - getSheetByName() returns null (never throws) for a tab that
+// doesn't exist yet, so every function below degrades to a no-op/null
+// and every other page on the site is completely unaffected whether or
+// not these tabs exist.
+// ================================================================
+
+function normalizeRole_(role) {
+  return String(role || '').trim().toLowerCase();
+}
+
+// Looks up this student's own pairing row for one activity - null if the
+// Pairs tab doesn't exist yet, or this student has no row on it for this
+// activityId (the common case: an activity with no pairing at all).
+function getPairing_(email, activityId) {
+  const sheet = ss_().getSheetByName('Pairs');
+  if (!sheet) return null;
+  const map = colMap_(sheet);
+  const data = sheet.getDataRange().getValues();
+  for (let r = 1; r < data.length; r++) {
+    if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(email) && data[r][map['ActivityId']] === activityId) {
+      return { rowNumber: r + 1, email: data[r][map['Email']], partnerEmail: data[r][map['PartnerEmail']], role: data[r][map['Role']] };
+    }
+  }
+  return null;
+}
+
+// access-check-facing shape: role normalized to 'driver'/'navigator', plus
+// the partner's real StudentName (looked up from Roster) instead of just
+// their email, so the page can show "Paired with <name>" directly.
+function getPairingWithPartnerName_(email, activityId) {
+  const pairing = getPairing_(email, activityId);
+  if (!pairing) return null;
+  const roster = ss_().getSheetByName('Roster');
+  const rMap = colMap_(roster);
+  const partnerRow = findRowByEmail_(roster, rMap['Email'], pairing.partnerEmail);
+  return {
+    role: normalizeRole_(pairing.role),
+    partnerEmail: pairing.partnerEmail,
+    partnerName: partnerRow ? partnerRow.row[rMap['StudentName']] : pairing.partnerEmail
+  };
+}
+
+// Mirrors one submitted item into the partner's own Progress row, so both
+// partners' dashboard rows read identically without the dashboard (or
+// Progress's own schema) needing to know pairing exists at all. Emails
+// are normalized before being handed to recordSubmission_/
+// getOrCreateProgressRow_ specifically because the partner's email here
+// comes from a teacher's hand-typed Pairs.PartnerEmail cell, which won't
+// necessarily match the exact casing Google's own token reports for that
+// same account the next time the partner signs in themselves - see the
+// normalizeEmail_ comparison now used in both of those functions' own
+// row-lookups for the other half of this fix.
+function mirrorSubmissionToPartner_(partnerEmail, activityId, item) {
+  const roster = ss_().getSheetByName('Roster');
+  const rMap = colMap_(roster);
+  const partnerRow = findRowByEmail_(roster, rMap['Email'], partnerEmail);
+  if (!partnerRow) return; // partner isn't on the roster - nothing to mirror to
+  const partnerStudent = {
+    name: partnerRow.row[rMap['StudentName']],
+    grade: partnerRow.row[rMap['Grade']],
+    teacher: partnerRow.row[rMap['Teacher']]
+  };
+  const catalog = ss_().getSheetByName('ActivityCatalog');
+  const cMap = colMap_(catalog);
+  const activityRow = findRow_(catalog, cMap['ActivityId'], activityId);
+  const activityTitle = activityRow ? activityRow.row[cMap['Title']] : '';
+  recordSubmission_(normalizeEmail_(partnerEmail), activityId, partnerStudent, activityTitle, item);
+}
+
+// Free-form app state (anything that isn't a discrete graded answer, e.g.
+// a canvas layout or a shopping cart's contents) doesn't fit the
+// SubmissionsLog append-only audit-log model - it's one snapshot that
+// gets overwritten on every save, not a growing history. ProjectState is
+// a separate, tiny, upsert-only tab for exactly that: one row per
+// (student, activity), the whole blob in one JSON cell.
+function getProjectState_(email, activityId) {
+  const sheet = ss_().getSheetByName('ProjectState');
+  if (!sheet) return '';
+  const map = colMap_(sheet);
+  const data = sheet.getDataRange().getValues();
+  for (let r = 1; r < data.length; r++) {
+    if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(email) && data[r][map['ActivityId']] === activityId) {
+      return data[r][map['StateJSON']] || '';
+    }
+  }
+  return '';
+}
+
+function saveProjectState_(email, activityId, stateJson) {
+  const sheet = ss_().getSheetByName('ProjectState');
+  if (!sheet) return;
+  const map = colMap_(sheet);
+  const data = sheet.getDataRange().getValues();
+  const now = new Date();
+  for (let r = 1; r < data.length; r++) {
+    if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(email) && data[r][map['ActivityId']] === activityId) {
+      sheet.getRange(r + 1, map['StateJSON'] + 1).setValue(stateJson);
+      sheet.getRange(r + 1, map['UpdatedAt'] + 1).setValue(now);
+      return;
+    }
+  }
+  const newRow = [];
+  newRow[map['Email']] = email;
+  newRow[map['ActivityId']] = activityId;
+  newRow[map['StateJSON']] = stateJson;
+  newRow[map['UpdatedAt']] = now;
+  sheet.appendRow(newRow);
+}
+
+// Teacher-initiated: removes a pairing in both directions (this student's
+// row and their partner's row) so it stops mirroring/locking anything
+// further - same "teacher is the only one who can undo it" rule as
+// teacher-reset. Nothing about SubmissionsLog/ProjectState history is
+// touched; this only removes the two Pairs rows, so a re-paired student
+// keeps every prior attempt on record.
+function unpair_(studentEmail, activityId) {
+  const sheet = ss_().getSheetByName('Pairs');
+  if (!sheet) return { ok: false, error: 'No Pairs tab found' };
+  const map = colMap_(sheet);
+  const data = sheet.getDataRange().getValues();
+  const rowsToDelete = [];
+  let partnerEmail = null;
+  for (let r = 1; r < data.length; r++) {
+    if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(studentEmail) && data[r][map['ActivityId']] === activityId) {
+      rowsToDelete.push(r + 1);
+      partnerEmail = data[r][map['PartnerEmail']];
+    }
+  }
+  if (partnerEmail) {
+    for (let r = 1; r < data.length; r++) {
+      if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(partnerEmail) && data[r][map['ActivityId']] === activityId) {
+        rowsToDelete.push(r + 1);
+      }
+    }
+  }
+  if (!rowsToDelete.length) return { ok: false, error: 'No pairing found for that student/activity' };
+  // Delete from bottom to top so earlier row numbers in the list don't
+  // shift out from under the later deletions.
+  rowsToDelete.sort((a, b) => b - a).forEach((rowNum) => sheet.deleteRow(rowNum));
+  return { ok: true, unpaired: rowsToDelete.length };
+}
+
+function getPairsForDashboard_(emailSet) {
+  const sheet = ss_().getSheetByName('Pairs');
+  if (!sheet) return [];
+  const map = colMap_(sheet);
+  const data = sheet.getDataRange().getValues();
+  const rows = [];
+  for (let r = 1; r < data.length; r++) {
+    const email = data[r][map['Email']];
+    if (emailSet && !emailSet[email]) continue;
+    rows.push({ email: email, partnerEmail: data[r][map['PartnerEmail']], activityId: data[r][map['ActivityId']], role: data[r][map['Role']] });
+  }
+  return rows;
+}
+
 // Simple first-pass flags - tune thresholds once real pilot data exists.
 function computeFlag_(row) {
   const submissions = JSON.parse(row.SubmissionsLog || '[]');
@@ -215,12 +375,27 @@ function doPost(e) {
       rows: getAllProgressForDashboard_(emailSet),
       roster: getRosterForDashboard_(emailSet),
       activityCatalog: getActivityCatalogForDashboard_(),
-      accessLog: getAccessLogForDashboard_(emailSet)
+      accessLog: getAccessLogForDashboard_(emailSet),
+      pairs: getPairsForDashboard_(emailSet)
     });
   }
 
-  // Everything below this line can write to Progress/AccessLog - only
-  // these two hold the lock.
+  // Read-only day-2-style unlock code check for a paired/project
+  // activity - compares against that activity's own ActivityCatalog.Day2Code
+  // cell (blank/missing column means no code is configured, so this
+  // always returns ok:false for every activity that doesn't use it).
+  // Never writes - no lock needed.
+  if (body.type === 'check-day2-code') {
+    const catalog = ss_().getSheetByName('ActivityCatalog');
+    const cMap = colMap_(catalog);
+    const activityRow = findRow_(catalog, cMap['ActivityId'], body.activityId);
+    const expected = activityRow && cMap['Day2Code'] !== undefined ? String(activityRow.row[cMap['Day2Code']] || '').trim() : '';
+    const typed = String(body.code || '').trim();
+    return jsonOut_({ ok: !!expected && expected.toLowerCase() === typed.toLowerCase() });
+  }
+
+  // Everything below this line can write (Progress/AccessLog/Pairs/
+  // ProjectState) - only these request types hold the lock.
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
@@ -235,14 +410,69 @@ function doPost(e) {
       const access = checkAccess_(auth.email, body.activityId);
       if (!access.allowed) return jsonOut_({ ok: true, allowed: false, reason: access.reason });
       const progress = getOrCreateProgressRow_(auth.email, body.activityId, access.student, access.activityTitle);
-      return jsonOut_({ ok: true, allowed: true, role: 'student', student: access.student, progress });
+      // pairing/projectState are both undefined (dropped by JSON.stringify)
+      // for the vast majority of activities, which have no Pairs/
+      // ProjectState rows at all - every existing page's response shape is
+      // unchanged.
+      const pairing = getPairingWithPartnerName_(auth.email, body.activityId);
+      const projectState = getProjectState_(auth.email, body.activityId);
+      return jsonOut_({
+        ok: true, allowed: true, role: 'student', student: access.student, progress,
+        pairing: pairing || undefined,
+        projectState: projectState || undefined
+      });
     }
 
     if (body.type === 'submission') {
       const access = checkAccess_(auth.email, body.activityId);
       if (!access.allowed) return jsonOut_({ ok: false, error: access.reason });
+      const pairing = getPairing_(auth.email, body.activityId);
+      // Defense in depth: a Navigator's own inputs are disabled client-side
+      // and never call LessonCheck.check()/.submit() in the first place,
+      // but the backend never trusts the front-end's claimed role either -
+      // same principle as every other access check in this file.
+      if (pairing && normalizeRole_(pairing.role) === 'navigator') {
+        return jsonOut_({ ok: false, error: "Your partner is driving this activity - you can only view their answers." });
+      }
       const updated = recordSubmission_(auth.email, body.activityId, access.student, access.activityTitle, body.item);
+      if (pairing && pairing.partnerEmail) {
+        mirrorSubmissionToPartner_(pairing.partnerEmail, body.activityId, body.item);
+      }
       return jsonOut_({ ok: true, progress: updated });
+    }
+
+    // Free-form app-state save (see the "Paired/team activities" block
+    // above) - mirrored to the partner's own ProjectState row the same
+    // way a submission mirrors, and rejected from a Navigator the same way.
+    if (body.type === 'project-state-save') {
+      const access = checkAccess_(auth.email, body.activityId);
+      if (!access.allowed) return jsonOut_({ ok: false, error: access.reason });
+      const pairing = getPairing_(auth.email, body.activityId);
+      if (pairing && normalizeRole_(pairing.role) === 'navigator') {
+        return jsonOut_({ ok: false, error: "Your partner is driving this activity - you can only view their progress." });
+      }
+      saveProjectState_(normalizeEmail_(auth.email), body.activityId, body.stateJson);
+      if (pairing && pairing.partnerEmail) {
+        saveProjectState_(normalizeEmail_(pairing.partnerEmail), body.activityId, body.stateJson);
+      }
+      return jsonOut_({ ok: true });
+    }
+
+    // Teacher-only, writes. Removes a pairing in both directions so a
+    // teacher can re-pair a student (a partner absent for the rest of the
+    // project, or two students paired by mistake) - see unpair_() for
+    // exactly what gets removed. Reuses the identical scoping check as
+    // teacher-reset below.
+    if (body.type === 'teacher-unpair') {
+      if (!isTeacher_(auth.email)) return jsonOut_({ ok: false, error: 'Not authorized' });
+      const scope = getTeacherScope_(auth.email);
+      const emailSet = getScopedEmailSet_(scope);
+      if (emailSet && !emailSet[body.studentEmail]) {
+        return jsonOut_({ ok: false, error: 'Not authorized for this student' });
+      }
+      const result = unpair_(body.studentEmail, body.activityId);
+      if (!result.ok) return jsonOut_({ ok: false, error: result.error });
+      return jsonOut_({ ok: true, unpaired: result.unpaired });
     }
 
     // Teacher-only, writes. Gives a student's locked item(s) their 2
@@ -277,8 +507,14 @@ function getOrCreateProgressRow_(email, activityId, student, activityTitle) {
   const sheet = ss_().getSheetByName('Progress');
   const map = colMap_(sheet);
   const data = sheet.getDataRange().getValues();
+  // Normalized (not strict ===) so a mirrored write for a paired
+  // activity - whose email comes from a teacher's hand-typed
+  // Pairs.PartnerEmail cell, not from that student's own Google token -
+  // still finds the row that student's own sign-in already created. Safe
+  // to broaden for every page: this only makes matching more permissive,
+  // never less, so an existing exact-cased match still matches.
   for (let r = 1; r < data.length; r++) {
-    if (data[r][map['Email']] === email && data[r][map['ActivityId']] === activityId) {
+    if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(email) && data[r][map['ActivityId']] === activityId) {
       return rowToProgress_(data[r], map);
     }
   }
@@ -328,8 +564,11 @@ function recordSubmission_(email, activityId, student, activityTitle, item) {
   const map = colMap_(sheet);
   const data = sheet.getDataRange().getValues();
   let rowNumber = -1;
+  // Same normalized-email broadening as getOrCreateProgressRow_ above, for
+  // the same reason (a mirrored write's email comes from a hand-typed
+  // Pairs cell, not a live Google token).
   for (let r = 1; r < data.length; r++) {
-    if (data[r][map['Email']] === email && data[r][map['ActivityId']] === activityId) { rowNumber = r + 1; break; }
+    if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(email) && data[r][map['ActivityId']] === activityId) { rowNumber = r + 1; break; }
   }
   if (rowNumber === -1) {
     getOrCreateProgressRow_(email, activityId, student, activityTitle);

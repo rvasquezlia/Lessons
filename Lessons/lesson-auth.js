@@ -417,6 +417,13 @@ const LessonSync = (() => {
       resolved = true;
       if (result.role === 'teacher') { unlockTeacherView(result.student && result.student.name); return; }
       unlock(result.student, result.progress);
+      // Optional hook for a page that needs more than the generic
+      // restoreSubmissions() flow above already gives it - e.g. a paired
+      // activity reading result.pairing/result.projectState (see
+      // /CLAUDE.md's "Paired activities" section) to apply a Navigator
+      // read-only lockout or restore free-form canvas/app state.
+      // Undefined on every other page, so this is a no-op everywhere else.
+      if (typeof window.onLessonUnlock === 'function') window.onLessonUnlock(result);
     } catch (err) {
       if (resolved || myGeneration !== requestGeneration) return;
       if (!isRetry) {
@@ -504,5 +511,33 @@ const LessonSync = (() => {
     tryStart();
   }
 
-  return { init };
+  // Generic helpers for a paired/team project page (see /CLAUDE.md's
+  // "Paired activities" section) - not used by any single-answer lesson
+  // page, only by a page storing its own free-form app state (a canvas
+  // layout, a cart, etc.) that doesn't fit the per-item SubmissionsLog
+  // model. Both no-op (never throw) if called before sign-in succeeds -
+  // idToken is this closure's private copy, never exposed directly, so a
+  // page can't build its own competing request shape against it.
+  function saveProjectState(stateJson) {
+    if (!ready || !idToken) return;
+    fetchWithTimeout(LESSON_SYNC_API_URL, {
+      method: 'POST',
+      body: JSON.stringify({ idToken, type: 'project-state-save', activityId, stateJson })
+    }).catch((err) => console.warn('Project state sync failed (kept on this page only):', err));
+  }
+
+  async function checkDay2Code(code) {
+    if (!ready || !idToken) return { ok: false, error: 'Not signed in yet' };
+    try {
+      const res = await fetchWithTimeout(LESSON_SYNC_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ idToken, type: 'check-day2-code', activityId, code })
+      });
+      return await res.json();
+    } catch (err) {
+      return { ok: false, error: "That took too long - try again." };
+    }
+  }
+
+  return { init, saveProjectState, checkDay2Code };
 })();
