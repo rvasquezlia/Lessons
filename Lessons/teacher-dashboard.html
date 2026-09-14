@@ -1940,7 +1940,7 @@
     const rowsHtml = u.activities.slice().sort((a, b) => (a.avgScore ?? 999) - (b.avgScore ?? 999)).map((a) => `
       <tr class="${a.flaggedCount ? 'flagged' : (a.startedCount === 0 ? 'zero-activity' : '')}">
         <td class="row-label"><span class="expand-btn" onclick="jumpToActivity('${a.activityId}')">${a.activityTitle}</span></td>
-        <td>${a.startedCount} / ${a.eligible || '?'}</td>
+        <td>${a.startedCount} / ${a.eligible}</td>
         <td>${a.completionPct === null ? '-' : a.completionPct + '%'}</td>
         <td>${a.avgScore === null ? '-' : a.avgScore + '%'}</td>
         <td>${a.flaggedCount ? `<span class="pill flag">${a.flaggedCount}</span>` : '<span class="pill ok">0</span>'}</td>
@@ -2073,7 +2073,7 @@
         <tr class="${a.flaggedCount ? 'flagged' : (a.startedCount === 0 ? 'zero-activity' : '')}">
           <td class="row-label"><span class="expand-btn" onclick="openActivityDetail(${i})">${a.activityTitle}</span></td>
           <td>${formatGradeLabel(a.grade)}</td>
-          <td>${a.startedCount} / ${a.eligible || '?'}</td>
+          <td>${a.startedCount} / ${a.eligible}</td>
           <td>${a.completionPct === null ? '-' : a.completionPct + '%'}</td>
           <td>${a.avgScore === null ? '-' : a.avgScore + '%'}</td>
           <td>${a.avgSeconds === null ? '-' : a.avgSeconds + 's'}</td>
@@ -2316,7 +2316,7 @@
       <button class="btn-back" onclick="showListView('by-activity')">&larr; Back to activities</button>
       <h3>${a.activityTitle} <span class="pill neutral">Grade ${formatGradeLabel(a.grade)}</span></h3>
       <div class="stat-row">
-        <div class="stat-tile"><div class="n">${a.startedCount} / ${a.eligible || '?'}</div><div class="l">Started</div></div>
+        <div class="stat-tile"><div class="n">${a.startedCount} / ${a.eligible}</div><div class="l">Started</div></div>
         <div class="stat-tile"><div class="n">${a.completionPct === null ? '-' : a.completionPct + '%'}</div><div class="l">Completion</div></div>
         <div class="stat-tile"><div class="n">${a.avgScore === null ? '-' : a.avgScore + '%'}</div><div class="l">Avg score</div></div>
         <div class="stat-tile"><div class="n">${a.avgSeconds === null ? '-' : a.avgSeconds + 's'}</div><div class="l">Avg sec/answer</div></div>

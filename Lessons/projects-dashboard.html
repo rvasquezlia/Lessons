@@ -529,7 +529,7 @@
         <h3>${a.activityTitle}</h3>
         <span class="grade-tag">Grade ${formatGradeLabel(a.grade)}</span>
         <div class="project-stat-row">
-          <div class="project-stat-tile"><div class="n">${startedCount} / ${eligible || '?'}</div><div class="l">Started</div></div>
+          <div class="project-stat-tile"><div class="n">${startedCount} / ${eligible}</div><div class="l">Started</div></div>
           <div class="project-stat-tile"><div class="n">${attempts.avgAttemptsOverall === null ? '-' : attempts.avgAttemptsOverall}</div><div class="l">Avg attempts/item</div></div>
           <div class="project-stat-tile"><div class="n">${attempts.solvedCount}</div><div class="l">Items solved</div></div>
         </div>
