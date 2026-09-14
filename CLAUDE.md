@@ -2249,6 +2249,75 @@ depends on viewport width. Never call it against a `display:none` panel
 - `offsetHeight` reads `0` there, which would zero out every head's
 `min-height` instead of matching them.
 
+### Teacher-Guide pages: no dedicated answer-key tabs, real differentiation content instead
+
+**Every `Teacher-Guide.html`'s standalone "Answer Key" tab(s) are redundant
+now, and Linear-Inequalities' has been rebuilt as the pilot for removing
+them.** The teacher pointed out directly that answer keys already live on
+each student page itself — sign in as a teacher and `unlockTeacherView`
+fills in every problem inline (see "Role differentiation on lesson
+pages" above) — so a separate answer-key tab duplicating the exact same
+content on the Teacher-Guide page serves no purpose. `Eighth/Linear-
+Inequalities/Teacher-Guide.html` was rebuilt from 4 tabs (Topic Overview
+&amp; Pacing, two Answer-Key tabs, IXL Practice) to 5: **Topic Overview
+&amp; Pacing** (kept), **Lesson-by-Lesson Guide** (NEW — replaces both
+answer-key tabs' screen real estate with a per-page, per-tab explanation
+of what each of the unit's six pages and every tab inside them actually
+covers — the teacher separately asked for exactly this: "the teacher's
+guide can have a little explanation on each activity per each Unit...
+Lesson/Activity... Tab"), **Metacognition &amp; Discussion** (NEW —
+reflection-prompt stems plus three leveled small-group discussion
+prompts, Building Understanding/Applying/Extending), **Differentiation**
+(NEW — real scaffolded support problems with the hint text meant to be
+read aloud, and extension/challenge problems that stay within the
+unit's own standard scope rather than reaching into a later lesson's
+content, both with real worked answers, not just a list of IXL links),
+and **IXL Practice** (kept, reformatted — see below). **This has only
+been done for Linear-Inequalities so far, as the agreed pilot** — the
+teacher explicitly chose "pilot on Linear-Inequalities only" over a
+site-wide rollout when asked. Don't assume any other unit's
+Teacher-Guide has been touched by this until it's explicitly rolled out
+further; every other unit's Teacher-Guide still has its old Answer-Key
+tab(s) as of this pass.
+
+**"Drop printing" for this feature means author differentiation content
+directly as normal web content on the Teacher-Guide page, not as a
+printable worksheet** — the teacher's separate complaint was that a
+`printClassProgress`-style printable can span several wasted pages, and
+asked to keep new content web-only rather than building a print flow
+for it. This did **not** mean deleting the pre-existing `printables/`
+folders that already exist for some older units (`Rational-Numbers`,
+`Operations-with-Rationals`, `Integers`, `Linear-Equations`) — those
+weren't part of what was asked and were left untouched. Linear-
+Inequalities never had a `printables/` folder or a Printables tab to
+begin with, so there was nothing to remove there either; the pilot
+simply never introduced one.
+
+**IXL link lists were "chunky" — several files crammed 2-4 links into
+one dense inline paragraph, comma-separated, instead of one per line —
+reformatted site-wide (not just the pilot unit) since it was a
+mechanical, low-risk fix.** Two shapes existed: an `<strong>Also
+consider:</strong>` paragraph following a page's main `<ul>` (a
+secondary/optional skill suggestion), and a denser `<strong>Label</strong>
+(context): <a>...</a>, <a>...</a>, ...` paragraph under "Building on
+Previous Topics"/"Differentiation &amp; Additional IXL Practice"
+headings citing several grade-levels-back foundational skills at once.
+Both were converted to the same `<ul><li>` shape every other IXL list on
+the page already uses — one link (plus its `<span class="ixl-code">`)
+per line — while preserving any trailing prose sentence (e.g. "Send any
+student who is still shaky on sign rules or conversions back to those
+topics before this one.") as its own paragraph after the list rather
+than losing it. Touched 8 files: `Eighth/Literal-Equations`,
+`Eighth/Linear-Equations`, `Eighth/Linear-Functions`,
+`Eighth/Linear-Inequalities`, `Seventh/Integers`,
+`Seventh/Operations-with-Rationals`, `Seventh/Rational-Numbers`,
+`Seventh/Squares-Cubes-and-Roots` — every `Teacher-Guide.html` that had
+at least one multi-link inline paragraph. `Sixth/Decimal-Operations`
+and `Sixth/Operations-with-Fractions` were checked and had none to fix.
+If a future IXL addition ever crams more than one link into a single
+`<p>` again, split it into a `<ul>` the same way rather than
+reintroducing the dense inline style.
+
 ### Reference materials for content authoring — check these before building/citing anything
 
 Two local reference sources exist in this repo specifically so content
