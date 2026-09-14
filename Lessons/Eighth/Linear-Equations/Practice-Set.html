@@ -730,9 +730,33 @@
     comparisonMore.forEach((p, i) => fillClassify(cmCardSelects, p, i, 'cm'));
 
     // Strategy Challenge is student-choice driven - its inputs don't exist
-    // in the DOM until a group is picked (chooseStrategyGroup), so there's
-    // nothing to fill in without simulating that choice; fillInput's own
-    // existence check already skips it harmlessly if so.
+    // in the DOM until a group is picked (chooseStrategyGroup), so a
+    // teacher who never clicks a group (nothing prompts them to) used to
+    // see nothing revealed here at all. Fixed by always rendering a
+    // static, all-groups answer-key table (below), independent of
+    // whether any group has been picked - plus still filling in the live
+    // inputs if a group happens to already be chosen.
+    if (!document.getElementById('strategy-answer-key')) {
+      const answerText = (p) => p.type === "number" ? `x = ${p.a}` : p.a;
+      const rows = Object.values(strategyGroups).map((g) => {
+        const flagship = `<tr><td>${g.title} - Flagship</td><td>${g.eq}</td><td>${answerText(g)}</td></tr>`;
+        const more = g.more.map((p, i) => `<tr><td>${g.title} - #${i + 2}</td><td>${p.q}</td><td>${answerText(p)}</td></tr>`).join('');
+        return flagship + more;
+      }).join('');
+      const box = document.createElement('div');
+      box.id = 'strategy-answer-key';
+      box.className = 'notebook-box';
+      box.style.marginTop = '16px';
+      box.innerHTML = `
+        <div class="notebook-header">Answer Key: All Strategy Groups</div>
+        <table class="data-table">
+          <thead><tr><th>Item</th><th>Problem</th><th>Answer</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+      document.getElementById('strategy-picker-box').insertAdjacentElement('afterend', box);
+    }
+
     if (chosenStrategyGroup) {
       const g = strategyGroups[chosenStrategyGroup];
       fillInput('strategy-x', 'strategy-feedback', g.a);

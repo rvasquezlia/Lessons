@@ -476,6 +476,28 @@
       fb.innerHTML = `Answer key: Step ${p.wrongStep} is wrong; <strong>x${p.op}${p.a}</strong>`;
     });
 
+    // Tab 4: Exit Ticket - this block was missing entirely (the comment
+    // above claimed it was covered, but nothing here ever touched
+    // exit-1/exit-2/exit-explain/exit-reflect), which is why signing in
+    // as a teacher never revealed anything on this tab.
+    const exit1 = document.getElementById('exit-1');
+    const exit2 = document.getElementById('exit-2');
+    if (exit1 && exit2) {
+      exit1.value = 'x < -5';
+      exit1.disabled = true;
+      exit2.value = 'x \\leq 10';
+      exit2.disabled = true;
+      document.getElementById('exit-explain').disabled = true;
+      document.getElementById('exit-reflect').disabled = true;
+      const exitForm = document.getElementById('exit-form');
+      const exitBtn = exitForm && exitForm.querySelector('button[type="submit"]');
+      if (exitBtn) exitBtn.disabled = true;
+      const exitFb = document.getElementById('exit-feedback');
+      exitFb.style.display = 'block';
+      exitFb.className = 'feedback-msg success locked';
+      exitFb.innerHTML = 'Answer key: 1. \\(x < -5\\) &nbsp; 2. \\(x \\leq 10\\) &nbsp; 3-4. Open-ended - review for understanding, not a right/wrong answer.';
+    }
+
     triggerMathJax();
   };
 </script>

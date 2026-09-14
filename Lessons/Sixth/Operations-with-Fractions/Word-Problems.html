@@ -365,6 +365,31 @@
       correct ? `Correct! The answer is \\(\\mathbf{${p.displayAnswer}}\\).` : `Submitted. This will be reviewed from your printed progress report.`);
   }
 
+  // Career Connections (Tab 4) isn't part of window.listRegistry
+  // (checkListRegistry only covers Tabs 1-3 and 5) - it uses its own
+  // render/check functions (renderCareerStations/checkCareerItem), so
+  // without a window.revealAnswerKey, signing in as a teacher never
+  // showed an answer key for this tab.
+  window.revealAnswerKey = function () {
+    Object.keys(careerGroups).forEach((key) => {
+      const g = careerGroups[key];
+      g.problems.forEach((p, i) => {
+        const input = document.getElementById(`career-${key}-${i}-input`);
+        const fb = document.getElementById(`career-${key}-${i}-feedback`);
+        if (!input || !fb) return;
+        input.value = p.displayAnswer;
+        input.disabled = true;
+        const container = input.closest('.guided-practice');
+        const btn = container && container.querySelector('button');
+        if (btn) btn.disabled = true;
+        fb.style.display = 'block';
+        fb.className = 'feedback-msg success locked';
+        fb.innerHTML = `Answer key: \\(\\mathbf{${p.displayAnswer}}\\)`;
+      });
+    });
+    triggerMathJax();
+  };
+
   // ==========================================
   // TAB 5: CHALLENGE TIER
   // ==========================================

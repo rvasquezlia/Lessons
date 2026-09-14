@@ -524,6 +524,62 @@
   }
   LessonProgress.preRegister('garden-challenge', 'Garden Seed Cost Challenge', '6. Financial Literacy');
 
+  // Career Connections (Tab 5) and Financial Literacy (Tab 6) aren't part
+  // of window.listRegistry (checkListRegistry above only covers Tabs 1-4
+  // and 7) - career items use their own render/check functions
+  // (renderCareerStations/checkCareerItem) and financial literacy is two
+  // standalone check functions - so without a window.revealAnswerKey,
+  // signing in as a teacher never showed an answer key for either tab.
+  window.revealAnswerKey = function () {
+    Object.keys(careerGroups).forEach((key) => {
+      const g = careerGroups[key];
+      g.problems.forEach((p, i) => {
+        const input = document.getElementById(`career-${key}-${i}-input`);
+        const fb = document.getElementById(`career-${key}-${i}-feedback`);
+        if (!input || !fb) return;
+        const answerText = p.aText || String(p.a);
+        input.value = answerText;
+        input.disabled = true;
+        const container = input.closest('.guided-practice');
+        const btn = container && container.querySelector('button');
+        if (btn) btn.disabled = true;
+        fb.style.display = 'block';
+        fb.className = 'feedback-msg success locked';
+        fb.innerHTML = `Answer key: <strong>${answerText}</strong>`;
+      });
+    });
+
+    const finA = document.getElementById('fin-a');
+    const finB = document.getElementById('fin-b');
+    const finC = document.getElementById('fin-c');
+    if (finA && finB && finC) {
+      finA.value = '$24.09';
+      finB.value = '$25.77';
+      finC.value = '$24.23';
+      [finA, finB, finC].forEach((el) => { el.disabled = true; });
+      const finBtn = document.querySelector('[onclick="checkFinancialLiteracy()"]');
+      if (finBtn) finBtn.disabled = true;
+      const finFb = document.getElementById('fin-feedback');
+      finFb.style.display = 'block';
+      finFb.className = 'feedback-msg success locked';
+      finFb.innerHTML = 'Answer key: A. $24.09 &nbsp; B. $25.77 &nbsp; C. $24.23';
+    }
+
+    const gardenCost = document.getElementById('garden-cost');
+    const gardenExplain = document.getElementById('garden-explain');
+    if (gardenCost && gardenExplain) {
+      gardenCost.value = '$26.40';
+      gardenCost.disabled = true;
+      gardenExplain.disabled = true;
+      const gardenBtn = document.querySelector('[onclick="checkGardenChallenge()"]');
+      if (gardenBtn) gardenBtn.disabled = true;
+      const gardenFb = document.getElementById('garden-feedback');
+      gardenFb.style.display = 'block';
+      gardenFb.className = 'feedback-msg success locked';
+      gardenFb.innerHTML = 'Answer key: area = 5.5 &times; 3.2 = 17.6 m&sup2;; cost = 17.6 &times; $1.50 = <strong>$26.40</strong>';
+    }
+  };
+
   // ==========================================
   // TAB 6: CHALLENGE TIER
   // ==========================================
