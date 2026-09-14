@@ -580,24 +580,31 @@
 
   function renderStrategyMore() {
     const g = strategyGroups[chosenStrategyGroup];
+    // Keys are scoped by group letter (stm-<group>-<i>, not stm-<i>) so
+    // picking a different group after reloading (the page's own text
+    // explicitly allows this) never reuses another group's key - a shared
+    // bare "stm-0" across groups would let attemptsSinceReset_ in Code.gs
+    // count a fresh first attempt at a different group's problem as a
+    // "2nd try" on whatever the previous group's problem 1 was, silently
+    // under-crediting it on the dashboard.
     const html = g.more.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 2}.</strong> ${p.q}
-        <input type="text" id="stm-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="x = or classify">
+        <input type="text" id="stm-${chosenStrategyGroup}-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="x = or classify">
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkStrategyMore(${i})">Check</button>
-        <div id="stm-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+        <div id="stm-${chosenStrategyGroup}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
     `).join('');
     document.getElementById('strategy-more-list').innerHTML = html;
-    g.more.forEach((p, i) => LessonProgress.preRegister(`stm-${i}`, `Strategy Set #${i + 2} (${g.title}): ${p.q.replace(/\\\(|\\\)/g, '')}`, '6. Strategy Challenge'));
+    g.more.forEach((p, i) => LessonProgress.preRegister(`stm-${chosenStrategyGroup}-${i}`, `Strategy Set #${i + 2} (${g.title}): ${p.q.replace(/\\\(|\\\)/g, '')}`, '6. Strategy Challenge'));
     triggerMathJax();
   }
 
   function checkStrategyMore(idx) {
     const g = strategyGroups[chosenStrategyGroup];
     const p = g.more[idx];
-    const raw = document.getElementById(`stm-${idx}-input`).value;
-    const fb = document.getElementById(`stm-${idx}-feedback`);
+    const raw = document.getElementById(`stm-${chosenStrategyGroup}-${idx}-input`).value;
+    const fb = document.getElementById(`stm-${chosenStrategyGroup}-${idx}-feedback`);
     if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
     let correct;
     if (p.type === "number") { correct = LessonCheck.numericMatch(raw, p.a, 0.001); }
@@ -606,7 +613,7 @@
       correct = p.a === "no solution" ? (norm.includes("no solution") || norm === "none") : norm.includes("infinite");
     }
     const answerText = p.type === "number" ? `x = \\(\\mathbf{${p.a}}\\)` : `<strong>${p.a}</strong>`;
-    LessonCheck.check(`stm-${idx}`, correct, fb, {
+    LessonCheck.check(`stm-${chosenStrategyGroup}-${idx}`, correct, fb, {
       correct: `Correct! ${p.q} \\(\\rightarrow\\) ${answerText}`,
       retry: "Not quite yet. Recheck your first move, then try again.",
       reveal: `Here's the correct solution: ${p.q} \\(\\rightarrow\\) ${answerText}`
@@ -729,7 +736,7 @@
     if (chosenStrategyGroup) {
       const g = strategyGroups[chosenStrategyGroup];
       fillInput('strategy-x', 'strategy-feedback', g.a);
-      g.more.forEach((p, i) => fillInput(`stm-${i}-input`, `stm-${i}-feedback`, p.a));
+      g.more.forEach((p, i) => fillInput(`stm-${chosenStrategyGroup}-${i}-input`, `stm-${chosenStrategyGroup}-${i}-feedback`, p.a));
     }
 
     errorDetective.forEach((p, i) => {

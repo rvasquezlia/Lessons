@@ -1507,6 +1507,54 @@ special handling either - it's already generic in `lesson-auth.js`'s
 | Seventh/Squares-Cubes-and-Roots (**7-Honors only**, 5 pages) | `7-squares-cubes-and-roots-*` | Practice-Set uses `window.listRegistry` for all three tabs' plain-number items (`checkPractice`), plus three critical-thinking textareas (`checkCT1`/`checkCT2`/`checkCT3`, submit-only, outside the registry). Word-Problems also uses `window.listRegistry` (plain-number real-world answers across all three tabs). Review's "Are You Ready?" tab and Vocabulary-Literacy's "Quick Vocabulary Check"/translation tabs both use the `checkListRegistry`-style pattern (two separate hand-written render/check functions on Vocabulary-Literacy, so its own `window.revealAnswerKey` covers both). Test-Prep is entirely hand-written `window.revealAnswerKey` (four problem shapes, none sharing a registry). |
 | Eighth/Linear-Functions (**8-PreAP only**, 5 pages) | `8-linear-functions-*` | Practice-Set's Tabs 1 & 3 (plain-number: slope, function evaluation) use `window.listRegistry`; Tabs 2 & 4 (algebraic-rule answers via `<math-field>`: slope-intercept form, writing a function rule from a table) sit outside the registry with their own hand-written reveal, same pattern as Literal-Equations. Word-Problems' two numeric tabs use `window.listRegistry`; its one algebraic item (writing the fuel-tank equation) is hand-written. Vocabulary-Literacy and Test-Prep are entirely hand-written (no page-wide registry). |
 
+**Strategy Challenge's "more practice" keys are scoped by chosen group
+(`stm-<group>-<i>`), not bare (`stm-<i>`) - a real scoring-integrity bug,
+fixed after the teacher asked directly how group-activity progress is
+saved/reviewed and whether switching groups was safe.** Both pages with
+this student-choice-driven pattern (`Eighth/Linear-Equations/Practice-
+Set.html`, `Eighth/Linear-Inequalities/Practice-Set.html`) let a student
+pick strategy Group A/B/C(/D) via `chooseStrategyGroup(key)`, and their
+own visible on-page text says a student "may reload the page to try
+another group later" - switching groups across sessions is explicitly
+allowed, by design. The flagship item's `LessonCheck` key was already
+scoped correctly (`strategy-${chosenStrategyGroup}`), but the "more
+practice" items' keys were bare `stm-${i}` - identical across every
+group, since each group's own `more` array is index-parallel. Since
+`attemptsSinceReset_` in `Code.gs` counts prior attempts purely by
+`item.key` string match with no concept of "which logical problem" a key
+represents, a student who tried Group A, reloaded, then picked Group B
+would have their fresh first attempt at Group B's problem 1 silently
+miscounted as a second attempt at whatever Group A's problem 1 was -
+capping their score at 0.5 instead of 1, invisibly. Fixed by scoping
+every occurrence (the `<input>`/`<math-field>` id, its feedback div id,
+the `LessonProgress.preRegister` call, `checkStrategyMore`'s own
+element lookups and `LessonCheck.check` key, and the teacher-reveal
+`fillInput` call) to `stm-${chosenStrategyGroup}-${i}` in both files -
+verified via Playwright that Group A and Group B now render entirely
+distinct element ids, and that both the check flow and the teacher
+reveal still work correctly against the new scoped ids. **Two
+limitations remain, not yet fixed:** the picker itself has no visual
+memory across a reload - `restoreSubmissions()` can't touch this
+section since its elements don't exist in the DOM until a group is
+chosen (it runs once at page load) and the flagship input's id
+(`strategy-x`, not `strategy-x-input`) doesn't match the `${key}-input`
+convention `restoreSubmissions()` looks for anyway - so a returning
+student always sees the bare picker again with no indication they'd
+already started a group, even though every attempt they made is safely
+saved server-side. And the teacher-view answer key only ever reveals
+whichever group is *currently selected* in that browser session -
+there's no way for a teacher to see all groups' answers at once without
+picking each one via `chooseStrategyGroup()` themselves (a page's own
+teacher view has no group picker; the check-fill happens automatically
+once `chosenStrategyGroup` already has a truthy value). Progress
+itself, and its teacher-side review, are not affected by any of this -
+every attempt reaches `Progress.SubmissionsLog` exactly like any other
+graded item, visible in the dashboard's Full Submission Log / that
+student's own profile, section `'6. Strategy Challenge'` (Linear-
+Equations) / `'5. Strategy Challenge'` (Linear-Inequalities) - it was
+only the *scoring* (attempt-numbering) and the *on-screen* picker state
+that had gaps.
+
 **Squares-Cubes-and-Roots was initially built as a 3-page set** (Review,
 Practice-Set, Test-Prep only, skipping Vocabulary-Literacy/Word-Problems)
 since the source Honors materials were pure computation with no
