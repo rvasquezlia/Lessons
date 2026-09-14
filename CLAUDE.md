@@ -544,7 +544,22 @@ additionally defines, per page:
   SVG number line (fixed −10 to 10 range, every graphed boundary in
   this unit is a whole number in that range), used both as a worked
   example (Explanation.html) and as the graded "Read the Graph" prompt.
-  Not an interactive/draggable widget by design.
+  Not an interactive/draggable widget by design. **Not the same
+  function as `renderNumberLine()` below** — different name, different
+  file, unrelated to Linear-Inequalities specifically.
+
+### Number line — `renderNumberLine(containerId, opts)` in `lesson-shared.js`
+A more general, reusable SVG number line (arbitrary `min`/`max`/`step`,
+optional `arrows`/`ranges`/`points`) — 8 pages across Rational-Numbers,
+Operations-with-Rationals, Integers, and Linear-Equations call it.
+**Rule**: the tick-label loop steps by an integer count and rounds each
+value to 6 decimal places before it's ever put in `<text>` — a
+fractional `step` (e.g. `0.2`) accumulated via repeated `+=` hits
+ordinary binary floating point noise (`0.6000000000000001` instead of
+`0.6`, a real bug once shown to a student: `Seventh/Rational-Numbers/
+Test-Prep.html`'s 0-to-1 fraction/decimal number line). Never revert to
+plain accumulation (`for (let v = min; v <= max; v += step)`) when
+touching this loop.
 
 ### Standards line
 Every lesson page (all 7-8 page types per unit, not just the
@@ -618,6 +633,24 @@ page in one unit. See §15 for the sourcing rule and the current table.
     never gets the toggle button and has no way to actually enter dark
     mode yet. `index.html` (§12) loads neither file at all and is
     entirely unaffected.
+  - **`--text` is deliberately a mid-gray (`#717a85`), never a near-
+    white, in dark mode** — `body { color: var(--text); }` (light-mode,
+    unedited) means every element on the page inherits this as its
+    default text color unless it sets its own, including page-local
+    content the scope note above says is untouched. A near-white value
+    here read as literally invisible white-on-white text the one time
+    it shipped (a live regression: "No answers in here" on a page-local
+    vocabulary card whose background correctly stayed light-mode white,
+    while its inherited text went light too). `#717a85` was chosen
+    because it clears ~4:1 contrast against **both** an untouched white
+    card and this file's own new dark surfaces — never as sharp as a
+    true near-white would look against a fully dark page, but never
+    invisible either. **Never brighten this toward white** without
+    first doing the full page-local dark-mode pass the scope note
+    above describes — until every light-background component the whole
+    site actually has gets its own explicit dark treatment, `--text`
+    has to stay conservative enough to survive landing on one that
+    doesn't.
   - **Never redefine `--primary` itself for dark mode.** It's used both
     as a *background* (header, `.app-container`'s border, several
     buttons — where the original dark navy is correct and unchanged in

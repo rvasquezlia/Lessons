@@ -477,7 +477,15 @@ function renderNumberLine(containerId, opts) {
   let defs = '';
   let body = `<line x1="${marginX}" y1="${lineY}" x2="${width - marginX}" y2="${lineY}" stroke="#1e3a8a" stroke-width="2"/>`;
 
-  for (let v = min; v <= max; v += step) {
+  // Accumulating a fractional step (e.g. 0 + 0.2 + 0.2 + 0.2) hits binary
+  // floating point's usual "0.30000000000000004"-style noise - stepping
+  // by an integer count instead and rounding only the label text (tick
+  // *position* is a proportional x-coordinate, where that same noise is
+  // many orders of magnitude under one pixel and was never visibly wrong)
+  // avoids compounding it further across iterations too.
+  const tickCount = Math.round((max - min) / step);
+  for (let i = 0; i <= tickCount; i++) {
+    const v = Math.round((min + i * step) * 1e6) / 1e6;
     const x = xFor(v);
     body += `<line x1="${x}" y1="${lineY - 6}" x2="${x}" y2="${lineY + 6}" stroke="#1e3a8a" stroke-width="2"/>`;
     body += `<text x="${x}" y="${lineY + 22}" text-anchor="middle" font-size="13" fill="#334155" font-family="Montserrat, sans-serif">${v}</text>`;

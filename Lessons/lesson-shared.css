@@ -1403,7 +1403,22 @@ math-field:focus-visible {
 [data-theme="dark"] {
   --bg: #0d1117;
   --card: #161b22;
-  --text: #e6edf3;
+  /* --text is inherited by `body { color: var(--text); }` (light-mode
+     rule, unedited) into EVERY element on the page that doesn't set its
+     own color - including a page's own local "white card" content this
+     dark-mode pass never touched (its background stays the original
+     light-mode white/pastel, since that's page-specific, out of scope
+     per /CLAUDE.md). A near-white value here read as invisible white-
+     on-white text on any such untouched card (a real regression found
+     live: "No answers in here" on a page-local vocabulary grid). A
+     mid-gray instead stays clearly legible against BOTH an untouched
+     light card AND this file's own new dark surfaces (~4.3:1 contrast
+     either way, by design) - not as sharp as a true near-white would
+     read against a fully dark page, but never invisible. The full fix
+     is per-page-local-component dark styling (deliberately out of
+     scope this round, see the note above) - this is a safe default
+     until that happens, not a substitute for it. */
+  --text: #717a85;
   --border: #475569;
   --notebook-bg: #2b2408;
   --notebook-border: #92752a;
