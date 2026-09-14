@@ -2297,13 +2297,51 @@ prompts, Building Understanding/Applying/Extending), **Differentiation**
 read aloud, and extension/challenge problems that stay within the
 unit's own standard scope rather than reaching into a later lesson's
 content, both with real worked answers, not just a list of IXL links),
-and **IXL Practice** (kept, reformatted — see below). **This has only
-been done for Linear-Inequalities so far, as the agreed pilot** — the
-teacher explicitly chose "pilot on Linear-Inequalities only" over a
-site-wide rollout when asked. Don't assume any other unit's
-Teacher-Guide has been touched by this until it's explicitly rolled out
-further; every other unit's Teacher-Guide still has its old Answer-Key
-tab(s) as of this pass.
+and **IXL Practice** (kept, reformatted — see below). **Piloted on
+Linear-Inequalities, then rolled out to all 7 remaining regular-track
+units** once the teacher asked for the wider rollout: `Sixth/Decimal-
+Operations`, `Sixth/Operations-with-Fractions`, `Seventh/Integers`,
+`Seventh/Rational-Numbers`, `Seventh/Operations-with-Rationals`,
+`Eighth/Linear-Equations`, `Eighth/Literal-Equations`. **Not yet done**
+for the two Honors/Pre-AP-only units (`Seventh/Squares-Cubes-and-Roots`,
+`Eighth/Linear-Functions`) — those were out of scope for this pass and
+still have their old, condensed 3-tab Overview/Answer-Keys pattern.
+
+**The two Sixth-grade units already had their own "Misconceptions &amp;
+Differentiation" tab from an earlier pass, so those two got a slightly
+different treatment than the other five: the four "Key: X" tabs were
+still replaced by one Lesson-by-Lesson Guide, and a new Metacognition
+&amp; Discussion tab was still added, but no separate new
+"Differentiation" tab was created — instead, the existing Misconceptions
+&amp; Differentiation tab was extended in place with new "Scaffolded
+Support Problems" and "Extension / Challenge Problems" subsections,
+keeping its own id (`misconceptions`) and every misconception already
+documented there untouched.** The other five units (three Seventh,
+two Eighth) had no pre-existing differentiation content, so they got a
+genuinely new `differentiation` tab, matching Linear-Inequalities'
+own shape exactly.
+
+**Every unit's own "Printables &amp; Challenge Bank"/"Printables &amp;
+Key"/"Challenge Bank" tab (where one exists — `Seventh/Integers`,
+`Seventh/Rational-Numbers`, `Seventh/Operations-with-Rationals`,
+`Eighth/Linear-Equations`, `Eighth/Literal-Equations`) was left
+completely untouched** — that's a genuinely different feature (official
+Savvas worksheets or original small-group cards reproduced with their
+own answer key for grading *printed* work) from the redundant on-screen
+answer-key tabs this redesign removed, not a duplicate of them. A
+handful of these tabs contained a stray cross-reference to the
+now-deleted answer-key tab (e.g. "see the Digital Answer Key tab") —
+those specific dangling sentences were reworded to point at the
+inline teacher-sign-in reveal instead, since leaving them broken would
+have been worse than leaving them alone.
+
+**One known content gap, not yet fixed:** `Eighth/Literal-Equations`'s
+Overview &amp; Pacing tab's own "Section / Purpose / Suggested Time"
+table only lists 5 of that unit's 7 pages — it's missing rows for
+Review and Guided-Solving-Ladder. This predates the Teacher-Guide
+redesign and was left alone (out of scope for this pass, which touched
+only the answer-key/metacognition/differentiation tabs) — worth a
+follow-up if the teacher wants the Overview table itself corrected.
 
 **"Drop printing" for this feature means author differentiation content
 directly as normal web content on the Teacher-Guide page, not as a
