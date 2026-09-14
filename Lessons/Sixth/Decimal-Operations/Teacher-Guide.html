@@ -81,25 +81,24 @@
     <span class="badge">Decimal Operations &middot; Teacher's Guide</span>
     <h1>Teacher's Guide: Decimal Operations</h1>
     <p class="standards-line">Standards: 6.NS.B.2, 6.NS.B.3</p>
-    <p class="subtitle">Pacing, Full Answer Keys, Misconceptions &amp; Differentiation, and Teacher Resources</p>
+    <p class="subtitle">Pacing, Lesson-by-Lesson Notes, Metacognition, Misconceptions &amp; Differentiation, and Teacher Resources</p>
   </header>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">This page is for you, not students</strong>
     <ul style="margin:6px 0 0 0;">
       <li>Not linked from any student page - no student-facing print button.</li>
-      <li>Tabs below: suggested pacing, full answer keys (same structure as the student pages), misconceptions &amp; differentiation notes, and every teacher resource (Savvas materials, the confidential test, all printables).</li>
+      <li>There's no dedicated answer-key tab here anymore - sign in on any of the six student pages yourself and it unlocks that page's own answer key inline (see "Role differentiation on lesson pages" in the repo's own notes for the mechanism).</li>
+      <li>Tabs below: suggested pacing, a tab-by-tab breakdown of what each of the six pages actually covers, metacognition &amp; discussion prompts, misconceptions &amp; differentiation notes (including real scaffolded and extension problems), and every teacher resource (Savvas materials, the confidential test, all printables).</li>
     </ul>
   </div>
 
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('overview')">1. Overview &amp; Pacing</button>
-    <button class="tab-btn" onclick="switchTab('key-explanation')">2. Key: Explanation</button>
-    <button class="tab-btn" onclick="switchTab('key-practice')">3. Key: Practice Set</button>
-    <button class="tab-btn" onclick="switchTab('key-word')">4. Key: Word Problems</button>
-    <button class="tab-btn" onclick="switchTab('key-testprep')">5. Key: Test Prep</button>
-    <button class="tab-btn" onclick="switchTab('misconceptions')">6. Misconceptions &amp; Differentiation</button>
-    <button class="tab-btn" onclick="switchTab('resources')">7. Teacher Resources</button>
+    <button class="tab-btn" onclick="switchTab('lesson-guide')">2. Lesson-by-Lesson Guide</button>
+    <button class="tab-btn" onclick="switchTab('metacognition-discussion')">3. Metacognition &amp; Discussion</button>
+    <button class="tab-btn" onclick="switchTab('misconceptions')">4. Misconceptions &amp; Differentiation</button>
+    <button class="tab-btn" onclick="switchTab('resources')">5. Teacher Resources</button>
   </nav>
 
   <!-- PANEL 1: OVERVIEW & PACING -->
@@ -169,512 +168,122 @@
     </div>
   </div>
 
-  <!-- PANEL 2: ANSWER KEY - EXPLANATION -->
-  <div id="key-explanation" class="panel">
-    <div class="section-title">Answer Key: Explanation</div>
-    <p>Every worked example on the Explanation page reaches these final answers - use this to check your own modeling on the projector, or a student's notebook copy.</p>
+  <!-- PANEL 2: LESSON-BY-LESSON GUIDE -->
+  <div id="lesson-guide" class="panel">
+    <div class="section-title">Lesson-by-Lesson Guide</div>
+    <p>What each of the six pages covers, and what each tab inside it is for. Answer keys for every graded item already live inline on the student page itself - sign in there as a teacher and it unlocks automatically (see the howto note above), so this tab is about what to <em>teach</em>, not what to <em>grade</em>.</p>
 
-    <div class="section-day-heading">Tab 2: Addition &amp; Subtraction</div>
+    <div class="section-day-heading">1. Review</div>
+    <p style="margin:0 0 8px 0;">Refreshes the whole-number skills this topic's algorithms build on - place value and the four whole-number operations - before any decimal-specific content appears. Gate it with Tab 5's graded check before moving on.</p>
     <table class="data-table">
-      <thead><tr><th colspan="2">Guided Example Carousel</th></tr></thead>
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
       <tbody>
-        <tr><td>Exercise 1: \(12 + 4.85\)</td><td>\(\mathbf{16.85}\)</td></tr>
-        <tr><td>Exercise 2: \(20.00 - 13.45\)</td><td>\(\mathbf{6.55}\)</td></tr>
-        <tr><td>Exercise 3: \(0.45 + 12.3 + 1.008\)</td><td>\(\mathbf{13.758}\)</td></tr>
-        <tr><td>Exercise 4: \(\$45.50 - \$18.75\)</td><td>\(\mathbf{\$26.75}\)</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <tbody>
-        <tr><td>Extra Guided Example 1: \(12.7 + 4.25\)</td><td>\(\mathbf{16.95}\)</td></tr>
-        <tr><td>Extra Guided Example 2: \(8.4 - 2.76\)</td><td>\(\mathbf{5.64}\)</td></tr>
-        <tr><td>Guided Word Problem (Marcus's boards)</td><td>\(\mathbf{2.05\text{ cm}}\)</td></tr>
+        <tr><td>1. Why Review This?</td><td>The hook - connects today's new skill (decimal operations) to what students already know (whole-number operations), so the review doesn't feel disconnected from "why am I doing this."</td></tr>
+        <tr><td>2. Vocabulary</td><td>Fast recall of place-value terms (ones, tenths, hundredths) students will need immediately in Vocabulary &amp; Literacy and Explanation.</td></tr>
+        <tr><td>3. Place Value</td><td>Reading and comparing whole numbers by place - the exact skill that extends to decimal place value later.</td></tr>
+        <tr><td>4. Whole-Number Operations</td><td>Re-practices the standard add/subtract/multiply/divide algorithms - if a student is shaky here, they'll struggle with every later decimal page for the wrong reason (arithmetic fluency, not decimals specifically).</td></tr>
+        <tr><td>5. Are You Ready?</td><td>The graded checkpoint - this is the one tab worth checking before assigning the rest of the unit.</td></tr>
+        <tr><td>6. Resources</td><td>Optional extra practice/reference material for a student who wants more before moving on - not graded.</td></tr>
       </tbody>
     </table>
 
-    <div class="section-day-heading">Tab 3: Multiplication</div>
+    <div class="section-day-heading">2. Vocabulary &amp; Literacy</div>
+    <p style="margin:0 0 8px 0;">Builds the actual language of this unit: decimal place-value terms, and the keyword vocabulary that signals which operation a word problem needs ("total," "difference," "product," "split evenly"). Assign before Word Problems if a class struggles more with reading than computing.</p>
     <table class="data-table">
-      <thead><tr><th colspan="2">Guided Example Carousel</th></tr></thead>
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
       <tbody>
-        <tr><td>Exercise 1: \(2.45 \times 6\)</td><td>\(\mathbf{14.70}\)</td></tr>
-        <tr><td>Exercise 2: \(2.45 \times 3.2\)</td><td>\(\mathbf{7.840}\)</td></tr>
-        <tr><td>Exercise 3: \(0.03 \times 0.004\)</td><td>\(\mathbf{0.00012}\)</td></tr>
-        <tr><td>Exercise 4: \(3.5\text{ lbs} \times \$2.40\text{/lb}\)</td><td>\(\mathbf{\$8.400}\)</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <tbody>
-        <tr><td>Extra Guided Example: \(3.2 \times 4.8\)</td><td>\(\mathbf{15.36}\)</td></tr>
-        <tr><td>Guided Word Problem (classroom carpet area)</td><td>\(\mathbf{13.23\text{ m}^2}\)</td></tr>
+        <tr><td>1. Word Bank</td><td>Glossary of decimal-operation terms - the reference the other three tabs draw on, and worth keeping open in a second tab during Explanation/Practice Set.</td></tr>
+        <tr><td>2. Place Value in Action</td><td>An interactive place-value chart applied specifically to decimals (tenths, hundredths, thousandths) - the foundation the whole topic depends on.</td></tr>
+        <tr><td>3. Keyword Clues</td><td>Color-codes operation vocabulary by category so a student can identify which operation a word problem needs before attempting the arithmetic.</td></tr>
+        <tr><td>4. Check Your Understanding</td><td>A graded self-check on the vocabulary and place-value content above.</td></tr>
       </tbody>
     </table>
 
-    <div class="section-day-heading">Tab 4: Division</div>
+    <div class="section-day-heading">3. Explanation</div>
+    <p style="margin:0 0 8px 0;">Worked examples only, no grading - the "watch me think through it" page, moving operation by operation from place value through all four decimal operations to real-world application.</p>
     <table class="data-table">
-      <thead><tr><th colspan="2">Guided Example Carousel</th></tr></thead>
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
       <tbody>
-        <tr><td>Exercise 1: \(7.2 \div 4\)</td><td>\(\mathbf{1.8}\)</td></tr>
-        <tr><td>Exercise 2: \(45 \div 1.5\)</td><td>\(\mathbf{30}\)</td></tr>
-        <tr><td>Exercise 3: \(3.75 \div 0.25\)</td><td>\(\mathbf{15}\)</td></tr>
-        <tr><td>Exercise 4: \(\$47.50 \div 6\)</td><td>\(7.9166\ldots \to \mathbf{\$7.92}\) per person, rounded to the nearest cent</td></tr>
+        <tr><td>1. Place Value &amp; Rounding</td><td>Reading, comparing, and rounding decimals - the prerequisite for estimating before every algorithm that follows.</td></tr>
+        <tr><td>2. Addition &amp; Subtraction</td><td>Aligning decimal points (not right edges) before adding/subtracting, including regrouping across zeros (e.g. \(20.00-13.45\)) - misconception #1 and #3 below both live here.</td></tr>
+        <tr><td>3. Multiplication</td><td>Counting total decimal places across both factors to place the product's decimal point - misconception #2 below.</td></tr>
+        <tr><td>4. Division</td><td>All four division variants (decimal &divide; whole, whole &divide; decimal, decimal &divide; decimal, and a money problem requiring rounding) - shifting both the divisor's and dividend's decimal point together, not just one - misconceptions #7-9 below.</td></tr>
+        <tr><td>5. Word Problem Strategy</td><td>A worked-example carousel applying all four operations to real scenarios, including one that correctly resolves to a negative answer (misconception #5 below).</td></tr>
+        <tr><td>6. Whiteboard Modeling</td><td>A whole-class, physical-whiteboard-friendly re-teach of all four operations - best for small-group or one-on-one intervention (see Differentiation Notes below).</td></tr>
       </tbody>
     </table>
 
-    <div class="section-day-heading">Tab 5: Word Problem Strategy (Carousel)</div>
+    <div class="section-day-heading">4. Practice Set</div>
+    <p style="margin:0 0 8px 0;">The main graded computation page - one operation at a time (Tiers A/B/C within each), then mixed practice, error analysis, and a challenge tier.</p>
     <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
       <tbody>
-        <tr><td>1. The Road Trip</td><td>\(\mathbf{\$67.50}\)</td></tr>
-        <tr><td>2. Precipitation Analysis</td><td>\(\mathbf{4.93}\) inches</td></tr>
-        <tr><td>3. School Supplies Budget</td><td>\(\mathbf{-\$6.25}\) (over budget - a negative result is a real, valid answer here)</td></tr>
-        <tr><td>4. Farmer's Market Profit</td><td>\(\mathbf{\$45.50}\)</td></tr>
-        <tr><td>5. Sports Equipment Sale</td><td>\(\mathbf{\$67.72}\)</td></tr>
-        <tr><td>6. Mountain Elevation Change</td><td>\(\mathbf{1478.95}\) meters</td></tr>
+        <tr><td>1. Addition &amp; Subtraction</td><td>Three tiers of increasing difficulty (Tier A easiest, Tier C hardest) - fine to stop at Tier A/B for a student who needs it, per the Differentiation notes below.</td></tr>
+        <tr><td>2. Multiplication</td><td>Same three-tier structure, focused on counting total decimal places correctly.</td></tr>
+        <tr><td>3. Division</td><td>Four tiers by division type: decimal&divide;whole, whole&divide;decimal, decimal&divide;decimal, and money/measurement requiring rounding.</td></tr>
+        <tr><td>4. Mixed: Estimate &amp; Exact</td><td>Every operation mixed together, with an estimate required before the exact answer is accepted - the estimate step isn't optional, since a wrong decimal placement is otherwise invisible (misconception #6 below).</td></tr>
+        <tr><td>5. Error Analysis</td><td>Given someone else's (sometimes correct, sometimes wrong) solution, find whether and where it broke - two of the seven problems are deliberately correct, testing whether a student assumes every problem must have an error (misconception #4 below).</td></tr>
+        <tr><td>6. Challenge Tier</td><td>Multi-step problems pushing every operation further - a missing-digit puzzle, more decimal places, real-world multi-step reasoning.</td></tr>
       </tbody>
     </table>
 
-    <div class="section-day-heading">Tab 6: Whiteboard Modeling</div>
+    <div class="section-day-heading">5. Word Problems</div>
+    <p style="margin:0 0 8px 0;">Applies all four operations to real scenarios across seven tabs, from straightforward guided practice through career-themed stations and a financial-literacy multi-part problem.</p>
     <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
       <tbody>
-        <tr><td>Prob 1: \(\$15.75+\$4.80\)</td><td>\(\mathbf{\$20.55}\)</td></tr>
-        <tr><td>Prob 2: \(\$20.00-\$13.45\)</td><td>\(\mathbf{\$6.55}\)</td></tr>
-        <tr><td>Prob 3: \(2.45\text{ g}\times3.2\text{ mL}\)</td><td>partials 0490 + 7350 = 7840; 3 decimal places \(\to \mathbf{7.840}\)</td></tr>
-        <tr><td>Prob 4: \(12.35\text{s}+2.40\text{s}\)</td><td>\(\mathbf{14.75\text{s}}\)</td></tr>
+        <tr><td>1. Guided Practice</td><td>Four straightforward single-operation word problems - the most scaffolded tab on this page.</td></tr>
+        <tr><td>2. Mixed Word Problems</td><td>Fifteen problems mixing all three operations - a student has to decide which operation each one needs before solving.</td></tr>
+        <tr><td>3. Division Word Problems</td><td>Every flavor of division scenario: splitting costs evenly, unit price/rate, equal shares, and money with rounding - misconception #7 (dividing in the wrong direction) is worth watching for here specifically.</td></tr>
+        <tr><td>4. Real-World Applications</td><td>Two full sets (A and B) of general real-world scenarios spanning every operation.</td></tr>
+        <tr><td>5. Career Connections</td><td>Five station cards (Medicine, Market, Engineering, Arts, Science &amp; Health), each applying decimal precision to a different profession - works well as a jigsaw activity, one table per theme.</td></tr>
+        <tr><td>6. Financial Literacy</td><td>Two multi-part money problems (a shopping trip with subtotal/tax/change; a garden-seeding cost calculation) that chain several operations together in sequence.</td></tr>
+        <tr><td>7. Challenge Tier</td><td>The hardest word problems on this page - multi-step reasoning across all four operations, including averages and ranges.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-day-heading">6. Test Prep</div>
+    <p style="margin:0 0 8px 0;">The assessment-prep page - a review pass on each operation, a concept-check on the underlying rules (not just computation), a submit-only Mixed Practice worksheet, and a short readiness check.</p>
+    <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
+      <tbody>
+        <tr><td>1. Review: Add &amp; Subtract</td><td>A guided refresh plus a critical-thinking prompt on why decimal alignment matters.</td></tr>
+        <tr><td>2. Review: Multiply</td><td>A guided refresh plus a critical-thinking prompt on why \(0.2\times0.3=0.06\), not \(0.6\) - the decimal-place-counting rule stated as reasoning, not just procedure.</td></tr>
+        <tr><td>3. Review: Divide</td><td>A guided refresh plus a critical-thinking prompt on why dividing by a number less than 1 gives a larger result - conceptual, not just procedural.</td></tr>
+        <tr><td>4. Concept Check</td><td>True/false and short-answer items testing the underlying rules directly (decimal alignment, decimal-place counting, divisor/dividend shifting) rather than raw computation - a fast way to see if a misconception is present before it shows up in a wrong answer.</td></tr>
+        <tr><td>5. Mixed Practice</td><td>Submit-only (no retry) - matches the printable Test Prep assessment exactly (see Teacher Resources tab), so it doubles as a real digital assessment, not just practice.</td></tr>
+        <tr><td>6. Readiness Check</td><td>A short exit ticket - fast enough to use as a same-day "are we ready to move on" signal.</td></tr>
       </tbody>
     </table>
   </div>
 
-  <!-- PANEL 3: ANSWER KEY - PRACTICE SET -->
-  <div id="key-practice" class="panel">
-    <div class="section-title">Answer Key: Practice Set</div>
+  <!-- PANEL 3: METACOGNITION & DISCUSSION -->
+  <div id="metacognition-discussion" class="panel">
+    <div class="section-title">Metacognition &amp; Discussion</div>
+    <p>Reflection prompts and small-group discussion questions to use alongside any of the six pages - none of this is graded content on a student page, it's for you to drop into a warm-up, an exit ticket, or a mid-lesson pause.</p>
 
-    <div class="section-day-heading">Tab 1: Addition &amp; Subtraction</div>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Tier A</th></tr></thead>
-      <tbody>
-        <tr><td>\(16.35+8.9\)</td><td>\(\mathbf{25.25}\)</td></tr>
-        <tr><td>\(9.75+22.4\)</td><td>\(\mathbf{32.15}\)</td></tr>
-        <tr><td>\(27.4+15.85\)</td><td>\(\mathbf{43.25}\)</td></tr>
-        <tr><td>\(14.25-5.14\)</td><td>\(\mathbf{9.11}\)</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Tier B</th></tr></thead>
-      <tbody>
-        <tr><td>\(40.6-17.85\)</td><td>\(\mathbf{22.75}\)</td></tr>
-        <tr><td>\(11.08+34.7\)</td><td>\(\mathbf{45.78}\)</td></tr>
-        <tr><td>\(56.3+8.47\)</td><td>\(\mathbf{64.77}\)</td></tr>
-        <tr><td>\(74.2-19.65\)</td><td>\(\mathbf{54.55}\)</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Tier C</th></tr></thead>
-      <tbody>
-        <tr><td>\(21.05+6.398\)</td><td>\(\mathbf{27.448}\)</td></tr>
-        <tr><td>\(90.1-33.68\)</td><td>\(\mathbf{56.42}\)</td></tr>
-        <tr><td>\(105.3+22.91\)</td><td>\(\mathbf{128.21}\)</td></tr>
-        <tr><td>\(88.06-34.7\)</td><td>\(\mathbf{53.36}\)</td></tr>
-      </tbody>
-    </table>
+    <div class="section-day-heading">Reflection Prompts (use as an exit ticket or journal stem)</div>
+    <ul>
+      <li>"Before I added or subtracted today, did I line up the decimal points, or did I catch myself lining up the right edge instead?" (see Misconception #1 on the Misconceptions &amp; Differentiation tab)</li>
+      <li>"When I multiplied two decimals today, how did I decide where the decimal point goes in my answer? Could I explain that rule to someone else?"</li>
+      <li>"Did I estimate before I calculated? If my estimate and my exact answer didn't roughly match, what did that tell me?"</li>
+      <li>"Which Error Analysis problem took me the longest to judge, and was it actually correct or actually wrong?"</li>
+      <li>"Where in real life outside of school have I actually needed to add, subtract, multiply, or divide decimals?"</li>
+    </ul>
 
-    <div class="section-day-heading">Tab 2: Multiplication</div>
+    <div class="section-day-heading">Leveled Small-Group Discussion Prompts</div>
     <table class="data-table">
-      <thead><tr><th colspan="2">Tier A</th></tr></thead>
+      <thead><tr><th>Tier</th><th>Prompt</th></tr></thead>
       <tbody>
-        <tr><td>\(3.6\times2.5\)</td><td>\(\mathbf{9.0}\)</td></tr>
-        <tr><td>\(0.8\times7.25\)</td><td>\(\mathbf{5.8}\)</td></tr>
-        <tr><td>\(4.2\times0.15\)</td><td>\(\mathbf{0.63}\)</td></tr>
-        <tr><td>\(2.5\times1.4\)</td><td>\(\mathbf{3.5}\)</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Tier B</th></tr></thead>
-      <tbody>
-        <tr><td>\(12.4\times0.5\)</td><td>\(\mathbf{6.2}\)</td></tr>
-        <tr><td>\(5.6\times1.25\)</td><td>\(\mathbf{7.0}\)</td></tr>
-        <tr><td>\(3.15\times2.8\)</td><td>\(\mathbf{8.82}\)</td></tr>
-        <tr><td>\(9.8\times0.07\)</td><td>\(\mathbf{0.686}\)</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Tier C</th></tr></thead>
-      <tbody>
-        <tr><td>\(0.06\times9.2\)</td><td>\(\mathbf{0.552}\)</td></tr>
-        <tr><td>\(4.89\times2.2\)</td><td>\(\mathbf{10.758}\)</td></tr>
-        <tr><td>\(2.01\times0.43\)</td><td>\(\mathbf{0.8643}\)</td></tr>
-        <tr><td>\(0.9\times0.35\)</td><td>\(\mathbf{0.315}\)</td></tr>
-      </tbody>
-    </table>
-
-    <div class="section-day-heading">Tab 3: Division</div>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Tier A: Decimal &divide; Whole Number</th></tr></thead>
-      <tbody>
-        <tr><td>\(9.36\div6\)</td><td>\(\mathbf{1.56}\)</td></tr>
-        <tr><td>\(15.75\div3\)</td><td>\(\mathbf{5.25}\)</td></tr>
-        <tr><td>\(12.4\div5\)</td><td>\(\mathbf{2.48}\)</td></tr>
-        <tr><td>\(8.28\div4\)</td><td>\(\mathbf{2.07}\)</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Tier B: Whole Number &divide; Decimal</th></tr></thead>
-      <tbody>
-        <tr><td>\(18\div0.6\)</td><td>\(\mathbf{30}\)</td></tr>
-        <tr><td>\(6\div0.25\)</td><td>\(\mathbf{24}\)</td></tr>
-        <tr><td>\(20\div0.4\)</td><td>\(\mathbf{50}\)</td></tr>
-        <tr><td>\(27\div1.5\)</td><td>\(\mathbf{18}\)</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Tier C: Decimal &divide; Decimal</th></tr></thead>
-      <tbody>
-        <tr><td>\(5.28\div0.4\)</td><td>\(\mathbf{13.2}\)</td></tr>
-        <tr><td>\(0.144\div0.12\)</td><td>\(\mathbf{1.2}\)</td></tr>
-        <tr><td>\(8.4\div0.07\)</td><td>\(\mathbf{120}\)</td></tr>
-        <tr><td>\(2.94\div0.6\)</td><td>\(\mathbf{4.9}\)</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Tier D: Money, Measurement &amp; Rounding</th></tr></thead>
-      <tbody>
-        <tr><td>\(\$100.00\div3\), nearest cent</td><td>\(33.3333\ldots \to \mathbf{\$33.33}\)</td></tr>
-        <tr><td>\(25.6\text{ m}\div3\), nearest tenth</td><td>\(8.5333\ldots \to \mathbf{8.5}\text{ m}\)</td></tr>
-        <tr><td>\(\$25.00\div6\), nearest cent</td><td>\(4.1666\ldots \to \mathbf{\$4.17}\)</td></tr>
-        <tr><td>\(62.5\text{ kg}\div4\), nearest hundredth</td><td>\(=15.625 \to \mathbf{15.63}\text{ kg}\)</td></tr>
-      </tbody>
-    </table>
-
-    <div class="section-day-heading">Tab 4: Mixed - Estimate &amp; Exact</div>
-    <table class="data-table">
-      <tbody>
-        <tr><td>\(14.2+8.95\)</td><td>\(\mathbf{23.15}\)</td></tr>
-        <tr><td>\(25.68+12.4\)</td><td>\(\mathbf{38.08}\)</td></tr>
-        <tr><td>\(7.81+19.3\)</td><td>\(\mathbf{27.11}\)</td></tr>
-        <tr><td>\(105.2+47.75\)</td><td>\(\mathbf{152.95}\)</td></tr>
-        <tr><td>\(18.7-6.24\)</td><td>\(\mathbf{12.46}\)</td></tr>
-        <tr><td>\(42.15-15.8\)</td><td>\(\mathbf{26.35}\)</td></tr>
-        <tr><td>\(9.4-3.76\)</td><td>\(\mathbf{5.64}\)</td></tr>
-        <tr><td>\(60.02-24.5\)</td><td>\(\mathbf{35.52}\)</td></tr>
-        <tr><td>\(5.2\times3.8\)</td><td>\(\mathbf{19.76}\)</td></tr>
-        <tr><td>\(12.4\times0.6\)</td><td>\(\mathbf{7.44}\)</td></tr>
-        <tr><td>\(2.15\times4.3\)</td><td>\(\mathbf{9.245}\)</td></tr>
-        <tr><td>\(0.85\times9.2\)</td><td>\(\mathbf{7.82}\)</td></tr>
-        <tr><td>\(8.4\div4\)</td><td>\(\mathbf{2.1}\)</td></tr>
-        <tr><td>\(63\div2.5\)</td><td>\(\mathbf{25.2}\)</td></tr>
-        <tr><td>\(6.24\div0.6\)</td><td>\(\mathbf{10.4}\)</td></tr>
-        <tr><td>\(5.4\div0.09\)</td><td>\(\mathbf{60}\)</td></tr>
-      </tbody>
-    </table>
-
-    <div class="section-day-heading">Tab 5: Error Analysis</div>
-    <table class="data-table">
-      <tbody>
-        <tr><td>1: \(15.4-2.65\)</td><td>Correct, no mistake: \(\mathbf{12.75}\)</td></tr>
-        <tr><td>2: \(4.2\times0.3\)</td><td>Mistake (shifted 1 place, not 2); correct \(=\mathbf{1.26}\)</td></tr>
-        <tr><td>3: \(8.05+12.1\)</td><td>Mistake (decimals not aligned); correct \(=\mathbf{20.15}\)</td></tr>
-        <tr><td>4: \(6.25+3.4\)</td><td>Mistake (misaligned 3.4 as 0.34); correct \(=\mathbf{9.65}\)</td></tr>
-        <tr><td>5: \(5.1\times2.03\)</td><td>Mistake (shifted 2 places, not 3); correct \(=\mathbf{10.353}\)</td></tr>
-        <tr><td>6: \(30.5-12.75\)</td><td>Correct, no mistake: \(\mathbf{17.75}\)</td></tr>
-        <tr><td>7: \(3.4\times0.25\)</td><td>Mistake (shifted only 2 places, not 3); correct \(=\mathbf{0.85}\)</td></tr>
-      </tbody>
-    </table>
-
-    <div class="section-day-heading">Tab 6: Challenge Tier</div>
-    <table class="data-table">
-      <tbody>
-        <tr><td>Missing Digit Challenge: \(14.X5 + 3.20 = 17.65\)</td><td>\(X = \mathbf{4}\); \(14.45 + 3.20 = 17.65\)</td></tr>
-        <tr><td>\(124.5 \times 0.036\)</td><td>\(\mathbf{4.482}\)</td></tr>
-        <tr><td>\(0.125 \times 64.8\)</td><td>\(\mathbf{8.1}\)</td></tr>
-        <tr><td>\(0.045 \times 3.2\)</td><td>\(\mathbf{0.144}\)</td></tr>
-        <tr><td>\(0.032 \times 250\)</td><td>\(\mathbf{8.0}\)</td></tr>
-        <tr><td>\(212.5 \times 0.048\)</td><td>\(\mathbf{10.2}\)</td></tr>
-        <tr><td>\(3.6 \times 125\)</td><td>\(\mathbf{450.0}\)</td></tr>
-        <tr><td>\(54.72 \div 6\)</td><td>\(\mathbf{9.12}\)</td></tr>
-        <tr><td>\(9.6 \div 0.8\)</td><td>\(\mathbf{12}\)</td></tr>
-        <tr><td>\(0.056 \div 0.008\)</td><td>\(\mathbf{7}\)</td></tr>
-        <tr><td>Charity \(\$85.00\) split among 7 families, nearest cent</td><td>\(12.142857\ldots \to \mathbf{\$12.14}\)</td></tr>
+        <tr><td><strong>Building Understanding</strong></td><td>Take turns explaining to your partner: why do we line up decimal points for addition and subtraction, but count total decimal places for multiplication instead? Why aren't they the same rule?</td></tr>
+        <tr><td><strong>Applying</strong></td><td>As a group, solve \(\$47.50 \div 6\) together. What do you do with the remainder once you've divided as far as the cents place? Compare your rounding choice with another group's - did everyone round the same way?</td></tr>
+        <tr><td><strong>Extending</strong></td><td>Design your own two-step real-world decimal problem (like the Career Connections stations) that requires both a multiplication and a division step. Trade with another group - can they solve it, and does their answer match what you intended?</td></tr>
       </tbody>
     </table>
   </div>
 
-  <!-- PANEL 4: ANSWER KEY - WORD PROBLEMS -->
-  <div id="key-word" class="panel">
-    <div class="section-title">Answer Key: Word Problems</div>
 
-    <div class="section-day-heading">Tab 1: Guided Practice</div>
-    <table class="data-table">
-      <tbody>
-        <tr><td>1: Book club, \(5\times\$9.75\)</td><td>\(\mathbf{\$48.75}\)</td></tr>
-        <tr><td>2: Hiker, \(6.4+3.85\)</td><td>\(\mathbf{10.25}\) km</td></tr>
-        <tr><td>3: Tailor, \(12.5-4.75\)</td><td>\(\mathbf{7.75}\) m</td></tr>
-        <tr><td>4: Vending machine, \(8\times\$3.25\)</td><td>\(\mathbf{\$26.00}\)</td></tr>
-      </tbody>
-    </table>
-
-    <div class="section-day-heading">Tab 2: Mixed Word Problems</div>
-    <table class="data-table">
-      <tbody>
-        <tr><td>1: 2 books at \$9.49</td><td>\(\mathbf{\$18.98}\)</td></tr>
-        <tr><td>2: \$15.00 &minus; \$6.75</td><td>\(\mathbf{\$8.25}\)</td></tr>
-        <tr><td>3: 3.5 m ribbon &minus; 1.25 m cut</td><td>\(\mathbf{2.25}\) m</td></tr>
-        <tr><td>4: 4 pencils at \$0.65</td><td>\(\mathbf{\$2.60}\)</td></tr>
-        <tr><td>5: 2.8 L &minus; 0.6 L poured out</td><td>\(\mathbf{2.2}\) L</td></tr>
-        <tr><td>6: \$5.00 &minus; \$2.25 snack</td><td>\(\mathbf{\$2.75}\) change</td></tr>
-        <tr><td>7: 3 notebooks (\$1.80) + eraser (\$0.75)</td><td>\(\mathbf{\$6.15}\)</td></tr>
-        <tr><td>8: 5.2 km + 3.75 km</td><td>\(\mathbf{8.95}\) km</td></tr>
-        <tr><td>9: \$40.00 &divide; 5 friends</td><td>\(\mathbf{\$8.00}\) each</td></tr>
-        <tr><td>10: 12.4 m rope &minus; three 2.5 m pieces</td><td>\(\mathbf{4.9}\) m</td></tr>
-        <tr><td>11: \$4.29 &minus; \$0.50 coupon</td><td>\(\mathbf{\$3.79}\)</td></tr>
-        <tr><td>12: 6 stickers at \$0.35</td><td>\(\mathbf{\$2.10}\)</td></tr>
-        <tr><td>13: 1.5 cups \(\times\) 4 batches</td><td>\(\mathbf{6.0}\) cups</td></tr>
-        <tr><td>14: \(68.5^\circ\text{F} - 12.3^\circ\text{F}\)</td><td>\(\mathbf{56.2^\circ\text{F}}\)</td></tr>
-        <tr><td>15: \$25.00 gift card &minus; \$18.60</td><td>\(\mathbf{\$6.40}\) balance</td></tr>
-      </tbody>
-    </table>
-
-    <div class="section-day-heading">Tab 3: Division Word Problems</div>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Splitting Costs Evenly</th></tr></thead>
-      <tbody>
-        <tr><td>4 friends split a \(\$58.00\) bill</td><td>\(\mathbf{\$14.50}\) each</td></tr>
-        <tr><td>\(\$96.00\) hotel room split 6 ways</td><td>\(\mathbf{\$16.00}\) each</td></tr>
-        <tr><td>\(\$45.60\) split among 8 club members</td><td>\(\mathbf{\$5.70}\) each</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Unit Price &amp; Unit Rate</th></tr></thead>
-      <tbody>
-        <tr><td>\(3.5\) lb rice for \(\$6.30\)</td><td>\(\mathbf{\$1.80}\)/lb</td></tr>
-        <tr><td>\(175.5\) mi on \(6.5\) gal</td><td>\(\mathbf{27}\) mpg</td></tr>
-        <tr><td>\(12.5\) km in \(1.25\) hr</td><td>\(\mathbf{10}\) km/h</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Equal Shares</th></tr></thead>
-      <tbody>
-        <tr><td>\(16.8\) m fabric into 4 pieces</td><td>\(\mathbf{4.2}\) m each</td></tr>
-        <tr><td>\(36.75\) L paint among 3 classes</td><td>\(\mathbf{12.25}\) L each</td></tr>
-        <tr><td>\(9.6\) kg dough, \(0.4\) kg/batch</td><td>\(\mathbf{24}\) batches</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Money &amp; Rounding</th></tr></thead>
-      <tbody>
-        <tr><td>\(\$67.00\) gift card, 8 notebooks, nearest cent</td><td>\(8.375 \to \mathbf{\$8.38}\) each</td></tr>
-        <tr><td>\(\$50.00\) pizza split 3 ways, nearest cent</td><td>\(16.6666\ldots \to \mathbf{\$16.67}\) each</td></tr>
-      </tbody>
-    </table>
-
-    <div class="section-day-heading">Tab 4: Real-World Applications</div>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Set A</th></tr></thead>
-      <tbody>
-        <tr><td>1: 8 gallons at \$3.45</td><td>\(\mathbf{\$27.60}\)</td></tr>
-        <tr><td>2: 4.2 km + 3.65 km</td><td>\(\mathbf{7.85}\) km</td></tr>
-        <tr><td>3: 2.25 cups \(\times\) 3 batches</td><td>\(\mathbf{6.75}\) cups</td></tr>
-        <tr><td>4: \$60.00 &minus; \$24.75 &minus; \$18.30</td><td>\(\mathbf{\$16.95}\)</td></tr>
-        <tr><td>5: 8.5 ft &minus; 3.25 ft &minus; 2.4 ft</td><td>\(\mathbf{2.85}\) ft</td></tr>
-        <tr><td>6: \$45.99 &minus; \$5.00 credit</td><td>\(\mathbf{\$40.99}\)</td></tr>
-        <tr><td>7: \$32.50 &divide; 5 friends</td><td>\(\mathbf{\$6.50}\) each</td></tr>
-        <tr><td>8: 55.5 mi + 48.25 mi</td><td>\(\mathbf{103.75}\) mi</td></tr>
-        <tr><td>9: 3.5 yards at \$6.40</td><td>\(\mathbf{\$22.40}\)</td></tr>
-        <tr><td>10: \$215.60 &minus; \$42.75 taxes</td><td>\(\mathbf{\$172.85}\)</td></tr>
-        <tr><td>11: 450.5 gal &minus; 62.25 gal</td><td>\(\mathbf{388.25}\) gal</td></tr>
-        <tr><td>12: 4 tickets at \$11.25</td><td>\(\mathbf{\$45.00}\)</td></tr>
-        <tr><td>13: 9.8 mi &minus; 6.35 mi hiked</td><td>\(\mathbf{3.45}\) mi</td></tr>
-        <tr><td>14: \$14.29 + \$8.75 + \$3.40</td><td>\(\mathbf{\$26.44}\)</td></tr>
-        <tr><td>15: \$120.50 + \$35.25 deposit</td><td>\(\mathbf{\$155.75}\)</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Set B</th></tr></thead>
-      <tbody>
-        <tr><td>1: school garden soil, \(3.8 \times \$5.25\)</td><td>\(\mathbf{\$19.95}\)</td></tr>
-        <tr><td>2: liquid samples, second sample volume</td><td>\(\mathbf{7.35}\) mL</td></tr>
-        <tr><td>3: sidewalk construction, \(12.45+9.8\)</td><td>\(\mathbf{22.25}\) m</td></tr>
-        <tr><td>4: baker's sugar, \(0.75\times2+1.25\)</td><td>\(\mathbf{2.75}\) cups</td></tr>
-        <tr><td>5: water bottle, \(24.5-18.75\)</td><td>\(\mathbf{5.75}\) oz</td></tr>
-        <tr><td>6: craft ribbon, \(2.15\times4.5\)</td><td>\(\mathbf{9.675}\)</td></tr>
-      </tbody>
-    </table>
-
-    <div class="section-day-heading">Tab 5: Career Connections</div>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Medicine</th></tr></thead>
-      <tbody>
-        <tr><td>1: Nurse gives doses of 12.5, 8.75, 6.4 mL. Total?</td><td>\(\mathbf{27.65}\) mL</td></tr>
-        <tr><td>2: Temperature drops from \(100.45\)&deg;F to \(98.6\)&deg;F. How many degrees?</td><td>\(\mathbf{1.85}\)&deg;F</td></tr>
-        <tr><td>3: Bottle has 50 mL; dispenses 12.5, 9.75, 14.25 mL. Remaining?</td><td>\(\mathbf{13.5}\) mL</td></tr>
-        <tr><td>4: 2.5 mL every 6 hrs, 4 times a day. Total?</td><td>\(\mathbf{10.0}\) mL</td></tr>
-        <tr><td>5: 3 boxes syringes at \(\$18.75\) + bandages \(\$9.40\). Total cost?</td><td>\(\mathbf{\$65.65}\)</td></tr>
-        <tr><td>6: 0.75 mL per tube for 12 tubes. Total?</td><td>\(\mathbf{9.0}\) mL</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Market</th></tr></thead>
-      <tbody>
-        <tr><td>1: Apples at \(\$2.35\)/kg, buy \(3.4\) kg. Total?</td><td>\(\mathbf{\$7.99}\)</td></tr>
-        <tr><td>2: Register has \(\$112.75\); pays \(\$45.60\) in bills. Left?</td><td>\(\mathbf{\$67.15}\)</td></tr>
-        <tr><td>3: 6 crates at \(\$8.25\), sold for \(\$72.90\) total. Profit?</td><td>\(\mathbf{\$23.40}\)</td></tr>
-        <tr><td>4: Change from \(\$20\) for a \(\$13.45\) purchase?</td><td>\(\mathbf{\$6.55}\)</td></tr>
-        <tr><td>5: \(\$45.80\) jacket marked down \(\$12.25\). New price?</td><td>\(\mathbf{\$33.55}\)</td></tr>
-        <tr><td>6: 2.5 kg coffee at \(\$9.60\)/kg. Total?</td><td>\(\mathbf{\$24.00}\)</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Engineering</th></tr></thead>
-      <tbody>
-        <tr><td>1: Join beams \(245.6\) cm \(+89.75\) cm, remove \(34.2\) cm. Final length?</td><td>\(\mathbf{301.15}\) cm</td></tr>
-        <tr><td>2: Target \(12.50\) cm; measured \(12.53\) cm. Difference?</td><td>\(\mathbf{0.03}\) cm</td></tr>
-        <tr><td>3: Weld 3.75 mm + 2.6 mm sheets, grind off 0.85 mm. Final thickness?</td><td>\(\mathbf{5.5}\) mm</td></tr>
-        <tr><td>4: 8 bolts at 0.45 kg each. Total weight?</td><td>\(\mathbf{3.6}\) kg</td></tr>
-        <tr><td>5: Beam 4.2 m extended by 1.85 m. New length?</td><td>\(\mathbf{6.05}\) m</td></tr>
-        <tr><td>6: Target 6.75 cm; measured 6.82 cm. Oversized by?</td><td>\(\mathbf{0.07}\) cm</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Arts</th></tr></thead>
-      <tbody>
-        <tr><td>1: Mix \(2.5\) L \(+1.75\) L \(+0.6\) L of paint. Total?</td><td>\(\mathbf{4.85}\) L</td></tr>
-        <tr><td>2: Song is \(24.5\)s; repeat a \(1.25\)s riff 2 extra times. New length?</td><td>\(\mathbf{27.0}\)s</td></tr>
-        <tr><td>3: Mix 1.5 kg + 0.75 kg clay + 0.35 kg additive. Total weight?</td><td>\(\mathbf{2.6}\) kg</td></tr>
-        <tr><td>4: 4 sections at 2.25 min each. Total routine length?</td><td>\(\mathbf{9.0}\) min</td></tr>
-        <tr><td>5: 6 canvases at \(\$4.85\) each. Total cost?</td><td>\(\mathbf{\$29.10}\)</td></tr>
-        <tr><td>6: 45.6s clip, trim 8.75s from start and 6.4s from end. New length?</td><td>\(\mathbf{30.45}\)s</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Science &amp; Health (2.5 energy bars)</th></tr></thead>
-      <tbody>
-        <tr><td>Total Fat</td><td>\(\mathbf{10.625}\) g</td></tr>
-        <tr><td>Protein</td><td>\(\mathbf{22.875}\) g</td></tr>
-        <tr><td>Carbohydrates</td><td>\(\mathbf{71.0}\) g</td></tr>
-        <tr><td>Fiber</td><td>\(\mathbf{9.5}\) g</td></tr>
-      </tbody>
-    </table>
-
-    <div class="section-day-heading">Tab 6: Financial Literacy</div>
-    <table class="data-table">
-      <tbody>
-        <tr><td>Shopping trip: Subtotal / Total / Change</td><td>Subtotal \(=\mathbf{\$24.09}\); Total \(=\mathbf{\$25.77}\); Change \(=\mathbf{\$24.23}\)</td></tr>
-        <tr><td>Garden Seed Cost (\(5.5\text{ m}\times3.2\text{ m}\) at \(\$1.50/\text{m}^2\))</td><td>Area \(=17.6\text{ m}^2\); total cost \(= \mathbf{\$26.40}\)</td></tr>
-      </tbody>
-    </table>
-
-    <div class="section-day-heading">Tab 7: Challenge Tier</div>
-    <table class="data-table">
-      <tbody>
-        <tr><td>Caterer, chicken+beef+delivery split 4 ways</td><td>\(\mathbf{\$27.85}\) per budget</td></tr>
-        <tr><td>Runner's average lap time</td><td>\(\mathbf{70.0}\)s per lap</td></tr>
-        <tr><td>Phone case store profit</td><td>\(\mathbf{\$137.76}\)</td></tr>
-        <tr><td>Dinner bill split + tip</td><td>\(\mathbf{\$20.45}\) per friend</td></tr>
-        <tr><td>Fruit crates minus bulk discount</td><td>\(\mathbf{\$113.50}\)</td></tr>
-        <tr><td>Snack A + Snack B total fat</td><td>\(\mathbf{15.3}\) g</td></tr>
-        <tr><td>Hiker's granola protein minus given away</td><td>\(\mathbf{16.7}\) g</td></tr>
-        <tr><td>Cyclist's average speed</td><td>\(\mathbf{34}\) km/h</td></tr>
-        <tr><td>Tank drain time</td><td>\(\mathbf{33.8}\) minutes</td></tr>
-        <tr><td>Biologist's measurement range</td><td>\(\mathbf{7.475}\) mm</td></tr>
-        <tr><td>Charity two-day total</td><td>\(\mathbf{\$364.00}\)</td></tr>
-        <tr><td>Charity split among 8 families</td><td>\(\mathbf{\$4.92}\) per family</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- PANEL 5: ANSWER KEY - TEST PREP -->
-  <div id="key-testprep" class="panel">
-    <div class="section-title">Answer Key: Test Prep</div>
-
-    <div class="section-day-heading">Tabs 1-3: Full Review</div>
-    <table class="data-table">
-      <tbody>
-        <tr><td>Try It Yourself: \(15.62+7.9\)</td><td>\(\mathbf{23.52}\)</td></tr>
-        <tr><td>Multiplication Guided Practice: \(2.5\times1.4\)</td><td>\(\mathbf{3.5}\)</td></tr>
-        <tr><td>Critical Thinking (Multiply): why is \(0.2\times0.3=0.06\), not \(0.6\)?</td><td>Open response - key idea: \(0.2\) has 1 decimal place and \(0.3\) has 1, so the product needs \(1+1=2\) decimal places, giving \(0.06\), not \(0.6\) (1 decimal place).</td></tr>
-        <tr><td>Worked Example (Divide): \(4.5 \div 0.6\)</td><td>\(\mathbf{7.5}\)</td></tr>
-        <tr><td>Division Guided Practice: \(3.6 \div 0.4\)</td><td>\(\mathbf{9}\)</td></tr>
-        <tr><td>Critical Thinking (Divide): why is \(6 \div 0.5 = 12\) greater than \(6\)?</td><td>Open response - key idea: dividing by \(0.5\) asks "how many halves fit into \(6\)?" Since a half is smaller than a whole, more of them fit, so the answer is bigger than the original number.</td></tr>
-      </tbody>
-    </table>
-
-    <div class="section-day-heading">Tab 4: Concept Check</div>
-    <table class="data-table">
-      <tbody>
-        <tr><td>1: T/F - line up digits on the right edge for addition</td><td><strong>False</strong> - line up the decimal points</td></tr>
-        <tr><td>2: T/F - count total decimal places for multiplication</td><td><strong>True</strong></td></tr>
-        <tr><td>3: Round \(7.253\) to the nearest hundredth</td><td>\(\mathbf{7.25}\)</td></tr>
-        <tr><td>4: Decimal places in \(0.45 \times 1.3\)</td><td>\(\mathbf{3}\)</td></tr>
-        <tr><td>5: T/F - only shift the dividend's decimal point, not the divisor's</td><td><strong>False</strong> - shift both</td></tr>
-        <tr><td>6: In \(3.75 \div 0.25\), shifted divisor</td><td>\(\mathbf{25}\)</td></tr>
-      </tbody>
-    </table>
-
-    <div class="flag-box">
-      <h4>Keep this tab confidential from students</h4>
-      <p style="margin:0;">The rest of this tab is the Mixed Practice answer key, matching the printable Test Prep assessment (see Teacher Resources tab) exactly. Do not link or share this Teacher's Guide page with students.</p>
-    </div>
-
-    <div class="section-day-heading">Tab 5: Mixed Practice</div>
-    <table class="data-table">
-      <thead><tr><th colspan="3">Section 1: Mixed Operations</th></tr></thead>
-      <tbody>
-        <tr><td>Add: \(24.68+9.75\)</td><td colspan="2">Estimate \(\approx 25+10=35\); exact \(\mathbf{34.43}\)</td></tr>
-        <tr><td>Subtract: \(83.4-27.56\)</td><td colspan="2">Estimate \(\approx 83-28=55\); exact \(\mathbf{55.84}\)</td></tr>
-        <tr><td>Multiply: \(6.5\times3.4\)</td><td colspan="2">Estimate \(\approx 7\times3=21\); exact \(\mathbf{22.1}\)</td></tr>
-        <tr><td>Add: \(145.2+38.09\)</td><td colspan="2">Estimate \(\approx 145+38=183\); exact \(\mathbf{183.29}\)</td></tr>
-        <tr><td>Subtract: \(92.03-45.8\)</td><td colspan="2">Estimate \(\approx 92-46=46\); exact \(\mathbf{46.23}\)</td></tr>
-        <tr><td>Multiply: \(0.75\times8.4\)</td><td colspan="2">Estimate \(\approx 1\times8=8\); exact \(\mathbf{6.3}\)</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Section 2: Word Problems</th></tr></thead>
-      <tbody>
-        <tr><td>3 notebooks (\$8.75) + 1 backpack (\$12.49)</td><td>\(\mathbf{\$38.74}\)</td></tr>
-        <tr><td>\$45.00 &minus; \$18.65 &minus; \$9.40</td><td>\(\mathbf{\$16.95}\)</td></tr>
-        <tr><td>Garden perimeter, \(12.5\text{ m}\times8.75\text{ m}\)</td><td>\(\mathbf{42.5}\) m</td></tr>
-        <tr><td>\(2.5\) cups \(\times\) 6 batches</td><td>\(\mathbf{15.0}\) cups</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">Extra Credit</th></tr></thead>
-      <tbody>
-        <tr><td>2 books (\$14.25) + 3 pens (\$2.50), tax \$3.62, paid with \$60</td><td>Subtotal \(\mathbf{\$36.00}\); total \(\mathbf{\$39.62}\); change \(\mathbf{\$20.38}\)</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">More Mixed Computation</th></tr></thead>
-      <tbody>
-        <tr><td>\(25.68+12.4\)</td><td>\(\mathbf{38.08}\)</td></tr>
-        <tr><td>\(7.81+19.3\)</td><td>\(\mathbf{27.11}\)</td></tr>
-        <tr><td>\(42.15-15.8\)</td><td>\(\mathbf{26.35}\)</td></tr>
-        <tr><td>\(60.02-24.5\)</td><td>\(\mathbf{35.52}\)</td></tr>
-        <tr><td>\(12.4\times0.6\)</td><td>\(\mathbf{7.44}\)</td></tr>
-        <tr><td>\(2.15\times4.3\)</td><td>\(\mathbf{9.245}\)</td></tr>
-        <tr><td>\(0.85\times9.2\)</td><td>\(\mathbf{7.82}\)</td></tr>
-        <tr><td>\(8.4\div0.7\)</td><td>\(\mathbf{12}\)</td></tr>
-        <tr><td>\(5.4\div6\)</td><td>\(\mathbf{0.9}\)</td></tr>
-      </tbody>
-    </table>
-    <table class="data-table">
-      <thead><tr><th colspan="2">More Word Problems</th></tr></thead>
-      <tbody>
-        <tr><td>School garden soil, \(3.8\times\$5.25\)</td><td>\(\mathbf{\$19.95}\)</td></tr>
-        <tr><td>Sidewalk construction, \(12.45+9.8\)</td><td>\(\mathbf{22.25}\) m</td></tr>
-        <tr><td>Baker's sugar, \(0.75\times2+1.25\)</td><td>\(\mathbf{2.75}\) cups</td></tr>
-        <tr><td>Water bottle, \(24.5-18.75\)</td><td>\(\mathbf{5.75}\) oz</td></tr>
-        <tr><td>Craft ribbon, \(2.15\times4.5\)</td><td>\(\mathbf{9.675}\)</td></tr>
-        <tr><td>\(\$63.00\) club fund split among 4 members</td><td>\(\mathbf{\$15.75}\) each</td></tr>
-      </tbody>
-    </table>
-
-    <div class="section-day-heading">Tab 6: Readiness Check</div>
-    <table class="data-table">
-      <tbody>
-        <tr><td>\(9.6+3.75\)</td><td>\(\mathbf{13.35}\)</td></tr>
-        <tr><td>\(2.4\times1.5\)</td><td>\(\mathbf{3.6}\)</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- PANEL 6: MISCONCEPTIONS & DIFFERENTIATION -->
+  <!-- PANEL 4: MISCONCEPTIONS & DIFFERENTIATION -->
   <div id="misconceptions" class="panel">
     <div class="section-title">Common Misconceptions</div>
 
@@ -747,9 +356,32 @@
         <li>Allow a bilingual glossary or translation tool during Word Problems - the math content itself (the numbers and operations) is unaffected by translating the scenario text.</li>
       </ul>
     </div>
+
+    <div class="section-title" style="margin-top:32px;">Scaffolded Support Problems</div>
+    <p>For a student still shaky on one of the misconceptions above. Read each hint aloud before they attempt the problem - the scaffolding is meant to be visible here, not discovered.</p>
+    <table class="data-table">
+      <thead><tr><th>Problem</th><th>Hint to give</th><th>Answer</th></tr></thead>
+      <tbody>
+        <tr><td>1. \(15.4 - 8.65\)</td><td>Pad \(15.4\) with a trailing zero (\(15.40\)) before subtracting, so both numbers have the same number of decimal places.</td><td>\(\mathbf{6.75}\)</td></tr>
+        <tr><td>2. \(3.6 \times 2.4\)</td><td>Count total decimal places in both factors (\(1+1=2\)), multiply as if they were whole numbers, then place the decimal point that many places from the right.</td><td>\(\mathbf{8.64}\)</td></tr>
+        <tr><td>3. \(4.8 \div 0.6\)</td><td>Multiply both numbers by \(10\) until the divisor is whole, then divide as usual.</td><td>\(\mathbf{8}\)</td></tr>
+        <tr><td>4. \(\$52.00 \div 8\)</td><td>Line up the quotient's decimal point directly above the dividend's as soon as you reach it - don't wait until the end.</td><td>\(\mathbf{\$6.50}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title" style="margin-top:32px;">Extension / Challenge Problems</div>
+    <p>Stays within this unit's own standard scope (6.NS.B.2/6.NS.B.3, decimal operations only) while pushing past what's graded on any of the six pages.</p>
+    <table class="data-table">
+      <thead><tr><th>Problem</th><th>Answer / Notes</th></tr></thead>
+      <tbody>
+        <tr><td>1. A bakery packages \(3.25\) kg of flour into bags of \(0.25\) kg each, sells each bag for \(\$1.80\), then pays a helper a flat \(\$2.50\) fee out of the earnings. How much is left after paying the helper?</td><td>\(3.25 \div 0.25 = 13\) bags; \(13 \times \$1.80 = \$23.40\); \(\$23.40 - \$2.50 = \mathbf{\$20.90}\) - a genuine three-step chain (division, then multiplication, then subtraction).</td></tr>
+        <tr><td>2. Missing-digit challenge: find the digit that makes \(4.X6 + 2.15 = 6.71\) true.</td><td>\(X = \mathbf{5}\) (\(4.56 + 2.15 = 6.71\)) - requires working the addition algorithm backward, not just forward.</td></tr>
+        <tr><td>3. A runner's three race times are \(24.85\)s, \(23.9\)s, and \(25.125\)s. What is her average time?</td><td>\((24.85+23.9+25.125) \div 3 = \mathbf{24.625}\)s - three numbers with different decimal-place counts have to be aligned correctly before summing.</td></tr>
+      </tbody>
+    </table>
   </div>
 
-  <!-- PANEL 7: TEACHER RESOURCES -->
+  <!-- PANEL 5: TEACHER RESOURCES -->
   <div id="resources" class="panel">
     <div class="section-title">Teacher Resources</div>
 
