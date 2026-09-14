@@ -553,6 +553,102 @@ student-facing five) has one line immediately after its `<h1>`:
 `.standards-line` in `lesson-shared.css`. Identical text across every
 page in one unit. See §15 for the sourcing rule and the current table.
 
+### Component states, touch targets, and dark mode
+- **`:focus-visible`** — every interactive shared component
+  (`button`, `.card-select-option`, `.tab-btn`, `.dot`, `.pv-column`,
+  every form control) gets a real, themed 3px focus ring on keyboard
+  navigation only (never on a mouse/touch click, since `:focus-visible`
+  — not plain `:focus` — is what's used). A button already filled with
+  a primary-colored background gets a white ring + colored glow instead
+  (a primary-on-primary ring would be nearly invisible) — see
+  `.btn-lg:focus-visible` and its neighbors in `lesson-shared.css` for
+  the exact selector list. **Rule**: a new shared interactive class
+  needs adding to one of these two selector groups, or it keeps only
+  the browser's own inconsistent default outline.
+- **Touch targets** — `.card-select-option` (the touch-friendly
+  `<select>` replacement, §7 above) has an explicit `min-height: 44px`
+  so a short one-word option never shrinks below the standard mobile
+  minimum tap size. Every other shared button already clears 44px from
+  its own padding/font-size. **Not yet audited**: a page's own locally-
+  defined buttons (e.g. `.row-check-btn`, defined per-page rather than
+  in this shared file) and anything canvas-based (the paired-activity
+  example's Konva drag tokens, §18) — a deliberately deferred, later,
+  file-by-file pass, not a gap in this file's own components.
+- **Colorblind-safe feedback** — `.feedback-msg.success`/`.error`
+  already differed by more than color (the message text itself always
+  says "Correct!" or gives specific guidance, never color-only); a
+  `::before` checkmark/X now makes the distinction visible at a glance
+  too, without reading the text. **Gotcha**: `.feedback-msg.locked`
+  (§9) already claims `::before` for a "Locked - " prefix — a message
+  that's both, e.g. `success locked`, needs the *combined* 3-class
+  selector (`.feedback-msg.success.locked::before`, content `"✓
+  Locked - "`) to render both cues at once; the plain 2-class
+  `.success::before`/`.locked::before` rules have equal specificity, so
+  without the combined rule one would silently win over the other
+  depending purely on source order. Follow this exact pattern (combined
+  selector for every state that can co-occur) before adding a new
+  `::before`-based cue to `.feedback-msg` anywhere.
+- **Dark mode** — a `.theme-toggle-btn` (plain SVG sun/moon icons, no
+  emoji, fixed top-right on every page) is injected automatically by
+  `lesson-shared.js`'s `ThemeToggle` module on every page that loads
+  it — no per-page markup needed. Click toggles a `data-theme="dark"`/
+  `"light"` attribute on `<html>`, persisted to `localStorage`
+  (`lia_theme`); a first-ever visit with nothing stored yet matches the
+  device's own `prefers-color-scheme` instead of defaulting to light
+  regardless, same "respect what's already there" principle as
+  `token-cache.js`. The attribute is set synchronously at script-load
+  time (this script has no `defer`/`async` and sits in `<head>` per
+  this section's own ordering rule), before `<body>` is even parsed —
+  no flash of the wrong theme on load.
+  - **Scope: this file's own shared components only.** Every hardcoded
+    color used by a class defined in `lesson-shared.css` has a
+    `[data-theme="dark"]`-scoped override (search the file for that
+    exact string to see the whole block, appended at the end) — but a
+    page's own local `<style>` block (a digit-box grid, a catalog
+    card, the paired-activity example's Konva canvas, a Teacher-Guide's
+    printable-styled sections, ...) is **not** covered and keeps its
+    original light styling even while the rest of the page around it
+    goes dark. Extending dark mode into page-specific content is a
+    separate, later, file-by-file pass — expect a page with heavy local
+    styling to look like a light card floating inside a dark shell
+    until that pass happens, not a bug in this mechanism.
+  - **`teacher-dashboard.html` loads `lesson-shared.css` but not
+    `lesson-shared.js`** (§13) — its own shared-component usage
+    benefits from the dark variables/overrides automatically, but it
+    never gets the toggle button and has no way to actually enter dark
+    mode yet. `index.html` (§12) loads neither file at all and is
+    entirely unaffected.
+  - **Never redefine `--primary` itself for dark mode.** It's used both
+    as a *background* (header, `.app-container`'s border, several
+    buttons — where the original dark navy is correct and unchanged in
+    both themes, since a dark background reads fine on a dark page too)
+    and, separately, as *text color* on a handful of headings that
+    assumed a white card behind them (`.section-title`, `.ladder-
+    result`, `.qa .a`, ...) — redefining the variable itself would fix
+    the text cases but break the background cases (a light-mode-correct
+    dark navy header would turn an unreadably light blue). Every text
+    use instead gets its own explicit override to a lighter blue
+    (`--dark-heading: #7dd3fc`, defined once, reused by every heading
+    selector) — **if a new shared component uses `var(--primary)` as
+    its own text color, add its selector to that same override group
+    rather than touching the variable.**
+  - **Every color-coded pastel badge/tag/box** (`.type-tag.*`,
+    `.pill-*`, `.resolve-box.*`, `.kcc-box`, `.running-box`, `.flow-
+    math.final`/`.running`) is inverted to a dark-tinted background
+    with a lighter version of its own saturated color, never just
+    "the same colors, dimmed" — keeps the same color-coding legible
+    (still identifiably the same hue family) against a dark surface.
+  - **`lesson-shared.css`/`lesson-shared.js` don't use the `?v=`
+    cache-bust convention** §2 requires for `token-cache.js`/
+    `lesson-auth.js` — no version query string exists on either
+    reference anywhere on the site today, so this change (like any
+    future edit to either shared file) propagates on GitHub Pages' own
+    normal CDN cache schedule rather than being forced immediately.
+    Not addressed here — retrofitting `?v=` onto both files would touch
+    the `<head>` of 77 (`lesson-shared.css`) and 66
+    (`lesson-shared.js`) pages, a separate, much larger, deliberate
+    change of its own.
+
 ---
 
 ## 8. Engagement & integrity tracking

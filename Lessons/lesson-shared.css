@@ -828,6 +828,20 @@ button:disabled {
 .feedback-msg.success { background: var(--success-bg); color: var(--success); border: 2px solid var(--success); }
 .feedback-msg.error { background: var(--error-bg); color: var(--error); border: 2px solid var(--error); }
 
+/* Colorblind-safe cue: every check message's own text already says
+   "Correct!"/gives specific guidance (never color-only), but a shape
+   distinguishes success from error at a glance too. `::before` can
+   only hold one `content` per element, and `.locked` (above) already
+   claims it for a plain locked message - these three-class combos are
+   deliberately MORE specific than both `.feedback-msg.locked::before`
+   and the plain `.success`/`.error::before` rules below, so a message
+   that's both e.g. "success" and "locked" keeps BOTH the checkmark and
+   the "Locked" text instead of one silently overwriting the other. */
+.feedback-msg.success.locked::before { content: "\2713  Locked - "; font-weight: 900; }
+.feedback-msg.error.locked::before { content: "\2717  Locked - "; font-weight: 900; }
+.feedback-msg.success::before { content: "\2713  "; font-weight: 900; }
+.feedback-msg.error::before { content: "\2717  "; font-weight: 900; }
+
 .problem-selector {
   display: flex;
   gap: 10px;
@@ -1282,3 +1296,236 @@ button:disabled {
 .match-slot.matched { border-style: solid; border-color: var(--success); background: var(--success-bg); cursor: default; }
 .match-slot.wrong-flash { border-color: var(--error); background: var(--error-bg); }
 .reveal-dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+
+/* ================================================================
+   COMPONENT STATES - every interactive element needs a visible
+   Default/Hover/Pressed/Disabled/Focus state, not just Default.
+   Hover/disabled mostly already existed per-component above; this
+   adds the one that was missing site-wide: a real, visible keyboard-
+   focus ring. `:focus-visible` (not plain `:focus`) so a mouse/touch
+   click never shows the ring - only actual keyboard navigation does,
+   matching how a modern browser's own default outline behaves, just
+   themed to the site instead of left as the browser's blue default
+   (which several of these dark-bordered/colored buttons made hard to
+   see - a plain `outline` on `.btn-nav`'s already-dark-blue background
+   was nearly invisible before this).
+   ================================================================ */
+button:focus-visible,
+.card-select-option:focus-visible,
+.tab-btn:focus-visible,
+.dot:focus-visible,
+.pv-column:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+.form-control-lg:focus-visible,
+math-field:focus-visible {
+  outline: 3px solid var(--primary-light);
+  outline-offset: 2px;
+}
+/* A focus ring on a button already filled with --primary/--primary-light
+   would nearly disappear against its own background - use a light,
+   high-contrast ring instead for exactly those buttons. */
+.btn-lg:focus-visible,
+.btn-nav:focus-visible,
+.btn-secondary:focus-visible,
+.problem-btn.active:focus-visible,
+.card-select-option.selected:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--primary-light);
+}
+
+/* ================================================================
+   TOUCH TARGETS - 44x44px minimum on any tappable control, per
+   standard mobile accessibility guidance. Most shared buttons already
+   clear this from padding + font-size alone; `.card-select-option`
+   (a touch-friendly <select> replacement - the one place this
+   actually mattered) gets an explicit floor so a short one-word
+   option (e.g. "Yes"/"No") never shrinks below it.
+   ================================================================ */
+.card-select-option { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+
+/* ================================================================
+   THEME TOGGLE - button injected by lesson-shared.js into every page
+   that loads it (see /CLAUDE.md). Fixed to the top-right corner,
+   site-wide, so it's reachable without scrolling regardless of which
+   tab/panel is open. SVG sun/moon icons (no emoji, per instruction) -
+   both are always present in the DOM and toggled via [hidden] rather
+   than swapped, so there's no icon flash while a font/image loads.
+   ================================================================ */
+.theme-toggle-btn {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 1000;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+.theme-toggle-btn:hover { transform: scale(1.08); }
+.theme-toggle-btn:active { transform: scale(0.94); }
+.theme-toggle-btn svg { width: 22px; height: 22px; }
+.theme-toggle-btn .icon-sun, .theme-toggle-btn .icon-moon { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ================================================================
+   DARK MODE - toggled via `data-theme="dark"` on <html> (the
+   .theme-toggle-btn above sets it, persisted to localStorage by
+   lesson-shared.js; defaults to the device's own prefers-color-scheme
+   on a page's first visit, same principle as the rest of this file's
+   "respect what's already there" approach to state). Every rule below
+   is new and purely additive - nothing above this comment was edited
+   to build this section, so light mode (the default, and the only
+   mode on a page/browser with JS disabled) is completely unchanged.
+
+   SCOPE - this file's own shared components only, as instructed: a
+   page's own local <style> block (a digit-box grid, a catalog card,
+   the Eco-Garden canvas, a Teacher-Guide's printable-styled sections,
+   ...) is not covered here and keeps its original light styling even
+   while the rest of the page around it goes dark. Extending dark mode
+   into page-specific content is a separate, later, file-by-file pass.
+   `teacher-dashboard.html` loads this stylesheet too, so its shared-
+   component usage (buttons, forms, `.card-select`-style pickers if
+   any) picks up these rules automatically, but the toggle button
+   itself is only injected by lesson-shared.js, which the dashboard
+   does not load (see /CLAUDE.md) - not in scope this round.
+   ================================================================ */
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --card: #161b22;
+  --text: #e6edf3;
+  --border: #475569;
+  --notebook-bg: #2b2408;
+  --notebook-border: #92752a;
+  --success: #4ade80;
+  --success-bg: #0f2a1a;
+  --error: #f87171;
+  --error-bg: #2d1414;
+  --highlight-carry: #f87171;
+}
+
+/* Elements whose light-mode rule uses var(--primary) as TEXT color on
+   a light card/background (not as a background/border - those stay
+   unchanged, a dark-navy background reads fine on a dark page too) -
+   the original dark navy is unreadable as text once its background
+   goes dark, so each gets a lighter, still-on-brand blue instead. Kept
+   as one shared custom property rather than 16 separate hardcoded
+   values, so a future addition only needs var(--dark-heading). */
+[data-theme="dark"] {
+  --dark-heading: #7dd3fc;
+}
+[data-theme="dark"] .lesson-gate-body h2,
+[data-theme="dark"] .pv-val,
+[data-theme="dark"] .algo-table td.decimal-cell,
+[data-theme="dark"] .algo-table td.currency-cell,
+[data-theme="dark"] .decimal-point,
+[data-theme="dark"] .decimal-mark,
+[data-theme="dark"] .shifted-num,
+[data-theme="dark"] .ladder-formula,
+[data-theme="dark"] .ladder-result,
+[data-theme="dark"] .example-title,
+[data-theme="dark"] .qa .a,
+[data-theme="dark"] .qa-q,
+[data-theme="dark"] .match-col-heading,
+[data-theme="dark"] .section-title { color: var(--dark-heading); }
+
+/* Muted/secondary text that assumed a white background (dark slate
+   grays reading fine on white become too low-contrast on a dark
+   surface) - one shared lighter gray for all of them. */
+[data-theme="dark"] .pv-title,
+[data-theme="dark"] .card-select-row-label,
+[data-theme="dark"] .column-header,
+[data-theme="dark"] .qa .q,
+[data-theme="dark"] .qa-a,
+[data-theme="dark"] .step-text,
+[data-theme="dark"] .ladder-check,
+[data-theme="dark"] .flow-connector span,
+[data-theme="dark"] .struck-digit { color: #94a3b8; }
+
+/* Structural surfaces that were hardcoded white/near-white, expecting
+   to sit on the (also white) page background - now need to read as
+   raised panels against the new dark page/card background instead. */
+[data-theme="dark"] .progress-bar { background: #0a0e14; }
+[data-theme="dark"] .nav-tabs { background: #1e2530; border-bottom-color: var(--border); }
+[data-theme="dark"] .tab-btn { color: #94a3b8; }
+[data-theme="dark"] .tab-btn:hover { background: #263040; color: var(--text); }
+[data-theme="dark"] .tab-btn.active { background: var(--card); }
+[data-theme="dark"] .section-title { border-bottom-color: #263040; }
+[data-theme="dark"] .howto-box { background: #0f2a1a; border-color: #166534; }
+[data-theme="dark"] .explainer-box { background: #16233d; }
+[data-theme="dark"] .pv-chart { background: #1e2530; }
+[data-theme="dark"] .pv-column { background: #1e2530; border-color: var(--border); }
+[data-theme="dark"] .pv-column:hover, [data-theme="dark"] .pv-column.selected { background: #16233d; }
+[data-theme="dark"] .carousel-card { background: var(--card); }
+[data-theme="dark"] .carousel-nav { background: #1e2530; border-color: var(--border); }
+[data-theme="dark"] .dot { background: #475569; }
+[data-theme="dark"] .algo-table td.grid-cell { background: #1e2530; border-color: var(--border); }
+[data-theme="dark"] .step-box { background: #1e2530; }
+[data-theme="dark"] .step-item { background: var(--card); }
+[data-theme="dark"] .form-control-lg { background: var(--card); color: var(--text); border-color: var(--border); }
+[data-theme="dark"] .form-control-lg:disabled,
+[data-theme="dark"] input:disabled,
+[data-theme="dark"] textarea:disabled,
+[data-theme="dark"] select:disabled { background: #1e2530; color: #64748b; }
+[data-theme="dark"] .wb-grid { background: #1e2530; }
+[data-theme="dark"] .digit-box { background: var(--card); border-color: var(--border); }
+[data-theme="dark"] .digit-box.input { background: #16233d; }
+[data-theme="dark"] .card-select-option { background: var(--card); color: var(--text); border-color: var(--border); }
+[data-theme="dark"] .card-select-option:hover { background: #16233d; }
+[data-theme="dark"] .card-select-option:disabled:hover { background: var(--card); }
+[data-theme="dark"] .problem-btn { background: var(--card); border-color: var(--border); }
+[data-theme="dark"] .slider-container { background: var(--card); border-color: var(--border); }
+[data-theme="dark"] .data-table th { background: #16233d; color: var(--dark-heading); }
+[data-theme="dark"] .data-table th, [data-theme="dark"] .data-table td { border-color: var(--border); }
+[data-theme="dark"] .station-card { background: var(--card); border-color: var(--border); }
+[data-theme="dark"] .ladder { background: #0a0e14; border-color: var(--border); }
+[data-theme="dark"] .ladder-formula { border-bottom-color: var(--border); }
+[data-theme="dark"] .ladder-round { background: var(--card); border-color: var(--border); }
+[data-theme="dark"] .ladder-eq { background: #16233d; }
+[data-theme="dark"] .example-card { background: #0a0e14; border-color: var(--border); }
+[data-theme="dark"] .example-title { border-bottom-color: var(--border); }
+[data-theme="dark"] .example-steps li { border-bottom-color: #263040; }
+[data-theme="dark"] .example-steps.cols-2 li:nth-child(odd) { border-right-color: #263040; }
+[data-theme="dark"] .step-math { background: #16233d; }
+[data-theme="dark"] .qa-row { border-bottom-color: #263040; }
+[data-theme="dark"] .flow-math { background: #1e2530; border-color: var(--border); }
+[data-theme="dark"] .match-card { background: #16233d; color: var(--dark-heading); }
+[data-theme="dark"] .match-badge { background: #263040; color: #94a3b8; }
+[data-theme="dark"] .match-slot { color: #94a3b8; border-color: var(--border); }
+
+/* Color-coded pastel badges/tags/boxes - each was a light tint with
+   dark saturated text; inverted to a dark tint with light saturated
+   text so the same color coding still reads correctly, just against
+   a dark surface instead of white. */
+[data-theme="dark"] .notebook-header { color: #fbbf24; }
+[data-theme="dark"] .challenge-box { background: #2e2008; border-color: #92752a; }
+[data-theme="dark"] .ixl-box { background: #0f2a1a; border-color: #4ade80; }
+[data-theme="dark"] .ixl-code { background: #14291d; color: #4ade80; }
+[data-theme="dark"] .type-tag.onestep, [data-theme="dark"] .type-tag.addsub, [data-theme="dark"] .pill-same { background: #14291d; color: #4ade80; }
+[data-theme="dark"] .type-tag.multistep { background: #16233d; color: #93c5fd; }
+[data-theme="dark"] .type-tag.factor, [data-theme="dark"] .pill-sub, [data-theme="dark"] .resolve-box.sub { background: #2e2008; color: #fbbf24; }
+[data-theme="dark"] .type-tag.classify, [data-theme="dark"] .pill-add, [data-theme="dark"] .resolve-box.add { background: #0f2626; color: #5eead4; }
+[data-theme="dark"] .type-tag.convert, [data-theme="dark"] .resolve-box.convert { background: #2e1a26; color: #f0abfc; }
+[data-theme="dark"] .type-tag.word, [data-theme="dark"] .kcc-box { background: #241b3d; color: #c4b5fd; }
+[data-theme="dark"] .kcc-box .box-label, [data-theme="dark"] .kcc-arrow { color: #c4b5fd; }
+[data-theme="dark"] .kcc-chip { background: var(--card); border-color: #7c3aed; color: #c4b5fd; }
+[data-theme="dark"] .pill-diff { background: var(--error-bg); color: var(--error); }
+[data-theme="dark"] .running-box { background: #1e1b4b; border-color: #6366f1; color: #a5b4fc; }
+[data-theme="dark"] .flow-math.running { background: #1e1b4b; border-color: #6366f1; }
+[data-theme="dark"] .flow-math.running .expr-chip.active { border-color: #6366f1; background: var(--card); color: #a5b4fc; }
+[data-theme="dark"] .flow-math.final .expr-chip.active { background: var(--card); }
+[data-theme="dark"] .expr-chip.active { background: #16233d; color: var(--text); }
+
+/* Standards-line/teacher-view-banner/badge/header text on colored
+   backgrounds are already white/high-contrast and unaffected - no
+   override needed for those. */

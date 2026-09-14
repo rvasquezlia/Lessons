@@ -728,3 +728,98 @@ const TeacherPrint = (function () {
   init();
   return { registerCarousel, registerAnswerList };
 })();
+
+// ================================================================
+// THEME TOGGLE - shared light/dark mode switch for every page that
+// loads this file (see /CLAUDE.md's "Component states/touch targets/
+// dark mode" note). Scoped to this file's own shared components only
+// (lesson-shared.css's dark-mode block) - a page's own local <style>
+// block keeps its original light styling regardless.
+//
+// The theme itself is applied synchronously here, at top-level IIFE
+// execution - this script tag has no defer/async and sits in <head>
+// (see /CLAUDE.md's <head> ordering rule), so this runs and sets
+// data-theme on <html> before <body> is even parsed, avoiding a flash
+// of the wrong theme. Only the toggle BUTTON's own DOM injection waits
+// for DOMContentLoaded, same pattern as TeacherPrint.init() above.
+// ================================================================
+const ThemeToggle = (() => {
+  const STORAGE_KEY = 'lia_theme';
+
+  // A stored choice always wins; with no stored choice yet, a page's
+  // very first paint should still match the device's own light/dark
+  // setting rather than defaulting to light regardless - same
+  // "respect what's already there" principle as index.html.
+  function preferredTheme() {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored === 'light' || stored === 'dark') return stored;
+    } catch (e) { /* private window or storage blocked - fall through to system preference */ }
+    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const btn = document.querySelector('.theme-toggle-btn');
+    if (!btn) return;
+    const sunIcon = btn.querySelector('.icon-sun');
+    const moonIcon = btn.querySelector('.icon-moon');
+    // Shows the icon for the mode a click switches TO, not the current
+    // mode - the common toggle convention (a moon while light, meaning
+    // "tap to go dark"; a sun while dark, meaning "tap to go light").
+    if (sunIcon) sunIcon.hidden = theme !== 'dark';
+    if (moonIcon) moonIcon.hidden = theme === 'dark';
+    btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+    btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+  }
+
+  let currentTheme = preferredTheme();
+  applyTheme(currentTheme);
+
+  function toggle() {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyTheme(currentTheme);
+    try { localStorage.setItem(STORAGE_KEY, currentTheme); } catch (e) { /* nothing to persist to - theme still applies for this page view */ }
+  }
+
+  // Plain, hand-authored SVG outline icons (Feather-style geometry, no
+  // external icon font/library) - deliberately not an emoji, per
+  // instruction. Both icons always exist in the DOM; applyTheme() above
+  // toggles which one is [hidden] rather than swapping innerHTML, so
+  // there's never a blank frame between them.
+  function buildButton() {
+    if (document.querySelector('.theme-toggle-btn')) return; // idempotent - never double-inject on a page that calls init() more than once
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'theme-toggle-btn';
+    btn.innerHTML = `
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>`;
+    btn.addEventListener('click', toggle);
+    document.body.prepend(btn);
+    applyTheme(currentTheme); // buildButton() can run after applyTheme() already set data-theme with no button to update yet - sync the just-created icons/aria now
+  }
+
+  function init() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', buildButton);
+    } else {
+      buildButton();
+    }
+  }
+
+  init();
+  return { toggle };
+})();
