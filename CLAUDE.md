@@ -1651,6 +1651,53 @@ pairing is completely unaffected)
     site-wide; a garden/sign's actual on-canvas image is not
     reproducible from the dashboard today.
 
+### Projects Dashboard (`Lessons/projects-dashboard.html`)
+A separate, standalone, teacher-only page — never a 5th top-level tab on
+`teacher-dashboard.html` (see §13's rule against that) — for the
+cross-project view a single activity's Project Insights panel can't
+give: one page showing every STREAM project at once. Own hand-written
+gate identical in shape to `teacher-dashboard.html`'s own (same
+`token-cache.js`-backed flow, same `type: 'teacher-data'` call, no
+`lesson-auth.js`), linked from `teacher-dashboard.html`'s header
+("STREAM Projects Dashboard →") and linking back.
+
+- **STREAM pillar hero** — six SVG rings (S-T-R-E-A-M, always all six,
+  never fewer) aggregated across every project activity currently in
+  view (same Grade/Teacher pill filters as the main dashboard). A
+  pillar with no matching graded content anywhere in view renders as a
+  dim "No data yet" ring rather than a fabricated 0% — same principle
+  §18's `computeStreamPillarBreakdown()` already established.
+- **Project cards** — one per detected project activity, each with a
+  mini version of the same pillar breakdown, an attempts-per-item stat,
+  and a collapsible `<details>` Deliverables table (`deliverableSummaryHtml`).
+- **A project activity is detected two ways**: `isKnownProjectId()`
+  matches the three known ports' `ActivityId` prefixes directly (so a
+  card renders even before any student has started it), and
+  `looksLikeProject()` (the same detection `teacher-dashboard.html`
+  uses) catches any future project this page doesn't know about yet,
+  once real submitted data exists for it.
+- **Deliberately duplicated, not shared, logic**: `decorateProjectRow()`
+  (a light version of `decorateRow()` — just the filtered graded-item
+  list, none of the integrity/effort flagging engine, which belongs to
+  the main dashboard only), `STREAM_PILLAR_RULES`,
+  `computeStreamPillarBreakdown()`, `deliverableSummaryHtml()`,
+  `gradeListIncludes()`/`formatGradeLabel()`/`isActiveStatus()` are all
+  copied here rather than imported from `teacher-dashboard.html` —
+  matches the site's existing "every dashboard-shaped page is
+  self-contained" convention (no shared module beyond
+  `lesson-shared.js`/`lesson-auth.js`). **Keep `STREAM_PILLAR_RULES` in
+  sync by hand** between the two files if it's ever tuned in one.
+- **`STREAM_PILLAR_RULES` keywords were widened past the original set**
+  (`flyer` added to Art, `optimization` added to Math) once the second
+  and third project ports' own section names didn't hit the original
+  keywords at all — see each port's own section list before assuming a
+  new project's content will show up here automatically; a section name
+  with no matching keyword is simply excluded, not an error to chase.
+  `deliverableSummaryHtml()` also gained two more optional fields —
+  `state.flyer` (Youth Festival Logistics) and `state.infographicConfig`
+  (Ethical Auditor) — kept in sync with `teacher-dashboard.html`'s own
+  copy, which gained the identical two fields at the same time.
+
 ### Setting up a new paired activity (teacher/manual steps — Claude
 cannot edit the live Sheet or redeploy Apps Script itself; see §1)
 1. Add the activity's row to `ActivityCatalog` as normal (§3) — set

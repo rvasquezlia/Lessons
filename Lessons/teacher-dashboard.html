@@ -214,6 +214,7 @@
     <span class="badge">Teacher Dashboard</span>
     <h1>Class Progress Overview</h1>
     <p class="subtitle" id="loaded-as"></p>
+    <p style="margin-top:6px;"><a href="projects-dashboard.html" style="color:#fff; font-weight:700; text-decoration:underline;">STREAM Projects Dashboard &rarr;</a></p>
   </header>
 
   <div class="filter-bar">
@@ -2261,6 +2262,13 @@
     if (state.sign) {
       const elCount = (state.sign.elements || []).length;
       parts.push(`<strong>Sign:</strong> ${state.sign.material || '?'} material, ${elCount} element${elCount === 1 ? '' : 's'}${state.sign.locked ? ' (locked in)' : ''}`);
+    }
+    if (state.flyer) {
+      const elCount = (state.flyer.elements || []).length;
+      parts.push(`<strong>Flyer:</strong> ${state.flyer.material || '?'} material, ${elCount} element${elCount === 1 ? '' : 's'}${state.flyer.locked ? ' (locked in)' : ''}`);
+    }
+    if (state.infographicConfig) {
+      parts.push(`<strong>Infographic:</strong> "${state.infographicConfig.title || '(untitled)'}"${state.infographicLocked ? ' (locked in)' : ''}`);
     }
     return parts.length ? parts.join('<br>') : '<em>No saved work yet.</em>';
   }
