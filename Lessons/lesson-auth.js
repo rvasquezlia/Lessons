@@ -345,21 +345,37 @@ const LessonSync = (() => {
     // just calls it.
     if (typeof window.revealAnswerKey === 'function') window.revealAnswerKey();
 
-    // A teacher viewing the answer key has nothing to submit, check, or
-    // choose - only every problem this page's own reveal logic already
-    // knows about gets disabled above, so anything outside that (a
-    // student-choice picker like Strategy Challenge's "pick your group"
-    // buttons, or any Check/Submit button a page's reveal code doesn't
-    // happen to reach) was left fully clickable, inviting a teacher to
-    // interact with a control that does nothing useful for them (reported
-    // live: "I have interaction to select groups... which is not needed
-    // because I'm not able to do this"). This final sweep disables every
-    // remaining enabled button and card-select option site-wide, except
-    // ones that just browse already-revealed content rather than submit
-    // an attempt - carousel next/prev, "Reveal Next Round/Step", Reset,
-    // tab navigation, and print/toggle controls stay live since a teacher
-    // still needs those to read everything.
-    const SAFE_ONCLICK = /next|prev|reveal|reset|toggle|switchtab|switchsubtab|print|scroll|jump|open|show|close/i;
+    // A teacher viewing the answer key has nothing to submit or check -
+    // only every problem this page's own reveal logic already knows about
+    // gets disabled above, so this final sweep disables every remaining
+    // enabled button/card-select option site-wide EXCEPT ones that only
+    // navigate/browse rather than submit or grade anything - a teacher
+    // should always be free to read every example, round, or student-
+    // choice branch a page has, exactly as if they were clicking through
+    // it themselves; the rule is "does this button submit/grade an
+    // answer" (disable it - already meaningless once every field is
+    // auto-filled), not "is this button graded content" (never disable
+    // pure navigation, even a "pick your strategy group" picker, since
+    // picking a group doesn't grade anything by itself - the exercises
+    // inside it do, and those are still individually disabled above).
+    //
+    // Matched by substring against the button's own onclick text, so this
+    // list has to track the site's real naming conventions, not just the
+    // words that sound like navigation. `change` covers every carousel's
+    // shared change(dir)-style Prev/Next handler (the actual convention
+    // used almost everywhere - a literal "next"/"prev" name is rare);
+    // `choose` covers a student-choice picker like Strategy Challenge's
+    // chooseStrategyGroup(); `load` covers a "load this problem/item"
+    // picker (loadWBProblem, loadGardenTokens) and, as a substring, every
+    // download*() artifact button (a certificate/badge/poster - never a
+    // submission either). Confirmed via a site-wide grep before adding
+    // any of these that nothing matching them is actually a
+    // Check/Submit-style grading function - see /CLAUDE.md's §6 note.
+    // A future carousel/picker/artifact function that doesn't happen to
+    // contain one of these words will still get wrongly disabled here -
+    // check this list first before assuming a "why won't this button
+    // work for a teacher" report is a bug somewhere else.
+    const SAFE_ONCLICK = /next|prev|change|choose|load|reveal|reset|toggle|switchtab|switchsubtab|print|scroll|jump|open|show|close/i;
     document.querySelectorAll('.app-container button, .app-container .card-select-option').forEach((btn) => {
       if (btn.disabled) return;
       if (btn.classList.contains('tab-btn') || btn.classList.contains('sub-tab-btn')) return;

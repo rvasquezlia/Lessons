@@ -173,7 +173,7 @@ at different versions. **Why:** GitHub Pages' CDN and browsers cache
 the old file for a while after a push, so live behavior can lag the
 committed code unpredictably.
 
-**Current versions**: `token-cache.js` → `2`, `lesson-auth.js` → `13`.
+**Current versions**: `token-cache.js` → `2`, `lesson-auth.js` → `14`.
 Verify before trusting this table stale: `grep -rhoE "lesson-auth\.js\?v=[0-9]+" Lessons/ --include="*.html" | sort -u`
 (should print exactly one version — if it prints more than one, some
 pages were missed on the last bump).
@@ -365,14 +365,40 @@ underneath.
 first child. After `revealAnswerKey()` runs, a final sweep disables
 every still-enabled `<button>`/`.card-select-option` in
 `.app-container`, **except** ones whose `onclick` matches
-`SAFE_ONCLICK` (`next`/`prev`/`reveal`/`reset`/`toggle`/`switchtab`/
-`switchsubtab`/`print`/`scroll`/`jump`/`open`/`show`/`close`,
-case-insensitive) or that carry `.tab-btn`/`.sub-tab-btn` — carousel
-nav, "Reveal Next Round/Step," Reset, and tab navigation all stay
-usable. **Rule**: if a new interactive control's `onclick` name doesn't
-naturally contain one of those safe words, add the keyword to
-`SAFE_ONCLICK` in `lesson-auth.js` (bump its `?v=` — see §2) rather
-than leaving it live or dead by accident.
+`SAFE_ONCLICK` (`next`/`prev`/`change`/`choose`/`load`/`reveal`/`reset`/
+`toggle`/`switchtab`/`switchsubtab`/`print`/`scroll`/`jump`/`open`/
+`show`/`close`, case-insensitive) or that carry
+`.tab-btn`/`.sub-tab-btn` — carousel nav, a student-choice picker like
+Strategy Challenge's group buttons, "Reveal Next Round/Step," Reset,
+and tab navigation all stay usable for a teacher, on the principle that
+a teacher should always be free to navigate/browse a page exactly as a
+student would, and only a genuine Check/Submit-style grading action
+(meaningless once every field is already auto-filled) gets disabled.
+**Rule**: matched by substring against the button's real onclick text,
+not by what "sounds like" navigation — `change` exists specifically
+because the site's actual carousel convention is a shared
+`change(dir)`-style handler (`changeRn`, `changeAddEx`, ...), **not** a
+literal `next`/`prev` function name (that's rare); a first pass that
+assumed the literal-name convention silently disabled every carousel's
+Prev/Next buttons for every teacher on every unit that uses it, plus
+every `chooseStrategyGroup`/`loadWBProblem`-style picker, with no
+per-widget state check anywhere to blame — the button was disabled
+purely because its onclick text never matched the regex. Before adding
+a new interactive control, check whether its function name will
+actually match one of these words; if not, `grep` site-wide for that
+same keyword first (e.g. `onclick="[a-zA-Z0-9_]*load[a-zA-Z0-9_]*\(`)
+to confirm it won't also catch something that genuinely grades an
+answer, then add it to `SAFE_ONCLICK` in `lesson-auth.js` (bump its
+`?v=` — see §2) rather than leaving the new control live or dead by
+accident. **A page with its own local copy of this regex for a
+different purpose** (the canonical paired-activity example's
+`lockForNavigator()`, §18 — blocking a read-only Navigator, not a
+teacher) should **not** blindly mirror every keyword added here: `load`
+is safe for a teacher (nothing it matches ever persists, since a
+teacher's `ready` flag never becomes `true`) but would be wrong for a
+Navigator, whose `loadGardenTokens()`-style functions do mutate locally
+even though the backend rejects saving it — judge each addition against
+what the specific lockout is actually protecting.
 
 ### How to verify teacher view on a page you're not sure about
 Drive `proceedWithToken` end-to-end in a headless browser: mock the
