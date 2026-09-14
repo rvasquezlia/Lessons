@@ -2297,64 +2297,110 @@ prompts, Building Understanding/Applying/Extending), **Differentiation**
 read aloud, and extension/challenge problems that stay within the
 unit's own standard scope rather than reaching into a later lesson's
 content, both with real worked answers, not just a list of IXL links),
-and **IXL Practice** (kept, reformatted — see below). **Piloted on
-Linear-Inequalities, then rolled out to all 7 remaining regular-track
-units** once the teacher asked for the wider rollout: `Sixth/Decimal-
-Operations`, `Sixth/Operations-with-Fractions`, `Seventh/Integers`,
-`Seventh/Rational-Numbers`, `Seventh/Operations-with-Rationals`,
-`Eighth/Linear-Equations`, `Eighth/Literal-Equations`. **Not yet done**
-for the two Honors/Pre-AP-only units (`Seventh/Squares-Cubes-and-Roots`,
-`Eighth/Linear-Functions`) — those were out of scope for this pass and
-still have their old, condensed 3-tab Overview/Answer-Keys pattern.
+and **Challenge Bank** (see below). **Piloted on Linear-Inequalities,
+then rolled out to all 9 units site-wide** across two passes: first the
+7 regular-track units (`Sixth/Decimal-Operations`, `Sixth/Operations-
+with-Fractions`, `Seventh/Integers`, `Seventh/Rational-Numbers`,
+`Seventh/Operations-with-Rationals`, `Eighth/Linear-Equations`,
+`Eighth/Literal-Equations`), then the two Honors/Pre-AP-only units
+(`Seventh/Squares-Cubes-and-Roots`, `Eighth/Linear-Functions`) once the
+teacher confirmed the same pattern should apply there too. **Every
+Teacher-Guide.html on the site now has this shape** — Overview &amp;
+Pacing, Lesson-by-Lesson Guide, Metacognition &amp; Discussion,
+Differentiation, Challenge Bank, IXL Practice — no unit still has the
+old dedicated answer-key tab(s).
 
 **The two Sixth-grade units already had their own "Misconceptions &amp;
 Differentiation" tab from an earlier pass, so those two got a slightly
-different treatment than the other five: the four "Key: X" tabs were
+different treatment than the rest: the four "Key: X" tabs were
 still replaced by one Lesson-by-Lesson Guide, and a new Metacognition
 &amp; Discussion tab was still added, but no separate new
 "Differentiation" tab was created — instead, the existing Misconceptions
 &amp; Differentiation tab was extended in place with new "Scaffolded
 Support Problems" and "Extension / Challenge Problems" subsections,
 keeping its own id (`misconceptions`) and every misconception already
-documented there untouched.** The other five units (three Seventh,
-two Eighth) had no pre-existing differentiation content, so they got a
+documented there untouched.** Every other unit (three Seventh, four
+Eighth) had no pre-existing differentiation content, so they got a
 genuinely new `differentiation` tab, matching Linear-Inequalities'
 own shape exactly.
 
-**Every unit's own "Printables &amp; Challenge Bank"/"Printables &amp;
-Key"/"Challenge Bank" tab (where one exists — `Seventh/Integers`,
-`Seventh/Rational-Numbers`, `Seventh/Operations-with-Rationals`,
-`Eighth/Linear-Equations`, `Eighth/Literal-Equations`) was left
-completely untouched** — that's a genuinely different feature (official
-Savvas worksheets or original small-group cards reproduced with their
-own answer key for grading *printed* work) from the redundant on-screen
-answer-key tabs this redesign removed, not a duplicate of them. A
-handful of these tabs contained a stray cross-reference to the
-now-deleted answer-key tab (e.g. "see the Digital Answer Key tab") —
-those specific dangling sentences were reworded to point at the
-inline teacher-sign-in reveal instead, since leaving them broken would
-have been worse than leaving them alone.
+**"No printed elements needed, all digital" — a second, later teacher
+instruction that superseded the earlier "leave existing printables
+alone" scoping.** The first Teacher-Guide pass (pilot plus the 7-unit
+rollout above) deliberately left every unit's own "Printables &amp;
+Challenge Bank"/"Printables &amp; Key"/"Challenge Bank" tab untouched,
+reasoning that printable worksheets with their own answer key (for
+grading *paper* work) were a genuinely different feature from the
+redundant on-screen answer-key tabs being removed. The teacher later
+asked directly for that print-based workflow to go away too, site-wide,
+consolidated into one consistently-named digital tab per unit. Every
+unit's Teacher-Guide now has exactly one **Challenge Bank** tab
+(panel id `challenge` on most units; `resources`/`paper` on a couple
+where the id predates this pass and renaming the id wasn't necessary):
+- **Every download link to a `printables/*.html` file was removed** from
+  every Teacher-Guide (`Seventh/Integers`, `Seventh/Rational-Numbers`,
+  `Seventh/Operations-with-Rationals`, `Eighth/Linear-Equations`,
+  `Eighth/Literal-Equations`, `Sixth/Decimal-Operations`).
+  `Eighth/Linear-Equations` and `Eighth/Literal-Equations` each had
+  *two* separate tabs ("Printables &amp; Key" + "Challenge Bank") merged
+  into one. **No file under any unit's own `printables/` folder was
+  deleted** — only the links to them from the Teacher-Guide were
+  removed; the folders themselves are untouched and still exist.
+- **Content that functioned as the actual graded/paper assessment**
+  (a Mixed Practice or Timed Review Quiz printable meant as a
+  confidential paper test) was never transcribed into the Challenge
+  Bank tab — every unit's on-screen Test-Prep page already has a
+  submit-only, no-retry Mixed Practice tab that reveals nothing to the
+  student, so that digital tab now *is* the assessment, graded from the
+  teacher dashboard's submission log. Every Challenge Bank tab says
+  this explicitly in a short note near the top.
+- **Genuinely useful content that only existed as a printable** (a
+  formula reference sheet, small-group activity cards, official Savvas
+  worksheet problems with their own answer key) was inlined as normal
+  digital tables/cards under the Challenge Bank tab rather than simply
+  dropped — the answers/content survive, only the "print this" call to
+  action is gone. Small-group activities that used to need physical
+  cards (Error Analysis cards, Formula Rearrangement cards, Strategy
+  Challenge cards) now point teachers at running the same activity
+  directly from the on-screen student page instead.
+- **Sixth-grade units' "Teacher Resources" tab was renamed to "Challenge
+  Bank"** (not merged with the separate Misconceptions &amp;
+  Differentiation tab — those stay two different tabs) — its Printables
+  Index box and confidential paper-assessment point breakdown were
+  removed the same way, while its already-digital content (Additional
+  Practice/Quick Check/Enrichment tables, IXL Skill Codes) stayed
+  exactly as-is under the new name.
+- **Units with no pre-existing printable/challenge content at all**
+  (`Sixth/Operations-with-Fractions`, and both Honors/Pre-AP units when
+  they were first redesigned) still got a Challenge Bank tab for
+  consistency — `Operations-with-Fractions`' says plainly there's
+  nothing there yet rather than fabricating filler, while
+  `Squares-Cubes-and-Roots` and `Linear-Functions` (built fresh in the
+  second pass) each got 5 genuinely new, original challenge problems
+  with click-to-reveal solutions (`.challenge-box`/`.solution-toggle` —
+  copy this exact markup/CSS from an existing unit's Teacher-Guide
+  rather than inventing new styling) since they had no separate
+  printables tab to migrate from in the first place.
+- Every stray cross-reference elsewhere in a file (Materials Needed,
+  the pacing table, a "see Printables tab" note inside the Lesson-by-
+  Lesson Guide) that assumed a printable/paper workflow still existed
+  was rewritted to describe the digital equivalent instead — a Teacher-
+  Guide redesign that leaves a dangling "see the printed X" sentence
+  pointing at nothing is worse than one that never mentioned printing
+  at all, so these were fixed as part of the same pass, not deferred.
 
-**One known content gap, not yet fixed:** `Eighth/Literal-Equations`'s
-Overview &amp; Pacing tab's own "Section / Purpose / Suggested Time"
-table only lists 5 of that unit's 7 pages — it's missing rows for
-Review and Guided-Solving-Ladder. This predates the Teacher-Guide
-redesign and was left alone (out of scope for this pass, which touched
-only the answer-key/metacognition/differentiation tabs) — worth a
-follow-up if the teacher wants the Overview table itself corrected.
-
-**"Drop printing" for this feature means author differentiation content
-directly as normal web content on the Teacher-Guide page, not as a
-printable worksheet** — the teacher's separate complaint was that a
-`printClassProgress`-style printable can span several wasted pages, and
-asked to keep new content web-only rather than building a print flow
-for it. This did **not** mean deleting the pre-existing `printables/`
-folders that already exist for some older units (`Rational-Numbers`,
-`Operations-with-Rationals`, `Integers`, `Linear-Equations`) — those
-weren't part of what was asked and were left untouched. Linear-
-Inequalities never had a `printables/` folder or a Printables tab to
-begin with, so there was nothing to remove there either; the pilot
-simply never introduced one.
+**Two known content gaps, both since fixed — a pattern worth checking
+on any Teacher-Guide you haven't touched yet:** `Eighth/Literal-
+Equations`, `Seventh/Squares-Cubes-and-Roots`, and `Eighth/Linear-
+Functions` all had an Overview &amp; Pacing "Section/Purpose/Suggested
+Time" table listing only 5 of that unit's actual 6-7 pages — every one
+of them was missing a row for `Review.html` (Literal-Equations was also
+missing `Guided-Solving-Ladder.html`, added as an explicit "Additional
+resource" row with a link, not folded into the regular sequence). All
+three were corrected as they were found. If a future edit touches
+another unit's Overview table, cross-check its row count against that
+unit's actual page list (`ls` the unit's folder) before trusting the
+table is complete.
 
 **IXL link lists were "chunky" — several files crammed 2-4 links into
 one dense inline paragraph, comma-separated, instead of one per line —
