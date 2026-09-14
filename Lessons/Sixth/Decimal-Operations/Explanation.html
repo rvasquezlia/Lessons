@@ -209,7 +209,7 @@
       <div id="add-carousel-content" style="min-height: 380px;"></div>
 
       <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextAddExStep()">Next Step &darr;</button>
+        <button class="btn-lg" id="add-ex-step-btn" onclick="nextAddExStep()">Next Step &darr;</button>
         <button class="btn-secondary" onclick="resetAddExStep()">Reset Steps</button>
       </div>
     </div>
@@ -219,7 +219,7 @@
       <p style="text-align:center;"><strong>Estimate Check:</strong> \(12.7 \approx 13\), \(4.25 \approx 4\) &rarr; \(13 + 4 = 17\)</p>
       <div id="ex1-worked-content" style="min-height:240px;"></div>
       <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextEx1Step()">Next Step &darr;</button>
+        <button class="btn-lg" id="ex1-step-btn" onclick="nextEx1Step()">Next Step &darr;</button>
         <button class="btn-secondary" onclick="resetEx1Step()">Reset Steps</button>
       </div>
     </div>
@@ -229,7 +229,7 @@
       <p style="text-align:center;"><strong>Estimate Check:</strong> \(8.4 \approx 8\), \(2.76 \approx 3\) &rarr; \(8 - 3 = 5\)</p>
       <div id="ex2-worked-content" style="min-height:240px;"></div>
       <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextEx2Step()">Next Step &darr;</button>
+        <button class="btn-lg" id="ex2-step-btn" onclick="nextEx2Step()">Next Step &darr;</button>
         <button class="btn-secondary" onclick="resetEx2Step()">Reset Steps</button>
       </div>
     </div>
@@ -237,9 +237,6 @@
     <div class="step-box" style="margin-top:24px;">
       <h3 style="margin-top:0; color:var(--primary);">Guided Word Problem: Step-by-Step</h3>
       <p><strong>Scenario:</strong> Marcus is building a wooden frame. He cuts a board that is \(14.25\text{ cm}\) long, then attaches a second board that is \(8.7\text{ cm}\) long. He needs the combined board to reach a target length of \(25.0\text{ cm}\). How much longer is his target than his combined board?</p>
-
-      <button class="btn-lg" onclick="revealAddStep()">Click to Reveal Next Step</button>
-      <button class="btn-secondary" onclick="resetAddSteps()">Reset</button>
 
       <div id="add-step-1" class="step-item">
         <strong>Step 1: Estimate the combined board length.</strong><br>
@@ -261,6 +258,11 @@
         <strong>Step 4: Final Answer &amp; Reasonable Check.</strong><br>
         \(25.00 - 22.95 = \mathbf{2.05\text{ cm}}\).<br>
         Reasonable check: \(25 - 23 = 2\text{ cm}\), which closely matches \(2.05\text{ cm}\)!
+      </div>
+
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" id="add-reveal-step-btn" onclick="revealAddStep()">Click to Reveal Next Step</button>
+        <button class="btn-secondary" onclick="resetAddSteps()">Reset</button>
       </div>
     </div>
   </div>
@@ -316,7 +318,7 @@
       <div id="mult-carousel-content" style="min-height: 420px;"></div>
 
       <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextMultExStep()">Next Step &darr;</button>
+        <button class="btn-lg" id="mult-ex-step-btn" onclick="nextMultExStep()">Next Step &darr;</button>
         <button class="btn-secondary" onclick="resetMultExStep()">Reset Steps</button>
       </div>
     </div>
@@ -326,7 +328,7 @@
       <p style="text-align:center;"><strong>Estimate Check:</strong> \(3.2 \approx 3\), \(4.8 \approx 5\) &rarr; \(3 \times 5 = 15\)</p>
       <div id="mult-worked-content" style="min-height:260px;"></div>
       <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextMultWorkedStep()">Next Step &darr;</button>
+        <button class="btn-lg" id="mult-worked-step-btn" onclick="nextMultWorkedStep()">Next Step &darr;</button>
         <button class="btn-secondary" onclick="resetMultWorkedStep()">Reset Steps</button>
       </div>
     </div>
@@ -343,9 +345,6 @@
     <div class="step-box" style="margin-top:24px;">
       <h3 style="margin-top:0; color:var(--primary);">Guided Word Problem: Step-by-Step</h3>
       <p><strong>Scenario:</strong> A classroom carpet measures \(4.2\text{ meters}\) wide and \(3.15\text{ meters}\) long. What is the total area of the carpet in square meters?</p>
-
-      <button class="btn-lg" onclick="revealMultStep()">Click to Reveal Next Step</button>
-      <button class="btn-secondary" onclick="resetMultSteps()">Reset</button>
 
       <div id="mult-step-1" class="step-item">
         <strong>Step 1: Estimate the total area (\(4.2 \times 3.15\)).</strong><br>
@@ -367,6 +366,11 @@
         <strong>Step 4: Shift the decimal 3 places to the left, then verify.</strong><br>
         \(13230 \rightarrow \mathbf{13.230\text{ m}^2}\) or \(\mathbf{13.23\text{ m}^2}\).<br>
         Reasonable check: \(13.23\text{ m}^2\) is close to our estimate of \(12\text{ m}^2\).
+      </div>
+
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
+        <button class="btn-lg" id="mult-reveal-step-btn" onclick="revealMultStep()">Click to Reveal Next Step</button>
+        <button class="btn-secondary" onclick="resetMultSteps()">Reset</button>
       </div>
     </div>
   </div>
@@ -413,7 +417,7 @@
       <div id="div-carousel-content" style="min-height: 340px;"></div>
 
       <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextDivExStep()">Next Step &darr;</button>
+        <button class="btn-lg" id="div-ex-step-btn" onclick="nextDivExStep()">Next Step &darr;</button>
         <button class="btn-secondary" onclick="resetDivExStep()">Reset Steps</button>
       </div>
     </div>
@@ -447,7 +451,7 @@
       <div id="wp-content" style="min-height: 320px;"></div>
 
       <div style="display:flex; justify-content:center; gap:12px; margin-top:20px; border-top:2px solid #e2e8f0; padding-top:16px;">
-        <button class="btn-lg" onclick="nextWordProblemStep()">Next Step &darr;</button>
+        <button class="btn-lg" id="wp-step-btn" onclick="nextWordProblemStep()">Next Step &darr;</button>
         <button class="btn-secondary" onclick="resetWordProblemStep()">Reset Steps</button>
       </div>
     </div>
@@ -749,6 +753,13 @@
     document.getElementById('add-prev-btn').disabled = currentAddEx === 0;
     document.getElementById('add-next-btn').disabled = currentAddEx === addExamples.length - 1;
 
+    const stepBtn = document.getElementById('add-ex-step-btn');
+    if (stepBtn) {
+      const done = currentAddExStep >= ex.maxSteps;
+      stepBtn.textContent = done ? 'All steps revealed' : 'Next Step ↓';
+      stepBtn.disabled = done;
+    }
+
     triggerMathJax();
   }
 
@@ -828,6 +839,12 @@
       </p>
     `;
     document.getElementById('ex1-worked-content').innerHTML = html;
+    const stepBtn = document.getElementById('ex1-step-btn');
+    if (stepBtn) {
+      const done = step >= ex1WorkedMaxStep;
+      stepBtn.textContent = done ? 'All steps revealed' : 'Next Step ↓';
+      stepBtn.disabled = done;
+    }
     triggerMathJax();
   }
   function nextEx1Step() { if (ex1WorkedStep < ex1WorkedMaxStep) { ex1WorkedStep++; renderEx1Worked(); } }
@@ -882,6 +899,12 @@
       </p>
     `;
     document.getElementById('ex2-worked-content').innerHTML = html;
+    const stepBtn = document.getElementById('ex2-step-btn');
+    if (stepBtn) {
+      const done = step >= ex2WorkedMaxStep;
+      stepBtn.textContent = done ? 'All steps revealed' : 'Next Step ↓';
+      stepBtn.disabled = done;
+    }
     triggerMathJax();
   }
   function nextEx2Step() { if (ex2WorkedStep < ex2WorkedMaxStep) { ex2WorkedStep++; renderEx2Worked(); } }
@@ -1105,6 +1128,13 @@
     document.getElementById('mult-prev-btn').disabled = currentMultEx === 0;
     document.getElementById('mult-next-btn').disabled = currentMultEx === multExamples.length - 1;
 
+    const stepBtn = document.getElementById('mult-ex-step-btn');
+    if (stepBtn) {
+      const done = currentMultExStep >= ex.maxSteps;
+      stepBtn.textContent = done ? 'All steps revealed' : 'Next Step ↓';
+      stepBtn.disabled = done;
+    }
+
     triggerMathJax();
   }
 
@@ -1264,6 +1294,13 @@
     document.getElementById('div-prev-btn').disabled = currentDivEx === 0;
     document.getElementById('div-next-btn').disabled = currentDivEx === divExamples.length - 1;
 
+    const stepBtn = document.getElementById('div-ex-step-btn');
+    if (stepBtn) {
+      const done = currentDivExStep >= ex.maxSteps;
+      stepBtn.textContent = done ? 'All steps revealed' : 'Next Step ↓';
+      stepBtn.disabled = done;
+    }
+
     triggerMathJax();
   }
 
@@ -1305,6 +1342,12 @@
       if (el) el.classList.add('visible');
       triggerMathJax();
     }
+    const btn = document.getElementById('add-reveal-step-btn');
+    if (btn) {
+      const done = addStepCount >= 4;
+      btn.textContent = done ? 'All steps revealed' : 'Click to Reveal Next Step';
+      btn.disabled = done;
+    }
   }
   function resetAddSteps() {
     addStepCount = 0;
@@ -1312,6 +1355,8 @@
       const el = document.getElementById(`add-step-${i}`);
       if (el) el.classList.remove('visible');
     }
+    const btn = document.getElementById('add-reveal-step-btn');
+    if (btn) { btn.textContent = 'Click to Reveal Next Step'; btn.disabled = false; }
   }
   function revealMultStep() {
     if (multStepCount < 4) {
@@ -1320,6 +1365,12 @@
       if (el) el.classList.add('visible');
       triggerMathJax();
     }
+    const btn = document.getElementById('mult-reveal-step-btn');
+    if (btn) {
+      const done = multStepCount >= 4;
+      btn.textContent = done ? 'All steps revealed' : 'Click to Reveal Next Step';
+      btn.disabled = done;
+    }
   }
   function resetMultSteps() {
     multStepCount = 0;
@@ -1327,6 +1378,8 @@
       const el = document.getElementById(`mult-step-${i}`);
       if (el) el.classList.remove('visible');
     }
+    const btn = document.getElementById('mult-reveal-step-btn');
+    if (btn) { btn.textContent = 'Click to Reveal Next Step'; btn.disabled = false; }
   }
 
   // ==========================================
@@ -1388,6 +1441,12 @@
       </p>
     `;
     document.getElementById('mult-worked-content').innerHTML = html;
+    const stepBtn = document.getElementById('mult-worked-step-btn');
+    if (stepBtn) {
+      const done = step >= multWorkedMaxStep;
+      stepBtn.textContent = done ? 'All steps revealed' : 'Next Step ↓';
+      stepBtn.disabled = done;
+    }
     triggerMathJax();
   }
   function nextMultWorkedStep() { if (multWorkedStep < multWorkedMaxStep) { multWorkedStep++; renderMultWorked(); } }
@@ -1503,6 +1562,13 @@
 
     document.getElementById('wp-prev-btn').disabled = currentWP === 0;
     document.getElementById('wp-next-btn').disabled = currentWP === wordProblems.length - 1;
+
+    const stepBtn = document.getElementById('wp-step-btn');
+    if (stepBtn) {
+      const done = currentWPStep >= wp.maxSteps;
+      stepBtn.textContent = done ? 'All steps revealed' : 'Next Step ↓';
+      stepBtn.disabled = done;
+    }
 
     triggerMathJax();
   }

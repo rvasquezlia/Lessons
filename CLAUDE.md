@@ -1165,15 +1165,29 @@ fully wired end-to-end — sign-in, grading, progress sync, teacher
 dashboard, teacher-view answer keys — and verified via the checklist
 above.
 
-**Not yet done / open-ended**: `Lessons/Projects/*` remains on its own
-older, unmigrated pattern — don't extend it and don't hold it to any
-rule in this file. `Vocabulary Match-Up` has not been rolled out to
-`Seventh/Integers`/`Operations-with-Rationals`/`Rational-Numbers` (see
-§10 — different, already-varied tab shape, would mean redesigning the
-page rather than swapping one widget; needs a deliberate decision
-first). `Sixth/Decimal-Operations/Explanation.html` has several
-progressive-reveal widgets (`revealAddStep`/`revealMultStep`/
-`nextAddExStep`/`nextMultExStep`/`nextDivExStep`/`nextWordProblemStep`)
-not yet given the "button after container, disable+relabel at the end"
-treatment every other unit's reveal widgets already have. Deliberately
-deferred integrity/reporting features are listed in §8.
+**Open (needs a team decision, not further engineering)**:
+`Lessons/Projects/*` remains on its own older, unmigrated pattern (its
+own per-project `SHEET_API_URL` instead of the shared Sheet/Apps
+Script backend). **Don't extend it and don't hold it to any rule in
+this file.** Migrating it onto the shared backend is a real project —
+rewriting each project's save calls to the shared `Code.gs` pipeline —
+and needs to be discussed with the team before anyone starts it. This
+is the only open item; everything else below is closed.
+
+**Closed, by design**: `Vocabulary Match-Up` is intentionally not on
+`Seventh/Integers`/`Operations-with-Rationals`/`Rational-Numbers` — see
+§10's capability matrix. Each of those three units' vocabulary practice
+is its own legitimate, already-graded multi-tab shape (not a single
+"match the term" tab like the 6 units that got the widget); staying
+different is fine and correct for these three, not a gap to close.
+
+**Closed**: every progressive-reveal widget in
+`Sixth/Decimal-Operations/Explanation.html` (`revealAddStep`/
+`revealMultStep`, the four carousel `next*ExStep` functions, and the
+three simple-counter `next{AddEx1,Ex2,MultWorked}Step` functions — 9
+widgets total, more than this file once implied) has the same
+"button after its container, disable + relabel to 'All steps revealed'
+once exhausted" treatment every other unit's reveal widgets have,
+verified live via Playwright (each widget's button correctly disables
+at its cap and correctly re-enables on Reset, zero `pageerror` events).
+Deliberately deferred integrity/reporting features are listed in §8.
