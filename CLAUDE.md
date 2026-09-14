@@ -1150,9 +1150,13 @@ In order, cheapest first:
    activity and a student detail view, confirm zero `pageerror` events
    and substantial rendered HTML (not an empty panel).
 9. **Panel-id / nav-tab consistency** on any page with tabs: every
-   `switchTab('x')`/`switchDashTab('x')`/`switchSubTab('p','x')` call
-   must have a matching `id="x"` panel, and vice versa (no orphans
-   either direction).
+   `switchTab('x')`/`switchDashTab('x')` call must have a matching
+   `id="x"` panel, and vice versa (no orphans either direction).
+   `switchSubTab('p', 'x')` is different — it looks up the **composite**
+   id `${p}-${x}`, not bare `x` (see `switchSubTab` in
+   `teacher-dashboard.html`), so the matching panel is `id="p-x"`, not
+   `id="x"`. Check for orphans against whichever id the actual function
+   looks up, not the raw call argument.
 
 ---
 
