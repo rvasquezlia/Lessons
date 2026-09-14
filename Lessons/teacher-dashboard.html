@@ -1132,7 +1132,15 @@
     const catalogForGrade = currentGradeFilter
       ? activityCatalog.filter((a) => gradeListIncludes(a.grade, currentGradeFilter))
       : activityCatalog;
-    const activityTitles = catalogForGrade.length
+    // The "no catalog data" fallback must key off activityCatalog itself,
+    // never off catalogForGrade - the real bug once shipped here was
+    // exactly that confusion: a genuine, populated catalog with zero rows
+    // for the SELECTED grade also has catalogForGrade.length === 0, and
+    // keying the fallback on it silently leaked every OTHER grade's
+    // activities into the dropdown (e.g. Grade 6 selected, Grade 7/8 titles
+    // still showing) instead of correctly showing none. Only fall back to
+    // every row's own activityTitle when there's no catalog data at all.
+    const activityTitles = activityCatalog.length
       ? catalogForGrade.map((a) => a.title)
       : [...new Set(allRows.map((r) => r.activityTitle))];
 
