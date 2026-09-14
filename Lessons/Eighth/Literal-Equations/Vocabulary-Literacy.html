@@ -269,7 +269,7 @@
       correct: `Correct! Solve for \\(${p.accepted[0]}\\).`,
       retry: "Not quite yet. Reread the question - which quantity is being asked for? Try again.",
       reveal: `You'd solve for \\(${p.accepted[0]}\\).`
-    });
+    }, { label: p.q, answer: val, section: '2. Reading a Formula' });
   }
 
   // ==========================================

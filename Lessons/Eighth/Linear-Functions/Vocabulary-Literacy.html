@@ -256,7 +256,7 @@
       correct: `Correct! ${p.accepted[0]}`,
       retry: "Not quite yet. Recheck each x-value's outputs and try again.",
       reveal: `Here's the correct answer: ${p.accepted[0]}`
-    });
+    }, { label: p.q, answer: val, section: '2. Domain & Range' });
   }
 
   // ==========================================

@@ -2127,6 +2127,55 @@ assuming it already saves correctly** - converting the input without
 verifying this would have preserved a pre-existing, unrelated data-loss
 bug instead of fixing it.
 
+**A full site-wide audit (AST-based, not regex) found 10 more instances
+of this exact bug class, none related to card-select - fixed in one
+pass.** Requested directly: "review everything again against the
+grading system... review the mechanism for answer key is consistent as
+well." A naive regex scan for `LessonCheck.check(...)` call sites with
+fewer than 5 arguments produces heavy false positives (a regex literal
+or template-string expression containing a literal `(`/`)` - e.g.
+Strategy Challenge's `g.eq.replace(/\\\(|\\\)/g, '')` - confuses a
+paren-counting regex into miscounting real, correctly-5-argument calls);
+the reliable way to check this is a real JS parser (TypeScript's
+`ts.createSourceFile` + walking `CallExpression` nodes, since neither
+`acorn` nor `espree` are installed in this environment but `typescript`
+is) counting each call's actual `arguments.length`. That pass found 10
+genuinely broken calls (all missing the whole 5th argument, not just
+malformed) across 8 files: `Eighth/Linear-Equations/Vocabulary-Literacy.html`
+(Tab 2 Translation Practice, `tr-*`), `Eighth/Linear-Functions/Vocabulary-Literacy.html`
+(Tab 2 Domain & Range, `dr-*`), `Eighth/Literal-Equations/Vocabulary-Literacy.html`
+(Tab 2 Reading a Formula, `rd-*`), `Seventh/Integers/Vocabulary-Literacy.html`
+(Tab 1 Number Vocabulary `nv-*`, and Tab 3 Word-Problem Clue Words'
+`checkTranslate(keyPrefix, idx)`), `Seventh/Operations-with-Rationals/Vocabulary-Literacy.html`
+(Tab 1 Quick Refresher `qr-*`, and the same Tab 3 `checkTranslate`
+pattern), `Seventh/Rational-Numbers/Vocabulary-Literacy.html` (Tab 1
+Number System Vocabulary, `nv-*`), `Seventh/Squares-Cubes-and-Roots/Vocabulary-Literacy.html`
+(Tab 2 Reading & Writing Radical Notation, `tr-*`), and
+`Sixth/Operations-with-Fractions/Explanation.html`'s Tab 7 "Whiteboard
+Modeling" - the one non-Vocabulary-Literacy hit, and a reminder that
+this bug isn't confined to one page type: any check function anywhere
+can have it. Every one of these had been silently losing every student
+attempt since the page shipped - correct/incorrect feedback rendered
+normally on screen, nothing ever reached `Progress.SubmissionsLog`.
+Fixed with the same `{label, answer, section}` shape used everywhere
+else (section taken from that item's own tab name, label from the
+item's own question text/`p.q`), re-verified with the same AST script
+(0 remaining short calls site-wide) and live Playwright tests against
+the real pages (each fixed item now appends a correctly-shaped
+`LessonProgress` entry) plus a live `unlockTeacherView()` run across 13
+pages spanning every registry pattern (hand-written `revealAnswerKey`,
+`window.listRegistry`, card-select, Guided-Solving-Ladder, an
+Explanation-only banner) with zero JS errors and every answer key
+field populated, including all 10 just-fixed items. Also audited every
+`LessonCheck.submit(...)` call site-wide the same way (required 2nd
+`record` argument missing or a literal `null`/`undefined`) - all 83
+calls were clean, nothing to fix there. **If a future audit needs to
+repeat this check, don't reach for a regex-based paren counter** - it
+will both under- and over-report; parse each `<script>` block with a
+real parser (`ts.createSourceFile(..., ts.ScriptKind.JS)` works fine on
+plain JS despite the "TypeScript" name) and inspect `CallExpression`
+argument counts directly.
+
 ### Vocabulary Match-Up (drag-and-drop term/definition/example widget)
 
 The old "Quick Vocabulary Check"/"Check Your Understanding" self-check

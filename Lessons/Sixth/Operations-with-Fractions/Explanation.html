@@ -785,7 +785,7 @@
       correct: `Correct! ${p.display} \\(= \\mathbf{${correctDisplay}}\\)`,
       retry: "Not quite yet. Ask the Question Ladder: same denominator? adding or subtracting? anything to regroup? is it simplified? Try again.",
       reveal: `Here's the correct answer: ${p.display} \\(= \\mathbf{${correctDisplay}}\\)`
-    });
+    }, { label: p.display, answer: p.hasWhole ? `${wholeVal} ${numVal}/${denVal}` : `${numVal}/${denVal}`, section: '7. Whiteboard Modeling' });
   }
 </script>
 </body>
