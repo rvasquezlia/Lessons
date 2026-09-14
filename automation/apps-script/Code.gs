@@ -154,6 +154,9 @@ function normalizeRole_(role) {
 // Looks up this student's own pairing row for one activity - null if the
 // Pairs tab doesn't exist yet, or this student has no row on it for this
 // activityId (the common case: an activity with no pairing at all).
+// `teamId` is '' whenever the (optional) TeamId column doesn't exist yet
+// or this row's cell is blank - the original 2-person PartnerEmail shape,
+// completely unaffected by anything below.
 function getPairing_(email, activityId) {
   const sheet = ss_().getSheetByName('Pairs');
   if (!sheet) return null;
@@ -161,25 +164,77 @@ function getPairing_(email, activityId) {
   const data = sheet.getDataRange().getValues();
   for (let r = 1; r < data.length; r++) {
     if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(email) && data[r][map['ActivityId']] === activityId) {
-      return { rowNumber: r + 1, email: data[r][map['Email']], partnerEmail: data[r][map['PartnerEmail']], role: data[r][map['Role']] };
+      return {
+        rowNumber: r + 1,
+        email: data[r][map['Email']],
+        partnerEmail: data[r][map['PartnerEmail']],
+        role: data[r][map['Role']],
+        teamId: map['TeamId'] !== undefined ? String(data[r][map['TeamId']] || '') : ''
+      };
     }
   }
   return null;
 }
 
+// Every OTHER student on this one's team for this activity - the general
+// form getPairing_() itself intentionally stays too low-level for (it only
+// ever finds this student's own single row). Two shapes, chosen per row:
+//  - TeamId blank (the original, still the common case): the "team" is
+//    just this row's own PartnerEmail - a real second lookup finds that
+//    partner's own row so their real Role comes back correctly (never
+//    assumed as "whatever role I'm not"), same info a 2-person pair
+//    always had, just reached through one extra step.
+//  - TeamId set (a 3+-person group, added for trios/larger groups -
+//    see /CLAUDE.md's "Paired activities" section): every other row on
+//    the Pairs tab sharing that exact TeamId + ActivityId is a teammate.
+//    Nothing here caps the group size at 3 - a fourth or fifth row with
+//    the same TeamId works identically, though every paired page's own
+//    UI (pairing-status text, Navigator lockout) has only ever been
+//    exercised with 2-3.
+function getTeammates_(email, activityId) {
+  const pairing = getPairing_(email, activityId);
+  if (!pairing) return [];
+  if (!pairing.teamId) {
+    if (!pairing.partnerEmail) return [];
+    const partnerPairing = getPairing_(pairing.partnerEmail, activityId);
+    return [{ email: pairing.partnerEmail, role: partnerPairing ? partnerPairing.role : '' }];
+  }
+  const sheet = ss_().getSheetByName('Pairs');
+  const map = colMap_(sheet);
+  const data = sheet.getDataRange().getValues();
+  const mates = [];
+  for (let r = 1; r < data.length; r++) {
+    if (data[r][map['ActivityId']] !== activityId) continue;
+    if (String(data[r][map['TeamId']] || '') !== pairing.teamId) continue;
+    if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(email)) continue;
+    mates.push({ email: data[r][map['Email']], role: data[r][map['Role']] });
+  }
+  return mates;
+}
+
 // access-check-facing shape: role normalized to 'driver'/'navigator', plus
-// the partner's real StudentName (looked up from Roster) instead of just
-// their email, so the page can show "Paired with <name>" directly.
+// every teammate's real StudentName (looked up from Roster) instead of
+// just their email, so the page can show "Paired with <name>" (or "Team
+// with <name> and <name>" for 3+) directly. `partnerEmail`/`partnerName`
+// stay as the first teammate, kept only so an existing paired page's own
+// onLessonUnlock handler - written before teammates existed, and reading
+// only these two fields - keeps showing *a* real partner instead of
+// breaking; a page that wants every teammate reads the new array instead.
 function getPairingWithPartnerName_(email, activityId) {
   const pairing = getPairing_(email, activityId);
   if (!pairing) return null;
   const roster = ss_().getSheetByName('Roster');
   const rMap = colMap_(roster);
-  const partnerRow = findRowByEmail_(roster, rMap['Email'], pairing.partnerEmail);
+  const teammates = getTeammates_(email, activityId).map((m) => {
+    const row = findRowByEmail_(roster, rMap['Email'], m.email);
+    return { email: m.email, name: row ? row.row[rMap['StudentName']] : m.email, role: normalizeRole_(m.role) };
+  });
+  const first = teammates[0];
   return {
     role: normalizeRole_(pairing.role),
-    partnerEmail: pairing.partnerEmail,
-    partnerName: partnerRow ? partnerRow.row[rMap['StudentName']] : pairing.partnerEmail
+    partnerEmail: first ? first.email : undefined,
+    partnerName: first ? first.name : undefined,
+    teammates: teammates
   };
 }
 
@@ -250,25 +305,46 @@ function saveProjectState_(email, activityId, stateJson) {
   sheet.appendRow(newRow);
 }
 
-// Teacher-initiated: removes a pairing in both directions (this student's
-// row and their partner's row) so it stops mirroring/locking anything
-// further - same "teacher is the only one who can undo it" rule as
-// teacher-reset. Nothing about SubmissionsLog/ProjectState history is
-// touched; this only removes the two Pairs rows, so a re-paired student
-// keeps every prior attempt on record.
+// Teacher-initiated: removes this student from a pairing, so it stops
+// mirroring/locking anything further for them - same "teacher is the
+// only one who can undo it" rule as teacher-reset. Nothing about
+// SubmissionsLog/ProjectState history is touched; this only removes
+// Pairs row(s), so a re-paired student keeps every prior attempt on
+// record. Two different scopes depending on the row's own shape:
+//  - TeamId set (3+-person group): removes ONLY this student's own row.
+//    Every remaining teammate's own teammate list is computed live from
+//    getTeammates_() (whoever else still shares that TeamId), so nothing
+//    is left dangling - a trio just becomes a pair, a group of 4 becomes
+//    a trio, with no cascade needed.
+//  - TeamId blank (the original 2-person shape): unchanged from before -
+//    removes both this student's row AND their PartnerEmail's row,
+//    since each side's own row references the other directly; leaving
+//    one behind would dangle a reference to a partner who's no longer
+//    actually paired.
 function unpair_(studentEmail, activityId) {
   const sheet = ss_().getSheetByName('Pairs');
   if (!sheet) return { ok: false, error: 'No Pairs tab found' };
   const map = colMap_(sheet);
   const data = sheet.getDataRange().getValues();
-  const rowsToDelete = [];
+  let studentRowNum = -1;
+  let teamId = '';
   let partnerEmail = null;
   for (let r = 1; r < data.length; r++) {
     if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(studentEmail) && data[r][map['ActivityId']] === activityId) {
-      rowsToDelete.push(r + 1);
+      studentRowNum = r + 1;
+      teamId = map['TeamId'] !== undefined ? String(data[r][map['TeamId']] || '') : '';
       partnerEmail = data[r][map['PartnerEmail']];
+      break;
     }
   }
+  if (studentRowNum === -1) return { ok: false, error: 'No pairing found for that student/activity' };
+
+  if (teamId) {
+    sheet.deleteRow(studentRowNum);
+    return { ok: true, unpaired: 1 };
+  }
+
+  const rowsToDelete = [studentRowNum];
   if (partnerEmail) {
     for (let r = 1; r < data.length; r++) {
       if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(partnerEmail) && data[r][map['ActivityId']] === activityId) {
@@ -276,7 +352,6 @@ function unpair_(studentEmail, activityId) {
       }
     }
   }
-  if (!rowsToDelete.length) return { ok: false, error: 'No pairing found for that student/activity' };
   // Delete from bottom to top so earlier row numbers in the list don't
   // shift out from under the later deletions.
   rowsToDelete.sort((a, b) => b - a).forEach((rowNum) => sheet.deleteRow(rowNum));
@@ -292,7 +367,13 @@ function getPairsForDashboard_(emailSet) {
   for (let r = 1; r < data.length; r++) {
     const email = data[r][map['Email']];
     if (emailSet && !emailSet[email]) continue;
-    rows.push({ email: email, partnerEmail: data[r][map['PartnerEmail']], activityId: data[r][map['ActivityId']], role: data[r][map['Role']] });
+    rows.push({
+      email: email,
+      partnerEmail: data[r][map['PartnerEmail']],
+      activityId: data[r][map['ActivityId']],
+      role: data[r][map['Role']],
+      teamId: map['TeamId'] !== undefined ? String(data[r][map['TeamId']] || '') : ''
+    });
   }
   return rows;
 }
@@ -456,14 +537,17 @@ function doPost(e) {
         return jsonOut_({ ok: false, error: "Your partner is driving this activity - you can only view their answers." });
       }
       const updated = recordSubmission_(auth.email, body.activityId, access.student, access.activityTitle, body.item);
-      if (pairing && pairing.partnerEmail) {
-        mirrorSubmissionToPartner_(pairing.partnerEmail, body.activityId, body.item);
+      if (pairing) {
+        // getTeammates_() is 1 entry for a classic pair (identical to the
+        // old pairing.partnerEmail-only mirror) or 2+ for a team - either
+        // way, every OTHER student on the team gets this item mirrored.
+        getTeammates_(auth.email, body.activityId).forEach((m) => mirrorSubmissionToPartner_(m.email, body.activityId, body.item));
       }
       return jsonOut_({ ok: true, progress: updated });
     }
 
     // Free-form app-state save (see the "Paired/team activities" block
-    // above) - mirrored to the partner's own ProjectState row the same
+    // above) - mirrored to every teammate's own ProjectState row the same
     // way a submission mirrors, and rejected from a Navigator the same way.
     if (body.type === 'project-state-save') {
       const access = checkAccess_(auth.email, body.activityId);
@@ -473,17 +557,19 @@ function doPost(e) {
         return jsonOut_({ ok: false, error: "Your partner is driving this activity - you can only view their progress." });
       }
       saveProjectState_(normalizeEmail_(auth.email), body.activityId, body.stateJson);
-      if (pairing && pairing.partnerEmail) {
-        saveProjectState_(normalizeEmail_(pairing.partnerEmail), body.activityId, body.stateJson);
+      if (pairing) {
+        getTeammates_(auth.email, body.activityId).forEach((m) => saveProjectState_(normalizeEmail_(m.email), body.activityId, body.stateJson));
       }
       return jsonOut_({ ok: true });
     }
 
-    // Teacher-only, writes. Removes a pairing in both directions so a
-    // teacher can re-pair a student (a partner absent for the rest of the
-    // project, or two students paired by mistake) - see unpair_() for
-    // exactly what gets removed. Reuses the identical scoping check as
-    // teacher-reset below.
+    // Teacher-only, writes. Removes this one student from their pairing (a
+    // partner/teammate absent for the rest of the project, or the wrong
+    // student added to a team by mistake) so a teacher can re-pair them -
+    // see unpair_() for exactly what gets removed, which differs for a
+    // classic 2-person pair (both sides) vs. a TeamId-tagged group (only
+    // this student). Reuses the identical scoping check as teacher-reset
+    // below.
     if (body.type === 'teacher-unpair') {
       if (!isTeacher_(auth.email)) return jsonOut_({ ok: false, error: 'Not authorized' });
       const scope = getTeacherScope_(auth.email);

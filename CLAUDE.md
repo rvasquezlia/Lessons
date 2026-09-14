@@ -1526,18 +1526,31 @@ identical array again).
 ### Two new Sheet tabs (both optional — every function below degrades
 to a no-op/null when the tab doesn't exist yet, so an activity with no
 pairing is completely unaffected)
-- **`Pairs`** — `Email, PartnerEmail, ActivityId, Role`. One row **per
-  student per paired activity** — a pair is two rows, not one (Alex's
-  row names Sam as `PartnerEmail` with `Role` = `Driver`; Sam's row
-  names Alex back with `Role` = `Navigator`). `Role` is matched
-  case-insensitively (`normalizeRole_` lowercases/trims); `Email`/
-  `PartnerEmail` are matched via `normalizeEmail_` too, since a
-  teacher's hand-typed `PartnerEmail` cell won't always match Google's
-  own token-reported casing for that student's future sign-ins exactly
-  — this is also why `getOrCreateProgressRow_`/`recordSubmission_`'s
-  own Email row-matching was hardened from strict `===` to
-  `normalizeEmail_`-based comparison (broadening-only, every existing
-  non-paired activity matches exactly as before).
+- **`Pairs`** — `Email, PartnerEmail, ActivityId, Role, TeamId`. `TeamId`
+  is the newest column (optional — every function that reads it degrades
+  cleanly to the original 2-person behavior when the column doesn't
+  exist at all, or a row's own cell is blank). Two shapes, chosen per
+  row:
+  - **Blank `TeamId` (a classic 2-person pair)** — unchanged from the
+    original design. One row **per student**, a pair is two rows, not
+    one (Alex's row names Sam as `PartnerEmail` with `Role` = `Driver`;
+    Sam's row names Alex back with `Role` = `Navigator`).
+  - **`TeamId` set (a 3+-person team)** — one row **per student**, all
+    sharing the exact same `TeamId` value for that `ActivityId`
+    (`PartnerEmail` is ignored/blank on these rows — teammates come from
+    the shared `TeamId` instead). One `Driver`, the rest `Navigator` —
+    nothing caps the group size at 3; a 4th or 5th row with the same
+    `TeamId` works identically at the backend/dashboard level, though no
+    paired page's own UI has been exercised past 3.
+  `Role` is matched case-insensitively (`normalizeRole_`
+  lowercases/trims); `Email`/`PartnerEmail` are matched via
+  `normalizeEmail_` too, since a teacher's hand-typed `PartnerEmail`
+  cell won't always match Google's own token-reported casing for that
+  student's future sign-ins exactly — this is also why
+  `getOrCreateProgressRow_`/`recordSubmission_`'s own Email row-matching
+  was hardened from strict `===` to `normalizeEmail_`-based comparison
+  (broadening-only, every existing non-paired activity matches exactly
+  as before).
 - **`ProjectState`** — `Email, ActivityId, StateJSON, UpdatedAt`. Free-
   form app-state storage (a canvas layout, a cart, anything that
   doesn't fit the per-item `SubmissionsLog` model) — upsert-only, one
@@ -1549,13 +1562,26 @@ pairing is completely unaffected)
   example.
 
 ### Backend mechanics (`Code.gs`)
+- `getTeammates_(email, activityId)` — the one place group membership is
+  actually resolved. Returns every OTHER student on this one's team, as
+  `[{email, role}, ...]`: for a blank-`TeamId` row, a real second lookup
+  of the partner's own row (so their real `Role` comes back correctly,
+  never assumed as "whatever role I'm not"); for a `TeamId`-set row,
+  every other `Pairs` row sharing that exact `TeamId` + `ActivityId`.
+  `getPairingWithPartnerName_` (the `access-check`-facing version) calls
+  this and resolves each teammate's real `StudentName` from `Roster`.
 - `access-check`'s response gains two optional fields, both `undefined`
   (dropped by `JSON.stringify`, so every existing page's response shape
   is byte-for-byte unchanged) unless the signed-in student has a `Pairs`/
   `ProjectState` row for this activity: `pairing: {role, partnerEmail,
-  partnerName}` (`partnerName` resolved from `Roster` so the page never
-  has to look it up itself) and `projectState` (the raw `StateJSON`
-  string, or `undefined`).
+  partnerName, teammates}` and `projectState` (the raw `StateJSON`
+  string, or `undefined`). `teammates` is the new, general array (1
+  entry for a classic pair, 2+ for a team); `partnerEmail`/`partnerName`
+  stay as the **first** teammate, kept only so a paired page written
+  before `teammates` existed — and reading only these two fields — still
+  shows *a* real partner instead of breaking; a page updated to show
+  every teammate reads the array instead (see the four existing paired
+  pages' own `window.onLessonUnlock` for the pattern).
 - `submission` and `project-state-save` (new request type, mirrors
   `submission`'s shape) both: (1) reject a Navigator's own write
   server-side — `{ok:false, error:"..."}` — **defense in depth**, since
@@ -1563,15 +1589,25 @@ pairing is completely unaffected)
   never call `LessonCheck.check()`/`.submit()`/`saveProjectState()` in
   the first place, but the backend never trusts the front-end's claimed
   role any more than it trusts its claimed identity (§2); (2) on a
-  Driver's successful write, mirror the identical item/state onto the
-  partner's own `Progress`/`ProjectState` row via
-  `mirrorSubmissionToPartner_`/a second `saveProjectState_` call — each
-  partner keeps their own normal row, so the dashboard, `decorateRow()`,
-  scoring, and every other per-student view work completely unchanged
-  for a paired student. Nothing about §5's "the record argument is what
-  saves it" rule changes — a paired page's check functions still call
-  `LessonCheck.check()`/`.submit()` exactly as any other page's would;
-  mirroring happens entirely server-side, after the normal save.
+  Driver's successful write, mirror the identical item/state onto every
+  teammate's own `Progress`/`ProjectState` row (looped over
+  `getTeammates_()`'s result — 1 partner for a classic pair, 2+ for a
+  team) via `mirrorSubmissionToPartner_`/a second `saveProjectState_`
+  call per teammate — each teammate keeps their own normal row, so the
+  dashboard, `decorateRow()`, scoring, and every other per-student view
+  work completely unchanged for a paired/team student. Nothing about
+  §5's "the record argument is what saves it" rule changes — a paired
+  page's check functions still call `LessonCheck.check()`/`.submit()`
+  exactly as any other page's would; mirroring happens entirely
+  server-side, after the normal save. **Known interaction, not a bug**:
+  since every teammate's `SubmissionsLog` ends up with byte-identical
+  mirrored entries, a wrong answer on a paired/team activity will
+  always also trip `teacher-dashboard.html`'s "Possible shared answers"
+  duplicate-detector (§8) against the teammate(s) it mirrored to — that
+  flag is designed to catch two *independent* students converging on
+  the same wrong answer, and can't currently tell that apart from a
+  mirror of its own making; read a paired/team row's flags with that in
+  mind rather than as evidence of anything suspicious.
 - `check-day2-code` — read-only, no lock, for an activity that wants
   the original "teacher gives a short passcode to unlock day 2" UX
   instead of (or alongside) a graded gate. Compares against that
@@ -1579,18 +1615,28 @@ pairing is completely unaffected)
   column — blank for every activity that doesn't use it, including
   every pre-existing row). `LessonSync.checkDay2Code(code)` is the
   client-side call.
-- `teacher-unpair` — teacher-only, dashboard-only, removes a pairing in
-  both directions (`unpair_()`) so a teacher can re-pair a student (an
-  absent partner, or two students paired by mistake). Reuses
-  `isTeacher_`/`getTeacherScope_`/`getScopedEmailSet_` — a scoped
-  teacher can only unpair their own students. Not live — the freed
-  students just have no `Pairs` row on their next page load, and the
-  page treats that exactly like "never paired" (see below). Removing a
+- `teacher-unpair` — teacher-only, dashboard-only, removes **this one
+  student** from their pairing (`unpair_()`) so a teacher can re-pair
+  them (an absent partner/teammate, or the wrong student added to a
+  team by mistake). Two different scopes depending on that student's
+  own row: a `TeamId`-set row removes only that student's own row
+  (every remaining teammate's own teammate list shrinks automatically
+  via `getTeammates_()` — no cascade, a trio just becomes a pair); a
+  blank-`TeamId` row still removes **both** sides symmetrically, exactly
+  as the original design did, since each side's row references the
+  other directly via `PartnerEmail` and leaving one behind would dangle
+  that reference. Reuses `isTeacher_`/`getTeacherScope_`/
+  `getScopedEmailSet_` — a scoped teacher can only unpair their own
+  students. Not live — the freed student(s) just have no `Pairs` row (or
+  one fewer teammate) on their next page load, and a student with none
+  left is treated exactly like "never paired" (see below). Removing a
   pairing never touches `Progress`/`SubmissionsLog`/`ProjectState` —
   everything already mirrored stays exactly as it was.
 - `teacher-data`'s response gains `pairs: getPairsForDashboard_(emailSet)`
   — every `Pairs` row for the scoped teacher's own students (or every
-  row, unrestricted scope), same shape as one `Pairs` Sheet row.
+  row, unrestricted scope), same shape as one `Pairs` Sheet row, now
+  including its `teamId` (`''` for a classic pair or a pre-`TeamId`
+  sheet).
 
 ### Client-side mechanics
 - **`window.onLessonUnlock(result)`** — a new, optional hook in
@@ -1602,7 +1648,16 @@ pairing is completely unaffected)
   project page defines it to read `result.pairing`/`result.projectState`
   and apply whatever its own page needs (restore free-form state, lock
   out a Navigator) — see the canonical example's own handler for the
-  full pattern.
+  full pattern. **All four existing paired pages' handlers read
+  `result.pairing.teammates`** (1 entry for a classic pair, 2+ for a
+  team) to build their `pairing-status` text — a `teammates.length > 1`
+  branch renders `"Team: <name> (<role>), <name> (<role>), ..."`
+  instead of the single-partner `"Partner: <name> (<role>)"` line. The
+  hidden `team-name-2` field feeding each page's certificate/badge
+  canvas still only ever holds the **first** teammate's name regardless
+  of team size — a 3+-person team's downloaded certificate still only
+  names two people until that canvas layout is deliberately redesigned
+  to fit more; not yet done anywhere on the site.
 - **`window.onTeacherUnlock(result)`** — a second, separate optional
   hook, called instead of the generic `unlockTeacherView()` (§6) when a
   **teacher** signs in, if the page defines it. Exists for a page where
@@ -1662,16 +1717,28 @@ pairing is completely unaffected)
 - `allPairs` (populated from `teacher-data`'s new `pairs` field) is
   looked up per detail row via `pairingForRow(r)` — matches on
   `r.email`/`r.activityId`, same key shape as a `Progress` row.
+  `teammatesForRow(r)` builds on top of it, mirroring `Code.gs`'s
+  `getTeammates_()` client-side: a blank `teamId` returns that row's own
+  `partnerEmail` (with their real role looked up from *their* own
+  `allPairs` row, never assumed); a set `teamId` returns every other
+  `allPairs` row sharing that exact `teamId` + `activityId`.
 - `submissionDetailTable(r)` (Student Roster & Profiles' per-activity
   rows, By Activity's per-student rows, Full Submission Log — same
   shared function as §9/§13) prepends a "Paired activity" block — role
-  pill, partner's name (via `partnerNameFor()`, resolved from `roster`),
-  and an **Unpair** button (`teacherUnpair(email, activityId, btn)`) —
-  whenever a pairing exists for that row, **before** the "no graded
-  items logged yet" early return, so it still shows even if the Driver
-  hasn't submitted anything yet. Nothing renders for a non-paired row —
-  `allPairs` is `[]` for every activity/teacher with no `Pairs` tab
-  rows at all.
+  pill, every teammate's name + role (`teammatesForRow(r)` +
+  `partnerNameFor()`, resolved from `roster` — "Partnered with `<name>`"
+  for exactly one teammate, "Team with `<name> (<role>)`, ..." plus a
+  "(team of N)" note for 2+), and an **Unpair** button
+  (`teacherUnpair(email, activityId, btn)`) — whenever a pairing exists
+  for that row, **before** the "no graded items logged yet" early
+  return, so it still shows even if the Driver hasn't submitted
+  anything yet. Nothing renders for a non-paired row — `allPairs` is
+  `[]` for every activity/teacher with no `Pairs` tab rows at all.
+  `teacherUnpair()`'s confirm dialog and its own optimistic `allPairs`
+  update both branch on that student's own `teamId` too, matching
+  `unpair_()`'s server-side branch exactly (remove only this row for a
+  team, both sides for a classic pair) — never assume symmetric removal
+  once `teamId` support exists.
 - **`allProjectStates`** (populated from `teacher-data`'s new
   `projectStates` field, backed by `Code.gs`'s
   `getProjectStatesForDashboard_`) — every `ProjectState` row the scoped
@@ -1748,7 +1815,23 @@ gate identical in shape to `teacher-dashboard.html`'s own (same
   matches the site's existing "every dashboard-shaped page is
   self-contained" convention (no shared module beyond
   `lesson-shared.js`/`lesson-auth.js`). **Keep `STREAM_PILLAR_RULES` in
-  sync by hand** between the two files if it's ever tuned in one.
+  sync by hand** between the two files if it's ever tuned in one — the
+  match keywords, specifically; this page's own copy additionally
+  carries a `color` field per rule (one hex color per pillar, reused
+  verbatim from `lesson-shared.css`'s own color-coded pastel-badge
+  palette — `.type-tag.*`/`.pill-*` — rather than inventing a new one),
+  applied to the STREAM hero rings' `stroke` and letter `color` and to
+  each project card's `mini-pillar-chip` badges. `teacher-dashboard.html`
+  never renders rings/chips (its Project Insights panel is a plain
+  table), so its own copy of the array has no `color` field and never
+  needs one — this is the one field that's deliberately **not** kept in
+  sync between the two. **Gotcha**: `computeStreamPillarBreakdown()`
+  here returns raw `Set` objects in each pillar's `.students` field
+  (unlike `teacher-dashboard.html`'s own version of the same function,
+  which already converts to `.size` before returning) — every call site
+  reading `data.students` must do `.size` itself, or it renders the
+  literal string `"[object Set] students"` instead of a count (a real
+  regression once shipped, since fixed).
 - **`STREAM_PILLAR_RULES` keywords were widened past the original set**
   (`flyer` added to Art, `optimization` added to Math for the second and
   third project ports; `sustainab`/`charity`/`model`/`solv` added for
@@ -1768,9 +1851,16 @@ cannot edit the live Sheet or redeploy Apps Script itself; see §1)
 1. Add the activity's row to `ActivityCatalog` as normal (§3) — set
    `Day2Code` only if that activity uses the typed-passcode Day-2-style
    unlock; leave it blank otherwise.
-2. For each pair, add **two** rows to `Pairs`: each student's own
+2. For each **pair**, add **two** rows to `Pairs`: each student's own
    `Email`, the other's `PartnerEmail`, the shared `ActivityId`, and
-   that student's own `Role` (`Driver` or `Navigator`).
+   that student's own `Role` (`Driver` or `Navigator`); leave `TeamId`
+   blank. For a **team of 3+** instead, add `TeamId` as a 5th header to
+   the `Pairs` tab if it isn't there yet (existing pair-only rows are
+   unaffected by adding the column — their own `TeamId` cell just stays
+   blank), then add one row **per student** on the team, all sharing the
+   exact same `TeamId` value (any short unique string, e.g. `T1`) for
+   that `ActivityId` — one `Driver`, the rest `Navigator`; `PartnerEmail`
+   is ignored for these rows, leave it blank.
 3. Create the `ProjectState` tab (headers: `Email, ActivityId, StateJSON,
    UpdatedAt`) if this activity saves free-form state — skip it for a
    paired activity that only ever uses normal `LessonCheck`-graded

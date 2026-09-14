@@ -3630,16 +3630,28 @@
   window.onLessonUnlock = function (result) {
     const pairing = result.pairing;
     const selfName = (result.student && result.student.name) || '';
-    const partnerName = pairing ? pairing.partnerName : '';
+    // teammates is 1 entry for a classic 2-person pair (identical info to
+    // the older partnerName-only shape) or 2+ for a 3+-person team - see
+    // /CLAUDE.md's "Paired activities" section. team-name-2 (a hidden
+    // field feeding the certificate/badge canvas) only ever holds ONE
+    // partner's name regardless of team size; a 3+-person team's
+    // certificate still only names two people until that canvas layout
+    // is redesigned to fit more.
+    const teammates = (pairing && pairing.teammates) || [];
+    const firstMateName = teammates.length ? teammates[0].name : '';
     document.getElementById('team-name-1').value = selfName;
-    document.getElementById('team-name-2').value = partnerName || '';
+    document.getElementById('team-name-2').value = firstMateName;
     syncTeamName();
 
     const statusEl = document.getElementById('pairing-status');
-    if (pairing && pairing.role === 'navigator') {
-      statusEl.textContent = `You: ${selfName} (Navigator)  ·  Partner: ${partnerName || '?'} (Driver, driving)`;
+    const roleLabel = pairing && pairing.role === 'navigator' ? 'Navigator' : 'Driver';
+    if (teammates.length > 1) {
+      const teamList = teammates.map((m) => `${m.name} (${m.role === 'navigator' ? 'Navigator' : 'Driver'})`).join(', ');
+      statusEl.textContent = `You: ${selfName} (${roleLabel}${pairing.role === 'driver' ? ', driving' : ''})  ·  Team: ${teamList}`;
+    } else if (pairing && pairing.role === 'navigator') {
+      statusEl.textContent = `You: ${selfName} (Navigator)  ·  Partner: ${firstMateName || '?'} (Driver, driving)`;
     } else if (pairing && pairing.role === 'driver') {
-      statusEl.textContent = `You: ${selfName} (Driver, driving)  ·  Partner: ${partnerName || '?'} (Navigator)`;
+      statusEl.textContent = `You: ${selfName} (Driver, driving)  ·  Partner: ${firstMateName || '?'} (Navigator)`;
     } else {
       statusEl.textContent = `You: ${selfName}  ·  Not paired yet - ask your teacher to pair you with a partner. You can still work solo for now; nothing is lost once you're paired.`;
     }

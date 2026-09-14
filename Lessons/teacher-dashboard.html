@@ -2621,25 +2621,59 @@
     return (partnerRow && partnerRow.studentName) || partnerEmail;
   }
 
+  // Every OTHER member of this row's own team/pair - mirrors Code.gs's
+  // getTeammates_() exactly, just reading allPairs (already fetched once
+  // for the whole dashboard) instead of re-querying the Sheet. A blank
+  // teamId is the original 2-person shape (this row's own partnerEmail,
+  // with THEIR real current role looked up from their own allPairs row -
+  // never assumed as "whatever role I'm not"); a set teamId is a 3+-person
+  // team, every other allPairs row sharing that exact teamId + activityId.
+  function teammatesForRow(r) {
+    const own = pairingForRow(r);
+    if (!own) return [];
+    if (own.teamId) {
+      return allPairs.filter((p) => p.activityId === r.activityId && p.teamId === own.teamId && p.email !== r.email);
+    }
+    if (!own.partnerEmail) return [];
+    const partnerRow = allPairs.find((p) => p.email === own.partnerEmail && p.activityId === r.activityId);
+    return [{ email: own.partnerEmail, role: partnerRow ? partnerRow.role : '' }];
+  }
+
   function pairingHtml(r) {
     const pairing = pairingForRow(r);
     if (!pairing) return '';
     const roleLabel = String(pairing.role || '').trim().toLowerCase() === 'navigator' ? 'Navigator' : 'Driver';
+    const mates = teammatesForRow(r);
+    const mateNames = mates.map((m) => {
+      const mateRole = String(m.role || '').trim().toLowerCase() === 'navigator' ? 'Navigator' : 'Driver';
+      return `${partnerNameFor(m.email)} (${mateRole})`;
+    }).join(', ');
+    const teamSizeNote = mates.length > 1 ? ` (team of ${mates.length + 1})` : '';
+    const label = mates.length > 1 ? 'Team with' : 'Partnered with';
     return `
       <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px; padding:10px 12px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px;">
-        <strong style="font-size:0.85rem; color:#1e3a8a;">Paired activity:</strong>
+        <strong style="font-size:0.85rem; color:#1e3a8a;">Paired activity${teamSizeNote}:</strong>
         <span class="pill neutral">${roleLabel}</span>
-        <span style="font-size:0.85rem;">Partnered with <strong>${partnerNameFor(pairing.partnerEmail)}</strong></span>
+        <span style="font-size:0.85rem;">${label} <strong>${mateNames || '(partner not on roster)'}</strong></span>
         <button class="btn-lg" style="padding:6px 12px; font-size:0.85rem;" onclick="teacherUnpair('${r.email}','${r.activityId}', this)">Unpair</button>
       </div>`;
   }
 
-  // Removes a pairing in both directions (see Code.gs's unpair_) so a
-  // teacher can re-pair a student - the absent partner for the rest of a
-  // project, or two students paired by mistake. Not reachable from a
-  // lesson page, teacher-dashboard-only, same as teacherReset above.
+  // Removes this one student from their pairing (see Code.gs's unpair_) so
+  // a teacher can re-pair them - an absent partner/teammate for the rest
+  // of a project, or the wrong student added to a team by mistake. A
+  // classic 2-person pair (no teamId) still removes both sides, same as
+  // before; a 3+-person team removes only this student's own row, leaving
+  // the rest of the team intact - the client-side allPairs update below
+  // mirrors that same branch so the UI never has to guess which rows the
+  // server actually removed. Not reachable from a lesson page,
+  // teacher-dashboard-only, same as teacherReset above.
   async function teacherUnpair(email, activityId, btn) {
-    if (!confirm('Unpair this student from their partner on this activity? Both students will need to be re-paired in the Sheet before either sees mirrored progress again.')) return;
+    const own = allPairs.find((p) => p.email === email && p.activityId === activityId);
+    const confirmMsg = own && own.teamId
+      ? 'Remove this student from their team on this activity? The rest of the team stays paired together.'
+      : 'Unpair this student from their partner on this activity? Both students will need to be re-paired in the Sheet before either sees mirrored progress again.';
+    if (!confirm(confirmMsg)) return;
     if (btn) btn.disabled = true;
     try {
       const res = await fetchWithTimeout(LESSON_SYNC_API_URL, {
@@ -2648,7 +2682,9 @@
       }, 15000);
       const result = await res.json();
       if (!result.ok) { alert(result.error || 'Unpair failed.'); if (btn) btn.disabled = false; return; }
-      allPairs = allPairs.filter((p) => !(p.activityId === activityId && (p.email === email || p.partnerEmail === email)));
+      allPairs = (own && own.teamId)
+        ? allPairs.filter((p) => !(p.email === email && p.activityId === activityId))
+        : allPairs.filter((p) => !(p.activityId === activityId && (p.email === email || p.partnerEmail === email)));
       renderAll();
       const i = lastStudentSummaries.findIndex((s) => s.email === email);
       if (i >= 0) openStudentDetail(i);

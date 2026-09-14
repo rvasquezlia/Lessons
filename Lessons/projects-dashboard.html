@@ -341,13 +341,20 @@
   // project's differently-named sections have a reasonable chance of
   // matching too. A section that matches nothing is simply excluded,
   // never forced into a pillar it doesn't belong to.
+  // `color` is this page's own addition, not mirrored to
+  // teacher-dashboard.html's copy of this array (that page's Project
+  // Insights panel renders a plain table, no rings/chips to color) -
+  // reuses the exact hex values lesson-shared.css's own color-coded
+  // pastel badges already use (.type-tag.*/.pill-*), rather than
+  // inventing a new palette, so a pillar's color reads consistently
+  // with the rest of the site's existing category-color convention.
   const STREAM_PILLAR_RULES = [
-    { match: /science|sun|shade|sustainab/i, pillar: 'Science', letter: 'S' },
-    { match: /technology|calculator|what-if/i, pillar: 'Technology', letter: 'T' },
-    { match: /religion|stewardship|celebrate|reflection|charity/i, pillar: 'Religion', letter: 'R' },
-    { match: /engineer|garden|layout|build/i, pillar: 'Engineering', letter: 'E' },
-    { match: /art|sign|design|creative|flyer/i, pillar: 'Art', letter: 'A' },
-    { match: /math|ledger|budget|division|decimal|optimization|model|solv/i, pillar: 'Math', letter: 'M' }
+    { match: /science|sun|shade|sustainab/i, pillar: 'Science', letter: 'S', color: '#0f766e' },
+    { match: /technology|calculator|what-if/i, pillar: 'Technology', letter: 'T', color: '#1d4ed8' },
+    { match: /religion|stewardship|celebrate|reflection|charity/i, pillar: 'Religion', letter: 'R', color: '#7c3aed' },
+    { match: /engineer|garden|layout|build/i, pillar: 'Engineering', letter: 'E', color: '#92400e' },
+    { match: /art|sign|design|creative|flyer/i, pillar: 'Art', letter: 'A', color: '#a21caf' },
+    { match: /math|ledger|budget|division|decimal|optimization|model|solv/i, pillar: 'Math', letter: 'M', color: '#15803d' }
   ];
   function pillarForSection(section) {
     const rule = STREAM_PILLAR_RULES.find((r) => r.match.test(section || ''));
@@ -493,15 +500,15 @@
           <div class="stream-ring${pct === null ? ' no-data' : ''}">
             <svg width="96" height="96" viewBox="0 0 96 96">
               <circle class="stream-ring-track" cx="48" cy="48" r="${R}"></circle>
-              <circle class="stream-ring-fill" cx="48" cy="48" r="${R}" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"></circle>
+              <circle class="stream-ring-fill" cx="48" cy="48" r="${R}" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"${pct === null ? '' : ` style="stroke:${rule.color};"`}></circle>
             </svg>
             <div class="stream-ring-label">
-              <div class="stream-ring-letter">${rule.letter}</div>
+              <div class="stream-ring-letter" style="color:${pct === null ? '' : rule.color};">${rule.letter}</div>
               <div class="stream-ring-pct">${pct === null ? '&ndash;' : pct + '%'}</div>
             </div>
           </div>
           <div class="stream-pillar-name">${rule.pillar}</div>
-          <div class="stream-pillar-note">${pct === null ? 'No data yet' : `${data.students} student${data.students === 1 ? '' : 's'}`}</div>
+          <div class="stream-pillar-note">${pct === null ? 'No data yet' : `${data.students.size} student${data.students.size === 1 ? '' : 's'}`}</div>
         </div>`;
     }).join('');
     document.getElementById('stream-hero').innerHTML = html;
@@ -515,7 +522,7 @@
       .map((rule) => {
         const data = byPillar[rule.pillar];
         const pct = Math.round((data.itemsCorrect / data.itemsAttempted) * 100);
-        return `<span class="mini-pillar-chip"><span class="letter">${rule.letter}</span>${pct}%</span>`;
+        return `<span class="mini-pillar-chip"><span class="letter" style="background:${rule.color};">${rule.letter}</span>${pct}%</span>`;
       }).join('');
     const eligible = eligibleRosterCount(a.grade);
     const startedCount = a.rows.length;
