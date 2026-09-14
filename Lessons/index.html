@@ -351,16 +351,6 @@
             word: "6-operations-with-fractions-word-problems",
             test: "6-operations-with-fractions-test-prep"
           }
-        },
-        {
-          title: "Laudato Si' Eco-Garden (Team Project)",
-          summary: "A 2-day paired STREAM project: design a community garden on a $100.00 budget using decimal rounding and exact operations, then divide, lay out, and sign your creation. Work with your assigned partner - one of you drives, the other watches the same progress.",
-          base: "Sixth/Laudato-Si-EcoGarden/",
-          practice: "index.html",
-          sectionLabels: { practice: "Open the Project" },
-          activityIds: {
-            practice: "6-laudato-si-ecogarden"
-          }
         }
       ]
     },
@@ -596,19 +586,13 @@
       const activityId = topic.activityIds && topic.activityIds[section.key];
       if (!activityId) return "";
     }
-    // A topic can override one section's chip text via its own
-    // sectionLabels map (e.g. a single-page project reusing the
-    // "practice" key but labeled "Open the Project" instead of "Practice
-    // Set") - every existing topic omits this and keeps SECTIONS' own
-    // label, unchanged.
-    const label = (topic.sectionLabels && topic.sectionLabels[section.key]) || section.label;
     const href = topic[section.key];
     if (!href) {
-      return `<span class="empty-tag">${label}<br>Coming soon</span>`;
+      return `<span class="empty-tag">${section.label}<br>Coming soon</span>`;
     }
     return `
       <a class="section-link ${section.cls}" href="${topic.base}${href}">
-        <span>${label}</span>
+        <span>${section.label}</span>
       </a>`;
   }
 

@@ -931,6 +931,13 @@ role + grade only).
   `SECTIONS` entry, no link, no "Coming soon" placeholder for either
   unit that has one. The pages themselves are still gated/wired and
   linked from their unit's own `Teacher-Guide.html`.
+- **`Sixth/Laudato-Si-EcoGarden/index.html` (§18) is deliberately not in
+  `CURRICULUM` either** — no topic card, not browsable from this page at
+  all. Access is by direct link only (the teacher hands out the URL) —
+  the page itself is still fully gated/wired (Google sign-in, shared
+  backend, pairing) exactly as if it were indexed; only its discovery
+  path differs. Don't re-add a `CURRICULUM` entry for it without asking
+  first — this was a deliberate access-control choice, not an oversight.
 
 ---
 
