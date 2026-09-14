@@ -82,7 +82,7 @@ shipping new backend code.
   committed code by an unpredictable amount - confusing to debug, since
   it looks like a bug that "sometimes" happens when it's really just
   staleness. Current versions: `token-cache.js` → `2`, `lesson-auth.js` →
-  `9`.
+  `11`.
 - **`hidden` doesn't always mean hidden — check for a competing CSS rule
   first.** `#lesson-loading` has its own `display: flex` (to center the
   spinner), and an ID selector beats the browser's default
@@ -1289,6 +1289,31 @@ full-width and flush with no margin, so `.app-container`'s own
 top corners as everything else. The "Open Teacher Dashboard" link is a
 real pill-button (`.teacher-view-banner a`) now instead of a plain
 underlined link.
+
+**Teacher view now disables every remaining live control at the end of
+`unlockTeacherView`, not just the ones its own reveal logic already
+knew about.** Reported live: a teacher signed in and could still click
+Strategy Challenge's "pick your group" buttons, or any Check/Submit
+button a page's `window.listRegistry`/`window.revealAnswerKey` reveal
+code didn't happen to reach - pointless for a teacher who's only there
+to see the answer key, not attempt anything. Fixed with a final sweep
+in `unlockTeacherView` (`lesson-auth.js`, after `revealAnswerKey()`
+runs): every still-enabled `<button>`/`.card-select-option` inside
+`.app-container` gets `disabled = true`, **except** ones whose
+`onclick` matches a `SAFE_ONCLICK` regex (`next`/`prev`/`reveal`/
+`reset`/`toggle`/`switchtab`/`switchsubtab`/`print`/`scroll`/`jump`/
+`open`/`show`/`close`, case-insensitive) or that carry the `.tab-btn`/
+`.sub-tab-btn` class - a teacher still needs carousel next/prev,
+"Reveal Next Round/Step," Reset, and tab navigation to actually read
+everything, so those stay live. This is a blanket, page-agnostic sweep
+- it needed zero changes to any individual lesson page, including ones
+with a bespoke picker like Strategy Challenge that predates this fix
+entirely. If a future interactive control's `onclick` name doesn't
+naturally contain one of the safe words above (e.g. a hypothetical
+`showHint()` does, but something named unusually might not), add its
+keyword to `SAFE_ONCLICK` rather than leaving it live by accident, or
+rather than leaving it disabled by accident if it's meant to stay
+usable in teacher view.
 
 **`assets/lia-logo.png` needs a light backdrop of its own wherever it's
 used.** The file is a transparent PNG whose ink (the wordmark, the

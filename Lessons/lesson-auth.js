@@ -345,6 +345,30 @@ const LessonSync = (() => {
     // just calls it.
     if (typeof window.revealAnswerKey === 'function') window.revealAnswerKey();
 
+    // A teacher viewing the answer key has nothing to submit, check, or
+    // choose - only every problem this page's own reveal logic already
+    // knows about gets disabled above, so anything outside that (a
+    // student-choice picker like Strategy Challenge's "pick your group"
+    // buttons, or any Check/Submit button a page's reveal code doesn't
+    // happen to reach) was left fully clickable, inviting a teacher to
+    // interact with a control that does nothing useful for them (reported
+    // live: "I have interaction to select groups... which is not needed
+    // because I'm not able to do this"). This final sweep disables every
+    // remaining enabled button and card-select option site-wide, except
+    // ones that just browse already-revealed content rather than submit
+    // an attempt - carousel next/prev, "Reveal Next Round/Step", Reset,
+    // tab navigation, and print/toggle controls stay live since a teacher
+    // still needs those to read everything.
+    const SAFE_ONCLICK = /next|prev|reveal|reset|toggle|switchtab|switchsubtab|print|scroll|jump|open|show|close/i;
+    document.querySelectorAll('.app-container button, .app-container .card-select-option').forEach((btn) => {
+      if (btn.disabled) return;
+      if (btn.classList.contains('tab-btn') || btn.classList.contains('sub-tab-btn')) return;
+      const onclick = btn.getAttribute('onclick') || '';
+      if (SAFE_ONCLICK.test(onclick)) return;
+      btn.disabled = true;
+      btn.style.cursor = 'not-allowed';
+    });
+
     // Every gated page defines its own triggerMathJax() (checks
     // window.MathJax/typesetPromise before calling) - the answer-key text
     // just inserted above is new DOM content MathJax has never scanned,
