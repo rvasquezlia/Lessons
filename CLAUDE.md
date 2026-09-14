@@ -1344,20 +1344,25 @@ dashboard, teacher-view answer keys — and verified via the checklist
 above.
 
 **Open (needs a team decision, not further engineering)**:
-`Lessons/Projects/*` — all three folders, `Laudato-Si-EcoGarden`
-included — remains on its own older, unmigrated pattern (its own
-per-project `SHEET_API_URL` instead of the shared Sheet/Apps Script
-backend), completely untouched. **Don't extend it and don't hold it to
-any rule in this file.** A shared-backend, paired-activity **port** of
-`Laudato-Si-EcoGarden` now exists alongside it as a separate page —
-`Sixth/Laudato-Si-EcoGarden/index.html` (see §18) — built new rather
-than by editing the original. `Ethical-Auditor-Community-Engineer` and
-`Youth-Festival-Logistics` have no such port yet; porting either is a
-real project — same shape as the Eco-Garden port, rewriting that
-project's own save calls onto the shared `Code.gs` pipeline plus adding
-a pairing UI where relevant — and needs to be discussed with the team
-before anyone starts it. This is the only open item; everything else
-below is closed.
+`Lessons/Projects/*` — all three folders — remains on its own older,
+unmigrated pattern (its own per-project `SHEET_API_URL` instead of the
+shared Sheet/Apps Script backend), completely untouched. **Don't extend
+it and don't hold it to any rule in this file.** A shared-backend,
+paired-activity **port** of each now exists alongside the original as a
+separate page, built new rather than by editing the original:
+`Sixth/Laudato-Si-EcoGarden/index.html` (the canonical example, see §18)
+and `Seventh/Ethical-Auditor-Community-Engineer/index.html`
+(`7-ethical-auditor-community-engineer`, standards `7.NS.A.1b, 7.NS.A.1c,
+7.NS.A.1d, 7.NS.A.2a, 7.NS.A.2b, 7.NS.A.2c, 7.NS.A.2d` — matches
+Rational-Numbers, since the project is entirely positive/negative
+rational-number budgeting). Like Eco-Garden, it is **deliberately not in
+`index.html`'s `CURRICULUM`** — direct-link-only, same access-control
+choice, for the same reason (see §12) — don't add a `CURRICULUM` entry
+for it without asking first either. `Youth-Festival-Logistics` has no
+port yet; porting it is the one remaining open item, same shape as the
+two ports above (target: `Eighth/Youth-Festival-Logistics/index.html`,
+standards matching Linear-Equations since its content is single-unknown
+algebraic equation solving, not inequalities).
 
 **Closed, by design**: `Vocabulary Match-Up` is intentionally not on
 `Seventh/Integers`/`Operations-with-Rationals`/`Rational-Numbers` — see
@@ -1421,6 +1426,22 @@ reuses this "lock in your creative work" pattern, check whether its own
 completion guard is similarly satisfied by a pre-seeded default or an
 empty-but-technically-valid state before assuming "at least one
 element" is actually "did the work."
+
+**Second port**: `Seventh/Ethical-Auditor-Community-Engineer/index.html`
+follows the identical pattern (gate/auth in `<head>`, `SHEET_API_URL`/
+`startTeam`/`fetchWithTimeout` replaced with `LessonSync.saveProjectState`/
+`checkDay2Code`, `window.onLessonUnlock`/`lockForNavigator`/
+`window.onTeacherUnlock` block at the end). Its own unlimited-attempt
+helper is `gradeAttempt()`/`checkMC()` (not Eco-Garden's inline pattern,
+but the same shape) — every `if (outcome === 'correct')` block that
+disables a field is guarded with `!window.teacherPreviewMode`, exactly
+like Eco-Garden's. It needed no Eco-Garden-style "genuine effort" fix —
+its one free-form lock (`lockInfographicArt()`) already requires a typed
+report title with nothing pre-seeded, so the existing guard was already
+meaningful. Its top progress-bar "Print My Progress" button was removed
+the same way Eco-Garden's was (the `printEngineeringReport()` function
+itself is left in place, unused, matching precedent exactly rather than
+deviating).
 
 ### Two new Sheet tabs (both optional — every function below degrades
 to a no-op/null when the tab doesn't exist yet, so an activity with no
