@@ -28,7 +28,7 @@
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
   <script src="../../token-cache.js?v=2"></script>
-  <script src="../../lesson-auth.js?v=9"></script>
+  <script src="../../lesson-auth.js?v=10"></script>
   <style>
     #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
     .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
@@ -444,31 +444,38 @@
     { word: "quotient", op: "div" }, { word: "split evenly", op: "div" }, { word: "per", op: "div" }, { word: "cut into equal pieces", op: "div" }
   ];
 
+  const wordSortCardSelects = [];
+  const WORD_SORT_OPTIONS = [
+    { value: 'add', label: 'Addition (+)' },
+    { value: 'sub', label: 'Subtraction (−)' },
+    { value: 'mult', label: 'Multiplication (×)' },
+    { value: 'div', label: 'Division (÷)' }
+  ];
+
   function renderWordSort() {
     const html = wordSortItems.map((item, i) => `
       <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap;">
         <strong style="min-width:220px;">${i + 1}. "${item.word}"</strong>
-        <select id="wordsort-${i}" class="form-control-lg" style="max-width:220px;">
-          <option value="">Select an operation...</option>
-          <option value="add">Addition (+)</option>
-          <option value="sub">Subtraction (-)</option>
-          <option value="mult">Multiplication (&times;)</option>
-          <option value="div">Division (&divide;)</option>
-        </select>
+        <div id="wordsort-${i}" class="card-select"></div>
       </div>
     `).join('');
     document.getElementById('wordsort-list').innerHTML = html;
+    wordSortItems.forEach((item, i) => {
+      wordSortCardSelects[i] = createCardSelect(`wordsort-${i}`, WORD_SORT_OPTIONS);
+    });
   }
   renderWordSort();
+  LessonProgress.preRegister('wordsort', 'Keyword Sort: Which Operation?', '3. Keyword Clues');
 
   function checkWordSort() {
     const fb = document.getElementById('wordsort-feedback');
     let allFilled = true;
     let allCorrect = true;
-    wordSortItems.forEach((item, i) => {
-      const val = document.getElementById(`wordsort-${i}`).value;
+    const values = wordSortItems.map((item, i) => {
+      const val = wordSortCardSelects[i].getValue();
       if (!val) allFilled = false;
       else if (val !== item.op) allCorrect = false;
+      return val;
     });
     if (!allFilled) {
       LessonCheck.incomplete(fb, "Choose an operation for every keyword before checking.");
@@ -478,6 +485,11 @@
       correct: 'Correct! Every keyword is sorted into the right operation.',
       retry: "Some keywords aren't sorted correctly yet. Review: sum/total/increased by/altogether = addition; difference/less than/decreased by/remain = subtraction; product/times/of/twice = multiplication; quotient/split evenly/per/cut into equal pieces = division."
     });
+    // LessonProgress.record() call added here - this tab's on-screen
+    // check never reached the backend before (LessonCheck.show() only
+    // renders feedback, unlike .check()/.submit() which also record).
+    const summary = wordSortItems.map((item, i) => `${item.word}=${values[i]}`).join(', ');
+    LessonProgress.record('wordsort', 'Keyword Sort: Which Operation?', summary, allCorrect ? 'correct' : 'incomplete', '3. Keyword Clues');
   }
 
   // ==========================================
@@ -508,6 +520,7 @@
     document.getElementById('translate-list').innerHTML = html;
   }
   renderTranslateList();
+  translateItems.forEach((item, i) => LessonProgress.preRegister(`translate-${i}`, `Translate: ${item.phrase}`, '3. Keyword Clues'));
 
   function checkTranslate(idx) {
     const item = translateItems[idx];
@@ -522,6 +535,9 @@
       correct: `Correct! ${item.answer}`,
       reveal: `The expression is ${item.answer}`
     });
+    // LessonProgress.record() call added here - see the identical note on
+    // checkWordSort() above; this item's check never reached the backend.
+    LessonProgress.record(`translate-${idx}`, `Translate: ${item.phrase}`, val, correct ? 'correct' : 'incomplete', '3. Keyword Clues');
   }
 
   // ==========================================
@@ -554,14 +570,14 @@
   });
   vocabMatch.render();
 
-  // No window.listRegistry on this page - word sort (select dropdowns) and
+  // No window.listRegistry on this page - word sort (card-select) and
   // translations (text inputs) are two different hand-written problem
   // shapes, so the teacher reveal is built by hand; Tab 4 delegates to
   // vocabMatch.reveal() since the match-up widget owns its own reveal state.
   window.revealAnswerKey = function () {
     wordSortItems.forEach((item, i) => {
-      const sel = document.getElementById(`wordsort-${i}`);
-      if (sel) { sel.value = item.op; sel.disabled = true; }
+      const cs = wordSortCardSelects[i];
+      if (cs) { cs.setValue(item.op); cs.disable(); }
     });
     const wsBtn = document.querySelector('button[onclick="checkWordSort()"]');
     if (wsBtn) wsBtn.disabled = true;

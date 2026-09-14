@@ -24,7 +24,7 @@
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
   <script src="../../token-cache.js?v=2"></script>
-  <script src="../../lesson-auth.js?v=9"></script>
+  <script src="../../lesson-auth.js?v=10"></script>
   <style>
     #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
     .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
@@ -188,12 +188,7 @@
       <p><strong>Task:</strong> set \(50 + 10x = 80 + 10x\) and classify it. What does that classification mean for these two friends' savings?</p>
       <div class="form-group">
         <label>Classification:</label>
-        <select id="comp1-verdict" class="form-control-lg" style="max-width:280px;">
-          <option value="">Select...</option>
-          <option value="one">One solution</option>
-          <option value="none">No solution</option>
-          <option value="infinite">Infinitely many solutions</option>
-        </select>
+        <div id="comp1-verdict" class="card-select"></div>
       </div>
       <div class="form-group">
         <label>What does that mean for these two friends' savings?</label>
@@ -209,12 +204,7 @@
       <p><strong>Task:</strong> set \(2(3x+5) = 6x+10\) and classify it. What does that classification mean about the two billing systems?</p>
       <div class="form-group">
         <label>Classification:</label>
-        <select id="comp2-verdict" class="form-control-lg" style="max-width:280px;">
-          <option value="">Select...</option>
-          <option value="one">One solution</option>
-          <option value="none">No solution</option>
-          <option value="infinite">Infinitely many solutions</option>
-        </select>
+        <div id="comp2-verdict" class="card-select"></div>
       </div>
       <div class="form-group">
         <label>What does that mean about the two billing systems?</label>
@@ -399,8 +389,16 @@
   // ==========================================
   // TAB 3: SAVINGS & BILLING
   // ==========================================
+  const VERDICT_OPTIONS = [
+    { value: 'one', label: 'One solution' },
+    { value: 'none', label: 'No solution' },
+    { value: 'infinite', label: 'Infinitely many solutions' }
+  ];
+  const comp1CardSelect = createCardSelect('comp1-verdict', VERDICT_OPTIONS);
+  const comp2CardSelect = createCardSelect('comp2-verdict', VERDICT_OPTIONS);
+
   function checkComparison1() {
-    const verdict = document.getElementById('comp1-verdict').value;
+    const verdict = comp1CardSelect.getValue() || '';
     const explain = document.getElementById('comp1-explain').value.trim();
     const fb = document.getElementById('comp1-feedback');
     if (!verdict || explain.length <= 5) { LessonCheck.incomplete(fb, "Choose a classification and explain what it means before submitting."); return; }
@@ -408,7 +406,7 @@
   }
 
   function checkComparison2() {
-    const verdict = document.getElementById('comp2-verdict').value;
+    const verdict = comp2CardSelect.getValue() || '';
     const explain = document.getElementById('comp2-explain').value.trim();
     const fb = document.getElementById('comp2-feedback');
     if (!verdict || explain.length <= 5) { LessonCheck.incomplete(fb, "Choose a classification and explain what it means before submitting."); return; }
@@ -424,29 +422,29 @@
     { q: "\\(7x-4=4x+17\\)", verdict: "one", a: 7 }
   ];
 
+  const cmCardSelects = [];
+
   function renderComparisonMore() {
     const html = comparisonMore.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 3}.</strong> ${p.q}
-        <select id="cm-${i}-verdict" class="form-control-lg" style="max-width:230px; display:inline-block;">
-          <option value="">Classify...</option>
-          <option value="one">One solution</option>
-          <option value="none">No solution</option>
-          <option value="infinite">Infinitely many solutions</option>
-        </select>
+        <div id="cm-${i}-verdict" class="card-select"></div>
         <input type="text" id="cm-${i}-x" class="form-control-lg" style="max-width:120px; display:inline-block;" placeholder="x = (if one)">
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkComparisonMore(${i})">Submit</button>
         <div id="cm-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
     `).join('');
     document.getElementById('comp-more-list').innerHTML = html;
-    comparisonMore.forEach((p, i) => LessonProgress.preRegister(`cm-${i}`, `Quick Classify #${i + 3}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '3. Savings & Billing'));
+    comparisonMore.forEach((p, i) => {
+      LessonProgress.preRegister(`cm-${i}`, `Quick Classify #${i + 3}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '3. Savings & Billing');
+      cmCardSelects[i] = createCardSelect(`cm-${i}-verdict`, VERDICT_OPTIONS);
+    });
     triggerMathJax();
   }
 
   function checkComparisonMore(idx) {
     const p = comparisonMore[idx];
-    const verdict = document.getElementById(`cm-${idx}-verdict`).value;
+    const verdict = cmCardSelects[idx].getValue() || '';
     const xVal = document.getElementById(`cm-${idx}-x`).value;
     const fb = document.getElementById(`cm-${idx}-feedback`);
     if (!verdict || (p.verdict === "one" && !xVal.trim())) {
@@ -587,15 +585,14 @@
       fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
     };
 
-    const fillVerdictSubmit = (verdictId, explainId, feedbackId, correctVerdict, label) => {
-      const sel = document.getElementById(verdictId);
+    const fillVerdictSubmit = (cardSelect, verdictId, explainId, feedbackId, correctVerdict, label) => {
       const fb = document.getElementById(feedbackId);
-      if (!sel || !fb) return;
-      sel.value = correctVerdict;
-      sel.disabled = true;
+      if (!cardSelect || !fb) return;
+      cardSelect.setValue(correctVerdict);
+      cardSelect.disable();
       const explain = document.getElementById(explainId);
       if (explain) { explain.value = '(Any reasonable explanation supporting the classification above.)'; explain.disabled = true; }
-      const container = sel.closest('.step-box');
+      const container = document.getElementById(verdictId).closest('.step-box');
       const btn = container && container.querySelector('button');
       if (btn) btn.disabled = true;
       fb.style.display = 'block';
@@ -624,18 +621,18 @@
     decisionMore.forEach((p, i) => fillInput(`dm-${i}-input`, `dm-${i}-feedback`, p.a));
 
     // Tab 3: Savings & Billing
-    fillVerdictSubmit('comp1-verdict', 'comp1-explain', 'comp1-feedback', 'none', 'No solution');
-    fillVerdictSubmit('comp2-verdict', 'comp2-explain', 'comp2-feedback', 'infinite', 'Infinitely many solutions');
+    fillVerdictSubmit(comp1CardSelect, 'comp1-verdict', 'comp1-explain', 'comp1-feedback', 'none', 'No solution');
+    fillVerdictSubmit(comp2CardSelect, 'comp2-verdict', 'comp2-explain', 'comp2-feedback', 'infinite', 'Infinitely many solutions');
     comparisonMore.forEach((p, i) => {
-      const sel = document.getElementById(`cm-${i}-verdict`);
+      const cs = cmCardSelects[i];
       const xInput = document.getElementById(`cm-${i}-x`);
       const fb = document.getElementById(`cm-${i}-feedback`);
-      if (!sel || !xInput || !fb) return;
-      sel.value = p.verdict;
+      if (!cs || !xInput || !fb) return;
+      cs.setValue(p.verdict);
       if (p.verdict === 'one') xInput.value = p.a;
-      sel.disabled = true;
+      cs.disable();
       xInput.disabled = true;
-      const container = sel.closest('.guided-practice');
+      const container = document.getElementById(`cm-${i}-verdict`).closest('.guided-practice');
       const btn = container && container.querySelector('button');
       if (btn) btn.disabled = true;
       fb.style.display = 'block';

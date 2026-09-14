@@ -26,7 +26,7 @@
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
   <script src="../../token-cache.js?v=2"></script>
-  <script src="../../lesson-auth.js?v=9"></script>
+  <script src="../../lesson-auth.js?v=10"></script>
   <style>
     #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
     .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
@@ -160,10 +160,7 @@
     </div>
     <div class="step-box" style="margin-top:16px;"><p><strong>5.</strong> Which equation represents a proportional relationship?<br>
       A. \(y = 5x + 2\)&nbsp;&nbsp; B. \(y = 5x\)&nbsp;&nbsp; C. \(y = x + 5\)&nbsp;&nbsp; D. \(y = -5\)</p>
-      <select id="qc-b2" class="form-control-lg" style="max-width:150px;">
-        <option value="">Choose...</option>
-        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
-      </select>
+      <div id="qc-b2" class="card-select"></div>
       <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('b', 2)">Check</button>
       <div id="qc-b2-feedback" class="feedback-msg" style="margin-top:8px;"></div>
     </div>
@@ -290,9 +287,12 @@
     b: { 0: 2, 1: 5, 2: "B" },
     c: { 0: 1, 1: 5 }
   };
+  const cardSelects = {};
+  cardSelects['qc-b2'] = createCardSelect('qc-b2', [{ value: 'A', label: 'A' }, { value: 'B', label: 'B' }, { value: 'C', label: 'C' }, { value: 'D', label: 'D' }]);
+
   function checkQC(set, idx) {
     const id = `qc-${set}${idx}`;
-    const raw = document.getElementById(id).value;
+    const raw = cardSelects[id] ? (cardSelects[id].getValue() || '') : document.getElementById(id).value;
     const fb = document.getElementById(`${id}-feedback`);
     if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
     const expected = qcAnswers[set][idx];
@@ -382,12 +382,21 @@
   // so the teacher reveal fills in every tab's answer key directly.
   window.revealAnswerKey = function () {
     const fillInput = (id, feedbackId, answer) => {
-      const input = document.getElementById(id);
       const fb = document.getElementById(feedbackId);
-      if (!input || !fb) return;
-      input.value = answer;
-      input.disabled = true;
-      const btn = input.parentElement && input.parentElement.querySelector('button');
+      if (!fb) return;
+      let container;
+      if (cardSelects[id]) {
+        cardSelects[id].setValue(answer);
+        cardSelects[id].disable();
+        container = document.getElementById(id).parentElement;
+      } else {
+        const input = document.getElementById(id);
+        if (!input) return;
+        input.value = answer;
+        input.disabled = true;
+        container = input.parentElement;
+      }
+      const btn = container && container.querySelector('button');
       if (btn) btn.disabled = true;
       fb.style.display = 'block';
       fb.className = 'feedback-msg success locked';

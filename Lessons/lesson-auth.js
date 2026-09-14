@@ -307,8 +307,21 @@ const LessonSync = (() => {
         // unrendered source, cut off by the box's width. On anything but
         // a <math-field>, fall back to the bare numeric p.a instead - the
         // feedback text below still gets the richer `answer` either way.
-        input.value = (input.tagName !== 'MATH-FIELD' && p.a !== undefined) ? String(p.a) : answer;
-        input.disabled = true;
+        // A card-select (see /CLAUDE.md's "Card-select" note) has no real
+        // .value/.disabled - it's a plain <div> of buttons - so it's a
+        // third case: mark the button whose data-value matches the answer
+        // as selected, and disable every option directly via the DOM, with
+        // no dependency on that page's own createCardSelect() instance
+        // (unlockTeacherView only ever has the element id, never that).
+        if (input.classList && input.classList.contains('card-select')) {
+          input.querySelectorAll('.card-select-option').forEach((optBtn) => {
+            optBtn.classList.toggle('selected', optBtn.dataset.value === answer);
+            optBtn.disabled = true;
+          });
+        } else {
+          input.value = (input.tagName !== 'MATH-FIELD' && p.a !== undefined) ? String(p.a) : answer;
+          input.disabled = true;
+        }
         const btn = input.parentElement && input.parentElement.querySelector('button');
         if (btn) { btn.disabled = true; btn.style.cursor = 'not-allowed'; }
         feedback.style.display = 'block';

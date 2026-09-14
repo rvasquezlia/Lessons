@@ -28,7 +28,7 @@
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
   <script src="../../token-cache.js?v=2"></script>
-  <script src="../../lesson-auth.js?v=9"></script>
+  <script src="../../lesson-auth.js?v=10"></script>
   <style>
     #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
     .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
@@ -1555,6 +1555,7 @@
   };
 
   let currentWBProb = 1;
+  let wbDecPlacesSelect = null;
 
   function loadWBProblem(id) {
     currentWBProb = id;
@@ -1600,18 +1601,19 @@
           <input type="text" id="wb-i3" class="digit-box input" maxlength="1">
         </div>
         <div style="margin-top:18px; font-weight:800; text-align:center;">
-          Count the total decimal places in both factors above. How many decimal places should your final answer have?<br>
-          <select id="wb-dec-places" class="form-control-lg" style="width:260px; text-align:center; margin-top:8px;">
-            <option value="">Select a number...</option>
-            <option value="0">0 decimal places</option>
-            <option value="1">1 decimal place</option>
-            <option value="2">2 decimal places</option>
-            <option value="3">3 decimal places</option>
-            <option value="4">4 decimal places</option>
-          </select>
+          Count the total decimal places in both factors above. How many decimal places should your final answer have?
+          <div id="wb-dec-places" class="card-select" style="justify-content:center; margin-top:8px;"></div>
         </div>
       `;
+      wbDecPlacesSelect = createCardSelect('wb-dec-places', [
+        { value: '0', label: '0 places' },
+        { value: '1', label: '1 place' },
+        { value: '2', label: '2 places' },
+        { value: '3', label: '3 places' },
+        { value: '4', label: '4 places' }
+      ]);
     } else {
+      wbDecPlacesSelect = null;
       const isMoney = prob.title.includes("$");
       container.innerHTML = `
         <h3>${prob.title}</h3>
@@ -1670,9 +1672,9 @@
       const u1 = document.getElementById('wb-i1').value;
       const u2 = document.getElementById('wb-i2').value;
       const u3 = document.getElementById('wb-i3').value;
-      const decPlaces = document.getElementById('wb-dec-places').value;
+      const decPlaces = wbDecPlacesSelect ? wbDecPlacesSelect.getValue() : null;
 
-      const allFilled = [p1_0, p1_1, p1_2, p1_3, p2_0, p2_1, p2_2, p2_3, u0, u1, u2, u3, decPlaces].every(v => v.trim() !== '');
+      const allFilled = [p1_0, p1_1, p1_2, p1_3, p2_0, p2_1, p2_2, p2_3, u0, u1, u2, u3].every(v => v.trim() !== '') && decPlaces !== null;
       if (!allFilled) {
         LessonCheck.incomplete(fb, "Fill in every box (both partial products, the final answer, and the decimal places) before checking - this won't count as an attempt yet.");
         return;
@@ -1712,9 +1714,7 @@
       prob.p1.forEach((d, i) => setDigit(`wb-p1-${i}`, d));
       prob.p2.forEach((d, i) => setDigit(`wb-p2-${i}`, d));
       prob.ans.forEach((d, i) => setDigit(`wb-i${i}`, d));
-      const decEl = document.getElementById('wb-dec-places');
-      const opt = decEl && decEl.querySelector(`option[value="${prob.decimalPlaces}"]`);
-      if (opt) opt.setAttribute('selected', 'selected');
+      if (wbDecPlacesSelect) wbDecPlacesSelect.setValue(String(prob.decimalPlaces));
     } else {
       prob.ans.forEach((d, i) => setDigit(`wb-i${i}`, d));
     }

@@ -26,7 +26,7 @@
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
   <script src="../../token-cache.js?v=2"></script>
-  <script src="../../lesson-auth.js?v=9"></script>
+  <script src="../../lesson-auth.js?v=10"></script>
   <style>
     #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
     .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
@@ -195,16 +195,16 @@
       <h3 style="margin-top:0; color:#b45309;">Match the Term to Its Job</h3>
       <p>For each operation, choose the word that names its <em>result</em>.</p>
       <div class="match-row"><strong>Addition &rarr; result is the...</strong>
-        <select id="ov-0" class="form-control-lg" style="max-width:200px;"><option value="">Choose...</option><option value="Sum">Sum</option><option value="Difference">Difference</option><option value="Product">Product</option><option value="Quotient">Quotient</option></select>
+        <div id="ov-0" class="card-select"></div>
       </div>
       <div class="match-row"><strong>Subtraction &rarr; result is the...</strong>
-        <select id="ov-1" class="form-control-lg" style="max-width:200px;"><option value="">Choose...</option><option value="Sum">Sum</option><option value="Difference">Difference</option><option value="Product">Product</option><option value="Quotient">Quotient</option></select>
+        <div id="ov-1" class="card-select"></div>
       </div>
       <div class="match-row"><strong>Multiplication &rarr; result is the...</strong>
-        <select id="ov-2" class="form-control-lg" style="max-width:200px;"><option value="">Choose...</option><option value="Sum">Sum</option><option value="Difference">Difference</option><option value="Product">Product</option><option value="Quotient">Quotient</option></select>
+        <div id="ov-2" class="card-select"></div>
       </div>
       <div class="match-row"><strong>Division &rarr; result is the...</strong>
-        <select id="ov-3" class="form-control-lg" style="max-width:200px;"><option value="">Choose...</option><option value="Sum">Sum</option><option value="Difference">Difference</option><option value="Product">Product</option><option value="Quotient">Quotient</option></select>
+        <div id="ov-3" class="card-select"></div>
       </div>
       <button class="btn-lg" style="margin-top:10px;" onclick="checkOpVocab()">Check My Matches</button>
       <div id="ov-feedback" class="feedback-msg"></div>
@@ -307,8 +307,13 @@
   // ==========================================
   // TAB 2: OPERATION VOCABULARY MATCH
   // ==========================================
+  const ovCardSelects = ['ov-0', 'ov-1', 'ov-2', 'ov-3'].map((id) => createCardSelect(id, [
+    { value: 'Sum', label: 'Sum' }, { value: 'Difference', label: 'Difference' }, { value: 'Product', label: 'Product' }, { value: 'Quotient', label: 'Quotient' }
+  ]));
+  LessonProgress.preRegister('ov-match', '2. Operation Vocabulary: Match the Term to Its Job', '2. Operation Vocabulary');
+
   function checkOpVocab() {
-    const vals = ['ov-0', 'ov-1', 'ov-2', 'ov-3'].map(id => document.getElementById(id).value);
+    const vals = ovCardSelects.map((cs) => cs.getValue());
     const fb = document.getElementById('ov-feedback');
     if (vals.some(v => !v)) { LessonCheck.incomplete(fb, "Choose a word for all four operations before checking."); return; }
     const expected = ['Sum', 'Difference', 'Product', 'Quotient'];
@@ -317,7 +322,7 @@
       correct: "Correct! Addition -> Sum, Subtraction -> Difference, Multiplication -> Product, Division -> Quotient.",
       retry: "Some of these aren't matched yet. Review the glossary boxes above and try again.",
       reveal: "Addition -> Sum, Subtraction -> Difference, Multiplication -> Product, Division -> Quotient."
-    });
+    }, { label: '2. Operation Vocabulary: Match the Term to Its Job', answer: vals.join(', '), section: '2. Operation Vocabulary' });
   }
 
   // ==========================================
@@ -328,70 +333,76 @@
     { word: "Below Sea Level", sign: "neg" }, { word: "Debt", sign: "neg" }, { word: "Withdraw", sign: "neg" }, { word: "Loss", sign: "neg" }, { word: "Debit", sign: "neg" }, { word: "Descend", sign: "neg" }
   ];
 
+  const cwCardSelects = [];
+
   function renderClueWords() {
     const html = clueWords.map((item, i) => `
       <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap;">
         <strong style="min-width:200px;">${i + 1}. "${item.word}"</strong>
-        <select id="cw-${i}" class="form-control-lg" style="max-width:200px;">
-          <option value="">Select...</option>
-          <option value="pos">Positive (+)</option>
-          <option value="neg">Negative (-)</option>
-        </select>
+        <div id="cw-${i}" class="card-select"></div>
       </div>
     `).join('');
     document.getElementById('cluewords-list').innerHTML = html;
+    clueWords.forEach((item, i) => {
+      cwCardSelects[i] = createCardSelect(`cw-${i}`, [{ value: 'pos', label: 'Positive (+)' }, { value: 'neg', label: 'Negative (−)' }]);
+    });
   }
   renderClueWords();
+  LessonProgress.preRegister('cluewords', '3. Word-Problem Clue Words: Sort by Sign', '3. Word-Problem Clue Words');
 
   function checkClueWords() {
     const fb = document.getElementById('cluewords-feedback');
     let allFilled = true, allCorrect = true;
-    clueWords.forEach((item, i) => {
-      const val = document.getElementById(`cw-${i}`).value;
+    const values = clueWords.map((item, i) => {
+      const val = cwCardSelects[i].getValue();
       if (!val) allFilled = false;
       else if (val !== item.sign) allCorrect = false;
+      return val;
     });
     if (!allFilled) { LessonCheck.incomplete(fb, "Choose positive or negative for every word before checking."); return; }
     LessonCheck.check('cluewords', allCorrect, fb, {
       correct: 'Correct! Every word is sorted correctly.',
       retry: 'Some words are sorted incorrectly. Review: Positive = Deposit, Credit, Ascend, Above Sea Level, Gain, Rise. Negative = Below Sea Level, Debt, Withdraw, Loss, Debit, Descend.',
       reveal: 'Correct sorting: Positive (+) = Deposit, Credit, Ascend, Above Sea Level, Gain, Rise. Negative (-) = Below Sea Level, Debt, Withdraw, Loss, Debit, Descend.'
-    });
+    }, { label: '3. Word-Problem Clue Words: Sort by Sign', answer: clueWords.map((item, i) => `${item.word}=${values[i]}`).join(', '), section: '3. Word-Problem Clue Words' });
   }
 
   const opMatchWords = [
     { word: "shared equally", op: "div" }, { word: "every", op: "mult" }, { word: "average", op: "div" }, { word: "rate", op: "mult" }, { word: "split", op: "div" }, { word: "each", op: "mult" }
   ];
 
+  const omCardSelects = [];
+
   function renderOpMatch() {
     const html = opMatchWords.map((item, i) => `
       <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap;">
         <strong style="min-width:200px;">${i + 1}. "${item.word}"</strong>
-        <select id="om-${i}" class="form-control-lg" style="max-width:220px;">
-          <option value="">Select...</option>
-          <option value="mult">Multiplication (&times;)</option>
-          <option value="div">Division (&divide;)</option>
-        </select>
+        <div id="om-${i}" class="card-select"></div>
       </div>
     `).join('');
     document.getElementById('opmatch-list').innerHTML = html;
+    opMatchWords.forEach((item, i) => {
+      omCardSelects[i] = createCardSelect(`om-${i}`, [{ value: 'mult', label: 'Multiplication (×)' }, { value: 'div', label: 'Division (÷)' }]);
+    });
   }
   renderOpMatch();
+  LessonProgress.preRegister('opmatch', '3. Word-Problem Clue Words: Multiplication or Division?', '3. Word-Problem Clue Words');
 
   function checkOpMatch() {
     const fb = document.getElementById('opmatch-feedback');
     let allFilled = true, allCorrect = true;
-    opMatchWords.forEach((item, i) => {
-      const val = document.getElementById(`om-${i}`).value;
+    const values = opMatchWords.map((item, i) => {
+      const val = omCardSelects[i].getValue();
       if (!val) allFilled = false;
       else if (val !== item.op) allCorrect = false;
+      return val;
     });
     if (!allFilled) { LessonCheck.incomplete(fb, "Choose an operation for every word before checking."); return; }
     LessonCheck.check('opmatch', allCorrect, fb, {
       correct: 'Correct! Every clue word matches the right operation.',
       retry: "Some matches aren't right yet. 'each', 'every', 'rate' point to multiplication; 'shared equally', 'average', 'split' point to division.",
       reveal: "Correct matches: Multiplication = every, rate, each. Division = shared equally, average, split."
-    });
+    }, { label: '3. Word-Problem Clue Words: Multiplication or Division?', answer: opMatchWords.map((item, i) => `${item.word}=${values[i]}`).join(', '), section: '3. Word-Problem Clue Words' });
   }
 
   // Reusable single-field list renderer (check mode, no printed report on this page)
@@ -482,10 +493,10 @@
       fb.className = 'feedback-msg success locked';
       fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
     };
-    const fillMatchGroup = (idPrefix, count, expectedByIndex, feedbackId, buttonSelector, summary) => {
+    const fillMatchGroup = (cardSelectArr, count, expectedByIndex, feedbackId, buttonSelector, summary) => {
       for (let i = 0; i < count; i++) {
-        const sel = document.getElementById(`${idPrefix}-${i}`);
-        if (sel) { sel.value = expectedByIndex(i); sel.disabled = true; }
+        const cs = cardSelectArr[i];
+        if (cs) { cs.setValue(expectedByIndex(i)); cs.disable(); }
       }
       const btn = document.querySelector(buttonSelector);
       if (btn) btn.disabled = true;
@@ -499,13 +510,13 @@
 
     numVocabProblems.forEach((p, i) => fillInput(`nv-${i}-input`, `nv-${i}-feedback`, p.a));
 
-    fillMatchGroup('ov', 4, (i) => ['Sum', 'Difference', 'Product', 'Quotient'][i], 'ov-feedback',
+    fillMatchGroup(ovCardSelects, 4, (i) => ['Sum', 'Difference', 'Product', 'Quotient'][i], 'ov-feedback',
       'button[onclick="checkOpVocab()"]', 'Addition = Sum, Subtraction = Difference, Multiplication = Product, Division = Quotient.');
 
-    fillMatchGroup('cw', clueWords.length, (i) => clueWords[i].sign, 'cluewords-feedback',
+    fillMatchGroup(cwCardSelects, clueWords.length, (i) => clueWords[i].sign, 'cluewords-feedback',
       'button[onclick="checkClueWords()"]', 'Positive (+) = Deposit, Credit, Ascend, Above Sea Level, Gain, Rise. Negative (-) = Below Sea Level, Debt, Withdraw, Loss, Debit, Descend.');
 
-    fillMatchGroup('om', opMatchWords.length, (i) => opMatchWords[i].op, 'opmatch-feedback',
+    fillMatchGroup(omCardSelects, opMatchWords.length, (i) => opMatchWords[i].op, 'opmatch-feedback',
       'button[onclick="checkOpMatch()"]', 'Multiplication = every, rate, each. Division = shared equally, average, split.');
 
     translateProblems.forEach((p, i) => fillInput(`tr-${i}-input`, `tr-${i}-feedback`, p.a));

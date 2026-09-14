@@ -24,7 +24,7 @@
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
   <script src="../../token-cache.js?v=2"></script>
-  <script src="../../lesson-auth.js?v=9"></script>
+  <script src="../../lesson-auth.js?v=10"></script>
   <style>
     #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
     .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
@@ -389,6 +389,12 @@
     { q: "\\(3(x - 2) = 3x - 6\\)", verdict: "infinite" }
   ];
   const verdictLabel = { one: "One solution", none: "No solution", infinite: "Infinitely many solutions" };
+  const VERDICT_OPTIONS = [
+    { value: 'one', label: 'One solution' },
+    { value: 'none', label: 'No solution' },
+    { value: 'infinite', label: 'Infinitely many solutions' }
+  ];
+  const clCardSelects = [];
 
   function renderClassify() {
     const html = classifyItems.map((item, i) => `
@@ -396,12 +402,7 @@
         <p style="margin:0 0 10px 0;"><strong>${i + 1}.</strong> ${item.q}</p>
         <div class="form-group">
           <label>Classification:</label>
-          <select id="cl-${i}-verdict" class="form-control-lg" style="max-width:280px;">
-            <option value="">Select...</option>
-            <option value="one">One solution</option>
-            <option value="none">No solution</option>
-            <option value="infinite">Infinitely many solutions</option>
-          </select>
+          <div id="cl-${i}-verdict" class="card-select"></div>
         </div>
         <div class="form-group">
           <label>If one solution, enter x (otherwise leave blank):</label>
@@ -412,13 +413,16 @@
       </div>
     `).join('');
     document.getElementById('classify-list').innerHTML = html;
-    classifyItems.forEach((item, i) => LessonProgress.preRegister(`cl-${i}`, `Classify #${i + 1}: ${item.q.replace(/\\\(|\\\)/g, '')}`, '5. Classify the Solution'));
+    classifyItems.forEach((item, i) => {
+      LessonProgress.preRegister(`cl-${i}`, `Classify #${i + 1}: ${item.q.replace(/\\\(|\\\)/g, '')}`, '5. Classify the Solution');
+      clCardSelects[i] = createCardSelect(`cl-${i}-verdict`, VERDICT_OPTIONS);
+    });
     triggerMathJax();
   }
 
   function checkClassify(idx) {
     const item = classifyItems[idx];
-    const verdict = document.getElementById(`cl-${idx}-verdict`).value;
+    const verdict = clCardSelects[idx].getValue() || '';
     const xVal = document.getElementById(`cl-${idx}-x`).value;
     const fb = document.getElementById(`cl-${idx}-feedback`);
     if (!verdict || (item.verdict === "one" && !xVal.trim())) {
@@ -445,29 +449,29 @@
     { q: "\\(7x-4=4x+17\\)", verdict: "one", a: 7 }
   ];
 
+  const cmCardSelects = [];
+
   function renderClassifyMore() {
     const html = comparisonMore.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 9}.</strong> ${p.q}
-        <select id="cm-${i}-verdict" class="form-control-lg" style="max-width:230px; display:inline-block;">
-          <option value="">Classify...</option>
-          <option value="one">One solution</option>
-          <option value="none">No solution</option>
-          <option value="infinite">Infinitely many solutions</option>
-        </select>
+        <div id="cm-${i}-verdict" class="card-select"></div>
         <input type="text" id="cm-${i}-x" class="form-control-lg" style="max-width:120px; display:inline-block;" placeholder="x = (if one)">
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkClassifyMore(${i})">Check</button>
         <div id="cm-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
     `).join('');
     document.getElementById('classify-more-list').innerHTML = html;
-    comparisonMore.forEach((p, i) => LessonProgress.preRegister(`cm-${i}`, `Quick Classify #${i + 9}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '5. Classify the Solution'));
+    comparisonMore.forEach((p, i) => {
+      LessonProgress.preRegister(`cm-${i}`, `Quick Classify #${i + 9}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '5. Classify the Solution');
+      cmCardSelects[i] = createCardSelect(`cm-${i}-verdict`, VERDICT_OPTIONS);
+    });
     triggerMathJax();
   }
 
   function checkClassifyMore(idx) {
     const p = comparisonMore[idx];
-    const verdict = document.getElementById(`cm-${idx}-verdict`).value;
+    const verdict = cmCardSelects[idx].getValue() || '';
     const xVal = document.getElementById(`cm-${idx}-x`).value;
     const fb = document.getElementById(`cm-${idx}-feedback`);
     if (!verdict || (p.verdict === "one" && !xVal.trim())) {
@@ -699,24 +703,24 @@
     l13Practice.forEach((p, i) => fillInput(`l13p-${i}-input`, `l13p-${i}-feedback`, p.a));
     mixedProblems.forEach((p, i) => fillInput(`mix-${i}-input`, `mix-${i}-feedback`, p.a));
 
-    const fillClassify = (idPrefix, item, i) => {
-      const sel = document.getElementById(`${idPrefix}-${i}-verdict`);
+    const fillClassify = (cardSelectArr, item, i, idPrefix) => {
+      const cs = cardSelectArr[i];
       const xInput = document.getElementById(`${idPrefix}-${i}-x`);
       const fb = document.getElementById(`${idPrefix}-${i}-feedback`);
-      if (!sel || !xInput || !fb) return;
-      sel.value = item.verdict;
+      if (!cs || !xInput || !fb) return;
+      cs.setValue(item.verdict);
       if (item.verdict === 'one') xInput.value = item.a;
-      sel.disabled = true;
+      cs.disable();
       xInput.disabled = true;
-      const container = sel.closest('.step-box') || sel.closest('.guided-practice');
+      const container = document.getElementById(`${idPrefix}-${i}-verdict`).closest('.step-box') || document.getElementById(`${idPrefix}-${i}-verdict`).closest('.guided-practice');
       const btn = container && container.querySelector('button');
       if (btn) btn.disabled = true;
       fb.style.display = 'block';
       fb.className = 'feedback-msg success locked';
       fb.innerHTML = `Answer key: <strong>${verdictLabel[item.verdict]}</strong>${item.verdict === 'one' ? `, x = ${item.a}` : ''}`;
     };
-    classifyItems.forEach((item, i) => fillClassify('cl', item, i));
-    comparisonMore.forEach((p, i) => fillClassify('cm', p, i));
+    classifyItems.forEach((item, i) => fillClassify(clCardSelects, item, i, 'cl'));
+    comparisonMore.forEach((p, i) => fillClassify(cmCardSelects, p, i, 'cm'));
 
     // Strategy Challenge is student-choice driven - its inputs don't exist
     // in the DOM until a group is picked (chooseStrategyGroup), so there's

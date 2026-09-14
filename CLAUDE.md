@@ -2001,20 +2001,58 @@ cramming both into one row of dropdowns side by side), `.card-select`
 (the flex row of option buttons within one group), `.card-select-option`
 (+`.selected`/`:disabled`).
 
-**Piloted on Linear-Inequalities' "Describe the Graph" item** (the one
-the teacher was actually looking at) - `describeCardSelects[i]` holds
-`{circle, direction}` instances per item, and `checkDescribe()`/the
-teacher-view reveal read/write through `.getValue()`/`.setValue()`/
-`.disable()` instead of touching a `<select>` element's `.value`/
-`.disabled` directly. **Not yet retrofitted onto any other unit's
-existing `<select>` elements** (Test-Prep sign-group/multi-select
-patterns elsewhere on the site, older multiple-choice quizzes, etc.) -
-that's a larger, separate sweep across every already-shipped page with a
-`<select>`, deliberately deferred rather than rushed through
-unreviewed. Do this the same way the pilot did: swap the `<select>` for
-an empty `<div class="card-select">` per choice group, call
-`createCardSelect()` once per group, and read/write through the
-returned handle everywhere the old element's `.value` used to be read.
+**Piloted on Linear-Inequalities' "Describe the Graph" item first, then
+rolled out to every remaining `<select>` site-wide** (`Lessons/Projects/*`
+and `teacher-dashboard.html`'s own admin reset-scope picker excluded -
+the former is the separate older pattern documented at the top of this
+file, the latter is a teacher-only admin control, not student-facing
+graded content) - `describeCardSelects[i]` holds `{circle, direction}`
+instances per item on the pilot page, and every other page's own
+check/reveal functions read/write through `.getValue()`/`.setValue()`/
+`.disable()` the exact same way, instead of touching a `<select>`
+element's `.value`/`.disabled` directly. Covered ~20 files across every
+grade (Sixth/Decimal-Operations, Sixth/Operations-with-Fractions,
+Seventh/Integers, Seventh/Operations-with-Rationals (including its
+Guided-Solving-Ladder), Seventh/Rational-Numbers,
+Seventh/Squares-Cubes-and-Roots, Eighth/Linear-Equations,
+Eighth/Linear-Functions) - both static (non-templated) selects, kept in
+a per-page `cardSelects`/similarly-named registry object keyed by
+element id so a shared check/reveal function can tell a card-select
+apart from a plain `<input>`/`<math-field>`, and templated selects
+(rendered per-array-item in a loop), tracked in a parallel array indexed
+the same way the array itself is.
+
+**`unlockTeacherView`'s generic `window.listRegistry` reveal loop (in
+`lesson-auth.js`) gained a third branch for this**, alongside its
+existing plain-`<input>` and `<math-field>` cases: when the looked-up
+element has the `card-select` class, it marks the `.card-select-option`
+button whose `data-value` matches the answer as `.selected` and disables
+every option in the group - directly via the DOM, with no dependency on
+that page's own `createCardSelect()` instance (`unlockTeacherView` only
+ever has the element id, never a reference to the instance itself). This
+is what let `Seventh/Operations-with-Rationals/Guided-Solving-Ladder.html`'s
+multiple-choice items convert with no hand-written reveal code at all -
+they were already in `window.listRegistry`. **Bump `lesson-auth.js`'s
+`?v=` cache-bust number across every referencing page whenever this
+generic function changes again** - same rule as any other `lesson-auth.js`
+edit (see "Persisted sign-in" above); this rollout bumped it to `v10`.
+
+**Converting a `<select>` to card-select surfaced several already-present
+`LessonCheck.check(...)` calls silently missing their `record` argument**
+- the exact historical bug class documented above under "Saving student
+progress," just never caught on these specific items because nobody had
+touched that code since. Found and fixed on `Sixth/Decimal-Operations`
+and `Sixth/Operations-with-Fractions`'s Vocabulary-Literacy word-sort/
+translate checks (both used the lower-level `LessonCheck.show()`, which
+only renders feedback and never records at all - `LessonProgress.record()`
+calls were added directly after each), and on `Seventh/Integers` and
+`Seventh/Rational-Numbers`'s Vocabulary-Literacy operation-vocabulary/
+clue-word/compare-words checks (`LessonCheck.check(...)` calls that
+omitted the 5th `record` argument entirely). **Any time this card-select
+conversion touches an existing check function, read its full call before
+assuming it already saves correctly** - converting the input without
+verifying this would have preserved a pre-existing, unrelated data-loss
+bug instead of fixing it.
 
 ### Vocabulary Match-Up (drag-and-drop term/definition/example widget)
 

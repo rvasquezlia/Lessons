@@ -26,7 +26,7 @@
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
   <script src="../../token-cache.js?v=2"></script>
-  <script src="../../lesson-auth.js?v=9"></script>
+  <script src="../../lesson-auth.js?v=10"></script>
   <style>
     #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
     .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
@@ -137,11 +137,7 @@
 
     <div class="challenge-box" style="margin-top:20px;">
       <p style="margin-top:0;">Jordan says \(0.\overline{3}\) is not exactly equal to \(\dfrac{1}{3}\) - just really close to it. Is Jordan correct?</p>
-      <select id="audit-choice" class="form-control-lg" style="max-width:260px;">
-        <option value="">Select...</option>
-        <option value="correct">Jordan is correct</option>
-        <option value="incorrect">Jordan is incorrect</option>
-      </select>
+      <div id="audit-choice" class="card-select"></div>
       <button class="btn-lg" style="margin-top:14px;" onclick="checkAudit()">Submit</button>
       <div id="audit-feedback" class="feedback-msg"></div>
     </div>
@@ -174,20 +170,14 @@
     <div class="step-box">
       <p><strong>1.</strong> Which set of numbers includes fractions, terminating decimals, and repeating decimals, but does NOT include numbers like \(\pi\)?<br>
       A. Whole Numbers&nbsp;&nbsp; B. Integers&nbsp;&nbsp; C. Rational Numbers&nbsp;&nbsp; D. Irrational Numbers</p>
-      <select id="qc-a0" class="form-control-lg" style="max-width:150px;">
-        <option value="">Choose...</option>
-        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
-      </select>
+      <div id="qc-a0" class="card-select"></div>
       <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('a', 0)">Check</button>
       <div id="qc-a0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
     </div>
     <div class="step-box" style="margin-top:16px;">
       <p><strong>2.</strong> Which decimal represents an irrational number?<br>
       A. \(0.75\)&nbsp;&nbsp; B. \(0.333\ldots\)&nbsp;&nbsp; C. \(3.14159265358979\ldots\) (never repeats)&nbsp;&nbsp; D. \(0.125\)</p>
-      <select id="qc-a1" class="form-control-lg" style="max-width:150px;">
-        <option value="">Choose...</option>
-        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
-      </select>
+      <div id="qc-a1" class="card-select"></div>
       <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('a', 1)">Check</button>
       <div id="qc-a1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
     </div>
@@ -195,10 +185,7 @@
       <p><strong>3.</strong> The number line shows a point between 0 and 1. Which fraction does it represent?</p>
       <div id="qc-a2-numberline"></div>
       <p style="margin:0;">A. \(\dfrac{1}{6}\)&nbsp;&nbsp; B. \(\dfrac{3}{5}\)&nbsp;&nbsp; C. \(\dfrac{5}{6}\)&nbsp;&nbsp; D. \(\dfrac{2}{3}\)</p>
-      <select id="qc-a3" class="form-control-lg" style="max-width:150px;">
-        <option value="">Choose...</option>
-        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
-      </select>
+      <div id="qc-a3" class="card-select"></div>
       <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('a', 3)">Check</button>
       <div id="qc-a3-feedback" class="feedback-msg" style="margin-top:8px;"></div>
     </div>
@@ -219,10 +206,7 @@
     <div class="step-box" style="margin-top:16px;">
       <p><strong>6.</strong> Which fraction is equal to \(0.1\overline{6}\) (that is, \(0.16666\ldots\))?<br>
       A. \(\dfrac{1}{16}\)&nbsp;&nbsp; B. \(\dfrac{1}{6}\)&nbsp;&nbsp; C. \(\dfrac{5}{6}\)&nbsp;&nbsp; D. \(\dfrac{1}{60}\)</p>
-      <select id="qc-b2" class="form-control-lg" style="max-width:150px;">
-        <option value="">Choose...</option>
-        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
-      </select>
+      <div id="qc-b2" class="card-select"></div>
       <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('b', 2)">Check</button>
       <div id="qc-b2-feedback" class="feedback-msg" style="margin-top:8px;"></div>
     </div>
@@ -315,10 +299,12 @@
     return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
   }
 
-  // Tab 3 mixes <select> multiple-choice, plain <input> (simple numbers/
+  // Tab 3 mixes card-select multiple-choice, plain <input> (simple numbers/
   // symbols), and <math-field> (fractions) under one id scheme - read
   // whichever one is actually there.
+  const qcCardSelects = {};
   function readAnswerField(id) {
+    if (qcCardSelects[id]) return qcCardSelects[id].getValue() || '';
     const el = document.getElementById(id);
     return el.tagName === 'MATH-FIELD' ? readMathField(el) : el.value;
   }
@@ -402,8 +388,17 @@
   }
 
   LessonProgress.preRegister('audit', "2. Error Analysis: is Jordan's claim about 0.3-repeating correct?", '2. Error Analysis');
+  const auditCardSelect = createCardSelect('audit-choice', [
+    { value: 'correct', label: 'Jordan is correct' },
+    { value: 'incorrect', label: 'Jordan is incorrect' }
+  ]);
+  qcCardSelects['qc-a0'] = createCardSelect('qc-a0', [{ value: 'A', label: 'A' }, { value: 'B', label: 'B' }, { value: 'C', label: 'C' }, { value: 'D', label: 'D' }]);
+  qcCardSelects['qc-a1'] = createCardSelect('qc-a1', [{ value: 'A', label: 'A' }, { value: 'B', label: 'B' }, { value: 'C', label: 'C' }, { value: 'D', label: 'D' }]);
+  qcCardSelects['qc-a3'] = createCardSelect('qc-a3', [{ value: 'A', label: 'A' }, { value: 'B', label: 'B' }, { value: 'C', label: 'C' }, { value: 'D', label: 'D' }]);
+  qcCardSelects['qc-b2'] = createCardSelect('qc-b2', [{ value: 'A', label: 'A' }, { value: 'B', label: 'B' }, { value: 'C', label: 'C' }, { value: 'D', label: 'D' }]);
+
   function checkAudit() {
-    const val = document.getElementById('audit-choice').value;
+    const val = auditCardSelect.getValue() || '';
     const fb = document.getElementById('audit-feedback');
     if (!val) { LessonCheck.incomplete(fb, "Choose an answer before submitting."); return; }
     LessonCheck.submit(fb, {
@@ -513,12 +508,21 @@
   // can't touch any of it - this fills in every tab's answer key directly.
   window.revealAnswerKey = function () {
     const fillInput = (id, feedbackId, answer) => {
-      const input = document.getElementById(id);
       const fb = document.getElementById(feedbackId);
-      if (!input || !fb) return;
-      input.value = answer;
-      input.disabled = true;
-      const btn = input.parentElement && input.parentElement.querySelector('button');
+      if (!fb) return;
+      let container;
+      if (qcCardSelects[id]) {
+        qcCardSelects[id].setValue(answer);
+        qcCardSelects[id].disable();
+        container = document.getElementById(id).parentElement;
+      } else {
+        const input = document.getElementById(id);
+        if (!input) return;
+        input.value = answer;
+        input.disabled = true;
+        container = input.parentElement;
+      }
+      const btn = container && container.querySelector('button');
       if (btn) { btn.disabled = true; btn.style.cursor = 'not-allowed'; }
       fb.style.display = 'block';
       fb.className = 'feedback-msg success locked';
@@ -543,11 +547,10 @@
       fb.innerHTML = `Answer key: <strong>${p.correctAnswer}</strong>`;
     });
 
-    const auditSel = document.getElementById('audit-choice');
     const auditFb = document.getElementById('audit-feedback');
-    if (auditSel && auditFb) {
-      auditSel.value = 'incorrect';
-      auditSel.disabled = true;
+    if (auditCardSelect && auditFb) {
+      auditCardSelect.setValue('incorrect');
+      auditCardSelect.disable();
       auditFb.style.display = 'block';
       auditFb.className = 'feedback-msg success locked';
       auditFb.innerHTML = 'Answer key: Jordan is incorrect.';

@@ -26,7 +26,7 @@
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
   <script src="../../token-cache.js?v=2"></script>
-  <script src="../../lesson-auth.js?v=9"></script>
+  <script src="../../lesson-auth.js?v=10"></script>
   <style>
     #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
     .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
@@ -146,11 +146,7 @@
 
     <div class="challenge-box" style="margin-top:20px;">
       <p style="margin-top:0;">Marco says \(-2.5 - 3.5 = -1\), reasoning that \(3.5-2.5=1\) and the answer is negative. Is he correct?</p>
-      <select id="audit-choice" class="form-control-lg" style="max-width:260px;">
-        <option value="">Select...</option>
-        <option value="correct">He's correct</option>
-        <option value="incorrect">He's incorrect</option>
-      </select>
+      <div id="audit-choice" class="card-select"></div>
       <button class="btn-lg" style="margin-top:14px;" onclick="checkAudit()">Submit</button>
       <div id="audit-feedback" class="feedback-msg"></div>
     </div>
@@ -199,10 +195,7 @@
     <div class="step-box">
       <p><strong>1.</strong> Which expression correctly applies "same signs, add and keep the sign"?<br>
       A. \(-\frac{3}{8}+\left(-\frac{1}{4}\right)=-\frac{1}{8}\)&nbsp;&nbsp; B. \(-\frac{3}{8}+\left(-\frac{1}{4}\right)=-\frac{5}{8}\)&nbsp;&nbsp; C. \(-\frac{3}{8}+\left(-\frac{1}{4}\right)=\frac{5}{8}\)&nbsp;&nbsp; D. \(-\frac{3}{8}+\left(-\frac{1}{4}\right)=\frac{1}{8}\)</p>
-      <select id="qc-a0" class="form-control-lg" style="max-width:150px;">
-        <option value="">Choose...</option>
-        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
-      </select>
+      <div id="qc-a0" class="card-select"></div>
       <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('a', 0)">Check</button>
       <div id="qc-a0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
     </div>
@@ -234,10 +227,7 @@
     <div class="step-box" style="margin-top:16px;">
       <p><strong>5.</strong> Which shows the correct first step for \(-\frac{7}{8}-\left(-\frac{3}{4}\right)\) using Keep-Change-Change?<br>
       A. \(-\frac{7}{8}-\frac{3}{4}\)&nbsp;&nbsp; B. \(-\frac{7}{8}+\frac{3}{4}\)&nbsp;&nbsp; C. \(\frac{7}{8}+\frac{3}{4}\)&nbsp;&nbsp; D. \(-\frac{7}{8}+\left(-\frac{3}{4}\right)\)</p>
-      <select id="qc-b2" class="form-control-lg" style="max-width:150px;">
-        <option value="">Choose...</option>
-        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
-      </select>
+      <div id="qc-b2" class="card-select"></div>
       <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('b', 2)">Check</button>
       <div id="qc-b2-feedback" class="feedback-msg" style="margin-top:8px;"></div>
     </div>
@@ -258,10 +248,7 @@
     <div class="step-box" style="margin-top:16px;">
       <p><strong>8.</strong> \(-0.8\div0.2=\) ?<br>
       A. \(-4\)&nbsp;&nbsp; B. \(4\)&nbsp;&nbsp; C. \(-0.4\)&nbsp;&nbsp; D. \(0.4\)</p>
-      <select id="qc-c2" class="form-control-lg" style="max-width:150px;">
-        <option value="">Choose...</option>
-        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
-      </select>
+      <div id="qc-c2" class="card-select"></div>
       <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('c', 2)">Check</button>
       <div id="qc-c2-feedback" class="feedback-msg" style="margin-top:8px;"></div>
     </div>
@@ -433,8 +420,20 @@
   }
 
   LessonProgress.preRegister('audit', "2. Error Analysis: is Marco's -2.5-3.5=-1 correct?", '2. Error Analysis');
+  // Static (non-templated) selects converted to card-select - registry
+  // keyed by element id so fillInput()/checkQC() can tell a card-select
+  // apart from a plain <input>/<math-field>.
+  const cardSelects = {};
+  cardSelects['audit-choice'] = createCardSelect('audit-choice', [
+    { value: 'correct', label: "He's correct" },
+    { value: 'incorrect', label: "He's incorrect" }
+  ]);
+  cardSelects['qc-a0'] = createCardSelect('qc-a0', [{ value: 'A', label: 'A' }, { value: 'B', label: 'B' }, { value: 'C', label: 'C' }, { value: 'D', label: 'D' }]);
+  cardSelects['qc-b2'] = createCardSelect('qc-b2', [{ value: 'A', label: 'A' }, { value: 'B', label: 'B' }, { value: 'C', label: 'C' }, { value: 'D', label: 'D' }]);
+  cardSelects['qc-c2'] = createCardSelect('qc-c2', [{ value: 'A', label: 'A' }, { value: 'B', label: 'B' }, { value: 'C', label: 'C' }, { value: 'D', label: 'D' }]);
+
   function checkAudit() {
-    const val = document.getElementById('audit-choice').value;
+    const val = cardSelects['audit-choice'].getValue() || '';
     const fb = document.getElementById('audit-feedback');
     if (!val) { LessonCheck.incomplete(fb, "Choose an answer before submitting."); return; }
     LessonCheck.submit(fb, {
@@ -469,8 +468,7 @@
   function checkQC(set, idx) {
     const id = `qc-${set}${idx}`;
     const cfg = qcConfig[id];
-    const field = document.getElementById(id);
-    const raw = (cfg.type === 'mc' || cfg.type === 'decimal') ? field.value : readMathField(field);
+    const raw = cfg.type === 'mc' ? (cardSelects[id].getValue() || '') : (cfg.type === 'decimal' ? document.getElementById(id).value : readMathField(document.getElementById(id)));
     const fb = document.getElementById(`${id}-feedback`);
     if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
     const correct = cfg.type === 'mc' ? raw.trim().toUpperCase() === cfg.answer : formatMatches(cfg.type, raw, cfg);
@@ -554,12 +552,21 @@
   // so the teacher reveal fills in every tab's answer key directly.
   window.revealAnswerKey = function () {
     const fillInput = (id, feedbackId, answer) => {
-      const input = document.getElementById(id);
       const fb = document.getElementById(feedbackId);
-      if (!input || !fb) return;
-      input.value = answer;
-      input.disabled = true;
-      const btn = input.parentElement && input.parentElement.querySelector('button');
+      if (!fb) return;
+      let container;
+      if (cardSelects[id]) {
+        cardSelects[id].setValue(answer);
+        cardSelects[id].disable();
+        container = document.getElementById(id).parentElement;
+      } else {
+        const input = document.getElementById(id);
+        if (!input) return;
+        input.value = answer;
+        input.disabled = true;
+        container = input.parentElement;
+      }
+      const btn = container && container.querySelector('button');
       if (btn) btn.disabled = true;
       fb.style.display = 'block';
       fb.className = 'feedback-msg success locked';
@@ -584,11 +591,10 @@
       fb.innerHTML = `Answer key: <strong>${p.correctAnswer}</strong>`;
     });
 
-    const auditSel = document.getElementById('audit-choice');
     const auditFb = document.getElementById('audit-feedback');
-    if (auditSel && auditFb) {
-      auditSel.value = 'incorrect';
-      auditSel.disabled = true;
+    if (cardSelects['audit-choice'] && auditFb) {
+      cardSelects['audit-choice'].setValue('incorrect');
+      cardSelects['audit-choice'].disable();
       auditFb.style.display = 'block';
       auditFb.className = 'feedback-msg success locked';
       auditFb.innerHTML = "Answer key: He's incorrect.";

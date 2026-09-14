@@ -28,7 +28,7 @@
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
   <script src="../../token-cache.js?v=2"></script>
-  <script src="../../lesson-auth.js?v=9"></script>
+  <script src="../../lesson-auth.js?v=10"></script>
   <style>
     #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
     .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
@@ -185,40 +185,16 @@
       <h3 style="margin-top:0; color:#b45309;">Match the Strategy to Its Job</h3>
       <p>For each job below, choose the strategy name that matches it.</p>
       <div class="match-row"><strong>Rewriting subtraction as adding the opposite &rarr;</strong>
-        <select id="sv-0" class="form-control-lg" style="max-width:280px;">
-          <option value="">Choose...</option>
-          <option value="kcc">Keep-Change-Change</option>
-          <option value="kcf">Keep-Change-Flip</option>
-          <option value="lcd">Least Common Denominator (LCD)</option>
-          <option value="ssr">Same Signs Rule</option>
-        </select>
+        <div id="sv-0" class="card-select"></div>
       </div>
       <div class="match-row"><strong>Rewriting division as multiplying by the reciprocal &rarr;</strong>
-        <select id="sv-1" class="form-control-lg" style="max-width:280px;">
-          <option value="">Choose...</option>
-          <option value="kcc">Keep-Change-Change</option>
-          <option value="kcf">Keep-Change-Flip</option>
-          <option value="lcd">Least Common Denominator (LCD)</option>
-          <option value="ssr">Same Signs Rule</option>
-        </select>
+        <div id="sv-1" class="card-select"></div>
       </div>
       <div class="match-row"><strong>Rewriting two fractions so they share one denominator &rarr;</strong>
-        <select id="sv-2" class="form-control-lg" style="max-width:280px;">
-          <option value="">Choose...</option>
-          <option value="kcc">Keep-Change-Change</option>
-          <option value="kcf">Keep-Change-Flip</option>
-          <option value="lcd">Least Common Denominator (LCD)</option>
-          <option value="ssr">Same Signs Rule</option>
-        </select>
+        <div id="sv-2" class="card-select"></div>
       </div>
       <div class="match-row"><strong>Deciding a product or quotient is positive because both numbers matched &rarr;</strong>
-        <select id="sv-3" class="form-control-lg" style="max-width:280px;">
-          <option value="">Choose...</option>
-          <option value="kcc">Keep-Change-Change</option>
-          <option value="kcf">Keep-Change-Flip</option>
-          <option value="lcd">Least Common Denominator (LCD)</option>
-          <option value="ssr">Same Signs Rule</option>
-        </select>
+        <div id="sv-3" class="card-select"></div>
       </div>
       <button class="btn-lg" style="margin-top:10px;" onclick="checkSignVocab()">Check My Matches</button>
       <div id="sv-feedback" class="feedback-msg"></div>
@@ -347,8 +323,17 @@
   // ==========================================
   // TAB 2: SIGN-RULE VOCABULARY MATCH
   // ==========================================
+  const SV_OPTIONS = [
+    { value: 'kcc', label: 'Keep-Change-Change' },
+    { value: 'kcf', label: 'Keep-Change-Flip' },
+    { value: 'lcd', label: 'Least Common Denominator (LCD)' },
+    { value: 'ssr', label: 'Same Signs Rule' }
+  ];
+  const svCardSelects = ['sv-0', 'sv-1', 'sv-2', 'sv-3'].map((id) => createCardSelect(id, SV_OPTIONS));
+  LessonProgress.preRegister('sv-match', '2. Sign-Rule Vocabulary: Match the Strategy to Its Job', '2. Sign-Rule Vocabulary');
+
   function checkSignVocab() {
-    const vals = ['sv-0', 'sv-1', 'sv-2', 'sv-3'].map(id => document.getElementById(id).value);
+    const vals = svCardSelects.map((cs) => cs.getValue());
     const fb = document.getElementById('sv-feedback');
     if (vals.some(v => !v)) { LessonCheck.incomplete(fb, "Choose a strategy for all four jobs before checking."); return; }
     const expected = ['kcc', 'kcf', 'lcd', 'ssr'];
@@ -357,7 +342,7 @@
       correct: "Correct! Keep-Change-Change rewrites subtraction, Keep-Change-Flip rewrites division, LCD lines up denominators, and the Same Signs Rule decides the sign of a product or quotient.",
       retry: "Some of these aren't matched yet. Review the glossary boxes above and try again.",
       reveal: "Rewriting subtraction &rarr; Keep-Change-Change. Rewriting division &rarr; Keep-Change-Flip. Sharing one denominator &rarr; LCD. Matching-sign product/quotient &rarr; Same Signs Rule."
-    });
+    }, { label: '2. Sign-Rule Vocabulary: Match the Strategy to Its Job', answer: vals.join(', '), section: '2. Sign-Rule Vocabulary' });
   }
 
   // ==========================================
@@ -368,70 +353,76 @@
     { word: "Loss", sign: "neg" }, { word: "Decrease", sign: "neg" }, { word: "Drop", sign: "neg" }, { word: "Debit", sign: "neg" }, { word: "Withdrawal", sign: "neg" }, { word: "Deficit", sign: "neg" }
   ];
 
+  const cwCardSelects = [];
+
   function renderClueWords() {
     const html = clueWords.map((item, i) => `
       <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap;">
         <strong style="min-width:200px;">${i + 1}. "${item.word}"</strong>
-        <select id="cw-${i}" class="form-control-lg" style="max-width:200px;">
-          <option value="">Select...</option>
-          <option value="pos">Positive (+)</option>
-          <option value="neg">Negative (-)</option>
-        </select>
+        <div id="cw-${i}" class="card-select"></div>
       </div>
     `).join('');
     document.getElementById('cluewords-list').innerHTML = html;
+    clueWords.forEach((item, i) => {
+      cwCardSelects[i] = createCardSelect(`cw-${i}`, [{ value: 'pos', label: 'Positive (+)' }, { value: 'neg', label: 'Negative (−)' }]);
+    });
   }
   renderClueWords();
+  LessonProgress.preRegister('cluewords', '3. Word-Problem Clue Words: Sort by Sign', '3. Word-Problem Clue Words');
 
   function checkClueWords() {
     const fb = document.getElementById('cluewords-feedback');
     let allFilled = true, allCorrect = true;
-    clueWords.forEach((item, i) => {
-      const val = document.getElementById(`cw-${i}`).value;
+    const values = clueWords.map((item, i) => {
+      const val = cwCardSelects[i].getValue();
       if (!val) allFilled = false;
       else if (val !== item.sign) allCorrect = false;
+      return val;
     });
     if (!allFilled) { LessonCheck.incomplete(fb, "Choose positive or negative for every word before checking."); return; }
     LessonCheck.check('cluewords', allCorrect, fb, {
       correct: 'Correct! Every word is sorted correctly.',
       retry: 'Some words are sorted incorrectly. Review: Positive = Gain, Increase, Rise, Credit, Deposit, Profit. Negative = Loss, Decrease, Drop, Debit, Withdrawal, Deficit.',
       reveal: 'Correct sorting: Positive (+) = Gain, Increase, Rise, Credit, Deposit, Profit. Negative (-) = Loss, Decrease, Drop, Debit, Withdrawal, Deficit.'
-    });
+    }, { label: '3. Word-Problem Clue Words: Sort by Sign', answer: clueWords.map((item, i) => `${item.word}=${values[i]}`).join(', '), section: '3. Word-Problem Clue Words' });
   }
 
   const opMatchWords = [
     { word: "per", op: "mult" }, { word: "each", op: "mult" }, { word: "rate", op: "mult" }, { word: "split evenly", op: "div" }, { word: "average", op: "div" }, { word: "divided among", op: "div" }
   ];
 
+  const omCardSelects = [];
+
   function renderOpMatch() {
     const html = opMatchWords.map((item, i) => `
       <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap;">
         <strong style="min-width:200px;">${i + 1}. "${item.word}"</strong>
-        <select id="om-${i}" class="form-control-lg" style="max-width:220px;">
-          <option value="">Select...</option>
-          <option value="mult">Multiplication (&times;)</option>
-          <option value="div">Division (&divide;)</option>
-        </select>
+        <div id="om-${i}" class="card-select"></div>
       </div>
     `).join('');
     document.getElementById('opmatch-list').innerHTML = html;
+    opMatchWords.forEach((item, i) => {
+      omCardSelects[i] = createCardSelect(`om-${i}`, [{ value: 'mult', label: 'Multiplication (×)' }, { value: 'div', label: 'Division (÷)' }]);
+    });
   }
   renderOpMatch();
+  LessonProgress.preRegister('opmatch', '3. Word-Problem Clue Words: Multiplication or Division?', '3. Word-Problem Clue Words');
 
   function checkOpMatch() {
     const fb = document.getElementById('opmatch-feedback');
     let allFilled = true, allCorrect = true;
-    opMatchWords.forEach((item, i) => {
-      const val = document.getElementById(`om-${i}`).value;
+    const values = opMatchWords.map((item, i) => {
+      const val = omCardSelects[i].getValue();
       if (!val) allFilled = false;
       else if (val !== item.op) allCorrect = false;
+      return val;
     });
     if (!allFilled) { LessonCheck.incomplete(fb, "Choose an operation for every word before checking."); return; }
     LessonCheck.check('opmatch', allCorrect, fb, {
       correct: 'Correct! Every clue word matches the right operation.',
       retry: "Some matches aren't right yet. 'per', 'each', 'rate' point to multiplication; 'split evenly', 'average', 'divided among' point to division.",
       reveal: "Correct matches: Multiplication = per, each, rate. Division = split evenly, average, divided among."
-    });
+    }, { label: '3. Word-Problem Clue Words: Multiplication or Division?', answer: opMatchWords.map((item, i) => `${item.word}=${values[i]}`).join(', '), section: '3. Word-Problem Clue Words' });
   }
 
   function renderSimpleList(containerId, problems, keyPrefix) {
@@ -521,10 +512,10 @@
       fb.className = 'feedback-msg success locked';
       fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
     };
-    const fillMatchGroup = (idPrefix, count, expectedByIndex, feedbackId, buttonSelector, summary) => {
+    const fillMatchGroup = (cardSelectArr, count, expectedByIndex, feedbackId, buttonSelector, summary) => {
       for (let i = 0; i < count; i++) {
-        const sel = document.getElementById(`${idPrefix}-${i}`);
-        if (sel) { sel.value = expectedByIndex(i); sel.disabled = true; }
+        const cs = cardSelectArr[i];
+        if (cs) { cs.setValue(expectedByIndex(i)); cs.disable(); }
       }
       const btn = document.querySelector(buttonSelector);
       if (btn) btn.disabled = true;
@@ -541,13 +532,13 @@
       fillInput(`qr-${i}-input`, `qr-${i}-feedback`, displayAnswer);
     });
 
-    fillMatchGroup('sv', 4, (i) => ['kcc', 'kcf', 'lcd', 'ssr'][i], 'sv-feedback',
+    fillMatchGroup(svCardSelects, 4, (i) => ['kcc', 'kcf', 'lcd', 'ssr'][i], 'sv-feedback',
       'button[onclick="checkSignVocab()"]', 'Rewriting subtraction = Keep-Change-Change, Rewriting division = Keep-Change-Flip, Sharing one denominator = LCD, Matching-sign product/quotient = Same Signs Rule.');
 
-    fillMatchGroup('cw', clueWords.length, (i) => clueWords[i].sign, 'cluewords-feedback',
+    fillMatchGroup(cwCardSelects, clueWords.length, (i) => clueWords[i].sign, 'cluewords-feedback',
       'button[onclick="checkClueWords()"]', 'Positive (+) = Gain, Increase, Rise, Credit, Deposit, Profit. Negative (-) = Loss, Decrease, Drop, Debit, Withdrawal, Deficit.');
 
-    fillMatchGroup('om', opMatchWords.length, (i) => opMatchWords[i].op, 'opmatch-feedback',
+    fillMatchGroup(omCardSelects, opMatchWords.length, (i) => opMatchWords[i].op, 'opmatch-feedback',
       'button[onclick="checkOpMatch()"]', 'Multiplication = per, each, rate. Division = split evenly, average, divided among.');
 
     translateProblems.forEach((p, i) => fillInput(`tr-${i}-input`, `tr-${i}-feedback`, p.a));

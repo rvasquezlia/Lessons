@@ -28,7 +28,7 @@
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
   <script src="../../token-cache.js?v=2"></script>
-  <script src="../../lesson-auth.js?v=9"></script>
+  <script src="../../lesson-auth.js?v=10"></script>
   <style>
     #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
     .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
@@ -625,13 +625,15 @@
     { q: "In \\(3.75 \\div 0.25\\), after shifting both decimal points \\(2\\) places right, what does the divisor become?", type: "text", correctVal: "25", tol: 0.5, explain: "\\(0.25\\) shifted \\(2\\) places right is \\(25\\) - now a whole number, so you can divide normally." }
   ];
 
+  const conceptCardSelects = {};
+
   function renderConceptList() {
     const html = conceptItems.map((item, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
         <strong>${i + 1}.</strong> ${item.q}
         <div style="margin-top:10px;">
           ${item.type === 'tf'
-            ? `<select id="concept-${i}" class="form-control-lg" style="max-width:160px;"><option value="">Select...</option><option value="true">True</option><option value="false">False</option></select>`
+            ? `<div id="concept-${i}" class="card-select" style="display:inline-flex;"></div>`
             : `<input type="text" id="concept-${i}" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">`}
           <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem; margin-left:10px;" onclick="checkConceptItem(${i})">Check</button>
         </div>
@@ -639,13 +641,18 @@
       </div>
     `).join('');
     document.getElementById('concept-list').innerHTML = html;
-    conceptItems.forEach((item, i) => LessonProgress.preRegister(`concept-${i}`, item.q.replace(/\\\(|\\\)/g, ''), '4. Concept Check'));
+    conceptItems.forEach((item, i) => {
+      LessonProgress.preRegister(`concept-${i}`, item.q.replace(/\\\(|\\\)/g, ''), '4. Concept Check');
+      if (item.type === 'tf') {
+        conceptCardSelects[i] = createCardSelect(`concept-${i}`, [{ value: 'true', label: 'True' }, { value: 'false', label: 'False' }]);
+      }
+    });
   }
   renderConceptList();
 
   function checkConceptItem(idx) {
     const item = conceptItems[idx];
-    const val = document.getElementById(`concept-${idx}`).value;
+    const val = item.type === 'tf' ? (conceptCardSelects[idx].getValue() || '') : document.getElementById(`concept-${idx}`).value;
     const fb = document.getElementById(`concept-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Choose or enter an answer before checking.");
@@ -804,11 +811,17 @@
     });
 
     conceptItems.forEach((item, i) => {
-      const input = document.getElementById(`concept-${i}`);
       const fb = document.getElementById(`concept-${i}-feedback`);
-      if (!input || !fb) return;
-      input.value = item.correctVal;
-      input.disabled = true;
+      if (!fb) return;
+      if (item.type === 'tf') {
+        conceptCardSelects[i].setValue(item.correctVal);
+        conceptCardSelects[i].disable();
+      } else {
+        const input = document.getElementById(`concept-${i}`);
+        if (!input) return;
+        input.value = item.correctVal;
+        input.disabled = true;
+      }
       fb.style.display = 'block';
       fb.className = 'feedback-msg success locked';
       fb.innerHTML = `Answer key: ${item.explain}`;
