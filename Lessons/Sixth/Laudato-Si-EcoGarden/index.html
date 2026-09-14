@@ -15,7 +15,7 @@
   <script src="https://cdn.jsdelivr.net/npm/konva@9/konva.min.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
   <script src="../../token-cache.js?v=2"></script>
-  <script src="../../lesson-auth.js?v=12"></script>
+  <script src="../../lesson-auth.js?v=13"></script>
 
   <style>
     #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
@@ -45,6 +45,39 @@
       pointer-events: none;
       opacity: 0.6;
     }
+    .teacher-preview-banner {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      text-align: center;
+      padding: 12px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .teacher-preview-banner button {
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+      font-weight: 800;
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 2px solid rgba(255,255,255,0.7);
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .teacher-preview-banner button:hover { background: rgba(255,255,255,0.32); }
+    .teacher-method-guide {
+      background: #fffbeb;
+      border: 2px solid var(--accent);
+      border-radius: 10px;
+      margin: 16px 24px 0 24px;
+      padding: 14px 18px;
+    }
+    .teacher-method-guide h4 { margin: 0 0 8px 0; color: #92400e; }
+    .teacher-method-guide ul { margin: 0; padding-left: 20px; }
+    .teacher-method-guide li { margin-bottom: 6px; }
   </style>
   <style>
     /* ===== Page-specific additions on top of lesson-shared.css ===== */
@@ -548,8 +581,7 @@
   <div id="navigator-banner" class="navigator-banner" hidden>You're the <strong>Navigator</strong> on this team - you're viewing your partner's answers and progress. Only your partner (the <strong>Driver</strong>) can type answers or drag items.</div>
 
   <div class="progress-bar">
-    <p id="pairing-status" style="margin:0; font-weight:700; color:var(--primary);"></p>
-    <button class="btn-print" onclick="printEcoGardenReport()">Print My Progress</button>
+    <p id="pairing-status" style="margin:0; font-weight:700; color:#ffffff; font-size:1rem;"></p>
   </div>
   <p id="team-status" style="text-align:center; margin:10px 24px 0 24px; font-weight:700; color:var(--primary);"></p>
   <input type="hidden" id="team-name-1">
@@ -563,7 +595,7 @@
       <li>Drag items from the Store Catalog into your Ledger (or tap "Add to Cart"). You need to round the total per item and also give the exact answers. Unlimited tries, but every attempt is counted and shown on your printed report, and each field locks as soon as you get it right.</li>
       <li>On Day 2 you'll drag your purchased items onto a 6&times;6 garden grid and can flip to a real-life preview of your design.</li>
       <li>You and your partner each sign in with your own Google account. One of you is the <strong>Driver</strong> (types answers, drags items) and the other is the <strong>Navigator</strong> (watches the same progress, read-only) - your teacher set this up. Reload the page any time to pick up right where your team left off.</li>
-      <li>When you're finished, click <strong>Print My Progress</strong>, or scroll to the bottom to download your completion badge and your garden sign.</li>
+      <li>When you're finished, scroll to the bottom to download your completion certificate, your badge, and your garden sign.</li>
     </ul>
   </div>
 
@@ -1514,7 +1546,12 @@
   }
 
   function removeItem(code) {
-    if (day1Locked || (cart[code] && (cart[code].roundLocked || cart[code].totalLocked))) return;
+    // The roundLocked/totalLocked block below exists to stop a student
+    // from swapping a solved item out for a fresh one while keeping
+    // "credit" for having solved it - an integrity guard with nothing to
+    // protect in Teacher Preview, where nothing is graded or saved (see
+    // window.onTeacherUnlock), so it's bypassed there.
+    if (day1Locked || (!window.teacherPreviewMode && cart[code] && (cart[code].roundLocked || cart[code].totalLocked))) return;
     delete cart[code];
     const idx = cartOrder.indexOf(code);
     if (idx > -1) cartOrder.splice(idx, 1);
@@ -1620,8 +1657,10 @@
     if (outcome === 'correct') {
       row.roundLocked = true;
       row.qty = qty;
-      document.getElementById(`qty-${code}`).disabled = true;
-      lockField(code, 'round');
+      if (!window.teacherPreviewMode) {
+        document.getElementById(`qty-${code}`).disabled = true;
+        lockField(code, 'round');
+      }
       recomputeBudget();
       saveProgress();
     }
@@ -1654,8 +1693,10 @@
       row.totalLocked = true;
       row.correctTotal = expected;
       row.qty = qty;
-      document.getElementById(`qty-${code}`).disabled = true;
-      lockField(code, 'total');
+      if (!window.teacherPreviewMode) {
+        document.getElementById(`qty-${code}`).disabled = true;
+        lockField(code, 'total');
+      }
       recomputeBudget();
       saveProgress();
     }
@@ -1689,8 +1730,10 @@
       section: 'Day 1 - Store Ledger'
     });
     if (outcome === 'correct') {
-      document.getElementById('estimatedtotal-input').disabled = true;
-      document.getElementById('estimatedtotal-btn').disabled = true;
+      if (!window.teacherPreviewMode) {
+        document.getElementById('estimatedtotal-input').disabled = true;
+        document.getElementById('estimatedtotal-btn').disabled = true;
+      }
       saveProgress();
     }
   }
@@ -1716,15 +1759,18 @@
     });
     if (outcome === 'correct') {
       window.grandTotal = expected;
-      day1Locked = true;
-      document.getElementById('grandtotal-input').disabled = true;
-      document.getElementById('grandtotal-btn').disabled = true;
+      if (!window.teacherPreviewMode) {
+        day1Locked = true;
+        document.getElementById('grandtotal-input').disabled = true;
+        document.getElementById('grandtotal-btn').disabled = true;
+        document.getElementById('day2-passcode-notice').style.display = 'block';
+      }
       renderCatalog();
       renderCart();
       revealBudgetMeter(expected);
       showBudgetCheckin(expected);
       document.getElementById('day2-finish-day1-notice').style.display = 'none';
-      document.getElementById('day2-passcode-notice').style.display = 'block';
+      if (window.teacherPreviewMode) unlockDay2(); // Day 2 was already unlocked at sign-in - just refresh its recap text now that a real Grand Total exists
       saveProgress();
     }
   }
@@ -1783,7 +1829,7 @@
       section: 'Day 2 - Budget & Division'
     });
     if (outcome === 'correct') {
-      document.getElementById('leftover-input').disabled = true;
+      if (!window.teacherPreviewMode) document.getElementById('leftover-input').disabled = true;
       saveProgress();
     }
   }
@@ -1816,7 +1862,9 @@
     });
     if (outcome === 'correct') {
       window.plantAvgAchieved = expectedAvg;
-      ['plantcost-input', 'plantcount-input', 'plantavg-input'].forEach((id) => { document.getElementById(id).disabled = true; });
+      if (!window.teacherPreviewMode) {
+        ['plantcost-input', 'plantcount-input', 'plantavg-input'].forEach((id) => { document.getElementById(id).disabled = true; });
+      }
       saveProgress();
     }
   }
@@ -3567,11 +3615,11 @@
 
     const statusEl = document.getElementById('pairing-status');
     if (pairing && pairing.role === 'navigator') {
-      statusEl.textContent = `Navigator - watching ${partnerName || 'your partner'} drive this project.`;
+      statusEl.textContent = `You: ${selfName} (Navigator)  ·  Partner: ${partnerName || '?'} (Driver, driving)`;
     } else if (pairing && pairing.role === 'driver') {
-      statusEl.textContent = `Driver - paired with ${partnerName || 'your partner'}.`;
+      statusEl.textContent = `You: ${selfName} (Driver, driving)  ·  Partner: ${partnerName || '?'} (Navigator)`;
     } else {
-      statusEl.textContent = "Not paired yet - ask your teacher to pair you with a partner. You can still work solo for now; nothing is lost once you're paired.";
+      statusEl.textContent = `You: ${selfName}  ·  Not paired yet - ask your teacher to pair you with a partner. You can still work solo for now; nothing is lost once you're paired.`;
     }
 
     if (result.projectState) {
@@ -3598,6 +3646,68 @@
     });
     document.querySelector('.app-container').classList.add('navigator-locked');
   }
+
+  // ================================================================
+  // TEACHER PREVIEW - a teacher signing in gets unrestricted free play
+  // (both days unlocked, fields never lock, nothing saved) instead of the
+  // generic answer-key-then-lock flow every other gated page uses - see
+  // /CLAUDE.md's "Paired activities" section and lesson-auth.js's
+  // window.onTeacherUnlock hook. Saving needs no explicit guard:
+  // showAppContainer() (called by lesson-auth.js right before this runs)
+  // never sets `ready` true the way unlock() does for a student, so
+  // LessonProgress.record()/LessonSync.saveProjectState() both already
+  // no-op on their own existing `!ready` guard. Locking does need an
+  // explicit guard, since it's driven by each check function's own local
+  // `outcome === 'correct'` block, not by anything ready-gated - every
+  // such block above checks `window.teacherPreviewMode` before disabling
+  // its field(s), while still setting the same internal roundLocked/
+  // totalLocked/etc. flags unconditionally (those gate downstream button
+  // enablement like Estimated Total's, unrelated to whether the field
+  // itself stays editable).
+  // ================================================================
+  window.onTeacherUnlock = function (result) {
+    window.teacherPreviewMode = true;
+    document.getElementById('team-name-1').value = 'Teacher';
+    document.getElementById('team-name-2').value = 'Preview';
+    document.getElementById('student-name').value = 'Teacher Preview';
+    document.getElementById('pairing-status').textContent =
+      'Teacher Preview - both days unlocked, nothing you do here is saved.';
+
+    window.grandTotal = window.grandTotal || 0;
+    day2Unlocked = true;
+    unlockDay2();
+
+    const banner = document.createElement('div');
+    banner.className = 'teacher-preview-banner';
+    banner.innerHTML = `<span>TEACHER PREVIEW &mdash; both days are unlocked, nothing here is saved. Every check still grades unlimited real attempts exactly as a team would see it - there's no single fixed answer key since the numbers depend on what a team buys.</span>
+      <button onclick="toggleEcoGardenMethodGuide()">Show the Method Guide</button>`;
+    document.querySelector('.app-container').prepend(banner);
+  };
+
+  // Optional, on-demand only (never auto-shown) - the *formulas* behind
+  // every check, not live numbers, since every answer here depends on
+  // which items a team put in their own cart (see the banner above).
+  // Toggling twice removes it rather than stacking a second copy.
+  function toggleEcoGardenMethodGuide() {
+    const existing = document.getElementById('teacher-method-guide');
+    if (existing) { existing.remove(); return; }
+    const panel = document.createElement('div');
+    panel.id = 'teacher-method-guide';
+    panel.className = 'teacher-method-guide';
+    panel.innerHTML = `
+      <h4>How each check is graded</h4>
+      <ul>
+        <li><strong>Rounded Estimate</strong> = round the Unit Price to the nearest whole dollar &times; Quantity.</li>
+        <li><strong>Line Total</strong> = Quantity &times; the exact Unit Price.</li>
+        <li><strong>Estimated Total</strong> = sum of every row's Rounded Estimate.</li>
+        <li><strong>Grand Total</strong> = sum of every row's Line Total.</li>
+        <li><strong>Leftover Budget</strong> = $100.00 &minus; Grand Total.</li>
+        <li><strong>Average Cost per Plant</strong> = Total Plant Cost &divide; Number of Plants purchased.</li>
+        <li><strong>Garden Grid &amp; Creation Sign</strong> have no single right answer - they're graded on completion (every purchased item placed, at least one sign element), not correctness.</li>
+      </ul>`;
+    document.querySelector('.teacher-preview-banner').after(panel);
+  }
+  window.toggleEcoGardenMethodGuide = toggleEcoGardenMethodGuide;
 
   LessonSync.init('6-laudato-si-ecogarden');
 </script>

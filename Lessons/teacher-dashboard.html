@@ -472,6 +472,9 @@
   // every teacher-data response until a Pairs Sheet tab actually exists,
   // same degrade-to-no-op pattern as Code.gs's own getPairsForDashboard_.
   let allPairs = [];
+  // ProjectState (free-form deliverable storage, e.g. a project's cart/
+  // garden layout/sign) - same degrade-to-[] pattern as allPairs above.
+  let allProjectStates = [];
 
   // '' means "All" for both, same convention the old <select>-based
   // filters used - activeFilters()/filteredRows() etc. never needed to
@@ -639,6 +642,7 @@
     activityCatalog = result.activityCatalog || [];
     teacherScope = result.scope || null;
     allPairs = result.pairs || [];
+    allProjectStates = result.projectStates || [];
 
     hideLoadingIndicator();
     document.getElementById('lesson-gate').hidden = true;
@@ -2121,6 +2125,172 @@
     }</tbody></table>`;
   }
 
+  // ================================================================
+  // PROJECT INSIGHTS - for an unlimited-attempt "project"-shaped activity
+  // (Laudato Si' Eco-Garden and any future page built the same way - see
+  // /CLAUDE.md's "Paired activities" section). Detected generically by
+  // the "- N attempt(s)" suffix gradeAttempt() embeds in a correct
+  // answer's own text (`${answer} - ${n} attempt${n===1?'':'s'}`), not by
+  // hardcoding an activityId, so a future project reusing that same
+  // pattern gets this panel for free. Renders nothing (returns '') for
+  // every ordinary graded page, which never produces that suffix.
+  // ================================================================
+
+  // Matches gradeAttempt()'s own suffix exactly - captures the attempt
+  // count from a correct item's final logged answer text.
+  const ATTEMPT_SUFFIX_RE = / - (\d+) attempts?$/;
+
+  function parseAttemptCount(answer) {
+    const m = ATTEMPT_SUFFIX_RE.exec(String(answer || ''));
+    return m ? parseInt(m[1], 10) : null;
+  }
+
+  // A rough content-area tag per graded section, matched by keyword
+  // rather than hardcoded section names - the Eco-Garden's own sections
+  // ("Day 1 - Store Ledger", "Day 2 - Garden Layout", ...) all match one
+  // of these, and a future project's differently-named sections have a
+  // reasonable chance of matching too. Returns null (excluded from the
+  // breakdown) rather than guessing when nothing matches.
+  const STREAM_PILLAR_RULES = [
+    { match: /science|sun|shade/i, pillar: 'Science (S)' },
+    { match: /technology|calculator|what-if/i, pillar: 'Technology (T)' },
+    { match: /religion|stewardship|celebrate|reflection/i, pillar: 'Religion (R)' },
+    { match: /engineer|garden|layout|build/i, pillar: 'Engineering (E)' },
+    { match: /art|sign|design|creative/i, pillar: 'Art (A)' },
+    { match: /math|ledger|budget|division|decimal/i, pillar: 'Math (M)' }
+  ];
+  function pillarForSection(section) {
+    const rule = STREAM_PILLAR_RULES.find((r) => r.match.test(section || ''));
+    return rule ? rule.pillar : null;
+  }
+
+  // One row's own final attempt count per key (excludes a reset entry
+  // and every earlier retry - the item's own submissions are already
+  // sorted ascending by timestamp, so the last non-reset entry per key
+  // is that key's current state, same "last entry wins" pattern
+  // submissionDetailTable's own lastIdxByKey uses).
+  function lastEntriesByKey(row) {
+    const lastIdx = {};
+    row.submissions.forEach((s, i) => { if (s.verdict !== 'reset') lastIdx[s.key] = i; });
+    return Object.values(lastIdx).map((i) => row.submissions[i]);
+  }
+
+  function looksLikeProject(rows) {
+    return rows.some((r) => lastEntriesByKey(r).some((s) => parseAttemptCount(s.answer) !== null));
+  }
+
+  // Ranks every distinct item (by key+label, since a Strategy-Challenge-
+  // style page could reuse a label across different keys) by its average
+  // attempts-to-solve across every student who reached a correct answer -
+  // the items worth reinforcing with the whole class, not just one
+  // student's own struggle points (see submissionDetailTable's own
+  // per-student attempts breakdown for that view instead).
+  function computeAttemptInsights(rows) {
+    const byItem = {};
+    let totalAttempts = 0, solvedCount = 0;
+    rows.forEach((r) => {
+      lastEntriesByKey(r).forEach((s) => {
+        const n = parseAttemptCount(s.answer);
+        if (n === null) return;
+        totalAttempts += n;
+        solvedCount++;
+        const itemKey = `${s.key}|${s.label}`;
+        if (!byItem[itemKey]) byItem[itemKey] = { label: s.label, section: s.section, attempts: [] };
+        byItem[itemKey].attempts.push(n);
+      });
+    });
+    const items = Object.values(byItem).map((it) => ({
+      label: it.label,
+      section: it.section,
+      students: it.attempts.length,
+      avgAttempts: Math.round((it.attempts.reduce((a, b) => a + b, 0) / it.attempts.length) * 10) / 10,
+      maxAttempts: Math.max(...it.attempts)
+    })).sort((a, b) => b.avgAttempts - a.avgAttempts);
+    return {
+      totalAttempts,
+      solvedCount,
+      avgAttemptsOverall: solvedCount ? Math.round((totalAttempts / solvedCount) * 10) / 10 : null,
+      topItems: items.slice(0, 5)
+    };
+  }
+
+  function computeStreamPillarBreakdown(rows) {
+    const byPillar = {};
+    rows.forEach((r) => {
+      lastEntriesByKey(r).forEach((s) => {
+        const pillar = pillarForSection(s.section);
+        if (!pillar) return;
+        if (!byPillar[pillar]) byPillar[pillar] = { itemsAttempted: 0, itemsCorrect: 0, students: new Set() };
+        byPillar[pillar].itemsAttempted++;
+        if (s.verdict === 'correct') byPillar[pillar].itemsCorrect++;
+        byPillar[pillar].students.add(r.email);
+      });
+    });
+    return Object.keys(byPillar).map((p) => ({
+      pillar: p,
+      students: byPillar[p].students.size,
+      completionPct: byPillar[p].itemsAttempted ? Math.round((byPillar[p].itemsCorrect / byPillar[p].itemsAttempted) * 100) : null
+    })).sort((a, b) => a.pillar.localeCompare(b.pillar));
+  }
+
+  // Every project field below is authored/serialized by that specific
+  // project page's own buildStatePayload()/restoreState() (see the
+  // Eco-Garden's own copy) - StateJSON's shape isn't standardized across
+  // projects, so this reads defensively (every field optional) rather
+  // than assuming any key exists.
+  function deliverableSummaryHtml(email, activityId) {
+    const row = allProjectStates.find((p) => p.email === email && p.activityId === activityId);
+    if (!row || !row.stateJson) return '<em>No saved work yet.</em>';
+    let state;
+    try { state = JSON.parse(row.stateJson); } catch (e) { return '<em>Could not read saved state.</em>'; }
+    const parts = [];
+    if (state.cartOrder) parts.push(`<strong>Purchased:</strong> ${state.cartOrder.length ? state.cartOrder.join(', ') : '(nothing yet)'}`);
+    if (state.grandTotal != null) parts.push(`<strong>Grand Total:</strong> $${Number(state.grandTotal).toFixed(2)}`);
+    if (state.tokens) {
+      const placed = (state.gardenElements || []).length;
+      parts.push(`<strong>Garden:</strong> ${placed} of ${state.tokens.length} item${state.tokens.length === 1 ? '' : 's'} placed${state.gardenLocked ? ' (locked in)' : ''}`);
+    }
+    if (state.sign) {
+      const elCount = (state.sign.elements || []).length;
+      parts.push(`<strong>Sign:</strong> ${state.sign.material || '?'} material, ${elCount} element${elCount === 1 ? '' : 's'}${state.sign.locked ? ' (locked in)' : ''}`);
+    }
+    return parts.length ? parts.join('<br>') : '<em>No saved work yet.</em>';
+  }
+
+  function projectInsightsHtml(a) {
+    if (!looksLikeProject(a.rows)) return '';
+    const attempts = computeAttemptInsights(a.rows);
+    const pillars = computeStreamPillarBreakdown(a.rows);
+    const attemptsCard = `
+      <div class="card">
+        <h3>Attempts to reach the answer (unlimited-attempt items)</h3>
+        <div class="stat-row">
+          <div class="stat-tile"><div class="n">${attempts.avgAttemptsOverall === null ? '-' : attempts.avgAttemptsOverall}</div><div class="l">Avg attempts/item</div></div>
+          <div class="stat-tile"><div class="n">${attempts.solvedCount}</div><div class="l">Items solved</div></div>
+        </div>
+        ${attempts.topItems.length ? `
+          <p style="margin:10px 0 6px 0; font-weight:700; color:#475569;">Reinforce with the class - highest average attempts:</p>
+          <table><thead><tr><th>Item</th><th>Section</th><th>Students</th><th>Avg attempts</th><th>Max</th></tr></thead><tbody>
+            ${attempts.topItems.map((it) => `<tr><td>${it.label}</td><td>${it.section || '-'}</td><td>${it.students}</td><td>${it.avgAttempts}</td><td>${it.maxAttempts}</td></tr>`).join('')}
+          </tbody></table>` : '<p class="empty-note">No solved items yet.</p>'}
+      </div>`;
+    const pillarsCard = pillars.length ? `
+      <div class="card">
+        <h3>STREAM pillar progress</h3>
+        <table><thead><tr><th>Pillar</th><th>Students with activity</th><th>Item completion</th></tr></thead><tbody>
+          ${pillars.map((p) => `<tr><td>${p.pillar}</td><td>${p.students}</td><td>${p.completionPct === null ? '-' : p.completionPct + '%'}</td></tr>`).join('')}
+        </tbody></table>
+      </div>` : '';
+    const deliverablesCard = `
+      <div class="card">
+        <h3>Deliverables</h3>
+        <table><thead><tr><th>Student</th><th>What they built</th></tr></thead><tbody>
+          ${a.rows.map((r) => `<tr><td class="row-label">${r.studentName}</td><td>${deliverableSummaryHtml(r.email, a.activityId)}</td></tr>`).join('')}
+        </tbody></table>
+      </div>`;
+    return attemptsCard + pillarsCard + deliverablesCard;
+  }
+
   function openActivityDetail(i) {
     const a = lastActivitySummaries[i];
     if (!a) return;
@@ -2139,6 +2309,7 @@
       <div class="card"><h3>Score by student</h3><div>${scoreBarsHtml(a.rows, 'studentName', 'scorePct')}</div></div>
       ${groupLegendHtml(a.rows)}
       <div class="table-wrap">${activityDetailTable(a)}</div>
+      ${projectInsightsHtml(a)}
       <div class="card"><h3>Most common wrong answers</h3><div class="table-wrap">${distractorAnalysisHtml(a.rows)}</div></div>
       <div class="card"><h3>Recent activity on this page</h3>${recentActivityHtml(events)}</div>
     `);

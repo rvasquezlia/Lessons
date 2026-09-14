@@ -415,7 +415,18 @@ const LessonSync = (() => {
         return;
       }
       resolved = true;
-      if (result.role === 'teacher') { unlockTeacherView(result.student && result.student.name); return; }
+      if (result.role === 'teacher') {
+        // A page can opt out of the generic answer-key-reveal-then-lock
+        // behavior below by defining window.onTeacherUnlock itself - e.g.
+        // a free-form project page where "the answer" varies per team and
+        // a teacher instead wants unrestricted, unsaved free play plus an
+        // optional manual reveal. Undefined on every other page, so this
+        // is a no-op everywhere else and unlockTeacherView() runs exactly
+        // as before.
+        if (typeof window.onTeacherUnlock === 'function') { showAppContainer(); window.onTeacherUnlock(result); return; }
+        unlockTeacherView(result.student && result.student.name);
+        return;
+      }
       unlock(result.student, result.progress);
       // Optional hook for a page that needs more than the generic
       // restoreSubmissions() flow above already gives it - e.g. a paired

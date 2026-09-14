@@ -297,6 +297,26 @@ function getPairsForDashboard_(emailSet) {
   return rows;
 }
 
+// Same shape/degrade-to-[] pattern as getPairsForDashboard_ above - lets
+// the dashboard read a project's free-form deliverable (garden layout,
+// cart, sign) without needing its own per-project endpoint. StateJSON is
+// handed back as the raw string; the dashboard parses it, same division
+// of labor as SubmissionsLog (see /CLAUDE.md's "Deliverably" note in the
+// Paired activities section).
+function getProjectStatesForDashboard_(emailSet) {
+  const sheet = ss_().getSheetByName('ProjectState');
+  if (!sheet) return [];
+  const map = colMap_(sheet);
+  const data = sheet.getDataRange().getValues();
+  const rows = [];
+  for (let r = 1; r < data.length; r++) {
+    const email = data[r][map['Email']];
+    if (emailSet && !emailSet[email]) continue;
+    rows.push({ email: email, activityId: data[r][map['ActivityId']], stateJson: data[r][map['StateJSON']], updatedAt: data[r][map['UpdatedAt']] });
+  }
+  return rows;
+}
+
 // Simple first-pass flags - tune thresholds once real pilot data exists.
 function computeFlag_(row) {
   const submissions = JSON.parse(row.SubmissionsLog || '[]');
@@ -376,7 +396,8 @@ function doPost(e) {
       roster: getRosterForDashboard_(emailSet),
       activityCatalog: getActivityCatalogForDashboard_(),
       accessLog: getAccessLogForDashboard_(emailSet),
-      pairs: getPairsForDashboard_(emailSet)
+      pairs: getPairsForDashboard_(emailSet),
+      projectStates: getProjectStatesForDashboard_(emailSet)
     });
   }
 

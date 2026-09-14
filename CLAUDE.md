@@ -173,7 +173,7 @@ at different versions. **Why:** GitHub Pages' CDN and browsers cache
 the old file for a while after a push, so live behavior can lag the
 committed code unpredictably.
 
-**Current versions**: `token-cache.js` → `2`, `lesson-auth.js` → `11`.
+**Current versions**: `token-cache.js` → `2`, `lesson-auth.js` → `13`.
 Verify before trusting this table stale: `grep -rhoE "lesson-auth\.js\?v=[0-9]+" Lessons/ --include="*.html" | sort -u`
 (should print exactly one version — if it prints more than one, some
 pages were missed on the last bump).
@@ -1323,13 +1323,40 @@ pairing is completely unaffected)
 ### Client-side mechanics
 - **`window.onLessonUnlock(result)`** — a new, optional hook in
   `lesson-auth.js`'s `proceedWithToken()`, called once right after the
-  existing `unlock(student, progress)` call succeeds (never for a
-  teacher — teachers return earlier via `unlockTeacherView()` and never
-  reach this hook). `undefined` on every page that doesn't define it —
-  a no-op everywhere else on the site. A paired/project page defines it
-  to read `result.pairing`/`result.projectState` and apply whatever its
-  own page needs (restore free-form state, lock out a Navigator) — see
-  the canonical example's own handler for the full pattern.
+  existing `unlock(student, progress)` call succeeds for a **student**
+  (a teacher never reaches it — see `window.onTeacherUnlock` below for
+  the teacher-side equivalent hook). `undefined` on every page that
+  doesn't define it — a no-op everywhere else on the site. A paired/
+  project page defines it to read `result.pairing`/`result.projectState`
+  and apply whatever its own page needs (restore free-form state, lock
+  out a Navigator) — see the canonical example's own handler for the
+  full pattern.
+- **`window.onTeacherUnlock(result)`** — a second, separate optional
+  hook, called instead of the generic `unlockTeacherView()` (§6) when a
+  **teacher** signs in, if the page defines it. Exists for a page where
+  §6's "fill every answer, then lock everything" behavior is wrong for
+  the content — a project has no single fixed answer key (it varies by
+  what a team bought/built), so a teacher instead wants **unrestricted
+  free play**: both days unlocked immediately (no typed passcode, no
+  Day-1-first gate), fields that never lock even after a correct
+  answer, and nothing saved. `undefined` on every page that doesn't
+  define it, so `unlockTeacherView()` runs exactly as before everywhere
+  else. Saving needs no separate guard — `lesson-auth.js` calls
+  `showAppContainer()` (never `unlock()`) ahead of this hook, so `ready`
+  stays `false` and `LessonProgress.record()`/`LessonSync.saveProjectState()`
+  already no-op on their own existing `!ready` check. **Locking does**
+  need an explicit guard, since it's driven by each check function's
+  own local `if (outcome === 'correct')` block, never by anything
+  `ready`-gated — the canonical example sets a page-local
+  `window.teacherPreviewMode = true` flag in its `onTeacherUnlock` and
+  every such block checks it before disabling a field, while still
+  setting the same internal tracking flags (`roundLocked`, etc.)
+  unconditionally, since those also gate downstream button enablement
+  (an Estimated Total check's button, say) unrelated to whether the
+  field itself stays editable. A page can optionally expose its own
+  "Show the Method Guide"-style toggle for the **formulas** behind each
+  check (never live numbers, since there's no fixed answer to reveal) —
+  see the canonical example's `toggleEcoGardenMethodGuide()`.
 - **`LessonSync.saveProjectState(stateJson)`** / **`LessonSync.checkDay2Code(code)`**
   — the two generic helpers exposed alongside `LessonSync.init`, for
   exactly the two new request types above. Both no-op/fail gracefully
@@ -1373,6 +1400,46 @@ pairing is completely unaffected)
   hasn't submitted anything yet. Nothing renders for a non-paired row —
   `allPairs` is `[]` for every activity/teacher with no `Pairs` tab
   rows at all.
+- **`allProjectStates`** (populated from `teacher-data`'s new
+  `projectStates` field, backed by `Code.gs`'s
+  `getProjectStatesForDashboard_`) — every `ProjectState` row the scoped
+  teacher can see, `{email, activityId, stateJson, updatedAt}`. `[]` for
+  every teacher/activity with no `ProjectState` tab rows, same
+  degrade-to-no-op pattern as `allPairs`.
+- **Project Insights** — `projectInsightsHtml(a)`, appended to By
+  Activity's detail view (`openActivityDetail`) right after the
+  per-student attempts table. Detected generically, never by hardcoding
+  an `activityId`: `looksLikeProject(rows)` checks whether any row's
+  final answer for some item matches the `" - N attempt(s)"` suffix
+  `gradeAttempt()` itself embeds on a correct answer — so any future
+  page reusing that same unlimited-attempt pattern (§10's "Per-unit
+  reference" doesn't cover project-shaped pages) gets this panel for
+  free, and every ordinary graded page (which never produces that
+  suffix) renders nothing here. Three cards:
+  - **Attempts to reach the answer** — average attempts/item and total
+    items solved across every student on this activity, plus a ranked
+    table (`computeAttemptInsights`) of the items with the **highest
+    average attempts** (top 5) — the ones worth reinforcing with the
+    whole class, each item's own final attempt count parsed straight
+    from its answer text (`parseAttemptCount`), no new instrumentation.
+  - **STREAM pillar progress** — `computeStreamPillarBreakdown` tags
+    each graded item's `section` against `STREAM_PILLAR_RULES` (keyword
+    match, e.g. `/math|ledger|budget|division|decimal/i` → `Math (M)`),
+    then reports students-with-activity and item-completion % per
+    pillar it actually found. A pillar with zero matching sections on
+    this activity (e.g. Science/Technology on the canonical example,
+    which has no graded item under either) simply doesn't appear —
+    never padded with a fabricated 0%.
+  - **Deliverables** — `deliverableSummaryHtml(email, activityId)` reads
+    that student's own `ProjectState.StateJSON` (**not**
+    `SubmissionsLog`) and renders whichever of `cartOrder`/`grandTotal`/
+    `tokens`+`gardenElements`/`sign` fields are present, defensively
+    (every field optional — `StateJSON`'s shape is whatever that
+    specific project's own `buildStatePayload()` produces, never
+    standardized across projects). This is a **structured summary**, not
+    a visual snapshot — no canvas-to-image capture/storage exists
+    site-wide; a garden/sign's actual on-canvas image is not
+    reproducible from the dashboard today.
 
 ### Setting up a new paired activity (teacher/manual steps — Claude
 cannot edit the live Sheet or redeploy Apps Script itself; see §1)
