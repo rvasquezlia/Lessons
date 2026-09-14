@@ -2142,6 +2142,15 @@
       return;
     }
     const placedCount = gardenElementNodes().length;
+    // Placing zero items still satisfied gardenBuilt alone (loading the
+    // tray, not arranging it) - locking a genuinely empty layout, with
+    // nothing designed, defeats the point of the exercise. Require every
+    // purchased item to actually be placed before it can be locked in.
+    if (placedCount < tokens.length) {
+      document.getElementById('garden-lock-msg').textContent =
+        `Place all ${tokens.length} of your purchased items in the garden before locking it in - you've placed ${placedCount} so far.`;
+      return;
+    }
     applyGardenLockedUI();
     const feedbackEl = document.getElementById('garden-feedback');
     LessonCheck.submit(feedbackEl, {
@@ -2751,8 +2760,21 @@
   }
 
   function lockSign() {
-    if (!signElementNodes().length) {
+    const elements = signElementNodes();
+    if (!elements.length) {
       LessonCheck.incomplete(document.getElementById('sign-feedback'), 'Add at least one text or sticker to your sign before locking it in.');
+      return;
+    }
+    // seedDefaultSignElements() pre-adds one "Our Garden" text node on
+    // load with the default wood material/no accent color - the length
+    // check above alone was already satisfied before the student touched
+    // anything. Block locking a sign that's still exactly that untouched
+    // starter state (nothing added, nothing edited, nothing recolored).
+    const textNodes = elements.filter((n) => n.getClassName() === 'Text');
+    const stillJustTheStarter = elements.length === 1 && textNodes.length === 1 &&
+      textNodes[0].text().trim() === 'Our Garden' && signMaterial === 'wood' && signAccentColor === null;
+    if (stillJustTheStarter) {
+      LessonCheck.incomplete(document.getElementById('sign-feedback'), "That's still the starter sign - make it your own first: edit the text, add a sticker, or change the material/color before locking it in.");
       return;
     }
     const textSummary = signElementNodes().filter((n) => n.getClassName() === 'Text').map((n) => n.text()).join(' | ') || '(stickers only)';

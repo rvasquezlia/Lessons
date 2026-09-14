@@ -1245,11 +1245,27 @@ ledger, then a Konva.js canvas garden-layout builder and sign studio).
 It is a from-scratch port of `Lessons/Projects/Laudato-Si-EcoGarden/index.html`
 (the older, separate `SHEET_API_URL` pattern — see §1) onto this
 backend, built as a **new file**; the original under `Projects/` is
-untouched and stays on its own pattern per §1/§17. Only its identity/
-save layer changed — every canvas/drag-drop/certificate/report function
-(`gradeAttempt()`, `restoreState()`'s body, all Garden/Sign Konva code)
-is unchanged from the original, since neither needed to know pairing
-exists at all.
+untouched and stays on its own pattern per §1/§17. Its identity/save
+layer changed (`gradeAttempt()` and `restoreState()`'s body are
+otherwise unchanged from the original, since neither needed to know
+pairing exists at all), plus one deliberate content fix carried only on
+this copy: `lockGarden()`/`lockSign()` originally allowed locking with
+zero real effort — `seedDefaultSignElements()` pre-seeds one default
+text element on load, satisfying `lockSign()`'s only guard
+(`signElementNodes().length >= 1`) before a student touches anything,
+and `lockGarden()` never checked how many of the loaded items were
+actually placed. Both now require genuine engagement before allowing a
+lock: `lockGarden()` requires every purchased item to be placed
+(`placedCount === tokens.length`, using the existing `#garden-lock-msg`
+element for the blocking message); `lockSign()` blocks only the exact
+untouched-starter state (still 1 element, still the literal default
+text, still the default `wood` material with no accent color) via
+`LessonCheck.incomplete()`, so any genuine edit, addition, or
+material/color change passes normally. **Rule**: if a future project
+reuses this "lock in your creative work" pattern, check whether its own
+completion guard is similarly satisfied by a pre-seeded default or an
+empty-but-technically-valid state before assuming "at least one
+element" is actually "did the work."
 
 ### Two new Sheet tabs (both optional — every function below degrades
 to a no-op/null when the tab doesn't exist yet, so an activity with no
