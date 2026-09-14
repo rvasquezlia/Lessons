@@ -547,6 +547,53 @@ function renderNumberLine(containerId, opts) {
 }
 
 // ============================================================
+// CARD-SELECT (touch-friendly replacement for a plain <select> when the
+// choices are a short, fixed set - "Open"/"Closed", "Left"/"Right", etc.)
+//
+// createCardSelect(containerId, options, config) renders `options`
+// ({value, label}) as a row of clickable cards inside the element with
+// id `containerId`, tracks which one is selected, and re-renders on every
+// click so the `.selected` styling always matches state - no separate
+// "clear siblings" bookkeeping needed at each call site. Returns
+// {getValue, setValue, reset, disable} so a page's check/reveal functions
+// can read or force a value the same way they'd read a <select>'s
+// .value - getValue() returns null (not '') when nothing is picked yet,
+// matching a <select>'s empty "Select..." option.
+// ============================================================
+function createCardSelect(containerId, options, config) {
+  const container = document.getElementById(containerId);
+  let selected = (config && config.initialValue) || null;
+
+  function render() {
+    if (!container) return;
+    container.innerHTML = options.map((o) => `
+      <button type="button" class="card-select-option${selected === o.value ? ' selected' : ''}" data-value="${o.value}">${o.label}</button>
+    `).join('');
+    container.querySelectorAll('.card-select-option').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (btn.disabled) return;
+        selected = btn.dataset.value;
+        render();
+        if (config && typeof config.onChange === 'function') config.onChange(selected);
+      });
+    });
+  }
+
+  function disable() {
+    if (!container) return;
+    container.querySelectorAll('.card-select-option').forEach((btn) => { btn.disabled = true; });
+  }
+
+  render();
+  return {
+    getValue: () => selected,
+    setValue: (v) => { selected = v; render(); },
+    reset: () => { selected = null; render(); },
+    disable
+  };
+}
+
+// ============================================================
 // TEACHER PRINT MODE - "Print Class Progress"
 //
 // A teacher who didn't finish a lesson can check off which tabs were

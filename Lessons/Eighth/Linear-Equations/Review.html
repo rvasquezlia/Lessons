@@ -248,9 +248,11 @@
     <div class="challenge-box">
       <h3 style="margin-top:0; color:#b45309;">Step-by-Step: A Harder Simplification</h3>
       <p style="margin:0 0 10px 0;"><strong>Problem:</strong> \(8x - 4(x - 6) + 8\)</p>
-      <button class="btn-lg" onclick="revealDistStep()">Reveal Next Step</button>
-      <button class="btn-secondary" onclick="resetDistStep()">Reset</button>
       <div id="dist-steps" style="margin-top:14px;"></div>
+      <div style="margin-top:14px;">
+        <button class="btn-lg" id="dist-reveal-btn" onclick="revealDistStep()">Reveal Next Step</button>
+        <button class="btn-secondary" onclick="resetDistStep()">Reset</button>
+      </div>
     </div>
   </div>
 
@@ -352,6 +354,12 @@
   function renderDistSteps() {
     const html = distSteps.slice(0, distStepCount).map(s => `<div class="step-item visible">${s}</div>`).join('');
     document.getElementById('dist-steps').innerHTML = html;
+    const btn = document.getElementById('dist-reveal-btn');
+    if (btn) {
+      const done = distStepCount >= distSteps.length;
+      btn.textContent = done ? 'All steps revealed' : 'Reveal Next Step';
+      btn.disabled = done;
+    }
     triggerMathJax();
   }
   function revealDistStep() {

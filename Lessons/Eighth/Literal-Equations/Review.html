@@ -227,9 +227,11 @@
     <div class="challenge-box">
       <h3 style="margin-top:0; color:#b45309;">Step-by-Step: A Harder Equation</h3>
       <p style="margin:0 0 10px 0;"><strong>Problem:</strong> \(4y - 7 + 2y = -3(y-1) - 1\)</p>
-      <button class="btn-lg" onclick="revealMsStep()">Reveal Next Step</button>
-      <button class="btn-secondary" onclick="resetMsStep()">Reset</button>
       <div id="ms-steps" style="margin-top:14px;"></div>
+      <div style="margin-top:14px;">
+        <button class="btn-lg" id="ms-reveal-btn" onclick="revealMsStep()">Reveal Next Step</button>
+        <button class="btn-secondary" onclick="resetMsStep()">Reset</button>
+      </div>
     </div>
   </div>
 
@@ -336,6 +338,12 @@
   function renderMsSteps() {
     const html = msSteps.slice(0, msStepCount).map(s => `<div class="step-item visible">${s}</div>`).join('');
     document.getElementById('ms-steps').innerHTML = html;
+    const btn = document.getElementById('ms-reveal-btn');
+    if (btn) {
+      const done = msStepCount >= msSteps.length;
+      btn.textContent = done ? 'All steps revealed' : 'Reveal Next Step';
+      btn.disabled = done;
+    }
     triggerMathJax();
   }
   function revealMsStep() {

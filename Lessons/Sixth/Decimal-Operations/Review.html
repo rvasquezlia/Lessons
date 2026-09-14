@@ -317,9 +317,11 @@
     <div class="challenge-box">
       <h3 style="margin-top:0; color:#b45309;">Step-by-Step: A Harder Multiplication</h3>
       <p style="margin:0 0 10px 0;"><strong>Problem:</strong> \(47 \times 26\)</p>
-      <button class="btn-lg" onclick="revealOpsStep()">Reveal Next Step</button>
-      <button class="btn-secondary" onclick="resetOpsStep()">Reset</button>
       <div id="ops-steps" style="margin-top:14px;"></div>
+      <div style="margin-top:14px;">
+        <button class="btn-lg" id="ops-reveal-btn" onclick="revealOpsStep()">Reveal Next Step</button>
+        <button class="btn-secondary" onclick="resetOpsStep()">Reset</button>
+      </div>
     </div>
   </div>
 
@@ -420,6 +422,12 @@
   function renderOpsSteps() {
     const html = opsSteps.slice(0, opsStepCount).map(s => `<div class="step-item visible">${s}</div>`).join('');
     document.getElementById('ops-steps').innerHTML = html;
+    const btn = document.getElementById('ops-reveal-btn');
+    if (btn) {
+      const done = opsStepCount >= opsSteps.length;
+      btn.textContent = done ? 'All steps revealed' : 'Reveal Next Step';
+      btn.disabled = done;
+    }
     triggerMathJax();
   }
   function revealOpsStep() {

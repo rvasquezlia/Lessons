@@ -20,6 +20,11 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <!-- Visual math input: registers the <math-field> custom element used
+       by every inequality-answer field below, in place of a plain text
+       input - see /CLAUDE.md's note on this unit's math-field rollout. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
@@ -68,7 +73,7 @@
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
     <ul style="margin:0; padding-left:20px;">
-      <li>Type your solution as an inequality, e.g. <strong>x &gt; 5</strong> or <strong>x &lt;= -2</strong> (you can type <code>&lt;=</code>/<code>&gt;=</code> or <code>&le;</code>/<code>&ge;</code> - both work).</li>
+      <li>Type your solution as an inequality using the math editor, e.g. <strong>x &gt; 5</strong> or <strong>x &le; -2</strong> - tap the field to bring up the symbol keyboard.</li>
       <li>Each item gives <strong>2 tries</strong>, then shows the method and locks.</li>
       <li><strong>Calculators are allowed</strong> this year.</li>
     </ul>
@@ -155,7 +160,7 @@
         <p id="strategy-equation" style="font-size:1.3rem;"></p>
         <div class="form-group">
           <label>Solution:</label>
-          <input type="text" id="strategy-x" class="form-control-lg" style="max-width:220px;" placeholder="e.g. x > 5">
+          <math-field id="strategy-x" class="form-control-lg" style="max-width:220px;"></math-field>
         </div>
         <button class="btn-lg" onclick="checkStrategy()">Check</button>
         <div id="strategy-feedback" class="feedback-msg"></div>
@@ -196,15 +201,21 @@
     triggerMathJax();
   }
 
+  // Reads a <math-field>'s answer as ASCIIMath text ("x>=5" for \(x \geq
+  // 5\)) - guarded the same way as every other math-field page on this
+  // site: if the MathLive script never loaded, the element stays an
+  // undefined custom element with no getValue method, treated the same
+  // as an empty answer instead of throwing.
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
   // ==========================================
   // INEQUALITY ANSWER MATCHING
   // Accepts "x > 5", "x>5", "5 < x", unicode >=/<=, or the sloppy =>/=<
-  // spelling, and canonicalizes to "<variable><op><number>" with the
-  // variable always first - see /CLAUDE.md's Practice-Set note on why a
-  // plain <input> (not <math-field>) is used for these answers: an
-  // inequality's answer is a short symbolic token, closer to
-  // Linear-Equations' "no solution"/"infinite" text answers than to a
-  // fraction/expression that needs real math notation.
+  // spelling (all of which a math-field's ASCIIMath export can produce),
+  // and canonicalizes to "<variable><op><number>" with the variable
+  // always first.
   function normalizeInequality(raw, variable) {
     let s = String(raw || '').trim().toLowerCase().replace(/\s+/g, '');
     s = s.replace(/≥/g, '>=').replace(/≤/g, '<=').replace(/=>/g, '>=').replace(/=</g, '<=');
@@ -278,7 +289,7 @@
     const html = warmupProblems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
-        <input type="text" id="wu-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="x > or < ...">
+        <math-field id="wu-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;"></math-field>
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkWarmup(${i})">Check</button>
         <div id="wu-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
@@ -290,7 +301,7 @@
 
   function checkWarmup(idx) {
     const p = warmupProblems[idx];
-    const val = document.getElementById(`wu-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`wu-${idx}-input`));
     const fb = document.getElementById(`wu-${idx}-feedback`);
     if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking - this won't count as an attempt yet."); return; }
     const correct = checkInequality(val, 'x', p.op, p.a);
@@ -318,7 +329,7 @@
     const html = twoStepProblems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
-        <input type="text" id="ts-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="x > or < ...">
+        <math-field id="ts-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;"></math-field>
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkTwoStep(${i})">Check</button>
         <div id="ts-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
@@ -330,7 +341,7 @@
 
   function checkTwoStep(idx) {
     const p = twoStepProblems[idx];
-    const val = document.getElementById(`ts-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`ts-${idx}-input`));
     const fb = document.getElementById(`ts-${idx}-feedback`);
     if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking - this won't count as an attempt yet."); return; }
     const correct = checkInequality(val, 'x', p.op, p.a);
@@ -358,7 +369,7 @@
     const html = flipProblems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(239, 68, 68, 0.06); border: 2px dashed var(--error); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
-        <input type="text" id="fl-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="x > or < ...">
+        <math-field id="fl-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;"></math-field>
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkFlip(${i})">Check</button>
         <div id="fl-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
@@ -370,7 +381,7 @@
 
   function checkFlip(idx) {
     const p = flipProblems[idx];
-    const val = document.getElementById(`fl-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`fl-${idx}-input`));
     const fb = document.getElementById(`fl-${idx}-feedback`);
     if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking - this won't count as an attempt yet."); return; }
     const correct = checkInequality(val, 'x', p.op, p.a);
@@ -392,41 +403,39 @@
     { q: "\\(x \\geq 5\\)", circle: 'closed', direction: 'right' }
   ];
 
+  const describeCardSelects = [];
+
   function renderDescribe() {
     const html = describeItems.map((p, i) => `
       <div class="step-box" style="margin-top:14px;">
         <p style="margin:0 0 10px 0;"><strong>${i + 1}.</strong> ${p.q}</p>
-        <div style="display:flex; gap:16px; flex-wrap:wrap;">
-          <div class="form-group">
-            <label>Circle type:</label>
-            <select id="ds-${i}-circle" class="form-control-lg" style="max-width:180px;">
-              <option value="">Select...</option>
-              <option value="open">Open</option>
-              <option value="closed">Closed (filled)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Direction:</label>
-            <select id="ds-${i}-direction" class="form-control-lg" style="max-width:180px;">
-              <option value="">Select...</option>
-              <option value="left">Left</option>
-              <option value="right">Right</option>
-            </select>
-          </div>
+        <div class="card-select-row">
+          <div class="card-select-row-label">Circle type:</div>
+          <div id="ds-${i}-circle" class="card-select"></div>
+        </div>
+        <div class="card-select-row">
+          <div class="card-select-row-label">Direction:</div>
+          <div id="ds-${i}-direction" class="card-select"></div>
         </div>
         <button class="btn-lg" style="padding:8px 18px; font-size:0.95rem;" onclick="checkDescribe(${i})">Check</button>
         <div id="ds-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
       </div>
     `).join('');
     document.getElementById('describe-list').innerHTML = html;
-    describeItems.forEach((p, i) => LessonProgress.preRegister(`ds-${i}`, `Describe the Graph #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '4. Graphing Practice'));
+    describeItems.forEach((p, i) => {
+      LessonProgress.preRegister(`ds-${i}`, `Describe the Graph #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '4. Graphing Practice');
+      describeCardSelects[i] = {
+        circle: createCardSelect(`ds-${i}-circle`, [{ value: 'open', label: 'Open' }, { value: 'closed', label: 'Closed (filled)' }]),
+        direction: createCardSelect(`ds-${i}-direction`, [{ value: 'left', label: 'Left' }, { value: 'right', label: 'Right' }])
+      };
+    });
     triggerMathJax();
   }
 
   function checkDescribe(idx) {
     const p = describeItems[idx];
-    const circle = document.getElementById(`ds-${idx}-circle`).value;
-    const direction = document.getElementById(`ds-${idx}-direction`).value;
+    const circle = describeCardSelects[idx].circle.getValue();
+    const direction = describeCardSelects[idx].direction.getValue();
     const fb = document.getElementById(`ds-${idx}-feedback`);
     if (!circle || !direction) {
       LessonCheck.incomplete(fb, "Choose both the circle type and the direction before checking - this won't count as an attempt yet.");
@@ -455,7 +464,7 @@
         <div id="read-${i}-graph"></div>
         <div class="form-group">
           <label>Inequality:</label>
-          <input type="text" id="read-${i}-input" class="form-control-lg" style="max-width:180px;" placeholder="e.g. x > 5">
+          <math-field id="read-${i}-input" class="form-control-lg" style="max-width:180px;"></math-field>
         </div>
         <button class="btn-lg" style="padding:8px 18px; font-size:0.95rem;" onclick="checkRead(${i})">Check</button>
         <div id="read-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
@@ -470,7 +479,7 @@
 
   function checkRead(idx) {
     const p = readItems[idx];
-    const val = document.getElementById(`read-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`read-${idx}-input`));
     const fb = document.getElementById(`read-${idx}-feedback`);
     if (!val.trim()) { LessonCheck.incomplete(fb, "Enter the inequality before checking - this won't count as an attempt yet."); return; }
     const correct = checkInequality(val, 'x', p.op, p.boundary);
@@ -535,7 +544,7 @@
 
   function checkStrategy() {
     const g = strategyGroups[chosenStrategyGroup];
-    const raw = document.getElementById('strategy-x').value;
+    const raw = readMathField(document.getElementById('strategy-x'));
     const fb = document.getElementById('strategy-feedback');
     if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter your solution before checking."); return; }
     const correct = checkInequality(raw, 'x', g.op, g.a);
@@ -552,7 +561,7 @@
     const html = g.more.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 2}.</strong> ${p.q}
-        <input type="text" id="stm-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="x > or < ...">
+        <math-field id="stm-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;"></math-field>
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkStrategyMore(${i})">Check</button>
         <div id="stm-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
@@ -565,7 +574,7 @@
   function checkStrategyMore(idx) {
     const g = strategyGroups[chosenStrategyGroup];
     const p = g.more[idx];
-    const raw = document.getElementById(`stm-${idx}-input`).value;
+    const raw = readMathField(document.getElementById(`stm-${idx}-input`));
     const fb = document.getElementById(`stm-${idx}-feedback`);
     if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
     const correct = checkInequality(raw, 'x', p.op, p.a);
@@ -599,7 +608,7 @@
         </div>
         <div class="form-group">
           <label>What is the correct solution?</label>
-          <input type="text" id="ed-${i}-answer" class="form-control-lg" style="max-width:200px;" placeholder="e.g. x > 5">
+          <math-field id="ed-${i}-answer" class="form-control-lg" style="max-width:200px;"></math-field>
         </div>
         <button class="btn-lg" onclick="checkDetective(${i})">Check</button>
         <div id="ed-${i}-feedback" class="feedback-msg"></div>
@@ -613,7 +622,7 @@
   function checkDetective(idx) {
     const p = errorDetective[idx];
     const step = document.getElementById(`ed-${idx}-step`).value.trim();
-    const answer = document.getElementById(`ed-${idx}-answer`).value;
+    const answer = readMathField(document.getElementById(`ed-${idx}-answer`));
     const fb = document.getElementById(`ed-${idx}-feedback`);
     if (!step || !answer.trim()) {
       LessonCheck.incomplete(fb, "Identify the step number and enter the correct solution before checking.");
@@ -643,11 +652,17 @@
   // function, several with non-text-input controls), so it's hand-written
   // per tab, matching Linear-Equations' own Practice-Set.
   window.revealAnswerKey = function () {
+    // answer is a readable unicode string (e.g. "x ≥ 7") for the
+    // feedback text; a <math-field>'s .value setter wants LaTeX instead,
+    // so ≥/≤ are swapped for \geq/\leq only when writing into one -
+    // a plain <input> (like ed-*-step) gets the readable string as-is.
     const fillInput = (id, feedbackId, answer) => {
       const input = document.getElementById(id);
       const fb = document.getElementById(feedbackId);
       if (!input || !fb) return;
-      input.value = answer;
+      input.value = input.tagName === 'MATH-FIELD'
+        ? answer.replace(/≥/g, '\\geq').replace(/≤/g, '\\leq')
+        : answer;
       input.disabled = true;
       const container = input.closest('.guided-practice') || input.closest('.step-box');
       const btn = container && container.querySelector('button');
@@ -657,7 +672,7 @@
       fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
     };
 
-    const plainAnswer = (op, a) => `x${op}${a}`;
+    const plainAnswer = (op, a) => `x ${{ '>': '>', '<': '<', '>=': '≥', '<=': '≤' }[op]} ${a}`;
 
     warmupProblems.forEach((p, i) => fillInput(`wu-${i}-input`, `wu-${i}-feedback`, plainAnswer(p.op, p.a)));
     twoStepProblems.forEach((p, i) => fillInput(`ts-${i}-input`, `ts-${i}-feedback`, plainAnswer(p.op, p.a)));
@@ -665,15 +680,14 @@
     readItems.forEach((p, i) => fillInput(`read-${i}-input`, `read-${i}-feedback`, plainAnswer(p.op, p.boundary)));
 
     describeItems.forEach((p, i) => {
-      const circleSel = document.getElementById(`ds-${i}-circle`);
-      const dirSel = document.getElementById(`ds-${i}-direction`);
+      const cs = describeCardSelects[i];
       const fb = document.getElementById(`ds-${i}-feedback`);
-      if (!circleSel || !dirSel || !fb) return;
-      circleSel.value = p.circle;
-      dirSel.value = p.direction;
-      circleSel.disabled = true;
-      dirSel.disabled = true;
-      const container = circleSel.closest('.step-box');
+      if (!cs || !fb) return;
+      cs.circle.setValue(p.circle);
+      cs.direction.setValue(p.direction);
+      cs.circle.disable();
+      cs.direction.disable();
+      const container = document.getElementById(`ds-${i}-circle`).closest('.step-box');
       const btn = container && container.querySelector('button');
       if (btn) btn.disabled = true;
       fb.style.display = 'block';
@@ -697,7 +711,7 @@
       const fb = document.getElementById(`ed-${i}-feedback`);
       if (!stepInput || !answerInput || !fb) return;
       stepInput.value = p.wrongStep;
-      answerInput.value = plainAnswer(p.op, p.a);
+      answerInput.value = plainAnswer(p.op, p.a).replace(/≥/g, '\\geq').replace(/≤/g, '\\leq');
       stepInput.disabled = true;
       answerInput.disabled = true;
       const container = stepInput.closest('.step-box');

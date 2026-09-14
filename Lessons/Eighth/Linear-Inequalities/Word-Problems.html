@@ -20,6 +20,11 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <!-- Visual math input: registers the <math-field> custom element used
+       by every inequality-setup field below (plain-number final-answer
+       fields stay a plain <input>). -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
@@ -144,6 +149,16 @@
     const norm = normalizeIneqExpr(val);
     return (accepted || []).some((a) => normalizeIneqExpr(a) === norm);
   }
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+  // Converts a stored ASCII inequality-setup string (e.g. "45n+150<=600")
+  // to the bare LaTeX a <math-field>'s .value setter expects, for the
+  // teacher-view reveal - the expression itself needs no other changes,
+  // only the comparison operator.
+  function ineqExprToLatex(s) {
+    return String(s).replace(/<=/g, '\\leq ').replace(/>=/g, '\\geq ');
+  }
 
   // ==========================================
   // TAB 1: BUDGETS & LIMITS (set up + solve, two fields per item)
@@ -177,7 +192,7 @@
         <p style="margin:0 0 10px 0;"><strong>${i + 1}.</strong> ${p.scenario}</p>
         <div class="form-group">
           <label>Inequality:</label>
-          <input type="text" id="lim-${i}-ineq" class="form-control-lg" style="max-width:220px;" placeholder="e.g. 45n+150<=600">
+          <math-field id="lim-${i}-ineq" class="form-control-lg" style="max-width:220px;"></math-field>
         </div>
         <div class="form-group">
           <label>${p.question}</label>
@@ -194,7 +209,7 @@
 
   function checkLimits(idx) {
     const p = limitsItems[idx];
-    const ineq = document.getElementById(`lim-${idx}-ineq`).value;
+    const ineq = readMathField(document.getElementById(`lim-${idx}-ineq`));
     const ans = document.getElementById(`lim-${idx}-answer`).value;
     const fb = document.getElementById(`lim-${idx}-feedback`);
     if (!ineq.trim() || !ans.trim()) {
@@ -228,7 +243,7 @@
     const html = requirementItems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.scenario}
-        <input type="text" id="req-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="e.g. h >= 42">
+        <math-field id="req-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;"></math-field>
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkRequirement(${i})">Check</button>
         <div id="req-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
@@ -240,7 +255,7 @@
 
   function checkRequirement(idx) {
     const p = requirementItems[idx];
-    const val = document.getElementById(`req-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`req-${idx}-input`));
     const fb = document.getElementById(`req-${idx}-feedback`);
     if (!val.trim()) { LessonCheck.incomplete(fb, "Enter an inequality before checking - this won't count as an attempt yet."); return; }
     const correct = ineqAnswerMatches(val, p.accepted);
@@ -316,7 +331,7 @@
       const input = document.getElementById(id);
       const fb = document.getElementById(feedbackId);
       if (!input || !fb) return;
-      input.value = answer;
+      input.value = input.tagName === 'MATH-FIELD' ? ineqExprToLatex(String(answer)) : answer;
       input.disabled = true;
       const container = input.closest('.step-box') || input.closest('.guided-practice');
       const btn = container && container.querySelector('button');
@@ -331,7 +346,7 @@
       const ansInput = document.getElementById(`lim-${i}-answer`);
       const fb = document.getElementById(`lim-${i}-feedback`);
       if (!ineqInput || !ansInput || !fb) return;
-      ineqInput.value = p.accepted[0];
+      ineqInput.value = ineqExprToLatex(p.accepted[0]);
       ansInput.value = p.answer;
       ineqInput.disabled = true;
       ansInput.disabled = true;

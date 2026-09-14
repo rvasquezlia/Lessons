@@ -1582,6 +1582,78 @@ own `Teacher-Guide.html` — only the `index.html` navigation entry was
 removed. Don't reintroduce the `ladder` `SECTIONS` entry without
 checking with the teacher first.
 
+**The Question Ladder's second question is "What is preventing me..."
+site-wide now, not "obstructing."** Every occurrence of "obstructing"/
+"obstruction" across every ladder-pattern page (`Guided-Solving-Ladder.html`
+×2, both `Literal-Equations`/`Linear-Equations` Explanation/Test-Prep/
+Practice-Set/Word-Problems pages that reference the Question Ladder, and
+`Linear-Inequalities`'s own Explanation/Test-Prep/Review) was replaced
+with "preventing"/"block" - a plain word-swap, sentence structure
+otherwise unchanged (`"What is obstructing me from doing so?"` →
+`"What is preventing me from doing so?"`, `"a single obstruction"` → `"a
+single block"`). This is deliberate site-wide consistency, not a
+per-page rewrite - every unit's ladder should use the identical phrase,
+so a student moving between units (e.g. Literal-Equations to
+Linear-Inequalities) sees the same question worded the same way. If this
+wording is ever revisited again, change it everywhere in one pass the
+same way, not on just the page someone happens to be looking at.
+
+**Linear-Inequalities' `Explanation.html` reuses the Guided-Solving-
+Ladder's exact Round-by-Round Q&A markup/CSS for its own worked
+examples, not just a summary paragraph per problem.** The page originally
+shipped with terse, single-line "Write it / Solve / Interpret" summaries
+per worked example (Tabs 2-5) - reported live as "not explanatory at
+all," with the teacher pointing at `Guided-Solving-Ladder.html` as the
+bar for what a real explanation should look like. Fixed by copying that
+page's `.ladder`/`.ladder-formula`/`.ladder-round`/`.ladder-round-label`/
+`.qa`/`.ladder-eq`/`.ladder-result`/`.ladder-check` CSS and structure
+verbatim into `Explanation.html`'s own `<style>` block and rewriting
+every worked example (including the two Tab 5 word-problem examples,
+which get the identical Define/Write/`.ladder`-Solve/Interpret
+treatment rather than staying as dense prose) as a full Round-by-Round
+breakdown - one added inequality-specific question ("Am I multiplying
+or dividing by a negative?", styled via new `.qa .a.flip-yes`/
+`.qa .a.flip-no`/`.type-tag.flip` classes) beyond the four questions
+Literal-Equations' ladder already asks. **Every round also gets a new
+`.ladder-arithmetic` line** (small italic text between `.ladder-eq` and
+`.ladder-result`) spelling out what actually happens to the numbers on
+that step (e.g. `"-4 + 4 cancels to 0 on the left; 11 + 4 = 15 on the
+right"`) - added after the teacher's separate note that "the solve step
+can be more explanatory on what happens with the numbers, the students
+can get a little bit lost" jumping straight from an equation-with-the-
+operation-applied to its simplified result with no visible arithmetic
+in between. Any other unit's Explanation page that gets this same
+"make it more explanatory" treatment in the future should follow this
+same pattern (full ladder rounds + a `.ladder-arithmetic` line per
+round), not revert to one-line summaries.
+
+**The "Reveal Next Round/Step" progressive-reveal button was hard to
+reach and never told a student when they were done - fixed on every
+page using the pattern, one still deferred.** Every occurrence (a
+`.challenge-box` with a `stepCount`/`renderXSteps()`/single-container
+pattern - `Linear-Inequalities/Explanation.html`'s `msSteps`,
+`Literal-Equations/Review.html` and `Linear-Equations/Review.html`'s
+own near-identical clones, `Sixth/Decimal-Operations/Review.html`'s)
+used to place the reveal button **above** the container new rounds get
+appended into - harmless on paper, but once a student scrolled down to
+actually read a newly-revealed round, the button was back up above
+everything they'd just read, requiring a scroll back up for every single
+click. Fixed by moving the button (and its Reset sibling) to sit
+**after** the steps container instead, so it's always right where the
+student's attention already is. Each page's `render*Steps()` also now
+toggles the button's own state once every round is revealed - relabels
+it (e.g. `"All rounds revealed"`) and sets `disabled = true` - instead
+of leaving it sitting there with nothing telling a student they'd
+already seen everything. **`Sixth/Decimal-Operations/Explanation.html`
+has several more of these same reveal widgets** (`revealAddStep`/
+`revealMultStep`, plus a differently-shaped `nextAddExStep`/
+`nextMultExStep`/`nextDivExStep`/`nextWordProblemStep` example-switcher
+pattern) that were **not** touched in this pass - that page has enough
+distinct widgets, each shaped slightly differently, to warrant its own
+dedicated pass rather than a rushed one bundled into an unrelated unit's
+fix. Apply the identical two-part fix (button after the container,
+disable+relabel at the end) there before assuming it's already covered.
+
 ### Visual math input (site-wide now, except Lessons/Projects)
 
 Piloted first on just Eighth/Literal-Equations' Practice-Set Tabs 1-3,
@@ -1817,22 +1889,46 @@ assume it's intentional** - check whether any of its problems are pure
 fraction computation with no decimal in sight, the same way these three
 were.
 
-**Inequality answers (Eighth/Linear-Inequalities) are plain text, not
-`<math-field>` - a deliberate exception to "real math notation gets the
-math-field editor."** Per the rule above, an inequality like `x > 5`
-arguably has "real math notation" (a comparison symbol), which would
-suggest `<math-field>`. It was kept as plain `<input type="text">`
-instead, for the same reason Linear-Equations' own `"no solution"`/
-`"infinite"` classification answers stayed plain text: a solved
-inequality is a short, fixed-shape symbolic token (`variable`,
-`operator`, `number`), not an expression a student builds up visually
-the way a fraction or multi-term expression is - MathLive's ASCIIMath
-export was never verified against inequality symbols specifically
-(`\ge`/`\le`), and there was no way to test that serialization live in
-this environment, so plain text sidesteps an untested assumption
-entirely. Every page in this unit that grades a solved inequality
-defines the identical pair of helpers (duplicated per-page, same
-convention as `readMathField()`/`normalizeExpr()` elsewhere):
+**Inequality answers (Eighth/Linear-Inequalities) use `<math-field>`
+after all - the earlier "plain text" decision was reversed on explicit
+teacher request.** This unit originally kept every inequality answer as
+a plain `<input type="text">`, on the reasoning that a solved inequality
+is a short, fixed-shape symbolic token rather than a built-up expression,
+and that MathLive's ASCIIMath export had never been verified against
+`\ge`/`\le` in this sandboxed environment (no CDN access to test it
+live). The teacher reviewed the shipped page and asked for the math
+editor regardless - "no matter if they just need to add x>5, better to
+have them use the math editor" - so every inequality-answer field across
+all five graded pages (Practice-Set, Test-Prep, Review, Word-Problems,
+Vocabulary-Literacy) was converted to `<math-field>`, and each of those
+files' `<head>` now includes the same pinned MathLive `<script>` tag
+every other math-field unit uses. **The dividing line stays the same
+one used site-wide** ("is this answer a plain number" - see "Visual
+math input" above): a field that holds an inequality (solved, like
+`x > 5`, or an unsolved setup, like `45n + 150 \leq 600`) became a
+`<math-field>`; a field that holds a plain final number (a word
+problem's "how many students/months/cupcakes" answer, or a step number
+in an Error Analysis item) stayed a plain `<input>` - converting those
+too would have been converting numbers that were never inequality
+notation in the first place, not what was asked. Every check function
+now reads via the same `readMathField(field)` helper as every other
+math-field page (`typeof field.getValue === 'function' ? field.getValue
+('ascii-math') : ''`, so a MathLive load failure degrades to an empty
+answer instead of throwing) instead of a plain `.value` read - the
+underlying `normalizeInequality`/`checkInequality`/`normalizeIneqExpr`/
+`ineqAnswerMatches` parsing logic needed no changes at all, since it
+already tolerated `>=`/`<=` (the exact tokens MathLive's `ascii-math`
+export produces for `\geq`/`\leq`, per the ASCIIMath spec both use)
+alongside the unicode/sloppy spellings a plain typed answer could also
+produce. **The teacher-view reveal had to switch conventions too** -
+`fillInput` on every page now writes real LaTeX into a `<math-field>`'s
+`.value` (unicode `≥`/`≤` swapped for `\geq`/`\leq` where a page's answer
+data stores the readable unicode form) instead of the old plain-ASCII
+string, mirroring the same math-field-vs-plain-input branch every other
+unit's reveal already makes. Every page in this unit that grades a
+solved inequality still defines the identical pair of helpers
+(duplicated per-page, same convention as `readMathField()`/
+`normalizeExpr()` elsewhere):
 - `normalizeInequality(raw, variable)` - strips whitespace, folds
   unicode `≥`/`≤` and the sloppy `=>`/`=<` spellings to ASCII `>=`/`<=`,
   parses either `variable OP number` or `number OP variable` (flipping
@@ -1868,14 +1964,57 @@ Used two ways: as a worked-example illustration on Explanation.html
 Practice-Set's "Read the Graph" items (student types the inequality the
 rendered graph shows, checked via `checkInequality`). The reverse skill
 - given an inequality, describe its graph - is graded differently, via
-two `<select>` dropdowns (circle type, direction) checked as two
-independent sub-answers in `checkDescribe()`, rather than asking a
-student to somehow "draw" a graph; open/closed and left/right are
-graded separately because they're two independent mistakes, not one.
-A genuinely interactive, draggable number line was considered and
-rejected for this build - the static-SVG-plus-typed-answer /
-two-dropdown-description approach fully covers the graphing standard
-(HSA.REI.B.3) without needing new drag-and-drop infrastructure.
+two independent sub-answers (circle type, direction) checked in
+`checkDescribe()`, rather than asking a student to somehow "draw" a
+graph; open/closed and left/right are graded separately because they're
+two independent mistakes, not one. Originally two `<select>` dropdowns -
+see "Card-select" below for why and how that changed. A genuinely
+interactive, draggable number line was considered and rejected for this
+build - the static-SVG-plus-typed-answer / two-choice-description
+approach fully covers the graphing standard (HSA.REI.B.3) without
+needing new drag-and-drop infrastructure.
+
+### Card-select (touch-friendly replacement for a plain `<select>`)
+
+The teacher reviewed Linear-Inequalities' shipped "Describe the Graph"
+item (two `<select>` dropdowns: circle type, direction) and asked for a
+site-wide change: "let's change from dropdown to cards to select, if
+multiple, two rows of cards so that it's more visually [clear]." A
+`<select>`'s native dropdown is small, easy to mis-tap on a touchscreen,
+and hides every option until opened - a poor fit for a short, fixed
+choice set a student picks between constantly.
+
+**`createCardSelect(containerId, options, config)` in `lesson-shared.js`**
+is the shared factory (same "build it once, reuse everywhere" precedent
+as `createVocabMatch()` above) - renders `options` (`{value, label}`) as
+a row of clickable `.card-select-option` buttons inside the element with
+id `containerId`, tracks which one is selected, and re-renders on every
+click so the `.selected` styling always matches state. Returns
+`{getValue, setValue, reset, disable}` - a page's check/reveal functions
+read or force a value the exact same way they would a `<select>`'s
+`.value`, except `getValue()` returns `null` (not `''`) when nothing is
+picked yet. CSS lives in `lesson-shared.css`: `.card-select-row` (one
+labeled row per choice group - "if multiple, two rows of cards" from the
+request above is satisfied by giving each group, e.g. Circle Type and
+Direction, its own `.card-select-row` stacked vertically, rather than
+cramming both into one row of dropdowns side by side), `.card-select`
+(the flex row of option buttons within one group), `.card-select-option`
+(+`.selected`/`:disabled`).
+
+**Piloted on Linear-Inequalities' "Describe the Graph" item** (the one
+the teacher was actually looking at) - `describeCardSelects[i]` holds
+`{circle, direction}` instances per item, and `checkDescribe()`/the
+teacher-view reveal read/write through `.getValue()`/`.setValue()`/
+`.disable()` instead of touching a `<select>` element's `.value`/
+`.disabled` directly. **Not yet retrofitted onto any other unit's
+existing `<select>` elements** (Test-Prep sign-group/multi-select
+patterns elsewhere on the site, older multiple-choice quizzes, etc.) -
+that's a larger, separate sweep across every already-shipped page with a
+`<select>`, deliberately deferred rather than rushed through
+unreviewed. Do this the same way the pilot did: swap the `<select>` for
+an empty `<div class="card-select">` per choice group, call
+`createCardSelect()` once per group, and read/write through the
+returned handle everywhere the old element's `.value` used to be read.
 
 ### Vocabulary Match-Up (drag-and-drop term/definition/example widget)
 
@@ -1988,6 +2127,41 @@ beyond 6/7/8" further up). As new units get added and wired the same
 way, add their `activityId`s to `CURRICULUM` the same way, or a
 signed-in student won't see them on the index even once the pages
 themselves work.
+
+**`GRADE_ORDER` and each grade's `topics` array are ordered by actual
+teaching sequence, not alphabetically or by when a unit was added to
+this file.** Reported live: the grade picker and topic cards read as
+out of order to a teacher scanning the index top-to-bottom.
+`GRADE_ORDER` is `["Sixth", "Seventh", "7-Honors", "Eighth", "8-PreAP"]`
+- the Honors/Pre-AP track for a grade sits immediately after that
+grade's regular track, not clustered at the end. Within `Eighth.topics`,
+the order is Linear Equations → Literal Equations → Linear Inequalities
+- matching the order these are actually taught, not the order they were
+added to this file (Linear Inequalities was built after Linear
+Equations but before Literal Equations got its own unit here, so the
+array's insertion order and the teaching order had drifted apart).
+**When adding a new topic to an existing grade, insert it at its correct
+teaching-sequence position in that grade's array - appending to the end
+is only correct if the new unit is genuinely taught last.**
+
+**`equalizeTopicCardHeads(panelEl)` pins every visible `.topic-card-head`
+in a grade panel to the same height.** Reported live as looking
+misaligned/OCD-triggering: a topic with a longer `summary` string wraps
+to more lines than one with a shorter summary, and since each card's own
+head/body split is independent, the section-link buttons below the head
+started at a different vertical position card to card within the same
+row - even though the grid already stretches every *card* in a row to
+the same overall height, the *split* between head and body inside each
+card wasn't equalized. Fixed by measuring every `.topic-card-head` in
+the panel actually being shown and setting `min-height` on all of them
+to the tallest one, rather than hardcoding a fixed pixel value that
+would go stale the next time a topic's summary text changes length.
+Called after every render that can change which panel is visible
+(`renderForTeacher()`, `renderForStudent()`, `showGrade()`) and again on
+a debounced `resize` listener, since how many lines a summary wraps to
+depends on viewport width. Never call it against a `display:none` panel
+- `offsetHeight` reads `0` there, which would zero out every head's
+`min-height` instead of matching them.
 
 ### Reference materials for content authoring — check these before building/citing anything
 

@@ -20,6 +20,10 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <!-- Visual math input: registers the <math-field> custom element used
+       by the Translation Practice answer fields below. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
@@ -261,6 +265,9 @@
     const norm = normalizeIneqExpr(val);
     return (accepted || []).some((a) => normalizeIneqExpr(a) === norm);
   }
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
 
   // ==========================================
   // TRANSLATION PRACTICE
@@ -280,7 +287,7 @@
     const html = translateItems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
-        <input type="text" id="tr-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="e.g. n > 5">
+        <math-field id="tr-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;"></math-field>
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkTranslate(${i})">Check</button>
         <div id="tr-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
@@ -291,7 +298,7 @@
 
   function checkTranslate(idx) {
     const p = translateItems[idx];
-    const val = document.getElementById(`tr-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`tr-${idx}-input`));
     const fb = document.getElementById(`tr-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
@@ -336,17 +343,15 @@
   // hand-written too; Tab 3 delegates to vocabMatch.reveal() since the
   // match-up widget owns its own reveal state.
   window.revealAnswerKey = function () {
-    // This page's answer fields are plain <input> (not <math-field>), so
-    // the input itself is filled with the plain ASCII form (accepted[0],
-    // e.g. "n>=12") rather than displayAnswer's LaTeX - stripping just the
-    // \( \) wrapper off displayAnswer would still leave literal \geq/\leq
-    // commands visible as raw text in the box. The feedback line below
-    // still shows the LaTeX form, which MathJax renders normally.
-    const fillInput = (id, feedbackId, plainAnswer, displayAnswer) => {
+    // This page's answer fields are <math-field>, so the field itself is
+    // filled with displayAnswer's bare LaTeX (its \( \) wrapper stripped -
+    // see /CLAUDE.md's teacher-view reveal notes on this convention). The
+    // feedback line below keeps the delimited form, which MathJax renders.
+    const fillInput = (id, feedbackId, displayAnswer) => {
       const input = document.getElementById(id);
       const fb = document.getElementById(feedbackId);
       if (!input || !fb) return;
-      input.value = plainAnswer;
+      input.value = displayAnswer.replace(/^\\\(|\\\)$/g, '');
       input.disabled = true;
       const container = input.closest('.guided-practice');
       const btn = container && container.querySelector('button');
@@ -355,7 +360,7 @@
       fb.className = 'feedback-msg success locked';
       fb.innerHTML = `Answer key: <strong>${displayAnswer}</strong>`;
     };
-    translateItems.forEach((p, i) => fillInput(`tr-${i}-input`, `tr-${i}-feedback`, p.accepted[0], p.displayAnswer));
+    translateItems.forEach((p, i) => fillInput(`tr-${i}-input`, `tr-${i}-feedback`, p.displayAnswer));
     vocabMatch.reveal();
   };
 </script>

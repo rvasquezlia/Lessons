@@ -20,6 +20,10 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <!-- Visual math input: registers the <math-field> custom element used
+       by the "Are You Ready?" tab's answer fields below. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
@@ -161,7 +165,7 @@
       <div class="notebook-header">The Question Ladder</div>
       <ul style="margin-bottom:0;">
         <li>What's the variable?</li>
-        <li>What's obstructing it, and what is it doing (adding, subtracting, multiplying, dividing)?</li>
+        <li>What's preventing it, and what is it doing (adding, subtracting, multiplying, dividing)?</li>
         <li>What's the inverse operation? Apply it to <strong>both</strong> sides.</li>
       </ul>
     </div>
@@ -307,6 +311,9 @@
     const norm = normalizeIneqExpr(val);
     return (accepted || []).some((a) => normalizeIneqExpr(a) === norm);
   }
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
 
   // ==========================================
   // GENERIC CHECK-STYLE PRACTICE LIST (2 tries, then reveal) - mirrors
@@ -323,7 +330,7 @@
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
-        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:190px; display:inline-block;" placeholder="Answer">
+        <math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:190px; display:inline-block;"></math-field>
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
@@ -335,7 +342,7 @@
   function checkListItem(keyPrefix, idx) {
     const cfg = checkListRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`${keyPrefix}-${idx}-input`));
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
@@ -351,11 +358,11 @@
   }
 
   const solvePractice = [
-    { q: "Solve: \\(x + 9 \\leq 14\\)", ineq: true, op: '<=', a: 5 },
-    { q: "Solve: \\(3x > 21\\)", ineq: true, op: '>', a: 7 },
-    { q: "Solve: \\(-4x \\geq 20\\)", ineq: true, op: '<=', a: -5 },
-    { q: "Solve: \\(2x - 3 < 9\\)", ineq: true, op: '<', a: 6 },
-    { q: "Solve: \\(-x + 4 \\leq 10\\)", ineq: true, op: '>=', a: -6 }
+    { q: "Solve: \\(x + 9 \\leq 14\\)", ineq: true, op: '<=', a: 5, displayAnswer: "\\(x \\leq 5\\)" },
+    { q: "Solve: \\(3x > 21\\)", ineq: true, op: '>', a: 7, displayAnswer: "\\(x > 7\\)" },
+    { q: "Solve: \\(-4x \\geq 20\\)", ineq: true, op: '<=', a: -5, displayAnswer: "\\(x \\leq -5\\)" },
+    { q: "Solve: \\(2x - 3 < 9\\)", ineq: true, op: '<', a: 6, displayAnswer: "\\(x < 6\\)" },
+    { q: "Solve: \\(-x + 4 \\leq 10\\)", ineq: true, op: '>=', a: -6, displayAnswer: "\\(x \\geq -6\\)" }
   ];
   renderCheckList('solve-practice-list', solvePractice, 'solve', "Not quite yet. Isolate the variable one step at a time, and watch for a division/multiplication by a negative.", "5. Are You Ready? - Solve These");
 

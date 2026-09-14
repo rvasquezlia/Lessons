@@ -20,6 +20,11 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <!-- Visual math input: registers the <math-field> custom element used
+       by every inequality-answer field below (plain-number word-problem
+       answers in Tab 3 Part 3 stay a plain <input>). -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
@@ -87,7 +92,7 @@
     </div>
 
     <div class="explainer-box">
-      <strong>The Question Ladder:</strong> What's the variable? What's obstructing it? What's it doing? What's the inverse - and does it involve a negative?
+      <strong>The Question Ladder:</strong> What's the variable? What's preventing it? What's it doing? What's the inverse - and does it involve a negative?
     </div>
 
     <div class="challenge-box">
@@ -101,7 +106,7 @@
 
       <div class="form-group" style="margin-top:20px;">
         <label>2. Solve: \(-5x \geq -35\)</label>
-        <input type="text" id="fund-q2" class="form-control-lg" style="max-width:180px;" placeholder="e.g. x > 5">
+        <math-field id="fund-q2" class="form-control-lg" style="max-width:180px;"></math-field>
       </div>
       <button class="btn-lg" onclick="checkFundQ2()">Check</button>
       <div id="fund-q2-feedback" class="feedback-msg"></div>
@@ -161,11 +166,11 @@
     <form id="exit-form" onsubmit="submitExitTicket(event)">
       <div class="form-group">
         <label>1. Solve: \(-3x + 5 > 20\)</label>
-        <input type="text" id="exit-1" class="form-control-lg" placeholder="Enter your answer">
+        <math-field id="exit-1" class="form-control-lg"></math-field>
       </div>
       <div class="form-group">
         <label>2. Solve: \(2x - 7 \leq 13\)</label>
-        <input type="text" id="exit-2" class="form-control-lg" placeholder="Enter your answer">
+        <math-field id="exit-2" class="form-control-lg"></math-field>
       </div>
       <div class="form-group">
         <label>3. In your own words, state the flip rule and explain when it applies.</label>
@@ -223,6 +228,9 @@
     const sym = { '>': '>', '<': '<', '>=': '\\geq', '<=': '\\leq' }[operator];
     return `\\(${variable} ${sym} ${boundary}\\)`;
   }
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
 
   // ==========================================
   // REUSABLE SINGLE-FIELD LIST (mode 'check' = 2 tries then reveal; mode
@@ -237,7 +245,9 @@
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
-        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="Answer">
+        ${p.op !== undefined
+          ? `<math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;"></math-field>`
+          : `<input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="Answer">`}
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkSimpleItem('${keyPrefix}', ${i})">${mode === 'submit' ? 'Submit' : 'Check'}</button>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
@@ -249,7 +259,8 @@
   function checkSimpleItem(keyPrefix, idx) {
     const cfg = listRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const field = document.getElementById(`${keyPrefix}-${idx}-input`);
+    const val = p.op !== undefined ? readMathField(field) : field.value;
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter an answer before submitting - this won't count as an attempt yet.");
@@ -282,7 +293,7 @@
   }
 
   function checkFundQ2() {
-    const val = document.getElementById('fund-q2').value;
+    const val = readMathField(document.getElementById('fund-q2'));
     const fb = document.getElementById('fund-q2-feedback');
     if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking."); return; }
     const correct = checkInequality(val, 'x', '<=', 7);
@@ -330,7 +341,7 @@
         </div>
         <div class="form-group">
           <label>What is the correct solution?</label>
-          <input type="text" id="ea-${i}-answer" class="form-control-lg" style="max-width:200px;" placeholder="e.g. x > 5">
+          <math-field id="ea-${i}-answer" class="form-control-lg" style="max-width:200px;"></math-field>
         </div>
         <button class="btn-lg" onclick="checkErrorAnalysis(${i})">Check</button>
         <div id="ea-${i}-feedback" class="feedback-msg"></div>
@@ -344,7 +355,7 @@
   function checkErrorAnalysis(idx) {
     const p = errorAnalysisItems[idx];
     const step = document.getElementById(`ea-${idx}-step`).value.trim();
-    const answer = document.getElementById(`ea-${idx}-answer`).value;
+    const answer = readMathField(document.getElementById(`ea-${idx}-answer`));
     const fb = document.getElementById(`ea-${idx}-feedback`);
     if (!step || !answer.trim()) {
       LessonCheck.incomplete(fb, "Identify the step number and enter the correct solution before checking.");
@@ -383,8 +394,8 @@
 
   function submitExitTicket(e) {
     e.preventDefault();
-    const a1 = document.getElementById('exit-1').value;
-    const a2 = document.getElementById('exit-2').value;
+    const a1 = readMathField(document.getElementById('exit-1'));
+    const a2 = readMathField(document.getElementById('exit-2'));
     const exp = document.getElementById('exit-explain').value.trim();
     const ref = document.getElementById('exit-reflect').value.trim();
     const fb = document.getElementById('exit-feedback');
@@ -434,7 +445,7 @@
     document.getElementById('fund-q1-feedback').innerHTML = 'Answer key: open-ended - any reasonable explanation of why multiplying/dividing by a negative reverses the inequality.';
 
     const q2 = document.getElementById('fund-q2');
-    q2.value = 'x<=7';
+    q2.value = 'x \\leq 7';
     q2.disabled = true;
     disableByOnclick('checkFundQ2()');
     document.getElementById('fund-q2-feedback').style.display = 'block';
@@ -453,7 +464,8 @@
       const fb = document.getElementById(`ea-${i}-feedback`);
       if (!stepInput || !answerInput || !fb) return;
       stepInput.value = p.wrongStep;
-      answerInput.value = `x${p.op}${p.a}`;
+      const sym = { '>': '>', '<': '<', '>=': '\\geq', '<=': '\\leq' }[p.op];
+      answerInput.value = `x ${sym} ${p.a}`;
       stepInput.disabled = true;
       answerInput.disabled = true;
       const container = stepInput.closest('.step-box');

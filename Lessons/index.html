@@ -450,26 +450,6 @@
           }
         },
         {
-          title: "Linear Inequalities",
-          summary: "Solve one-step, two-step, and multi-step inequalities, apply the flip rule when multiplying or dividing by a negative, and graph solutions on a number line.",
-          base: "Eighth/Linear-Inequalities/",
-          review: "Review.html",
-          vocab: "Vocabulary-Literacy.html",
-          explain: "Explanation.html",
-          practice: "Practice-Set.html",
-          word: "Word-Problems.html",
-          test: "Test-Prep.html",
-          teacher: "Teacher-Guide.html",
-          activityIds: {
-            explain: "8-linear-inequalities-explanation",
-            review: "8-linear-inequalities-review",
-            vocab: "8-linear-inequalities-vocabulary-literacy",
-            practice: "8-linear-inequalities-practice-set",
-            word: "8-linear-inequalities-word-problems",
-            test: "8-linear-inequalities-test-prep"
-          }
-        },
-        {
           title: "Literal Equations",
           summary: "Solve equations and formulas for a specified variable, using interactive sliders and live models to see how each quantity depends on the others.",
           base: "Eighth/Literal-Equations/",
@@ -487,6 +467,26 @@
             practice: "8-literal-equations-practice-set",
             word: "8-literal-equations-word-problems",
             test: "8-literal-equations-test-prep"
+          }
+        },
+        {
+          title: "Linear Inequalities",
+          summary: "Solve one-step, two-step, and multi-step inequalities, apply the flip rule when multiplying or dividing by a negative, and graph solutions on a number line.",
+          base: "Eighth/Linear-Inequalities/",
+          review: "Review.html",
+          vocab: "Vocabulary-Literacy.html",
+          explain: "Explanation.html",
+          practice: "Practice-Set.html",
+          word: "Word-Problems.html",
+          test: "Test-Prep.html",
+          teacher: "Teacher-Guide.html",
+          activityIds: {
+            explain: "8-linear-inequalities-explanation",
+            review: "8-linear-inequalities-review",
+            vocab: "8-linear-inequalities-vocabulary-literacy",
+            practice: "8-linear-inequalities-practice-set",
+            word: "8-linear-inequalities-word-problems",
+            test: "8-linear-inequalities-test-prep"
           }
         }
       ]
@@ -571,7 +571,7 @@
     }
   };
 
-  const GRADE_ORDER = ["Sixth", "Seventh", "Eighth", "7-Honors", "8-PreAP"];
+  const GRADE_ORDER = ["Sixth", "Seventh", "7-Honors", "Eighth", "8-PreAP"];
   const GRADE_KEY_BY_NUMBER = { 6: "Sixth", 7: "Seventh", 8: "Eighth" };
 
   // restrictToWired = true (student view): a section only ever shows as a
@@ -640,6 +640,37 @@
       </button>`;
   }
 
+  // A card's own summary text can wrap to 1-3 lines depending on length,
+  // which used to leave .topic-card-head at a different height on every
+  // card in the same row - the section-link buttons below it then started
+  // at a different vertical position card to card, reading as misaligned
+  // even though the grid itself already stretches every card to the same
+  // overall height. Rather than guessing a fixed min-height that could go
+  // stale as new topics/summaries are added, this measures every visible
+  // head in the panel and pins them all to the tallest one. Only ever
+  // called on a panel that's actually visible (offsetHeight reads 0 on a
+  // display:none one), and re-run on resize since wrapping changes with
+  // viewport width.
+  function equalizeTopicCardHeads(panelEl) {
+    if (!panelEl) return;
+    const heads = panelEl.querySelectorAll(".topic-card-head");
+    if (!heads.length) return;
+    heads.forEach((h) => { h.style.minHeight = ""; });
+    let max = 0;
+    heads.forEach((h) => { max = Math.max(max, h.offsetHeight); });
+    heads.forEach((h) => { h.style.minHeight = `${max}px`; });
+  }
+
+  function getActivePanel() {
+    return document.querySelector(".grade-panel.active");
+  }
+
+  let resizeEqualizeTimer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeEqualizeTimer);
+    resizeEqualizeTimer = setTimeout(() => equalizeTopicCardHeads(getActivePanel()), 150);
+  });
+
   function showGrade(gradeKey) {
     document.querySelectorAll(".grade-panel").forEach((el) => {
       el.classList.toggle("active", el.id === `panel-${gradeKey}`);
@@ -647,6 +678,7 @@
     document.querySelectorAll(".grade-pill").forEach((el) => {
       el.classList.toggle("active", el.dataset.grade === gradeKey);
     });
+    equalizeTopicCardHeads(getActivePanel());
   }
 
   // Teacher: everything, unrestricted, exactly as before sign-in existed.
@@ -658,6 +690,7 @@
     document.querySelectorAll(".grade-pill").forEach((btn) => {
       btn.addEventListener("click", () => showGrade(btn.dataset.grade));
     });
+    equalizeTopicCardHeads(getActivePanel());
   }
 
   // Student: only their own grade, no picker (nothing else to pick), and
@@ -665,6 +698,7 @@
   function renderForStudent(gradeKey) {
     document.getElementById("grade-picker").innerHTML = "";
     document.getElementById("grade-panels").innerHTML = renderGradePanel(gradeKey, true, true);
+    equalizeTopicCardHeads(getActivePanel());
   }
 
   // ===== Sign-in gate =====

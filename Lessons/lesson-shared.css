@@ -777,6 +777,45 @@ button:disabled {
 
 .btn-secondary:hover { background: #475569; }
 
+/* Card-select: touch-friendly replacement for a plain <select> when the
+   choices are a short, fixed set. Rendered by createCardSelect() in
+   lesson-shared.js - a page places an empty container per choice group
+   (one .card-select-row per group, stacked so multiple groups read as
+   separate rows rather than side-by-side dropdowns) and the JS fills it
+   with one .card-select-option button per option. */
+.card-select-row { margin: 10px 0; }
+.card-select-row-label {
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 6px;
+}
+.card-select { display: flex; flex-wrap: wrap; gap: 10px; }
+.card-select-option {
+  border: 2px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  font-family: inherit;
+}
+.card-select-option:hover { border-color: var(--primary-light); background: #eff6ff; }
+.card-select-option.selected {
+  background: var(--primary-light);
+  border-color: var(--primary-light);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(37,99,235,0.3);
+}
+.card-select-option:disabled { opacity: 0.65; cursor: not-allowed; }
+.card-select-option:disabled:hover { border-color: var(--border); background: #fff; }
+.card-select-option.selected:disabled:hover { border-color: var(--primary-light); background: var(--primary-light); }
+
 .feedback-msg {
   margin-top: 20px;
   padding: 16px;
@@ -903,7 +942,7 @@ button:disabled {
    QUESTION LADDER - shared worked-example mechanism, originated on
    the Literal Equations "Guided Solving Ladder" supplemental page.
    Every step of solving asks the SAME fixed set of self-diagnostic
-   questions ("What's the variable? What's obstructing it? What's it
+   questions ("What's the variable? What's preventing it? What's it
    doing? What's the inverse?"), repeated round by round until the
    target is isolated. Any indexed page teaching that same skill
    should use these classes instead of a plain numbered step list, so

@@ -100,7 +100,7 @@
       <div class="notebook-header">The Question Ladder</div>
       <ul style="margin-bottom:8px;">
         <li>What's the variable?</li>
-        <li>What's obstructing it?</li>
+        <li>What's preventing it?</li>
         <li>What's it doing?</li>
         <li>What's the inverse? Apply to <strong>both</strong> sides.</li>
       </ul>
@@ -285,7 +285,7 @@
       rounds: [
         { label: "Round 1", qas: [
             ["What's the variable I need to isolate?", "\\(t\\)"],
-            ["What is obstructing me from doing so?", "\\(r\\)"],
+            ["What is preventing me from doing so?", "\\(r\\)"],
             ["What is \\(r\\) doing?", "Multiplying"],
             ["What's the inverse operation to remove it?", "Division"]
           ], eq: "\\(\\dfrac{d}{r} = \\dfrac{rt}{r}\\)", result: "\\(t = \\dfrac{d}{r}\\)", check: "Is \\(t\\) now isolated? <strong>Yes.</strong>" }
@@ -297,7 +297,7 @@
       rounds: [
         { label: "Round 1", qas: [
             ["What's the variable I need to isolate?", "\\(w\\)"],
-            ["What is obstructing me from doing so?", "\\(l\\)"],
+            ["What is preventing me from doing so?", "\\(l\\)"],
             ["What is \\(l\\) doing?", "Multiplying"],
             ["What's the inverse operation to remove it?", "Division"]
           ], eq: "\\(\\dfrac{A}{l} = \\dfrac{lw}{l}\\)", result: "\\(w = \\dfrac{A}{l}\\)", check: "Is \\(w\\) now isolated? <strong>Yes.</strong>" }
@@ -309,12 +309,12 @@
       rounds: [
         { label: "Round 1", qas: [
             ["What's the variable I need to isolate?", "\\(l\\)"],
-            ["What is obstructing me from doing so?", "\\(2w\\) adding, and \\(2\\) multiplying"],
-            ["What's the first obstruction to undo?", "\\(2w\\) adding"],
+            ["What is preventing me from doing so?", "\\(2w\\) adding, and \\(2\\) multiplying"],
+            ["What's the first block to undo?", "\\(2w\\) adding"],
             ["What's the inverse operation to remove it?", "Subtraction"]
           ], eq: "\\(P - 2w = 2w - 2w + 2l\\)", result: "\\(P - 2w = 2l\\)", check: "Is \\(l\\) now isolated? No. Keep going - see next round." },
         { label: "Round 2", qas: [
-            ["What is obstructing me from doing so?", "\\(2\\)"],
+            ["What is preventing me from doing so?", "\\(2\\)"],
             ["What is \\(2\\) doing?", "Multiplying"],
             ["What's the inverse operation to remove it?", "Division"]
           ], eq: "\\(\\dfrac{P-2w}{2} = \\dfrac{2l}{2}\\)", result: "\\(l = \\dfrac{P-2w}{2}\\)", check: "Is \\(l\\) now isolated? <strong>Yes.</strong>" }
@@ -326,12 +326,12 @@
       rounds: [
         { label: "Round 1", qas: [
             ["What's the variable I need to isolate?", "\\(C\\)"],
-            ["What is obstructing me from doing so?", "\\(32\\) adding, and \\(\\dfrac95\\) multiplying"],
-            ["What's the first obstruction to undo?", "\\(32\\) adding"],
+            ["What is preventing me from doing so?", "\\(32\\) adding, and \\(\\dfrac95\\) multiplying"],
+            ["What's the first block to undo?", "\\(32\\) adding"],
             ["What's the inverse operation to remove it?", "Subtraction"]
           ], eq: "\\(F - 32 = \\dfrac95C + 32 - 32\\)", result: "\\(F - 32 = \\dfrac95C\\)", check: "Is \\(C\\) now isolated? No. Keep going - see next round." },
         { label: "Round 2", qas: [
-            ["What is obstructing me from doing so?", "\\(\\dfrac95\\)"],
+            ["What is preventing me from doing so?", "\\(\\dfrac95\\)"],
             ["What is \\(\\dfrac95\\) doing?", "Multiplying"],
             ["What's the inverse operation to remove it?", "Multiplying by its reciprocal, \\(\\dfrac59\\)"]
           ], eq: "\\(\\dfrac59(F-32) = \\dfrac59\\cdot\\dfrac95C\\)", result: "\\(C = \\dfrac59(F-32)\\)", check: "Is \\(C\\) now isolated? <strong>Yes.</strong>" }
@@ -343,12 +343,12 @@
       rounds: [
         { label: "Round 1 - Factoring Question", qas: [
             ["What's the variable I need to isolate?", "\\(P\\)"],
-            ["What is obstructing me from doing so?", "\\(P\\) appears in <strong>two</strong> terms: \\(P\\) and \\(Prt\\)"],
+            ["What is preventing me from doing so?", "\\(P\\) appears in <strong>two</strong> terms: \\(P\\) and \\(Prt\\)"],
             ["Can one inverse operation remove both at once?", "No"],
             ["What do I do instead?", "Factor \\(P\\) out of the right side"]
           ], eq: "\\(A = P(1+rt)\\)", check: "Is \\(P\\) now isolated? No, but it now appears only once. Keep going - see next round." },
         { label: "Round 2", qas: [
-            ["What is obstructing me from doing so?", "\\((1+rt)\\)"],
+            ["What is preventing me from doing so?", "\\((1+rt)\\)"],
             ["What is \\((1+rt)\\) doing?", "Multiplying"],
             ["What's the inverse operation to remove it?", "Division"]
           ], eq: "\\(\\dfrac{A}{1+rt} = \\dfrac{P(1+rt)}{1+rt}\\)", result: "\\(P = \\dfrac{A}{1+rt}\\)", check: "Is \\(P\\) now isolated? <strong>Yes.</strong>" }
