@@ -1916,10 +1916,89 @@ pairing is completely unaffected)
     `tokens`+`gardenElements`/`sign` fields are present, defensively
     (every field optional — `StateJSON`'s shape is whatever that
     specific project's own `buildStatePayload()` produces, never
-    standardized across projects). This is a **structured summary**, not
-    a visual snapshot — no canvas-to-image capture/storage exists
-    site-wide; a garden/sign's actual on-canvas image is not
-    reproducible from the dashboard today.
+    standardized across projects), plus an **"Open & download real
+    files"** button (see below) next to the text summary.
+
+**Getting a student's actual, full-resolution deliverable (not a
+stored copy).** The certificate/badge/garden/sign/flyer/infographic a
+student downloads is never a stored image anywhere — the download
+button re-renders it live, in the browser, from the same state
+variables (`cartOrder`, `tokens`, `gardenElements`, `sign`, `flyer`,
+`infographicConfig`, ...) that are already sitting in
+`ProjectState.StateJSON`. Since the dashboard already has that exact
+JSON in memory (`allProjectStates`), a teacher can reconstruct a
+student's real page and use the *same* download buttons the student
+has, rather than a separately-stored, necessarily-lower-quality copy.
+**Never build a second, stored-image mechanism for this** (one was
+tried and reverted — see git history around "Capture real canvas/
+infographic snapshots" — a low-res JPEG saved into `ProjectState`
+purely so it would fit a Sheet cell; strictly worse than reconstruction
+in every way once reconstruction existed) — extend this mechanism
+instead of adding a parallel one.
+
+- **`openStudentWorkForDownload(email, activityId, studentName)`**
+  (identical copy in `teacher-dashboard.html` and
+  `projects-dashboard.html`, wired to the button `deliverableSummaryHtml()`
+  renders) — looks up that student's `stateJson` in `allProjectStates`,
+  writes `{activityId, studentName, teammates: [{name, role}], stateJson}`
+  to `sessionStorage['lia_teacher_view_state']`, then
+  `window.open()`s that project's own page (`PROJECT_PAGE_URLS`, one
+  entry per known project — extend it when a new paired project ships).
+  `teammates` comes from `teammatesForRow()`/`partnerNameFor()` (see
+  above) so the reconstructed page can populate every team member's
+  name, not just the one being opened — `projects-dashboard.html`
+  carries its own copies of `pairingForRow()`/`teammatesForRow()`/
+  `partnerNameFor()` for this (it had none before; §13's "Teacher
+  dashboard" pairing functions were teacher-dashboard-only until this).
+- **Delivery mechanism: `sessionStorage`, not a URL param or a new
+  backend call.** Per the HTML Living Standard, a same-origin tab
+  opened via `window.open()`/`target="_blank"` gets a **copy** of the
+  opener's `sessionStorage` at open time — verified live in this
+  environment's own headless Chromium, not just asserted from the spec.
+  This keeps the whole handoff client-side (no `Code.gs` change, no
+  redeploy, nothing written anywhere new) and self-cleaning (a one-time
+  read — see below).
+- **Each of the four project pages' `window.onTeacherUnlock` hook**
+  (§18's teacher-preview hook) checks for a pending handoff *matching
+  its own `activityId`* first, before falling through to the generic
+  Teacher Preview (empty, free-play) setup below it. If found: reads
+  `sessionStorage`, **immediately removes the key** (one-time use — a
+  refreshed or reopened tab never re-triggers it), sets
+  `window.allTeamNames`/`team-name-1`/`team-name-2`/`team-name-3` from
+  the handoff's own `studentName`/`teammates` (not from any live
+  pairing lookup on this page, since a teacher's own sign-in never goes
+  through `onLessonUnlock`), then calls `restoreState(JSON.parse(...))`
+  — **the exact same function a normal student reload already calls**,
+  not a new reconstruction path. `restoreState()` on every one of these
+  four pages already fully rebuilds everything needed (Konva canvas
+  elements from `gardenElements`/`sign.elements`/`flyer.elements`;
+  `window.infographicConfig` + a `renderInfographicArt()` call for the
+  SVG-based pages; `day1Locked`/`day2Unlocked` correctly re-gating Day 2
+  access) purely because that's what it was already built to do for a
+  student's own reload — reusing it here needed zero changes to
+  `restoreState()` itself on any page. A distinct
+  `.teacher-preview-banner` ("VIEWING `<name>`'S SAVED WORK...") makes
+  clear this is a read-only reconstruction, not free play.
+- **Nothing this teacher does here can get saved over the student's
+  real record** — `window.teacherPreviewMode = true` is set exactly as
+  the generic Teacher Preview path already does, and `lesson-auth.js`
+  calls `showAppContainer()` (never `unlock()`) ahead of either branch
+  of `onTeacherUnlock`, so `ready` stays `false` and
+  `LessonSync.saveProjectState()`/`LessonProgress.record()` already
+  no-op on their own pre-existing `!ready` guard — this reconstruction
+  needed no new save-blocking guard of its own.
+- **Verifying this on a Konva-canvas page in an environment where the
+  CDN is blocked** (this one included — `cdn.jsdelivr.net` returns 403
+  through this sandbox's proxy): a minimal `Konva` stub (a `Proxy`-
+  wrapped node whose only real methods are the handful actually read
+  back — `getClassName`/`toDataURL`/`getChildren`/`x`/`y`/`width`/
+  `height`/`text`/`fill`/`nodes`/`position` — everything else a
+  chainable no-op) routed in via Playwright's `page.route()` is enough
+  to prove `onTeacherUnlock`/`restoreState()` run end-to-end with zero
+  page errors; it can't verify actual pixel output, only that the
+  reconstruction logic itself doesn't throw. The SVG-based pages
+  (Ethical Auditor, Ethical Linear Budgeting) need no such stub and
+  were verified with a real, full-resolution rendered image.
 
 ### Projects Dashboard (`Lessons/projects-dashboard.html`)
 A separate, standalone, teacher-only page — never a 5th top-level tab on
@@ -1951,6 +2030,9 @@ gate identical in shape to `teacher-dashboard.html`'s own (same
   list, none of the integrity/effort flagging engine, which belongs to
   the main dashboard only), `STREAM_PILLAR_RULES`,
   `computeStreamPillarBreakdown()`, `deliverableSummaryHtml()`,
+  `pairingForRow()`/`teammatesForRow()`/`partnerNameFor()`/
+  `openStudentWorkForDownload()`/`PROJECT_PAGE_URLS` (the "open a
+  student's real deliverable" mechanism — see above),
   `gradeListIncludes()`/`formatGradeLabel()`/`isActiveStatus()` are all
   copied here rather than imported from `teacher-dashboard.html` —
   matches the site's existing "every dashboard-shaped page is

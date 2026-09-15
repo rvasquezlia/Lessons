@@ -3168,6 +3168,44 @@
   // designing after clicking "Lock" just as freely as before it.
   // ================================================================
   window.onTeacherUnlock = function (result) {
+    // Reconstructing a student's real deliverable (see /CLAUDE.md's
+    // "Paired/team activities" section) - the Teacher Dashboard/Projects
+    // Dashboard's openStudentWorkForDownload() hands off that student's
+    // saved ProjectState via sessionStorage (copied into this same-origin
+    // tab by the browser itself per the HTML spec, since it was opened
+    // via window.open()/target="_blank" from the dashboard) before
+    // opening this page. Runs the exact same restoreState() a normal
+    // student reload already uses, so the actual Download Certificate/
+    // Badge/Flyer buttons below produce the genuine full-resolution
+    // file - nothing about this reconstruction is a separate, lower-
+    // quality copy.
+    const pendingView = (() => {
+      try {
+        const raw = sessionStorage.getItem('lia_teacher_view_state');
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (parsed.activityId !== '8-youth-festival-logistics') return null;
+        sessionStorage.removeItem('lia_teacher_view_state');
+        return parsed;
+      } catch (e) { return null; }
+    })();
+    if (pendingView) {
+      window.teacherPreviewMode = true;
+      window.allTeamNames = [pendingView.studentName, ...pendingView.teammates.map((m) => m.name)].filter(Boolean);
+      document.getElementById('team-name-1').value = pendingView.studentName || '';
+      document.getElementById('team-name-2').value = pendingView.teammates[0] ? pendingView.teammates[0].name : '';
+      document.getElementById('team-name-3').value = pendingView.teammates[1] ? pendingView.teammates[1].name : '';
+      document.getElementById('student-name').value = pendingView.studentName || '';
+      document.getElementById('pairing-status').textContent =
+        `Viewing ${pendingView.studentName}'s saved work (read-only reconstruction) - not live, nothing here is saved.`;
+      try { restoreState(JSON.parse(pendingView.stateJson)); } catch (e) { /* corrupted/empty saved state - nothing to reconstruct */ }
+      const viewBanner = document.createElement('div');
+      viewBanner.className = 'teacher-preview-banner';
+      viewBanner.innerHTML = `<span>VIEWING ${(pendingView.studentName || 'a student').toUpperCase()}'S SAVED WORK &mdash; reconstructed read-only from their last save. Nothing you do here is saved - use the real Download buttons below for their actual certificate/badge/flyer image.</span>`;
+      document.querySelector('.app-container').prepend(viewBanner);
+      return;
+    }
+
     window.teacherPreviewMode = true;
     document.getElementById('team-name-1').value = 'Teacher';
     document.getElementById('team-name-2').value = 'Preview';

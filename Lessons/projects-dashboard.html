@@ -269,6 +269,7 @@
   let activityCatalog = [];
   let teacherScope = null;
   let allProjectStates = [];
+  let allPairs = [];
 
   let currentGradeFilter = '';
   let currentTeacherFilter = '';
@@ -477,6 +478,76 @@
     return { totalAttempts, solvedCount, avgAttemptsOverall: solvedCount ? Math.round((totalAttempts / solvedCount) * 10) / 10 : null };
   }
 
+  // Pairing lookups - kept in sync with teacher-dashboard.html's own
+  // identical copies (see /CLAUDE.md's "Paired/team activities"). Needed
+  // here only so openStudentWorkForDownload() can hand every teammate's
+  // real name to the reconstructed page (a certificate/badge needs every
+  // team member's name, not just the one row being opened).
+  function pairingForRow(r) {
+    return allPairs.find((p) => p.email === r.email && p.activityId === r.activityId) || null;
+  }
+  function partnerNameFor(partnerEmail) {
+    const partnerRow = roster.find((s) => s.email === partnerEmail);
+    return (partnerRow && partnerRow.studentName) || partnerEmail;
+  }
+  function teammatesForRow(r) {
+    const own = pairingForRow(r);
+    if (!own) return [];
+    if (own.teamId) {
+      return allPairs.filter((p) => p.activityId === r.activityId && p.teamId === own.teamId && p.email !== r.email);
+    }
+    if (!own.partnerEmail) return [];
+    const partnerRow = allPairs.find((p) => p.email === own.partnerEmail && p.activityId === r.activityId);
+    return [{ email: own.partnerEmail, role: partnerRow ? partnerRow.role : '' }];
+  }
+
+  // Direct link (relative to this page, same as Teacher-Help.html's own
+  // table) for each known project - see openStudentWorkForDownload().
+  const PROJECT_PAGE_URLS = {
+    '6-laudato-si-ecogarden': 'Sixth/Laudato-Si-EcoGarden/index.html',
+    '7-ethical-auditor-community-engineer': 'Seventh/Ethical-Auditor-Community-Engineer/index.html',
+    '8-youth-festival-logistics': 'Eighth/Youth-Festival-Logistics/index.html',
+    '8-ethical-linear-budgeting': 'Eighth/Ethical-Linear-Budgeting/index.html'
+  };
+  function projectPageUrlFor(activityId) {
+    const exact = PROJECT_PAGE_URLS[activityId];
+    if (exact) return exact;
+    const prefix = Object.keys(PROJECT_PAGE_URLS).find((p) => activityId.startsWith(p + '-'));
+    return prefix ? PROJECT_PAGE_URLS[prefix] : null;
+  }
+
+  // Opens a student's actual project page with their saved state handed
+  // off via sessionStorage - the page's own window.onTeacherUnlock hook
+  // (see /CLAUDE.md's "Paired/team activities" - "Reconstructing a
+  // student's real deliverable" note) picks it up, runs it through the
+  // exact same restoreState() a normal reload already uses, and reveals
+  // the page's own real Download Certificate/Badge/Garden/Sign/
+  // Infographic buttons - producing the genuine full-resolution file,
+  // not a copy stored anywhere. sessionStorage (not localStorage) is
+  // used deliberately: the HTML spec copies a same-origin opener's
+  // sessionStorage into a tab opened via window.open()/target="_blank",
+  // so this is same-tab-visible only and never persists across a
+  // browser restart - a one-time handoff, not a stored artifact.
+  function openStudentWorkForDownload(email, activityId, studentName) {
+    const row = allProjectStates.find((p) => p.email === email && p.activityId === activityId);
+    if (!row || !row.stateJson) { alert('No saved work to open yet.'); return; }
+    const url = projectPageUrlFor(activityId);
+    if (!url) { alert("Don't know this project's page - can't open it from here."); return; }
+    const mates = teammatesForRow({ email, activityId });
+    try {
+      sessionStorage.setItem('lia_teacher_view_state', JSON.stringify({
+        activityId, studentName,
+        teammates: mates.map((m) => ({ name: partnerNameFor(m.email), role: m.role })),
+        stateJson: row.stateJson
+      }));
+    } catch (e) {
+      alert('Could not prepare the handoff - your browser may be blocking storage.');
+      return;
+    }
+    window.open(url, '_blank');
+  }
+  window.openStudentWorkForDownload = openStudentWorkForDownload;
+
   // Every project field below is authored/serialized by that specific
   // project page's own buildStatePayload()/restoreState() - StateJSON's
   // shape isn't standardized across projects, so this reads defensively
@@ -504,7 +575,9 @@
     if (state.infographicConfig) {
       parts.push(`<strong>Infographic:</strong> "${state.infographicConfig.title || '(untitled)'}"${state.infographicLocked ? ' (locked in)' : ''}`);
     }
-    return parts.length ? parts.join('<br>') : '<em>No saved work yet.</em>';
+    const studentName = (roster.find((s) => s.email === email) || {}).studentName || email;
+    const openBtn = `<div style="margin-top:8px;"><button class="btn-refresh" style="padding:5px 12px; font-size:0.78rem;" onclick="openStudentWorkForDownload('${email}','${activityId}','${studentName.replace(/'/g, "\\'")}')">Open &amp; download real files</button></div>`;
+    return (parts.length ? parts.join('<br>') : '<em>No saved work yet.</em>') + openBtn;
   }
 
   // ===== Filters (grade/teacher pills only - same pattern as
@@ -684,6 +757,7 @@
     activityCatalog = result.activityCatalog || [];
     teacherScope = result.scope || null;
     allProjectStates = result.projectStates || [];
+    allPairs = result.pairs || [];
 
     hideLoadingIndicator();
     document.getElementById('lesson-gate').hidden = true;
