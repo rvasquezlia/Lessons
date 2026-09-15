@@ -897,6 +897,7 @@
             <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(1)">Download Badge - Team Member 1</button>
             <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(2)">Download Badge - Team Member 2</button>
             <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(3)" hidden>Download Badge - Team Member 3</button>
+            <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(4)" hidden>Download Badge - Team Member 4</button>
           </div>
           <div class="feedback-msg" id="certificate-feedback"></div>
           <div class="feedback-msg" id="badge-feedback"></div>
@@ -3045,6 +3046,9 @@
     if (celebrateNames.length > 2) {
       celebrateRows.push({ label: `${celebrateNames[2]}'s Badge`, detail: window.badge3Downloaded ? 'Downloaded' : 'Not downloaded yet' });
     }
+    if (celebrateNames.length > 3) {
+      celebrateRows.push({ label: `${celebrateNames[3]}'s Badge`, detail: window.badge4Downloaded ? 'Downloaded' : 'Not downloaded yet' });
+    }
     celebrateRows.push({ label: 'Math Quality Stamp', detail: document.getElementById('stamp-display').classList.contains('show') ? 'Awarded' : 'Not awarded yet' });
     sections.push({
       title: 'Celebrate',
@@ -3110,6 +3114,8 @@
     document.getElementById('team-name-3').value = teammates.length > 1 ? teammates[1].name : '';
     const badge3Btn = document.querySelector('[onclick="downloadSoloBadge(3)"]');
     if (badge3Btn) badge3Btn.hidden = teammates.length <= 1;
+    const badge4Btn = document.querySelector('[onclick="downloadSoloBadge(4)"]');
+    if (badge4Btn) badge4Btn.hidden = teammates.length <= 2;
     syncTeamName();
 
     const statusEl = document.getElementById('pairing-status');
@@ -3196,6 +3202,10 @@
       document.getElementById('team-name-2').value = pendingView.teammates[0] ? pendingView.teammates[0].name : '';
       document.getElementById('team-name-3').value = pendingView.teammates[1] ? pendingView.teammates[1].name : '';
       document.getElementById('student-name').value = pendingView.studentName || '';
+      const viewBadge3Btn = document.querySelector('[onclick="downloadSoloBadge(3)"]');
+      if (viewBadge3Btn) viewBadge3Btn.hidden = pendingView.teammates.length <= 1;
+      const viewBadge4Btn = document.querySelector('[onclick="downloadSoloBadge(4)"]');
+      if (viewBadge4Btn) viewBadge4Btn.hidden = pendingView.teammates.length <= 2;
       document.getElementById('pairing-status').textContent =
         `Viewing ${pendingView.studentName}'s saved work (read-only reconstruction) - not live, nothing here is saved.`;
       try { restoreState(JSON.parse(pendingView.stateJson)); } catch (e) { /* corrupted/empty saved state - nothing to reconstruct */ }

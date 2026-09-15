@@ -1788,17 +1788,23 @@ pairing is completely unaffected)
   line shrinks its own font (34px down to a 22px floor, `ctx.measureText`
   against the canvas's own fixed width) so three names don't overflow —
   a per-line adjustment, every other line's size is untouched. A 3rd
-  "Download Badge - Team Member 3" button exists on every page,
-  `hidden` by default, unhidden here only when `teammates.length > 1`
-  (a real 3+-person team) — `downloadSoloBadge(3)` reads the same
-  `getAllTeamNames()` array, so it needs no special-casing beyond that
-  button's own visibility. **Not yet done**: the badge canvas layout was
-  never designed to show a *group* — for 4+ people, `downloadSoloBadge`
-  still works (each member downloads their own badge, "Teamed up with"
-  lists everyone else via `joinNames`), but there is no 4th+ badge
-  button in the markup — extend the same pattern (one more hidden
-  button + `getAllTeamNames().length > 3` check) if a 4-person team is
-  ever actually used.
+  **and 4th** "Download Badge - Team Member N" button exists on every
+  page, both `hidden` by default, unhidden here only when
+  `teammates.length > 1` (3rd) / `teammates.length > 2` (4th) — a real
+  3-/4-person team — `downloadSoloBadge(3)`/`downloadSoloBadge(4)` read
+  the same `getAllTeamNames()` array, so neither needs any
+  special-casing beyond its own button's visibility. **The
+  reconstruction path (`window.onTeacherUnlock`'s `pendingView` branch —
+  see above) toggles both buttons too**, from `pendingView.teammates
+  .length` — this was missed on the first pass (only the live
+  `onLessonUnlock` path toggled them), so a teacher opening a real
+  trio/quad's saved work via "Open & download real files" couldn't
+  reach member 3/4's own badge; fixed before it shipped. **Still not
+  done**: no 5th+ button — extend the identical pattern (one more
+  hidden button in the markup + a `teammates.length > 3` check in
+  *both* `onLessonUnlock` and the `pendingView` branch, in all four
+  files) if a 5-person team is ever actually used. The certificate/
+  stamp already scale to any team size with no changes needed.
 - **`window.onTeacherUnlock(result)`** — a second, separate optional
   hook, called instead of the generic `unlockTeacherView()` (§6) when a
   **teacher** signs in, if the page defines it. Exists for a page where
