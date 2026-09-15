@@ -105,6 +105,19 @@
     h1 { margin: 8px 0; font-size: 2.2rem; font-weight: 800; }
     p.subtitle { margin: 4px 0 0 0; font-size: 1.05rem; opacity: 0.95; }
 
+    /* Consistent cross-page nav row - teacher-only, hidden for a student
+       (this page has no teacher-only content otherwise, so it's toggled
+       on directly inside renderForTeacher() rather than gated any other
+       way). Same look as teacher-dashboard.html/projects-dashboard.html/
+       Teacher-Help.html's own copy of this pattern. */
+    .dash-nav-links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+    .dash-nav-link {
+      display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.4); color: #fff; padding: 7px 16px; border-radius: 999px;
+      font-weight: 700; font-size: 0.85rem; text-decoration: none; transition: background 0.15s;
+    }
+    .dash-nav-link:hover { background: rgba(255,255,255,0.32); }
+
     .content { padding: 28px 32px 36px 32px; }
 
     /* ===== Grade picker (pill tabs, one per grade) ===== */
@@ -279,6 +292,11 @@
     <span class="badge">2026-2027 Academic Year</span>
     <h1>Lesson Plans</h1>
     <p class="subtitle">Digital lessons organized by topic - vocabulary, explanation, practice, word problems, test prep, and teacher guides</p>
+    <div class="dash-nav-links" id="teacher-nav-links" hidden>
+      <a class="dash-nav-link" href="teacher-dashboard.html">Teacher Dashboard &rarr;</a>
+      <a class="dash-nav-link" href="projects-dashboard.html">STREAM Projects Dashboard &rarr;</a>
+      <a class="dash-nav-link" href="Teacher-Help.html">? Teacher Help</a>
+    </div>
   </header>
 
   <div class="content">
@@ -683,6 +701,7 @@
 
   // Teacher: everything, unrestricted, exactly as before sign-in existed.
   function renderForTeacher() {
+    document.getElementById("teacher-nav-links").hidden = false;
     document.getElementById("grade-picker").innerHTML =
       GRADE_ORDER.map((g, i) => renderGradePill(g, i === 0)).join("");
     document.getElementById("grade-panels").innerHTML =

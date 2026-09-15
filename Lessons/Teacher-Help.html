@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Help - Lessons Progress</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson-shared.css">
+<script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+<script src="token-cache.js?v=2"></script>
+<style>
+  body { padding: 20px; }
+  #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 120px 20px; }
+  .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+  @keyframes lesson-spin { to { transform: rotate(360deg); } }
+
+  /* Consistent cross-page nav row - same pattern as teacher-dashboard.html
+     and projects-dashboard.html's own copy. Never links to this page. */
+  .dash-nav-links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+  .dash-nav-link {
+    display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.4); color: #fff; padding: 7px 16px; border-radius: 999px;
+    font-weight: 700; font-size: 0.85rem; text-decoration: none; transition: background 0.15s;
+  }
+  .dash-nav-link:hover { background: rgba(255,255,255,0.32); }
+
+  .help-wrap { max-width: 980px; margin: 0 auto; padding: 24px 4px 60px; }
+
+  /* A sticky pill-row table of contents, same visual language as the
+     dashboards' own filter pills, so jumping between the big sections
+     below doesn't require scrolling back to the top every time. */
+  .help-toc {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+    background: var(--bg); border: 2px solid var(--border); border-radius: 12px;
+    padding: 14px; margin-bottom: 28px; position: sticky; top: 0; z-index: 20;
+  }
+  .help-toc a {
+    padding: 6px 14px; border-radius: 999px; border: 2px solid var(--border);
+    background: var(--card); color: var(--text); font-weight: 700; font-size: 0.82rem;
+    text-decoration: none;
+  }
+  .help-toc a:hover { border-color: var(--primary-light); color: var(--primary-light); }
+
+  .help-section { margin-bottom: 40px; scroll-margin-top: 90px; }
+  .help-section h2 {
+    font-size: 1.5rem; color: var(--primary); border-bottom: 3px solid var(--border);
+    padding-bottom: 8px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+  }
+  .help-section h2 .icon { font-size: 1.3rem; }
+  .help-section h3 { font-size: 1.1rem; color: var(--text); margin: 22px 0 8px 0; }
+  .help-section p, .help-section li { color: var(--text); line-height: 1.65; }
+  .help-card {
+    background: var(--card); border: 2px solid var(--border); border-radius: 12px;
+    padding: 16px 20px; margin-bottom: 14px;
+  }
+  .help-card.tinted { background: var(--bg); }
+  .help-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 14px 0; }
+
+  /* Reused color-coded chips - the exact same colors index.html gives each
+     section type, so a teacher meeting "Vocabulary & Literacy" here and on
+     the index page recognizes it as the same color, not a fresh one. */
+  .chip { display: inline-block; padding: 3px 12px; border-radius: 999px; font-size: 0.78rem; font-weight: 800; margin: 2px 4px 2px 0; }
+  .chip.review     { background: #e0e7ff; color: #4338ca; }
+  .chip.vocab      { background: #ccfbf1; color: #0f766e; }
+  .chip.explain    { background: #dbeafe; color: #1d4ed8; }
+  .chip.practice   { background: #dcfce7; color: #15803d; }
+  .chip.word       { background: #ede9fe; color: #7c3aed; }
+  .chip.test       { background: #fee2e2; color: #b91c1c; }
+  .chip.teacher    { background: #fef3c7; color: #92400e; }
+  .chip.ladder     { background: #e2e8f0; color: #334155; }
+
+  .role-pill { display: inline-block; padding: 3px 12px; border-radius: 999px; font-size: 0.78rem; font-weight: 800; }
+  .role-pill.driver { background: var(--success-bg); color: var(--success); }
+  .role-pill.navigator { background: #e2e8f0; color: #475569; }
+
+  table.help-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.92rem; }
+  table.help-table th, table.help-table td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+  table.help-table th { background: var(--primary); color: #fff; }
+  table.help-table tr:nth-child(even) td { background: var(--bg); }
+
+  .step-list { counter-reset: step; list-style: none; padding-left: 0; }
+  .step-list li {
+    counter-increment: step; position: relative; padding: 8px 8px 8px 44px; margin-bottom: 6px;
+    background: var(--bg); border-radius: 8px; border: 1px solid var(--border);
+  }
+  .step-list li::before {
+    content: counter(step); position: absolute; left: 10px; top: 8px;
+    background: var(--primary); color: #fff; width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 800;
+  }
+
+  details.help-faq { border: 2px solid var(--border); border-radius: 10px; margin-bottom: 10px; background: var(--card); }
+  details.help-faq summary { cursor: pointer; padding: 12px 16px; font-weight: 700; color: var(--primary); }
+  details.help-faq[open] summary { border-bottom: 1px solid var(--border); }
+  details.help-faq .faq-body { padding: 12px 16px; }
+
+  .note-box { border-left: 6px solid var(--accent); background: #fffbeb; padding: 10px 16px; border-radius: 0 8px 8px 0; margin: 12px 0; font-size: 0.92rem; }
+  .warn-box { border-left: 6px solid var(--error); background: var(--error-bg); padding: 10px 16px; border-radius: 0 8px 8px 0; margin: 12px 0; font-size: 0.92rem; }
+
+  code.k { background: #e2e8f0; padding: 1px 6px; border-radius: 5px; font-size: 0.85em; }
+
+  @media (max-width: 640px) {
+    .help-toc { position: static; }
+  }
+</style>
+</head>
+<body>
+
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Teacher Help</h2>
+    <p>Sign in with your school Google account. This page is for teachers only.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" id="help-app" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Teacher Help</span>
+    <h1>How This Site Works</h1>
+    <p class="subtitle" id="loaded-as">A guide to the lesson site, both dashboards, and the STREAM projects.</p>
+    <div class="dash-nav-links">
+      <a class="dash-nav-link" href="index.html">&larr; Lessons Index</a>
+      <a class="dash-nav-link" href="teacher-dashboard.html">Teacher Dashboard &rarr;</a>
+      <a class="dash-nav-link" href="projects-dashboard.html">STREAM Projects Dashboard &rarr;</a>
+    </div>
+  </header>
+
+  <div class="help-wrap">
+
+    <nav class="help-toc">
+      <a href="#site-map">Site Map</a>
+      <a href="#page-types">The 7 Page Types</a>
+      <a href="#grades">Grades &amp; Tracks</a>
+      <a href="#sign-in">Sign-In &amp; Access</a>
+      <a href="#main-dashboard">Teacher Dashboard</a>
+      <a href="#projects-dashboard">Projects Dashboard</a>
+      <a href="#projects">STREAM Projects &amp; Pairing</a>
+      <a href="#roster-admin">Managing the Roster &amp; Sheet</a>
+      <a href="#faq">FAQ &amp; Troubleshooting</a>
+    </nav>
+
+    <!-- ===================== SITE MAP ===================== -->
+    <section class="help-section" id="site-map">
+      <h2><span class="icon">&#128506;&#65039;</span> Site Map - Where Everything Lives</h2>
+      <p>The whole site is four kinds of page, all reachable from the nav buttons at the top of this
+        page and every dashboard:</p>
+      <div class="help-grid">
+        <div class="help-card">
+          <h3 style="margin-top:0;">Lessons Index (<code class="k">index.html</code>)</h3>
+          <p>What students see first. Signing in shows only their own grade's units; a teacher
+            signing in here instead sees every grade and every unit unrestricted, plus these
+            three nav buttons to reach the dashboards and this help page.</p>
+        </div>
+        <div class="help-card">
+          <h3 style="margin-top:0;">Lesson pages (per unit)</h3>
+          <p>The actual student work - Vocabulary, Explanation, Practice, Word Problems, Test Prep,
+            Review, and a Teacher's Guide for every unit. See <a href="#page-types">The 7 Page
+            Types</a> below.</p>
+        </div>
+        <div class="help-card">
+          <h3 style="margin-top:0;">Teacher Dashboard</h3>
+          <p>The main gradebook and behavior monitor - every student, every activity, every
+            submission, with tools to flag, reset, and review. See <a href="#main-dashboard">below</a>.</p>
+        </div>
+        <div class="help-card">
+          <h3 style="margin-top:0;">Projects Dashboard</h3>
+          <p>A separate, zoomed-out view of only the hands-on STREAM projects (Eco-Garden, Ethical
+            Auditor, Youth Festival, Ethical Linear Budgeting) - see <a href="#projects-dashboard">below</a>.</p>
+        </div>
+      </div>
+      <div class="note-box">
+        Both dashboards and this help page are <strong>teacher-only</strong> - a student account
+        signing in anywhere on this site never sees them and has no link to find them. Access is
+        controlled by the <code class="k">Teachers</code> tab in the shared Sheet (see
+        <a href="#roster-admin">Managing the Roster</a>), never by hiding the URL.
+      </div>
+    </section>
+
+    <!-- ===================== PAGE TYPES ===================== -->
+    <section class="help-section" id="page-types">
+      <h2><span class="icon">&#128218;</span> The 7 Page Types in Every Unit</h2>
+      <p>Every unit (Decimal Operations, Integers, Linear Equations, ...) ships the same set of
+        page types, so once you know how one unit reads, you know how all of them read:</p>
+      <table class="help-table">
+        <tr><th>Page</th><th>What it's for</th><th>Gated?</th></tr>
+        <tr><td><span class="chip vocab">Vocabulary &amp; Literacy</span></td><td>Key terms - matching, translation, and vocabulary-in-context questions.</td><td>Yes</td></tr>
+        <tr><td><span class="chip explain">Explanation</span></td><td>The worked-example walkthrough - step-by-step reveals of how to solve each problem type.</td><td>Yes</td></tr>
+        <tr><td><span class="chip practice">Practice Set</span></td><td>Guided practice problems with immediate feedback, usually two tries per item.</td><td>Yes</td></tr>
+        <tr><td><span class="chip word">Word Problems</span></td><td>The same skills applied to real-world scenarios.</td><td>Yes</td></tr>
+        <tr><td><span class="chip test">Test Prep</span></td><td>A mixed, cumulative check - graded strictly on the first attempt only, no partial credit for a corrected second try.</td><td>Yes</td></tr>
+        <tr><td><span class="chip review">Review</span></td><td>An "Are You Ready?" style recap tab, usually the last stop before Test Prep.</td><td>Yes</td></tr>
+        <tr><td><span class="chip teacher">Teacher's Guide</span></td><td>Pacing table, lesson guide, misconceptions/differentiation, a Challenge Bank, and IXL Practice links - for you, never linked to students.</td><td><strong>No</strong> - open to anyone with the link</td></tr>
+      </table>
+      <p>Two units (<em>Operations with Rationals</em> and <em>Literal Equations</em>) also have an
+        eighth page, <span class="chip ladder">Guided Solving Ladder</span> - a step-by-step scaffolded
+        solving drill. It's gated and graded like the others, but deliberately isn't linked from the
+        Lessons Index - find it from that unit's own Teacher's Guide.</p>
+    </section>
+
+    <!-- ===================== GRADES & TRACKS ===================== -->
+    <section class="help-section" id="grades">
+      <h2><span class="icon">&#127891;</span> Grades &amp; Tracks</h2>
+      <p>Most students are on a plain numeric grade (6, 7, or 8). Two tracks sit alongside a
+        regular grade instead of replacing it:</p>
+      <ul>
+        <li><strong>7th Grade Honors</strong> (<code class="k">7-Honors</code>) - shares every
+          Rational Numbers page verbatim with regular 7th grade, plus its own extra unit,
+          <em>Squares, Cubes &amp; Roots</em>.</li>
+        <li><strong>8th Grade Pre-AP</strong> (<code class="k">8-PreAP</code>) - its own unit,
+          <em>Linear Functions</em>, and the newest STREAM project, <em>Ethical Linear Budgeting</em>.</li>
+      </ul>
+      <div class="note-box">
+        A student's <code class="k">Grade</code> cell in the Roster must match one of these five
+        values <em>exactly</em> (spelling and hyphenation) - <code class="k">7-Honors</code>, not
+        <code class="k">7 Honors</code> or <code class="k">Honors 7</code>.
+      </div>
+    </section>
+
+    <!-- ===================== SIGN-IN ===================== -->
+    <section class="help-section" id="sign-in">
+      <h2><span class="icon">&#128274;</span> Sign-In &amp; Access</h2>
+      <p>Everyone signs in with their <strong>school Google account</strong>
+        (<code class="k">@lincoln.edu.ni</code>). There are no separate passwords or accounts to
+        manage - access is entirely controlled by two Sheet tabs:</p>
+      <div class="help-grid">
+        <div class="help-card tinted">
+          <h3 style="margin-top:0;">A student</h3>
+          <p>Must have a row on <code class="k">Roster</code> with their email, grade, and teacher.
+            They then only see units matching their own grade, and can only work on activities
+            listed as <code class="k">Active</code> on <code class="k">ActivityCatalog</code>.</p>
+        </div>
+        <div class="help-card tinted">
+          <h3 style="margin-top:0;">A teacher</h3>
+          <p>Must have a row on <code class="k">Teachers</code> - being listed as someone's teacher
+            on <code class="k">Roster</code> is <strong>not</strong> enough by itself. Being on
+            <code class="k">Teachers</code> unlocks the Lessons Index unrestricted, both dashboards,
+            this help page, and an automatic answer key on every lesson page.</p>
+        </div>
+      </div>
+      <div class="warn-box">
+        If a teacher's dashboard shows no students at all, the most common cause is a typo in the
+        optional <code class="k">Scope</code> column on <code class="k">Teachers</code> - it must
+        exactly match that teacher's own name as spelled on <code class="k">Roster</code>, or it
+        silently shows nobody instead of erroring. Leave <code class="k">Scope</code> blank (or
+        write <code class="k">All</code>) to see every student.
+      </div>
+    </section>
+
+    <!-- ===================== MAIN DASHBOARD ===================== -->
+    <section class="help-section" id="main-dashboard">
+      <h2><span class="icon">&#128202;</span> Teacher Dashboard - Reading the Four Tabs</h2>
+      <p>Filters at the top (Grade, Activity, Teacher, and a "Flagged only" checkbox) apply across
+        all four tabs at once. Every tab follows a <strong>list, then click for detail</strong>
+        pattern - click any row to drill in, and a "Back" button returns you to the list.</p>
+
+      <h3>1. Overview</h3>
+      <p>A bird's-eye summary: stat tiles, a progress-by-unit bar chart, your lowest-scoring
+        activities and students, a count of every flag by category, and a 24-hour histogram of
+        when students are actually doing the work.</p>
+
+      <h3>2. Unit &amp; Lesson Deep Dive</h3>
+      <p><strong>By Unit</strong> groups whole units together; <strong>By Activity</strong> breaks
+        it down page-by-page, including activities nobody has started yet. Opening an activity's
+        detail view also shows <strong>Item Diagnostics</strong> - the most common wrong answer per
+        question, so you can see exactly which misconception is spreading.</p>
+
+      <h3>3. Student Roster &amp; Profiles</h3>
+      <p>One row per student - including students who haven't started anything yet. Columns include
+        an <strong>Effort Score Index</strong> (0-100, blending depth of engagement, reflection
+        quality, and flag-free work), a <strong>Lesson Completion %</strong>, and an
+        <strong>Attempt-2 Recovery Index</strong> (of everything they missed on the first try, what
+        share did they eventually get right?).</p>
+
+      <h3>4. Integrity &amp; Behavior Monitor</h3>
+      <p>Three sub-tabs: <strong>Engagement Funnel</strong> (Not started / Opened only / In progress
+        / Completed) tells you who's opening work but not finishing it; <strong>Flags &amp;
+        Behavior</strong> lists every integrity/effort signal (see below) plus a time-vs-score
+        scatter plot; <strong>Full Submission Log</strong> is the raw, complete event feed
+        everything else on the dashboard is summarized from.</p>
+
+      <h3>What triggers a flag?</h3>
+      <p>All flags are read <em>after the fact</em> from timestamps already saved - nothing is
+        monitored live. The main ones:</p>
+      <table class="help-table">
+        <tr><th>Flag</th><th>What it means</th></tr>
+        <tr><td>Fast-guessing</td><td>First attempt answered in under 3 seconds.</td></tr>
+        <tr><td>Attempt-1 sacrifice</td><td>A suspiciously fast wrong first try, then a slow, correct second try.</td></tr>
+        <tr><td>Reflection padding / low-effort reflection</td><td>A written answer that's either repetitive filler or too short to be meaningful.</td></tr>
+        <tr><td>Idle gap</td><td>A pause of 3-15 minutes between actions in the same sitting.</td></tr>
+        <tr><td>Tab-skipping</td><td>Two tabs opened less than 2 seconds apart - clicking through without reading.</td></tr>
+        <tr><td>Paste / right-click / tab-focus loss</td><td>Detected on an answer field. Focus loss is only flagged at 3+ occurrences.</td></tr>
+        <tr><td>Possible shared answers</td><td>Two different students gave the identical <em>wrong</em> answer on the same item within 15 minutes.</td></tr>
+        <tr><td>Possible answer lookup</td><td>A paste event, a very high score, and a completion time under half the class average.</td></tr>
+      </table>
+      <div class="note-box">
+        On a <strong>paired/team STREAM project</strong>, teammates' answers are mirrored to each
+        other by design (see <a href="#projects">STREAM Projects &amp; Pairing</a> below) - so
+        "Possible shared answers" between two known teammates is expected, not suspicious, and the
+        dashboard now skips it automatically for anyone paired together.
+      </div>
+
+      <h3>Giving a student their attempts back</h3>
+      <p>Open a student's activity detail view (from Student Roster, By Activity, or the Submission
+        Log) to find the <strong>"Give attempts back"</strong> toolbar:</p>
+      <ol class="step-list">
+        <li>Pick a scope: reset one item, an entire section/tab, or the whole activity.</li>
+        <li>Click the matching Reset button. This takes effect the <em>next time the student loads
+          the page</em> - nothing changes live.</li>
+        <li>A reset never deletes anything - it appends a new "reset" entry, so the full history
+          stays visible, and attempt numbering (and scoring) restarts cleanly from there.</li>
+      </ol>
+
+      <h3>Marking a flag reviewed</h3>
+      <p>Any flagged row can be marked <strong>Reviewed</strong> once you've looked into it, and
+        classified as either a <span class="pill ok" style="background:var(--success-bg);color:var(--success);">Valid concern</span>
+        (something you followed up on) or <span class="pill flag" style="background:var(--error-bg);color:var(--error);">Not an issue</span>
+        (a false alarm - e.g. two teammates, or a legitimately fast learner). This doesn't remove the
+        flag from the record, but it lets you tell at a glance which flags still need a look.</p>
+    </section>
+
+    <!-- ===================== PROJECTS DASHBOARD ===================== -->
+    <section class="help-section" id="projects-dashboard">
+      <h2><span class="icon">&#129513;</span> Projects Dashboard</h2>
+      <p>A separate page focused only on the hands-on STREAM projects, since a single number on the
+        main dashboard can't show "did this class actually touch Science this unit?" the way this
+        page can.</p>
+      <ul>
+        <li><strong>STREAM pillar rings</strong> - six rings (Science, Technology, Religion,
+          Engineering, Art, Math), aggregated across every project currently in view. A pillar with
+          no matching content anywhere shows "No data yet" rather than a fake 0%.</li>
+        <li><strong>Project cards</strong> - one per project, with its own mini pillar breakdown,
+          an attempts-per-item stat (how many tries it typically takes the class to land the right
+          answer - handy for spotting a station that's too hard), and a collapsible
+          <strong>Deliverables</strong> table summarizing what each student actually built (their
+          budget total, garden layout, chosen materials, etc.).</li>
+      </ul>
+      <div class="note-box">
+        The Deliverables table is a <em>text</em> summary reconstructed from saved data - it is
+        <strong>not</strong> a picture of the student's actual canvas/poster. Nothing rendered on a
+        student's canvas is ever uploaded anywhere; the certificate/badge/poster they download stays
+        on their own device only.
+      </div>
+    </section>
+
+    <!-- ===================== PROJECTS & PAIRING ===================== -->
+    <section class="help-section" id="projects">
+      <h2><span class="icon">&#129309;</span> STREAM Projects &amp; Pairing</h2>
+      <p>Four multi-day projects run on the same backend as every other activity, but let two or
+        more students work together on one shared attempt:</p>
+      <table class="help-table">
+        <tr><th>Project</th><th>Grade</th><th>Direct link</th></tr>
+        <tr><td>Laudato Si' Eco-Garden</td><td>6</td><td><code class="k">Sixth/Laudato-Si-EcoGarden/index.html</code></td></tr>
+        <tr><td>Ethical Auditor &amp; Community Engineer</td><td>7</td><td><code class="k">Seventh/Ethical-Auditor-Community-Engineer/index.html</code></td></tr>
+        <tr><td>Youth Festival Logistics</td><td>8</td><td><code class="k">Eighth/Youth-Festival-Logistics/index.html</code></td></tr>
+        <tr><td>Ethical Linear Budgeting</td><td>8-PreAP</td><td><code class="k">Eighth/Ethical-Linear-Budgeting/index.html</code></td></tr>
+      </table>
+      <div class="warn-box">
+        None of these four appear on the Lessons Index - hand the direct link to your class (or post
+        it wherever you share links) rather than expecting students to browse to it.
+      </div>
+
+      <h3>Driver &amp; Navigator</h3>
+      <p>Every team has exactly one <span class="role-pill driver">Driver</span> (types the
+        answers, drags the pieces, submits) and one or more
+        <span class="role-pill navigator">Navigator</span>s (read-only - sees the Driver's saved
+        progress on their own screen, can look around, can never edit or submit). Mirroring happens
+        on the Driver's <em>next save</em>, not instantly as they type.</p>
+
+      <h3>Setting up a pair or a team of three or more</h3>
+      <ol class="step-list">
+        <li>Open the <code class="k">Pairs</code> tab in the shared Sheet.</li>
+        <li><strong>For a pair:</strong> add one row per student - each student's own email, the
+          <em>other</em> student's email under <code class="k">PartnerEmail</code>, the activity's
+          ID, and that student's own Role (<code class="k">Driver</code> or
+          <code class="k">Navigator</code>). Leave <code class="k">TeamId</code> blank.</li>
+        <li><strong>For a team of 3+:</strong> add one row per student, all sharing the exact same
+          <code class="k">TeamId</code> (any short label, e.g. <code class="k">T1</code>) for that
+          activity - one Driver, the rest Navigators. Leave <code class="k">PartnerEmail</code>
+          blank on these rows.</li>
+      </ol>
+      <p>To undo a pairing (wrong student added, or a partner needs replacing), open that student's
+        row on the Teacher Dashboard's Student Roster or Submission Log detail view and click
+        <strong>Unpair</strong> - it takes effect the next time that student loads the page.</p>
+    </section>
+
+    <!-- ===================== ROSTER / SHEET ADMIN ===================== -->
+    <section class="help-section" id="roster-admin">
+      <h2><span class="icon">&#128203;</span> Managing the Roster &amp; Sheet</h2>
+      <p>Everything a teacher needs to hand-edit lives in one Google Sheet. You never need to touch
+        code to add a student, add a class, or change who's a teacher.</p>
+      <table class="help-table">
+        <tr><th>Tab</th><th>You edit this to...</th></tr>
+        <tr><td><code class="k">Roster</code></td><td>Add/remove a student, or fix their grade or assigned teacher.</td></tr>
+        <tr><td><code class="k">ActivityCatalog</code></td><td>Turn an activity on/off (<code class="k">Active</code> column) or check which grade it belongs to.</td></tr>
+        <tr><td><code class="k">Teachers</code></td><td>Grant/revoke dashboard access, or scope a teacher to only their own students.</td></tr>
+        <tr><td><code class="k">Pairs</code></td><td>Set up or remove a paired/team STREAM project assignment.</td></tr>
+        <tr><td><code class="k">Progress</code></td><td>Automatic only - never hand-edit except the two "reviewed" columns, which the dashboard now writes for you.</td></tr>
+      </table>
+      <div class="note-box">
+        Any change to the underlying grading/backend code (not the Sheet data itself) needs a
+        manual redeploy in the Apps Script editor before it takes effect - that step is always
+        called out explicitly whenever it applies.
+      </div>
+    </section>
+
+    <!-- ===================== FAQ ===================== -->
+    <section class="help-section" id="faq">
+      <h2><span class="icon">&#10067;</span> FAQ &amp; Troubleshooting</h2>
+
+      <details class="help-faq">
+        <summary>A student says they can't see an activity.</summary>
+        <div class="faq-body">Check three things in order: (1) their <code class="k">Roster.Grade</code>
+          matches the activity's <code class="k">ActivityCatalog.Grade</code> exactly (including
+          Honors/Pre-AP spelling), (2) that activity's <code class="k">Active</code> column is
+          checked, (3) their email on <code class="k">Roster</code> is spelled exactly as their
+          Google account's own email.</div>
+      </details>
+      <details class="help-faq">
+        <summary>I don't see any students on my dashboard.</summary>
+        <div class="faq-body">Almost always a <code class="k">Teachers.Scope</code> typo - it has
+          to match your name on <code class="k">Roster.Teacher</code> exactly, or it silently shows
+          nobody. Leave it blank to see everyone.</div>
+      </details>
+      <details class="help-faq">
+        <summary>A student wants to redo an activity they already finished.</summary>
+        <div class="faq-body">Use "Give attempts back" from their detail view on the Teacher
+          Dashboard (see <a href="#main-dashboard">above</a>) - never edit the Sheet directly.</div>
+      </details>
+      <details class="help-faq">
+        <summary>How do I know if a flag is something worth following up on?</summary>
+        <div class="faq-body">Open the student's detail view, check the Full Submission Log for the
+          exact timing/answer that triggered it, then mark it Reviewed as Valid or Not an issue so
+          you (or a colleague) don't have to re-investigate the same flag later.</div>
+      </details>
+      <details class="help-faq">
+        <summary>Can I see the actual picture of a student's poster/garden/certificate?</summary>
+        <div class="faq-body">Not from the dashboard today - only a text summary of their choices.
+          The rendered image is generated in the student's own browser and downloaded straight to
+          their device; it's never uploaded anywhere.</div>
+      </details>
+      <details class="help-faq">
+        <summary>Where do I find a unit's answer key?</summary>
+        <div class="faq-body">Sign in as a teacher directly on that lesson page - every problem
+          auto-fills with the correct answer and a "TEACHER VIEW" banner appears. No separate answer
+          key document exists.</div>
+      </details>
+    </section>
+
+  </div>
+</div>
+
+<script>
+  const LESSON_SYNC_API_URL = 'https://script.google.com/macros/s/AKfycbyC7mb1TKfg3JvhiZftXMf7oXkzrBMWJczZSURC7sIfoIxYnZrrumYfx-j7JYTY0A9i/exec';
+  const GOOGLE_CLIENT_ID = '478111261772-7l1qamohr0fjsa7ekosuhpj9jum1q4vc.apps.googleusercontent.com';
+
+  // requestGeneration/resolved stop a slow, now-superseded sign-in attempt
+  // from undoing a later one that already succeeded - see CLAUDE.md's
+  // "Stale in-flight requests" note. Same pattern as the two dashboards.
+  let requestGeneration = 0;
+  let resolved = false;
+  let googleInitialized = false;
+  let googleLibraryLoaded = false;
+
+  function fetchWithTimeout(url, opts, timeoutMs) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs || 15000);
+    return fetch(url, Object.assign({}, opts, { signal: controller.signal })).finally(() => clearTimeout(timer));
+  }
+
+  function hideLoadingIndicator() {
+    const el = document.getElementById('lesson-loading');
+    if (el) el.style.display = 'none';
+  }
+
+  function setGateStatus(msg, isError) {
+    const el = document.getElementById('lesson-gate-status');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.color = isError ? 'var(--error)' : 'var(--primary)';
+  }
+
+  function showAppContainer(scopeText) {
+    hideLoadingIndicator();
+    document.getElementById('lesson-gate').hidden = true;
+    document.getElementById('help-app').hidden = false;
+    const loadedAs = document.getElementById('loaded-as');
+    if (loadedAs) {
+      loadedAs.textContent = scopeText
+        ? `A guide to the lesson site, both dashboards, and the STREAM projects. Signed in scoped to: ${scopeText}.`
+        : 'A guide to the lesson site, both dashboards, and the STREAM projects.';
+    }
+  }
+
+  async function proceedWithToken(rawToken, isRetry) {
+    const myGeneration = ++requestGeneration;
+    setGateStatus('Checking your account...', false);
+    try {
+      // Reuses the exact same teacher-only check the dashboards use -
+      // this page has no data of its own to fetch, so the response body
+      // beyond `ok`/`scope` is simply ignored.
+      const res = await fetchWithTimeout(LESSON_SYNC_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ idToken: rawToken, type: 'teacher-data' })
+      }, isRetry ? 25000 : 15000);
+      const result = await res.json();
+      if (resolved || myGeneration !== requestGeneration) return;
+      if (!result.ok) {
+        TokenCache.clear();
+        showGateAndPromptSignIn();
+        setGateStatus(result.error || 'This page is for teachers only.', true);
+        return;
+      }
+      TokenCache.save(rawToken);
+      resolved = true;
+      showAppContainer(result.scope);
+    } catch (err) {
+      if (resolved || myGeneration !== requestGeneration) return;
+      if (!isRetry) {
+        setGateStatus('Still checking - the server is taking a moment...', false);
+        await new Promise((r) => setTimeout(r, 1200));
+        if (resolved || myGeneration !== requestGeneration) return;
+        return proceedWithToken(rawToken, true);
+      }
+      showGateAndPromptSignIn();
+      setGateStatus("Couldn't reach the backend - check your connection and try again.", true);
+    }
+  }
+
+  async function handleGoogleSignIn(response) {
+    resolved = false;
+    await proceedWithToken(response.credential);
+  }
+  window.handleGoogleSignIn = handleGoogleSignIn;
+
+  function showGateWithError(msg) {
+    hideLoadingIndicator();
+    const gate = document.getElementById('lesson-gate');
+    if (gate) gate.hidden = false;
+    setGateStatus(msg, true);
+  }
+
+  function showGateAndPromptSignIn() {
+    if (resolved) return;
+    hideLoadingIndicator();
+    const gate = document.getElementById('lesson-gate');
+    if (gate) gate.hidden = false;
+    if (!googleLibraryLoaded || googleInitialized) return;
+    googleInitialized = true;
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleSignIn,
+      auto_select: true
+    });
+    const btnContainer = document.querySelector('#lesson-gate .g_id_signin');
+    if (btnContainer) google.accounts.id.renderButton(btnContainer, { type: 'standard' });
+    try { google.accounts.id.prompt(); } catch (e) {}
+  }
+
+  function onGoogleLibraryLoad() {
+    try {
+      googleLibraryLoaded = true;
+      const cached = TokenCache.load();
+      if (cached) {
+        proceedWithToken(cached).then(() => {
+          if (!resolved) showGateAndPromptSignIn();
+        });
+      } else {
+        showGateAndPromptSignIn();
+      }
+    } catch (err) {
+      showGateWithError('Something went wrong loading sign-in. Please refresh the page.');
+    }
+  }
+  window.onGoogleLibraryLoad = onGoogleLibraryLoad;
+
+  // Fallback if the GIS script's own onload never fires (network filter,
+  // ad blocker) - same 10s pattern as the dashboards/lesson pages.
+  setTimeout(() => {
+    if (!resolved && !googleLibraryLoaded) {
+      showGateWithError('Sign-in is taking longer than expected. Please refresh the page.');
+    }
+  }, 10000);
+</script>
+
+</body>
+</html>

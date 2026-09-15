@@ -37,11 +37,17 @@
     border-radius: 8px; font-weight: 800; cursor: pointer; font-family: inherit; font-size: 0.9rem;
   }
   .btn-refresh:hover { background: var(--primary-light); }
-  .back-link {
-    display: inline-block; margin: 0 0 14px 0; color: var(--primary); font-weight: 700;
-    text-decoration: none; font-size: 0.9rem;
+
+  /* Consistent cross-page nav row, shown in the header of every teacher-
+     only page (Teacher Dashboard, this page, Teacher Help) - always links
+     to the OTHER pages, never the one currently open. */
+  .dash-nav-links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+  .dash-nav-link {
+    display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.4); color: #fff; padding: 7px 16px; border-radius: 999px;
+    font-weight: 700; font-size: 0.85rem; text-decoration: none; transition: background 0.15s;
   }
-  .back-link:hover { text-decoration: underline; }
+  .dash-nav-link:hover { background: rgba(255,255,255,0.32); }
 
   .section-title { font-size: 1.4rem; font-weight: 800; color: var(--primary); margin: 26px 0 14px 0; }
 
@@ -140,6 +146,11 @@
     <span class="badge">Projects Dashboard</span>
     <h1>STREAM Project Progress</h1>
     <p class="subtitle" id="loaded-as"></p>
+    <div class="dash-nav-links">
+      <a class="dash-nav-link" href="index.html">&larr; Lessons Index</a>
+      <a class="dash-nav-link" href="teacher-dashboard.html">&larr; Main Teacher Dashboard</a>
+      <a class="dash-nav-link" href="Teacher-Help.html">? Teacher Help</a>
+    </div>
   </header>
 
   <div class="filter-bar">
@@ -157,8 +168,6 @@
   </div>
 
   <div style="padding: 0 24px;">
-    <a class="back-link" href="teacher-dashboard.html">&larr; Back to the main Teacher Dashboard</a>
-
     <div class="section-title">STREAM Pillar Progress</div>
     <p style="margin: -8px 0 14px 0; color: var(--text); opacity: 0.85; font-size: 0.9rem;">
       Aggregated across every STREAM project activity currently in view (see the Grade/Teacher filters above).

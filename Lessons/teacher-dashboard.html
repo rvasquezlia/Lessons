@@ -70,6 +70,17 @@
   }
   .btn-refresh:hover { background: var(--primary-light); }
 
+  /* Consistent cross-page nav row, shown in the header of every teacher-
+     only page (this dashboard, the Projects Dashboard, Teacher Help) -
+     always links to the OTHER pages, never the one currently open. */
+  .dash-nav-links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+  .dash-nav-link {
+    display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.4); color: #fff; padding: 7px 16px; border-radius: 999px;
+    font-weight: 700; font-size: 0.85rem; text-decoration: none; transition: background 0.15s;
+  }
+  .dash-nav-link:hover { background: rgba(255,255,255,0.32); }
+
   /* One-click Grade/Teacher filters - a button per value plus an "All"
      button, instead of a <select> a teacher has to open to see the
      choices. #teacher-filter-group is hidden entirely for a scoped
@@ -214,7 +225,11 @@
     <span class="badge">Teacher Dashboard</span>
     <h1>Class Progress Overview</h1>
     <p class="subtitle" id="loaded-as"></p>
-    <p style="margin-top:6px;"><a href="projects-dashboard.html" style="color:#fff; font-weight:700; text-decoration:underline;">STREAM Projects Dashboard &rarr;</a></p>
+    <div class="dash-nav-links">
+      <a class="dash-nav-link" href="index.html">&larr; Lessons Index</a>
+      <a class="dash-nav-link" href="projects-dashboard.html">STREAM Projects Dashboard &rarr;</a>
+      <a class="dash-nav-link" href="Teacher-Help.html">? Teacher Help</a>
+    </div>
   </header>
 
   <div class="filter-bar">
