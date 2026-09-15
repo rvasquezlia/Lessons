@@ -998,7 +998,8 @@
       vocabExMatched: vocabExMatched,
       fcMatched: fcMatched,
       infographicConfig: window.infographicConfig,
-      infographicLocked: infographicLocked
+      infographicLocked: infographicLocked,
+      infographicSnapshot: window.infographicSnapshotUrl || null
     };
   }
 
@@ -1013,6 +1014,11 @@
     Object.assign(solvedKeys, state.solvedKeys || {});
     day1Locked = !!state.day1Locked;
     day2Unlocked = !!state.day2Unlocked;
+    // Carried forward so a save triggered before the student re-locks the
+    // infographic on this visit still includes the snapshot already
+    // captured on a previous visit, instead of buildStatePayload() reading
+    // it as unset and blanking it out.
+    if (state.infographicSnapshot) window.infographicSnapshotUrl = state.infographicSnapshot;
 
     const restoreNumeric = (key, inputId, feedbackId, expected, msg, summaryId, summaryText) => {
       if (!solvedKeys[key]) return;
@@ -2046,7 +2052,37 @@
     buildStudioSwatchRow('studio-accent-row', STUDIO_ACCENTS, cfg.accent, 'setInfographicAccent');
   }
 
-  function lockInfographicArt() {
+  // A small, low-res JPEG snapshot of the current infographic - captured
+  // once at lock time (see lockInfographicArt()) and carried in
+  // ProjectState alongside everything else, so the dashboard can show an
+  // actual picture of what a student built instead of only the text
+  // summary deliverableSummaryHtml() already gives. Deliberately low-res
+  // and compressed to stay well clear of a Google Sheets cell's
+  // ~50,000-character limit - null (not a giant string) if it somehow
+  // still comes out too large, or if rendering fails, rather than ever
+  // risking a failed save. Reuses the exact SVG-to-canvas pipeline
+  // downloadInfographicArt() already uses, just at a smaller size/quality.
+  // Named distinctly from window.infographicSnapshotUrl below - a
+  // top-level function declaration IS a window property in a classic
+  // script, so naming this function the same as that property would let
+  // the first assignment silently replace the function with a string,
+  // breaking every call after the first.
+  async function captureInfographicSnapshot() {
+    try {
+      const svgString = buildInfographicSVG(window.infographicConfig);
+      const img = await svgToImage(svgString);
+      const SNAP_SCALE = 0.35;
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(STUDIO_W * SNAP_SCALE);
+      canvas.height = Math.round(STUDIO_H * SNAP_SCALE);
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const url = canvas.toDataURL('image/jpeg', 0.5);
+      return url.length <= 40000 ? url : null;
+    } catch (e) { return null; }
+  }
+
+  async function lockInfographicArt() {
     const feedbackEl = document.getElementById('infographicart-feedback');
     if (!window.infographicConfig.title) {
       LessonCheck.incomplete(feedbackEl, 'Give your budget report a name first.');
@@ -2067,6 +2103,7 @@
     feedbackEl.className = 'feedback-msg success locked';
     feedbackEl.innerHTML = 'Infographic locked! Download your poster below.';
     LessonProgress.record('infographicart', 'Budget Infographic Studio', `"${window.infographicConfig.title}"`, 'correct', 'Day 2 - Art');
+    window.infographicSnapshotUrl = await captureInfographicSnapshot();
     saveProgress();
   }
 

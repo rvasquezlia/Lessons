@@ -1295,6 +1295,27 @@
   // ================================================================
   let day2Unlocked = false;
 
+  // A small, low-res JPEG snapshot of a Konva stage - captured once at
+  // lock time (see lockGarden()/lockSign()) and carried in ProjectState
+  // alongside everything else, so the dashboard can show an actual
+  // picture of what a student built instead of only the text summary
+  // deliverableSummaryHtml() already gives. Deliberately low-res
+  // (pixelRatio 0.5) and compressed (JPEG quality 0.5) to stay well
+  // clear of a Google Sheets cell's ~50,000-character limit - `null` (not
+  // a giant string) if it somehow still comes out too large, or if the
+  // canvas is tainted/Konva failed to load, rather than ever risking a
+  // failed save. transformer.nodes([]) first, same as getGardenDataUrl()/
+  // getSignDataUrl() above, so a selection's resize handles never end up
+  // baked into the image.
+  function stageSnapshotUrl(stage, transformer, layer) {
+    try {
+      transformer.nodes([]);
+      layer.draw();
+      const url = stage.toDataURL({ pixelRatio: 0.5, mimeType: 'image/jpeg', quality: 0.5 });
+      return url.length <= 40000 ? url : null;
+    } catch (e) { return null; }
+  }
+
   function buildStatePayload() {
     return {
       cart, cartOrder, attemptCounts, solvedKeys, day1Locked,
@@ -1303,12 +1324,14 @@
       day2Unlocked,
       tokens, trayIds, nextTokenId, gardenBuilt, gardenLocked,
       gardenElements: serializeGardenElements(),
+      gardenSnapshot: window.gardenSnapshotUrl || null,
       sign: {
         material: signMaterial,
         accentColor: signAccentColor,
         elements: serializeSignElements(),
         locked: document.getElementById('lock-sign-btn').disabled
-      }
+      },
+      signSnapshot: window.signSnapshotUrl || null
     };
   }
 
@@ -1336,6 +1359,12 @@
     nextTokenId = state.nextTokenId || 1;
     gardenBuilt = !!state.gardenBuilt;
     gardenLocked = !!state.gardenLocked;
+    // Carried forward so a save triggered before the student re-locks
+    // anything on this visit (e.g. answering an unrelated question) still
+    // includes the snapshot already captured on a previous visit, instead
+    // of buildStatePayload() reading these as unset and blanking it out.
+    if (state.gardenSnapshot) window.gardenSnapshotUrl = state.gardenSnapshot;
+    if (state.signSnapshot) window.signSnapshotUrl = state.signSnapshot;
 
     renderCatalog();
     renderCart();
@@ -2162,6 +2191,7 @@
       section: 'Day 2 - Garden Layout'
     }, `Garden layout locked! You placed ${placedCount} of ${tokens.length} items.`);
     document.getElementById('lock-garden-btn').disabled = true;
+    window.gardenSnapshotUrl = stageSnapshotUrl(gardenStage, gardenTransformer, gardenLayer);
     saveProgress();
   }
 
@@ -2787,6 +2817,7 @@
       answer: textSummary,
       section: 'Day 2 - Creation Sign'
     }, 'Your creation sign is locked in!');
+    window.signSnapshotUrl = stageSnapshotUrl(signStage, signTransformer, signLayer);
     saveProgress();
   }
 

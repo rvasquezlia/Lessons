@@ -1088,6 +1088,24 @@
   // ================================================================
   let day2Unlocked = false;
 
+  // A small, low-res JPEG snapshot of the flyer Konva stage - captured
+  // once at lock time (see lockFlyer()) and carried in ProjectState
+  // alongside everything else, so the dashboard can show an actual
+  // picture of what a student built instead of only the text summary
+  // deliverableSummaryHtml() already gives. Deliberately low-res
+  // (pixelRatio 0.5) and compressed (JPEG quality 0.5) to stay well clear
+  // of a Google Sheets cell's ~50,000-character limit - null (not a giant
+  // string) if it somehow still comes out too large, or if the canvas is
+  // tainted/Konva failed to load, rather than ever risking a failed save.
+  function stageSnapshotUrl(stage, transformer, layer) {
+    try {
+      transformer.nodes([]);
+      layer.draw();
+      const url = stage.toDataURL({ pixelRatio: 0.5, mimeType: 'image/jpeg', quality: 0.5 });
+      return url.length <= 40000 ? url : null;
+    } catch (e) { return null; }
+  }
+
   function buildStatePayload() {
     return {
       attemptCounts, solvedKeys, day1Locked, day2Unlocked,
@@ -1100,6 +1118,7 @@
         elements: serializeFlyerElements(),
         locked: document.getElementById('lock-flyer-btn').disabled
       },
+      flyerSnapshot: window.flyerSnapshotUrl || null,
       reflections: {
         comp1: document.getElementById('comp-reflection-1').value,
         comp3: document.getElementById('comp-reflection-3').value,
@@ -1130,6 +1149,11 @@
     window.taxRevenue = state.taxRevenue;
     window.taxBreakEven = state.taxBreakEven;
     window.headcountTarget = state.headcountTarget;
+    // Carried forward so a save triggered before the student re-locks the
+    // flyer on this visit still includes the snapshot already captured on
+    // a previous visit, instead of buildStatePayload() reading it as
+    // unset and blanking it out.
+    if (state.flyerSnapshot) window.flyerSnapshotUrl = state.flyerSnapshot;
 
     const restoreNumeric = (key, inputId, feedbackId, expected, msg, summaryId, summaryText) => {
       if (!solvedKeys[key]) return;
@@ -2188,6 +2212,7 @@
       answer: textSummary,
       section: 'Day 2 - Event Flyer'
     }, 'Your event flyer is locked in!');
+    window.flyerSnapshotUrl = stageSnapshotUrl(flyerStage, flyerTransformer, flyerLayer);
     saveProgress();
   }
 
