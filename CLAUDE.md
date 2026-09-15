@@ -101,6 +101,22 @@ directly, not a separate `SHEET_API_URL`.
   Client ID) — never commit it, never add it to any page.
 - Every request is re-verified server-side; the front-end's claimed
   identity is never trusted directly.
+- **`Lessons/privacy-policy.html` and `Lessons/terms-of-service.html`**
+  are the public Privacy Policy/Terms of Service pages the consent
+  screen's own configuration requires a link to before this app can
+  move from Testing to Production. Both are **deliberately public/
+  ungated** (Google's own review, and a prospective sign-in user, need
+  to read them without first signing in — unlike every other page this
+  file documents) and **generic** — no project-specific implementation
+  detail, just what data is collected (a Google account's name/email
+  via sign-in, restricted to the school's domain, plus academic
+  activity) and how it's used. **Deliberately not indexed** — no
+  `<meta name="robots" content="noindex, nofollow">`, not in
+  `index.html`'s `CURRICULUM`/any nav, same direct-link-only pattern as
+  the four STREAM project pages (§12) — only linked to each other and
+  back to `index.html`. Built with `lesson-shared.css`'s real
+  `.app-container`/`header`/`.panel` shell like every other page on the
+  site, not a one-off design.
 
 ### Persisted sign-in
 `Lessons/token-cache.js` (shared by `lesson-auth.js` and `index.html`,
@@ -936,10 +952,29 @@ Every unit ships the same file set: `Review.html`,
 `Vocabulary-Literacy.html`, `Explanation.html`, `Practice-Set.html`,
 `Word-Problems.html`, `Test-Prep.html`, `Teacher-Guide.html` (7 files).
 `Operations-with-Rationals` and `Literal-Equations` additionally have
-`Guided-Solving-Ladder.html` (8 files). `Teacher-Guide.html` is the
-only page in each unit left **ungated** (never linked from the student
-index, so a student has no path to it). Every other page type is
-gated, including `Explanation.html`.
+`Guided-Solving-Ladder.html` (8 files). Every page type in every unit
+is gated, including `Explanation.html` and `Teacher-Guide.html`.
+
+**`Teacher-Guide.html` uses the dashboards' hand-written teacher-only
+gate, not `lesson-auth.js`.** It used to be left completely ungated
+(never linked from the student index, relying on obscurity alone) —
+now every one of the 10 `Teacher-Guide.html` files carries the exact
+same gate `teacher-dashboard.html`/`projects-dashboard.html`/
+`Teacher-Help.html` use: `token-cache.js` plus a hand-rolled sign-in
+flow that POSTs `type: 'teacher-data'` purely as a teacher-only check
+(the response body beyond `ok` is ignored — this page has no data of
+its own to show). This is deliberately **not** the same
+`lesson-auth.js`/`unlockTeacherView()` pattern every other lesson page
+uses, since a Teacher's Guide has no student-facing check flow for a
+role split to apply to — it only ever needs a yes/no "is this a
+teacher" answer, exactly like the two dashboards. The gate markup is
+`#lesson-loading`/`#lesson-gate`/`.lesson-gate-body` (all styled by
+`lesson-shared.css`, already loaded on every Teacher-Guide.html), and
+`<div class="app-container" id="guide-app" hidden>` wraps the existing
+content unchanged. **Rule**: never add a real "answer key" reveal to a
+Teacher-Guide.html's own gate — a signed-in teacher already sees the
+Guide's real content as soon as the gate passes, there's nothing to
+auto-fill.
 
 **Before trusting any cell below on a page you're about to edit, verify
 it directly** — `grep` for `<math-field`, `createCardSelect(`,
@@ -1167,12 +1202,32 @@ this dashboard, `projects-dashboard.html`, and (for a signed-in teacher)
 `index.html`. Same gate pattern as this file (hand-written, `type:
 'teacher-data'` used purely as the teacher-only check — it ignores
 every field of the response except `ok`/`scope`, since this page has no
-data of its own to show). A static, styled reference explaining the
-site map, the 7 per-unit page types, grade tracks, sign-in/access rules,
-both dashboards' tabs/flags, STREAM project pairing setup, which Sheet
-tabs a teacher edits directly, and an FAQ — written for a teacher
-reading it, not a developer. **Keep it in sync by hand** whenever a
-dashboard-facing feature changes (a new flag type, a new tab, a new
+data of its own to show). A reference covering getting started
+(sign-in and what a teacher account unlocks), grades and the 7 per-unit
+page types, the Teacher Dashboard's four tabs and flags, STREAM
+projects and pairing, which Sheet tabs a teacher edits directly, and an
+FAQ — written for a teacher reading it, not a developer, and worded in
+plain classroom terms rather than backend/implementation language (no
+raw file paths, Sheet-mechanics framing kept to only what a teacher
+genuinely edits by hand). **Uses the site's own real content shell, not
+a bespoke design** — `<nav class="nav-tabs">`/`<button class="tab-btn"
+onclick="switchTab(...)">`/`<div class="panel">` (the exact same
+tabbed-page pattern every `Teacher-Guide.html` and lesson page already
+uses, including a page-local `switchTab()` copied from that same
+convention), `.section-title`/`.howto-box`/`.notebook-box`/
+`.explainer-box`/`.data-table` from `lesson-shared.css` for headings,
+callouts, and tables. Its only genuinely page-local components are the
+FAQ accordion (`details.help-faq` — no shared `<details>` style exists
+anywhere else on the site to reuse) and the color-coded `.chip`/
+`.role-pill` badges (deliberately reusing index.html's own per-section
+colors, so "Vocabulary & Literacy" reads as the same color here and on
+the index page). **No emoji, ever, on this page or anywhere else new
+gets added to the site** — an earlier version used emoji as decorative
+section-header icons; the site's own writing convention doesn't use
+them (a plain `" - "` is this site's own stand-in for an em dash,
+already used throughout this very file — that convention stays, only
+the emoji were the actual defect). **Keep it in sync by hand** whenever
+a dashboard-facing feature changes (a new flag type, a new tab, a new
 Sheet column a teacher might touch) — nothing generates its content
 from the dashboards' own code.
 
@@ -1193,7 +1248,16 @@ filtered.
 **Cross-page nav row** — same `.dash-nav-links` header row as
 `projects-dashboard.html`/`Teacher-Help.html`/index.html's teacher-only
 row (see §12); links to the other two teacher pages plus the Lessons
-Index, never to this page itself.
+Index, never to this page itself. **Each link carries a small
+stroke-style SVG icon** (`.nav-icon`, 16x16, `stroke="currentColor"`)
+identifying its *destination* — home for the Lessons Index, a bar-chart
+glyph for a dashboard, a flask for the STREAM Projects Dashboard, a
+help-circle for Teacher Help — rather than a directional arrow or a
+bare `?` character. Matches the visual language the `ThemeToggle`
+sun/moon icons already established on these same four pages. **Rule**:
+because the icon encodes the destination, not the direction, the exact
+same markup is correct on every page that links to it — never invent a
+"back" vs. "forward" variant of an icon for the same destination.
 
 **CSV gradebook export** — an "Export CSV" button next to Refresh calls
 `exportGradebookCsv()`, which exports exactly `filteredRows()` (the same
@@ -1320,7 +1384,17 @@ decision.
   sorted order on first load (`gradeFilterInitialized`), not "All" — a
   later Refresh leaves the teacher's own selection alone unless it no
   longer exists in fresh data. Teacher pill group is hidden entirely
-  for a scoped account.
+  for a scoped account. **The Grade pill row is built from `roster`
+  alone, never from `activityCatalog`.** `ActivityCatalog` always lists
+  every track (6/7/7-Honors/8/8-PreAP) regardless of who's actually
+  enrolled — an earlier version folded its grades into the pill set too
+  (to fold a shared row's comma-separated `Grade` cell into the right
+  pills), which meant a teacher with only 6th-grade students still saw
+  all 5 grade pills. A roster student's own `Grade` cell is always a
+  single value (only `ActivityCatalog.Grade` is ever comma-widened for
+  a shared activity — see §11), so no splitting is needed on the
+  roster side. `projects-dashboard.html`'s own copy of
+  `populateFilters()` had the identical bug and got the identical fix.
 - **Activity filter** is a multi-select checkbox popover
   (`currentActivityFilter` is an array), not a pill row or `<select>`.
 - **Default sort**: alphabetical everywhere (`sortState`:
