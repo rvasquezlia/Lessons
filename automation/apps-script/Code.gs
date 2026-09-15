@@ -604,6 +604,21 @@ function doPost(e) {
       return jsonOut_({ ok: true, progress: result.progress, resetCount: result.resetCount, skippedNoSection: result.skippedNoSection });
     }
 
+    // Teacher-only, writes. Marks (or clears) a review of this activity's
+    // flags for one student - body.reviewValid is 'valid'/'invalid'/''
+    // (see applyTeacherReview_). Same scoping check as teacher-reset above.
+    if (body.type === 'teacher-review') {
+      if (!isTeacher_(auth.email)) return jsonOut_({ ok: false, error: 'Not authorized' });
+      const scope = getTeacherScope_(auth.email);
+      const emailSet = getScopedEmailSet_(scope);
+      if (emailSet && !emailSet[body.studentEmail]) {
+        return jsonOut_({ ok: false, error: 'Not authorized for this student' });
+      }
+      const result = applyTeacherReview_(auth.email, body.studentEmail, body.activityId, body.reviewValid || '');
+      if (!result.ok) return jsonOut_({ ok: false, error: result.error });
+      return jsonOut_({ ok: true, progress: result.progress });
+    }
+
     return jsonOut_({ ok: false, error: 'Unknown request type' });
   } finally {
     lock.releaseLock();
@@ -826,6 +841,35 @@ function applyTeacherReset_(teacherEmail, studentEmail, activityId, scope, targe
   return { ok: true, progress: rowToDashboardRow_(row, map), resetCount: targetKeys.length, skippedNoSection };
 }
 
+// Marks (or clears) a teacher's own review of an activity's flags, on the
+// student's Progress row - never touches SubmissionsLog itself. Passing
+// reviewValid as 'valid' (a real concern, followed up on) or 'invalid'
+// (a false alarm - e.g. two known teammates) sets ReviewedByTeacher/
+// ReviewedAt/ReviewValid; passing '' clears all three (an "undo", in case
+// a row was marked by mistake). ReviewValid is an optional column - a
+// Sheet without it yet just never gets that cell written, same
+// degrade-cleanly pattern as Day2Code/TeamId elsewhere in this file.
+function applyTeacherReview_(teacherEmail, studentEmail, activityId, reviewValid) {
+  if (['valid', 'invalid', ''].indexOf(reviewValid) === -1) {
+    return { ok: false, error: 'Unknown review classification' };
+  }
+  const sheet = ss_().getSheetByName('Progress');
+  const map = colMap_(sheet);
+  const data = sheet.getDataRange().getValues();
+  let rowNumber = -1;
+  for (let r = 1; r < data.length; r++) {
+    if (data[r][map['Email']] === studentEmail && data[r][map['ActivityId']] === activityId) { rowNumber = r + 1; break; }
+  }
+  if (rowNumber === -1) return { ok: false, error: 'No progress found for that student/activity' };
+
+  const row = sheet.getRange(rowNumber, 1, 1, sheet.getLastColumn()).getValues()[0];
+  row[map['ReviewedByTeacher']] = !!reviewValid;
+  row[map['ReviewedAt']] = reviewValid ? new Date().toISOString() : '';
+  if (map['ReviewValid'] !== undefined) row[map['ReviewValid']] = reviewValid;
+  sheet.getRange(rowNumber, 1, 1, row.length).setValues([row]);
+  return { ok: true, progress: rowToDashboardRow_(row, map) };
+}
+
 function rowToProgress_(row, map) {
   return {
     email: row[map['Email']], studentName: row[map['StudentName']], grade: row[map['Grade']],
@@ -896,7 +940,10 @@ function rowToDashboardRow_(row, map) {
     submissionsLog: row[map['SubmissionsLog']] || '[]',
     flagReason: row[map['FlagReason']],
     reviewedByTeacher: row[map['ReviewedByTeacher']],
-    reviewedAt: row[map['ReviewedAt']]
+    reviewedAt: row[map['ReviewedAt']],
+    // Optional column (see applyTeacherReview_) - degrades to '' on a
+    // Sheet that doesn't have it yet, same pattern as Day2Code/TeamId.
+    reviewValid: map['ReviewValid'] !== undefined ? (row[map['ReviewValid']] || '') : ''
   };
 }
 

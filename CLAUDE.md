@@ -196,7 +196,7 @@ One spreadsheet, five tabs.
 | `Roster` | **Manual** — teacher: `Email, StudentName, Grade, Teacher, Section, Status` | Who's allowed in, and their grade/teacher. Add/remove students directly in the Sheet. |
 | `ActivityCatalog` | **Manual** — teacher: `ActivityId, Title, Grade, Unit, Active` | Drives the grade-gate check. One row per activity. |
 | `Teachers` | **Manual** — `Email, Scope` (optional) | Gates the `teacher-data` endpoint. Being on `Roster.Teacher` does NOT by itself grant dashboard access — only an email listed on `Teachers` can. `Scope` blank/`All`/missing = unrestricted (sees every student). Any other value must exactly match a `Roster.Teacher` value — a typo (case/spelling) makes that teacher silently see nobody, not an error. |
-| `Progress` | **Automatic** — Apps Script only | One row per (student, activity), upserted on every save. Columns: `Email, StudentName, Grade, Teacher, ActivityId, ActivityTitle, FirstStartedAt, LastSubmittedAt, ItemsTotal, ItemsAttempted, ItemsCorrect, ScorePct, Status, SubmissionsLog (JSON), FlagReason, ReviewedByTeacher, ReviewedAt`. Only the last two are ever hand-edited by a teacher. |
+| `Progress` | **Automatic** — Apps Script only | One row per (student, activity), upserted on every save. Columns: `Email, StudentName, Grade, Teacher, ActivityId, ActivityTitle, FirstStartedAt, LastSubmittedAt, ItemsTotal, ItemsAttempted, ItemsCorrect, ScorePct, Status, SubmissionsLog (JSON), FlagReason, ReviewedByTeacher, ReviewedAt`, plus an optional `ReviewValid` (`'valid'`/`'invalid'`/blank — see §13's "Marking a flag reviewed"). None of these five are ever hand-edited directly — the Teacher Dashboard's own review UI writes `ReviewedByTeacher`/`ReviewedAt`/`ReviewValid` via a `teacher-review` backend request. |
 | `AccessLog` | **Automatic** — Apps Script only | **Denied access attempts only.** Allowed opens are never logged here (redundant with `Progress`, and a duplicate-row source of their own — see `checkAccess_` in `Code.gs`). Older rows may still say `Allowed`; not backfilled away. |
 
 ---
@@ -627,12 +627,54 @@ page in one unit. See §15 for the sourcing rule and the current table.
     separate, later, file-by-file pass — expect a page with heavy local
     styling to look like a light card floating inside a dark shell
     until that pass happens, not a bug in this mechanism.
-  - **`teacher-dashboard.html` loads `lesson-shared.css` but not
-    `lesson-shared.js`** (§13) — its own shared-component usage
-    benefits from the dark variables/overrides automatically, but it
-    never gets the toggle button and has no way to actually enter dark
-    mode yet. `index.html` (§12) loads neither file at all and is
-    entirely unaffected.
+  - **`teacher-dashboard.html`/`projects-dashboard.html`/`Teacher-
+    Help.html` load `lesson-shared.css` but never `lesson-shared.js`**
+    (§13) — loading the whole file would also auto-inject
+    `TeacherPrint`'s "Print Class Progress" bar the moment it finds any
+    `.tab-btn` element, which `teacher-dashboard.html`'s own nav tabs
+    are (they use `switchDashTab()`, not the lesson-page `switchTab()`
+    that bar expects — the bar would render with an empty checklist, a
+    real bug, not a hypothetical one). All three pages instead carry
+    their own standalone copy of just the `ThemeToggle` module (a
+    `<script>` in `<head>`, before `<body>` — same "no flash of the
+    wrong theme" ordering as `lesson-shared.js`'s own copy), duplicated
+    rather than shared, matching this codebase's existing
+    "self-contained dashboard page" convention (see `projects-
+    dashboard.html`'s own `STREAM_PILLAR_RULES` duplication). Each adds
+    a small `[data-theme="dark"]` block for its own hardcoded (non
+    `var()`) colors — `teacher-dashboard.html`'s `.pill.neutral`/
+    `.pill.progress`/`.detail-row td`/the shared `.info-bar` class (see
+    below); `projects-dashboard.html`'s `details.deliverables-toggle
+    summary`; `Teacher-Help.html`'s `.chip.*`/`.note-box`/`code.k`. Any
+    other selector in these three files already uses
+    `lesson-shared.css`'s own shared custom properties and flips
+    automatically once `[data-theme="dark"]` is set — check for `var(
+    --...)` usage before assuming a new hardcoded color needs its own
+    override.
+  - **`teacher-dashboard.html`'s `.info-bar` class** — the small utility
+    bars `pairingHtml()`/`reviewToolbarHtml()`/`submissionDetailTable()`'s
+    reset toolbar each render (§9/§13/§18) used to be inline
+    `style="background:#f8fafc..."` on each call site — converted to a
+    shared `.info-bar` class (`.tint-blue` variant for `pairingHtml()`'s
+    lighter tint) specifically so dark mode can override them in one
+    place instead of five. Any new small inline-styled info box in this
+    file should use (or extend) this class rather than a fresh inline
+    background, or it silently stays light-mode-only.
+  - **`index.html` (§12) keeps its own separate `:root` block** (not
+    shared with `lesson-shared.css` — this page loads neither shared
+    file, its own separate gate implementation) — it has its own
+    `[data-theme="dark"]` redefinition of the same variable names
+    (`--bg`/`--card`/`--text`/`--border`/`--dark-heading`) plus its own
+    six `--c-*`/`--c-*-bg` topic-chip pairs, inverted the same
+    dark-tinted-background-plus-lighter-foreground way as every other
+    pastel badge on the site. It also carries its own duplicated
+    `.theme-toggle-btn` CSS and `ThemeToggle` module (no shared file to
+    load at all) — a third copy of both, alongside the three dashboard-
+    style pages' copies above. **Every dashboard-adjacent page (all
+    four now) has real, working dark mode** — the one remaining gap is
+    genuinely page-local lesson-page content (a digit-box grid, a
+    catalog card, a Konva canvas, ...), unchanged from the scope note
+    above.
   - **`--text` is deliberately a mid-gray (`#717a85`), never a near-
     white, in dark mode** — `body { color: var(--text); }` (light-mode,
     unedited) means every element on the page inherits this as its
@@ -795,11 +837,14 @@ first try).
 
 **Deliberately deferred** (need either new client-side instrumentation
 or are inherently a live feature the "no live monitoring" rule
-excludes): a Printable PDF/Report Generator, the *full* structured
-per-distractor Item Diagnostics (a free-text "lite" version exists —
-see §13's Item Diagnostics entry), true DevTools/concurrent-session
-detection, Vocabulary flashcard rapid-flip tracking, any Live
-Classroom View. Don't build these without a separate, explicit request.
+excludes): the *full* structured per-distractor Item Diagnostics (a
+free-text "lite" version exists — see §13's Item Diagnostics entry),
+true DevTools/concurrent-session detection, Vocabulary flashcard
+rapid-flip tracking, any Live Classroom View. Don't build these without
+a separate, explicit request. **Closed**: a Printable PDF/Report
+Generator — see §13's CSV gradebook export (a filtered CSV, not a
+formatted PDF/printable page; a real print-formatted report is still
+open if that specific format is ever wanted).
 
 ---
 
@@ -1093,6 +1138,14 @@ role + grade only).
   backend, pairing) exactly as if it were indexed; only its discovery
   path differs. Don't re-add a `CURRICULUM` entry for it without asking
   first — this was a deliberate access-control choice, not an oversight.
+- **A teacher-only nav row** (`#teacher-nav-links`, hidden by default,
+  unhidden inside `renderForTeacher()`) sits under the header subtitle —
+  links to `teacher-dashboard.html`, `projects-dashboard.html`, and
+  `Teacher-Help.html`. A student never sees it (`renderForStudent()`
+  never unhides it). Same `.dash-nav-links`/`.dash-nav-link` CSS class
+  names as the three teacher-only pages below, each page keeping its own
+  copy in its own `<style>` block (this page's own convention: no shared
+  CSS file with the dashboards).
 
 ---
 
@@ -1109,6 +1162,20 @@ zero-submission students show up), `activityCatalog` (every
 `accessLog` (returned but unused by current UI), and `scope` (`null` or
 the matched teacher name).
 
+**`Lessons/Teacher-Help.html`** — a fourth teacher-only page, alongside
+this dashboard, `projects-dashboard.html`, and (for a signed-in teacher)
+`index.html`. Same gate pattern as this file (hand-written, `type:
+'teacher-data'` used purely as the teacher-only check — it ignores
+every field of the response except `ok`/`scope`, since this page has no
+data of its own to show). A static, styled reference explaining the
+site map, the 7 per-unit page types, grade tracks, sign-in/access rules,
+both dashboards' tabs/flags, STREAM project pairing setup, which Sheet
+tabs a teacher edits directly, and an FAQ — written for a teacher
+reading it, not a developer. **Keep it in sync by hand** whenever a
+dashboard-facing feature changes (a new flag type, a new tab, a new
+Sheet column a teacher might touch) — nothing generates its content
+from the dashboards' own code.
+
 **Field casing from the backend is always lowercase camelCase**
 (`email`, `studentName`, `grade`, `activityId`, `scorePct`, etc. — see
 `rowToDashboardRow_`/`getRosterForDashboard_`/
@@ -1122,6 +1189,58 @@ every filter/grouping silently reads `undefined`.
 ever leave `Code.gs`; a scoped teacher's browser never receives another
 teacher's rows to filter out client-side. `activityCatalog` is never
 filtered.
+
+**Cross-page nav row** — same `.dash-nav-links` header row as
+`projects-dashboard.html`/`Teacher-Help.html`/index.html's teacher-only
+row (see §12); links to the other two teacher pages plus the Lessons
+Index, never to this page itself.
+
+**CSV gradebook export** — an "Export CSV" button next to Refresh calls
+`exportGradebookCsv()`, which exports exactly `filteredRows()` (the same
+Grade/Teacher/Activity/Flagged-only-filtered set every tab's own table
+already reads from) as a UTF-8-BOM CSV (Student, Grade, Teacher,
+Activity, Score %, Items Attempted, Items Correct, Status, Last
+Submitted, Flags, Reviewed, Review Classification). Client-side only —
+no backend call.
+
+### Marking a flag reviewed (Valid concern / Not an issue)
+`ReviewedByTeacher`/`ReviewedAt` existed as real `Progress` columns with
+no UI to set them until a `teacher-review` request type
+(`applyTeacherReview_` in `Code.gs`) and a matching dashboard UI closed
+that gap. A flagged row can be marked reviewed and classified
+`'valid'` (a real concern, followed up on) or `'invalid'` (a false
+alarm) — or unmarked (`''` clears all three fields). This never touches
+`SubmissionsLog`/scoring — it's a note for whoever reads the dashboard
+next, not a correction to the record.
+
+- **`ReviewValid`** is an optional `Progress` column (add it as a 6th
+  header if you want the classification persisted — everything degrades
+  cleanly without it, same pattern as `Day2Code`/`TeamId`: reviewed/
+  unreviewed still works, the row's classification just reads as
+  `''`/"Not an issue" until the column exists).
+- **`reviewToolbarHtml(r)`** — the full toolbar (status pill + Mark
+  Valid/Mark Not an issue buttons, or the reviewed pill + Undo),
+  prepended inside `submissionDetailTable()` so it shows on every detail
+  view that function already serves (Student Roster, By Activity, Full
+  Submission Log) — same "one shared function, three call sites" pattern
+  the reset toolbar (§9) uses.
+- **`reviewCellHtml(r)`** — the compact version (buttons or a pill,
+  no label) for the Flags & Behavior list row itself, so a teacher can
+  classify a flag without opening its detail view first.
+- **`teacherReview(email, activityId, reviewValid, btn)`** — the one
+  client function both call, mirroring `teacherReset()`'s shape exactly
+  (fetch, `decorateRow(result.progress)` back into `allRows`, `renderAll()`).
+- Requires a `Code.gs` redeploy (§1) to take effect live.
+
+### Duplicate-answer flag skips known teammates
+`applyDuplicateAnswerFlags()` (§8) now excludes a match against anyone
+`teammatesForRow()` already reports as this row's own teammate before
+counting it — a paired/team activity mirrors the Driver's every
+submission onto each teammate's row by design (§18), so two teammates
+converging on the same wrong answer is expected, not suspicious.
+`allPairs` must be populated (inside `onDataLoaded`) **before**
+`applyDuplicateAnswerFlags()` runs, not after — the two were reordered
+for this reason.
 
 ### Four top-level tabs, in this order
 **Never re-introduce a fifth+ top-level tab** as the default way to add
@@ -1653,11 +1772,39 @@ pairing is completely unaffected)
   team) to build their `pairing-status` text — a `teammates.length > 1`
   branch renders `"Team: <name> (<role>), <name> (<role>), ..."`
   instead of the single-partner `"Partner: <name> (<role>)"` line. The
-  hidden `team-name-2` field feeding each page's certificate/badge
-  canvas still only ever holds the **first** teammate's name regardless
-  of team size — a 3+-person team's downloaded certificate still only
-  names two people until that canvas layout is deliberately redesigned
-  to fit more; not yet done anywhere on the site.
+  hidden `team-name-2` field still only ever holds the **first**
+  teammate's name (kept only for a page reading it directly, e.g.
+  Teacher Preview); a third, `team-name-3`, holds the **second**
+  teammate's name when one exists. **The certificate/stamp/badge
+  renderers now support 3+ names** — `window.allTeamNames` (set here,
+  right alongside `team-name-2`/`team-name-3`) is `[selfName, ...every
+  teammate's name]`; `getAllTeamNames()` (falls back to the three hidden
+  inputs for Teacher Preview, which sets those directly and never calls
+  this hook) and `joinNames()` (Oxford-comma-style: `"A"` / `"A & B"` /
+  `"A, B & C"`) are the two small helpers every one of
+  `downloadCertificate()`/`downloadSoloBadge(memberNum)`/
+  `downloadStamp()` on all four paired pages now goes through instead of
+  reading `team-name-1`/`team-name-2` directly. The certificate's name
+  line shrinks its own font (34px down to a 22px floor, `ctx.measureText`
+  against the canvas's own fixed width) so three names don't overflow —
+  a per-line adjustment, every other line's size is untouched. A 3rd
+  **and 4th** "Download Badge - Team Member N" button exists on every
+  page, both `hidden` by default, unhidden here only when
+  `teammates.length > 1` (3rd) / `teammates.length > 2` (4th) — a real
+  3-/4-person team — `downloadSoloBadge(3)`/`downloadSoloBadge(4)` read
+  the same `getAllTeamNames()` array, so neither needs any
+  special-casing beyond its own button's visibility. **The
+  reconstruction path (`window.onTeacherUnlock`'s `pendingView` branch —
+  see above) toggles both buttons too**, from `pendingView.teammates
+  .length` — this was missed on the first pass (only the live
+  `onLessonUnlock` path toggled them), so a teacher opening a real
+  trio/quad's saved work via "Open & download real files" couldn't
+  reach member 3/4's own badge; fixed before it shipped. **Still not
+  done**: no 5th+ button — extend the identical pattern (one more
+  hidden button in the markup + a `teammates.length > 3` check in
+  *both* `onLessonUnlock` and the `pendingView` branch, in all four
+  files) if a 5-person team is ever actually used. The certificate/
+  stamp already scale to any team size with no changes needed.
 - **`window.onTeacherUnlock(result)`** — a second, separate optional
   hook, called instead of the generic `unlockTeacherView()` (§6) when a
   **teacher** signs in, if the page defines it. Exists for a page where
@@ -1775,10 +1922,137 @@ pairing is completely unaffected)
     `tokens`+`gardenElements`/`sign` fields are present, defensively
     (every field optional — `StateJSON`'s shape is whatever that
     specific project's own `buildStatePayload()` produces, never
-    standardized across projects). This is a **structured summary**, not
-    a visual snapshot — no canvas-to-image capture/storage exists
-    site-wide; a garden/sign's actual on-canvas image is not
-    reproducible from the dashboard today.
+    standardized across projects), plus an **"Open & download real
+    files"** button (see below) next to the text summary.
+
+**Getting a student's actual, full-resolution deliverable (not a
+stored copy).** The certificate/badge/garden/sign/flyer/infographic a
+student downloads is never a stored image anywhere — the download
+button re-renders it live, in the browser, from the same state
+variables (`cartOrder`, `tokens`, `gardenElements`, `sign`, `flyer`,
+`infographicConfig`, ...) that are already sitting in
+`ProjectState.StateJSON`. Since the dashboard already has that exact
+JSON in memory (`allProjectStates`), a teacher can reconstruct a
+student's real page and use the *same* download buttons the student
+has, rather than a separately-stored, necessarily-lower-quality copy.
+**Never build a second, stored-image mechanism for this** (one was
+tried and reverted — see git history around "Capture real canvas/
+infographic snapshots" — a low-res JPEG saved into `ProjectState`
+purely so it would fit a Sheet cell; strictly worse than reconstruction
+in every way once reconstruction existed) — extend this mechanism
+instead of adding a parallel one.
+
+- **`openStudentWorkForDownload(email, activityId, studentName)`**
+  (identical copy in `teacher-dashboard.html` and
+  `projects-dashboard.html`, wired to the button `deliverableSummaryHtml()`
+  renders) — looks up that student's `stateJson` in `allProjectStates`,
+  writes `{activityId, studentName, teammates: [{name, role}], stateJson}`
+  to `sessionStorage['lia_teacher_view_state']`, then
+  `window.open()`s that project's own page (`PROJECT_PAGE_URLS`, one
+  entry per known project — extend it when a new paired project ships).
+  `teammates` comes from `teammatesForRow()`/`partnerNameFor()` (see
+  above) so the reconstructed page can populate every team member's
+  name, not just the one being opened — `projects-dashboard.html`
+  carries its own copies of `pairingForRow()`/`teammatesForRow()`/
+  `partnerNameFor()` for this (it had none before; §13's "Teacher
+  dashboard" pairing functions were teacher-dashboard-only until this).
+- **Delivery mechanism: `sessionStorage`, not a URL param or a new
+  backend call.** Per the HTML Living Standard, a same-origin tab
+  opened via `window.open()`/`target="_blank"` gets a **copy** of the
+  opener's `sessionStorage` at open time — verified live in this
+  environment's own headless Chromium, not just asserted from the spec.
+  This keeps the whole handoff client-side (no `Code.gs` change, no
+  redeploy, nothing written anywhere new) and self-cleaning (a one-time
+  read — see below).
+- **Each of the four project pages' `window.onTeacherUnlock` hook**
+  (§18's teacher-preview hook) checks for a pending handoff *matching
+  its own `activityId`* first, before falling through to the generic
+  Teacher Preview (empty, free-play) setup below it. If found: reads
+  `sessionStorage`, **immediately removes the key** (one-time use — a
+  refreshed or reopened tab never re-triggers it), sets
+  `window.allTeamNames`/`team-name-1`/`team-name-2`/`team-name-3` from
+  the handoff's own `studentName`/`teammates` (not from any live
+  pairing lookup on this page, since a teacher's own sign-in never goes
+  through `onLessonUnlock`), then calls `restoreState(JSON.parse(...))`
+  — **the exact same function a normal student reload already calls**,
+  not a new reconstruction path. `restoreState()` on every one of these
+  four pages already fully rebuilds everything needed (Konva canvas
+  elements from `gardenElements`/`sign.elements`/`flyer.elements`;
+  `window.infographicConfig` + a `renderInfographicArt()` call for the
+  SVG-based pages; `day1Locked`/`day2Unlocked` correctly re-gating Day 2
+  access) purely because that's what it was already built to do for a
+  student's own reload — reusing it here needed zero changes to
+  `restoreState()` itself on any page. A distinct
+  `.teacher-preview-banner` ("VIEWING `<name>`'S SAVED WORK...") makes
+  clear this is a read-only reconstruction, not free play.
+- **Nothing this teacher does here can get saved over the student's
+  real record** — `window.teacherPreviewMode = true` is set exactly as
+  the generic Teacher Preview path already does, and `lesson-auth.js`
+  calls `showAppContainer()` (never `unlock()`) ahead of either branch
+  of `onTeacherUnlock`, so `ready` stays `false` and
+  `LessonSync.saveProjectState()`/`LessonProgress.record()` already
+  no-op on their own pre-existing `!ready` guard — this reconstruction
+  needed no new save-blocking guard of its own.
+- **Verifying this on a Konva-canvas page in an environment where the
+  CDN is blocked** (this one included — `cdn.jsdelivr.net` returns 403
+  through this sandbox's proxy): a minimal `Konva` stub (a `Proxy`-
+  wrapped node whose only real methods are the handful actually read
+  back — `getClassName`/`toDataURL`/`getChildren`/`x`/`y`/`width`/
+  `height`/`text`/`fill`/`nodes`/`position` — everything else a
+  chainable no-op) routed in via Playwright's `page.route()` is enough
+  to prove `onTeacherUnlock`/`restoreState()` run end-to-end with zero
+  page errors; it can't verify actual pixel output, only that the
+  reconstruction logic itself doesn't throw. The SVG-based pages
+  (Ethical Auditor, Ethical Linear Budgeting) need no such stub and
+  were verified with a real, full-resolution rendered image.
+
+**Downloading every student's certificate for one activity at once.**
+`downloadAllCertificatesForActivity(activityId)` (identical copy in
+both dashboards — `teacher-dashboard.html`'s Deliverables card header
+inside `projectInsightsHtml()`; `projects-dashboard.html`'s
+Deliverables `<details>` toggle) — **certificate only**, not
+badges/stamps/gardens/infographics, which still need the one-at-a-time
+"Open & download real files" button above (every project's Certificate
+is the one deliverable every one of the four pages has in common).
+- **Sequential, one tab at a time, never parallel** — opening every
+  student's tab at once is far more likely to trip a browser's popup
+  blocker than opening them one at a time as each previous one finishes
+  and self-closes. `writeTeacherViewHandoff()` (shared by this and
+  `openStudentWorkForDownload()`) gained an `autoDownload` field for
+  this — `'certificate'` today, the only value read anywhere.
+- **On the project-page side**, the exact same `pendingView` branch
+  described above additionally checks `pendingView.autoDownload ===
+  'certificate'` right after `restoreState()` — if set, it calls
+  `downloadCertificate()` itself (fire-and-forget, since
+  `onTeacherUnlock` isn't `async`), checks `window.certificateDownloaded`
+  afterward (a student who hasn't finished Day 2 can't generate one —
+  `downloadCertificate()`'s own existing guard just returns without
+  setting it, never throws), reports `{type:
+  'lia-batch-download-done', email, ok}` back via
+  `window.opener.postMessage()`, then `window.close()`s itself ~1.2s
+  later (not immediately — closing right away can cancel an
+  in-progress browser download).
+- **On the dashboard side**, each iteration opens one tab, listens for
+  that exact `email`'s `message` event (a **10-second timeout**
+  resolves it as skipped if no message ever arrives — a hung/failed tab
+  can't stall the whole batch forever), tallies success/skip, then
+  moves to the next candidate. If `window.open()` itself returns falsy
+  (the browser blocked the tab), the loop **stops immediately** and
+  tells the teacher exactly which student it stopped at, how many
+  succeeded so far, and that re-running "Download all" after allowing
+  pop-ups is safe (each run is independent — no dedup/resume state is
+  kept between runs, so re-running simply redoes every candidate again).
+- **Verified in isolation, not as one fully-integrated real-multi-tab
+  test** — real cross-tab `window.open()` timing in headless automation
+  doesn't reliably mirror a real browser's user-gesture/popup-blocker
+  behavior, so the two sides were proven independently instead: the
+  project-page side (stub `window.opener`/`window.close`, confirm the
+  real `postMessage` payload and self-close call), and the dashboard
+  side (stub `window.open` to simulate a fast success, a silent
+  timeout, and an outright block, confirming sequential pacing,
+  correct tallying, and the exact alert text in each case). Both
+  dashboards' copies tested identically since they're kept in sync by
+  hand.
 
 ### Projects Dashboard (`Lessons/projects-dashboard.html`)
 A separate, standalone, teacher-only page — never a 5th top-level tab on
@@ -1810,6 +2084,10 @@ gate identical in shape to `teacher-dashboard.html`'s own (same
   list, none of the integrity/effort flagging engine, which belongs to
   the main dashboard only), `STREAM_PILLAR_RULES`,
   `computeStreamPillarBreakdown()`, `deliverableSummaryHtml()`,
+  `pairingForRow()`/`teammatesForRow()`/`partnerNameFor()`/
+  `writeTeacherViewHandoff()`/`openStudentWorkForDownload()`/
+  `downloadAllCertificatesForActivity()`/`PROJECT_PAGE_URLS` (the
+  "open/download a student's real deliverable" mechanism — see above),
   `gradeListIncludes()`/`formatGradeLabel()`/`isActiveStatus()` are all
   copied here rather than imported from `teacher-dashboard.html` —
   matches the site's existing "every dashboard-shaped page is

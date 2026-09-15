@@ -8,6 +8,77 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="lesson-shared.css">
+<script>
+  // Dark mode toggle - a standalone copy of lesson-shared.js's own
+  // ThemeToggle module (see /CLAUDE.md's "Dark mode" section), duplicated
+  // here rather than loading the whole file, matching this page's existing
+  // "self-contained dashboard page" convention (see STREAM_PILLAR_RULES
+  // below). Only sets data-theme on <html> (synchronously, before <body>
+  // is parsed, so there's no flash of the wrong theme) and injects its own
+  // toggle button once the DOM is ready. The button's own CSS
+  // (.theme-toggle-btn) already ships in lesson-shared.css, loaded above.
+  const ThemeToggle = (() => {
+    const STORAGE_KEY = 'lia_theme';
+    function preferredTheme() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored === 'light' || stored === 'dark') return stored;
+      } catch (e) { /* private window or storage blocked - fall through to system preference */ }
+      return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    }
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      const btn = document.querySelector('.theme-toggle-btn');
+      if (!btn) return;
+      const sunIcon = btn.querySelector('.icon-sun');
+      const moonIcon = btn.querySelector('.icon-moon');
+      if (sunIcon) sunIcon.hidden = theme !== 'dark';
+      if (moonIcon) moonIcon.hidden = theme === 'dark';
+      btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+      btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    }
+    let currentTheme = preferredTheme();
+    applyTheme(currentTheme);
+    function toggle() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme(currentTheme);
+      try { localStorage.setItem(STORAGE_KEY, currentTheme); } catch (e) { /* nothing to persist to - theme still applies for this page view */ }
+    }
+    function buildButton() {
+      if (document.querySelector('.theme-toggle-btn')) return;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'theme-toggle-btn';
+      btn.innerHTML = `
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>`;
+      btn.addEventListener('click', toggle);
+      document.body.prepend(btn);
+      applyTheme(currentTheme);
+    }
+    function init() {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', buildButton);
+      } else {
+        buildButton();
+      }
+    }
+    init();
+    return { toggle };
+  })();
+</script>
 <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
 <script src="token-cache.js?v=2"></script>
 <style>
@@ -37,11 +108,17 @@
     border-radius: 8px; font-weight: 800; cursor: pointer; font-family: inherit; font-size: 0.9rem;
   }
   .btn-refresh:hover { background: var(--primary-light); }
-  .back-link {
-    display: inline-block; margin: 0 0 14px 0; color: var(--primary); font-weight: 700;
-    text-decoration: none; font-size: 0.9rem;
+
+  /* Consistent cross-page nav row, shown in the header of every teacher-
+     only page (Teacher Dashboard, this page, Teacher Help) - always links
+     to the OTHER pages, never the one currently open. */
+  .dash-nav-links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+  .dash-nav-link {
+    display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.4); color: #fff; padding: 7px 16px; border-radius: 999px;
+    font-weight: 700; font-size: 0.85rem; text-decoration: none; transition: background 0.15s;
   }
-  .back-link:hover { text-decoration: underline; }
+  .dash-nav-link:hover { background: rgba(255,255,255,0.32); }
 
   .section-title { font-size: 1.4rem; font-weight: 800; color: var(--primary); margin: 26px 0 14px 0; }
 
@@ -110,6 +187,14 @@
   .deliverables-table th { background: var(--primary); color: #fff; font-size: 0.78rem; }
 
   .empty-note { color: var(--empty, #94a3b8); font-style: italic; }
+
+  /* Dark-mode override for this page's own hardcoded "primary as text
+     color" spot - everything else here already uses lesson-shared.css's
+     shared custom properties and flips automatically. The STREAM ring
+     stroke/letter colors are set inline per-pillar (see stream-hero
+     rendering below) whenever real data exists, so they need no override
+     here. */
+  [data-theme="dark"] details.deliverables-toggle summary { color: var(--dark-heading); }
 </style>
 </head>
 <body>
@@ -140,6 +225,11 @@
     <span class="badge">Projects Dashboard</span>
     <h1>STREAM Project Progress</h1>
     <p class="subtitle" id="loaded-as"></p>
+    <div class="dash-nav-links">
+      <a class="dash-nav-link" href="index.html">&larr; Lessons Index</a>
+      <a class="dash-nav-link" href="teacher-dashboard.html">&larr; Main Teacher Dashboard</a>
+      <a class="dash-nav-link" href="Teacher-Help.html">? Teacher Help</a>
+    </div>
   </header>
 
   <div class="filter-bar">
@@ -157,8 +247,6 @@
   </div>
 
   <div style="padding: 0 24px;">
-    <a class="back-link" href="teacher-dashboard.html">&larr; Back to the main Teacher Dashboard</a>
-
     <div class="section-title">STREAM Pillar Progress</div>
     <p style="margin: -8px 0 14px 0; color: var(--text); opacity: 0.85; font-size: 0.9rem;">
       Aggregated across every STREAM project activity currently in view (see the Grade/Teacher filters above).
@@ -181,6 +269,7 @@
   let activityCatalog = [];
   let teacherScope = null;
   let allProjectStates = [];
+  let allPairs = [];
 
   let currentGradeFilter = '';
   let currentTeacherFilter = '';
@@ -389,6 +478,136 @@
     return { totalAttempts, solvedCount, avgAttemptsOverall: solvedCount ? Math.round((totalAttempts / solvedCount) * 10) / 10 : null };
   }
 
+  // Pairing lookups - kept in sync with teacher-dashboard.html's own
+  // identical copies (see /CLAUDE.md's "Paired/team activities"). Needed
+  // here only so openStudentWorkForDownload() can hand every teammate's
+  // real name to the reconstructed page (a certificate/badge needs every
+  // team member's name, not just the one row being opened).
+  function pairingForRow(r) {
+    return allPairs.find((p) => p.email === r.email && p.activityId === r.activityId) || null;
+  }
+  function partnerNameFor(partnerEmail) {
+    const partnerRow = roster.find((s) => s.email === partnerEmail);
+    return (partnerRow && partnerRow.studentName) || partnerEmail;
+  }
+  function teammatesForRow(r) {
+    const own = pairingForRow(r);
+    if (!own) return [];
+    if (own.teamId) {
+      return allPairs.filter((p) => p.activityId === r.activityId && p.teamId === own.teamId && p.email !== r.email);
+    }
+    if (!own.partnerEmail) return [];
+    const partnerRow = allPairs.find((p) => p.email === own.partnerEmail && p.activityId === r.activityId);
+    return [{ email: own.partnerEmail, role: partnerRow ? partnerRow.role : '' }];
+  }
+
+  // Direct link (relative to this page, same as Teacher-Help.html's own
+  // table) for each known project - see openStudentWorkForDownload().
+  const PROJECT_PAGE_URLS = {
+    '6-laudato-si-ecogarden': 'Sixth/Laudato-Si-EcoGarden/index.html',
+    '7-ethical-auditor-community-engineer': 'Seventh/Ethical-Auditor-Community-Engineer/index.html',
+    '8-youth-festival-logistics': 'Eighth/Youth-Festival-Logistics/index.html',
+    '8-ethical-linear-budgeting': 'Eighth/Ethical-Linear-Budgeting/index.html'
+  };
+  function projectPageUrlFor(activityId) {
+    const exact = PROJECT_PAGE_URLS[activityId];
+    if (exact) return exact;
+    const prefix = Object.keys(PROJECT_PAGE_URLS).find((p) => activityId.startsWith(p + '-'));
+    return prefix ? PROJECT_PAGE_URLS[prefix] : null;
+  }
+
+  // Writes the sessionStorage handoff a project page's own
+  // window.onTeacherUnlock reads (see /CLAUDE.md's "Paired/team
+  // activities" - "Reconstructing a student's real deliverable" note).
+  // Shared by openStudentWorkForDownload() (interactive, one student) and
+  // downloadAllCertificatesForActivity() (autoDownload: 'certificate',
+  // one student at a time). Returns false (and alerts) on failure so
+  // both callers can bail out the same way. Kept in sync with
+  // teacher-dashboard.html's identical copy.
+  function writeTeacherViewHandoff(email, activityId, studentName, stateJson, autoDownload) {
+    const mates = teammatesForRow({ email, activityId });
+    try {
+      sessionStorage.setItem('lia_teacher_view_state', JSON.stringify({
+        activityId, email, studentName,
+        teammates: mates.map((m) => ({ name: partnerNameFor(m.email), role: m.role })),
+        stateJson,
+        autoDownload: autoDownload || undefined
+      }));
+      return true;
+    } catch (e) {
+      alert('Could not prepare the handoff - your browser may be blocking storage.');
+      return false;
+    }
+  }
+
+  // Opens a student's actual project page with their saved state handed
+  // off via sessionStorage - the page's own window.onTeacherUnlock hook
+  // picks it up, runs it through the exact same restoreState() a normal
+  // reload already uses, and reveals the page's own real Download
+  // Certificate/Badge/Garden/Sign/Infographic buttons - producing the
+  // genuine full-resolution file, not a copy stored anywhere.
+  // sessionStorage (not localStorage) is used deliberately: the HTML spec
+  // copies a same-origin opener's sessionStorage into a tab opened via
+  // window.open()/target="_blank", so this is same-tab-visible only and
+  // never persists across a browser restart - a one-time handoff, not a
+  // stored artifact.
+  function openStudentWorkForDownload(email, activityId, studentName) {
+    const row = allProjectStates.find((p) => p.email === email && p.activityId === activityId);
+    if (!row || !row.stateJson) { alert('No saved work to open yet.'); return; }
+    const url = projectPageUrlFor(activityId);
+    if (!url) { alert("Don't know this project's page - can't open it from here."); return; }
+    if (!writeTeacherViewHandoff(email, activityId, studentName, row.stateJson)) return;
+    window.open(url, '_blank');
+  }
+  window.openStudentWorkForDownload = openStudentWorkForDownload;
+
+  // Downloads every student's real Certificate for one activity, one tab
+  // at a time - certificate only (the one deliverable every paired page
+  // has in common), not badges/stamps/gardens/infographics, which still
+  // need the one-at-a-time button above. Kept in sync with
+  // teacher-dashboard.html's identical copy - see its own comment for
+  // the full design rationale (sequential, not parallel, to avoid
+  // tripping a popup blocker; postMessage reports success/skip per
+  // student since a student who hasn't finished Day 2 can't generate one).
+  async function downloadAllCertificatesForActivity(activityId) {
+    const url = projectPageUrlFor(activityId);
+    if (!url) { alert("Don't know this project's page - can't open it from here."); return; }
+    const candidates = allProjectStates.filter((p) => p.activityId === activityId && p.stateJson);
+    if (!candidates.length) { alert('No saved work for this activity yet.'); return; }
+    if (!confirm(`Download ${candidates.length} certificate(s), one browser tab at a time? Your browser may ask you to allow pop-ups the first time.`)) return;
+
+    let successCount = 0, skippedCount = 0, blockedAt = -1;
+    for (let i = 0; i < candidates.length; i++) {
+      const row = candidates[i];
+      const studentName = (roster.find((s) => s.email === row.email) || {}).studentName || row.email;
+      if (!writeTeacherViewHandoff(row.email, activityId, studentName, row.stateJson, 'certificate')) return;
+
+      const resultPromise = new Promise((resolve) => {
+        function handler(ev) {
+          if (ev.data && ev.data.type === 'lia-batch-download-done' && ev.data.email === row.email) {
+            window.removeEventListener('message', handler);
+            resolve(ev.data.ok);
+          }
+        }
+        window.addEventListener('message', handler);
+        setTimeout(() => { window.removeEventListener('message', handler); resolve(null); }, 10000);
+      });
+
+      const win = window.open(url, '_blank');
+      if (!win) { blockedAt = i; break; }
+      const ok = await resultPromise;
+      if (ok === true) successCount++; else skippedCount++;
+      await new Promise((r) => setTimeout(r, 250));
+    }
+
+    if (blockedAt >= 0) {
+      alert(`Downloaded ${successCount} so far. Your browser blocked opening further tabs after student ${blockedAt + 1} of ${candidates.length} - allow pop-ups for this site, then click "Download all" again (already-downloaded students are safe to redo).`);
+    } else {
+      alert(`Done - ${successCount} certificate(s) downloaded${skippedCount ? `, ${skippedCount} skipped (Day 2 not finished yet, or timed out)` : ''}.`);
+    }
+  }
+  window.downloadAllCertificatesForActivity = downloadAllCertificatesForActivity;
+
   // Every project field below is authored/serialized by that specific
   // project page's own buildStatePayload()/restoreState() - StateJSON's
   // shape isn't standardized across projects, so this reads defensively
@@ -416,7 +635,9 @@
     if (state.infographicConfig) {
       parts.push(`<strong>Infographic:</strong> "${state.infographicConfig.title || '(untitled)'}"${state.infographicLocked ? ' (locked in)' : ''}`);
     }
-    return parts.length ? parts.join('<br>') : '<em>No saved work yet.</em>';
+    const studentName = (roster.find((s) => s.email === email) || {}).studentName || email;
+    const openBtn = `<div style="margin-top:8px;"><button class="btn-refresh" style="padding:5px 12px; font-size:0.78rem;" onclick="openStudentWorkForDownload('${email}','${activityId}','${studentName.replace(/'/g, "\\'")}')">Open &amp; download real files</button></div>`;
+    return (parts.length ? parts.join('<br>') : '<em>No saved work yet.</em>') + openBtn;
   }
 
   // ===== Filters (grade/teacher pills only - same pattern as
@@ -544,6 +765,7 @@
         <details class="deliverables-toggle">
           <summary>Deliverables (${startedCount} student${startedCount === 1 ? '' : 's'})</summary>
           ${startedCount ? `
+            <button class="btn-refresh" style="padding:5px 12px; font-size:0.78rem; margin-bottom:8px;" onclick="downloadAllCertificatesForActivity('${a.activityId}')">Download all certificates</button>
             <table class="deliverables-table">
               <thead><tr><th>Student</th><th>What they built</th></tr></thead>
               <tbody>${deliverableRows}</tbody>
@@ -596,6 +818,7 @@
     activityCatalog = result.activityCatalog || [];
     teacherScope = result.scope || null;
     allProjectStates = result.projectStates || [];
+    allPairs = result.pairs || [];
 
     hideLoadingIndicator();
     document.getElementById('lesson-gate').hidden = true;

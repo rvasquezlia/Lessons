@@ -8,6 +8,81 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="lesson-shared.css">
+<script>
+  // Dark mode toggle - a standalone copy of lesson-shared.js's own
+  // ThemeToggle module (see /CLAUDE.md's "Dark mode" section), duplicated
+  // here rather than loading the whole file, since lesson-shared.js also
+  // auto-injects a "Print Class Progress" bar (TeacherPrint.buildBar())
+  // the moment it finds any `.tab-btn` element on the page - which this
+  // dashboard's own nav tabs are, even though they use switchDashTab(),
+  // not the lesson-page switchTab() that bar expects. This module has no
+  // such side effect: it only sets data-theme on <html> (synchronously,
+  // before <body> is parsed, so there's no flash of the wrong theme) and
+  // injects its own toggle button once the DOM is ready. The button's own
+  // CSS (.theme-toggle-btn) already ships in lesson-shared.css, loaded
+  // just above.
+  const ThemeToggle = (() => {
+    const STORAGE_KEY = 'lia_theme';
+    function preferredTheme() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored === 'light' || stored === 'dark') return stored;
+      } catch (e) { /* private window or storage blocked - fall through to system preference */ }
+      return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    }
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      const btn = document.querySelector('.theme-toggle-btn');
+      if (!btn) return;
+      const sunIcon = btn.querySelector('.icon-sun');
+      const moonIcon = btn.querySelector('.icon-moon');
+      if (sunIcon) sunIcon.hidden = theme !== 'dark';
+      if (moonIcon) moonIcon.hidden = theme === 'dark';
+      btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+      btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    }
+    let currentTheme = preferredTheme();
+    applyTheme(currentTheme);
+    function toggle() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme(currentTheme);
+      try { localStorage.setItem(STORAGE_KEY, currentTheme); } catch (e) { /* nothing to persist to - theme still applies for this page view */ }
+    }
+    function buildButton() {
+      if (document.querySelector('.theme-toggle-btn')) return;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'theme-toggle-btn';
+      btn.innerHTML = `
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>`;
+      btn.addEventListener('click', toggle);
+      document.body.prepend(btn);
+      applyTheme(currentTheme);
+    }
+    function init() {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', buildButton);
+      } else {
+        buildButton();
+      }
+    }
+    init();
+    return { toggle };
+  })();
+</script>
 <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
 <script src="token-cache.js?v=2"></script>
 <style>
@@ -69,6 +144,17 @@
     border-radius: 8px; font-weight: 800; cursor: pointer; font-family: inherit; font-size: 0.9rem;
   }
   .btn-refresh:hover { background: var(--primary-light); }
+
+  /* Consistent cross-page nav row, shown in the header of every teacher-
+     only page (this dashboard, the Projects Dashboard, Teacher Help) -
+     always links to the OTHER pages, never the one currently open. */
+  .dash-nav-links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+  .dash-nav-link {
+    display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.4); color: #fff; padding: 7px 16px; border-radius: 999px;
+    font-weight: 700; font-size: 0.85rem; text-decoration: none; transition: background 0.15s;
+  }
+  .dash-nav-link:hover { background: rgba(255,255,255,0.32); }
 
   /* One-click Grade/Teacher filters - a button per value plus an "All"
      button, instead of a <select> a teacher has to open to see the
@@ -170,6 +256,29 @@
   .detail-view h3 { margin: 16px 0 4px 0; }
   .detail-view .card { margin-bottom: 24px; }
 
+  /* The small utility bars generated by pairingHtml()/reviewToolbarHtml()/
+     submissionDetailTable()'s reset toolbar - a class instead of each call
+     site's own inline background/border so dark mode can override them in
+     one place. .tint-blue is pairingHtml()'s own lighter-blue variant. */
+  .info-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 10px 12px; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; }
+  .info-bar.tint-blue { background: #eff6ff; border-color: #bfdbfe; }
+  .info-bar.tint-blue strong { color: #1e3a8a; }
+
+  /* Dark-mode overrides for this page's own hardcoded (non var()) colors -
+     everything else in this file already uses the shared lesson-shared.css
+     custom properties and flips automatically once [data-theme="dark"] is
+     set on <html>. See lesson-shared.css's own dark-mode section for the
+     toggle button/--dark-heading this reuses. */
+  [data-theme="dark"] .pill.neutral { background: #334155; color: #cbd5e1; }
+  [data-theme="dark"] .pill.progress { background: #78350f; color: #fde68a; }
+  [data-theme="dark"] .detail-row td { background: var(--card); }
+  [data-theme="dark"] .empty-note,
+  [data-theme="dark"] .sub-tab-btn { color: #94a3b8; }
+  [data-theme="dark"] .expand-btn { color: var(--dark-heading); }
+  [data-theme="dark"] .info-bar { background: var(--card); }
+  [data-theme="dark"] .info-bar.tint-blue { background: #17304d; border-color: #2c5079; }
+  [data-theme="dark"] .info-bar.tint-blue strong { color: var(--dark-heading); }
+
   /* Secondary-level tabs inside a merged top-level tab (Unit & Lesson
      Deep Dive's Units/Activities, Integrity & Behavior Monitor's
      Engagement/Flags/Submission Log) - visually one step down from
@@ -214,7 +323,11 @@
     <span class="badge">Teacher Dashboard</span>
     <h1>Class Progress Overview</h1>
     <p class="subtitle" id="loaded-as"></p>
-    <p style="margin-top:6px;"><a href="projects-dashboard.html" style="color:#fff; font-weight:700; text-decoration:underline;">STREAM Projects Dashboard &rarr;</a></p>
+    <div class="dash-nav-links">
+      <a class="dash-nav-link" href="index.html">&larr; Lessons Index</a>
+      <a class="dash-nav-link" href="projects-dashboard.html">STREAM Projects Dashboard &rarr;</a>
+      <a class="dash-nav-link" href="Teacher-Help.html">? Teacher Help</a>
+    </div>
   </header>
 
   <div class="filter-bar">
@@ -240,7 +353,10 @@
       </div>
       <label><input type="checkbox" id="filter-flagged-only"> Flagged only</label>
     </div>
-    <button class="btn-refresh" id="refresh-btn">Refresh</button>
+    <div style="display:flex; gap:10px;">
+      <button class="btn-refresh" id="export-csv-btn" style="background:var(--success);">Export CSV</button>
+      <button class="btn-refresh" id="refresh-btn">Refresh</button>
+    </div>
   </div>
 
   <nav class="nav-tabs">
@@ -424,6 +540,7 @@
               <th data-table="integrity" data-sort="scorePct">Score</th>
               <th data-table="integrity" data-sort="totalMinutes">Time on task</th>
               <th data-table="integrity" data-sort="lastSubmittedAt">Last submitted</th>
+              <th>Review</th>
               <th></th>
             </tr>
           </thead>
@@ -637,13 +754,15 @@
 
   function onDataLoaded(result) {
     allRows = (result.rows || []).map(decorateRow);
-    applyDuplicateAnswerFlags(allRows);
-    applyLookedUpFlags(allRows);
     roster = result.roster || [];
     activityCatalog = result.activityCatalog || [];
     teacherScope = result.scope || null;
+    // allPairs must be populated before applyDuplicateAnswerFlags runs -
+    // it reads teammatesForRow() to skip a mirrored teammate answer.
     allPairs = result.pairs || [];
     allProjectStates = result.projectStates || [];
+    applyDuplicateAnswerFlags(allRows);
+    applyLookedUpFlags(allRows);
 
     hideLoadingIndicator();
     document.getElementById('lesson-gate').hidden = true;
@@ -1068,8 +1187,19 @@
     Object.values(groups).forEach((entries) => {
       if (entries.length < 2) return;
       entries.forEach((entry, i) => {
+        // A paired/team activity mirrors the Driver's every submission onto
+        // each teammate's own row server-side (see /CLAUDE.md's "Paired/
+        // team activities" section) - so two teammates will always end up
+        // with byte-identical answers, including wrong ones, and this
+        // check would otherwise flag that mirror as "possible shared
+        // answers" every single time. Skip a match against anyone already
+        // known to be this row's own teammate on this exact activity;
+        // an *independent* student converging on the same wrong answer is
+        // still flagged normally.
+        const mates = teammatesForRow(entry.row);
+        const isTeammate = (otherRow) => mates.some((m) => m.email === otherRow.email);
         const matchCount = entries.filter((other, j) =>
-          j !== i && other.row.email !== entry.row.email &&
+          j !== i && other.row.email !== entry.row.email && !isTeammate(other.row) &&
           Math.abs(new Date(other.timestamp) - new Date(entry.timestamp)) / 60000 <= DUPLICATE_ANSWER_WINDOW_MINUTES
         ).length;
         if (matchCount > 0) entry.row._duplicateMatches = (entry.row._duplicateMatches || 0) + matchCount;
@@ -2270,8 +2400,122 @@
     if (state.infographicConfig) {
       parts.push(`<strong>Infographic:</strong> "${state.infographicConfig.title || '(untitled)'}"${state.infographicLocked ? ' (locked in)' : ''}`);
     }
-    return parts.length ? parts.join('<br>') : '<em>No saved work yet.</em>';
+    const studentName = (roster.find((s) => s.email === email) || {}).studentName || email;
+    const openBtn = `<div style="margin-top:8px;"><button class="btn-refresh" style="padding:5px 12px; font-size:0.78rem;" onclick="openStudentWorkForDownload('${email}','${activityId}','${studentName.replace(/'/g, "\\'")}')">Open &amp; download real files</button></div>`;
+    return (parts.length ? parts.join('<br>') : '<em>No saved work yet.</em>') + openBtn;
   }
+
+  // Direct link (relative to this page, same as Teacher-Help.html's own
+  // table) for each known project - see openStudentWorkForDownload().
+  const PROJECT_PAGE_URLS = {
+    '6-laudato-si-ecogarden': 'Sixth/Laudato-Si-EcoGarden/index.html',
+    '7-ethical-auditor-community-engineer': 'Seventh/Ethical-Auditor-Community-Engineer/index.html',
+    '8-youth-festival-logistics': 'Eighth/Youth-Festival-Logistics/index.html',
+    '8-ethical-linear-budgeting': 'Eighth/Ethical-Linear-Budgeting/index.html'
+  };
+  function projectPageUrlFor(activityId) {
+    const exact = PROJECT_PAGE_URLS[activityId];
+    if (exact) return exact;
+    const prefix = Object.keys(PROJECT_PAGE_URLS).find((p) => activityId.startsWith(p + '-'));
+    return prefix ? PROJECT_PAGE_URLS[prefix] : null;
+  }
+
+  // Writes the sessionStorage handoff a project page's own
+  // window.onTeacherUnlock reads (see /CLAUDE.md's "Paired/team
+  // activities" - "Reconstructing a student's real deliverable" note).
+  // Shared by openStudentWorkForDownload() (interactive, one student) and
+  // downloadAllCertificatesForActivity() (autoDownload: 'certificate',
+  // one student at a time). Returns false (and alerts) on failure so
+  // both callers can bail out the same way.
+  function writeTeacherViewHandoff(email, activityId, studentName, stateJson, autoDownload) {
+    const mates = teammatesForRow({ email, activityId });
+    try {
+      sessionStorage.setItem('lia_teacher_view_state', JSON.stringify({
+        activityId, email, studentName,
+        teammates: mates.map((m) => ({ name: partnerNameFor(m.email), role: m.role })),
+        stateJson,
+        autoDownload: autoDownload || undefined
+      }));
+      return true;
+    } catch (e) {
+      alert('Could not prepare the handoff - your browser may be blocking storage.');
+      return false;
+    }
+  }
+
+  // Opens a student's actual project page with their saved state handed
+  // off via sessionStorage - the page's own window.onTeacherUnlock hook
+  // picks it up, runs it through the exact same restoreState() a normal
+  // reload already uses, and reveals the page's own real Download
+  // Certificate/Badge/Garden/Sign/Infographic buttons - producing the
+  // genuine full-resolution file, not a copy stored anywhere.
+  // sessionStorage (not localStorage) is used deliberately: the HTML spec
+  // copies a same-origin opener's sessionStorage into a tab opened via
+  // window.open()/target="_blank", so this is same-tab-visible only and
+  // never persists across a browser restart - a one-time handoff, not a
+  // stored artifact.
+  function openStudentWorkForDownload(email, activityId, studentName) {
+    const row = allProjectStates.find((p) => p.email === email && p.activityId === activityId);
+    if (!row || !row.stateJson) { alert('No saved work to open yet.'); return; }
+    const url = projectPageUrlFor(activityId);
+    if (!url) { alert("Don't know this project's page - can't open it from here."); return; }
+    if (!writeTeacherViewHandoff(email, activityId, studentName, row.stateJson)) return;
+    window.open(url, '_blank');
+  }
+  window.openStudentWorkForDownload = openStudentWorkForDownload;
+
+  // Downloads every student's real Certificate for one activity, one tab
+  // at a time - certificate only (the one deliverable every paired page
+  // has in common), not badges/stamps/gardens/infographics, which still
+  // need the one-at-a-time button above. Each tab: reconstructs via the
+  // exact same handoff as openStudentWorkForDownload(), but with
+  // autoDownload: 'certificate' - the project page's own pendingView
+  // branch (see /CLAUDE.md) calls downloadCertificate() itself, reports
+  // back via postMessage whether it actually succeeded (a student who
+  // hasn't finished Day 2 can't generate one yet), then self-closes.
+  // Sequential, not parallel: opening every tab at once is far more
+  // likely to trip a popup blocker than opening them one at a time as
+  // each previous one finishes and closes.
+  async function downloadAllCertificatesForActivity(activityId) {
+    const url = projectPageUrlFor(activityId);
+    if (!url) { alert("Don't know this project's page - can't open it from here."); return; }
+    const candidates = allProjectStates.filter((p) => p.activityId === activityId && p.stateJson);
+    if (!candidates.length) { alert('No saved work for this activity yet.'); return; }
+    if (!confirm(`Download ${candidates.length} certificate(s), one browser tab at a time? Your browser may ask you to allow pop-ups the first time.`)) return;
+
+    let successCount = 0, skippedCount = 0, blockedAt = -1;
+    for (let i = 0; i < candidates.length; i++) {
+      const row = candidates[i];
+      const studentName = (roster.find((s) => s.email === row.email) || {}).studentName || row.email;
+      if (!writeTeacherViewHandoff(row.email, activityId, studentName, row.stateJson, 'certificate')) return;
+
+      const resultPromise = new Promise((resolve) => {
+        function handler(ev) {
+          if (ev.data && ev.data.type === 'lia-batch-download-done' && ev.data.email === row.email) {
+            window.removeEventListener('message', handler);
+            resolve(ev.data.ok);
+          }
+        }
+        window.addEventListener('message', handler);
+        // A timed-out student (tab failed to load, or genuinely stuck)
+        // counts as skipped rather than hanging the whole batch forever.
+        setTimeout(() => { window.removeEventListener('message', handler); resolve(null); }, 10000);
+      });
+
+      const win = window.open(url, '_blank');
+      if (!win) { blockedAt = i; break; }
+      const ok = await resultPromise;
+      if (ok === true) successCount++; else skippedCount++;
+      await new Promise((r) => setTimeout(r, 250));
+    }
+
+    if (blockedAt >= 0) {
+      alert(`Downloaded ${successCount} so far. Your browser blocked opening further tabs after student ${blockedAt + 1} of ${candidates.length} - allow pop-ups for this site, then click "Download all" again (already-downloaded students are safe to redo).`);
+    } else {
+      alert(`Done - ${successCount} certificate(s) downloaded${skippedCount ? `, ${skippedCount} skipped (Day 2 not finished yet, or timed out)` : ''}.`);
+    }
+  }
+  window.downloadAllCertificatesForActivity = downloadAllCertificatesForActivity;
 
   function projectInsightsHtml(a) {
     if (!looksLikeProject(a.rows)) return '';
@@ -2299,7 +2543,10 @@
       </div>` : '';
     const deliverablesCard = `
       <div class="card">
-        <h3>Deliverables</h3>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+          <h3 style="margin:0;">Deliverables</h3>
+          <button class="btn-lg" style="padding:6px 14px; font-size:0.82rem;" onclick="downloadAllCertificatesForActivity('${a.activityId}')">Download all certificates</button>
+        </div>
         <table><thead><tr><th>Student</th><th>What they built</th></tr></thead><tbody>
           ${a.rows.map((r) => `<tr><td class="row-label">${r.studentName}</td><td>${deliverableSummaryHtml(r.email, a.activityId)}</td></tr>`).join('')}
         </tbody></table>
@@ -2434,7 +2681,7 @@
     renderIntegrityScatter(filteredRows());
     const items = sortItems(flaggedRows, 'integrity', 'lastSubmittedAt');
     const tbody = document.getElementById('integrity-body');
-    if (!items.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-note">Nothing flagged in the current filter.</td></tr>'; return; }
+    if (!items.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-note">Nothing flagged in the current filter.</td></tr>'; return; }
     tbody.innerHTML = items.map((r, i) => `
       <tr class="flagged">
         <td class="row-label">${groupDot(r.grade, r.teacher)}${r.studentName}</td>
@@ -2443,9 +2690,10 @@
         <td>${r.scorePct === null ? '-' : r.scorePct + '%'}${resetTagHtml(r)}</td>
         <td>${r.totalMinutes} min</td>
         <td>${r.lastSubmittedAt ? new Date(r.lastSubmittedAt).toLocaleString() : '-'}</td>
+        <td>${reviewCellHtml(r)}</td>
         <td><span class="expand-btn" onclick="toggleDetail('integrity-${i}')">Details</span></td>
       </tr>
-      <tr class="detail-row" id="detail-integrity-${i}" hidden><td colspan="7">${submissionDetailTable(r)}</td></tr>
+      <tr class="detail-row" id="detail-integrity-${i}" hidden><td colspan="8">${submissionDetailTable(r)}</td></tr>
     `).join('');
   }
 
@@ -2651,8 +2899,8 @@
     const teamSizeNote = mates.length > 1 ? ` (team of ${mates.length + 1})` : '';
     const label = mates.length > 1 ? 'Team with' : 'Partnered with';
     return `
-      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px; padding:10px 12px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px;">
-        <strong style="font-size:0.85rem; color:#1e3a8a;">Paired activity${teamSizeNote}:</strong>
+      <div class="info-bar tint-blue" style="margin-bottom:12px;">
+        <strong style="font-size:0.85rem;">Paired activity${teamSizeNote}:</strong>
         <span class="pill neutral">${roleLabel}</span>
         <span style="font-size:0.85rem;">${label} <strong>${mateNames || '(partner not on roster)'}</strong></span>
         <button class="btn-lg" style="padding:6px 12px; font-size:0.85rem;" onclick="teacherUnpair('${r.email}','${r.activityId}', this)">Unpair</button>
@@ -2695,10 +2943,79 @@
   }
   window.teacherUnpair = teacherUnpair;
 
+  // A compact bar for marking this row's flags reviewed, classified as a
+  // real concern ("valid") or a false alarm ("invalid" - e.g. two known
+  // teammates on a paired activity mirroring the same wrong answer). This
+  // never changes the flags themselves - it's a note for the teacher(s)
+  // reading this dashboard so a flag already looked into doesn't need a
+  // second look. Shared by submissionDetailTable() (every detail view)
+  // and reviewCellHtml() (the compact Flags & Behavior list row).
+  function reviewToolbarHtml(r) {
+    if (!r.flags.length && !r.reviewedByTeacher) return '';
+    const args = `'${r.email}','${r.activityId}'`;
+    if (r.reviewedByTeacher) {
+      const isValid = r.reviewValid === 'valid';
+      const label = isValid ? 'Reviewed - Valid concern' : 'Reviewed - Not an issue';
+      const pillClass = isValid ? 'flag' : 'ok';
+      const when = r.reviewedAt ? new Date(r.reviewedAt).toLocaleString() : '';
+      return `
+      <div class="info-bar" style="margin-bottom:12px;">
+        <strong style="font-size:0.85rem; color:var(--text);">Review:</strong>
+        <span class="pill ${pillClass}">${label}</span>
+        ${when ? `<span style="font-size:0.78rem; color:var(--text);">${when}</span>` : ''}
+        <span class="expand-btn" onclick="teacherReview(${args},'',this)">Undo</span>
+      </div>`;
+    }
+    return `
+      <div class="info-bar" style="margin-bottom:12px;">
+        <strong style="font-size:0.85rem; color:var(--text);">Review:</strong>
+        <span class="pill neutral">Not yet reviewed</span>
+        <button class="btn-lg" style="padding:6px 12px; font-size:0.85rem; background:var(--error);" onclick="teacherReview(${args},'valid',this)">Mark Valid concern</button>
+        <button class="btn-lg" style="padding:6px 12px; font-size:0.85rem;" onclick="teacherReview(${args},'invalid',this)">Mark Not an issue</button>
+      </div>`;
+  }
+
+  // Compact version of the same review state for the Flags & Behavior list
+  // row (renderIntegrityMonitor) - a table cell rather than a full toolbar,
+  // since the full one is already one click away via "Details".
+  function reviewCellHtml(r) {
+    const args = `'${r.email}','${r.activityId}'`;
+    if (r.reviewedByTeacher) {
+      const isValid = r.reviewValid === 'valid';
+      return `<span class="pill ${isValid ? 'flag' : 'ok'}">${isValid ? 'Valid' : 'Not an issue'}</span>`;
+    }
+    return `
+      <button class="btn-lg" style="padding:3px 8px; font-size:0.72rem; background:var(--error);" onclick="teacherReview(${args},'valid',this)">Valid</button>
+      <button class="btn-lg" style="padding:3px 8px; font-size:0.72rem;" onclick="teacherReview(${args},'invalid',this)">Not an issue</button>`;
+  }
+
+  async function teacherReview(email, activityId, reviewValid, btn) {
+    if (btn) btn.disabled = true;
+    try {
+      const res = await fetchWithTimeout(LESSON_SYNC_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ idToken, type: 'teacher-review', studentEmail: email, activityId, reviewValid })
+      }, 15000);
+      const result = await res.json();
+      if (!result.ok) { alert(result.error || 'Could not save the review.'); return; }
+      const idx = allRows.findIndex((row) => row.email === email && row.activityId === activityId);
+      if (idx >= 0) allRows[idx] = decorateRow(result.progress);
+      renderAll();
+      const i = lastStudentSummaries.findIndex((s) => s.email === email);
+      if (i >= 0) openStudentDetail(i);
+    } catch (err) {
+      alert('Could not save the review - check your connection and try again.');
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+  window.teacherReview = teacherReview;
+
   function submissionDetailTable(r) {
     const pairing = pairingHtml(r);
     const sessions = sessionsHtml(r);
-    if (!r.submissions.length) return pairing + (sessions ? `${sessions}<p style="margin-top:14px;"><em>No graded items logged.</em></p>` : '<em>No graded items logged.</em>');
+    const review = reviewToolbarHtml(r);
+    if (!r.submissions.length) return pairing + review + (sessions ? `${sessions}<p style="margin-top:14px;"><em>No graded items logged.</em></p>` : '<em>No graded items logged.</em>');
 
     // A "Reset" link only makes sense on a key's most recent entry (its
     // current state) - showing it on every past attempt row would be
@@ -2725,8 +3042,8 @@
     const missingSectionCount = Object.values(lastIdxByKey).filter((i) => !r.submissions[i].section).length;
     const selId = `reset-section-${safeId(r.email)}-${safeId(r.activityId)}`;
     const toolbar = `
-      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:${missingSectionCount ? '6px' : '12px'}; padding:10px 12px; background:#f8fafc; border:1px solid var(--border); border-radius:8px;">
-        <strong style="font-size:0.85rem; color:#475569;">Give attempts back:</strong>
+      <div class="info-bar" style="margin-bottom:${missingSectionCount ? '6px' : '12px'};">
+        <strong style="font-size:0.85rem; color:var(--text);">Give attempts back:</strong>
         ${sections.length ? `
           <select id="${selId}" class="form-control-lg" style="max-width:220px; padding:6px 10px; font-size:0.85rem;">${sectionOptions}</select>
           <button class="btn-lg" style="padding:6px 12px; font-size:0.85rem;" onclick="teacherReset('${r.email}','${r.activityId}','section', document.getElementById('${selId}').value, 'the selected section', this)">Reset section</button>
@@ -2780,7 +3097,7 @@
       </tr>`);
     }
     const itemsHtml = items.join('');
-    const itemsTable = `${toolbar}<table><thead><tr><th>Item</th><th>Answer</th><th>Verdict</th><th>Attempt</th><th>Time</th></tr></thead><tbody>${itemsHtml}</tbody></table>`;
+    const itemsTable = `${review}${toolbar}<table><thead><tr><th>Item</th><th>Answer</th><th>Verdict</th><th>Attempt</th><th>Time</th></tr></thead><tbody>${itemsHtml}</tbody></table>`;
     return pairing + (sessions ? `${sessions}<div style="margin-top:14px;">${itemsTable}</div>` : itemsTable);
   }
 
@@ -2870,6 +3187,60 @@
   document.getElementById('refresh-btn').addEventListener('click', () => {
     if (idToken) { resolved = false; proceedWithToken(idToken); }
   });
+
+  // A quotes/commas/newlines-safe CSV field - wrapped in double quotes
+  // whenever any of those appear, with an embedded quote doubled (the
+  // standard CSV escaping rule), left bare otherwise for readability.
+  function csvField(val) {
+    const s = val === null || val === undefined ? '' : String(val);
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  }
+
+  // Exports exactly the rows the Grade/Teacher/Activity/Flagged-only
+  // filters currently show (filteredRows() - the same set every tab's own
+  // table is built from), since a teacher reaching for this button has
+  // usually already narrowed the view to the class/unit they want a
+  // gradebook-style sheet for, not the entire roster across every grade.
+  function exportGradebookCsv() {
+    const rows = filteredRows();
+    const header = ['Student', 'Grade', 'Teacher', 'Activity', 'Role', 'Teammate(s)', 'Score %', 'Items Attempted', 'Items Correct', 'Status', 'Last Submitted', 'Flags', 'Reviewed', 'Review Classification'];
+    const lines = [header.map(csvField).join(',')];
+    rows.forEach((r) => {
+      // Role/Teammate(s) are blank for a non-paired row (pairingForRow
+      // returns null) - a paired/team activity's Driver and Navigator(s)
+      // each get their own roster row here (mirroring writes to each
+      // teammate's own Progress row independently), so this is the only
+      // way to tell from the export alone who had the device (Driver)
+      // and who was read-only (Navigator) on any given team.
+      const pairing = pairingForRow(r);
+      const mates = pairing ? teammatesForRow(r) : [];
+      const role = pairing ? (String(pairing.role || '').trim().toLowerCase() === 'navigator' ? 'Navigator' : 'Driver') : '';
+      const mateNames = mates.map((m) => `${partnerNameFor(m.email)} (${String(m.role || '').trim().toLowerCase() === 'navigator' ? 'Navigator' : 'Driver'})`).join('; ');
+      lines.push([
+        r.studentName, r.grade, r.teacher, r.activityTitle, role, mateNames,
+        r.scorePct === null ? '' : r.scorePct,
+        r.itemsAttempted, r.itemsCorrect, r.status,
+        r.lastSubmittedAt ? new Date(r.lastSubmittedAt).toLocaleString() : '',
+        r.flags.join('; '),
+        r.reviewedByTeacher ? 'Yes' : 'No',
+        r.reviewedByTeacher ? (r.reviewValid === 'valid' ? 'Valid concern' : 'Not an issue') : ''
+      ].map(csvField).join(','));
+    });
+    // A leading UTF-8 BOM so Excel (which otherwise guesses Windows-1252)
+    // renders accented characters in a student's name correctly, rather
+    // than only working correctly in Sheets/a text editor.
+    const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const stamp = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `gradebook-export-${stamp}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+  document.getElementById('export-csv-btn').addEventListener('click', exportGradebookCsv);
 </script>
 </body>
 </html>
