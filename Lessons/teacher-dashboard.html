@@ -1251,12 +1251,14 @@
     // grades (only numeric-looking codes are affected; "7-Honors"/
     // "8-PreAP" can never be auto-numbered, which is why only 6/7/8 ever
     // showed as duplicate pills).
+    // Grade pills are roster-only, on purpose: ActivityCatalog always
+    // lists every track (6/7/7-Honors/8/8-PreAP) regardless of who's
+    // actually enrolled, so folding its grades in here used to show a
+    // pill for a track this teacher has zero students in. A roster
+    // student's own Grade cell is always a single value (never a
+    // comma list - only ActivityCatalog.Grade can be widened that way
+    // for a shared activity), so no splitting is needed on this side.
     const gradesFromRoster = roster.map((s) => String(s.grade || ''));
-    // A shared row's raw Grade cell ("7,7-Honors") must be split back into
-    // its individual grades here - otherwise it shows up as its own
-    // bogus, unclickable pill instead of folding into the real "7"/
-    // "7-Honors" pills roster students already produce.
-    const gradesFromCatalog = activityCatalog.flatMap((a) => String(a.grade || '').split(',').map((g) => g.trim()));
     const teachersFromRoster = roster.map((s) => s.teacher);
     // Narrowed to the selected grade so the Activity filter doesn't offer
     // every activity across every grade at once.
@@ -1275,7 +1277,7 @@
       ? catalogForGrade.map((a) => a.title)
       : [...new Set(allRows.map((r) => r.activityTitle))];
 
-    const grades = [...new Set([...gradesFromRoster, ...gradesFromCatalog])].filter(Boolean).sort();
+    const grades = [...new Set(gradesFromRoster)].filter(Boolean).sort();
     const teachers = [...new Set(teachersFromRoster)].filter(Boolean).sort();
 
     // Default to the first grade rather than "All" the first time data

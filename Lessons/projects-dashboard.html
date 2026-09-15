@@ -644,10 +644,12 @@
   // teacher-dashboard.html's own, no activity multiselect since every
   // row on this page is already a project). =====
   function populateFilters() {
+    // Roster-only, same reasoning as teacher-dashboard.html's own
+    // populateFilters(): ActivityCatalog always lists every track
+    // regardless of who's enrolled, so it must not feed the grade pills.
     const gradesFromRoster = roster.map((s) => String(s.grade || ''));
-    const gradesFromCatalog = activityCatalog.flatMap((a) => String(a.grade || '').split(',').map((g) => g.trim()));
     const teachersFromRoster = roster.map((s) => s.teacher);
-    const grades = [...new Set([...gradesFromRoster, ...gradesFromCatalog])].filter(Boolean).sort();
+    const grades = [...new Set(gradesFromRoster)].filter(Boolean).sort();
     const teachers = [...new Set(teachersFromRoster)].filter(Boolean).sort();
 
     if (!gradeFilterInitialized) {
