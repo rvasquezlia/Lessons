@@ -2006,6 +2006,54 @@ instead of adding a parallel one.
   (Ethical Auditor, Ethical Linear Budgeting) need no such stub and
   were verified with a real, full-resolution rendered image.
 
+**Downloading every student's certificate for one activity at once.**
+`downloadAllCertificatesForActivity(activityId)` (identical copy in
+both dashboards — `teacher-dashboard.html`'s Deliverables card header
+inside `projectInsightsHtml()`; `projects-dashboard.html`'s
+Deliverables `<details>` toggle) — **certificate only**, not
+badges/stamps/gardens/infographics, which still need the one-at-a-time
+"Open & download real files" button above (every project's Certificate
+is the one deliverable every one of the four pages has in common).
+- **Sequential, one tab at a time, never parallel** — opening every
+  student's tab at once is far more likely to trip a browser's popup
+  blocker than opening them one at a time as each previous one finishes
+  and self-closes. `writeTeacherViewHandoff()` (shared by this and
+  `openStudentWorkForDownload()`) gained an `autoDownload` field for
+  this — `'certificate'` today, the only value read anywhere.
+- **On the project-page side**, the exact same `pendingView` branch
+  described above additionally checks `pendingView.autoDownload ===
+  'certificate'` right after `restoreState()` — if set, it calls
+  `downloadCertificate()` itself (fire-and-forget, since
+  `onTeacherUnlock` isn't `async`), checks `window.certificateDownloaded`
+  afterward (a student who hasn't finished Day 2 can't generate one —
+  `downloadCertificate()`'s own existing guard just returns without
+  setting it, never throws), reports `{type:
+  'lia-batch-download-done', email, ok}` back via
+  `window.opener.postMessage()`, then `window.close()`s itself ~1.2s
+  later (not immediately — closing right away can cancel an
+  in-progress browser download).
+- **On the dashboard side**, each iteration opens one tab, listens for
+  that exact `email`'s `message` event (a **10-second timeout**
+  resolves it as skipped if no message ever arrives — a hung/failed tab
+  can't stall the whole batch forever), tallies success/skip, then
+  moves to the next candidate. If `window.open()` itself returns falsy
+  (the browser blocked the tab), the loop **stops immediately** and
+  tells the teacher exactly which student it stopped at, how many
+  succeeded so far, and that re-running "Download all" after allowing
+  pop-ups is safe (each run is independent — no dedup/resume state is
+  kept between runs, so re-running simply redoes every candidate again).
+- **Verified in isolation, not as one fully-integrated real-multi-tab
+  test** — real cross-tab `window.open()` timing in headless automation
+  doesn't reliably mirror a real browser's user-gesture/popup-blocker
+  behavior, so the two sides were proven independently instead: the
+  project-page side (stub `window.opener`/`window.close`, confirm the
+  real `postMessage` payload and self-close call), and the dashboard
+  side (stub `window.open` to simulate a fast success, a silent
+  timeout, and an outright block, confirming sequential pacing,
+  correct tallying, and the exact alert text in each case). Both
+  dashboards' copies tested identically since they're kept in sync by
+  hand.
+
 ### Projects Dashboard (`Lessons/projects-dashboard.html`)
 A separate, standalone, teacher-only page — never a 5th top-level tab on
 `teacher-dashboard.html` (see §13's rule against that) — for the
@@ -2037,8 +2085,9 @@ gate identical in shape to `teacher-dashboard.html`'s own (same
   the main dashboard only), `STREAM_PILLAR_RULES`,
   `computeStreamPillarBreakdown()`, `deliverableSummaryHtml()`,
   `pairingForRow()`/`teammatesForRow()`/`partnerNameFor()`/
-  `openStudentWorkForDownload()`/`PROJECT_PAGE_URLS` (the "open a
-  student's real deliverable" mechanism — see above),
+  `writeTeacherViewHandoff()`/`openStudentWorkForDownload()`/
+  `downloadAllCertificatesForActivity()`/`PROJECT_PAGE_URLS` (the
+  "open/download a student's real deliverable" mechanism — see above),
   `gradeListIncludes()`/`formatGradeLabel()`/`isActiveStatus()` are all
   copied here rather than imported from `teacher-dashboard.html` —
   matches the site's existing "every dashboard-shaped page is

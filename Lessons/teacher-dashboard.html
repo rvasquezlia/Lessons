@@ -2420,37 +2420,102 @@
     return prefix ? PROJECT_PAGE_URLS[prefix] : null;
   }
 
+  // Writes the sessionStorage handoff a project page's own
+  // window.onTeacherUnlock reads (see /CLAUDE.md's "Paired/team
+  // activities" - "Reconstructing a student's real deliverable" note).
+  // Shared by openStudentWorkForDownload() (interactive, one student) and
+  // downloadAllCertificatesForActivity() (autoDownload: 'certificate',
+  // one student at a time). Returns false (and alerts) on failure so
+  // both callers can bail out the same way.
+  function writeTeacherViewHandoff(email, activityId, studentName, stateJson, autoDownload) {
+    const mates = teammatesForRow({ email, activityId });
+    try {
+      sessionStorage.setItem('lia_teacher_view_state', JSON.stringify({
+        activityId, email, studentName,
+        teammates: mates.map((m) => ({ name: partnerNameFor(m.email), role: m.role })),
+        stateJson,
+        autoDownload: autoDownload || undefined
+      }));
+      return true;
+    } catch (e) {
+      alert('Could not prepare the handoff - your browser may be blocking storage.');
+      return false;
+    }
+  }
+
   // Opens a student's actual project page with their saved state handed
   // off via sessionStorage - the page's own window.onTeacherUnlock hook
-  // (see /CLAUDE.md's "Paired/team activities" - "Reconstructing a
-  // student's real deliverable" note) picks it up, runs it through the
-  // exact same restoreState() a normal reload already uses, and reveals
-  // the page's own real Download Certificate/Badge/Garden/Sign/
-  // Infographic buttons - producing the genuine full-resolution file,
-  // not a copy stored anywhere. sessionStorage (not localStorage) is
-  // used deliberately: the HTML spec copies a same-origin opener's
-  // sessionStorage into a tab opened via window.open()/target="_blank",
-  // so this is same-tab-visible only and never persists across a
-  // browser restart - a one-time handoff, not a stored artifact.
+  // picks it up, runs it through the exact same restoreState() a normal
+  // reload already uses, and reveals the page's own real Download
+  // Certificate/Badge/Garden/Sign/Infographic buttons - producing the
+  // genuine full-resolution file, not a copy stored anywhere.
+  // sessionStorage (not localStorage) is used deliberately: the HTML spec
+  // copies a same-origin opener's sessionStorage into a tab opened via
+  // window.open()/target="_blank", so this is same-tab-visible only and
+  // never persists across a browser restart - a one-time handoff, not a
+  // stored artifact.
   function openStudentWorkForDownload(email, activityId, studentName) {
     const row = allProjectStates.find((p) => p.email === email && p.activityId === activityId);
     if (!row || !row.stateJson) { alert('No saved work to open yet.'); return; }
     const url = projectPageUrlFor(activityId);
     if (!url) { alert("Don't know this project's page - can't open it from here."); return; }
-    const mates = teammatesForRow({ email, activityId });
-    try {
-      sessionStorage.setItem('lia_teacher_view_state', JSON.stringify({
-        activityId, studentName,
-        teammates: mates.map((m) => ({ name: partnerNameFor(m.email), role: m.role })),
-        stateJson: row.stateJson
-      }));
-    } catch (e) {
-      alert('Could not prepare the handoff - your browser may be blocking storage.');
-      return;
-    }
+    if (!writeTeacherViewHandoff(email, activityId, studentName, row.stateJson)) return;
     window.open(url, '_blank');
   }
   window.openStudentWorkForDownload = openStudentWorkForDownload;
+
+  // Downloads every student's real Certificate for one activity, one tab
+  // at a time - certificate only (the one deliverable every paired page
+  // has in common), not badges/stamps/gardens/infographics, which still
+  // need the one-at-a-time button above. Each tab: reconstructs via the
+  // exact same handoff as openStudentWorkForDownload(), but with
+  // autoDownload: 'certificate' - the project page's own pendingView
+  // branch (see /CLAUDE.md) calls downloadCertificate() itself, reports
+  // back via postMessage whether it actually succeeded (a student who
+  // hasn't finished Day 2 can't generate one yet), then self-closes.
+  // Sequential, not parallel: opening every tab at once is far more
+  // likely to trip a popup blocker than opening them one at a time as
+  // each previous one finishes and closes.
+  async function downloadAllCertificatesForActivity(activityId) {
+    const url = projectPageUrlFor(activityId);
+    if (!url) { alert("Don't know this project's page - can't open it from here."); return; }
+    const candidates = allProjectStates.filter((p) => p.activityId === activityId && p.stateJson);
+    if (!candidates.length) { alert('No saved work for this activity yet.'); return; }
+    if (!confirm(`Download ${candidates.length} certificate(s), one browser tab at a time? Your browser may ask you to allow pop-ups the first time.`)) return;
+
+    let successCount = 0, skippedCount = 0, blockedAt = -1;
+    for (let i = 0; i < candidates.length; i++) {
+      const row = candidates[i];
+      const studentName = (roster.find((s) => s.email === row.email) || {}).studentName || row.email;
+      if (!writeTeacherViewHandoff(row.email, activityId, studentName, row.stateJson, 'certificate')) return;
+
+      const resultPromise = new Promise((resolve) => {
+        function handler(ev) {
+          if (ev.data && ev.data.type === 'lia-batch-download-done' && ev.data.email === row.email) {
+            window.removeEventListener('message', handler);
+            resolve(ev.data.ok);
+          }
+        }
+        window.addEventListener('message', handler);
+        // A timed-out student (tab failed to load, or genuinely stuck)
+        // counts as skipped rather than hanging the whole batch forever.
+        setTimeout(() => { window.removeEventListener('message', handler); resolve(null); }, 10000);
+      });
+
+      const win = window.open(url, '_blank');
+      if (!win) { blockedAt = i; break; }
+      const ok = await resultPromise;
+      if (ok === true) successCount++; else skippedCount++;
+      await new Promise((r) => setTimeout(r, 250));
+    }
+
+    if (blockedAt >= 0) {
+      alert(`Downloaded ${successCount} so far. Your browser blocked opening further tabs after student ${blockedAt + 1} of ${candidates.length} - allow pop-ups for this site, then click "Download all" again (already-downloaded students are safe to redo).`);
+    } else {
+      alert(`Done - ${successCount} certificate(s) downloaded${skippedCount ? `, ${skippedCount} skipped (Day 2 not finished yet, or timed out)` : ''}.`);
+    }
+  }
+  window.downloadAllCertificatesForActivity = downloadAllCertificatesForActivity;
 
   function projectInsightsHtml(a) {
     if (!looksLikeProject(a.rows)) return '';
@@ -2478,7 +2543,10 @@
       </div>` : '';
     const deliverablesCard = `
       <div class="card">
-        <h3>Deliverables</h3>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+          <h3 style="margin:0;">Deliverables</h3>
+          <button class="btn-lg" style="padding:6px 14px; font-size:0.82rem;" onclick="downloadAllCertificatesForActivity('${a.activityId}')">Download all certificates</button>
+        </div>
         <table><thead><tr><th>Student</th><th>What they built</th></tr></thead><tbody>
           ${a.rows.map((r) => `<tr><td class="row-label">${r.studentName}</td><td>${deliverableSummaryHtml(r.email, a.activityId)}</td></tr>`).join('')}
         </tbody></table>

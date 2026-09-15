@@ -2763,6 +2763,25 @@
       viewBanner.className = 'teacher-preview-banner';
       viewBanner.innerHTML = `<span>VIEWING ${(pendingView.studentName || 'a student').toUpperCase()}'S SAVED WORK &mdash; reconstructed read-only from their last save. Nothing you do here is saved - use the real Download buttons below for their actual certificate/badge/infographic.</span>`;
       document.querySelector('.app-container').prepend(viewBanner);
+      // Batch-download mode (see /CLAUDE.md's "Reconstructing a
+      // student's real deliverable" note - teacher-dashboard.html's/
+      // projects-dashboard.html's downloadAllCertificatesForActivity()):
+      // this tab was opened non-interactively to generate one student's
+      // real certificate automatically, report back whether it actually
+      // produced one (a student who hasn't finished Day 2 can't), and
+      // close itself - the opener moves on to the next student.
+      if (pendingView.autoDownload === 'certificate') {
+        window.certificateDownloaded = false;
+        (async () => {
+          try { await downloadCertificate(); } catch (e) { /* missing Day 2 work, etc - nothing to download */ }
+          if (window.opener) {
+            try {
+              window.opener.postMessage({ type: 'lia-batch-download-done', email: pendingView.email, ok: !!window.certificateDownloaded }, '*');
+            } catch (e) { /* opener closed/gone - nothing to report to */ }
+          }
+          setTimeout(() => window.close(), 1200);
+        })();
+      }
       return;
     }
 
