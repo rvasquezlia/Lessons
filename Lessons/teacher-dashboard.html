@@ -439,6 +439,7 @@
               <th data-table="integrity" data-sort="scorePct">Score</th>
               <th data-table="integrity" data-sort="totalMinutes">Time on task</th>
               <th data-table="integrity" data-sort="lastSubmittedAt">Last submitted</th>
+              <th>Review</th>
               <th></th>
             </tr>
           </thead>
@@ -652,13 +653,15 @@
 
   function onDataLoaded(result) {
     allRows = (result.rows || []).map(decorateRow);
-    applyDuplicateAnswerFlags(allRows);
-    applyLookedUpFlags(allRows);
     roster = result.roster || [];
     activityCatalog = result.activityCatalog || [];
     teacherScope = result.scope || null;
+    // allPairs must be populated before applyDuplicateAnswerFlags runs -
+    // it reads teammatesForRow() to skip a mirrored teammate answer.
     allPairs = result.pairs || [];
     allProjectStates = result.projectStates || [];
+    applyDuplicateAnswerFlags(allRows);
+    applyLookedUpFlags(allRows);
 
     hideLoadingIndicator();
     document.getElementById('lesson-gate').hidden = true;
@@ -1083,8 +1086,19 @@
     Object.values(groups).forEach((entries) => {
       if (entries.length < 2) return;
       entries.forEach((entry, i) => {
+        // A paired/team activity mirrors the Driver's every submission onto
+        // each teammate's own row server-side (see /CLAUDE.md's "Paired/
+        // team activities" section) - so two teammates will always end up
+        // with byte-identical answers, including wrong ones, and this
+        // check would otherwise flag that mirror as "possible shared
+        // answers" every single time. Skip a match against anyone already
+        // known to be this row's own teammate on this exact activity;
+        // an *independent* student converging on the same wrong answer is
+        // still flagged normally.
+        const mates = teammatesForRow(entry.row);
+        const isTeammate = (otherRow) => mates.some((m) => m.email === otherRow.email);
         const matchCount = entries.filter((other, j) =>
-          j !== i && other.row.email !== entry.row.email &&
+          j !== i && other.row.email !== entry.row.email && !isTeammate(other.row) &&
           Math.abs(new Date(other.timestamp) - new Date(entry.timestamp)) / 60000 <= DUPLICATE_ANSWER_WINDOW_MINUTES
         ).length;
         if (matchCount > 0) entry.row._duplicateMatches = (entry.row._duplicateMatches || 0) + matchCount;
@@ -2449,7 +2463,7 @@
     renderIntegrityScatter(filteredRows());
     const items = sortItems(flaggedRows, 'integrity', 'lastSubmittedAt');
     const tbody = document.getElementById('integrity-body');
-    if (!items.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-note">Nothing flagged in the current filter.</td></tr>'; return; }
+    if (!items.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-note">Nothing flagged in the current filter.</td></tr>'; return; }
     tbody.innerHTML = items.map((r, i) => `
       <tr class="flagged">
         <td class="row-label">${groupDot(r.grade, r.teacher)}${r.studentName}</td>
@@ -2458,9 +2472,10 @@
         <td>${r.scorePct === null ? '-' : r.scorePct + '%'}${resetTagHtml(r)}</td>
         <td>${r.totalMinutes} min</td>
         <td>${r.lastSubmittedAt ? new Date(r.lastSubmittedAt).toLocaleString() : '-'}</td>
+        <td>${reviewCellHtml(r)}</td>
         <td><span class="expand-btn" onclick="toggleDetail('integrity-${i}')">Details</span></td>
       </tr>
-      <tr class="detail-row" id="detail-integrity-${i}" hidden><td colspan="7">${submissionDetailTable(r)}</td></tr>
+      <tr class="detail-row" id="detail-integrity-${i}" hidden><td colspan="8">${submissionDetailTable(r)}</td></tr>
     `).join('');
   }
 
@@ -2710,10 +2725,79 @@
   }
   window.teacherUnpair = teacherUnpair;
 
+  // A compact bar for marking this row's flags reviewed, classified as a
+  // real concern ("valid") or a false alarm ("invalid" - e.g. two known
+  // teammates on a paired activity mirroring the same wrong answer). This
+  // never changes the flags themselves - it's a note for the teacher(s)
+  // reading this dashboard so a flag already looked into doesn't need a
+  // second look. Shared by submissionDetailTable() (every detail view)
+  // and reviewCellHtml() (the compact Flags & Behavior list row).
+  function reviewToolbarHtml(r) {
+    if (!r.flags.length && !r.reviewedByTeacher) return '';
+    const args = `'${r.email}','${r.activityId}'`;
+    if (r.reviewedByTeacher) {
+      const isValid = r.reviewValid === 'valid';
+      const label = isValid ? 'Reviewed - Valid concern' : 'Reviewed - Not an issue';
+      const pillClass = isValid ? 'flag' : 'ok';
+      const when = r.reviewedAt ? new Date(r.reviewedAt).toLocaleString() : '';
+      return `
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px; padding:10px 12px; background:#f8fafc; border:1px solid var(--border); border-radius:8px;">
+        <strong style="font-size:0.85rem; color:#475569;">Review:</strong>
+        <span class="pill ${pillClass}">${label}</span>
+        ${when ? `<span style="font-size:0.78rem; color:#64748b;">${when}</span>` : ''}
+        <span class="expand-btn" onclick="teacherReview(${args},'',this)">Undo</span>
+      </div>`;
+    }
+    return `
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px; padding:10px 12px; background:#f8fafc; border:1px solid var(--border); border-radius:8px;">
+        <strong style="font-size:0.85rem; color:#475569;">Review:</strong>
+        <span class="pill neutral">Not yet reviewed</span>
+        <button class="btn-lg" style="padding:6px 12px; font-size:0.85rem; background:var(--error);" onclick="teacherReview(${args},'valid',this)">Mark Valid concern</button>
+        <button class="btn-lg" style="padding:6px 12px; font-size:0.85rem;" onclick="teacherReview(${args},'invalid',this)">Mark Not an issue</button>
+      </div>`;
+  }
+
+  // Compact version of the same review state for the Flags & Behavior list
+  // row (renderIntegrityMonitor) - a table cell rather than a full toolbar,
+  // since the full one is already one click away via "Details".
+  function reviewCellHtml(r) {
+    const args = `'${r.email}','${r.activityId}'`;
+    if (r.reviewedByTeacher) {
+      const isValid = r.reviewValid === 'valid';
+      return `<span class="pill ${isValid ? 'flag' : 'ok'}">${isValid ? 'Valid' : 'Not an issue'}</span>`;
+    }
+    return `
+      <button class="btn-lg" style="padding:3px 8px; font-size:0.72rem; background:var(--error);" onclick="teacherReview(${args},'valid',this)">Valid</button>
+      <button class="btn-lg" style="padding:3px 8px; font-size:0.72rem;" onclick="teacherReview(${args},'invalid',this)">Not an issue</button>`;
+  }
+
+  async function teacherReview(email, activityId, reviewValid, btn) {
+    if (btn) btn.disabled = true;
+    try {
+      const res = await fetchWithTimeout(LESSON_SYNC_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ idToken, type: 'teacher-review', studentEmail: email, activityId, reviewValid })
+      }, 15000);
+      const result = await res.json();
+      if (!result.ok) { alert(result.error || 'Could not save the review.'); return; }
+      const idx = allRows.findIndex((row) => row.email === email && row.activityId === activityId);
+      if (idx >= 0) allRows[idx] = decorateRow(result.progress);
+      renderAll();
+      const i = lastStudentSummaries.findIndex((s) => s.email === email);
+      if (i >= 0) openStudentDetail(i);
+    } catch (err) {
+      alert('Could not save the review - check your connection and try again.');
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+  window.teacherReview = teacherReview;
+
   function submissionDetailTable(r) {
     const pairing = pairingHtml(r);
     const sessions = sessionsHtml(r);
-    if (!r.submissions.length) return pairing + (sessions ? `${sessions}<p style="margin-top:14px;"><em>No graded items logged.</em></p>` : '<em>No graded items logged.</em>');
+    const review = reviewToolbarHtml(r);
+    if (!r.submissions.length) return pairing + review + (sessions ? `${sessions}<p style="margin-top:14px;"><em>No graded items logged.</em></p>` : '<em>No graded items logged.</em>');
 
     // A "Reset" link only makes sense on a key's most recent entry (its
     // current state) - showing it on every past attempt row would be
@@ -2795,7 +2879,7 @@
       </tr>`);
     }
     const itemsHtml = items.join('');
-    const itemsTable = `${toolbar}<table><thead><tr><th>Item</th><th>Answer</th><th>Verdict</th><th>Attempt</th><th>Time</th></tr></thead><tbody>${itemsHtml}</tbody></table>`;
+    const itemsTable = `${review}${toolbar}<table><thead><tr><th>Item</th><th>Answer</th><th>Verdict</th><th>Attempt</th><th>Time</th></tr></thead><tbody>${itemsHtml}</tbody></table>`;
     return pairing + (sessions ? `${sessions}<div style="margin-top:14px;">${itemsTable}</div>` : itemsTable);
   }
 
