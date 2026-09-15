@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Solving Linear Inequalities - Review</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Visual math input: registers the <math-field> custom element used
+       by the "Are You Ready?" tab's answer fields below. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
+  <style>
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .glossary-card {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .glossary-term { font-weight: 900; color: var(--primary); font-size: 1.1rem; margin-bottom: 6px; display: block; }
+    .glossary-def { margin: 0 0 8px 0; }
+    .glossary-example { background: #f1f5f9; border-radius: 6px; padding: 6px 10px; font-size: 0.92rem; color: #334155; }
+    .ready-list { list-style: none; margin: 12px 0 0 0; padding: 0; }
+    .ready-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: #ffffff; border: 2px solid var(--border); border-radius: 10px;
+      padding: 12px 16px; margin-bottom: 10px; font-weight: 600;
+    }
+    .ready-list li::before { content: "\2713"; color: var(--success); font-weight: 900; font-size: 1.2rem; }
+  </style>
+</head>
+<body>
+
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Solving Linear Inequalities &middot; Review</span>
+    <h1>Review: Isolating a Variable &amp; Signed Numbers</h1>
+    <p class="standards-line">Standards: HSA.CED.A.1, HSA.REI.A.1, HSA.REI.B.3</p>
+    <p class="subtitle">Everything you need to remember before we start Solving Linear Inequalities</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Nothing here is graded except the "Are You Ready?" tab &ndash; this is a warm-up, and it's an important one. Solving an inequality uses the <strong>exact same isolate-the-variable process</strong> you just learned for equations, plus exactly <strong>one</strong> new rule: flip the symbol when you multiply or divide by a negative. That new rule depends completely on the integer sign rules from earlier grades, so this page reviews both pieces before the new content begins.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('why')">1. Why Review This?</button>
+    <button class="tab-btn" onclick="switchTab('vocab')">2. Vocabulary</button>
+    <button class="tab-btn" onclick="switchTab('isolate')">3. Isolating the Variable</button>
+    <button class="tab-btn" onclick="switchTab('numberline')">4. Number Lines &amp; Signed Numbers</button>
+    <button class="tab-btn" onclick="switchTab('practice')">5. Are You Ready?</button>
+    <button class="tab-btn" onclick="switchTab('resources')">6. Resources</button>
+  </nav>
+
+  <!-- TAB 1: WHY REVIEW THIS -->
+  <div id="why" class="panel active">
+    <div class="section-title">Why We're Reviewing This First</div>
+    <div class="explainer-box">
+      An inequality is solved almost exactly like an equation: use inverse operations to <strong>isolate the variable</strong>. If that skill is already solid from the Linear Equations topic, this whole unit is really just learning <strong>one new rule</strong> on top of it - flip the symbol when you multiply or divide by a negative number. If isolating a variable still feels shaky, that one new rule will be much harder to apply correctly, because you'll be juggling two skills instead of one.
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">The Big Idea</div>
+      <p style="margin:0;">Every rule for solving an equation still works for an inequality, with exactly one exception: multiplying or dividing both sides by a negative number reverses which side is bigger, so the inequality symbol has to reverse too. That single exception - not a whole new method - is what makes this topic different from the last one.</p>
+    </div>
+    <div class="notebook-box">
+      <div class="notebook-header">What This Page Covers</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Isolating the Variable:</strong> the inverse-operations process from solving equations, refreshed with inequality-flavored examples.</li>
+        <li><strong>Number Lines &amp; Signed Numbers:</strong> the integer sign rules and number-line basics the flip rule depends on.</li>
+        <li><strong>A short practice check</strong> so you know exactly what to brush up on before we begin.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TAB 2: VOCABULARY -->
+  <div id="vocab" class="panel">
+    <div class="section-title">Vocabulary Quick Reference</div>
+    <div class="explainer-box">
+      A fast reference for the words used on this page. For the full glossary (including graphing vocabulary like <em>boundary point</em> and <em>solution set</em>) plus translation practice, see this topic's own <strong>Vocabulary &amp; Literacy</strong> page.
+    </div>
+    <div class="glossary-grid">
+      <div class="glossary-card">
+        <span class="glossary-term">Variable</span>
+        <p class="glossary-def">A letter that represents an unknown or changing number.</p>
+        <div class="glossary-example">The \(x\) in \(2x - 5\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Isolate the Variable</span>
+        <p class="glossary-def">The goal of solving: use inverse operations until the variable stands alone on one side.</p>
+        <div class="glossary-example">\(3x > 15 \rightarrow x > 5\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Inequality</span>
+        <p class="glossary-def">A mathematical sentence comparing two expressions with \(<\), \(>\), \(\leq\), or \(\geq\).</p>
+        <div class="glossary-example">\(x + 3 > 10\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">The Four Symbols</span>
+        <p class="glossary-def">\(>\) greater than, \(<\) less than, \(\geq\) at least, \(\leq\) at most.</p>
+        <div class="glossary-example">"At least 5" is \(x \geq 5\)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: ISOLATING THE VARIABLE -->
+  <div id="isolate" class="panel">
+    <div class="section-title">Isolating the Variable: Equation Warm-Up</div>
+    <div class="explainer-box">
+      Before adding the flip rule, make sure the underlying process is automatic. Solve each equation below exactly as you did in the last topic - no inequalities yet.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The Question Ladder</div>
+      <ul style="margin-bottom:0;">
+        <li>What's the variable?</li>
+        <li>What's preventing it, and what is it doing (adding, subtracting, multiplying, dividing)?</li>
+        <li>What's the inverse operation? Apply it to <strong>both</strong> sides.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: One-Step</div>
+      <p style="margin:0;">Solve \(x + 7 = 15\). Subtract 7 from both sides: \(x = 8\).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Two-Step</div>
+      <p style="margin:0 0 4px 0;">Solve \(3x - 2 = 13\).</p>
+      <p style="margin:0 0 4px 0;"><strong>Step 1 - Add 2 to both sides:</strong> \(3x = 15\).</p>
+      <p style="margin:0;"><strong>Step 2 - Divide both sides by 3:</strong> \(x = 5\).</p>
+    </div>
+
+    <div class="notebook-box" style="background: rgba(30, 58, 138, 0.06);">
+      <div class="notebook-header">The One Difference Coming Up</div>
+      <p style="margin:0;">Every step above works identically for an inequality - <strong>except</strong> when the inverse operation is dividing or multiplying by a <strong>negative</strong> number. That single case is the entire new content of this topic, covered in depth on the Explanation page.</p>
+    </div>
+  </div>
+
+  <!-- TAB 4: NUMBER LINES & SIGNED NUMBERS -->
+  <div id="numberline" class="panel">
+    <div class="section-title">Number Lines &amp; Signed Numbers Recap</div>
+    <div class="explainer-box">
+      The flip rule and graphing an inequality both depend on being fluent with negative numbers and number lines - the same skills from Integers and Rational Numbers.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Reading a Number Line</div>
+      <p style="margin:0;">Numbers get <strong>larger</strong> moving to the right, and <strong>smaller</strong> moving to the left - this is true for negative numbers too. \(-2\) is greater than \(-5\), because \(-2\) sits to the right of \(-5\) on the number line.</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Multiplying &amp; Dividing Signed Numbers</div>
+      <table class="data-table">
+        <thead><tr><th>Signs</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>Same signs (both positive, or both negative)</td><td>Positive</td></tr>
+          <tr><td>Different signs (one positive, one negative)</td><td>Negative</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Why This Matters for the Flip Rule</div>
+      <p style="margin:0;">Multiplying or dividing by a negative number swaps a value's sign - a swap big enough that it can change which of two numbers is "bigger." That's exactly why the inequality symbol has to flip: without flipping, the statement would no longer be true.</p>
+    </div>
+  </div>
+
+  <!-- TAB 5: ARE YOU READY? -->
+  <div id="practice" class="panel">
+    <div class="section-title">Practice: Are You Ready?</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Type your own answer first, then click Check. You get up to <strong>2 tries</strong> per problem before the correct answer is shown.
+    </div>
+
+    <h3 style="color:var(--primary);">Solve These</h3>
+    <div id="solve-practice-list"></div>
+
+    <h3 style="color:var(--primary); margin-top:24px;">Translate These</h3>
+    <div id="translate-practice-list"></div>
+  </div>
+
+  <!-- TAB 6: RESOURCES -->
+  <div id="resources" class="panel">
+    <div class="section-title">Resources &amp; Next Steps</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">You're Ready for Solving Linear Inequalities When You Can...</div>
+      <ul class="ready-list">
+        <li>Isolate a variable in a one-step or two-step equation without hesitating.</li>
+        <li>Say instantly whether a product or quotient of two signed numbers is positive or negative.</li>
+        <li>Read a number line and say which of two numbers (including negatives) is greater.</li>
+        <li>Explain, in your own words, why multiplying by a negative reverses which side of an inequality is bigger.</li>
+      </ul>
+    </div>
+
+    <div class="ixl-box">
+      <h3 style="margin-top:0; color:#15803d;">Extra Practice, Any Time</h3>
+      <ul>
+        <li><a href="https://www.ixl.com/math/algebra-1/solve-linear-equations-with-variables-on-one-side" target="_blank" rel="noopener">Solve linear equations with variables on one side</a> <span class="ixl-code">28N</span></li>
+        <li><a href="https://www.ixl.com/math/grade-7/multiply-and-divide-integers" target="_blank" rel="noopener">Multiply and divide integers</a> <span class="ixl-code">R8D</span></li>
+      </ul>
+    </div>
+
+    <div class="explainer-box" style="margin-top:24px;">
+      <strong>Next step:</strong> once you feel solid here, move on to this topic's own <strong>Vocabulary &amp; Literacy</strong> page from the Index for the inequality glossary and symbol translation practice, then the Explanation page - every worked example there starts exactly where this page leaves off.
+    </div>
+  </div>
+</div>
+
+<script>
+  LessonSync.init('8-linear-inequalities-review');
+
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // Same inequality parser as every other page in this unit - see
+  // Practice-Set.html for full notes.
+  function normalizeInequality(raw, variable) {
+    let s = String(raw || '').trim().toLowerCase().replace(/\s+/g, '');
+    s = s.replace(/≥/g, '>=').replace(/≤/g, '<=').replace(/=>/g, '>=').replace(/=</g, '<=');
+    const v = variable.toLowerCase();
+    const num = '-?\\d+\\.?\\d*';
+    const opNum = new RegExp(`^${v}(>=|<=|>|<)(${num})$`);
+    const numOp = new RegExp(`^(${num})(>=|<=|>|<)${v}$`);
+    let m = s.match(opNum);
+    if (m) return `${v}${m[1]}${parseFloat(m[2])}`;
+    m = s.match(numOp);
+    if (m) {
+      const flip = { '>': '<', '<': '>', '>=': '<=', '<=': '>=' };
+      return `${v}${flip[m[2]]}${parseFloat(m[1])}`;
+    }
+    return null;
+  }
+  function checkInequality(raw, variable, operator, boundary) {
+    return normalizeInequality(raw, variable) === `${variable.toLowerCase()}${operator}${boundary}`;
+  }
+  function ineqDisplay(variable, operator, boundary) {
+    const sym = { '>': '>', '<': '<', '>=': '\\geq', '<=': '\\leq' }[operator];
+    return `\\(${variable} ${sym} ${boundary}\\)`;
+  }
+  function normalizeIneqExpr(s) {
+    let out = String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, '');
+    out = out.replace(/≥/g, '>=').replace(/≤/g, '<=').replace(/=>/g, '>=').replace(/=</g, '<=');
+    return out;
+  }
+  function ineqAnswerMatches(val, accepted) {
+    const norm = normalizeIneqExpr(val);
+    return (accepted || []).some((a) => normalizeIneqExpr(a) === norm);
+  }
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
+  // ==========================================
+  // GENERIC CHECK-STYLE PRACTICE LIST (2 tries, then reveal) - mirrors
+  // Linear-Equations' own Review.html checkListRegistry pattern, adapted
+  // for this topic's answer shapes: p.ineq (solved inequality, checked via
+  // checkInequality) or p.accepted (an unsolved translated inequality,
+  // checked via ineqAnswerMatches).
+  // ==========================================
+  const checkListRegistry = {};
+  window.listRegistry = checkListRegistry; // read by lesson-auth.js's teacher answer-key view
+
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg, section) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg, section: section || '5. Are You Ready?' };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:190px; display:inline-block;"></math-field>
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    triggerMathJax();
+  }
+
+  function checkListItem(keyPrefix, idx) {
+    const cfg = checkListRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const val = readMathField(document.getElementById(`${keyPrefix}-${idx}-input`));
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = p.ineq ? checkInequality(val, 'x', p.op, p.a) : ineqAnswerMatches(val, p.accepted);
+    const answerText = p.ineq ? ineqDisplay('x', p.op, p.a) : p.displayAnswer;
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! ${answerText}`,
+      retry: cfg.retry,
+      reveal: `Here's the correct answer: ${answerText}`
+    }, { label: p.label || p.q, answer: val, section: cfg.section });
+  }
+
+  const solvePractice = [
+    { q: "Solve: \\(x + 9 \\leq 14\\)", ineq: true, op: '<=', a: 5, displayAnswer: "\\(x \\leq 5\\)" },
+    { q: "Solve: \\(3x > 21\\)", ineq: true, op: '>', a: 7, displayAnswer: "\\(x > 7\\)" },
+    { q: "Solve: \\(-4x \\geq 20\\)", ineq: true, op: '<=', a: -5, displayAnswer: "\\(x \\leq -5\\)" },
+    { q: "Solve: \\(2x - 3 < 9\\)", ineq: true, op: '<', a: 6, displayAnswer: "\\(x < 6\\)" },
+    { q: "Solve: \\(-x + 4 \\leq 10\\)", ineq: true, op: '>=', a: -6, displayAnswer: "\\(x \\geq -6\\)" }
+  ];
+  renderCheckList('solve-practice-list', solvePractice, 'solve', "Not quite yet. Isolate the variable one step at a time, and watch for a division/multiplication by a negative.", "5. Are You Ready? - Solve These");
+
+  const translatePractice = [
+    { q: "A number is at least \\(-4\\).", accepted: ["n>=-4"], displayAnswer: "\\(n \\geq -4\\)" },
+    { q: "Six less than a number is less than 10.", accepted: ["n-6<10"], displayAnswer: "\\(n - 6 < 10\\)" },
+    { q: "Triple a number is at most 30.", accepted: ["3n<=30"], displayAnswer: "\\(3n \\leq 30\\)" }
+  ];
+  renderCheckList('translate-practice-list', translatePractice, 'translate', "Not quite yet. Find the keyword (at least/at most) and match it to its symbol.", "5. Are You Ready? - Translate These");
+</script>
+</body>
+</html>

@@ -20,8 +20,21 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <!-- Visual math input (site-wide rollout from the Eighth/Literal-Equations
+       pilot - see /CLAUDE.md's "Visual math input" note): registers the
+       <math-field> custom element used for this page's fraction answers. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
   <style>
     .section-heading {
       font-weight: 800;
@@ -42,7 +55,23 @@
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -50,12 +79,12 @@
     </div>
     <span class="badge">Operations with Fractions &middot; Test Prep</span>
     <h1>Operations with Fractions: Test Prep</h1>
+    <p class="standards-line">Standards: 5.NF.A.1, 6.NS.A.1</p>
   </header>
 
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Math 6 - Operations with Fractions - Test Prep')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -63,7 +92,6 @@
     <ul style="margin:6px 0 0 0;">
       <li>Work the tabs in order: review, review, concept check, mixed practice, then the readiness check.</li>
       <li>Type answers as a fraction like <code>3/4</code> or a mixed number like <code>2 1/3</code>, always in <strong>simplest form</strong>.</li>
-      <li>When you finish, type your name above and click <strong>Print My Progress</strong>.</li>
     </ul>
   </div>
 
@@ -172,11 +200,11 @@
       <p style="margin-top:10px;">A carpenter has a board that is \(8\) ft long. She cuts a piece \(2\frac{3}{4}\) ft for a shelf and another piece \(1\frac{1}{2}\) ft for a bracket.</p>
       <div class="form-group">
         <label>A. How much board remains after both cuts?</label>
-        <input type="text" id="mp-ec-a" class="form-control-lg" style="max-width:200px;" placeholder="ft remaining">
+        <math-field id="mp-ec-a" class="form-control-lg" style="max-width:200px; display:inline-block;"></math-field>
       </div>
       <div class="form-group">
         <label>B. She then cuts one more piece, \(\frac{1}{2}\) ft, for trim. How much board remains after that cut?</label>
-        <input type="text" id="mp-ec-b" class="form-control-lg" style="max-width:200px;" placeholder="ft remaining">
+        <math-field id="mp-ec-b" class="form-control-lg" style="max-width:200px; display:inline-block;"></math-field>
       </div>
       <button class="btn-lg" onclick="submitExtraCredit()">Submit Extra Credit</button>
       <div id="mp-ec-feedback" class="feedback-msg"></div>
@@ -194,18 +222,18 @@
     <div class="section-title">Readiness Check: Operations with Fractions</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Answer all four questions, then click Submit. This is the last step before you print your progress - go back to the Student Name box in the blue bar at the top of the page, type your name, and click Print My Progress.
+      Answer all four questions, then click Submit.
     </div>
 
     <form id="exit-form" onsubmit="submitReadiness(event)">
       <div class="form-group">
         <label>1. Compute the exact sum: \(\frac{5}{6} + \frac{1}{4}\)</label>
-        <input type="text" id="exit-1" class="form-control-lg" placeholder="Enter exact sum">
+        <math-field id="exit-1" class="form-control-lg" style="display:inline-block;"></math-field>
       </div>
 
       <div class="form-group">
         <label>2. Compute the exact difference: \(4\frac{1}{3} - 1\frac{5}{6}\)</label>
-        <input type="text" id="exit-2" class="form-control-lg" placeholder="Enter exact difference">
+        <math-field id="exit-2" class="form-control-lg" style="display:inline-block;"></math-field>
       </div>
 
       <div class="form-group">
@@ -225,6 +253,8 @@
 </div>
 
 <script>
+  LessonSync.init('6-operations-with-fractions-test-prep');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -240,9 +270,24 @@
   }
 
   // Strips ALL whitespace so "2 1/3" and "2  1/3" both collapse to the same
-  // comparable string - accepted answers are stored pre-stripped the same way.
+  // comparable string - accepted answers are stored pre-stripped the same
+  // way. Also strips a fraction's own redundant parens: MathLive's
+  // getValue('ascii-math') always wraps both sides of every fraction in
+  // parens even when trivial (\frac{5}{9} -> "(5)/(9)") - see
+  // Eighth/Literal-Equations' Practice-Set.html for the full explanation
+  // (same regex, this file's own local name for it).
   function normFracStrict(s) {
-    return String(s || '').toLowerCase().replace(/\s+/g, '');
+    let out = String(s || '').toLowerCase().replace(/\s+/g, '');
+    let prev;
+    do { prev = out; out = out.replace(/\(([^()+-]+)\)/g, '$1'); } while (out !== prev);
+    return out;
+  }
+
+  // Reads a <math-field>'s answer as ASCIIMath text, guarded against the
+  // MathLive script never loading - see Eighth/Literal-Equations'
+  // Practice-Set.html for the identical helper.
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
   }
 
   // ==========================================
@@ -288,7 +333,7 @@
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
-        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:170px; display:inline-block;" placeholder="e.g. 2 1/3">
+        <math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:170px; display:inline-block;"></math-field>
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
@@ -300,7 +345,7 @@
   function checkListItem(keyPrefix, idx) {
     const cfg = checkListRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`${keyPrefix}-${idx}-input`));
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
@@ -380,28 +425,37 @@
     { q: "True or False: \\(5 - \\frac{1}{4} = 4\\frac{1}{4}\\)", type: "tf", correctVal: "false", explain: "False - regroup 5 as \\(4\\frac{4}{4}\\) first: \\(4\\frac{4}{4} - \\frac{1}{4} = 4\\frac{3}{4}\\), not \\(4\\frac{1}{4}\\)." }
   ];
 
+  const conceptCardSelects = {};
+
   function renderConceptList() {
     const html = conceptItems.map((item, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
         <strong>${i + 1}.</strong> ${item.q}
         <div style="margin-top:10px;">
           ${item.type === 'tf'
-            ? `<select id="concept-${i}" class="form-control-lg" style="max-width:160px;"><option value="">Select...</option><option value="true">True</option><option value="false">False</option></select>`
-            : `<input type="text" id="concept-${i}" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">`}
+            ? `<div id="concept-${i}" class="card-select" style="display:inline-flex;"></div>`
+            : `<math-field id="concept-${i}" class="form-control-lg" style="max-width:160px; display:inline-block;"></math-field>`}
           <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem; margin-left:10px;" onclick="checkConceptItem(${i})">Check</button>
         </div>
         <div id="concept-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
       </div>
     `).join('');
     document.getElementById('concept-list').innerHTML = html;
-    conceptItems.forEach((item, i) => LessonProgress.preRegister(`concept-${i}`, item.q.replace(/\\\(|\\\)/g, ''), '3. Concept Check'));
+    conceptItems.forEach((item, i) => {
+      LessonProgress.preRegister(`concept-${i}`, item.q.replace(/\\\(|\\\)/g, ''), '3. Concept Check');
+      if (item.type === 'tf') {
+        conceptCardSelects[i] = createCardSelect(`concept-${i}`, [{ value: 'true', label: 'True' }, { value: 'false', label: 'False' }]);
+      }
+    });
     triggerMathJax();
   }
   renderConceptList();
 
   function checkConceptItem(idx) {
     const item = conceptItems[idx];
-    const val = document.getElementById(`concept-${idx}`).value;
+    // "tf" items render as a card-select (read via getValue()); "fraction"
+    // items render as a <math-field> (needs readMathField()).
+    const val = item.type === 'tf' ? (conceptCardSelects[idx].getValue() || '') : readMathField(document.getElementById(`concept-${idx}`));
     const fb = document.getElementById(`concept-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Choose or enter an answer before checking.");
@@ -423,7 +477,7 @@
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
         <strong>${i + 1}.</strong> ${p.q}
         <div style="margin-top:10px;">
-          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Your answer">
+          <math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;"></math-field>
           <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="submitListItem('${keyPrefix}', ${i})">Submit</button>
         </div>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
@@ -439,7 +493,7 @@
   function submitListItem(keyPrefix, idx) {
     const cfg = submitListRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`${keyPrefix}-${idx}-input`));
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter your answer before submitting.");
@@ -470,8 +524,8 @@
   renderSubmitList('mp-section2-list', mpSection2, 'mp2', 'Mixed Practice - Section 2');
 
   function submitExtraCredit() {
-    const a = document.getElementById('mp-ec-a').value;
-    const b = document.getElementById('mp-ec-b').value;
+    const a = readMathField(document.getElementById('mp-ec-a'));
+    const b = readMathField(document.getElementById('mp-ec-b'));
     const fb = document.getElementById('mp-ec-feedback');
     if (!a.trim() && !b.trim()) {
       LessonCheck.incomplete(fb, "Fill in at least one part before submitting, or leave both blank to skip this optional problem.");
@@ -511,8 +565,8 @@
 
   function submitReadiness(e) {
     e.preventDefault();
-    const a1 = document.getElementById('exit-1').value;
-    const a2 = document.getElementById('exit-2').value;
+    const a1 = readMathField(document.getElementById('exit-1'));
+    const a2 = readMathField(document.getElementById('exit-2'));
     const exp = document.getElementById('exit-explain').value.trim();
     const ref = document.getElementById('exit-reflect').value.trim();
     const fb = document.getElementById('exit-feedback');
@@ -527,7 +581,77 @@
     LessonProgress.recordText('Readiness Check: denominator matching explanation', exp, '5. Readiness Check');
     LessonProgress.recordText('Readiness Check: estimation reflection', ref, '5. Readiness Check');
   }
+
+  // checkListRegistry and submitListRegistry are both keyed by keyPrefix
+  // with the same {problems, section} shape and single-input-per-problem
+  // DOM convention lesson-auth.js's generic reveal already understands -
+  // merging them into window.listRegistry covers all of Tabs 1, 2 and 4
+  // for free. Only the remaining one-off items (concept check, critical
+  // thinking, extra credit, readiness) need custom handling below.
+  window.listRegistry = Object.assign({}, checkListRegistry, submitListRegistry);
+
+  window.revealAnswerKey = function () {
+    const criticalFb = document.getElementById('critical-feedback');
+    if (criticalFb) {
+      criticalFb.style.display = 'block';
+      criticalFb.className = 'feedback-msg success locked';
+      criticalFb.innerHTML = "Open-ended - grade from the student's own explanation, no single correct answer.";
+    }
+
+    conceptItems.forEach((item, i) => {
+      const fb = document.getElementById(`concept-${i}-feedback`);
+      if (!fb) return;
+      if (item.type === 'tf') {
+        conceptCardSelects[i].setValue(item.correctVal);
+        conceptCardSelects[i].disable();
+      } else {
+        const input = document.getElementById(`concept-${i}`);
+        if (!input) return;
+        input.value = item.correctVal;
+        input.disabled = true;
+      }
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: ${item.explain}`;
+    });
+
+    const ecA = document.getElementById('mp-ec-a');
+    const ecB = document.getElementById('mp-ec-b');
+    const ecFb = document.getElementById('mp-ec-feedback');
+    if (ecA && ecB && ecFb) {
+      // A <math-field>'s .value setter parses LaTeX, which collapses
+      // inter-digit spaces - "3 3/4" as LaTeX fuses into "33/4" (=8.25)
+      // instead of the mixed number 3¾ (=3.75). Needs real LaTeX
+      // mixed-number notation here; the plain "3 3/4" spelling below is
+      // fine since that's just literal feedback text, not a math-field value.
+      ecA.value = '3\\frac{3}{4}'; ecB.value = '3\\frac{1}{4}';
+      ecA.disabled = true; ecB.disabled = true;
+      ecFb.style.display = 'block';
+      ecFb.className = 'feedback-msg success locked';
+      ecFb.innerHTML = 'Answer key: A=3 3/4, B=3 1/4.';
+    }
+
+    const exit1 = document.getElementById('exit-1');
+    const exit2 = document.getElementById('exit-2');
+    const exitFb = document.getElementById('exit-feedback');
+    if (exit1 && exit2 && exitFb) {
+      // Same LaTeX-space-collapsing issue as the Extra Credit fields above -
+      // needs real mixed-number LaTeX, not "1 1/12" as a literal string.
+      exit1.value = '1\\frac{1}{12}';
+      exit2.value = '2\\frac{1}{2}';
+      exit1.disabled = true;
+      exit2.disabled = true;
+      const explainEl = document.getElementById('exit-explain');
+      const reflectEl = document.getElementById('exit-reflect');
+      if (explainEl) explainEl.disabled = true;
+      if (reflectEl) reflectEl.disabled = true;
+      exitFb.style.display = 'block';
+      exitFb.className = 'feedback-msg success locked';
+      exitFb.innerHTML = "Answer key: Sum = 1 1/12, Difference = 2 1/2. Explanations are open-ended - grade from the student's own writing.";
+    }
+
+    triggerMathJax();
+  };
 </script>
-<div id="print-report"></div>
 </body>
 </html>

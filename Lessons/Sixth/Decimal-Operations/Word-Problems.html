@@ -26,6 +26,14 @@
 
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
   <style>
     .set-heading {
       font-weight: 800;
@@ -40,7 +48,23 @@
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -48,12 +72,12 @@
     </div>
     <span class="badge">Decimal Operations &middot; Word Problems</span>
     <h1>Decimal Operations: Word Problems</h1>
+    <p class="standards-line">Standards: 6.NS.B.2, 6.NS.B.3</p>
   </header>
 
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Math 6 - Decimal Operations - Word Problems')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -61,7 +85,6 @@
     <ul style="margin:6px 0 0 0;">
       <li>Every problem is a <strong>word problem</strong> - decide which operation it needs, watching for keywords like "total," "difference," "product," or "split evenly."</li>
       <li>Work the tabs in any order: estimate first by rounding, then calculate the exact answer, then type it in and check.</li>
-      <li>When you finish, type your name above and click <strong>Print My Progress</strong>.</li>
     </ul>
   </div>
 
@@ -202,6 +225,8 @@
 </div>
 
 <script>
+  LessonSync.init('6-decimal-operations-word-problems');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -220,6 +245,7 @@
   // GENERIC CHECK-STYLE WORD PROBLEM LIST (2 tries, then reveal)
   // ==========================================
   const checkListRegistry = {};
+  window.listRegistry = checkListRegistry; // read by lesson-auth.js's teacher answer-key view
 
   function renderCheckList(containerId, problems, keyPrefix, section) {
     const html = problems.map((p, i) => `
@@ -498,6 +524,62 @@
   }
   LessonProgress.preRegister('garden-challenge', 'Garden Seed Cost Challenge', '6. Financial Literacy');
 
+  // Career Connections (Tab 5) and Financial Literacy (Tab 6) aren't part
+  // of window.listRegistry (checkListRegistry above only covers Tabs 1-4
+  // and 7) - career items use their own render/check functions
+  // (renderCareerStations/checkCareerItem) and financial literacy is two
+  // standalone check functions - so without a window.revealAnswerKey,
+  // signing in as a teacher never showed an answer key for either tab.
+  window.revealAnswerKey = function () {
+    Object.keys(careerGroups).forEach((key) => {
+      const g = careerGroups[key];
+      g.problems.forEach((p, i) => {
+        const input = document.getElementById(`career-${key}-${i}-input`);
+        const fb = document.getElementById(`career-${key}-${i}-feedback`);
+        if (!input || !fb) return;
+        const answerText = p.aText || String(p.a);
+        input.value = answerText;
+        input.disabled = true;
+        const container = input.closest('.guided-practice');
+        const btn = container && container.querySelector('button');
+        if (btn) btn.disabled = true;
+        fb.style.display = 'block';
+        fb.className = 'feedback-msg success locked';
+        fb.innerHTML = `Answer key: <strong>${answerText}</strong>`;
+      });
+    });
+
+    const finA = document.getElementById('fin-a');
+    const finB = document.getElementById('fin-b');
+    const finC = document.getElementById('fin-c');
+    if (finA && finB && finC) {
+      finA.value = '$24.09';
+      finB.value = '$25.77';
+      finC.value = '$24.23';
+      [finA, finB, finC].forEach((el) => { el.disabled = true; });
+      const finBtn = document.querySelector('[onclick="checkFinancialLiteracy()"]');
+      if (finBtn) finBtn.disabled = true;
+      const finFb = document.getElementById('fin-feedback');
+      finFb.style.display = 'block';
+      finFb.className = 'feedback-msg success locked';
+      finFb.innerHTML = 'Answer key: A. $24.09 &nbsp; B. $25.77 &nbsp; C. $24.23';
+    }
+
+    const gardenCost = document.getElementById('garden-cost');
+    const gardenExplain = document.getElementById('garden-explain');
+    if (gardenCost && gardenExplain) {
+      gardenCost.value = '$26.40';
+      gardenCost.disabled = true;
+      gardenExplain.disabled = true;
+      const gardenBtn = document.querySelector('[onclick="checkGardenChallenge()"]');
+      if (gardenBtn) gardenBtn.disabled = true;
+      const gardenFb = document.getElementById('garden-feedback');
+      gardenFb.style.display = 'block';
+      gardenFb.className = 'feedback-msg success locked';
+      gardenFb.innerHTML = 'Answer key: area = 5.5 &times; 3.2 = 17.6 m&sup2;; cost = 17.6 &times; $1.50 = <strong>$26.40</strong>';
+    }
+  };
+
   // ==========================================
   // TAB 6: CHALLENGE TIER
   // ==========================================
@@ -518,6 +600,5 @@
   checkListRegistry['challenge'] = { problems: challengeProblems, section: '7. Challenge Tier' };
   renderCheckList('challenge-list', challengeProblems, 'challenge', '7. Challenge Tier');
 </script>
-<div id="print-report"></div>
 </body>
 </html>

@@ -26,6 +26,14 @@
 
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
   <style>
     .section-heading {
       font-weight: 800;
@@ -54,7 +62,23 @@
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -62,12 +86,12 @@
     </div>
     <span class="badge">Decimal Operations &middot; Test Prep</span>
     <h1>Decimal Operations: Test Prep</h1>
+    <p class="standards-line">Standards: 6.NS.B.2, 6.NS.B.3</p>
   </header>
 
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Math 6 - Decimal Operations - Test Prep')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -77,7 +101,7 @@
       <li>Tabs 1-3: step through worked examples, then practice (2 tries, reveal on the 2nd miss).</li>
       <li>Tab 4: quick concept check.</li>
       <li>Tab 5 <strong>Mixed Practice</strong>: submit each answer <strong>once</strong> - no right/wrong shown, your teacher grades it from your printed report, like a paper test.</li>
-      <li>Tab 6: readiness reflection, then type your name above and click <strong>Print My Progress</strong>.</li>
+      <li>Tab 6: readiness reflection.</li>
     </ul>
   </div>
 
@@ -281,7 +305,7 @@
     <div class="section-title">Readiness Check: Decimal Operations</div>
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
-      Answer all four questions, then click Submit. This is the last step before you print your progress - go back to the Student Name box in the blue bar at the top of the page, type your name, and click Print My Progress.
+      Answer all four questions, then click Submit.
     </div>
 
     <form id="exit-form" onsubmit="submitReadiness(event)">
@@ -312,6 +336,8 @@
 </div>
 
 <script>
+  LessonSync.init('6-decimal-operations-test-prep');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -599,13 +625,15 @@
     { q: "In \\(3.75 \\div 0.25\\), after shifting both decimal points \\(2\\) places right, what does the divisor become?", type: "text", correctVal: "25", tol: 0.5, explain: "\\(0.25\\) shifted \\(2\\) places right is \\(25\\) - now a whole number, so you can divide normally." }
   ];
 
+  const conceptCardSelects = {};
+
   function renderConceptList() {
     const html = conceptItems.map((item, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
         <strong>${i + 1}.</strong> ${item.q}
         <div style="margin-top:10px;">
           ${item.type === 'tf'
-            ? `<select id="concept-${i}" class="form-control-lg" style="max-width:160px;"><option value="">Select...</option><option value="true">True</option><option value="false">False</option></select>`
+            ? `<div id="concept-${i}" class="card-select" style="display:inline-flex;"></div>`
             : `<input type="text" id="concept-${i}" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">`}
           <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem; margin-left:10px;" onclick="checkConceptItem(${i})">Check</button>
         </div>
@@ -613,13 +641,18 @@
       </div>
     `).join('');
     document.getElementById('concept-list').innerHTML = html;
-    conceptItems.forEach((item, i) => LessonProgress.preRegister(`concept-${i}`, item.q.replace(/\\\(|\\\)/g, ''), '4. Concept Check'));
+    conceptItems.forEach((item, i) => {
+      LessonProgress.preRegister(`concept-${i}`, item.q.replace(/\\\(|\\\)/g, ''), '4. Concept Check');
+      if (item.type === 'tf') {
+        conceptCardSelects[i] = createCardSelect(`concept-${i}`, [{ value: 'true', label: 'True' }, { value: 'false', label: 'False' }]);
+      }
+    });
   }
   renderConceptList();
 
   function checkConceptItem(idx) {
     const item = conceptItems[idx];
-    const val = document.getElementById(`concept-${idx}`).value;
+    const val = item.type === 'tf' ? (conceptCardSelects[idx].getValue() || '') : document.getElementById(`concept-${idx}`).value;
     const fb = document.getElementById(`concept-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Choose or enter an answer before checking.");
@@ -745,7 +778,101 @@
     LessonProgress.recordText('Readiness Check: procedural difference explanation', exp, '5. Readiness Check');
     LessonProgress.recordText('Readiness Check: estimation reflection', ref, '5. Readiness Check');
   }
+
+  // No single window.listRegistry on this page - two different registries
+  // (estExactRegistry: two-field est+exact items; submitListRegistry:
+  // single-field submit-only items) plus several one-off items
+  // (concept check, extra credit, readiness), so the teacher reveal
+  // covers each by hand.
+  window.revealAnswerKey = function () {
+    Object.keys(estExactRegistry).forEach((keyPrefix) => {
+      const cfg = estExactRegistry[keyPrefix];
+      cfg.problems.forEach((p, i) => {
+        const estInput = document.getElementById(`${keyPrefix}-${i}-est`);
+        const exactInput = document.getElementById(`${keyPrefix}-${i}-exact`);
+        const fb = document.getElementById(`${keyPrefix}-${i}-feedback`);
+        if (!estInput || !exactInput || !fb) return;
+        exactInput.value = p.a;
+        estInput.disabled = true;
+        exactInput.disabled = true;
+        fb.style.display = 'block';
+        fb.className = 'feedback-msg success locked';
+        fb.innerHTML = `Answer key: <strong>${p.a}</strong>`;
+      });
+    });
+
+    ['mult-critical-feedback', 'div-critical-feedback'].forEach((id) => {
+      const fb = document.getElementById(id);
+      if (fb) {
+        fb.style.display = 'block';
+        fb.className = 'feedback-msg success locked';
+        fb.innerHTML = "Open-ended - grade from the student's own explanation, no single correct answer.";
+      }
+    });
+
+    conceptItems.forEach((item, i) => {
+      const fb = document.getElementById(`concept-${i}-feedback`);
+      if (!fb) return;
+      if (item.type === 'tf') {
+        conceptCardSelects[i].setValue(item.correctVal);
+        conceptCardSelects[i].disable();
+      } else {
+        const input = document.getElementById(`concept-${i}`);
+        if (!input) return;
+        input.value = item.correctVal;
+        input.disabled = true;
+      }
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: ${item.explain}`;
+    });
+
+    Object.keys(submitListRegistry).forEach((keyPrefix) => {
+      const cfg = submitListRegistry[keyPrefix];
+      cfg.problems.forEach((p, i) => {
+        const input = document.getElementById(`${keyPrefix}-${i}-input`);
+        const fb = document.getElementById(`${keyPrefix}-${i}-feedback`);
+        if (!input || !fb) return;
+        const answer = p.aText || String(p.a);
+        input.value = answer;
+        input.disabled = true;
+        fb.style.display = 'block';
+        fb.className = 'feedback-msg success locked';
+        fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
+      });
+    });
+
+    const ecA = document.getElementById('mp-ec-a');
+    const ecB = document.getElementById('mp-ec-b');
+    const ecC = document.getElementById('mp-ec-c');
+    const ecFb = document.getElementById('mp-ec-feedback');
+    if (ecA && ecB && ecC && ecFb) {
+      ecA.value = '36.00'; ecB.value = '39.62'; ecC.value = '20.38';
+      ecA.disabled = true; ecB.disabled = true; ecC.disabled = true;
+      ecFb.style.display = 'block';
+      ecFb.className = 'feedback-msg success locked';
+      ecFb.innerHTML = 'Answer key: A=$36.00, B=$39.62, C=$20.38.';
+    }
+
+    const exit1 = document.getElementById('exit-1');
+    const exit2 = document.getElementById('exit-2');
+    const exitFb = document.getElementById('exit-feedback');
+    if (exit1 && exit2 && exitFb) {
+      exit1.value = '13.35';
+      exit2.value = '3.6';
+      exit1.disabled = true;
+      exit2.disabled = true;
+      const explainEl = document.getElementById('exit-explain');
+      const reflectEl = document.getElementById('exit-reflect');
+      if (explainEl) explainEl.disabled = true;
+      if (reflectEl) reflectEl.disabled = true;
+      exitFb.style.display = 'block';
+      exitFb.className = 'feedback-msg success locked';
+      exitFb.innerHTML = "Answer key: Sum = 13.35, Product = 3.6. Explanations are open-ended - grade from the student's own writing.";
+    }
+
+    triggerMathJax();
+  };
 </script>
-<div id="print-report"></div>
 </body>
 </html>

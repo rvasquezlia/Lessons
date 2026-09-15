@@ -20,8 +20,22 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <!-- Visual math input (site-wide rollout from the Eighth/Literal-Equations
+       pilot - see /CLAUDE.md's "Visual math input" note): registers the
+       <math-field> custom element used for the Translate Phrases section's
+       fraction-expression answers. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
   <style>
     .term-grid {
       display: grid;
@@ -50,7 +64,23 @@
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -58,6 +88,7 @@
     </div>
     <span class="badge">Operations with Fractions &middot; Vocabulary &amp; Literacy</span>
     <h1>Operations with Fractions: Vocabulary &amp; Literacy</h1>
+    <p class="standards-line">Standards: 5.NF.A.1, 6.NS.A.1</p>
   </header>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -65,7 +96,7 @@
     <ul style="margin:6px 0 0 0;">
       <li>Every keyword and term you need for Operations with Fractions lives here, before the algorithms themselves.</li>
       <li>Go tab by tab: Word Bank (copy into your notebook), fraction bar models, keyword clues, then the short check.</li>
-      <li>Nothing here prints a progress report - keep this page as your reference for whatever comes next.</li>
+      <li>Nothing here prints a progress report - keep this page as your reference for whatever comes next. Your teacher can still see that you worked through it (which tabs you opened and whether you reached the end).</li>
     </ul>
   </div>
 
@@ -268,17 +299,24 @@
     <div class="howto-box">
       <strong class="howto-label">What to do on this tab</strong>
       <ul style="margin:6px 0 0 0;">
-        <li>Choose the correct definition for each term - <strong>2 tries</strong> per question.</li>
-        <li>After a second miss, the correct definition is shown and it locks.</li>
+        <li>Drag each term onto its matching <strong>definition</strong>, and onto its matching <strong>example</strong>, too - or tap a term and then tap a definition or example.</li>
+        <li>A term only earns full credit once both its definition and its example are matched. There's no limit on tries.</li>
         <li>Quick check only - it doesn't print a progress report.</li>
       </ul>
     </div>
 
-    <div id="vocab-quiz-list"></div>
+    <div class="match-wrap">
+      <div class="match-col"><div class="match-col-heading">Term</div><div id="vocab-terms"></div></div>
+      <div class="match-col"><div class="match-col-heading">Definition</div><div id="vocab-definitions"></div></div>
+      <div class="match-col"><div class="match-col-heading">Example</div><div id="vocab-examples"></div></div>
+    </div>
+    <div class="feedback-msg" id="vocabmatch-feedback"></div>
   </div>
 </div>
 
 <script>
+  LessonSync.init('6-operations-with-fractions-vocabulary-literacy');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -324,29 +362,36 @@
     { word: "difference", op: "sub" }, { word: "less than", op: "sub" }, { word: "decreased by", op: "sub" }, { word: "how much left", op: "sub" }
   ];
 
+  const wordSortCardSelects = [];
+  const WORD_SORT_OPTIONS = [
+    { value: 'add', label: 'Addition (+)' },
+    { value: 'sub', label: 'Subtraction (−)' }
+  ];
+
   function renderWordSort() {
     const html = wordSortItems.map((item, i) => `
       <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap;">
         <strong style="min-width:220px;">${i + 1}. "${item.word}"</strong>
-        <select id="wordsort-${i}" class="form-control-lg" style="max-width:220px;">
-          <option value="">Select an operation...</option>
-          <option value="add">Addition (+)</option>
-          <option value="sub">Subtraction (-)</option>
-        </select>
+        <div id="wordsort-${i}" class="card-select"></div>
       </div>
     `).join('');
     document.getElementById('wordsort-list').innerHTML = html;
+    wordSortItems.forEach((item, i) => {
+      wordSortCardSelects[i] = createCardSelect(`wordsort-${i}`, WORD_SORT_OPTIONS);
+    });
   }
   renderWordSort();
+  LessonProgress.preRegister('wordsort', 'Keyword Sort: Which Operation?', '3. Keyword Clues');
 
   function checkWordSort() {
     const fb = document.getElementById('wordsort-feedback');
     let allFilled = true;
     let allCorrect = true;
-    wordSortItems.forEach((item, i) => {
-      const val = document.getElementById(`wordsort-${i}`).value;
+    const values = wordSortItems.map((item, i) => {
+      const val = wordSortCardSelects[i].getValue();
       if (!val) allFilled = false;
       else if (val !== item.op) allCorrect = false;
+      return val;
     });
     if (!allFilled) {
       LessonCheck.incomplete(fb, "Choose an operation for every keyword before checking.");
@@ -356,6 +401,11 @@
       correct: 'Correct! Every keyword is sorted into the right operation.',
       retry: "Some keywords aren't sorted correctly yet. Review: sum/total/increased by/altogether = addition; difference/less than/decreased by/how much left = subtraction."
     });
+    // LessonProgress.record() call added here - see Sixth/Decimal-
+    // Operations' identical fix note: LessonCheck.show() only renders
+    // feedback, it never reached the backend on its own.
+    const summary = wordSortItems.map((item, i) => `${item.word}=${values[i]}`).join(', ');
+    LessonProgress.record('wordsort', 'Keyword Sort: Which Operation?', summary, allCorrect ? 'correct' : 'incomplete', '3. Keyword Clues');
   }
 
   // ==========================================
@@ -368,15 +418,35 @@
     { phrase: "\\(\\frac{1}{3}\\) less than \\(\\frac{5}{6}\\)", accepted: ["5/6-1/3"], answer: "\\(\\frac{5}{6} - \\frac{1}{3}\\)" }
   ];
 
+  // Also strips a fraction's own redundant parens (MathLive's
+  // getValue('ascii-math') always wraps both sides of every fraction in
+  // parens even when trivial) and normalizes the accepted spelling too,
+  // not just the typed answer - see Eighth/Literal-Equations'
+  // Practice-Set.html for the full explanation of both.
   function normalizeExpr(s) {
-    return String(s || '').toLowerCase().replace(/\s+/g, '');
+    let out = String(s || '').toLowerCase().replace(/\s+/g, '');
+    let prev;
+    do { prev = out; out = out.replace(/\(([^()+-]+)\)/g, '$1'); } while (out !== prev);
+    return out;
+  }
+
+  function answerMatches(val, accepted) {
+    const nv = normalizeExpr(val);
+    return accepted.some((a) => normalizeExpr(a) === nv);
+  }
+
+  // Reads a <math-field>'s answer as ASCIIMath text, guarded against the
+  // MathLive script never loading - see Eighth/Literal-Equations'
+  // Practice-Set.html for the identical helper.
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
   }
 
   function renderTranslateList() {
     const html = translateItems.map((item, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${item.phrase}
-        <input type="text" id="translate-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="e.g. 1/4+5/8">
+        <math-field id="translate-${i}-input" class="form-control-lg" style="max-width:220px; display:inline-block;"></math-field>
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkTranslate(${i})">Check</button>
         <div id="translate-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
@@ -384,69 +454,95 @@
     document.getElementById('translate-list').innerHTML = html;
   }
   renderTranslateList();
+  translateItems.forEach((item, i) => LessonProgress.preRegister(`translate-${i}`, `Translate: ${item.phrase.replace(/\\\(|\\\)/g, '')}`, '3. Keyword Clues'));
 
   function checkTranslate(idx) {
     const item = translateItems[idx];
-    const val = document.getElementById(`translate-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`translate-${idx}-input`));
     const fb = document.getElementById(`translate-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter an expression before checking.");
       return;
     }
-    const correct = item.accepted.includes(normalizeExpr(val));
+    const correct = answerMatches(val, item.accepted);
     LessonCheck.show(fb, correct ? 'correct' : 'reveal', {
       correct: `Correct! ${item.answer}`,
       reveal: `The expression is ${item.answer}`
     });
+    // LessonProgress.record() call added here - see checkWordSort() above.
+    LessonProgress.record(`translate-${idx}`, `Translate: ${item.phrase.replace(/\\\(|\\\)/g, '')}`, val, correct ? 'correct' : 'incomplete', '3. Keyword Clues');
   }
 
   // ==========================================
-  // VOCABULARY QUIZ (Check Your Understanding)
+  // VOCABULARY MATCH-UP (Check Your Understanding) - drag-and-drop, see
+  // createVocabMatch() in lesson-shared.js and /CLAUDE.md's "Standards
+  // line" section's neighboring vocabulary-check notes.
   // ==========================================
-  const vocabQuiz = [
-    { term: "Like Denominators", choices: ["Fractions whose denominators are the same", "Fractions whose numerators are the same", "Fractions that simplify to whole numbers"], correct: 0 },
-    { term: "Butterfly Method", choices: ["Simplifying a fraction by dividing out a common factor", "Cross-multiplying for the wings, then multiplying the denominators for the new one", "Converting a mixed number to an improper fraction"], correct: 1 },
-    { term: "Improper Fraction", choices: ["A fraction that is not in simplest form", "A fraction whose numerator is greater than or equal to its denominator", "A fraction with a denominator of 1"], correct: 1 },
-    { term: "Regroup (Fraction Subtraction)", choices: ["Simplifying a fraction after subtracting", "Borrowing 1 whole and rewriting it as an extra fraction when the fraction being subtracted is bigger", "Finding a common denominator before subtracting"], correct: 1 },
-    { term: "Benchmark Fraction", choices: ["A fraction used to estimate before calculating exactly", "The final simplified answer to a problem", "A fraction with the same numerator and denominator"], correct: 0 },
-    { term: "Mixed Number", choices: ["A fraction with two different denominators", "A whole number and a fraction written together", "A fraction that has been simplified"], correct: 1 }
+  // Definitions are the same "correct choice" text this quiz already used
+  // when it was multiple-choice; examples are pulled from Tab 1's Word
+  // Bank cards for the same terms, so this stays self-consistent with the
+  // reference material by construction.
+  const VOCAB_TERMS = [
+    { key: 'likedenominators', term: 'Like Denominators', def: 'Fractions whose denominators are the same', example: '\\(\\frac{2}{7}\\) and \\(\\frac{4}{7}\\) have like denominators.' },
+    { key: 'butterflymethod', term: 'Butterfly Method', def: 'Cross-multiplying for the wings, then multiplying the denominators for the new one', example: '\\(\\frac{1}{4}+\\frac{1}{6}\\) &rarr; wings \\(6\\) and \\(4\\), new denominator \\(24\\).' },
+    { key: 'improperfraction', term: 'Improper Fraction', def: 'A fraction whose numerator is greater than or equal to its denominator', example: '\\(\\frac{17}{5}\\) is the same amount as \\(3\\frac{2}{5}\\).' },
+    { key: 'regroupfracsub', term: 'Regroup (Fraction Subtraction)', def: 'Borrowing 1 whole and rewriting it as an extra fraction when the fraction being subtracted is bigger', example: '\\(5\\frac{1}{4}\\) regroups to \\(4\\frac{5}{4}\\) before subtracting \\(\\frac{3}{4}\\).' },
+    { key: 'benchmarkfraction', term: 'Benchmark Fraction', def: 'A fraction used to estimate before calculating exactly', example: '\\(\\frac{5}{9} + \\frac{4}{7}\\) is close to \\(\\frac{1}{2} + \\frac{1}{2} = 1\\).' },
+    { key: 'mixednumber', term: 'Mixed Number', def: 'A whole number and a fraction written together', example: '\\(3\\frac{2}{5}\\)' }
   ];
 
-  function renderVocabQuiz() {
-    const html = vocabQuiz.map((item, i) => `
-      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
-        <strong>${i + 1}. What is the correct definition of "${item.term}"?</strong>
-        <div style="margin-top:10px;">
-          <select id="vocab-${i}" class="form-control-lg">
-            <option value="">Select a definition...</option>
-            ${item.choices.map((c, ci) => `<option value="${ci}">${c}</option>`).join('')}
-          </select>
-        </div>
-        <div style="margin-top:10px;">
-          <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkVocabQuiz(${i})">Check</button>
-        </div>
-        <div id="vocab-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
-      </div>
-    `).join('');
-    document.getElementById('vocab-quiz-list').innerHTML = html;
-  }
-  renderVocabQuiz();
+  const vocabMatch = createVocabMatch({
+    termsId: 'vocab-terms', defsId: 'vocab-definitions', exsId: 'vocab-examples',
+    feedbackId: 'vocabmatch-feedback',
+    terms: VOCAB_TERMS,
+    progressKey: 'vocabmatch', progressLabel: 'Key Vocabulary Match-Up',
+    section: '4. Check Your Understanding'
+  });
+  vocabMatch.render();
 
-  function checkVocabQuiz(idx) {
-    const item = vocabQuiz[idx];
-    const val = document.getElementById(`vocab-${idx}`).value;
-    const fb = document.getElementById(`vocab-${idx}-feedback`);
-    if (val === '') {
-      LessonCheck.incomplete(fb, "Choose a definition before checking.");
-      return;
-    }
-    const correct = Number(val) === item.correct;
-    LessonCheck.check(`vocab-${idx}`, correct, fb, {
-      correct: `Correct! "${item.term}" means: ${item.choices[item.correct]}`,
-      retry: "Not quite yet. Re-read the Word Bank tab and try again.",
-      reveal: `"${item.term}" means: ${item.choices[item.correct]}`
+  // No window.listRegistry on this page - word sort (select dropdowns) and
+  // translations (text inputs) are two different hand-written problem
+  // shapes, so the teacher reveal is built by hand; Tab 4 delegates to
+  // vocabMatch.reveal() since the match-up widget owns its own reveal state.
+  window.revealAnswerKey = function () {
+    wordSortItems.forEach((item, i) => {
+      const cs = wordSortCardSelects[i];
+      if (cs) { cs.setValue(item.op); cs.disable(); }
     });
-  }
+    const wsBtn = document.querySelector('button[onclick="checkWordSort()"]');
+    if (wsBtn) wsBtn.disabled = true;
+    const wsFb = document.getElementById('wordsort-feedback');
+    if (wsFb) {
+      wsFb.style.display = 'block';
+      wsFb.className = 'feedback-msg success locked';
+      wsFb.innerHTML = 'Answer key shown above - each keyword is matched to its operation.';
+    }
+
+    translateItems.forEach((item, i) => {
+      const input = document.getElementById(`translate-${i}-input`);
+      const fb = document.getElementById(`translate-${i}-feedback`);
+      if (!input || !fb) return;
+      // item.answer already carries its own \( \) wrapper (used directly
+      // in the "Correct!"/feedback messages elsewhere on this page) -
+      // strip it for the math-field, which wants bare LaTeX, same as
+      // unlockTeacherView does in lesson-auth.js for this exact
+      // convention (see /CLAUDE.md's "displayAnswer isn't stored the
+      // same way..." note). Using item.accepted[0] here (the old
+      // plain-text form, e.g. "1/4+5/8") would show as flat unstyled
+      // text instead of a real stacked fraction.
+      input.value = item.answer.replace(/^\\\(|\\\)$/g, '');
+      input.disabled = true;
+      const btn = input.parentElement && input.parentElement.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${item.answer}</strong>`;
+    });
+
+    vocabMatch.reveal();
+
+    triggerMathJax();
+  };
 </script>
 </body>
 </html>

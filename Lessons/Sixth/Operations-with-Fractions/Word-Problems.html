@@ -20,8 +20,21 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <!-- Visual math input (site-wide rollout from the Eighth/Literal-Equations
+       pilot - see /CLAUDE.md's "Visual math input" note): registers the
+       <math-field> custom element used for this page's fraction answers. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
   <style>
     .set-heading {
       font-weight: 800;
@@ -36,7 +49,23 @@
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -44,12 +73,12 @@
     </div>
     <span class="badge">Operations with Fractions &middot; Word Problems</span>
     <h1>Operations with Fractions: Word Problems</h1>
+    <p class="standards-line">Standards: 5.NF.A.1, 6.NS.A.1</p>
   </header>
 
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Math 6 - Operations with Fractions - Word Problems')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -58,7 +87,6 @@
       <li>Every problem is a <strong>word problem</strong> - decide whether it's asking you to add or subtract, watching for keywords like "total," "combined," "difference," or "how much is left."</li>
       <li>Work the tabs in any order: estimate with a benchmark fraction first, then calculate the exact answer, then type it in and check.</li>
       <li>Type answers as a fraction like <code>3/4</code> or a mixed number like <code>2 1/3</code>, always in <strong>simplest form</strong>.</li>
-      <li>When you finish, type your name above and click <strong>Print My Progress</strong>.</li>
     </ul>
   </div>
 
@@ -135,6 +163,8 @@
 </div>
 
 <script>
+  LessonSync.init('6-operations-with-fractions-word-problems');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -151,14 +181,29 @@
 
   // Strips ALL whitespace so "2 1/3" and "2  1/3" both collapse to the same
   // comparable string - accepted answers are stored pre-stripped the same way.
+  // Also strips a fraction's own redundant parens: MathLive's
+  // getValue('ascii-math') always wraps both sides of every fraction in
+  // parens even when trivial - see Eighth/Literal-Equations'
+  // Practice-Set.html for the full explanation.
   function normFracStrict(s) {
-    return String(s || '').toLowerCase().replace(/\s+/g, '');
+    let out = String(s || '').toLowerCase().replace(/\s+/g, '');
+    let prev;
+    do { prev = out; out = out.replace(/\(([^()+-]+)\)/g, '$1'); } while (out !== prev);
+    return out;
+  }
+
+  // Reads a <math-field>'s answer as ASCIIMath text, guarded against the
+  // MathLive script never loading - see Eighth/Literal-Equations'
+  // Practice-Set.html for the identical helper.
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
   }
 
   // ==========================================
   // GENERIC CHECK-STYLE WORD PROBLEM LIST (2 tries, then reveal)
   // ==========================================
   const checkListRegistry = {};
+  window.listRegistry = checkListRegistry; // read by lesson-auth.js's teacher answer-key view
 
   function renderCheckList(containerId, problems, keyPrefix, section) {
     checkListRegistry[keyPrefix] = { problems, section };
@@ -166,7 +211,7 @@
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
         <strong>${i + 1}.</strong> ${p.q}
         <div style="margin-top:10px;">
-          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Your answer">
+          <math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;"></math-field>
           <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
         </div>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
@@ -181,7 +226,7 @@
   function checkListItem(keyPrefix, idx) {
     const cfg = checkListRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`${keyPrefix}-${idx}-input`));
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
@@ -282,7 +327,7 @@
         <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px;">
           <strong>${i + 1}.</strong> ${p.q}
           <div style="margin-top:10px; display:flex; gap:14px; flex-wrap:wrap; align-items:center;">
-            <input type="text" id="career-${key}-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+            <math-field id="career-${key}-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;"></math-field>
             <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkCareerItem('${key}', ${i})">Submit</button>
           </div>
           <div id="career-${key}-${i}-feedback" class="feedback-msg" style="margin-top:8px;"></div>
@@ -309,7 +354,7 @@
   function checkCareerItem(key, idx) {
     const g = careerGroups[key];
     const p = g.problems[idx];
-    const val = document.getElementById(`career-${key}-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`career-${key}-${idx}-input`));
     const fb = document.getElementById(`career-${key}-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter your answer before submitting.");
@@ -319,6 +364,31 @@
     LessonCheck.submit(fb, { key: `career-${key}-${idx}`, label: `${g.name} #${idx + 1}`, answer: val, section: '4. Career Connections', correct },
       correct ? `Correct! The answer is \\(\\mathbf{${p.displayAnswer}}\\).` : `Submitted. This will be reviewed from your printed progress report.`);
   }
+
+  // Career Connections (Tab 4) isn't part of window.listRegistry
+  // (checkListRegistry only covers Tabs 1-3 and 5) - it uses its own
+  // render/check functions (renderCareerStations/checkCareerItem), so
+  // without a window.revealAnswerKey, signing in as a teacher never
+  // showed an answer key for this tab.
+  window.revealAnswerKey = function () {
+    Object.keys(careerGroups).forEach((key) => {
+      const g = careerGroups[key];
+      g.problems.forEach((p, i) => {
+        const input = document.getElementById(`career-${key}-${i}-input`);
+        const fb = document.getElementById(`career-${key}-${i}-feedback`);
+        if (!input || !fb) return;
+        input.value = p.displayAnswer;
+        input.disabled = true;
+        const container = input.closest('.guided-practice');
+        const btn = container && container.querySelector('button');
+        if (btn) btn.disabled = true;
+        fb.style.display = 'block';
+        fb.className = 'feedback-msg success locked';
+        fb.innerHTML = `Answer key: \\(\\mathbf{${p.displayAnswer}}\\)`;
+      });
+    });
+    triggerMathJax();
+  };
 
   // ==========================================
   // TAB 5: CHALLENGE TIER
@@ -331,6 +401,5 @@
   ];
   renderCheckList('challenge-list', challengeProblems, 'challenge', '5. Challenge Tier');
 </script>
-<div id="print-report"></div>
 </body>
 </html>

@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Solving Linear Inequalities - Practice Set</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Visual math input: registers the <math-field> custom element used
+       by every inequality-answer field below, in place of a plain text
+       input - see /CLAUDE.md's note on this unit's math-field rollout. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Algebra I &middot; Solving Linear Inequalities</span>
+    <h1>Practice Set</h1>
+    <p class="standards-line">Standards: HSA.CED.A.1, HSA.REI.A.1, HSA.REI.B.3</p>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    <ul style="margin:0; padding-left:20px;">
+      <li>Type your solution as an inequality using the math editor, e.g. <strong>x &gt; 5</strong> or <strong>x &le; -2</strong> - tap the field to bring up the symbol keyboard.</li>
+      <li>Each item gives <strong>2 tries</strong>, then shows the method and locks.</li>
+      <li><strong>Calculators are allowed</strong> this year.</li>
+    </ul>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('warmup')">1. Warm-Up</button>
+    <button class="tab-btn" onclick="switchTab('twostep')">2. Two-Step &amp; Multi-Step</button>
+    <button class="tab-btn" onclick="switchTab('fliprule')">3. The Flip Rule Focus</button>
+    <button class="tab-btn" onclick="switchTab('graphing')">4. Graphing Practice</button>
+    <button class="tab-btn" onclick="switchTab('strategy')">5. Strategy Challenge</button>
+    <button class="tab-btn" onclick="switchTab('detective')">6. Error Analysis</button>
+  </nav>
+
+  <!-- TAB 1: WARM-UP -->
+  <div id="warmup" class="panel active">
+    <div class="section-title">Warm-Up: One-Step Inequalities</div>
+    <div class="explainer-box">
+      Every problem here uses one inverse operation, and none of them require multiplying or dividing by a negative - save that for Tab 3.
+    </div>
+    <div id="warmup-list"></div>
+  </div>
+
+  <!-- TAB 2: TWO-STEP & MULTI-STEP -->
+  <div id="twostep" class="panel">
+    <div class="section-title">Two-Step &amp; Multi-Step Inequalities</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Guided Practice</div>
+      <p style="margin:0;">Show your work in your notebook, then type just your final answer below. None of these require the flip rule either.</p>
+    </div>
+    <div id="twostep-list"></div>
+  </div>
+
+  <!-- TAB 3: THE FLIP RULE FOCUS -->
+  <div id="fliprule" class="panel">
+    <div class="section-title">The Flip Rule Focus</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Every problem here requires dividing or multiplying both sides by a <strong>negative</strong> number at some point - remember to flip the inequality symbol when you do.
+    </div>
+    <div id="flip-list"></div>
+  </div>
+
+  <!-- TAB 4: GRAPHING PRACTICE -->
+  <div id="graphing" class="panel">
+    <div class="section-title">Graphing Practice</div>
+
+    <h3 style="color:var(--primary);">Part A: Describe the Graph</h3>
+    <div class="howto-box">
+      <strong class="howto-label">What to do</strong>
+      For each inequality, choose the correct circle type and direction.
+    </div>
+    <div id="describe-list"></div>
+
+    <h3 style="color:var(--primary); margin-top:28px;">Part B: Read the Graph</h3>
+    <div class="howto-box">
+      <strong class="howto-label">What to do</strong>
+      Write the inequality shown by each graph, e.g. <strong>x &gt; 5</strong>.
+    </div>
+    <div id="read-list"></div>
+  </div>
+
+  <!-- TAB 5: STRATEGY CHALLENGE -->
+  <div id="strategy" class="panel">
+    <div class="section-title">Strategy Challenge: Pick Your Group</div>
+    <div class="explainer-box">
+      Different inequalities test different skills. Pick a group below, solve its flagship inequality, then work through 4 more that reward the same strategy.
+    </div>
+
+    <div id="strategy-picker-box" class="station-card">
+      <span class="station-label">Step 1</span>
+      <h3 style="margin-top:8px; color:var(--primary);">Which group would you like to try?</h3>
+      <p>Once you confirm, it locks in for the rest of this tab. You may reload the page to try another group later.</p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:12px;">
+        <button class="btn-lg" onclick="chooseStrategyGroup('A')">Group A: No Flip Needed</button>
+        <button class="btn-lg" onclick="chooseStrategyGroup('B')">Group B: Flip Required</button>
+        <button class="btn-lg" onclick="chooseStrategyGroup('C')">Group C: Distribute, Then Flip</button>
+      </div>
+    </div>
+
+    <div id="strategy-content" style="display:none;">
+      <div class="step-box">
+        <h3 id="strategy-title" style="margin-top:0; color:var(--primary);"></h3>
+        <p id="strategy-equation" style="font-size:1.3rem;"></p>
+        <div class="form-group">
+          <label>Solution:</label>
+          <math-field id="strategy-x" class="form-control-lg" style="max-width:220px;"></math-field>
+        </div>
+        <button class="btn-lg" onclick="checkStrategy()">Check</button>
+        <div id="strategy-feedback" class="feedback-msg"></div>
+      </div>
+
+      <div class="notebook-box" style="margin-top:20px;">
+        <div class="notebook-header">More Practice: Your Group's Set</div>
+        <div id="strategy-more-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 6: ERROR ANALYSIS -->
+  <div id="detective" class="panel">
+    <div class="section-title">Error Analysis: Spot the Mistake</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Each problem shows a solved inequality with a mistake somewhere in the work - usually the flip rule. Find the first step where the work goes wrong, identify the step number, and enter the correct solution.
+    </div>
+    <div id="ed-list"></div>
+  </div>
+</div>
+
+<script>
+  LessonSync.init('8-linear-inequalities-practice-set');
+
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // Reads a <math-field>'s answer as ASCIIMath text ("x>=5" for \(x \geq
+  // 5\)) - guarded the same way as every other math-field page on this
+  // site: if the MathLive script never loaded, the element stays an
+  // undefined custom element with no getValue method, treated the same
+  // as an empty answer instead of throwing.
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
+  // ==========================================
+  // INEQUALITY ANSWER MATCHING
+  // Accepts "x > 5", "x>5", "5 < x", unicode >=/<=, or the sloppy =>/=<
+  // spelling (all of which a math-field's ASCIIMath export can produce),
+  // and canonicalizes to "<variable><op><number>" with the variable
+  // always first.
+  function normalizeInequality(raw, variable) {
+    let s = String(raw || '').trim().toLowerCase().replace(/\s+/g, '');
+    s = s.replace(/≥/g, '>=').replace(/≤/g, '<=').replace(/=>/g, '>=').replace(/=</g, '<=');
+    const v = variable.toLowerCase();
+    const num = '-?\\d+\\.?\\d*';
+    const opNum = new RegExp(`^${v}(>=|<=|>|<)(${num})$`);
+    const numOp = new RegExp(`^(${num})(>=|<=|>|<)${v}$`);
+    let m = s.match(opNum);
+    if (m) return `${v}${m[1]}${parseFloat(m[2])}`;
+    m = s.match(numOp);
+    if (m) {
+      const flip = { '>': '<', '<': '>', '>=': '<=', '<=': '>=' };
+      return `${v}${flip[m[2]]}${parseFloat(m[1])}`;
+    }
+    return null;
+  }
+
+  function checkInequality(raw, variable, operator, boundary) {
+    return normalizeInequality(raw, variable) === `${variable.toLowerCase()}${operator}${boundary}`;
+  }
+
+  function ineqDisplay(variable, operator, boundary) {
+    const sym = { '>': '>', '<': '<', '>=': '\\geq', '<=': '\\leq' }[operator];
+    return `\\(${variable} ${sym} ${boundary}\\)`;
+  }
+
+  // ==========================================
+  // NUMBER-LINE SVG (see Explanation.html's identical copy for notes)
+  // ==========================================
+  function numberLineSvg(boundary, type, direction) {
+    const min = -10, max = 10, width = 480, height = 70, padX = 20;
+    const usableW = width - padX * 2;
+    const scale = (n) => padX + ((n - min) / (max - min)) * usableW;
+    const y = 36;
+    let ticks = '';
+    for (let n = min; n <= max; n++) {
+      const x = scale(n);
+      const major = n % 5 === 0;
+      ticks += `<line x1="${x}" y1="${y - (major ? 8 : 5)}" x2="${x}" y2="${y + (major ? 8 : 5)}" stroke="#64748b" stroke-width="${major ? 2 : 1}"/>`;
+      if (major) ticks += `<text x="${x}" y="${y + 24}" font-size="12" text-anchor="middle" fill="#334155">${n}</text>`;
+    }
+    const bx = scale(boundary);
+    const rayX2 = direction === 'right' ? scale(max) : scale(min);
+    const ray = `<line x1="${bx}" y1="${y}" x2="${rayX2}" y2="${y}" stroke="#1e3a8a" stroke-width="5" stroke-linecap="round"/>`;
+    const arrowPoints = direction === 'right'
+      ? `${rayX2 - 10},${y - 7} ${rayX2},${y} ${rayX2 - 10},${y + 7}`
+      : `${rayX2 + 10},${y - 7} ${rayX2},${y} ${rayX2 + 10},${y + 7}`;
+    const arrow = `<polygon points="${arrowPoints}" fill="#1e3a8a"/>`;
+    const circle = type === 'closed'
+      ? `<circle cx="${bx}" cy="${y}" r="7" fill="#1e3a8a" stroke="#1e3a8a" stroke-width="2"/>`
+      : `<circle cx="${bx}" cy="${y}" r="7" fill="#ffffff" stroke="#1e3a8a" stroke-width="2.5"/>`;
+    return `<svg viewBox="0 0 ${width} ${height}" style="width:100%; max-width:480px; display:block; margin:10px auto;">
+      <line x1="${padX}" y1="${y}" x2="${width - padX}" y2="${y}" stroke="#cbd5e1" stroke-width="2"/>
+      ${ticks}${ray}${arrow}${circle}
+    </svg>`;
+  }
+
+  // ==========================================
+  // TAB 1: WARM-UP
+  // ==========================================
+  const warmupProblems = [
+    { q: "\\(x + 8 > 15\\)", op: '>', a: 7 },
+    { q: "\\(x - 4 \\leq 9\\)", op: '<=', a: 13 },
+    { q: "\\(5x < 30\\)", op: '<', a: 6 },
+    { q: "\\(4x \\geq 28\\)", op: '>=', a: 7 },
+    { q: "\\(x + 12 \\geq 5\\)", op: '>=', a: -7 },
+    { q: "\\(7x \\leq -21\\)", op: '<=', a: -3 }
+  ];
+
+  function renderWarmup() {
+    const html = warmupProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <math-field id="wu-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;"></math-field>
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkWarmup(${i})">Check</button>
+        <div id="wu-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('warmup-list').innerHTML = html;
+    warmupProblems.forEach((p, i) => LessonProgress.preRegister(`wu-${i}`, `Warm-Up #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '1. Warm-Up'));
+    triggerMathJax();
+  }
+
+  function checkWarmup(idx) {
+    const p = warmupProblems[idx];
+    const val = readMathField(document.getElementById(`wu-${idx}-input`));
+    const fb = document.getElementById(`wu-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking - this won't count as an attempt yet."); return; }
+    const correct = checkInequality(val, 'x', p.op, p.a);
+    const answerText = ineqDisplay('x', p.op, p.a);
+    LessonCheck.check(`wu-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(\\rightarrow\\) ${answerText}`,
+      retry: "Not quite yet. Identify the inverse operation and try again.",
+      reveal: `Here's the correct answer: ${p.q} \\(\\rightarrow\\) ${answerText}`
+    }, { label: `Warm-Up #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '1. Warm-Up' });
+  }
+
+  // ==========================================
+  // TAB 2: TWO-STEP & MULTI-STEP (no flip needed)
+  // ==========================================
+  const twoStepProblems = [
+    { q: "\\(2x - 5 < 9\\)", op: '<', a: 7 },
+    { q: "\\(4x + 6 \\geq 26\\)", op: '>=', a: 5 },
+    { q: "\\(2(x + 4) > 18\\)", op: '>', a: 5 },
+    { q: "\\(5x - 3 \\leq 3x + 9\\)", op: '<=', a: 6 },
+    { q: "\\(3(x - 1) + 2 < 2x + 10\\)", op: '<', a: 11 },
+    { q: "\\(6x - 5 \\geq 4x + 9\\)", op: '>=', a: 7 }
+  ];
+
+  function renderTwoStep() {
+    const html = twoStepProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <math-field id="ts-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;"></math-field>
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkTwoStep(${i})">Check</button>
+        <div id="ts-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('twostep-list').innerHTML = html;
+    twoStepProblems.forEach((p, i) => LessonProgress.preRegister(`ts-${i}`, `Two-Step #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '2. Two-Step & Multi-Step'));
+    triggerMathJax();
+  }
+
+  function checkTwoStep(idx) {
+    const p = twoStepProblems[idx];
+    const val = readMathField(document.getElementById(`ts-${idx}-input`));
+    const fb = document.getElementById(`ts-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking - this won't count as an attempt yet."); return; }
+    const correct = checkInequality(val, 'x', p.op, p.a);
+    const answerText = ineqDisplay('x', p.op, p.a);
+    LessonCheck.check(`ts-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(\\rightarrow\\) ${answerText}`,
+      retry: "Not quite yet. Simplify each side first, then apply inverse operations. Try again.",
+      reveal: `Here's the correct answer: ${p.q} \\(\\rightarrow\\) ${answerText}`
+    }, { label: `Two-Step #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '2. Two-Step & Multi-Step' });
+  }
+
+  // ==========================================
+  // TAB 3: THE FLIP RULE FOCUS
+  // ==========================================
+  const flipProblems = [
+    { q: "\\(-2x < 10\\)", op: '>', a: -5 },
+    { q: "\\(-x \\geq -8\\)", op: '<=', a: 8 },
+    { q: "\\(-5x \\leq 25\\)", op: '>=', a: -5 },
+    { q: "\\(-3x + 7 > -8\\)", op: '<', a: 5 },
+    { q: "\\(12 - 4x \\leq 0\\)", op: '>=', a: 3 },
+    { q: "\\(-6x - 9 \\geq 15\\)", op: '<=', a: -4 }
+  ];
+
+  function renderFlip() {
+    const html = flipProblems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(239, 68, 68, 0.06); border: 2px dashed var(--error); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <math-field id="fl-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;"></math-field>
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkFlip(${i})">Check</button>
+        <div id="fl-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('flip-list').innerHTML = html;
+    flipProblems.forEach((p, i) => LessonProgress.preRegister(`fl-${i}`, `Flip Rule #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '3. The Flip Rule Focus'));
+    triggerMathJax();
+  }
+
+  function checkFlip(idx) {
+    const p = flipProblems[idx];
+    const val = readMathField(document.getElementById(`fl-${idx}-input`));
+    const fb = document.getElementById(`fl-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking - this won't count as an attempt yet."); return; }
+    const correct = checkInequality(val, 'x', p.op, p.a);
+    const answerText = ineqDisplay('x', p.op, p.a);
+    LessonCheck.check(`fl-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(\\rightarrow\\) ${answerText}`,
+      retry: "Not quite yet. You'll need to divide or multiply by a negative number somewhere - remember to flip the symbol. Try again.",
+      reveal: `Here's the correct answer: ${p.q} \\(\\rightarrow\\) ${answerText}`
+    }, { label: `Flip Rule #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: val, section: '3. The Flip Rule Focus' });
+  }
+
+  // ==========================================
+  // TAB 4: GRAPHING PRACTICE
+  // ==========================================
+  const describeItems = [
+    { q: "\\(x > 6\\)", circle: 'open', direction: 'right' },
+    { q: "\\(x \\leq -3\\)", circle: 'closed', direction: 'left' },
+    { q: "\\(x < 0\\)", circle: 'open', direction: 'left' },
+    { q: "\\(x \\geq 5\\)", circle: 'closed', direction: 'right' }
+  ];
+
+  const describeCardSelects = [];
+
+  function renderDescribe() {
+    const html = describeItems.map((p, i) => `
+      <div class="step-box" style="margin-top:14px;">
+        <p style="margin:0 0 10px 0;"><strong>${i + 1}.</strong> ${p.q}</p>
+        <div class="card-select-row">
+          <div class="card-select-row-label">Circle type:</div>
+          <div id="ds-${i}-circle" class="card-select"></div>
+        </div>
+        <div class="card-select-row">
+          <div class="card-select-row-label">Direction:</div>
+          <div id="ds-${i}-direction" class="card-select"></div>
+        </div>
+        <button class="btn-lg" style="padding:8px 18px; font-size:0.95rem;" onclick="checkDescribe(${i})">Check</button>
+        <div id="ds-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('describe-list').innerHTML = html;
+    describeItems.forEach((p, i) => {
+      LessonProgress.preRegister(`ds-${i}`, `Describe the Graph #${i + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '4. Graphing Practice');
+      describeCardSelects[i] = {
+        circle: createCardSelect(`ds-${i}-circle`, [{ value: 'open', label: 'Open' }, { value: 'closed', label: 'Closed (filled)' }]),
+        direction: createCardSelect(`ds-${i}-direction`, [{ value: 'left', label: 'Left' }, { value: 'right', label: 'Right' }])
+      };
+    });
+    triggerMathJax();
+  }
+
+  function checkDescribe(idx) {
+    const p = describeItems[idx];
+    const circle = describeCardSelects[idx].circle.getValue();
+    const direction = describeCardSelects[idx].direction.getValue();
+    const fb = document.getElementById(`ds-${idx}-feedback`);
+    if (!circle || !direction) {
+      LessonCheck.incomplete(fb, "Choose both the circle type and the direction before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = circle === p.circle && direction === p.direction;
+    const answerText = `<strong>${p.circle === 'open' ? 'Open' : 'Closed (filled)'}</strong> circle, arrow pointing <strong>${p.direction}</strong>`;
+    LessonCheck.check(`ds-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} needs ${answerText}.`,
+      retry: "Not quite yet. Strict symbols (< or >) use an open circle; \\(\\leq\\)/\\(\\geq\\) use a closed circle. \"Greater than\" points right, \"less than\" points left.",
+      reveal: `${p.q} needs ${answerText}.`
+    }, { label: `Describe the Graph #${idx + 1}: ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: `${circle || '(none)'}, ${direction || '(none)'}`, section: '4. Graphing Practice' });
+  }
+
+  const readItems = [
+    { boundary: 2, circle: 'open', direction: 'right', op: '>' },
+    { boundary: -4, circle: 'closed', direction: 'left', op: '<=' },
+    { boundary: 7, circle: 'closed', direction: 'right', op: '>=' },
+    { boundary: -1, circle: 'open', direction: 'left', op: '<' }
+  ];
+
+  function renderRead() {
+    const html = readItems.map((p, i) => `
+      <div class="step-box" style="margin-top:14px;">
+        <p style="margin:0 0 6px 0;"><strong>${i + 1}.</strong></p>
+        <div id="read-${i}-graph"></div>
+        <div class="form-group">
+          <label>Inequality:</label>
+          <math-field id="read-${i}-input" class="form-control-lg" style="max-width:180px;"></math-field>
+        </div>
+        <button class="btn-lg" style="padding:8px 18px; font-size:0.95rem;" onclick="checkRead(${i})">Check</button>
+        <div id="read-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('read-list').innerHTML = html;
+    readItems.forEach((p, i) => {
+      document.getElementById(`read-${i}-graph`).innerHTML = numberLineSvg(p.boundary, p.circle, p.direction);
+      LessonProgress.preRegister(`read-${i}`, `Read the Graph #${i + 1}`, '4. Graphing Practice');
+    });
+  }
+
+  function checkRead(idx) {
+    const p = readItems[idx];
+    const val = readMathField(document.getElementById(`read-${idx}-input`));
+    const fb = document.getElementById(`read-${idx}-feedback`);
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter the inequality before checking - this won't count as an attempt yet."); return; }
+    const correct = checkInequality(val, 'x', p.op, p.boundary);
+    const answerText = ineqDisplay('x', p.op, p.boundary);
+    LessonCheck.check(`read-${idx}`, correct, fb, {
+      correct: `Correct! This graph shows ${answerText}.`,
+      retry: "Not quite yet. Check the circle type (open = strict, closed = includes the boundary) and the arrow's direction.",
+      reveal: `This graph shows ${answerText}.`
+    }, { label: `Read the Graph #${idx + 1}`, answer: val, section: '4. Graphing Practice' });
+  }
+
+  // ==========================================
+  // TAB 5: STRATEGY CHALLENGE
+  // ==========================================
+  const strategyGroups = {
+    A: {
+      title: "Group A: No Flip Needed", eq: "\\(4(x - 1) \\geq 2x + 10\\)", op: '>=', a: 7,
+      more: [
+        { q: "\\(3(x + 2) < x + 14\\)", op: '<', a: 4 },
+        { q: "\\(5x - 2 \\geq 3x + 10\\)", op: '>=', a: 6 },
+        { q: "\\(2(x - 3) + 5 < x + 4\\)", op: '<', a: 5 },
+        { q: "\\(7x + 1 \\leq 4x + 19\\)", op: '<=', a: 6 }
+      ]
+    },
+    B: {
+      title: "Group B: Flip Required", eq: "\\(-4x + 3 \\leq 19\\)", op: '>=', a: -4,
+      more: [
+        { q: "\\(-3x - 2 > 10\\)", op: '<', a: -4 },
+        { q: "\\(-x + 6 \\leq 2\\)", op: '>=', a: 4 },
+        { q: "\\(8 - 2x < 0\\)", op: '>', a: 4 },
+        { q: "\\(-5x + 4 \\geq -16\\)", op: '<=', a: 4 }
+      ]
+    },
+    C: {
+      title: "Group C: Distribute, Then Flip", eq: "\\(-2(x + 3) > x - 15\\)", op: '<', a: 3,
+      more: [
+        { q: "\\(-3(x - 1) \\leq x + 11\\)", op: '>=', a: -2 },
+        { q: "\\(-2(x - 3) < 4x + 6\\)", op: '>', a: 0 },
+        { q: "\\(-5(x + 1) \\geq 3x - 21\\)", op: '<=', a: 2 },
+        { q: "\\(-2(x - 4) > 3x - 3\\)", op: '<', a: 2.2 }
+      ]
+    }
+  };
+
+  let chosenStrategyGroup = null;
+
+  function chooseStrategyGroup(key) {
+    chosenStrategyGroup = key;
+    const g = strategyGroups[key];
+    document.getElementById('strategy-picker-box').innerHTML = `
+      <span class="station-label">Locked In</span>
+      <h3 style="margin-top:8px; color:var(--primary);">Your group: ${g.title}</h3>
+      <p>Scroll down to solve your flagship inequality.</p>
+    `;
+    document.getElementById('strategy-title').innerText = g.title;
+    document.getElementById('strategy-equation').innerHTML = g.eq;
+    document.getElementById('strategy-content').style.display = 'block';
+    LessonProgress.preRegister(`strategy-${key}`, `Strategy Challenge (${g.title}): ${g.eq.replace(/\\\(|\\\)/g, '')}`, '5. Strategy Challenge');
+    renderStrategyMore();
+    triggerMathJax();
+  }
+
+  function checkStrategy() {
+    const g = strategyGroups[chosenStrategyGroup];
+    const raw = readMathField(document.getElementById('strategy-x'));
+    const fb = document.getElementById('strategy-feedback');
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter your solution before checking."); return; }
+    const correct = checkInequality(raw, 'x', g.op, g.a);
+    const answerText = ineqDisplay('x', g.op, g.a);
+    LessonCheck.check(`strategy-${chosenStrategyGroup}`, correct, fb, {
+      correct: `Correct! ${g.eq} \\(\\rightarrow\\) ${answerText}`,
+      retry: "Not quite yet. Recheck your first move, then try again.",
+      reveal: `Here's the correct solution: ${g.eq} \\(\\rightarrow\\) ${answerText}`
+    }, { label: `Strategy Challenge (${g.title}): ${g.eq.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '5. Strategy Challenge' });
+  }
+
+  function renderStrategyMore() {
+    const g = strategyGroups[chosenStrategyGroup];
+    // Keys are scoped by group letter (stm-<group>-<i>, not stm-<i>) so
+    // picking a different group after reloading (the page's own copy
+    // explicitly allows this) never reuses another group's key - a
+    // shared bare "stm-0" across groups would let attemptsSinceReset_
+    // in Code.gs count a fresh first attempt at a different group's
+    // problem as a "2nd try" on whatever the previous group's problem 1
+    // was, silently under-crediting it on the dashboard.
+    const html = g.more.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 2}.</strong> ${p.q}
+        <math-field id="stm-${chosenStrategyGroup}-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;"></math-field>
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkStrategyMore(${i})">Check</button>
+        <div id="stm-${chosenStrategyGroup}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('strategy-more-list').innerHTML = html;
+    g.more.forEach((p, i) => LessonProgress.preRegister(`stm-${chosenStrategyGroup}-${i}`, `Strategy Set #${i + 2} (${g.title}): ${p.q.replace(/\\\(|\\\)/g, '')}`, '5. Strategy Challenge'));
+    triggerMathJax();
+  }
+
+  function checkStrategyMore(idx) {
+    const g = strategyGroups[chosenStrategyGroup];
+    const p = g.more[idx];
+    const raw = readMathField(document.getElementById(`stm-${chosenStrategyGroup}-${idx}-input`));
+    const fb = document.getElementById(`stm-${chosenStrategyGroup}-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
+    const correct = checkInequality(raw, 'x', p.op, p.a);
+    const answerText = ineqDisplay('x', p.op, p.a);
+    LessonCheck.check(`stm-${chosenStrategyGroup}-${idx}`, correct, fb, {
+      correct: `Correct! ${p.q} \\(\\rightarrow\\) ${answerText}`,
+      retry: "Not quite yet. Recheck your first move, then try again.",
+      reveal: `Here's the correct solution: ${p.q} \\(\\rightarrow\\) ${answerText}`
+    }, { label: `Strategy Set #${idx + 2} (${g.title}): ${p.q.replace(/\\\(|\\\)/g, '')}`, answer: raw, section: '5. Strategy Challenge' });
+  }
+
+  // ==========================================
+  // TAB 6: ERROR ANALYSIS
+  // ==========================================
+  const errorDetective = [
+    { problem: "\\(-4x > 12\\)", steps: ["Divide both sides by \\(-4\\): \\(x > -3\\)"], op: '<', a: -3, wrongStep: '1' },
+    { problem: "\\(2x - 5 \\leq 9\\)", steps: ["Add 5 to both sides: \\(2x \\leq 14\\)", "Divide by 2 and flip: \\(x \\geq 7\\)"], op: '<=', a: 7, wrongStep: '2' },
+    { problem: "\\(-x + 3 < 10\\)", steps: ["Subtract 3 from both sides: \\(-x < 7\\)", "Multiply by \\(-1\\): \\(x < 7\\)"], op: '>', a: -7, wrongStep: '2' },
+    { problem: "\\(-6x + 2 \\geq -10\\)", steps: ["Subtract 2 from both sides: \\(-6x \\geq -12\\)", "Divide by \\(-6\\): \\(x \\geq 2\\)"], op: '<=', a: 2, wrongStep: '2' }
+  ];
+
+  function renderDetective() {
+    const html = errorDetective.map((p, i) => `
+      <div class="step-box" style="margin-top:14px;">
+        <p><strong>Problem ${i + 1}:</strong> ${p.problem}</p>
+        <p><strong>Student work:</strong></p>
+        ${p.steps.map((s, j) => `<p style="margin:0 0 4px 0;">Step ${j + 1}: ${s}</p>`).join('')}
+        <div class="form-group">
+          <label>Which step number has the first mistake?</label>
+          <input type="text" id="ed-${i}-step" class="form-control-lg" style="max-width:160px;" placeholder="Step #">
+        </div>
+        <div class="form-group">
+          <label>What is the correct solution?</label>
+          <math-field id="ed-${i}-answer" class="form-control-lg" style="max-width:200px;"></math-field>
+        </div>
+        <button class="btn-lg" onclick="checkDetective(${i})">Check</button>
+        <div id="ed-${i}-feedback" class="feedback-msg"></div>
+      </div>
+    `).join('');
+    document.getElementById('ed-list').innerHTML = html;
+    errorDetective.forEach((p, i) => LessonProgress.preRegister(`ed-${i}`, `Error Analysis #${i + 1}: ${p.problem.replace(/\\\(|\\\)/g, '')}`, '6. Error Analysis'));
+    triggerMathJax();
+  }
+
+  function checkDetective(idx) {
+    const p = errorDetective[idx];
+    const step = document.getElementById(`ed-${idx}-step`).value.trim();
+    const answer = readMathField(document.getElementById(`ed-${idx}-answer`));
+    const fb = document.getElementById(`ed-${idx}-feedback`);
+    if (!step || !answer.trim()) {
+      LessonCheck.incomplete(fb, "Identify the step number and enter the correct solution before checking.");
+      return;
+    }
+    const answerText = ineqDisplay('x', p.op, p.a);
+    const correct = step === p.wrongStep && checkInequality(answer, 'x', p.op, p.a);
+    LessonCheck.check(`ed-${idx}`, correct, fb, {
+      correct: `Correct! The mistake is in Step ${p.wrongStep}; the correct solution is ${answerText}.`,
+      retry: "Not quite yet. Check every step against the flip rule - a division/multiplication by a negative must flip the symbol, and a positive one never does. Try again.",
+      reveal: `The mistake is in Step ${p.wrongStep}; the correct solution is ${answerText}.`
+    }, { label: `Error Analysis #${idx + 1}: ${p.problem.replace(/\\\(|\\\)/g, '')}`, answer: `Step ${step}, ${answer}`, section: '6. Error Analysis' });
+  }
+
+  // Initial render
+  renderWarmup();
+  renderTwoStep();
+  renderFlip();
+  renderDescribe();
+  renderRead();
+  renderDetective();
+
+  // Teacher answer key - fills in every problem's correct answer instead
+  // of the interactive check flow (see lesson-auth.js's unlockTeacherView,
+  // and /CLAUDE.md's "Role differentiation on lesson pages"). This page
+  // has no shared listRegistry (every tab uses its own bespoke check
+  // function, several with non-text-input controls), so it's hand-written
+  // per tab, matching Linear-Equations' own Practice-Set.
+  window.revealAnswerKey = function () {
+    // answer is a readable unicode string (e.g. "x ≥ 7") for the
+    // feedback text; a <math-field>'s .value setter wants LaTeX instead,
+    // so ≥/≤ are swapped for \geq/\leq only when writing into one -
+    // a plain <input> (like ed-*-step) gets the readable string as-is.
+    const fillInput = (id, feedbackId, answer) => {
+      const input = document.getElementById(id);
+      const fb = document.getElementById(feedbackId);
+      if (!input || !fb) return;
+      input.value = input.tagName === 'MATH-FIELD'
+        ? answer.replace(/≥/g, '\\geq').replace(/≤/g, '\\leq')
+        : answer;
+      input.disabled = true;
+      const container = input.closest('.guided-practice') || input.closest('.step-box');
+      const btn = container && container.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
+    };
+
+    const plainAnswer = (op, a) => `x ${{ '>': '>', '<': '<', '>=': '≥', '<=': '≤' }[op]} ${a}`;
+
+    warmupProblems.forEach((p, i) => fillInput(`wu-${i}-input`, `wu-${i}-feedback`, plainAnswer(p.op, p.a)));
+    twoStepProblems.forEach((p, i) => fillInput(`ts-${i}-input`, `ts-${i}-feedback`, plainAnswer(p.op, p.a)));
+    flipProblems.forEach((p, i) => fillInput(`fl-${i}-input`, `fl-${i}-feedback`, plainAnswer(p.op, p.a)));
+    readItems.forEach((p, i) => fillInput(`read-${i}-input`, `read-${i}-feedback`, plainAnswer(p.op, p.boundary)));
+
+    describeItems.forEach((p, i) => {
+      const cs = describeCardSelects[i];
+      const fb = document.getElementById(`ds-${i}-feedback`);
+      if (!cs || !fb) return;
+      cs.circle.setValue(p.circle);
+      cs.direction.setValue(p.direction);
+      cs.circle.disable();
+      cs.direction.disable();
+      const container = document.getElementById(`ds-${i}-circle`).closest('.step-box');
+      const btn = container && container.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${p.circle === 'open' ? 'Open' : 'Closed'}</strong> circle, arrow <strong>${p.direction}</strong>`;
+    });
+
+    // Strategy Challenge is student-choice driven - its inputs don't exist
+    // in the DOM until a group is picked, so a teacher who never clicks a
+    // group (nothing prompts them to) used to see nothing revealed here
+    // at all, even though the tab clearly has graded content. Fixed by
+    // always rendering a static, all-groups answer-key table (below),
+    // independent of whether any group has been picked - plus still
+    // filling in the live inputs if a group happens to already be chosen.
+    if (!document.getElementById('strategy-answer-key')) {
+      const ineqLatex = (op, a) => `\\(x ${{ '>': '>', '<': '<', '>=': '\\geq', '<=': '\\leq' }[op]} ${a}\\)`;
+      const rows = Object.values(strategyGroups).map((g) => {
+        const flagship = `<tr><td>${g.title} - Flagship</td><td>${g.eq}</td><td>${ineqLatex(g.op, g.a)}</td></tr>`;
+        const more = g.more.map((p, i) => `<tr><td>${g.title} - #${i + 2}</td><td>${p.q}</td><td>${ineqLatex(p.op, p.a)}</td></tr>`).join('');
+        return flagship + more;
+      }).join('');
+      const box = document.createElement('div');
+      box.id = 'strategy-answer-key';
+      box.className = 'notebook-box';
+      box.style.marginTop = '16px';
+      box.innerHTML = `
+        <div class="notebook-header">Answer Key: All Strategy Groups</div>
+        <table class="data-table">
+          <thead><tr><th>Item</th><th>Problem</th><th>Answer</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+      document.getElementById('strategy-picker-box').insertAdjacentElement('afterend', box);
+    }
+
+    if (chosenStrategyGroup) {
+      const g = strategyGroups[chosenStrategyGroup];
+      fillInput('strategy-x', 'strategy-feedback', plainAnswer(g.op, g.a));
+      g.more.forEach((p, i) => fillInput(`stm-${chosenStrategyGroup}-${i}-input`, `stm-${chosenStrategyGroup}-${i}-feedback`, plainAnswer(p.op, p.a)));
+    }
+
+    errorDetective.forEach((p, i) => {
+      const stepInput = document.getElementById(`ed-${i}-step`);
+      const answerInput = document.getElementById(`ed-${i}-answer`);
+      const fb = document.getElementById(`ed-${i}-feedback`);
+      if (!stepInput || !answerInput || !fb) return;
+      stepInput.value = p.wrongStep;
+      answerInput.value = plainAnswer(p.op, p.a).replace(/≥/g, '\\geq').replace(/≤/g, '\\leq');
+      stepInput.disabled = true;
+      answerInput.disabled = true;
+      const container = stepInput.closest('.step-box');
+      const btn = container && container.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: Step ${p.wrongStep} is wrong; <strong>${plainAnswer(p.op, p.a)}</strong>`;
+    });
+  };
+</script>
+</body>
+</html>

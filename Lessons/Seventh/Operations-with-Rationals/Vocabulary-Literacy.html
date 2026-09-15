@@ -22,8 +22,18 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
 
   <style>
     .glossary-term {
@@ -42,7 +52,23 @@
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -50,11 +76,12 @@
     </div>
     <span class="badge">Operations with Rational Numbers - Vocabulary &amp; Literacy</span>
     <h1>Vocabulary &amp; Literacy: Signed Fractions &amp; Decimals</h1>
+    <p class="standards-line">Standards: 7.NS.A.1b, 7.NS.A.1c, 7.NS.A.1d, 7.NS.A.2a, 7.NS.A.2b, 7.NS.A.2c</p>
   </header>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Copy each glossary box into your notebook. Fraction answers: enter as a decimal. Not graded - no print button.
+    Copy each glossary box into your notebook. Fraction answers: enter as a decimal. Not graded - no print button. Your teacher can still see that you worked through it (which tabs you opened and whether you reached the end).
   </div>
 
   <nav class="nav-tabs">
@@ -113,7 +140,7 @@
     <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
       <strong>2.</strong> What is the reciprocal of \(-\frac{3}{7}\)? Type it as a fraction, like <code>-7/3</code>.
       <div style="margin-top:10px;">
-        <input type="text" id="qr-1-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+        <math-field id="qr-1-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="\text{Answer}"></math-field>
         <button class="btn-lg" style="padding:8px 18px; font-size:1rem;" onclick="checkRefresher(1)">Check</button>
       </div>
       <div id="qr-1-feedback" class="feedback-msg" style="margin-top:10px;"></div>
@@ -158,40 +185,16 @@
       <h3 style="margin-top:0; color:#b45309;">Match the Strategy to Its Job</h3>
       <p>For each job below, choose the strategy name that matches it.</p>
       <div class="match-row"><strong>Rewriting subtraction as adding the opposite &rarr;</strong>
-        <select id="sv-0" class="form-control-lg" style="max-width:280px;">
-          <option value="">Choose...</option>
-          <option value="kcc">Keep-Change-Change</option>
-          <option value="kcf">Keep-Change-Flip</option>
-          <option value="lcd">Least Common Denominator (LCD)</option>
-          <option value="ssr">Same Signs Rule</option>
-        </select>
+        <div id="sv-0" class="card-select"></div>
       </div>
       <div class="match-row"><strong>Rewriting division as multiplying by the reciprocal &rarr;</strong>
-        <select id="sv-1" class="form-control-lg" style="max-width:280px;">
-          <option value="">Choose...</option>
-          <option value="kcc">Keep-Change-Change</option>
-          <option value="kcf">Keep-Change-Flip</option>
-          <option value="lcd">Least Common Denominator (LCD)</option>
-          <option value="ssr">Same Signs Rule</option>
-        </select>
+        <div id="sv-1" class="card-select"></div>
       </div>
       <div class="match-row"><strong>Rewriting two fractions so they share one denominator &rarr;</strong>
-        <select id="sv-2" class="form-control-lg" style="max-width:280px;">
-          <option value="">Choose...</option>
-          <option value="kcc">Keep-Change-Change</option>
-          <option value="kcf">Keep-Change-Flip</option>
-          <option value="lcd">Least Common Denominator (LCD)</option>
-          <option value="ssr">Same Signs Rule</option>
-        </select>
+        <div id="sv-2" class="card-select"></div>
       </div>
       <div class="match-row"><strong>Deciding a product or quotient is positive because both numbers matched &rarr;</strong>
-        <select id="sv-3" class="form-control-lg" style="max-width:280px;">
-          <option value="">Choose...</option>
-          <option value="kcc">Keep-Change-Change</option>
-          <option value="kcf">Keep-Change-Flip</option>
-          <option value="lcd">Least Common Denominator (LCD)</option>
-          <option value="ssr">Same Signs Rule</option>
-        </select>
+        <div id="sv-3" class="card-select"></div>
       </div>
       <button class="btn-lg" style="margin-top:10px;" onclick="checkSignVocab()">Check My Matches</button>
       <div id="sv-feedback" class="feedback-msg"></div>
@@ -246,6 +249,8 @@
 </div>
 
 <script>
+  LessonSync.init('7-operations-with-rationals-vocabulary-literacy');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -275,25 +280,60 @@
     { q: "LCD of 2/3 and 3/4", type: "number", a: 12, tol: 0.001 }
   ];
 
+  // ASCIIMath always double-parenthesizes every fraction (e.g. -7/3 typed
+  // with the fraction template reads back as "-(7)/(3)"), so a typed
+  // math-field answer needs its redundant parens stripped before
+  // comparing against a plain "-7/3" in accepted[] - see /CLAUDE.md's
+  // "Visual math input" note.
+  function stripRedundantParens(s) {
+    let prev;
+    do {
+      prev = s;
+      s = s.replace(/\(([^()+-]+)\)/g, '$1');
+    } while (s !== prev);
+    return s;
+  }
+
+  function normalizeExpr(s) {
+    return stripRedundantParens(String(s || '').toLowerCase().replace(/\s+/g, ''));
+  }
+
+  // Reads a <math-field>'s answer as ASCIIMath text, guarded against the
+  // MathLive script never loading (blocked network, ad blocker, cold CDN
+  // failure).
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
   function checkRefresher(idx) {
     const p = refresherProblems[idx];
-    const raw = document.getElementById(`qr-${idx}-input`).value;
+    const field = document.getElementById(`qr-${idx}-input`);
+    const raw = p.type === "number" ? field.value : readMathField(field);
     const fb = document.getElementById(`qr-${idx}-feedback`);
     if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet."); return; }
-    const correct = p.type === "number" ? LessonCheck.numericMatch(raw, p.a, p.tol) : p.accepted.includes(raw.trim().replace(/\s+/g, ''));
+    const correct = p.type === "number" ? LessonCheck.numericMatch(raw, p.a, p.tol) : p.accepted.some((a) => normalizeExpr(a) === normalizeExpr(raw));
     const displayAnswer = p.type === "number" ? p.a : p.accepted[0];
     LessonCheck.check(`qr-${idx}`, correct, fb, {
       correct: `Correct! Answer: <strong>${displayAnswer}</strong>`,
       retry: "Not quite yet. Review the glossary box above and try again.",
       reveal: `Here's the correct answer: <strong>${displayAnswer}</strong>`
-    });
+    }, { label: p.q, answer: raw, section: '1. Quick Refresher: Key Terms' });
   }
 
   // ==========================================
   // TAB 2: SIGN-RULE VOCABULARY MATCH
   // ==========================================
+  const SV_OPTIONS = [
+    { value: 'kcc', label: 'Keep-Change-Change' },
+    { value: 'kcf', label: 'Keep-Change-Flip' },
+    { value: 'lcd', label: 'Least Common Denominator (LCD)' },
+    { value: 'ssr', label: 'Same Signs Rule' }
+  ];
+  const svCardSelects = ['sv-0', 'sv-1', 'sv-2', 'sv-3'].map((id) => createCardSelect(id, SV_OPTIONS));
+  LessonProgress.preRegister('sv-match', '2. Sign-Rule Vocabulary: Match the Strategy to Its Job', '2. Sign-Rule Vocabulary');
+
   function checkSignVocab() {
-    const vals = ['sv-0', 'sv-1', 'sv-2', 'sv-3'].map(id => document.getElementById(id).value);
+    const vals = svCardSelects.map((cs) => cs.getValue());
     const fb = document.getElementById('sv-feedback');
     if (vals.some(v => !v)) { LessonCheck.incomplete(fb, "Choose a strategy for all four jobs before checking."); return; }
     const expected = ['kcc', 'kcf', 'lcd', 'ssr'];
@@ -302,7 +342,7 @@
       correct: "Correct! Keep-Change-Change rewrites subtraction, Keep-Change-Flip rewrites division, LCD lines up denominators, and the Same Signs Rule decides the sign of a product or quotient.",
       retry: "Some of these aren't matched yet. Review the glossary boxes above and try again.",
       reveal: "Rewriting subtraction &rarr; Keep-Change-Change. Rewriting division &rarr; Keep-Change-Flip. Sharing one denominator &rarr; LCD. Matching-sign product/quotient &rarr; Same Signs Rule."
-    });
+    }, { label: '2. Sign-Rule Vocabulary: Match the Strategy to Its Job', answer: vals.join(', '), section: '2. Sign-Rule Vocabulary' });
   }
 
   // ==========================================
@@ -313,70 +353,76 @@
     { word: "Loss", sign: "neg" }, { word: "Decrease", sign: "neg" }, { word: "Drop", sign: "neg" }, { word: "Debit", sign: "neg" }, { word: "Withdrawal", sign: "neg" }, { word: "Deficit", sign: "neg" }
   ];
 
+  const cwCardSelects = [];
+
   function renderClueWords() {
     const html = clueWords.map((item, i) => `
       <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap;">
         <strong style="min-width:200px;">${i + 1}. "${item.word}"</strong>
-        <select id="cw-${i}" class="form-control-lg" style="max-width:200px;">
-          <option value="">Select...</option>
-          <option value="pos">Positive (+)</option>
-          <option value="neg">Negative (-)</option>
-        </select>
+        <div id="cw-${i}" class="card-select"></div>
       </div>
     `).join('');
     document.getElementById('cluewords-list').innerHTML = html;
+    clueWords.forEach((item, i) => {
+      cwCardSelects[i] = createCardSelect(`cw-${i}`, [{ value: 'pos', label: 'Positive (+)' }, { value: 'neg', label: 'Negative (−)' }]);
+    });
   }
   renderClueWords();
+  LessonProgress.preRegister('cluewords', '3. Word-Problem Clue Words: Sort by Sign', '3. Word-Problem Clue Words');
 
   function checkClueWords() {
     const fb = document.getElementById('cluewords-feedback');
     let allFilled = true, allCorrect = true;
-    clueWords.forEach((item, i) => {
-      const val = document.getElementById(`cw-${i}`).value;
+    const values = clueWords.map((item, i) => {
+      const val = cwCardSelects[i].getValue();
       if (!val) allFilled = false;
       else if (val !== item.sign) allCorrect = false;
+      return val;
     });
     if (!allFilled) { LessonCheck.incomplete(fb, "Choose positive or negative for every word before checking."); return; }
     LessonCheck.check('cluewords', allCorrect, fb, {
       correct: 'Correct! Every word is sorted correctly.',
       retry: 'Some words are sorted incorrectly. Review: Positive = Gain, Increase, Rise, Credit, Deposit, Profit. Negative = Loss, Decrease, Drop, Debit, Withdrawal, Deficit.',
       reveal: 'Correct sorting: Positive (+) = Gain, Increase, Rise, Credit, Deposit, Profit. Negative (-) = Loss, Decrease, Drop, Debit, Withdrawal, Deficit.'
-    });
+    }, { label: '3. Word-Problem Clue Words: Sort by Sign', answer: clueWords.map((item, i) => `${item.word}=${values[i]}`).join(', '), section: '3. Word-Problem Clue Words' });
   }
 
   const opMatchWords = [
     { word: "per", op: "mult" }, { word: "each", op: "mult" }, { word: "rate", op: "mult" }, { word: "split evenly", op: "div" }, { word: "average", op: "div" }, { word: "divided among", op: "div" }
   ];
 
+  const omCardSelects = [];
+
   function renderOpMatch() {
     const html = opMatchWords.map((item, i) => `
       <div style="display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #e2e8f0; flex-wrap:wrap;">
         <strong style="min-width:200px;">${i + 1}. "${item.word}"</strong>
-        <select id="om-${i}" class="form-control-lg" style="max-width:220px;">
-          <option value="">Select...</option>
-          <option value="mult">Multiplication (&times;)</option>
-          <option value="div">Division (&divide;)</option>
-        </select>
+        <div id="om-${i}" class="card-select"></div>
       </div>
     `).join('');
     document.getElementById('opmatch-list').innerHTML = html;
+    opMatchWords.forEach((item, i) => {
+      omCardSelects[i] = createCardSelect(`om-${i}`, [{ value: 'mult', label: 'Multiplication (×)' }, { value: 'div', label: 'Division (÷)' }]);
+    });
   }
   renderOpMatch();
+  LessonProgress.preRegister('opmatch', '3. Word-Problem Clue Words: Multiplication or Division?', '3. Word-Problem Clue Words');
 
   function checkOpMatch() {
     const fb = document.getElementById('opmatch-feedback');
     let allFilled = true, allCorrect = true;
-    opMatchWords.forEach((item, i) => {
-      const val = document.getElementById(`om-${i}`).value;
+    const values = opMatchWords.map((item, i) => {
+      const val = omCardSelects[i].getValue();
       if (!val) allFilled = false;
       else if (val !== item.op) allCorrect = false;
+      return val;
     });
     if (!allFilled) { LessonCheck.incomplete(fb, "Choose an operation for every word before checking."); return; }
     LessonCheck.check('opmatch', allCorrect, fb, {
       correct: 'Correct! Every clue word matches the right operation.',
       retry: "Some matches aren't right yet. 'per', 'each', 'rate' point to multiplication; 'split evenly', 'average', 'divided among' point to division.",
       reveal: "Correct matches: Multiplication = per, each, rate. Division = split evenly, average, divided among."
-    });
+    }, { label: '3. Word-Problem Clue Words: Multiplication or Division?', answer: opMatchWords.map((item, i) => `${item.word}=${values[i]}`).join(', '), section: '3. Word-Problem Clue Words' });
   }
 
   function renderSimpleList(containerId, problems, keyPrefix) {
@@ -410,7 +456,7 @@
       correct: `Correct! Answer: <strong>${p.a}</strong>`,
       retry: "Not quite yet. Which clue word tells you the sign? Try again.",
       reveal: `Here's the correct answer: <strong>${p.a}</strong>`
-    });
+    }, { label: p.q, answer: raw, section: '3. Word-Problem Clue Words' });
   }
 
   const realworldProblems = [
@@ -449,6 +495,62 @@
     if (explain.length <= 5) { LessonCheck.incomplete(fb, "Write your explanation before submitting."); return; }
     LessonCheck.submit(fb, { key: 'vocab-critical', label: 'Critical Thinking: why line up decimals / find an LCD before adding or subtracting?', answer: explain });
   }
+
+  // No window.listRegistry on this page - several unrelated problem
+  // shapes (single inputs, multi-select match groups), so the teacher
+  // reveal is built by hand for each.
+  window.revealAnswerKey = function () {
+    const fillInput = (id, feedbackId, answer) => {
+      const input = document.getElementById(id);
+      const fb = document.getElementById(feedbackId);
+      if (!input || !fb) return;
+      input.value = answer;
+      input.disabled = true;
+      const btn = input.parentElement && input.parentElement.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
+    };
+    const fillMatchGroup = (cardSelectArr, count, expectedByIndex, feedbackId, buttonSelector, summary) => {
+      for (let i = 0; i < count; i++) {
+        const cs = cardSelectArr[i];
+        if (cs) { cs.setValue(expectedByIndex(i)); cs.disable(); }
+      }
+      const btn = document.querySelector(buttonSelector);
+      if (btn) btn.disabled = true;
+      const fb = document.getElementById(feedbackId);
+      if (fb) {
+        fb.style.display = 'block';
+        fb.className = 'feedback-msg success locked';
+        fb.innerHTML = `Answer key: ${summary}`;
+      }
+    };
+
+    refresherProblems.forEach((p, i) => {
+      const displayAnswer = p.type === 'number' ? p.a : p.accepted[0];
+      fillInput(`qr-${i}-input`, `qr-${i}-feedback`, displayAnswer);
+    });
+
+    fillMatchGroup(svCardSelects, 4, (i) => ['kcc', 'kcf', 'lcd', 'ssr'][i], 'sv-feedback',
+      'button[onclick="checkSignVocab()"]', 'Rewriting subtraction = Keep-Change-Change, Rewriting division = Keep-Change-Flip, Sharing one denominator = LCD, Matching-sign product/quotient = Same Signs Rule.');
+
+    fillMatchGroup(cwCardSelects, clueWords.length, (i) => clueWords[i].sign, 'cluewords-feedback',
+      'button[onclick="checkClueWords()"]', 'Positive (+) = Gain, Increase, Rise, Credit, Deposit, Profit. Negative (-) = Loss, Decrease, Drop, Debit, Withdrawal, Deficit.');
+
+    fillMatchGroup(omCardSelects, opMatchWords.length, (i) => opMatchWords[i].op, 'opmatch-feedback',
+      'button[onclick="checkOpMatch()"]', 'Multiplication = per, each, rate. Division = split evenly, average, divided among.');
+
+    translateProblems.forEach((p, i) => fillInput(`tr-${i}-input`, `tr-${i}-feedback`, p.a));
+    realworldProblems.forEach((p, i) => fillInput(`rw-${i}-input`, `rw-${i}-feedback`, p.a));
+
+    const criticalFb = document.getElementById('vocab-critical-feedback');
+    if (criticalFb) {
+      criticalFb.style.display = 'block';
+      criticalFb.className = 'feedback-msg success locked';
+      criticalFb.innerHTML = 'Open-ended - grade from the student\'s own explanation, no single correct answer.';
+    }
+  };
 </script>
 </body>
 </html>

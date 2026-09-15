@@ -1,0 +1,35 @@
+# Key Concepts: Rational Numbers
+
+## 1.6 Key Concept: Terminating and Repeating Decimals
+Every rational number can be represented as a point on the number line. That point on the line represents a quotient of two integers and can be written either as a fraction, a terminating decimal, or a repeating decimal.
+
+### Terminating Decimal
+A terminating decimal has a decimal expansion that terminates in 0.
+
+**Example:**
+Both 0.6 and 0.7265 are terminating decimals.
+
+---
+
+## 1.7 Key Concept: Adding and Subtracting Rational Numbers
+The rules for adding and subtracting all rational numbers are the same as those for adding and subtracting integers.
+
+The distance between any two rational numbers $p$ and $q$ on a number line is the absolute value of their difference.
+
+$$\text{Distance} = |p - q| \quad \text{or} \quad |q - p|$$
+
+**Example:**
+$$|-5 - (-2)| = |-2 - (-5)|$$
+
+---
+
+## 1.8 Key Concept: Multiplying and Dividing Rational Numbers
+The same rules for multiplying and dividing integers apply to multiplying and dividing all rational numbers.
+
+### Multiplying Rational Numbers
+* If the signs of the factors are the **same**, the product is **positive**.
+* If the signs of the factors are **different**, the product is **negative**.
+
+### Dividing Rational Numbers
+* If the signs of the dividend and divisor are the **same**, the quotient is **positive**.
+* If the signs of the dividend and divisor are **different**, the quotient is **negative**.

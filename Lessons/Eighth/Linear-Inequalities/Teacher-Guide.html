@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Solving Linear Inequalities - Teacher Guide</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <style>
+    .answer-day-heading {
+      background: var(--primary);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 28px 0 12px 0;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Algebra I &middot; Solving Linear Inequalities - Teacher Guide</span>
+    <h1>Teacher Guide: Solving Linear Inequalities</h1>
+    <p class="standards-line">Standards: HSA.CED.A.1, HSA.REI.A.1, HSA.REI.B.3</p>
+    <p class="subtitle">Pacing, Lesson-by-Lesson Notes, Metacognition, and Differentiation for All Six Pages</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">This page is for you, not students</strong>
+    Keep this link away from students. There's no dedicated answer-key tab here anymore - sign in on any student page yourself and it unlocks that page's own answer key inline (see "Role differentiation on lesson pages" in the repo's own notes if you want the mechanism). Use the tabs here instead for pacing/context, a tab-by-tab breakdown of what each page covers, metacognition and small-group discussion prompts, and real differentiation problems for students who need more support or more challenge.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('overview')">1. Topic Overview &amp; Pacing</button>
+    <button class="tab-btn" onclick="switchTab('lesson-guide')">2. Lesson-by-Lesson Guide</button>
+    <button class="tab-btn" onclick="switchTab('metacognition')">3. Metacognition &amp; Discussion</button>
+    <button class="tab-btn" onclick="switchTab('differentiation')">4. Differentiation</button>
+    <button class="tab-btn" onclick="switchTab('ixl-practice')">5. IXL Practice</button>
+  </nav>
+
+  <!-- PANEL 1: TOPIC OVERVIEW & PACING -->
+  <div id="overview" class="panel active">
+    <div class="section-title">Topic Overview: Solving Linear Inequalities</div>
+
+    <div class="explainer-box">
+      <strong>Regular Eighth grade only - not shared with 8th Grade Pre-AP</strong> (Pre-AP's equivalent-level content lives in <code>Eighth/Linear-Functions</code> instead). This topic continues directly from <code>Linear-Equations</code>/<code>Literal-Equations</code> - same Topic 1 standards, same "isolate the variable" skill, plus exactly one new rule: flip the inequality symbol when multiplying or dividing by a negative.
+      <ul style="margin:8px 0 0 0;">
+        <li>Six pages: Review, Vocabulary &amp; Literacy, Explanation, Practice Set, Word Problems, Test Prep.</li>
+        <li>Pages don't link to each other - share each one directly (e.g. one Google Classroom post per page) in the order you want. Suggested order: Review &rarr; Vocabulary &amp; Literacy &rarr; Explanation &rarr; Practice Set &rarr; Word Problems &rarr; Test Prep.</li>
+        <li><strong>Calculators are allowed</strong> this year.</li>
+        <li>Every answer on every page is a plain typed inequality (e.g. <code>x &gt; 5</code> or <code>x &lt;= -2</code>, either ASCII or unicode &ge;/&le; accepted) - no <code>&lt;math-field&gt;</code> visual editor on this topic, since an inequality's answer is a short symbolic token rather than a fraction or algebraic expression (see <code>/CLAUDE.md</code>'s "Visual math input" notes for the site-wide rule this follows).</li>
+      </ul>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Section</th><th>Suggested Time</th><th>Focus</th></tr></thead>
+      <tbody>
+        <tr><td>Review</td><td>~20-30 min</td><td>Prerequisite refresh: isolating a variable (from Linear-Equations) and the integer sign rules the flip rule depends on. Ends with a short graded "Are You Ready?" check.</td></tr>
+        <tr><td>Vocabulary &amp; Literacy</td><td>~20-30 min</td><td>Inequality/solution set/boundary point vocabulary, graphing terms (open/closed circle), and real-world phrase translation (at least/at most/more than/fewer than), plus a drag-and-drop vocabulary match-up.</td></tr>
+        <tr><td>Explanation</td><td>~1-2 class periods</td><td>Worked examples: symbols &amp; graphing basics, one/two-step solving, the flip rule (with a "why does it flip" derivation), multi-step inequalities, and real-world applications.</td></tr>
+        <tr><td>Practice Set</td><td>~1-2 class periods</td><td>Warm-up, two/multi-step (no flip), a dedicated flip-rule-focus tab, graphing practice (describe a graph <strong>and</strong> read one), a 3-group strategy challenge, and error analysis.</td></tr>
+        <tr><td>Word Problems</td><td>~1 class period</td><td>Budget/limit scenarios (set up + solve), pure translation scenarios (age/speed/GPA/temperature requirements), and mixed/challenge problems including phone-plan cost comparisons and rounding to a sensible whole number.</td></tr>
+        <tr><td>Test Prep</td><td>~1-2 class periods + assessment</td><td>Full review with guided mixed practice, error analysis review, a submit-only Mixed Practice worksheet (paper-equivalent assessment), and an exit-ticket readiness check.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Standards &amp; Objectives</div>
+      <p style="margin:0 0 8px 0;"><strong>HSA.CED.A.1</strong> (create inequalities in one variable and use them to solve problems), <strong>HSA.REI.A.1</strong> (justify each solving step), <strong>HSA.REI.B.3</strong> (solve linear inequalities in one variable) - the identical standards set <code>Linear-Equations</code> carries, since both are Algebra I Topic 1 (Lessons 1-2 through 1-5 in the enVision Algebra 1 book).</p>
+      <ul style="margin-bottom:0;">
+        <li>Solve one-step, two-step, and multi-step linear inequalities in one variable.</li>
+        <li>Apply the flip rule correctly when multiplying or dividing by a negative number.</li>
+        <li>Graph an inequality's solution set on a number line, and read a solution set from a graph.</li>
+        <li>Translate real-world constraints ("at least," "at most," "more than," "fewer than") into inequalities and solve them.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Common Misconceptions to Watch For</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Forgetting to flip</strong> when dividing/multiplying by a negative - by far the most common error across every page.</li>
+        <li><strong>Flipping when it isn't needed</strong> - adding or subtracting a negative number never flips the symbol, only multiplying/dividing by one does. Test-Prep's own Error Analysis items are built specifically around this pair of opposite mistakes.</li>
+        <li>Distributing a negative multiplier incorrectly (e.g. \(-4(x+2)\) becoming \(-4x+2\) instead of \(-4x-8\)) - independent of the flip rule, but compounds with it in multi-step problems.</li>
+        <li>Confusing "fewer than"/"less than" (\(<\)) with "at most" (\(\leq\)), or "more than" (\(>\)) with "at least" (\(\geq\)) - the strict-vs-inclusive distinction is exactly what the Vocabulary &amp; Literacy page's translation table targets.</li>
+        <li>Graphing the wrong circle type or the wrong direction - open vs. closed and left vs. right are graded as two independent sub-answers on Practice Set's Graphing Practice tab specifically because they're two independent mistakes.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Source Material</div>
+      <p style="margin:0;">Built from <code>Math Department Curriculum Map &amp; Year Plan.xlsx</code>'s Algebra I sheet, Topic 1 / Lesson 1-5 "Solving Inequalities in One Variable" (Q01W04-W05), and cross-checked against <code>IXL/Algebra-1/README.md</code>'s own Lesson 1-5 skill list for the IXL codes below - written from scratch to match this site's established Linear-Equations pattern (same standards, same page structure), not sourced from any pre-existing worksheet.</p>
+    </div>
+  </div>
+
+  <!-- PANEL 2: LESSON-BY-LESSON GUIDE -->
+  <div id="lesson-guide" class="panel">
+    <div class="section-title">Lesson-by-Lesson Guide</div>
+    <p>What each of the six pages covers, and what each tab inside it is for. Answer keys for every graded item already live inline on the student page itself - sign in there as a teacher and it unlocks automatically (see the howto note above), so this tab is about what to <em>teach</em>, not what to <em>grade</em>.</p>
+
+    <div class="answer-day-heading">1. Review</div>
+    <p style="margin:0 0 8px 0;">Refreshes exactly the two prerequisite skills the flip rule depends on - isolating a variable (from <code>Linear-Equations</code>) and signed-number reasoning - before any new inequality content appears. Gate it with Tab 5's graded check before moving on.</p>
+    <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
+      <tbody>
+        <tr><td>1. Why Review This?</td><td>The hook - connects today's new skill (inequalities) to what students already know (equations), so the review doesn't feel disconnected from "why am I doing this."</td></tr>
+        <tr><td>2. Vocabulary</td><td>Fast recall of terms from prior units (variable, coefficient, isolate) - not the full inequality vocabulary, that's Vocabulary &amp; Literacy's job.</td></tr>
+        <tr><td>3. Isolating the Variable</td><td>Re-practices solving one- and two-step equations - if a student is shaky here, they'll struggle with every later inequality page for the wrong reason (equation-solving, not inequality-specific).</td></tr>
+        <tr><td>4. Number Lines &amp; Signed Numbers</td><td>Integer sign rules and number-line reading - the exact prerequisite the flip rule and graphing both lean on.</td></tr>
+        <tr><td>5. Are You Ready?</td><td>The graded checkpoint (solve + translate items) - this is the one tab worth checking before assigning the rest of the unit.</td></tr>
+        <tr><td>6. Resources</td><td>Optional extra practice/reference material for a student who wants more before moving on - not graded.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">2. Vocabulary &amp; Literacy</div>
+    <p style="margin:0 0 8px 0;">Builds the actual language of this unit: inequality/solution-set/boundary-point terms, the four translation phrases (at least/at most/more than/fewer than), and graphing terms (open/closed circle). This is the page to assign before Explanation if a class struggles with word problems more than computation.</p>
+    <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
+      <tbody>
+        <tr><td>1. Key Vocabulary</td><td>Glossary of inequality parts, graphing terms, and the real-world phrase list - the reference the other two tabs draw on.</td></tr>
+        <tr><td>2. Translating Words to Inequalities</td><td>Graded practice turning a phrase ("at least 12") into symbolic form (\(n \geq 12\)) - the single most common word-problem stumbling block later on.</td></tr>
+        <tr><td>3. Quick Vocabulary Check</td><td>A drag-and-drop term/definition/example match-up (see <code>createVocabMatch</code> in the repo's shared JS) - a lower-stakes self-check on the same vocabulary before it's tested for real.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">3. Explanation</div>
+    <p style="margin:0 0 8px 0;">Worked examples only, no grading - the "watch me think through it" page. Built as a full Round-by-Round Question Ladder (Define it / What am I solving for / What's preventing me / single next move / check), the same format as <code>Literal-Equations</code>' Guided-Solving-Ladder, so a student who's used the ladder before recognizes the structure immediately.</p>
+    <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
+      <tbody>
+        <tr><td>1. Symbols &amp; Graphing Basics</td><td>What each symbol (\(<,\leq,>,\geq\)) means, and how a solution set looks on a number line (open vs. closed circle, direction of the ray).</td></tr>
+        <tr><td>2. One-Step &amp; Two-Step</td><td>Solving inequalities with no sign flip needed yet - isolating a variable when the coefficient is positive.</td></tr>
+        <tr><td>3. The Flip Rule</td><td>The one genuinely new rule in this whole unit: why the symbol flips when multiplying/dividing by a negative, with a from-scratch derivation (not just "memorize this"), plus a step-by-step arithmetic breakdown of what actually happens to the numbers each round.</td></tr>
+        <tr><td>4. Multi-Step Inequalities</td><td>Distributing, combining like terms, and variables on both sides - everything from Linear-Equations' own multi-step work, now with the flip rule layered on top when it applies.</td></tr>
+        <tr><td>5. Worked Applications</td><td>Real-world scenarios worked start to finish (define the variable, write the inequality, solve, interpret in context) - the bridge to Word Problems.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">4. Practice Set</div>
+    <p style="margin:0 0 8px 0;">The main graded computation page - six tabs moving from no-flip warm-up to full multi-step, plus a dedicated flip-rule-only tab (the misconception this whole unit centers on gets its own isolated practice, not just mixed in with everything else) and both directions of graphing.</p>
+    <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
+      <tbody>
+        <tr><td>1. Warm-Up</td><td>One-step inequalities, all positive coefficients - no flip decision required yet, purely a fluency check.</td></tr>
+        <tr><td>2. Two-Step &amp; Multi-Step</td><td>Adds a second operation and, later, distributing/combining - still mostly positive coefficients, so the flip rule isn't the focus here.</td></tr>
+        <tr><td>3. The Flip Rule Focus</td><td>Every item here requires dividing/multiplying by a negative - deliberately isolates the one skill students get wrong most, per the Common Misconceptions box on the Overview tab.</td></tr>
+        <tr><td>4. Graphing Practice</td><td>Both directions of the graphing skill: describe a given graph as an inequality (Part A), and read a graph from a given inequality (Part B) - graded as two independent sub-skills (open/closed, left/right) since they're two independent mistakes.</td></tr>
+        <tr><td>5. Strategy Challenge</td><td>Student picks one of several themed problem groups (no-flip / flip-required / distribute-then-flip) and works through it - see "Group Activities" in the Metacognition &amp; Discussion tab for how to use this one with the whole class.</td></tr>
+        <tr><td>6. Error Analysis</td><td>Given someone else's (wrong) solution, find the step where it broke and fix it - trains students to catch the flip-rule mistake in someone else's work, which is a different skill than avoiding it in their own.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">5. Word Problems</div>
+    <p style="margin:0 0 8px 0;">Applies everything above to real scenarios - budgets/limits first (the most concrete, closest to Explanation's own worked applications), then pure phrase-translation scenarios, then genuinely mixed/challenge problems that require picking apart a two-plan comparison or rounding a fractional answer to a sensible whole number.</p>
+    <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
+      <tbody>
+        <tr><td>1. Budgets &amp; Limits</td><td>Set-up-and-solve scenarios with a clear "at most/no more than" cap (a trip budget, a weight limit) - the most scaffolded of the three tabs.</td></tr>
+        <tr><td>2. Requirement Scenarios</td><td>Pure translation - given a real-world requirement (a minimum height, a maximum speed), write and solve the inequality with no extra arithmetic layered on.</td></tr>
+        <tr><td>3. Mixed &amp; Challenge</td><td>The hardest tab: comparing two payment plans, minimizing packing weight, or finding a whole-number answer where the raw solve gives a fraction - these require reading closely, not just plugging into a formula.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">6. Test Prep</div>
+    <p style="margin:0 0 8px 0;">The assessment-prep page - a full mixed review, a second error-analysis pass, a submit-only worksheet-style tab (no retry, closest to a real quiz), and a short exit-ticket readiness check you can use as a same-day formative signal.</p>
+    <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
+      <tbody>
+        <tr><td>1. Full Review</td><td>Check Your Understanding items plus guided mixed practice spanning every skill in the unit - the broadest single tab on this page.</td></tr>
+        <tr><td>2. Error Analysis Review</td><td>A second, harder pass at the same "find the wrong step" skill Practice Set's Tab 6 introduced.</td></tr>
+        <tr><td>3. Mixed Practice</td><td>Submit-only (no second try, no reveal-and-retry) - the closest thing on this page to a real paper quiz, useful as an actual graded assessment rather than practice.</td></tr>
+        <tr><td>4. Readiness Check</td><td>A short exit ticket (2 solve items plus a flip-rule explanation/reflection) - fast enough to use as a same-day "are we ready to move on" signal.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 3: METACOGNITION & DISCUSSION -->
+  <div id="metacognition" class="panel">
+    <div class="section-title">Metacognition &amp; Discussion</div>
+    <p>Reflection prompts and small-group discussion questions to use alongside any of the six pages - none of this is graded content on a student page, it's for you to drop into a warm-up, an exit ticket, or a mid-lesson pause.</p>
+
+    <div class="answer-day-heading">Reflection Prompts (use as an exit ticket or journal stem)</div>
+    <ul>
+      <li>"What's one moment today where I almost made the sign-flip mistake, and how did I catch it (or not)?"</li>
+      <li>"If I had to explain the flip rule to a 6th grader in one sentence, what would I say?"</li>
+      <li>"Which problem today took me the most tries? What did I actually change between attempts?"</li>
+      <li>"On a scale of 1-5, how confident am I graphing an inequality's solution set? What's one thing that would move me up a point?"</li>
+      <li>"Where in real life might I actually reach for an inequality instead of an equation?"</li>
+    </ul>
+
+    <div class="answer-day-heading">Leveled Small-Group Discussion Prompts</div>
+    <table class="data-table">
+      <thead><tr><th>Tier</th><th>Prompt</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Building Understanding</strong></td><td>Take turns explaining to your partner: why do we flip the inequality symbol only for multiplying or dividing by a negative, and never for adding or subtracting one?</td></tr>
+        <tr><td><strong>Applying</strong></td><td>As a group, solve \(-5x + 2 \geq -18\) two different ways (e.g. one person isolates the \(x\)-term first, another distributes or reorders differently if possible). Do you land on the same answer? Where could the two paths have gone wrong?</td></tr>
+        <tr><td><strong>Extending</strong></td><td>Design a real-world scenario (a budget, a speed limit, a minimum score) whose inequality requires flipping the sign at least once to solve. Trade with another group - can they both write <em>and</em> solve your inequality correctly?</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Using Practice Set's Strategy Challenge (Tab 5) as a Group Activity</div>
+    <p style="margin:0;">Each strategy group (No Flip Needed / Flip Required / Distribute, Then Flip) targets a different piece of the skill progression - consider assigning groups deliberately rather than letting every student pick the same one, so you get a genuine spread when you compare answers as a class afterward. A student's progress on whichever group they choose is saved automatically and reviewable in the teacher dashboard's Full Submission Log exactly like any other graded item; the on-screen picker itself doesn't yet remember a prior choice across a reload (a known limitation, not a data-loss issue - nothing a student submits is ever lost, they'd just see the picker screen again).</p>
+  </div>
+
+  <!-- PANEL 4: DIFFERENTIATION -->
+  <div id="differentiation" class="panel">
+    <div class="section-title">Differentiation</div>
+    <p>Real problems, not just links - for a student who needs more scaffolding before the graded pages, or more challenge once they've cleared them. None of this generates a printable worksheet; it's meant to be read from this page and written on the board, given verbally, or copied into whatever format you're already using with a small group.</p>
+
+    <div class="answer-day-heading">Scaffolded Support Problems (Flip Rule anchor set)</div>
+    <p style="margin:0 0 8px 0;">For a student who is still guessing rather than reasoning through when to flip. Read each hint aloud before they attempt the problem - unlike the graded Practice Set items, the scaffolding is meant to be visible here, not discovered.</p>
+    <table class="data-table">
+      <thead><tr><th>Problem</th><th>Hint to give</th><th>Answer</th></tr></thead>
+      <tbody>
+        <tr><td>1. \(-3x < 12\)</td><td>You're dividing by a negative number. What has to happen to the inequality symbol?</td><td>\(\mathbf{x > -4}\)</td></tr>
+        <tr><td>2. \(-x \geq 7\)</td><td>Multiplying or dividing by \(-1\) still counts - it flips too.</td><td>\(\mathbf{x \leq -7}\)</td></tr>
+        <tr><td>3. \(5x > -15\)</td><td>The coefficient here is positive - no flip. Compare this to #1: what's actually different between them?</td><td>\(\mathbf{x > -3}\)</td></tr>
+        <tr><td>4. \(-4x + 3 \leq 19\)</td><td>Isolate the term with \(x\) first (subtract 3 from both sides) before you divide - the flip only applies to the division step, not the subtraction.</td><td>\(\mathbf{x \geq -4}\)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Extension / Challenge Problems</div>
+    <p style="margin:0 0 8px 0;">Stays within this unit's own scope (one-variable inequalities only - no compound-inequality notation, which belongs to a later lesson per the note on the IXL tab) while pushing past what's graded on any of the six pages.</p>
+    <table class="data-table">
+      <thead><tr><th>Problem</th><th>Answer / Notes</th></tr></thead>
+      <tbody>
+        <tr><td>1. \(-\dfrac{2}{3}x + 4 < 10\)</td><td>\(\mathbf{x > -9}\) - a fractional coefficient forces multiplying by a reciprocal (\(-\tfrac{3}{2}\)) rather than simple division, still triggering the flip.</td></tr>
+        <tr><td>2. Find every whole number \(x\) that makes both \(-2x + 5 \geq -7\) <em>and</em> \(3x - 1 < 20\) true.</td><td>First inequality: \(x \leq 6\). Second: \(x < 7\). Combined whole numbers: \(0\) through \(6\) (7 values) - the same reasoning behind a compound inequality, built from two separate solves rather than new notation.</td></tr>
+        <tr><td>3. Write your own solution to a simple inequality that contains exactly one deliberate flip-rule mistake. Trade with a partner and have them find and fix it.</td><td>Open-ended (generative version of Error Analysis) - constructing a plausible wrong step is a higher-DOK task than just spotting one.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 4: IXL PRACTICE -->
+  <div id="ixl-practice" class="panel">
+    <div class="section-title">IXL Practice</div>
+    <p>Skill codes from IXL's official skill-alignment guide for <a href="https://www.ixl.com/math/skill-plans/envision-mathematics-2024-algebra-1" target="_blank" rel="noopener">enVision Mathematics (2024), Algebra 1</a> - Topic 1, Lesson 1-5. Assign any time during Practice Set or Word Problems.</p>
+
+    <div class="answer-day-heading">Lesson 1-5: Solving Inequalities in One Variable</div>
+    <div class="ixl-box">
+      <ul>
+        <li><a href="https://www.ixl.com/math/algebra-1/solve-multi-step-linear-inequalities" target="_blank" rel="noopener">Solve multi-step linear inequalities</a> <span class="ixl-code">9K8</span></li>
+        <li><a href="https://www.ixl.com/math/algebra-1/graph-solutions-to-multi-step-linear-inequalities" target="_blank" rel="noopener">Graph solutions to multi-step linear inequalities</a> <span class="ixl-code">5GC</span></li>
+        <li><a href="https://www.ixl.com/math/algebra-1/solve-multi-step-linear-inequalities-word-problems" target="_blank" rel="noopener">Solve multi-step linear inequalities: word problems</a> <span class="ixl-code">5NX</span></li>
+      </ul>
+      <p style="margin:10px 0 4px 0;"><strong>Also consider</strong> (a gentler on-ramp for a student who needs the two-step version before the multi-step one above):</p>
+      <ul>
+        <li><a href="https://www.ixl.com/math/algebra-1/solve-two-step-linear-inequalities" target="_blank" rel="noopener">Solve two-step linear inequalities</a> <span class="ixl-code">NPZ</span></li>
+        <li><a href="https://www.ixl.com/math/algebra-1/graph-solutions-to-two-step-linear-inequalities" target="_blank" rel="noopener">Graph solutions to two-step linear inequalities</a> <span class="ixl-code">XVM</span></li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <p style="margin:0;">Compound inequalities (Lesson 1-6) and two-variable/systems-of-inequalities (Topic 4, Lessons 4-4/4-5) are separate enVision lessons outside this unit's scope - this topic covers one-variable inequalities only, matching the curriculum map's own Q01W04-W05 rows. Don't assign those IXL skills for this topic; they belong to later units.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+</script>
+</body>
+</html>

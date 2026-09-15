@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-AP Algebra I: Linear Functions - Word Problems</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Pre-AP Algebra I &middot; Linear Functions</span>
+    <h1>Word Problems</h1>
+    <p class="standards-line">Standards: HSA.CED.A.2, HSS.ID.C.7, HSF-IF.A.1, HSF-IF.B.5, HSF-LE.A.2</p>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Every item is a word problem - define your variables, write the function, then solve. <strong>Calculators are allowed.</strong>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('modeling')">1. Modeling With Function Notation</button>
+    <button class="tab-btn" onclick="switchTab('cost')">2. Cost &amp; Savings Models</button>
+    <button class="tab-btn" onclick="switchTab('challenge')">3. Challenge Problems</button>
+  </nav>
+
+  <!-- TAB 1: MODELING WITH FUNCTION NOTATION -->
+  <div id="modeling" class="panel active">
+    <div class="section-title">Modeling With Function Notation</div>
+    <div class="explainer-box">
+      For each scenario, write the linear function described, then use it to answer the question.
+    </div>
+    <div id="modeling-list"></div>
+  </div>
+
+  <!-- TAB 2: COST & SAVINGS MODELS -->
+  <div id="cost" class="panel">
+    <div class="section-title">Cost &amp; Savings Models</div>
+    <div class="explainer-box">
+      These problems model money over time - a flat fee plus a rate, either growing or shrinking.
+    </div>
+    <div id="cost-list"></div>
+  </div>
+
+  <!-- TAB 3: CHALLENGE PROBLEMS -->
+  <div id="challenge" class="panel">
+    <div class="section-title">Challenge Problems</div>
+    <div class="explainer-box">
+      Multi-step problems - some ask you to work backward from an output to find the input.
+    </div>
+    <div id="challenge-list"></div>
+  </div>
+</div>
+
+<script>
+  LessonSync.init('8-linear-functions-word-problems');
+
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  function stripRedundantParens(s) {
+    let prev;
+    do { prev = s; s = s.replace(/\(([^()+-]+)\)/g, '$1'); } while (s !== prev);
+    return s;
+  }
+  function normalizeExpr(s) {
+    return stripRedundantParens(String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, ''));
+  }
+  function answerMatches(val, accepted) {
+    const nv = normalizeExpr(val);
+    return accepted.some((a) => normalizeExpr(a) === nv);
+  }
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
+  // ==========================================
+  // NUMERIC WORD-PROBLEM LIST (plain <input>, 2 tries then reveal)
+  // ==========================================
+  const listRegistry = {};
+  window.listRegistry = listRegistry; // read by lesson-auth.js's teacher answer-key view - covers numeric items
+
+  function renderList(containerId, problems, keyPrefix, section) {
+    listRegistry[keyPrefix] = { problems, section };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <div style="margin-top:10px;">
+          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="${p.placeholder || 'Answer'}">
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkItem('${keyPrefix}', ${i})">Check</button>
+        </div>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, `${section} #${i + 1}: ${p.label}`, section));
+  }
+
+  function checkItem(keyPrefix, idx) {
+    const cfg = listRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const raw = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet."); return; }
+    const correct = p.a !== undefined ? LessonCheck.numericMatch(raw, p.a, p.tol || 0.01) : (p.accepted || []).map((s) => s.toLowerCase()).includes(String(raw).trim().toLowerCase());
+    const answerText = p.displayAnswer || (p.a !== undefined ? String(p.a) : (p.accepted ? p.accepted[0] : ''));
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! ${answerText}`,
+      retry: p.hint || "Not quite yet. Re-read the problem and try again.",
+      reveal: `Here's the correct answer: ${answerText}`
+    }, { label: `${cfg.section} #${idx + 1}: ${p.label}`, answer: raw, section: cfg.section });
+  }
+
+  // ==========================================
+  // TAB 1: MODELING WITH FUNCTION NOTATION
+  // ==========================================
+  const modelingProblems = [
+    { q: "Anna has a \\$50 gift card. Each smoothie costs \\$6.50. Write \\(f(x)\\), the money left on the card after \\(x\\) smoothies, then find \\(f(3)\\).", a: 30.5, label: "Gift card f(3)" },
+    { q: "At a pumpkin patch, entry costs \\$5 plus \\$0.25 per pound picked. Write \\(C(p)\\) for the cost of a \\(p\\)-pound pumpkin, then find \\(C(20)\\).", a: 10, label: "Pumpkin patch C(20)" },
+    { q: "You ski down a 1,350-meter slope at 60 meters per second. Write \\(d(t)\\), your distance from the bottom after \\(t\\) seconds, then find \\(d(15)\\).", a: 450, label: "Ski slope d(15)" },
+    { q: "An elevator starts 40 feet below ground and rises 5 feet per second. Write \\(h(t)\\) for its height after \\(t\\) seconds, then find \\(h(10)\\).", a: 10, label: "Elevator h(10)" },
+    { q: "Each algebra book is \\(1\\frac{1}{4}\\) inches thick. Write \\(s(b)\\) for the height of a stack of \\(b\\) books, then find \\(s(8)\\) in inches.", a: 10, label: "Book stack s(8)" }
+  ];
+  renderList('modeling-list', modelingProblems, 'modeling', '1. Modeling With Function Notation');
+
+  // ==========================================
+  // TAB 2: COST & SAVINGS MODELS
+  // ==========================================
+  const costProblems = [
+    { q: "A computer repair shop charges a \\$50 diagnostic fee plus \\$75 per hour of labor. What is the total cost for 3.5 hours?", a: 312.5, label: "Tech repair, 3.5 hrs" },
+    { q: "Sarah starts a savings account with \\$200 and deposits \\$30 every week. How many weeks until she has \\$650?", a: 15, label: "Savings account weeks" },
+    { q: "A truck's 30-gallon fuel tank empties at 0.15 gallons per mile. How many gallons remain after driving 100 miles?", a: 15, label: "Fuel tank after 100 mi" },
+    { q: "A cable provider charges a \\$60 activation fee plus \\$125 per month. What is the total cost for 2 years (24 months)?", a: 3060, label: "Cable subscription, 2 years" },
+    { q: "Zachary bought a computer for \\$1,800 on a payment plan. After 3 months his balance was \\$1,350; after 5 months it was \\$1,050. What is his balance after 8 months?", a: 600, label: "Zachary's balance after 8 months" },
+    { q: "A shoe store sells each pair of sneakers for \\$50, plus a \\$10 shipping fee per order. What is the total cost for an order of 5 pairs?", a: 260, label: "Sneakers order, 5 pairs" },
+    { q: "A theme park charges \\$40 per ticket, plus a \\$15 processing fee per order. What is the total cost for an order of 4 tickets?", a: 175, label: "Theme park order, 4 tickets" },
+    { q: "A babysitter earns \\$12 per hour. How much does she earn for a 6-hour job?", a: 72, label: "Babysitting, 6 hours" }
+  ];
+  renderList('cost-list', costProblems, 'cost', '2. Cost & Savings Models');
+
+  // ==========================================
+  // TAB 3: CHALLENGE PROBLEMS
+  // ==========================================
+  const challengeNumericProblems = [
+    { q: "Using the fuel tank scenario from Tab 2 (\\(G(d) = 30 - 0.15d\\)), how many miles can the truck drive before the tank is empty?", a: 200, label: "Fuel tank: miles to empty" },
+    { q: "For \\(f(x) = 12 - 5x\\), what value of \\(x\\) makes \\(f(x) = 6\\)?", a: 1.2, label: "Solve f(x)=6 for f(x)=12-5x" }
+  ];
+  renderList('challenge-list', challengeNumericProblems, 'challenge', '3. Challenge Problems');
+
+  // The fuel tank equation itself (an algebraic-rule answer) is a
+  // separate math-field item, appended after the two numeric challenge
+  // items above - kept out of window.listRegistry since it isn't a plain
+  // number, same convention as Practice-Set's Tabs 2 & 4.
+  const fuelRuleProblem = { accepted: ["30-0.15d", "-0.15d+30"], displayAnswer: "G(d) = 30 - 0.15d", label: "Fuel tank equation G(d)" };
+  function renderFuelRule() {
+    const html = `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
+        <strong>3.</strong> Write the equation \\(G(d)\\) for the fuel tank scenario from Tab 2 (30-gallon tank, 0.15 gallons used per mile driven).
+        <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <label style="font-weight:700;">\\(G(d) = \\)</label>
+          <math-field id="fuelrule-input" class="form-control-lg" style="max-width:220px; display:inline-block;" placeholder="\\text{expression}"></math-field>
+          <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkFuelRule()">Check</button>
+        </div>
+        <div id="fuelrule-feedback" class="feedback-msg" style="margin-top:10px;"></div>
+      </div>`;
+    document.getElementById('challenge-list').insertAdjacentHTML('beforeend', html);
+    LessonProgress.preRegister('fuelrule', `3. Challenge Problems #3: ${fuelRuleProblem.label}`, '3. Challenge Problems');
+    triggerMathJax();
+  }
+  function checkFuelRule() {
+    const val = readMathField(document.getElementById('fuelrule-input'));
+    const fb = document.getElementById('fuelrule-feedback');
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter an expression before checking - this won't count as an attempt yet."); return; }
+    const correct = answerMatches(val, fuelRuleProblem.accepted);
+    LessonCheck.check('fuelrule', correct, fb, {
+      correct: `Correct! \\(${fuelRuleProblem.displayAnswer}\\)`,
+      retry: "Not quite yet. Start with the full tank (30) and subtract the rate times distance.",
+      reveal: `Here's the correct equation: \\(${fuelRuleProblem.displayAnswer}\\)`
+    }, { label: `3. Challenge Problems #3: ${fuelRuleProblem.label}`, answer: val, section: '3. Challenge Problems' });
+  }
+  renderFuelRule();
+
+  // window.listRegistry (all plain-number items) is filled by the generic
+  // teacher reveal loop in lesson-auth.js; the one math-field item on
+  // Tab 3 gets its own reveal here.
+  window.revealAnswerKey = function () {
+    const input = document.getElementById('fuelrule-input');
+    const fb = document.getElementById('fuelrule-feedback');
+    if (input && fb) {
+      input.value = fuelRuleProblem.displayAnswer.replace(/^G\(d\) = /, '');
+      input.disabled = true;
+      const btn = input.closest('.guided-practice').querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>\\(${fuelRuleProblem.displayAnswer}\\)</strong>`;
+    }
+    triggerMathJax();
+  };
+</script>
+</body>
+</html>

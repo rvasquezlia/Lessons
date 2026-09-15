@@ -1,0 +1,85 @@
+# Answer Key: Rational Number Practice
+
+## Section 1: Fractions and Decimals
+1. **a)** Repeating ($0.45...$)
+   **b)** Terminating ($2.375$)
+   **c)** Repeating ($7.12...$)
+   **d)** Terminating ($4.06$)
+   *Common Error:* Students may misidentify $4.06$ as repeating if they confuse a zero with a repeating pattern.
+
+2. **$0.625$**
+   *Step-by-step:* $5 \div 8$. $8$ goes into $50$ six times ($48$), remainder $2$. $8$ goes into $20$ two times ($16$), remainder $4$. $8$ goes into $40$ five times ($40$), remainder $0$.
+
+3. **$2.\overline{27}$**
+   *Step-by-step:* Keep the whole number $2$. Divide $3 \div 11$. $11$ goes into $30$ twice ($22$), remainder $8$. $11$ goes into $80$ seven times ($77$), remainder $3$. The pattern $27$ repeats.
+
+4. **$0.\overline{142857}$**
+   *Step-by-step:* Divide $1 \div 7$. The result is a non-terminating, repeating decimal.
+
+5. **Yes, the book will fit.**
+   *Step-by-step:* Convert $6\frac{5}{11}$ to a decimal: $5 \div 11 = 0.4545...$, so the book is $6.\overline{45}$ inches.
+   *Comparison:* $6.4545... < 6.48$.
+   *Final Answer:* Yes, the book will fit. The book height ($6.\overline{45}$) is less than the shelf height ($6.48$).
+
+6. **B) Every terminating decimal is rational.**
+   *Rationale:* By definition, any decimal that ends can be written as a fraction with a power of 10 denominator.
+
+---
+
+## Section 2: Add and Subtract Rational Numbers
+7. **$2.15$**
+   *Step-by-step:* $4.75 - 2.60 = 2.15$.
+   *Common Error:* Aligning the $6$ under the $5$ instead of the $7$ (place value error).
+
+8. **$1.75$**
+   *Step-by-step:* $-3.5 + 5.25 = 1.75$.
+
+9. **$16.15$**
+   *Step-by-step:* $12.4 + 3.75 = 16.15$.
+   *Common Error:* Forgetting that subtracting a negative is the same as adding a positive.
+
+10. **$-9.25$ (or $-9\frac{1}{4}$)**
+    *Step-by-step:* $-6.75 - 2.5 = -9.25$.
+
+11. **$13.75$**
+    *Step-by-step:* $18.25 - 7.5 = 10.75$; $10.75 + 3 = 13.75$.
+
+12. **$-2\frac{5}{6}$**
+    *Step-by-step:* $-4\frac{4}{6} + 1\frac{5}{6} = -3\frac{10}{6} + 1\frac{5}{6}$ is incorrect. Use improper fractions: $-\frac{28}{6} + \frac{11}{6} = -\frac{17}{6} = -2\frac{5}{6}$.
+
+13. **Expression:** $-2\frac{1}{2} + 4\frac{1}{4}$; **Final Position:** $1\frac{3}{4}$ (or $1.75$)
+    *Step-by-step:* $-2.5 + 4.25 = 1.75$.
+
+14. **A, B, and D**
+    *Rationale:* $-18.5 - 3 = -21.5$. The expression simplifies to $-21.5 + 12.75$.
+
+---
+
+## Section 3: Multiply and Divide Rational Numbers
+15. **$1.2$**
+    *Step-by-step:* $(-0.75) \times (-1.6) = 1.2$. Negative times negative is positive.
+
+16. **$-8$**
+    *Step-by-step:* $-2.5 \times 3.2 = -8$.
+
+17. **$-\frac{3}{4}$**
+    *Step-by-step:* $-\frac{5}{6} \times \frac{9}{10} = -\frac{45}{60} = -\frac{3}{4}$.
+
+18. **$-3$**
+    *Step-by-step:* $4.5 \div (-1.5) = -3$.
+
+---
+
+## Section 4: Real-World Applications
+19. **Change in elevation:** $-564.75\text{ feet}$
+    *Expression:* $-125.5 \times 4.5$
+    *Common Error:* Omitting the negative sign; elevation "descends", so the change is negative.
+
+20. **Average hourly change:** $-\frac{1}{16}\text{ per hour}$
+    *Step-by-step:* Total change = $\frac{3}{8} - \frac{6}{8} = -\frac{3}{8}$.
+    *Average:* $-\frac{3}{8} \div 6 = -\frac{3}{8} \times \frac{1}{6} = -\frac{3}{48} = -\frac{1}{16}$.
+
+---
+
+## Challenge / Explain Your Reasoning
+*Sample Answer:* For problem #19, the answer is negative because the submarine is moving downward (descending). A rate of descent is a negative velocity, and multiplying a negative rate by a positive time results in a negative displacement.

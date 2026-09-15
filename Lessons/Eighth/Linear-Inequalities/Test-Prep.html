@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Solving Linear Inequalities - Test Prep</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Visual math input: registers the <math-field> custom element used
+       by every inequality-answer field below (plain-number word-problem
+       answers in Tab 3 Part 3 stay a plain <input>). -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Algebra I &middot; Solving Linear Inequalities</span>
+    <h1>Test Prep</h1>
+    <p class="standards-line">Standards: HSA.CED.A.1, HSA.REI.A.1, HSA.REI.B.3</p>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Work the tabs <strong>in order</strong>: 1-2 review (2 tries + reveal), 3 is a graded printable check (nothing revealed), 4 is your exit ticket.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('review')">1. Full Review</button>
+    <button class="tab-btn" onclick="switchTab('erroranalysis')">2. Error Analysis Review</button>
+    <button class="tab-btn" onclick="switchTab('mixed')">3. Mixed Practice</button>
+    <button class="tab-btn" onclick="switchTab('readiness')">4. Readiness Check</button>
+  </nav>
+
+  <!-- TAB 1: FULL REVIEW -->
+  <div id="review" class="panel active">
+    <div class="section-title">Full Review: Everything in This Topic</div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The Flip Rule</div>
+      <p style="margin:0;">Adding or subtracting <strong>never</strong> flips the symbol. Multiplying or dividing by a <strong>negative</strong> number <strong>always</strong> flips it. Multiplying or dividing by a positive number never flips it.</p>
+    </div>
+
+    <div class="explainer-box">
+      <strong>The Question Ladder:</strong> What's the variable? What's preventing it? What's it doing? What's the inverse - and does it involve a negative?
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Check Your Understanding</h3>
+      <div class="form-group">
+        <label>1. Explain, in your own words, why multiplying or dividing an inequality by a negative number flips the symbol. Use \(4 < 9\) as your example.</label>
+        <textarea id="fund-q1" class="form-control-lg" rows="3" placeholder="Explain the flip rule..."></textarea>
+      </div>
+      <button class="btn-lg" onclick="checkFundQ1()">Submit My Work</button>
+      <div id="fund-q1-feedback" class="feedback-msg"></div>
+
+      <div class="form-group" style="margin-top:20px;">
+        <label>2. Solve: \(-5x \geq -35\)</label>
+        <math-field id="fund-q2" class="form-control-lg" style="max-width:180px;"></math-field>
+      </div>
+      <button class="btn-lg" onclick="checkFundQ2()">Check</button>
+      <div id="fund-q2-feedback" class="feedback-msg"></div>
+    </div>
+
+    <h3 style="margin-top:24px;">Guided Practice: Mixed Review</h3>
+    <div id="guided-list"></div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Critical Thinking</h3>
+      <p>Would the solution to \(-2x \leq 10\) change if the symbol were strict (\(<\)) instead? What would be different about the graph?</p>
+      <textarea id="guided-critical" class="form-control-lg" rows="3" placeholder="Explain your reasoning..."></textarea>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkGuidedCritical()">Submit My Work</button>
+      <div id="guided-critical-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: ERROR ANALYSIS REVIEW -->
+  <div id="erroranalysis" class="panel">
+    <div class="section-title">Error Analysis Review</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Find the mistake, identify the step, then solve correctly. Two tries.
+    </div>
+    <div id="erroranalysis-list"></div>
+  </div>
+
+  <!-- TAB 3: MIXED PRACTICE (submit-only, printable-worksheet style) -->
+  <div id="mixed" class="panel">
+    <div class="section-title">Mixed Practice</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Work on paper, submit once. <strong>Nothing is revealed</strong> - your teacher grades it from your printed report.
+    </div>
+
+    <h3>Part 1: Bare Computation</h3>
+    <p>Solve for the variable in each inequality. Show every step on paper, including any flips.</p>
+    <div id="quiz-part1-list"></div>
+
+    <h3 style="margin-top:28px;">Part 2: Error Analysis</h3>
+    <p>Each problem shows a classmate's incorrect work. Find the mistake on paper, then enter the actually-correct answer below.</p>
+    <div id="quiz-part2-list"></div>
+
+    <h3 style="margin-top:28px;">Part 3: Word Problems</h3>
+    <p>For each scenario, define your variable, write an inequality, solve it, and interpret the result on paper. Enter your final answer below.</p>
+    <div id="quiz-part3-list"></div>
+  </div>
+
+  <!-- TAB 4: READINESS CHECK -->
+  <div id="readiness" class="panel">
+    <div class="section-title">Exit Ticket: Linear Inequalities Readiness Check</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Answer all four, then submit.
+    </div>
+
+    <form id="exit-form" onsubmit="submitExitTicket(event)">
+      <div class="form-group">
+        <label>1. Solve: \(-3x + 5 > 20\)</label>
+        <math-field id="exit-1" class="form-control-lg"></math-field>
+      </div>
+      <div class="form-group">
+        <label>2. Solve: \(2x - 7 \leq 13\)</label>
+        <math-field id="exit-2" class="form-control-lg"></math-field>
+      </div>
+      <div class="form-group">
+        <label>3. In your own words, state the flip rule and explain when it applies.</label>
+        <textarea id="exit-explain" class="form-control-lg" rows="3" placeholder="Explain the flip rule..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>4. Which part of solving inequalities still feels the most confusing, and what will you review before your test?</label>
+        <textarea id="exit-reflect" class="form-control-lg" rows="3" placeholder="Reflect on your learning..."></textarea>
+      </div>
+      <button type="submit" class="btn-lg">Submit Exit Ticket</button>
+    </form>
+    <div id="exit-feedback" class="feedback-msg"></div>
+  </div>
+</div>
+
+<script>
+  LessonSync.init('8-linear-inequalities-test-prep');
+
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // Same inequality parser as Practice-Set.html/Word-Problems.html - see
+  // Practice-Set.html for full notes.
+  function normalizeInequality(raw, variable) {
+    let s = String(raw || '').trim().toLowerCase().replace(/\s+/g, '');
+    s = s.replace(/≥/g, '>=').replace(/≤/g, '<=').replace(/=>/g, '>=').replace(/=</g, '<=');
+    const v = variable.toLowerCase();
+    const num = '-?\\d+\\.?\\d*';
+    const opNum = new RegExp(`^${v}(>=|<=|>|<)(${num})$`);
+    const numOp = new RegExp(`^(${num})(>=|<=|>|<)${v}$`);
+    let m = s.match(opNum);
+    if (m) return `${v}${m[1]}${parseFloat(m[2])}`;
+    m = s.match(numOp);
+    if (m) {
+      const flip = { '>': '<', '<': '>', '>=': '<=', '<=': '>=' };
+      return `${v}${flip[m[2]]}${parseFloat(m[1])}`;
+    }
+    return null;
+  }
+  function checkInequality(raw, variable, operator, boundary) {
+    return normalizeInequality(raw, variable) === `${variable.toLowerCase()}${operator}${boundary}`;
+  }
+  function ineqDisplay(variable, operator, boundary) {
+    const sym = { '>': '>', '<': '<', '>=': '\\geq', '<=': '\\leq' }[operator];
+    return `\\(${variable} ${sym} ${boundary}\\)`;
+  }
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
+  // ==========================================
+  // REUSABLE SINGLE-FIELD LIST (mode 'check' = 2 tries then reveal; mode
+  // 'submit' = single submission, nothing revealed) - matches
+  // Linear-Equations' own Test-Prep pattern exactly.
+  // ==========================================
+  const listRegistry = {};
+  window.listRegistry = listRegistry; // read by lesson-auth.js's teacher answer-key view - covers Tab 3 for free
+
+  function renderSimpleList(containerId, problems, keyPrefix, section, mode) {
+    listRegistry[keyPrefix] = { problems, section, mode };
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        ${p.op !== undefined
+          ? `<math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;"></math-field>`
+          : `<input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="Answer">`}
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkSimpleItem('${keyPrefix}', ${i})">${mode === 'submit' ? 'Submit' : 'Check'}</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, p.label || p.q.replace(/\\\(|\\\)/g, ''), section));
+  }
+
+  function checkSimpleItem(keyPrefix, idx) {
+    const cfg = listRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const field = document.getElementById(`${keyPrefix}-${idx}-input`);
+    const val = p.op !== undefined ? readMathField(field) : field.value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before submitting - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = p.op !== undefined ? checkInequality(val, 'x', p.op, p.a) : LessonCheck.numericMatch(val, p.a, p.tol || 0.01);
+    const label = p.label || p.q.replace(/\\\(|\\\)/g, '');
+    const answerText = p.op !== undefined ? ineqDisplay('x', p.op, p.a) : String(p.a);
+
+    if (cfg.mode === 'submit') {
+      // Mixed Practice: submit-only, no correct/incorrect reveal on screen.
+      LessonCheck.submit(fb, { key: `${keyPrefix}-${idx}`, label, answer: val, section: cfg.section, correct });
+    } else {
+      LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+        correct: `Correct! Answer: ${answerText}`,
+        retry: p.hint || "Not quite yet. Watch for the flip rule and try again.",
+        reveal: `Here's the correct answer: ${answerText}`
+      }, { label, answer: val, section: cfg.section });
+    }
+  }
+
+  // ==========================================
+  // TAB 1: FULL REVIEW
+  // ==========================================
+  function checkFundQ1() {
+    const explain = document.getElementById('fund-q1').value.trim();
+    const fb = document.getElementById('fund-q1-feedback');
+    if (explain.length <= 5) { LessonCheck.incomplete(fb, "Write your explanation before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'fund-q1', label: 'Check Your Understanding 1: why does the flip rule work?', answer: explain, section: '1. Full Review' });
+  }
+
+  function checkFundQ2() {
+    const val = readMathField(document.getElementById('fund-q2'));
+    const fb = document.getElementById('fund-q2-feedback');
+    if (!val.trim()) { LessonCheck.incomplete(fb, "Enter your answer before checking."); return; }
+    const correct = checkInequality(val, 'x', '<=', 7);
+    LessonCheck.check('fund-q2', correct, fb, {
+      correct: 'Correct! \\(-5x \\geq -35 \\rightarrow x \\leq 7\\) (divide by \\(-5\\), flip)',
+      retry: "Not quite yet. Divide both sides by \\(-5\\) - remember to flip the symbol.",
+      reveal: 'Correct solution: \\(-5x \\geq -35 \\rightarrow x \\leq 7\\) (divide by \\(-5\\), flip)'
+    }, { label: 'Check Your Understanding 2: solve -5x >= -35', answer: val, section: '1. Full Review' });
+  }
+
+  const guidedProblems = [
+    { q: "\\(x - 9 > 4\\)", op: '>', a: 13 },
+    { q: "\\(-7x < 28\\)", op: '>', a: -4, hint: "Not quite yet. Dividing by a negative flips the symbol." },
+    { q: "\\(3(x + 2) \\leq x + 18\\)", op: '<=', a: 6 },
+    { q: "\\(-2x - 5 \\geq 9\\)", op: '<=', a: -7, hint: "Not quite yet. Isolate the term with x first, then divide by a negative - flip!" },
+    { q: "\\(6x - 4 < 3x + 11\\)", op: '<', a: 5 }
+  ];
+
+  function checkGuidedCritical() {
+    const explain = document.getElementById('guided-critical').value.trim();
+    const fb = document.getElementById('guided-critical-feedback');
+    if (explain.length <= 5) { LessonCheck.incomplete(fb, "Write your explanation before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'guided-critical', label: 'Critical Thinking: strict vs. inclusive inequality', answer: explain, section: '1. Full Review' });
+  }
+
+  // ==========================================
+  // TAB 2: ERROR ANALYSIS REVIEW
+  // ==========================================
+  const errorAnalysisItems = [
+    { problem: "\\(3x + 2 \\leq 17\\)", steps: ["Subtract 2 from both sides: \\(3x \\leq 15\\)", "Divide by 3 and flip: \\(x \\geq 5\\)"], op: '<=', a: 5, wrongStep: '2' },
+    { problem: "\\(-2x - 3 > 7\\)", steps: ["Add 3 to both sides: \\(-2x > 10\\)", "Divide by \\(-2\\) (no flip): \\(x > -5\\)"], op: '<', a: -5, wrongStep: '2' },
+    { problem: "\\(10 - x \\geq 4\\)", steps: ["Subtract 10 from both sides: \\(-x \\geq -6\\)", "Multiply by \\(-1\\) (no flip): \\(x \\geq 6\\)"], op: '<=', a: 6, wrongStep: '2' },
+    { problem: "\\(-4(x + 2) < 12\\)", steps: ["Distribute the \\(-4\\): \\(-4x + 2 < 12\\)"], op: '>', a: -5, wrongStep: '1' }
+  ];
+
+  function renderErrorAnalysis() {
+    const html = errorAnalysisItems.map((p, i) => `
+      <div class="step-box" style="margin-top:14px;">
+        <p><strong>Problem ${i + 1}:</strong> ${p.problem}</p>
+        <p><strong>Student work:</strong></p>
+        ${p.steps.map((s, j) => `<p style="margin:0 0 4px 0;">Step ${j + 1}: ${s}</p>`).join('')}
+        <div class="form-group">
+          <label>Which step number has the first mistake?</label>
+          <input type="text" id="ea-${i}-step" class="form-control-lg" style="max-width:160px;" placeholder="Step #">
+        </div>
+        <div class="form-group">
+          <label>What is the correct solution?</label>
+          <math-field id="ea-${i}-answer" class="form-control-lg" style="max-width:200px;"></math-field>
+        </div>
+        <button class="btn-lg" onclick="checkErrorAnalysis(${i})">Check</button>
+        <div id="ea-${i}-feedback" class="feedback-msg"></div>
+      </div>
+    `).join('');
+    document.getElementById('erroranalysis-list').innerHTML = html;
+    errorAnalysisItems.forEach((p, i) => LessonProgress.preRegister(`ea-${i}`, `Error Analysis Review #${i + 1}: ${p.problem.replace(/\\\(|\\\)/g, '')}`, '2. Error Analysis Review'));
+    triggerMathJax();
+  }
+
+  function checkErrorAnalysis(idx) {
+    const p = errorAnalysisItems[idx];
+    const step = document.getElementById(`ea-${idx}-step`).value.trim();
+    const answer = readMathField(document.getElementById(`ea-${idx}-answer`));
+    const fb = document.getElementById(`ea-${idx}-feedback`);
+    if (!step || !answer.trim()) {
+      LessonCheck.incomplete(fb, "Identify the step number and enter the correct solution before checking.");
+      return;
+    }
+    const answerText = ineqDisplay('x', p.op, p.a);
+    const correct = step === p.wrongStep && checkInequality(answer, 'x', p.op, p.a);
+    LessonCheck.check(`ea-${idx}`, correct, fb, {
+      correct: `Correct! The mistake is in Step ${p.wrongStep}; the correct solution is ${answerText}.`,
+      retry: "Not quite yet. Check every step against the flip rule. Try again.",
+      reveal: `The mistake is in Step ${p.wrongStep}; the correct solution is ${answerText}.`
+    }, { label: `Error Analysis Review #${idx + 1}: ${p.problem.replace(/\\\(|\\\)/g, '')}`, answer: `Step ${step}, ${answer}`, section: '2. Error Analysis Review' });
+  }
+
+  // ==========================================
+  // TAB 3: MIXED PRACTICE (submit-only)
+  // ==========================================
+  const pretestPart1 = [
+    { q: "\\(2x + 9 > 21\\)", op: '>', a: 6 },
+    { q: "\\(-3x \\leq 18\\)", op: '>=', a: -6 },
+    { q: "\\(4(x - 2) \\geq 2x + 6\\)", op: '>=', a: 7 },
+    { q: "\\(-x + 10 < 3\\)", op: '>', a: 7 },
+    { q: "\\(5x - 6 \\leq 2x + 9\\)", op: '<=', a: 5 }
+  ];
+
+  const pretestPart2 = [
+    { q: "\\(-6x > 24\\). A classmate wrote: divide by \\(-6\\): \\(x > -4\\). What is the actually-correct answer?", label: "Error Analysis: -6x > 24", op: '<', a: -4 },
+    { q: "\\(5 - 2x \\leq -3\\). A classmate wrote: subtract 5: \\(-2x \\leq -8\\); divide by \\(-2\\): \\(x \\leq 4\\). What is the actually-correct answer?", label: "Error Analysis: 5 - 2x <= -3", op: '>=', a: 4 }
+  ];
+
+  const pretestPart3 = [
+    { q: "A ride requires riders to be at least 48 inches tall. Your friend is 46 inches tall. What is the minimum additional height, in inches, your friend needs?", label: "Word Problem: ride height requirement", a: 2 },
+    { q: "A bakery sells cupcakes for \\(\\$3\\) each. You have a \\(\\$20\\) gift card. What is the maximum number of whole cupcakes you can buy?", label: "Word Problem: bakery gift card", a: 6 },
+    { q: "A company needs to save at least \\(\\$5{,}000\\) for a new machine, saving \\(\\$350\\) per month starting from \\$0. What is the minimum number of whole months until they reach the goal?", label: "Word Problem: savings goal", a: 15 }
+  ];
+
+  function submitExitTicket(e) {
+    e.preventDefault();
+    const a1 = readMathField(document.getElementById('exit-1'));
+    const a2 = readMathField(document.getElementById('exit-2'));
+    const exp = document.getElementById('exit-explain').value.trim();
+    const ref = document.getElementById('exit-reflect').value.trim();
+    const fb = document.getElementById('exit-feedback');
+
+    if (!a1.trim() || !a2.trim() || exp.length <= 5 || ref.length <= 5) {
+      LessonCheck.incomplete(fb, "Fill in both answers and both explanation boxes before submitting.");
+      return;
+    }
+
+    LessonCheck.submit(fb, {
+      key: 'exit-ticket', label: 'Exit Ticket: two inequalities and reflections', answer: `Q1=${a1}, Q2=${a2}`, section: '4. Readiness Check',
+      correct: checkInequality(a1, 'x', '<', -5) && checkInequality(a2, 'x', '<=', 10)
+    }, "Exit Ticket submitted and logged successfully!");
+    LessonProgress.recordText('Exit Ticket: flip rule explanation', exp, '4. Readiness Check');
+    LessonProgress.recordText('Exit Ticket: metacognition reflection', ref, '4. Readiness Check');
+  }
+
+  // Initial render
+  renderSimpleList('guided-list', guidedProblems, 'gp', '1. Full Review', 'check');
+  renderErrorAnalysis();
+  renderSimpleList('quiz-part1-list', pretestPart1, 'pt1', '3. Mixed Practice', 'submit');
+  renderSimpleList('quiz-part2-list', pretestPart2, 'pt2', '3. Mixed Practice', 'submit');
+  renderSimpleList('quiz-part3-list', pretestPart3, 'pt3', '3. Mixed Practice', 'submit');
+  LessonProgress.preRegister('exit-ticket', 'Exit Ticket: two inequalities and reflections', '4. Readiness Check');
+
+  // Teacher answer key for everything window.listRegistry doesn't already
+  // cover (Tab 1's two Check Your Understanding items and its critical
+  // thinking reflection, Tab 2's Error Analysis Review, Tab 4's exit
+  // ticket) - see /CLAUDE.md's "Role differentiation on lesson pages".
+  window.revealAnswerKey = function () {
+    // Each of Tab 1's three items has its own uniquely-onclick'd button
+    // right after it in the DOM (not nested in a shared .step-box/
+    // .guided-practice wrapper the way the other tabs' items are), so
+    // each is targeted by its onclick selector directly rather than a
+    // generic .closest()-based lookup - a generic lookup here would grab
+    // the *first* button inside the shared .challenge-box (fund-q1's),
+    // wrongly leaving fund-q2's own button enabled.
+    const disableByOnclick = (onclick) => {
+      const btn = document.querySelector(`[onclick="${onclick}"]`);
+      if (btn) btn.disabled = true;
+    };
+
+    document.getElementById('fund-q1').disabled = true;
+    disableByOnclick('checkFundQ1()');
+    document.getElementById('fund-q1-feedback').style.display = 'block';
+    document.getElementById('fund-q1-feedback').className = 'feedback-msg success locked';
+    document.getElementById('fund-q1-feedback').innerHTML = 'Answer key: open-ended - any reasonable explanation of why multiplying/dividing by a negative reverses the inequality.';
+
+    const q2 = document.getElementById('fund-q2');
+    q2.value = 'x \\leq 7';
+    q2.disabled = true;
+    disableByOnclick('checkFundQ2()');
+    document.getElementById('fund-q2-feedback').style.display = 'block';
+    document.getElementById('fund-q2-feedback').className = 'feedback-msg success locked';
+    document.getElementById('fund-q2-feedback').innerHTML = 'Answer key: \\(x \\leq 7\\)';
+
+    document.getElementById('guided-critical').disabled = true;
+    disableByOnclick('checkGuidedCritical()');
+    document.getElementById('guided-critical-feedback').style.display = 'block';
+    document.getElementById('guided-critical-feedback').className = 'feedback-msg success locked';
+    document.getElementById('guided-critical-feedback').innerHTML = 'Answer key: open-ended - any reasonable explanation (yes, the boundary point \\(-5\\) would no longer be included, and the graph would use an open circle instead of a closed one).';
+
+    errorAnalysisItems.forEach((p, i) => {
+      const stepInput = document.getElementById(`ea-${i}-step`);
+      const answerInput = document.getElementById(`ea-${i}-answer`);
+      const fb = document.getElementById(`ea-${i}-feedback`);
+      if (!stepInput || !answerInput || !fb) return;
+      stepInput.value = p.wrongStep;
+      const sym = { '>': '>', '<': '<', '>=': '\\geq', '<=': '\\leq' }[p.op];
+      answerInput.value = `x ${sym} ${p.a}`;
+      stepInput.disabled = true;
+      answerInput.disabled = true;
+      const container = stepInput.closest('.step-box');
+      const btn = container && container.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: Step ${p.wrongStep} is wrong; <strong>x${p.op}${p.a}</strong>`;
+    });
+
+    // Tab 4: Exit Ticket - this block was missing entirely (the comment
+    // above claimed it was covered, but nothing here ever touched
+    // exit-1/exit-2/exit-explain/exit-reflect), which is why signing in
+    // as a teacher never revealed anything on this tab.
+    const exit1 = document.getElementById('exit-1');
+    const exit2 = document.getElementById('exit-2');
+    if (exit1 && exit2) {
+      exit1.value = 'x < -5';
+      exit1.disabled = true;
+      exit2.value = 'x \\leq 10';
+      exit2.disabled = true;
+      document.getElementById('exit-explain').disabled = true;
+      document.getElementById('exit-reflect').disabled = true;
+      const exitForm = document.getElementById('exit-form');
+      const exitBtn = exitForm && exitForm.querySelector('button[type="submit"]');
+      if (exitBtn) exitBtn.disabled = true;
+      const exitFb = document.getElementById('exit-feedback');
+      exitFb.style.display = 'block';
+      exitFb.className = 'feedback-msg success locked';
+      exitFb.innerHTML = 'Answer key: 1. \\(x < -5\\) &nbsp; 2. \\(x \\leq 10\\) &nbsp; 3-4. Open-ended - review for understanding, not a right/wrong answer.';
+    }
+
+    triggerMathJax();
+  };
+</script>
+</body>
+</html>

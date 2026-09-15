@@ -22,10 +22,34 @@
 
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -33,12 +57,12 @@
     </div>
     <span class="badge">Algebra I &middot; Solving Linear Equations</span>
     <h1>Word Problems</h1>
+    <p class="standards-line">Standards: HSA.CED.A.1, HSA.REI.A.1, HSA.REI.B.3</p>
   </header>
 
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Algebra I - Solving Linear Equations - Word Problems')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -46,7 +70,7 @@
     <ul style="margin:0; padding-left:20px;">
       <li>Every item is a word problem - use the <strong>4-Step Method</strong>: define, write, solve, interpret.</li>
       <li>Some items check on screen (2 tries); others record your written recommendation for your teacher.</li>
-      <li>Finish every tab, then type your name above and click <strong>Print My Progress</strong>.</li>
+      <li>Finish every tab.</li>
       <li><strong>Calculators are allowed</strong> this year.</li>
     </ul>
   </div>
@@ -164,12 +188,7 @@
       <p><strong>Task:</strong> set \(50 + 10x = 80 + 10x\) and classify it. What does that classification mean for these two friends' savings?</p>
       <div class="form-group">
         <label>Classification:</label>
-        <select id="comp1-verdict" class="form-control-lg" style="max-width:280px;">
-          <option value="">Select...</option>
-          <option value="one">One solution</option>
-          <option value="none">No solution</option>
-          <option value="infinite">Infinitely many solutions</option>
-        </select>
+        <div id="comp1-verdict" class="card-select"></div>
       </div>
       <div class="form-group">
         <label>What does that mean for these two friends' savings?</label>
@@ -185,12 +204,7 @@
       <p><strong>Task:</strong> set \(2(3x+5) = 6x+10\) and classify it. What does that classification mean about the two billing systems?</p>
       <div class="form-group">
         <label>Classification:</label>
-        <select id="comp2-verdict" class="form-control-lg" style="max-width:280px;">
-          <option value="">Select...</option>
-          <option value="one">One solution</option>
-          <option value="none">No solution</option>
-          <option value="infinite">Infinitely many solutions</option>
-        </select>
+        <div id="comp2-verdict" class="card-select"></div>
       </div>
       <div class="form-group">
         <label>What does that mean about the two billing systems?</label>
@@ -228,6 +242,8 @@
 </div>
 
 <script>
+  LessonSync.init('8-linear-equations-word-problems');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -373,8 +389,16 @@
   // ==========================================
   // TAB 3: SAVINGS & BILLING
   // ==========================================
+  const VERDICT_OPTIONS = [
+    { value: 'one', label: 'One solution' },
+    { value: 'none', label: 'No solution' },
+    { value: 'infinite', label: 'Infinitely many solutions' }
+  ];
+  const comp1CardSelect = createCardSelect('comp1-verdict', VERDICT_OPTIONS);
+  const comp2CardSelect = createCardSelect('comp2-verdict', VERDICT_OPTIONS);
+
   function checkComparison1() {
-    const verdict = document.getElementById('comp1-verdict').value;
+    const verdict = comp1CardSelect.getValue() || '';
     const explain = document.getElementById('comp1-explain').value.trim();
     const fb = document.getElementById('comp1-feedback');
     if (!verdict || explain.length <= 5) { LessonCheck.incomplete(fb, "Choose a classification and explain what it means before submitting."); return; }
@@ -382,7 +406,7 @@
   }
 
   function checkComparison2() {
-    const verdict = document.getElementById('comp2-verdict').value;
+    const verdict = comp2CardSelect.getValue() || '';
     const explain = document.getElementById('comp2-explain').value.trim();
     const fb = document.getElementById('comp2-feedback');
     if (!verdict || explain.length <= 5) { LessonCheck.incomplete(fb, "Choose a classification and explain what it means before submitting."); return; }
@@ -398,29 +422,29 @@
     { q: "\\(7x-4=4x+17\\)", verdict: "one", a: 7 }
   ];
 
+  const cmCardSelects = [];
+
   function renderComparisonMore() {
     const html = comparisonMore.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 3}.</strong> ${p.q}
-        <select id="cm-${i}-verdict" class="form-control-lg" style="max-width:230px; display:inline-block;">
-          <option value="">Classify...</option>
-          <option value="one">One solution</option>
-          <option value="none">No solution</option>
-          <option value="infinite">Infinitely many solutions</option>
-        </select>
+        <div id="cm-${i}-verdict" class="card-select"></div>
         <input type="text" id="cm-${i}-x" class="form-control-lg" style="max-width:120px; display:inline-block;" placeholder="x = (if one)">
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkComparisonMore(${i})">Submit</button>
         <div id="cm-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
     `).join('');
     document.getElementById('comp-more-list').innerHTML = html;
-    comparisonMore.forEach((p, i) => LessonProgress.preRegister(`cm-${i}`, `Quick Classify #${i + 3}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '3. Savings & Billing'));
+    comparisonMore.forEach((p, i) => {
+      LessonProgress.preRegister(`cm-${i}`, `Quick Classify #${i + 3}: ${p.q.replace(/\\\(|\\\)/g, '')}`, '3. Savings & Billing');
+      cmCardSelects[i] = createCardSelect(`cm-${i}-verdict`, VERDICT_OPTIONS);
+    });
     triggerMathJax();
   }
 
   function checkComparisonMore(idx) {
     const p = comparisonMore[idx];
-    const verdict = document.getElementById(`cm-${idx}-verdict`).value;
+    const verdict = cmCardSelects[idx].getValue() || '';
     const xVal = document.getElementById(`cm-${idx}-x`).value;
     const fb = document.getElementById(`cm-${idx}-feedback`);
     if (!verdict || (p.verdict === "one" && !xVal.trim())) {
@@ -523,7 +547,103 @@
   LessonProgress.preRegister('decision-internet', 'Cost Comparison: Internet Providers A vs B', '2. Cost Comparisons');
   LessonProgress.preRegister('comp1', 'Comparison: two savings plans', '3. Savings & Billing');
   LessonProgress.preRegister('comp2', 'Comparison: two billing expressions', '3. Savings & Billing');
+
+  // Teacher answer key - see /CLAUDE.md's "Role differentiation on lesson
+  // pages". No shared listRegistry here (every tab has its own bespoke
+  // check function), so this is hand-written.
+  window.revealAnswerKey = function () {
+    const fillInput = (id, feedbackId, answer) => {
+      const input = document.getElementById(id);
+      const fb = document.getElementById(feedbackId);
+      if (!input || !fb) return;
+      input.value = answer;
+      input.disabled = true;
+      const container = input.closest('.guided-practice') || input.closest('.step-box');
+      const btn = container && container.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
+    };
+
+    // Submit-type items (LessonCheck.submit) pair a graded number with an
+    // open-ended explanation - the explanation has no single right answer,
+    // so it's marked as such rather than invented.
+    const fillSubmit = (inputId, explainId, feedbackId, answer) => {
+      const input = document.getElementById(inputId);
+      const fb = document.getElementById(feedbackId);
+      if (!input || !fb) return;
+      input.value = answer;
+      input.disabled = true;
+      const explain = explainId && document.getElementById(explainId);
+      if (explain) { explain.value = '(Any reasonable explanation supporting the answer above.)'; explain.disabled = true; }
+      const container = input.closest('.step-box');
+      const btn = container && container.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
+    };
+
+    const fillVerdictSubmit = (cardSelect, verdictId, explainId, feedbackId, correctVerdict, label) => {
+      const fb = document.getElementById(feedbackId);
+      if (!cardSelect || !fb) return;
+      cardSelect.setValue(correctVerdict);
+      cardSelect.disable();
+      const explain = document.getElementById(explainId);
+      if (explain) { explain.value = '(Any reasonable explanation supporting the classification above.)'; explain.disabled = true; }
+      const container = document.getElementById(verdictId).closest('.step-box');
+      const btn = container && container.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${label}</strong>`;
+    };
+
+    const verdictLabel = { one: 'One solution', none: 'No solution', infinite: 'Infinitely many solutions' };
+
+    // Tab 1: Mixture & Work-Rate
+    const mixX = document.getElementById('mix-x'), mixOther = document.getElementById('mix-other'), mixFb = document.getElementById('mix-feedback');
+    if (mixX && mixOther && mixFb) {
+      mixX.value = 4; mixOther.value = 8; mixX.disabled = true; mixOther.disabled = true;
+      const btn = mixX.closest('.step-box') && mixX.closest('.step-box').querySelector('button');
+      if (btn) btn.disabled = true;
+      mixFb.style.display = 'block';
+      mixFb.className = 'feedback-msg success locked';
+      mixFb.innerHTML = 'Answer key: <strong>4 L of 50% solution, 8 L of 20% solution</strong>';
+    }
+    fillInput('wt-x', 'wt-feedback', 20);
+
+    // Tab 2: Cost Comparisons
+    fillSubmit('budget-x', 'budget-explain', 'budget-feedback', 5);
+    budgetMore.forEach((p, i) => fillInput(`bm-${i}-input`, `bm-${i}-feedback`, p.a));
+    fillSubmit('decision-x', 'decision-explain', 'decision-feedback', 4);
+    decisionMore.forEach((p, i) => fillInput(`dm-${i}-input`, `dm-${i}-feedback`, p.a));
+
+    // Tab 3: Savings & Billing
+    fillVerdictSubmit(comp1CardSelect, 'comp1-verdict', 'comp1-explain', 'comp1-feedback', 'none', 'No solution');
+    fillVerdictSubmit(comp2CardSelect, 'comp2-verdict', 'comp2-explain', 'comp2-feedback', 'infinite', 'Infinitely many solutions');
+    comparisonMore.forEach((p, i) => {
+      const cs = cmCardSelects[i];
+      const xInput = document.getElementById(`cm-${i}-x`);
+      const fb = document.getElementById(`cm-${i}-feedback`);
+      if (!cs || !xInput || !fb) return;
+      cs.setValue(p.verdict);
+      if (p.verdict === 'one') xInput.value = p.a;
+      cs.disable();
+      xInput.disabled = true;
+      const container = document.getElementById(`cm-${i}-verdict`).closest('.guided-practice');
+      const btn = container && container.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${verdictLabel[p.verdict]}</strong>${p.verdict === 'one' ? `, x = ${p.a}` : ''}`;
+    });
+
+    // Tab 4 & 5: word problems
+    wordAppProblems.forEach((p, i) => fillInput(`wa-${i}-input`, `wa-${i}-feedback`, p.a));
+    challengeWordProblems.forEach((p, i) => fillInput(`cwp-${i}-input`, `cwp-${i}-feedback`, p.a));
+  };
 </script>
-<div id="print-report"></div>
 </body>
 </html>

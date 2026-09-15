@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7 Honors: Squares, Cubes &amp; Roots - Practice Set</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">7 Honors &middot; Squares, Cubes &amp; Roots</span>
+    <h1>Practice Set: Squares, Cubes &amp; Roots</h1>
+    <p class="standards-line">Standards: 8.EE.A.2</p>
+  </header>
+
+  <div class="progress-bar">
+    <label for="student-name">Student Name:</label>
+    <input type="text" id="student-name" placeholder="Type your full name">
+  </div>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Pure computation, no word problems - work the 3 tabs in any order. Each item gives <strong>2 tries</strong>, then shows the answer and locks. <strong>Calculators are not allowed</strong> - these facts should come from memory or quick multiplication.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('table')">1. Squares &amp; Cubes Table</button>
+    <button class="tab-btn" onclick="switchTab('base')">2. Identify the Base Number</button>
+    <button class="tab-btn" onclick="switchTab('missing')">3. Missing Value Equations</button>
+  </nav>
+
+  <!-- TAB 1: SQUARES & CUBES TABLE -->
+  <div id="table" class="panel active">
+    <div class="section-title">Squares &amp; Cubes Mastery Table</div>
+    <div class="explainer-box">
+      Each item below gives you two of the three values (base, square, cube) from one row of the mastery chart. Find the missing value.
+    </div>
+    <div id="table-list"></div>
+    <div class="challenge-box" style="margin-top:20px;">
+      <h3 style="margin-top:0; color:#b45309;">Critical Thinking</h3>
+      <p>Look at base 4 and base 8. What do you notice about the relationship between \(4^3\) and \(8^2\)? Explain why this happens.</p>
+      <textarea id="ct1-answer" class="form-control-lg" rows="3" placeholder="Type your explanation..."></textarea>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkCT1()">Submit</button>
+      <div id="ct1-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: IDENTIFY THE BASE NUMBER -->
+  <div id="base" class="panel">
+    <div class="section-title">Identifying the Base Number</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Remember</div>
+      <p style="margin:0;">If \(x^2 = n\), then \(x = \sqrt{n}\). If \(x^3 = n\), then \(x = \sqrt[3]{n}\).</p>
+    </div>
+    <h3 style="color:var(--primary);">Part 1: Square Bases</h3>
+    <div id="sqbase-list"></div>
+    <h3 style="color:var(--primary); margin-top:24px;">Part 2: Cube Bases</h3>
+    <div id="cbbase-list"></div>
+    <div class="challenge-box" style="margin-top:20px;">
+      <h3 style="margin-top:0; color:#b45309;">Critical Thinking</h3>
+      <p>A square has an area of 361 square units. Explain how you can find the length of one side of the square using roots.</p>
+      <textarea id="ct2-answer" class="form-control-lg" rows="3" placeholder="Type your explanation..."></textarea>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkCT2()">Submit</button>
+      <div id="ct2-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: MISSING VALUE EQUATIONS -->
+  <div id="missing" class="panel">
+    <div class="section-title">Missing Value Equations</div>
+    <div class="notebook-box">
+      <div class="notebook-header">Remember</div>
+      <p style="margin:0;">A square root (\(\sqrt{x}\)) asks: "What number times itself equals \(x\)?" A cube root (\(\sqrt[3]{x}\)) asks: "What number multiplied by itself three times equals \(x\)?"</p>
+    </div>
+    <div id="missing-list"></div>
+    <div class="challenge-box" style="margin-top:20px;">
+      <h3 style="margin-top:0; color:#b45309;">Critical Thinking</h3>
+      <p>Explain the relationship between \(8^2\) and \(\sqrt{64}\). How are these two expressions connected?</p>
+      <textarea id="ct3-answer" class="form-control-lg" rows="3" placeholder="Type your explanation..."></textarea>
+      <button class="btn-lg" style="margin-top:10px;" onclick="checkCT3()">Submit</button>
+      <div id="ct3-feedback" class="feedback-msg"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  LessonSync.init('7-squares-cubes-and-roots-practice-set');
+
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // REUSABLE SINGLE-FIELD PRACTICE LIST (check mode: 2 tries then reveal)
+  // ==========================================
+  function renderPracticeList(containerId, problems, keyPrefix, section) {
+    const html = problems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:150px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkPractice('${keyPrefix}', ${i})">Check</button>
+        <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById(containerId).innerHTML = html;
+    problems.forEach((p, i) => LessonProgress.preRegister(`${keyPrefix}-${i}`, `${section} #${i + 1}: ${p.label || p.q.replace(/\\\(|\\\)/g, '')}`, section));
+  }
+
+  const listRegistry = {};
+  window.listRegistry = listRegistry; // read by lesson-auth.js's teacher answer-key view
+
+  function checkPractice(keyPrefix, idx) {
+    const cfg = listRegistry[keyPrefix];
+    const p = cfg.problems[idx];
+    const raw = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
+    if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet."); return; }
+    const correct = LessonCheck.numericMatch(raw, p.a, 0.01);
+    const label = `${cfg.section} #${idx + 1}: ${p.label || p.q.replace(/\\\(|\\\)/g, '')}`;
+    LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
+      correct: `Correct! Answer: \\(\\mathbf{${p.a}}\\)`,
+      retry: p.hint || "Not quite yet. Recheck the reference chart and try again.",
+      reveal: `Here's the correct answer: \\(\\mathbf{${p.a}}\\)`
+    }, { label, answer: raw, section: cfg.section });
+  }
+
+  function setup(containerId, problems, keyPrefix, section) {
+    listRegistry[keyPrefix] = { problems, section };
+    renderPracticeList(containerId, problems, keyPrefix, section);
+  }
+
+  // ==========================================
+  // TAB 1: SQUARES & CUBES TABLE
+  // ==========================================
+  const tableProblems = [
+    { q: "Base = 4, Square = 16. What is the Cube?", a: 64 },
+    { q: "Square = 81, Cube = 729. What is the Base?", a: 9 },
+    { q: "Base = 12, Cube = 1,728. What is the Square?", a: 144 },
+    { q: "Square = 225, Cube = 3,375. What is the Base?", a: 15 },
+    { q: "Base = 7, Square = 49. What is the Cube?", a: 343 },
+    { q: "Base = 20, Square = 400. What is the Cube?", a: 8000 },
+    { q: "Square = 121, Cube = 1,331. What is the Base?", a: 11 },
+    { q: "Base = 13, Cube = 2,197. What is the Square?", a: 169 },
+    { q: "Square = 256, Cube = 4,096. What is the Base?", a: 16 },
+    { q: "Base = 14, Square = 196. What is the Cube?", a: 2744 },
+    { q: "Base = 8, Cube = 512. What is the Square?", a: 64 },
+    { q: "Square = 289. What is the Base?", a: 17, label: "Square=289, find Base" },
+    { q: "Square = 289 (Base = 17). What is the Cube?", a: 4913, label: "Square=289, find Cube" }
+  ];
+  setup('table-list', tableProblems, 'table', '1. Squares & Cubes Table');
+
+  function checkCT1() {
+    const val = document.getElementById('ct1-answer').value.trim();
+    const fb = document.getElementById('ct1-feedback');
+    if (val.length <= 5) { LessonCheck.incomplete(fb, "Write a full sentence explaining the relationship before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'ct1', label: '1. Critical Thinking: 4³ vs 8²', answer: val, section: '1. Squares & Cubes Table' });
+  }
+
+  // ==========================================
+  // TAB 2: IDENTIFY THE BASE NUMBER
+  // ==========================================
+  const sqBaseProblems = [
+    { q: "If \\(x^2 = 49\\), then \\(x = \\)", a: 7 },
+    { q: "If \\(x^2 = 144\\), then \\(x = \\)", a: 12 },
+    { q: "If \\(x^2 = 289\\), then \\(x = \\)", a: 17 },
+    { q: "If \\(x^2 = 324\\), then \\(x = \\)", a: 18 },
+    { q: "If \\(x^2 = 256\\), then \\(x = \\)", a: 16 },
+    { q: "If \\(x^2 = 400\\), then \\(x = \\)", a: 20 }
+  ];
+  setup('sqbase-list', sqBaseProblems, 'sqbase', '2. Identify the Base Number: Squares');
+
+  const cbBaseProblems = [
+    { q: "If \\(x^3 = 27\\), then \\(x = \\)", a: 3 },
+    { q: "If \\(x^3 = 125\\), then \\(x = \\)", a: 5 },
+    { q: "If \\(x^3 = 1{,}000\\), then \\(x = \\)", a: 10 },
+    { q: "If \\(x^3 = 1{,}331\\), then \\(x = \\)", a: 11 },
+    { q: "If \\(x^3 = 2{,}197\\), then \\(x = \\)", a: 13 },
+    { q: "If \\(x^3 = 3{,}375\\), then \\(x = \\)", a: 15 }
+  ];
+  setup('cbbase-list', cbBaseProblems, 'cbbase', '2. Identify the Base Number: Cubes');
+
+  function checkCT2() {
+    const val = document.getElementById('ct2-answer').value.trim();
+    const fb = document.getElementById('ct2-feedback');
+    if (val.length <= 5) { LessonCheck.incomplete(fb, "Write a full sentence explaining your reasoning before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'ct2', label: '2. Critical Thinking: side length from area 361', answer: val, section: '2. Identify the Base Number' });
+  }
+
+  // ==========================================
+  // TAB 3: MISSING VALUE EQUATIONS
+  // ==========================================
+  const missingProblems = [
+    { q: "\\(\\sqrt{144} = \\)", a: 12 },
+    { q: "\\(\\sqrt[3]{?} = 6\\). What number is under the cube root?", a: 216, label: "Cube root of ? = 6" },
+    { q: "\\(14^2 = \\)", a: 196 },
+    { q: "\\(\\sqrt[3]{3{,}375} = \\)", a: 15 },
+    { q: "\\(\\sqrt{?} = 17\\). What number is under the square root?", a: 289, label: "Square root of ? = 17" },
+    { q: "\\(9^3 = \\)", a: 729 },
+    { q: "\\(\\sqrt[3]{729} = \\)", a: 9 },
+    { q: "\\(20^2 = \\)", a: 400 },
+    { q: "\\(\\sqrt{?} = 13\\). What number is under the square root?", a: 169, label: "Square root of ? = 13" },
+    { q: "\\(\\sqrt[3]{1{,}331} = \\)", a: 11 }
+  ];
+  setup('missing-list', missingProblems, 'missing', '3. Missing Value Equations');
+
+  function checkCT3() {
+    const val = document.getElementById('ct3-answer').value.trim();
+    const fb = document.getElementById('ct3-feedback');
+    if (val.length <= 5) { LessonCheck.incomplete(fb, "Write a full sentence explaining the connection before submitting."); return; }
+    LessonCheck.submit(fb, { key: 'ct3', label: '3. Critical Thinking: 8² vs sqrt(64)', answer: val, section: '3. Missing Value Equations' });
+  }
+</script>
+</body>
+</html>

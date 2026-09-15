@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-AP Algebra I: Linear Functions - Teacher Guide</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <style>
+    .answer-day-heading {
+      background: var(--primary);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin: 28px 0 12px 0;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .solution-toggle > summary {
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--primary);
+      padding: 4px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Pre-AP Algebra I &middot; Linear Functions - Teacher Guide</span>
+    <h1>Teacher Guide: Linear Functions</h1>
+    <p class="standards-line">Standards: HSA.CED.A.2, HSS.ID.C.7, HSF-IF.A.1, HSF-IF.B.5, HSF-LE.A.2</p>
+    <p class="subtitle">Pacing, Lesson-by-Lesson Notes, Metacognition, Differentiation, and a Challenge Bank for All Six Pages</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">This page is for you, not students</strong>
+    Keep this link away from students - there's no student-facing print button. There's no dedicated answer-key tab here anymore - sign in on any student page yourself and it unlocks that page's own answer key inline (see "Role differentiation on lesson pages" in the repo's own notes if you want the mechanism). Use the tabs below instead for pacing/standards, a tab-by-tab breakdown of what each of the six pages covers, metacognition and small-group discussion prompts, real differentiation problems, and a digital Challenge Bank - everything here is web-only, no printed materials.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('overview')">1. Topic Overview &amp; Pacing</button>
+    <button class="tab-btn" onclick="switchTab('lesson-guide')">2. Lesson-by-Lesson Guide</button>
+    <button class="tab-btn" onclick="switchTab('metacognition')">3. Metacognition &amp; Discussion</button>
+    <button class="tab-btn" onclick="switchTab('differentiation')">4. Differentiation</button>
+    <button class="tab-btn" onclick="switchTab('challenge')">5. Challenge Bank</button>
+    <button class="tab-btn" onclick="switchTab('ixl-practice')">6. IXL Practice</button>
+  </nav>
+
+  <!-- PANEL 1: TOPIC OVERVIEW & PACING -->
+  <div id="overview" class="panel active">
+    <div class="section-title">Topic Overview: Linear Functions</div>
+
+    <div class="explainer-box">
+      <strong>8-PreAP only - distinct from Solving Linear Equations and Literal Equations.</strong> Those two units solve equations for one unknown; this unit treats a linear equation as a function - an input/output rule - and covers domain/range, slope, function notation, and slope-intercept form.
+      <ul style="margin:8px 0 0 0;">
+        <li>Six standalone pages: Review, Vocabulary &amp; Literacy, Explanation, Practice Set, Word Problems, Test Prep.</li>
+        <li>Pages don't link to each other - share each one directly (e.g. one Google Classroom post per page) in the order you want.</li>
+        <li><strong>Calculators are allowed.</strong></li>
+      </ul>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Section</th><th>Suggested Time</th><th>Focus</th></tr></thead>
+      <tbody>
+        <tr><td>Review</td><td>~20-30 min</td><td>Motivates the topic, refreshes vocabulary, and contrasts proportional vs. linear relationships before any new function content appears.</td></tr>
+        <tr><td>Vocabulary &amp; Literacy</td><td>~30-40 min</td><td>Function/relation/domain/range vocabulary, the vertical line test, function notation, slope-intercept/point-slope form - plus domain/range classification practice.</td></tr>
+        <tr><td>Explanation</td><td>~1-2 class periods</td><td>Worked examples: finding slope, writing slope-intercept equations, evaluating function notation, and writing a rule from a table.</td></tr>
+        <tr><td>Practice Set</td><td>~1-2 class periods</td><td>Four tabs: slope &amp; rate of change, slope-intercept form (algebraic answers), function notation, and writing function rules from data.</td></tr>
+        <tr><td>Word Problems</td><td>~1 class period</td><td>Modeling real scenarios with function notation, cost/savings models, and challenge problems that work backward from an output.</td></tr>
+        <tr><td>Test Prep</td><td>~1 class period + assessment</td><td>Concept review, error analysis, a timed review quiz, and a submit-only Mixed Practice worksheet that serves as this topic's digital assessment.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Standards &amp; Objectives</div>
+      <p style="margin:0 0 8px 0;"><strong>HSF.IF.A.1, HSF.IF.A.2, HSF.IF.B.5, HAS.CED.A.2, HSS.ID.C.7</strong> &amp; <strong>MP.4, MP.6, MP.7</strong>.</p>
+      <ul style="margin-bottom:0;">
+        <li>Determine whether a relation is a function; identify domain and range.</li>
+        <li>Find the slope between two points and interpret it as a rate of change.</li>
+        <li>Write and graph linear equations in slope-intercept form.</li>
+        <li>Use function notation to evaluate functions and to model real-world situations.</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Common Misconceptions to Watch For</div>
+      <ul style="margin-bottom:0;">
+        <li>Substituting into the wrong place in \(f(x)\), or skipping order of operations after substituting.</li>
+        <li>Flipping which coordinate is \((x_1,y_1)\) vs. \((x_2,y_2)\) in the slope formula and losing the sign.</li>
+        <li>Assuming any table of ordered pairs is automatically a function, without checking for a repeated input.</li>
+        <li>Confusing a proportional relationship (\(y=kx\)) with every linear relationship (\(y=mx+b\)).</li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Source Material</div>
+      <p style="margin:0;">Built from the Pre-AP Algebra 1 Unit 1 (Lessons 1.2 &amp; 1.5) student/teacher handouts, the Savvas enVision Additional Practice sheets (2-1: Slope-Intercept Form, 3-2: Linear Functions), and the Functions &amp; Linear Relationships comprehensive study guide (see <code>Materials/8-PreAP/</code> in the repo).</p>
+    </div>
+  </div>
+
+  <!-- PANEL 2: LESSON-BY-LESSON GUIDE -->
+  <div id="lesson-guide" class="panel">
+    <div class="section-title">Lesson-by-Lesson Guide</div>
+    <p>What each of the six pages covers, and what each tab inside it is for. Answer keys for every graded item already live inline on the student page itself - sign in there as a teacher and it unlocks automatically (see the howto note above), so this tab is about what to <em>teach</em>, not what to <em>grade</em>.</p>
+
+    <div class="answer-day-heading">1. Review</div>
+    <p style="margin:0 0 8px 0;">Motivates the topic and refreshes vocabulary, then contrasts proportional relationships (\(y=kx\)) against the broader class of linear relationships (\(y=mx+b\)) before any new function content appears. Gate it with Tab 4's graded check before moving on.</p>
+    <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
+      <tbody>
+        <tr><td>1. Why This Topic?</td><td>The hook - connects this unit to the equation-solving skills from Linear Equations/Literal Equations, and previews the shift from "solve for x" to "think of it as a function."</td></tr>
+        <tr><td>2. Vocabulary</td><td>Fast recall of terms this whole topic depends on (function, domain, range, slope).</td></tr>
+        <tr><td>3. Linear vs. Proportional</td><td>Direct practice classifying a relationship as proportional or just linear - misconception #4 on the Overview tab lives here.</td></tr>
+        <tr><td>4. Are You Ready?</td><td>The graded checkpoint - this is the one tab worth checking before assigning the rest of the unit.</td></tr>
+        <tr><td>5. Resources</td><td>Optional extra practice/reference material for a student who wants more before moving on - not graded.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">2. Vocabulary &amp; Literacy</div>
+    <p style="margin:0 0 8px 0;">Builds the actual language of this unit - function, relation, domain, range, the vertical line test - which every later page assumes fluency with.</p>
+    <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
+      <tbody>
+        <tr><td>1. Key Vocabulary</td><td>Glossary of function/relation/domain/range/slope-intercept/point-slope terms - the reference the other two tabs draw on.</td></tr>
+        <tr><td>2. Domain &amp; Range</td><td>Graded practice identifying whether a relation is a function, and naming its domain/range - misconception #3 on the Overview tab (assuming any table of pairs is automatically a function) shows up most here.</td></tr>
+        <tr><td>3. Quick Vocabulary Check</td><td>A self-check on the same vocabulary before it's tested for real.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">3. Explanation</div>
+    <p style="margin:0 0 8px 0;">Worked examples only, no grading - the "watch me think through it" page, moving from finding slope through writing equations, evaluating function notation, and writing a rule from a table.</p>
+    <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
+      <tbody>
+        <tr><td>1. Slope &amp; Rate of Change</td><td>The slope formula between two points, and interpreting it as a real-world rate - misconception #2 on the Overview tab (flipping which point is \((x_1,y_1)\)) lives here.</td></tr>
+        <tr><td>2. Slope-Intercept Form</td><td>Writing \(y=mx+b\) from two points, from a table, or from a different form - the algebraic-answer skill Practice Set's Tab 2 grades directly.</td></tr>
+        <tr><td>3. Function Notation</td><td>Evaluating \(f(x)\) for a given input - misconception #1 on the Overview tab (substituting into the wrong place, or skipping order of operations) lives here.</td></tr>
+        <tr><td>4. Writing Function Rules</td><td>Working backward from a table of values to the function rule that produced it - the inverse of Tab 3's skill.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">4. Practice Set</div>
+    <p style="margin:0 0 8px 0;">The main graded computation page - mirrors Explanation's own four-tab structure exactly, so a student who struggled with one of Explanation's tabs knows precisely which Practice Set tab to expect trouble on.</p>
+    <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
+      <tbody>
+        <tr><td>1. Slope &amp; Rate of Change</td><td>Plain-number slope calculations, including the zero-slope and undefined-slope special cases.</td></tr>
+        <tr><td>2. Slope-Intercept Form</td><td>Algebraic-answer items (via <code>&lt;math-field&gt;</code>) - writing \(y=mx+b\) from two points or converting from standard form.</td></tr>
+        <tr><td>3. Function Notation</td><td>Plain-number evaluation of \(f(x)\)/\(g(x)\) for a given input.</td></tr>
+        <tr><td>4. Writing Function Rules</td><td>Algebraic-answer items - writing \(f(x)=mx+b\) from a table of values.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">5. Word Problems</div>
+    <p style="margin:0 0 8px 0;">Applies function notation and slope-intercept modeling to real scenarios across three tabs, ending with challenge problems that require working backward from an output.</p>
+    <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
+      <tbody>
+        <tr><td>1. Modeling With Function Notation</td><td>Given a real-world function rule, evaluate it at a specific input - direct application of Explanation Tab 3's skill.</td></tr>
+        <tr><td>2. Cost &amp; Savings Models</td><td>Real linear-model scenarios (fees, subscriptions, savings accounts) - the most concrete application in the unit.</td></tr>
+        <tr><td>3. Challenge Problems</td><td>The hardest tab: working backward from a known output to solve for an unknown input, and writing a function rule from a word scenario rather than a table.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">6. Test Prep</div>
+    <p style="margin:0 0 8px 0;">The assessment-prep page - concept review, error analysis, a timed review quiz, and a submit-only Mixed Practice worksheet that serves as this topic's digital assessment.</p>
+    <table class="data-table">
+      <thead><tr><th>Tab</th><th>What it's about</th></tr></thead>
+      <tbody>
+        <tr><td>1. Concept Review</td><td>A fast pass across every skill in the unit - function evaluation, slope, and identifying a function.</td></tr>
+        <tr><td>2. Error Analysis</td><td>Given someone else's wrong answer, find and name the mistake - trains students to catch the exact misconceptions listed on the Overview tab.</td></tr>
+        <tr><td>3. Timed Review Quiz</td><td>A short, timed mixed-skills quiz - good as a fluency check before the actual assessment.</td></tr>
+        <tr><td>4. Mixed Practice</td><td>Submit-only (no retry) - functions as this topic's real digital assessment, not just practice, since there's no second attempt.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 3: METACOGNITION & DISCUSSION -->
+  <div id="metacognition" class="panel">
+    <div class="section-title">Metacognition &amp; Discussion</div>
+    <p>Reflection prompts and small-group discussion questions to use alongside any of the six pages - none of this is graded content on a student page, it's for you to drop into a warm-up, an exit ticket, or a mid-lesson pause.</p>
+
+    <div class="answer-day-heading">Reflection Prompts (use as an exit ticket or journal stem)</div>
+    <ul>
+      <li>"When I evaluated \(f(x)\) today, did I substitute the input in every place \(x\) appeared, and did I follow order of operations after that?" (see Misconception #1 on the Overview tab)</li>
+      <li>"When I found a slope today, how did I keep track of which point was \((x_1,y_1)\) and which was \((x_2,y_2)\)?"</li>
+      <li>"Given a table of values, what's the first thing I check to decide whether it's a function?"</li>
+      <li>"What's the difference between a proportional relationship and a linear relationship - and is every proportional relationship also linear?"</li>
+      <li>"Where might I actually use function notation outside of math class - a recipe, a paycheck, a phone bill?"</li>
+    </ul>
+
+    <div class="answer-day-heading">Leveled Small-Group Discussion Prompts</div>
+    <table class="data-table">
+      <thead><tr><th>Tier</th><th>Prompt</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Building Understanding</strong></td><td>Take turns explaining to your partner: why does the table \(\{(1,4),(2,4),(3,4)\}\) still count as a function, even though every output is the same? What would break it?</td></tr>
+        <tr><td><strong>Applying</strong></td><td>As a group, find the slope between \((2,3)\) and \((5,9)\) two different ways - once treating \((2,3)\) as \((x_1,y_1)\), once treating \((5,9)\) as \((x_1,y_1)\). Do you get the same slope either way? Why or why not?</td></tr>
+        <tr><td><strong>Extending</strong></td><td>Design a real-world scenario (a cost, a savings plan, a distance) that a proportional relationship \(y=kx\) can model, and a second one that needs the more general \(y=mx+b\) instead. What real-world feature makes the difference?</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 4: DIFFERENTIATION -->
+  <div id="differentiation" class="panel">
+    <div class="section-title">Differentiation</div>
+    <p>Real problems, not just links - for a student who needs more scaffolding before the graded pages, or more challenge once they've cleared them.</p>
+
+    <div class="answer-day-heading">Scaffolded Support Problems</div>
+    <p>For a student still shaky on one of the misconceptions from the Overview tab. Read each hint aloud before they attempt the problem.</p>
+    <table class="data-table">
+      <thead><tr><th>Problem</th><th>Hint to give</th><th>Answer</th></tr></thead>
+      <tbody>
+        <tr><td>1. \(f(x) = 3x - 5\); find \(f(4)\).</td><td>Substitute 4 in for every \(x\), then follow order of operations - multiply before you subtract.</td><td>\(\mathbf{7}\)</td></tr>
+        <tr><td>2. Find the slope through \((2,3)\) and \((5,9)\).</td><td>Keep the same point as \((x_1,y_1)\) in both the numerator and denominator: \(\dfrac{y_2-y_1}{x_2-x_1}\).</td><td>\(\mathbf{2}\)</td></tr>
+        <tr><td>3. Is \(\{(1,4),(2,4),(3,4)\}\) a function?</td><td>Check the inputs (first coordinates), not the outputs - a repeated input breaks it, a repeated output doesn't.</td><td><strong>Yes</strong> - every input has exactly one output.</td></tr>
+        <tr><td>4. Is \(y=4x\) proportional or just linear?</td><td>A proportional relationship has to pass through the origin - no added constant.</td><td><strong>Proportional</strong> (\(b=0\)).</td></tr>
+      </tbody>
+    </table>
+
+    <div class="answer-day-heading">Extension / Challenge Problems</div>
+    <p>Stays within this unit's own standard scope (HSA.CED.A.2, HSS.ID.C.7, HSF-IF.A.1, HSF-IF.B.5, HSF-LE.A.2) while pushing past what's graded on any of the six pages.</p>
+    <table class="data-table">
+      <thead><tr><th>Problem</th><th>Answer / Notes</th></tr></thead>
+      <tbody>
+        <tr><td>1. \(f(x)=2x+1\) and \(g(x)=3x-4\). Find the value of \(x\) that makes \(f(x)=g(x)\), then verify.</td><td>\(2x+1=3x-4 \Rightarrow x=\mathbf{5}\). Check: \(f(5)=11\) and \(g(5)=11\) - both functions agree at \(x=5\).</td></tr>
+        <tr><td>2. A line has the same slope as \(y=2x+7\) and passes through \((3,-1)\). Write its equation in slope-intercept form.</td><td>Slope \(=2\); \(-1=2(3)+b \Rightarrow b=-7\). Equation: \(\mathbf{y=2x-7}\).</td></tr>
+        <tr><td>3. A company's cost function is \(C(x)=15x+40\) and its revenue function is \(R(x)=25x\). Write a profit function \(P(x)=R(x)-C(x)\), then find \(P(10)\).</td><td>\(P(x)=25x-(15x+40)=10x-40\). \(P(10)=100-40=\mathbf{60}\).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PANEL 5: CHALLENGE BANK -->
+  <div id="challenge" class="panel">
+    <div class="section-title">Challenge Bank</div>
+    <p>Extra problems for early finishers or homework extension, harder than anything graded on the six pages - everything below is digital, no printed materials needed. Click a problem to reveal its full solution.</p>
+
+    <div class="challenge-box">
+      <p><strong>C1.</strong> A function is defined by \(f(x)=-3x+7\). Find \(x\) when \(f(x)=-14\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(-3x+7=-14\). Subtract 7: \(-3x=-21\). Divide by \(-3\): \(x=\mathbf{7}\). Check: \(f(7)=-3(7)+7=-21+7=-14\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C2.</strong> Two points on a line are \((a,5)\) and \((a+4,13)\), where \(a\) is any real number. Find the slope.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>Slope \(=\dfrac{13-5}{(a+4)-a}=\dfrac{8}{4}=\mathbf{2}\). The \(a\) cancels out entirely - the slope is the same no matter what \(a\) is, since both points always sit exactly 4 apart horizontally and 8 apart vertically.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C3.</strong> A table shows \(x: 0,1,2,3\) and \(y: 5,5,5,5\). Is this relation a function? Is it proportional? Explain both.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p><strong>Function:</strong> yes - every input maps to exactly one output. <strong>Proportional:</strong> no - a proportional relationship must pass through the origin, but here \(x=0\) gives \(y=5\), not \(y=0\). This is a constant function (\(y=5\)), a special case of linear but not proportional.</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C4.</strong> A gym charges a \(\$50\) signup fee plus \(\$30\)/month. Write a cost function \(C(m)\), then find the fewest number of whole months before the total cost exceeds \(\$500\).</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(C(m)=30m+50\). Set \(30m+50 > 500\): \(30m>450\), so \(m>15\). Since \(m\) must be a whole number of months, the total first exceeds \$500 at \(m=\mathbf{16}\) months. Check: \(C(15)=500\) exactly (not yet <em>over</em>), \(C(16)=530\).</p>
+      </details>
+    </div>
+    <div class="challenge-box">
+      <p><strong>C5.</strong> Given \(f(x)=2x-3\), find the value of \(k\) that makes \(f(k)=15\) true.</p>
+      <details class="solution-toggle"><summary>Show solution</summary>
+        <p>\(2k-3=15\). Add 3: \(2k=18\). Divide by 2: \(k=\mathbf{9}\). Check: \(f(9)=2(9)-3=18-3=15\).</p>
+      </details>
+    </div>
+  </div>
+
+  <!-- PANEL 6: IXL PRACTICE -->
+  <div id="ixl-practice" class="panel">
+    <div class="section-title">IXL Practice</div>
+    <p>Skill codes from IXL's official skill-alignment guide for <a href="https://www.ixl.com/math/skill-plans/envision-mathematics-2024-algebra-1" target="_blank" rel="noopener">enVision Mathematics (2024), Algebra 1</a> - Topic 2, Lesson 2-1, and Topic 3, Lessons 3-1 through 3-2. Assign any time during Practice Set or Word Problems.</p>
+
+    <div class="answer-day-heading">Lesson 2-1: Slope-Intercept Form</div>
+    <div class="ixl-box">
+      <ul>
+        <li><a href="https://www.ixl.com/math/algebra-1/slope-intercept-form-graphs-and-equations" target="_blank" rel="noopener">Slope-intercept form: graphs and equations</a> <span class="ixl-code">G7B</span></li>
+        <li><a href="https://www.ixl.com/math/algebra-1/write-a-linear-function-word-problems" target="_blank" rel="noopener">Write a linear function: word problems</a> <span class="ixl-code">HWM</span></li>
+      </ul>
+      <p style="margin:10px 0 4px 0;"><strong>Also consider:</strong></p>
+      <ul>
+        <li><a href="https://www.ixl.com/math/algebra-1/interpret-the-slope-and-y-intercept-of-a-linear-function" target="_blank" rel="noopener">Interpret the slope and y-intercept of a linear function</a> <span class="ixl-code">RPQ</span></li>
+        <li><a href="https://www.ixl.com/math/algebra-1/slope-intercept-form-write-an-equation" target="_blank" rel="noopener">Slope-intercept form: write an equation</a> <span class="ixl-code">A42</span></li>
+        <li><a href="https://www.ixl.com/math/algebra-1/find-the-slope-from-a-table" target="_blank" rel="noopener">Find the slope from a table</a> <span class="ixl-code">GUP</span></li>
+        <li><a href="https://www.ixl.com/math/algebra-1/find-a-missing-coordinate-using-slope" target="_blank" rel="noopener">Find a missing coordinate using slope</a> <span class="ixl-code">5C7</span></li>
+      </ul>
+    </div>
+
+    <div class="answer-day-heading">Lesson 3-1: Domain and Range of Functions</div>
+    <div class="ixl-box">
+      <ul>
+        <li><a href="https://www.ixl.com/math/algebra-1/domain-and-range-of-relations" target="_blank" rel="noopener">Domain and range of relations</a> <span class="ixl-code">2CG</span></li>
+        <li><a href="https://www.ixl.com/math/algebra-1/domain-and-range-of-linear-functions-word-problems" target="_blank" rel="noopener">Domain and range of linear functions: word problems</a> <span class="ixl-code">AW7</span></li>
+        <li><a href="https://www.ixl.com/math/algebra-1/identify-functions" target="_blank" rel="noopener">Identify functions</a> <span class="ixl-code">VLL</span></li>
+      </ul>
+      <p style="margin:10px 0 4px 0;"><strong>Also consider:</strong></p>
+      <ul>
+        <li><a href="https://www.ixl.com/math/algebra-1/relations-convert-between-tables-graphs-mappings-and-lists-of-points" target="_blank" rel="noopener">Relations: convert between tables, graphs, mappings, and lists of points</a> <span class="ixl-code">RBG</span></li>
+        <li><a href="https://www.ixl.com/math/algebra-1/identify-functions-vertical-line-test" target="_blank" rel="noopener">Identify functions: vertical line test</a> <span class="ixl-code">HLX</span></li>
+      </ul>
+    </div>
+
+    <div class="answer-day-heading">Lesson 3-2: Linear Functions</div>
+    <div class="ixl-box">
+      <ul>
+        <li><a href="https://www.ixl.com/math/algebra-1/slope-intercept-form-write-an-equation-from-a-table" target="_blank" rel="noopener">Slope-intercept form: write an equation from a table</a> <span class="ixl-code">SSE</span></li>
+        <li><a href="https://www.ixl.com/math/algebra-1/find-values-using-mostly-linear-function-graphs" target="_blank" rel="noopener">Find values using function graphs</a> <span class="ixl-code">TJM</span></li>
+        <li><a href="https://www.ixl.com/math/algebra-1/evaluate-a-linear-function-from-its-graph-word-problems" target="_blank" rel="noopener">Evaluate a linear function from its graph: word problems</a> <span class="ixl-code">STU</span></li>
+      </ul>
+      <p style="margin:10px 0 4px 0;"><strong>Also consider:</strong></p>
+      <ul>
+        <li><a href="https://www.ixl.com/math/algebra-1/identify-linear-functions-from-tables" target="_blank" rel="noopener">Identify linear functions from tables</a> <span class="ixl-code">F5G</span></li>
+        <li><a href="https://www.ixl.com/math/algebra-1/complete-a-function-table-from-an-equation" target="_blank" rel="noopener">Complete a function table from an equation</a> <span class="ixl-code">Z73</span></li>
+        <li><a href="https://www.ixl.com/math/algebra-1/interpret-functions-using-everyday-language" target="_blank" rel="noopener">Interpret functions using everyday language</a> <span class="ixl-code">U98</span></li>
+      </ul>
+    </div>
+
+    <div class="notebook-box">
+      <p style="margin:0;">Two skills this unit teaches have no dedicated match under this book's Topic 2/3: the plain slope formula from two coordinate points (Practice Set Tab 1), and a three-way "proportional / linear / neither" classification (Review Tab 3) - this book's own proportional-relationship skills live in its Grade 8 prerequisite course, not the Algebra 1 alignment itself. No verified code is listed for either, rather than forcing an imprecise match.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+</script>
+</body>
+</html>

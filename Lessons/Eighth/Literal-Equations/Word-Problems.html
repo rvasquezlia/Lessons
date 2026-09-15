@@ -20,12 +20,41 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <!-- Visual math input (rolled out from the Practice-Set pilot - see
+       /CLAUDE.md's "Visual math input pilot" note): registers the
+       <math-field> custom element used for this page's answer inputs. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -33,12 +62,12 @@
     </div>
     <span class="badge">Algebra I &middot; Literal Equations</span>
     <h1>Word Problems</h1>
+    <p class="standards-line">Standards: HSA.CED.A.4</p>
   </header>
 
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Algebra I - Literal Equations - Word Problems')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -82,7 +111,7 @@
       </div>
       <div class="ladder-round">
         <div class="ladder-round-label">Move 2: Climb the Ladder</div>
-        <div class="qa"><span class="q">What is obstructing \(w\)?</span><span class="a">\(l\), multiplying</span></div>
+        <div class="qa"><span class="q">What is preventing \(w\)?</span><span class="a">\(l\), multiplying</span></div>
         <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Division</span></div>
       </div>
       <div class="ladder-eq">\(w = \dfrac{A}{l}\)</div>
@@ -119,11 +148,11 @@
       <p><strong>Task:</strong> find the interest earned by each investment, then say which one earns more and by how much.</p>
       <div class="form-group">
         <label>Interest earned by Investment A:</label>
-        <input type="text" id="fin-a" class="form-control-lg" style="max-width:160px;" placeholder="$">
+        <math-field id="fin-a" class="form-control-lg" style="max-width:160px; display:inline-block;"></math-field>
       </div>
       <div class="form-group">
         <label>Interest earned by Investment B:</label>
-        <input type="text" id="fin-b" class="form-control-lg" style="max-width:160px;" placeholder="$">
+        <math-field id="fin-b" class="form-control-lg" style="max-width:160px; display:inline-block;"></math-field>
       </div>
       <div class="form-group">
         <label>Which investment earns more, and by how much?</label>
@@ -155,6 +184,8 @@
 </div>
 
 <script>
+  LessonSync.init('8-literal-equations-word-problems');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -173,6 +204,7 @@
   // REUSABLE NUMERIC WORD-PROBLEM LIST
   // ==========================================
   const wpRegistry = {};
+  window.listRegistry = wpRegistry; // read by lesson-auth.js's teacher answer-key view - covers Tabs 1,2,4,5
 
   function renderWpList(containerId, problems, keyPrefix, section) {
     wpRegistry[keyPrefix] = { problems, section };
@@ -180,7 +212,7 @@
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
         <strong>${i + 1}.</strong> ${p.q}
         <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-          <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+          <math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;"></math-field>
           <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkWpItem('${keyPrefix}', ${i})">Check</button>
         </div>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
@@ -191,10 +223,20 @@
     triggerMathJax();
   }
 
+  // Reads a <math-field>'s answer as ASCIIMath text, guarded against the
+  // MathLive script never loading - see Practice-Set.html's identical
+  // helper and /CLAUDE.md's "Visual math input pilot" note.
+  // numericMatch() already strips anything but digits/./- before
+  // parsing, so a plain number typed in the math editor works exactly
+  // like it did from a plain input.
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
   function checkWpItem(keyPrefix, idx) {
     const cfg = wpRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`${keyPrefix}-${idx}-input`));
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!val.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
     const correct = LessonCheck.numericMatch(val, p.a, p.tol || 0.05);
@@ -238,8 +280,8 @@
   ];
 
   function checkFinCompare() {
-    const a = document.getElementById('fin-a').value;
-    const b = document.getElementById('fin-b').value;
+    const a = readMathField(document.getElementById('fin-a'));
+    const b = readMathField(document.getElementById('fin-b'));
     const explain = document.getElementById('fin-explain').value.trim();
     const fb = document.getElementById('fin-compare-feedback');
     if (!a.trim() || !b.trim() || explain.length <= 5) {
@@ -279,7 +321,24 @@
   renderWpList('more-list', moreProblems, 'mor', '4. More Word Problems');
   renderWpList('challenge-list', challengeProblems, 'chl', '5. Challenge Word Problems');
   LessonProgress.preRegister('fin-compare', 'Comparing Investments A and B', '3. Finance');
+
+  // Teacher answer key for the one item window.listRegistry doesn't cover
+  // (Tab 3's investment comparison) - see /CLAUDE.md's "Role
+  // differentiation on lesson pages".
+  window.revealAnswerKey = function () {
+    const a = document.getElementById('fin-a'), b = document.getElementById('fin-b');
+    const explain = document.getElementById('fin-explain'), fb = document.getElementById('fin-compare-feedback');
+    if (!a || !b || !fb) return;
+    a.value = 120; b.value = 108;
+    a.disabled = true; b.disabled = true;
+    if (explain) { explain.value = 'Investment A earns more, by $12.'; explain.disabled = true; }
+    const container = a.closest('.step-box');
+    const btn = container && container.querySelector('button');
+    if (btn) btn.disabled = true;
+    fb.style.display = 'block';
+    fb.className = 'feedback-msg success locked';
+    fb.innerHTML = 'Answer key: <strong>A earns $120, B earns $108 - A earns more, by $12.</strong>';
+  };
 </script>
-<div id="print-report"></div>
 </body>
 </html>

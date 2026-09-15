@@ -26,6 +26,14 @@
 
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
   <style>
     .tier-heading {
       font-weight: 800;
@@ -40,7 +48,23 @@
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -48,12 +72,12 @@
     </div>
     <span class="badge">Decimal Operations &middot; Practice Set</span>
     <h1>Decimal Operations: Practice Set</h1>
+    <p class="standards-line">Standards: 6.NS.B.2, 6.NS.B.3</p>
   </header>
 
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Math 6 - Decimal Operations - Practice Set')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -62,7 +86,6 @@
       <li><strong>Computation only</strong> - no word problems (those are on the Word Problems page).</li>
       <li>Work the tabs in any order - each groups problems by type and difficulty.</li>
       <li>Type your answer, click Check - <strong>2 tries</strong> before the method is shown.</li>
-      <li>When you finish, type your name above and click <strong>Print My Progress</strong>.</li>
     </ul>
   </div>
 
@@ -209,6 +232,8 @@
 </div>
 
 <script>
+  LessonSync.init('6-decimal-operations-practice-set');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -241,6 +266,7 @@
   }
 
   const checkListRegistry = {};
+  window.listRegistry = checkListRegistry; // read by lesson-auth.js's teacher answer-key view
 
   function checkListItem(keyPrefix, idx) {
     const cfg = checkListRegistry[keyPrefix];
@@ -414,6 +440,7 @@
   // TAB 4: ERROR ANALYSIS CAROUSEL
   // ==========================================
   let currentEA = 0;
+  let eaVerdictSelect = null;
 
   const errorExamples = [
     {
@@ -516,11 +543,7 @@
         <p style="margin:0 0 10px 0;"><strong>Act as the teacher:</strong> is this correct? What is the correct answer?</p>
         <div class="form-group">
           <label>Is the student's work correct?</label>
-          <select id="ea-verdict-${currentEA}" class="form-control-lg" style="max-width:240px;">
-            <option value="">Select...</option>
-            <option value="correct">Correct, no mistake</option>
-            <option value="error">There's a mistake</option>
-          </select>
+          <div id="ea-verdict-${currentEA}" class="card-select"></div>
         </div>
         <div class="form-group">
           <label>What is the correct answer?</label>
@@ -530,6 +553,10 @@
         <div id="ea-feedback-${currentEA}" class="feedback-msg" style="margin-top:14px;"></div>
       </div>
     `;
+    eaVerdictSelect = createCardSelect(`ea-verdict-${currentEA}`, [
+      { value: 'correct', label: 'Correct, no mistake' },
+      { value: 'error', label: "There's a mistake" }
+    ]);
 
     document.getElementById('ea-prev-btn').disabled = currentEA === 0;
     document.getElementById('ea-next-btn').disabled = currentEA === errorExamples.length - 1;
@@ -549,7 +576,7 @@
 
   function checkErrorAnalysis(idx) {
     const ex = errorExamples[idx];
-    const verdict = document.getElementById(`ea-verdict-${idx}`).value;
+    const verdict = eaVerdictSelect ? eaVerdictSelect.getValue() : null;
     const val = document.getElementById(`ea-answer-${idx}`).value;
     const fb = document.getElementById(`ea-feedback-${idx}`);
     if (!verdict || !val.trim()) {
@@ -597,6 +624,5 @@
   checkListRegistry['chdiv'] = { problems: challengeDivision, section: '6. Challenge Tier', retry: "Not quite yet. If dividing by a decimal, shift both decimal points right by the same number of places until you're dividing by a whole number, then divide." };
   renderCheckList('challenge-division-list', challengeDivision, 'chdiv', '6. Challenge Tier');
 </script>
-<div id="print-report"></div>
 </body>
 </html>

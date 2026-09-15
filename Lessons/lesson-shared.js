@@ -7,24 +7,31 @@
 // message for each outcome.
 //
 // LessonCheck also keeps a running log of every item a student has
-// answered (LessonProgress) so the page can print a "proof of completion"
-// summary - see printProgressReport() below.
+// answered (LessonProgress) - lesson-auth.js patches LessonProgress.record
+// to sync each one to the shared backend as it happens (see
+// /CLAUDE.md's progress-tracking architecture notes).
 const LessonProgress = (() => {
   const items = []; // ordered list of {key, label, section, answer, verdict}
 
   // Records/updates one practice item. verdict is 'correct', 'incomplete'
   // (never got it right), 'reflection' (open-ended or submit-only, no
   // right answer graded on screen), or 'not-attempted' (pre-registered,
-  // never touched). `section` is the tab/section name shown on the
-  // printed report - pass it every time an item is first registered.
-  function record(key, label, answer, verdict, section) {
+  // never touched). `section` is the tab/section name synced to the
+  // backend alongside this item - pass it every time an item is first
+  // registered. `lockAfterSubmit` (default true/omit) only matters for
+  // LessonCheck.submit()-style items deliberately marked freely-redoable -
+  // see that function's own doc comment and /CLAUDE.md's reset-mechanism
+  // notes; passing `false` here is what tells restoreSubmissions() (in
+  // lesson-auth.js) not to lock this field back up on a later page load.
+  function record(key, label, answer, verdict, section, lockAfterSubmit) {
     const idx = items.findIndex((i) => i.key === key);
     const entry = {
       key,
       label,
       section: section || (idx >= 0 ? items[idx].section : ''),
       answer: (answer === '' || answer === undefined || answer === null) ? '(blank)' : answer,
-      verdict
+      verdict,
+      lockAfterSubmit
     };
     if (idx >= 0) items[idx] = entry;
     else items.push(entry);
@@ -33,17 +40,17 @@ const LessonProgress = (() => {
   // For open-ended reflection fields that don't go through LessonCheck.
   // Key is derived from the label, not a call counter - a counter-based
   // key made every re-submission of the same field (clicking Submit
-  // twice, or re-visiting a tab) create a brand-new report row instead
-  // of updating the existing one, duplicating it on the printed report.
+  // twice, or re-visiting a tab) create a brand-new synced entry instead
+  // of updating the existing one, duplicating it in SubmissionsLog.
   function recordText(label, text, section) {
     record(`text-${label}`, label, text, 'reflection', section);
   }
 
-  // Pre-registers a question as "not attempted" so it always shows up on
-  // the printed report, in its correct section and position, even if the
-  // student never touches it. Call once per question at render time -
-  // record()/submit() later update this same entry in place once the
-  // student actually answers, without disturbing its position.
+  // Pre-registers a question as "not attempted" so it's tracked from the
+  // moment a page renders, even if the student never touches it. Call
+  // once per question at render time - record()/submit() later update
+  // this same entry in place once the student actually answers, without
+  // disturbing its position.
   function preRegister(key, label, section) {
     if (!items.find((i) => i.key === key)) {
       items.push({ key, label, section: section || '', answer: '', verdict: 'not-attempted' });
@@ -165,17 +172,33 @@ const LessonCheck = (() => {
   // Practice problem) so the printed answer can't be quietly edited
   // afterward.
   //
-  // `record` is required: {key, label, answer, section, correct}.
-  // `correct` is optional - pass true/false when this item has a single
-  // checkable right answer (an equation, a classification, ...) so the
-  // printed audit shows a real Correct/Needs review verdict instead of
-  // just "Submitted". Omit it for genuinely open-ended items (written
-  // explanations, recommendations) that have no one right answer - those
-  // stay "Submitted" and are judged by the teacher from the printout.
+  // `record` is required: {key, label, answer, section, correct,
+  // lockAfterSubmit}. `correct` is optional - pass true/false when this
+  // item has a single checkable right answer (an equation, a
+  // classification, ...) so the printed audit shows a real Correct/Needs
+  // review verdict instead of just "Submitted". Omit it for genuinely
+  // open-ended items (written explanations, recommendations) that have no
+  // one right answer - those stay "Submitted" and are judged by the
+  // teacher from the printout.
+  //
+  // `lockAfterSubmit` defaults to true (unchanged behavior everywhere
+  // existing content already calls submit()) - the fields lock so a
+  // printed answer can't be quietly edited afterward, and a teacher would
+  // need to use the dashboard's reset action to give it back. Pass
+  // `lockAfterSubmit: false` on an item deliberately meant to be
+  // freely redone with no teacher intervention (open practice, not a
+  // point-in-time snapshot) - every resubmission still appends its own
+  // entry to SubmissionsLog (nothing about the audit trail changes,
+  // see /CLAUDE.md), the field just never disables. This is a per-item
+  // authoring choice, not a blanket site behavior - don't flip existing
+  // content to it without deciding, item by item, that a redo genuinely
+  // shouldn't need a teacher's say-so (see /CLAUDE.md's reset-mechanism
+  // notes for the reasoning).
   function submit(feedbackEl, record, message) {
+    const willLock = !record || record.lockAfterSubmit !== false;
     if (feedbackEl) {
       feedbackEl.style.display = 'block';
-      feedbackEl.className = 'feedback-msg success locked';
+      feedbackEl.className = willLock ? 'feedback-msg success locked' : 'feedback-msg success';
       feedbackEl.innerHTML = message || 'Submitted! This will be reviewed from your printed progress report.';
       if (window.MathJax && window.MathJax.typesetPromise) {
         MathJax.typesetPromise([feedbackEl]).catch((err) => console.log(err));
@@ -183,13 +206,217 @@ const LessonCheck = (() => {
     }
     if (record) {
       const verdict = record.correct === true ? 'correct' : record.correct === false ? 'incomplete' : 'reflection';
-      LessonProgress.record(record.key, record.label, record.answer, verdict, record.section);
+      LessonProgress.record(record.key, record.label, record.answer, verdict, record.section, record.lockAfterSubmit);
     }
-    lockControls(feedbackEl);
+    if (willLock) lockControls(feedbackEl);
   }
 
   return { evaluate, reset, show, check, numericMatch, incomplete, submit };
 })();
+
+// ==========================================
+// VOCABULARY MATCH-UP (drag-and-drop, shared by every Vocabulary-Literacy.html
+// page's "Quick Vocabulary Check" tab)
+// ==========================================
+// A 3-way match: drag each term onto its matching definition, and onto its
+// matching example. A term earns full credit only once both are matched -
+// this replaces the old type-the-term-into-a-box self-check, which read as
+// cramped stacked boxes on screen (see git history/CLAUDE.md). Drag-and-drop
+// is the primary interaction; tap-to-select (tap a term, then tap a
+// definition or example) is the touch-friendly fallback, since a phone/
+// tablet can't always drag reliably.
+//
+// createVocabMatch(config) returns one instance - a page calls it once per
+// "Quick Vocabulary Check" tab (there's only ever one per page). Its
+// rendered onclick/ondrop attributes call back through the fixed
+// identifier `vocabMatch` (evaluated in the shared script-scope, same
+// convention every other page's inline handlers already rely on), so the
+// returned instance MUST be assigned to a page-level `const vocabMatch` -
+// not renamed - or the rendered handlers won't resolve to anything:
+//   const vocabMatch = createVocabMatch({
+//     termsId: 'vocab-terms', defsId: 'vocab-definitions', exsId: 'vocab-examples',
+//     feedbackId: 'vocabmatch-feedback',
+//     terms: [{ key, term, def, example }, ...],   // def/example may contain
+//                                                   // HTML/LaTeX \\(...\\) -
+//                                                   // call vocabMatch.render()
+//                                                   // again after MathJax is
+//                                                   // ready if typeset late
+//     progressKey: 'vocabmatch', progressLabel: 'Key Vocabulary Match-Up',
+//     section: '3. Quick Vocabulary Check'
+//   });
+//   vocabMatch.render();
+// and its markup (three <div id="..."></div> columns inside a .match-wrap,
+// plus a feedback <div>) - see any Vocabulary-Literacy.html Tab 3 for the
+// exact shape. def/example strings render as raw innerHTML (same convention
+// every glossary card on Tab 1 already uses) - author them, don't accept
+// student input into them.
+// Fixed, hand-picked palette (not hashed like teacher-dashboard.html's
+// GROUP_COLORS, since here every term needs a distinct, stable color in a
+// small fixed set, not a hash bucket) - used only in the teacher-view
+// reveal below, to make an otherwise unordered 3-column answer key
+// actually readable at a glance.
+const VOCAB_MATCH_REVEAL_PALETTE = ['#1d4ed8', '#b91c1c', '#15803d', '#a16207', '#7c3aed', '#0e7490', '#be185d', '#c2410c'];
+
+function createVocabMatch(config) {
+  const defMatched = {};
+  const exMatched = {};
+  let selected = null;
+  let attempts = 0;
+  // Definitions and examples each render in their own shuffled order,
+  // chosen once, so neither column visibly reshuffles after an attempt.
+  // The teacher-view reveal below ignores this and re-sorts both columns
+  // into the same order as Term instead - see revealDot()/reveal().
+  let defOrder = null;
+  let exOrder = null;
+  let revealed = false;
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function escText(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function termDone(key) {
+    return !!(defMatched[key] && exMatched[key]);
+  }
+
+  function allDone() {
+    return config.terms.every((t) => termDone(t.key));
+  }
+
+  // Teacher-view only: a small colored dot prefixed onto a term/def/example
+  // once revealed, so a teacher can trace which definition and example
+  // belong to which term even though the three columns are otherwise
+  // unordered relative to each other (see render()'s revealed-order note).
+  function revealDot(key) {
+    if (!revealed) return '';
+    const idx = config.terms.findIndex((t) => t.key === key);
+    const color = VOCAB_MATCH_REVEAL_PALETTE[idx % VOCAB_MATCH_REVEAL_PALETTE.length];
+    return `<span class="reveal-dot" style="background:${color}"></span>`;
+  }
+
+  function render() {
+    if (!defOrder) defOrder = shuffle(config.terms.map((t) => t.key));
+    if (!exOrder) exOrder = shuffle(config.terms.map((t) => t.key));
+
+    const termsEl = document.getElementById(config.termsId);
+    const defsEl = document.getElementById(config.defsId);
+    const exsEl = document.getElementById(config.exsId);
+    if (!termsEl || !defsEl || !exsEl) return;
+
+    // Once revealed, definitions/examples drop their independent shuffled
+    // order and line up row-for-row with the Term column instead (plus the
+    // colored revealDot() on all three) - an unordered 3-column answer key
+    // is not something a teacher can actually read at a glance.
+    const defRenderOrder = revealed ? config.terms.map((t) => t.key) : defOrder;
+    const exRenderOrder = revealed ? config.terms.map((t) => t.key) : exOrder;
+
+    termsEl.innerHTML = config.terms.map((t) => {
+      const done = termDone(t.key);
+      const sel = selected === t.key;
+      const handlers = (done || revealed) ? '' :
+        `onclick="vocabMatch.onTermClick('${t.key}')" draggable="true" ondragstart="vocabMatch.onDragStart(event,'${t.key}')"`;
+      const badges = `<div class="match-badges">
+        <span class="match-badge${defMatched[t.key] ? ' done' : ''}">Def${defMatched[t.key] ? ' &#10003;' : ''}</span>
+        <span class="match-badge${exMatched[t.key] ? ' done' : ''}">Ex${exMatched[t.key] ? ' &#10003;' : ''}</span>
+      </div>`;
+      return `<div class="match-card${done ? ' matched' : ''}${sel ? ' selected' : ''}" ${handlers}>${revealDot(t.key)}${escText(t.term)}${done ? ' &#10003;' : badges}</div>`;
+    }).join('');
+
+    defsEl.innerHTML = defRenderOrder.map((key) => {
+      const t = config.terms.find((x) => x.key === key);
+      const matched = defMatched[key];
+      const handlers = (matched || revealed) ? '' :
+        `onclick="vocabMatch.onSlotClick('def','${key}')" ondragover="event.preventDefault()" ondrop="vocabMatch.onDrop(event,'def','${key}')"`;
+      return `<div class="match-slot${matched ? ' matched' : ''}" id="${config.defsId}-${key}" ${handlers}><span>${revealDot(key)}${t.def}</span></div>`;
+    }).join('');
+
+    exsEl.innerHTML = exRenderOrder.map((key) => {
+      const t = config.terms.find((x) => x.key === key);
+      const matched = exMatched[key];
+      const handlers = (matched || revealed) ? '' :
+        `onclick="vocabMatch.onSlotClick('ex','${key}')" ondragover="event.preventDefault()" ondrop="vocabMatch.onDrop(event,'ex','${key}')"`;
+      return `<div class="match-slot${matched ? ' matched' : ''}" id="${config.exsId}-${key}" ${handlers}><span>${revealDot(key)}${t.example}</span></div>`;
+    }).join('');
+
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise([termsEl, defsEl, exsEl]).catch((err) => console.log(err));
+    }
+  }
+
+  function showFeedback(cls, html) {
+    const fb = document.getElementById(config.feedbackId);
+    if (!fb) return;
+    fb.style.display = 'block';
+    fb.className = `feedback-msg ${cls}`;
+    fb.innerHTML = html;
+  }
+
+  function attemptMatch(termKey, col, targetKey) {
+    if (!termKey || termDone(termKey)) return;
+    const matchedMap = col === 'def' ? defMatched : exMatched;
+    if (matchedMap[termKey]) return;
+    attempts++;
+    if (termKey === targetKey) {
+      matchedMap[termKey] = true;
+      selected = null;
+      render();
+      if (allDone()) {
+        showFeedback('success locked', `All ${config.terms.length} terms fully matched! <span style="opacity:.75; font-weight:700;">(${attempts} attempt${attempts === 1 ? '' : 's'})</span>`);
+        LessonProgress.record(config.progressKey, config.progressLabel, `All ${config.terms.length} terms matched (definitions and examples) in ${attempts} attempts`, 'correct', config.section);
+      } else {
+        showFeedback('success', `Matched! Keep going. <span style="opacity:.75;">(attempt ${attempts})</span>`);
+      }
+    } else {
+      selected = null;
+      document.querySelectorAll(`#${config.termsId} .match-card.selected`).forEach((el) => el.classList.remove('selected'));
+      const slotId = col === 'def' ? `${config.defsId}-${targetKey}` : `${config.exsId}-${targetKey}`;
+      const slot = document.getElementById(slotId);
+      if (slot) {
+        slot.classList.add('wrong-flash');
+        setTimeout(() => slot.classList.remove('wrong-flash'), 500);
+      }
+      showFeedback('error', `That's not a match yet - try again. <span style="opacity:.75;">(attempt ${attempts})</span>`);
+    }
+  }
+
+  function onTermClick(key) {
+    selected = selected === key ? null : key;
+    render();
+  }
+  function onDragStart(e, key) {
+    e.dataTransfer.setData('text/plain', key);
+  }
+  function onDrop(e, col, targetKey) {
+    e.preventDefault();
+    attemptMatch(e.dataTransfer.getData('text/plain'), col, targetKey);
+  }
+  function onSlotClick(col, targetKey) {
+    if (!selected) return;
+    attemptMatch(selected, col, targetKey);
+  }
+
+  // Called from a page's window.revealAnswerKey for the teacher view - marks
+  // every term matched (so every slot shows the locked/solved styling).
+  // Teacher view never writes to LessonProgress at all (no Progress row
+  // exists for a teacher - see /CLAUDE.md's "Role differentiation on
+  // lesson pages"), so this only touches local render state.
+  function reveal() {
+    revealed = true;
+    config.terms.forEach((t) => { defMatched[t.key] = true; exMatched[t.key] = true; });
+    render();
+    showFeedback('success locked', `Answer key: each term, its definition, and its example are numbered top-to-bottom in matching order and marked with the same colored dot - row 1 in every column is the same term, row 2 is the same term, and so on.`);
+  }
+
+  return { render, onTermClick, onDragStart, onDrop, onSlotClick, reveal };
+}
 
 // ==========================================
 // NUMBER LINE DIAGRAM (reusable, no external library)
@@ -250,7 +477,15 @@ function renderNumberLine(containerId, opts) {
   let defs = '';
   let body = `<line x1="${marginX}" y1="${lineY}" x2="${width - marginX}" y2="${lineY}" stroke="#1e3a8a" stroke-width="2"/>`;
 
-  for (let v = min; v <= max; v += step) {
+  // Accumulating a fractional step (e.g. 0 + 0.2 + 0.2 + 0.2) hits binary
+  // floating point's usual "0.30000000000000004"-style noise - stepping
+  // by an integer count instead and rounding only the label text (tick
+  // *position* is a proportional x-coordinate, where that same noise is
+  // many orders of magnitude under one pixel and was never visibly wrong)
+  // avoids compounding it further across iterations too.
+  const tickCount = Math.round((max - min) / step);
+  for (let i = 0; i <= tickCount; i++) {
+    const v = Math.round((min + i * step) * 1e6) / 1e6;
     const x = xFor(v);
     body += `<line x1="${x}" y1="${lineY - 6}" x2="${x}" y2="${lineY + 6}" stroke="#1e3a8a" stroke-width="2"/>`;
     body += `<text x="${x}" y="${lineY + 22}" text-anchor="middle" font-size="13" fill="#334155" font-family="Montserrat, sans-serif">${v}</text>`;
@@ -319,90 +554,51 @@ function renderNumberLine(containerId, opts) {
   el.innerHTML = `<svg viewBox="0 0 ${width} ${height}" style="width:100%; max-width:600px; display:block; margin:12px auto;" role="img" aria-label="Number line diagram from ${min} to ${max}"><defs>${defs}</defs>${body}</svg>`;
 }
 
-// ==========================================
-// PRINTABLE PROGRESS / PROOF OF COMPLETION
-// ==========================================
-// Builds a print-only report (name, date, lesson title, every logged
-// item with the student's answer and result) into a hidden #print-report
-// element, then opens the browser print dialog. Students can print it or
-// "Save as PDF" to submit as proof of completion to Google Classroom.
-function printProgressReport(lessonTitle) {
-  const nameField = document.getElementById('student-name');
-  const name = (nameField && nameField.value.trim()) || '';
+// ============================================================
+// CARD-SELECT (touch-friendly replacement for a plain <select> when the
+// choices are a short, fixed set - "Open"/"Closed", "Left"/"Right", etc.)
+//
+// createCardSelect(containerId, options, config) renders `options`
+// ({value, label}) as a row of clickable cards inside the element with
+// id `containerId`, tracks which one is selected, and re-renders on every
+// click so the `.selected` styling always matches state - no separate
+// "clear siblings" bookkeeping needed at each call site. Returns
+// {getValue, setValue, reset, disable} so a page's check/reveal functions
+// can read or force a value the same way they'd read a <select>'s
+// .value - getValue() returns null (not '') when nothing is picked yet,
+// matching a <select>'s empty "Select..." option.
+// ============================================================
+function createCardSelect(containerId, options, config) {
+  const container = document.getElementById(containerId);
+  let selected = (config && config.initialValue) || null;
 
-  if (!name) {
-    if (nameField) nameField.focus();
-    alert('Type your name before printing your progress report.');
-    return;
-  }
-  const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  const items = LessonProgress.all();
-
-  const verdictLabel = (v) => v === 'correct' ? 'Correct'
-    : v === 'reflection' ? 'Submitted'
-    : v === 'not-attempted' ? 'Not attempted'
-    : 'Needs review';
-
-  let rows = '';
-  if (items.length === 0) {
-    rows = '<tr><td colspan="3" style="text-align:center; padding:16px;">No activities on this page yet - work through the tabs, then come back and print.</td></tr>';
-  } else {
-    // Group by section, then order sections by their leading "N." number
-    // (matching tab/page order) rather than insertion order - insertion
-    // order depends on each page's init-script call sequence, which is
-    // easy to get wrong and shouldn't be load-bearing for report order.
-    const sectionOrder = [];
-    const bySection = {};
-    items.forEach((item) => {
-      const sec = item.section || 'This Page';
-      if (!bySection[sec]) { bySection[sec] = []; sectionOrder.push(sec); }
-      bySection[sec].push(item);
-    });
-    sectionOrder.sort((a, b) => {
-      const na = parseInt(a, 10);
-      const nb = parseInt(b, 10);
-      const aHas = !isNaN(na), bHas = !isNaN(nb);
-      if (aHas && bHas) return na - nb;
-      if (aHas) return -1;
-      if (bHas) return 1;
-      return 0;
-    });
-
-    let n = 0;
-    sectionOrder.forEach((sec) => {
-      rows += `<tr class="print-section-row"><td colspan="3">${sec}</td></tr>`;
-      bySection[sec].forEach((item) => {
-        n++;
-        const answerText = item.verdict === 'not-attempted'
-          ? '<span class="print-blank">&mdash;</span>'
-          : item.answer;
-        rows += `
-          <tr>
-            <td>${n}. ${item.label}</td>
-            <td>${answerText}</td>
-            <td>${verdictLabel(item.verdict)}</td>
-          </tr>`;
+  function render() {
+    if (!container) return;
+    container.innerHTML = options.map((o) => `
+      <button type="button" class="card-select-option${selected === o.value ? ' selected' : ''}" data-value="${o.value}">${o.label}</button>
+    `).join('');
+    container.querySelectorAll('.card-select-option').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (btn.disabled) return;
+        selected = btn.dataset.value;
+        render();
+        if (config && typeof config.onChange === 'function') config.onChange(selected);
       });
     });
   }
 
-  const total = items.length;
-  const attempted = items.filter((i) => i.verdict !== 'not-attempted').length;
-  const correct = items.filter((i) => i.verdict === 'correct').length;
+  function disable() {
+    if (!container) return;
+    container.querySelectorAll('.card-select-option').forEach((btn) => { btn.disabled = true; });
+  }
 
-  const report = document.getElementById('print-report');
-  report.innerHTML = `
-    <h1>${lessonTitle}</h1>
-    <p class="print-meta"><strong>Student:</strong> ${name} &nbsp;&nbsp; <strong>Date:</strong> ${today}</p>
-    <p class="print-meta"><strong>Questions on this page:</strong> ${total} &nbsp;&nbsp; <strong>Attempted:</strong> ${attempted} &nbsp;&nbsp; <strong>Correct on first or second try:</strong> ${correct}</p>
-    <table class="print-table">
-      <thead><tr><th>Activity</th><th>Answer Given</th><th>Result</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    <p class="print-footer">Printed from the interactive lesson page as a full record of this student's work, section by section.</p>
-  `;
-
-  window.print();
+  render();
+  return {
+    getValue: () => selected,
+    setValue: (v) => { selected = v; render(); },
+    reset: () => { selected = null; render(); },
+    disable
+  };
 }
 
 // ============================================================
@@ -539,4 +735,99 @@ const TeacherPrint = (function () {
 
   init();
   return { registerCarousel, registerAnswerList };
+})();
+
+// ================================================================
+// THEME TOGGLE - shared light/dark mode switch for every page that
+// loads this file (see /CLAUDE.md's "Component states/touch targets/
+// dark mode" note). Scoped to this file's own shared components only
+// (lesson-shared.css's dark-mode block) - a page's own local <style>
+// block keeps its original light styling regardless.
+//
+// The theme itself is applied synchronously here, at top-level IIFE
+// execution - this script tag has no defer/async and sits in <head>
+// (see /CLAUDE.md's <head> ordering rule), so this runs and sets
+// data-theme on <html> before <body> is even parsed, avoiding a flash
+// of the wrong theme. Only the toggle BUTTON's own DOM injection waits
+// for DOMContentLoaded, same pattern as TeacherPrint.init() above.
+// ================================================================
+const ThemeToggle = (() => {
+  const STORAGE_KEY = 'lia_theme';
+
+  // A stored choice always wins; with no stored choice yet, a page's
+  // very first paint should still match the device's own light/dark
+  // setting rather than defaulting to light regardless - same
+  // "respect what's already there" principle as index.html.
+  function preferredTheme() {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored === 'light' || stored === 'dark') return stored;
+    } catch (e) { /* private window or storage blocked - fall through to system preference */ }
+    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const btn = document.querySelector('.theme-toggle-btn');
+    if (!btn) return;
+    const sunIcon = btn.querySelector('.icon-sun');
+    const moonIcon = btn.querySelector('.icon-moon');
+    // Shows the icon for the mode a click switches TO, not the current
+    // mode - the common toggle convention (a moon while light, meaning
+    // "tap to go dark"; a sun while dark, meaning "tap to go light").
+    if (sunIcon) sunIcon.hidden = theme !== 'dark';
+    if (moonIcon) moonIcon.hidden = theme === 'dark';
+    btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+    btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+  }
+
+  let currentTheme = preferredTheme();
+  applyTheme(currentTheme);
+
+  function toggle() {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyTheme(currentTheme);
+    try { localStorage.setItem(STORAGE_KEY, currentTheme); } catch (e) { /* nothing to persist to - theme still applies for this page view */ }
+  }
+
+  // Plain, hand-authored SVG outline icons (Feather-style geometry, no
+  // external icon font/library) - deliberately not an emoji, per
+  // instruction. Both icons always exist in the DOM; applyTheme() above
+  // toggles which one is [hidden] rather than swapping innerHTML, so
+  // there's never a blank frame between them.
+  function buildButton() {
+    if (document.querySelector('.theme-toggle-btn')) return; // idempotent - never double-inject on a page that calls init() more than once
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'theme-toggle-btn';
+    btn.innerHTML = `
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>`;
+    btn.addEventListener('click', toggle);
+    document.body.prepend(btn);
+    applyTheme(currentTheme); // buildButton() can run after applyTheme() already set data-theme with no button to update yet - sync the just-created icons/aria now
+  }
+
+  function init() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', buildButton);
+    } else {
+      buildButton();
+    }
+  }
+
+  init();
+  return { toggle };
 })();

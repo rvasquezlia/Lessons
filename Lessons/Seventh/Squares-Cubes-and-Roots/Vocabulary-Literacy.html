@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7 Honors: Squares, Cubes &amp; Roots - Vocabulary &amp; Literacy</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
+  <style>
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .glossary-card {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .glossary-term { font-weight: 900; color: var(--primary); font-size: 1.1rem; margin-bottom: 6px; display: block; }
+    .glossary-def { margin: 0 0 8px 0; }
+    .glossary-example { background: #f1f5f9; border-radius: 6px; padding: 6px 10px; font-size: 0.92rem; color: #334155; }
+  </style>
+</head>
+<body>
+
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">7 Honors &middot; Squares, Cubes &amp; Roots</span>
+    <h1>Vocabulary &amp; Literacy</h1>
+    <p class="standards-line">Standards: 8.EE.A.2</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    <ul style="margin:0; padding-left:20px;">
+      <li><strong>Tab 1:</strong> glossary of every term - read it once, then use it as a reference.</li>
+      <li><strong>Tab 2:</strong> translate between plain-English phrasing and radical notation.</li>
+      <li><strong>Tab 3:</strong> a short self-check of the vocabulary.</li>
+      <li>No printable progress report here - this page is a reference and warm-up, not graded.</li>
+    </ul>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('glossary')">1. Key Vocabulary</button>
+    <button class="tab-btn" onclick="switchTab('translate')">2. Reading &amp; Writing Radical Notation</button>
+    <button class="tab-btn" onclick="switchTab('selfcheck')">3. Quick Vocabulary Check</button>
+  </nav>
+
+  <!-- TAB 1: GLOSSARY -->
+  <div id="glossary" class="panel active">
+    <div class="section-title">Key Vocabulary: Squares, Cubes &amp; Roots</div>
+    <div class="explainer-box">
+      Every term below shows up in this topic. Read through them once, then come back any time a word trips you up.
+    </div>
+    <div class="glossary-grid">
+      <div class="glossary-card">
+        <span class="glossary-term">Base</span>
+        <p class="glossary-def">The number being multiplied by itself in a square or cube.</p>
+        <div class="glossary-example">In \(7^2\), the base is 7</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Square (\(n^2\))</span>
+        <p class="glossary-def">A number multiplied by itself one time.</p>
+        <div class="glossary-example">\(6^2 = 36\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Cube (\(n^3\))</span>
+        <p class="glossary-def">A number multiplied by itself, then by itself again (three factors total).</p>
+        <div class="glossary-example">\(4^3 = 64\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Perfect Square</span>
+        <p class="glossary-def">A number that is the square of a whole number.</p>
+        <div class="glossary-example">36 is a perfect square</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Perfect Cube</span>
+        <p class="glossary-def">A number that is the cube of a whole number.</p>
+        <div class="glossary-example">64 is a perfect cube</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Radical</span>
+        <p class="glossary-def">The root symbol (\(\sqrt{\phantom{x}}\) or \(\sqrt[3]{\phantom{x}}\)), and any expression that uses it.</p>
+        <div class="glossary-example">\(\sqrt{49}\) is a radical expression</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Radicand</span>
+        <p class="glossary-def">The number underneath the radical symbol - the number a root is being taken of.</p>
+        <div class="glossary-example">In \(\sqrt{81}\), the radicand is 81</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Square Root (\(\sqrt{n}\))</span>
+        <p class="glossary-def">The "undo" of squaring: what number times itself equals \(n\)?</p>
+        <div class="glossary-example">\(\sqrt{36} = 6\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Cube Root (\(\sqrt[3]{n}\))</span>
+        <p class="glossary-def">The "undo" of cubing: what number, used as a factor three times, equals \(n\)?</p>
+        <div class="glossary-example">\(\sqrt[3]{64} = 4\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Index</span>
+        <p class="glossary-def">The small number tucked into the radical's checkmark showing which root to take - 2 (square root) is usually left off.</p>
+        <div class="glossary-example">The 3 in \(\sqrt[3]{64}\) is the index</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: READING & WRITING RADICAL NOTATION -->
+  <div id="translate" class="panel">
+    <div class="section-title">Reading &amp; Writing Radical Notation</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Translate each plain-English phrase into radical or power notation, or the other way around. You get two tries per item.
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Plain English</th><th>Notation</th></tr></thead>
+      <tbody>
+        <tr><td>"the square of 9"</td><td>\(9^2\)</td></tr>
+        <tr><td>"the cube of 5"</td><td>\(5^3\)</td></tr>
+        <tr><td>"the square root of 49"</td><td>\(\sqrt{49}\)</td></tr>
+        <tr><td>"the cube root of 27"</td><td>\(\sqrt[3]{27}\)</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:24px;">Translation Practice</h3>
+    <div id="translate-list"></div>
+  </div>
+
+  <!-- TAB 3: QUICK VOCABULARY CHECK -->
+  <div id="selfcheck" class="panel">
+    <div class="section-title">Quick Vocabulary Check</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Drag each term onto its matching <strong>definition</strong>, and onto its matching <strong>example</strong>, too - or tap a term and then tap a definition or example. A term only earns full credit once both its definition and its example are matched. There's no limit on tries.
+    </div>
+    <div class="match-wrap">
+      <div class="match-col"><div class="match-col-heading">Term</div><div id="vocab-terms"></div></div>
+      <div class="match-col"><div class="match-col-heading">Definition</div><div id="vocab-definitions"></div></div>
+      <div class="match-col"><div class="match-col-heading">Example</div><div id="vocab-examples"></div></div>
+    </div>
+    <div class="feedback-msg" id="vocabmatch-feedback"></div>
+  </div>
+</div>
+
+<script>
+  LessonSync.init('7-squares-cubes-and-roots-vocabulary-literacy');
+
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  function normalizeWord(s) {
+    return String(s || '').toLowerCase().replace(/[\s,{}()^\\]/g, '');
+  }
+
+  // ==========================================
+  // TRANSLATION PRACTICE
+  // ==========================================
+  const translateItems = [
+    { q: "Write \"the square of 8\" using an exponent.", accepted: ["8^2", "8²"], displayAnswer: "\\(8^2\\)" },
+    { q: "Write \"the cube of 6\" using an exponent.", accepted: ["6^3", "6³"], displayAnswer: "\\(6^3\\)" },
+    { q: "Write \"the square root of 81\" using a radical.", accepted: ["sqrt(81)", "√81"], displayAnswer: "\\(\\sqrt{81}\\)" },
+    { q: "Write \"the cube root of 125\" using a radical.", accepted: ["cbrt(125)", "sqrt[3](125)", "∛125"], displayAnswer: "\\(\\sqrt[3]{125}\\)" },
+    { q: "What is the radicand in \\(\\sqrt{144}\\)?", accepted: ["144"], displayAnswer: "144" },
+    { q: "What is the base in \\(9^2\\)?", accepted: ["9"], displayAnswer: "9" },
+    { q: "What is the index in \\(\\sqrt[3]{27}\\)?", accepted: ["3"], displayAnswer: "3" },
+    { q: "In words, what does \\(\\sqrt{100}\\) ask?", accepted: ["whatnumbertimesitselfequals100", "whatnumbertimesitselfequals100?"], displayAnswer: "What number times itself equals 100?" }
+  ];
+
+  function renderTranslate() {
+    const html = translateItems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <input type="text" id="tr-${i}-input" class="form-control-lg" style="max-width:220px; display:inline-block;" placeholder="Answer">
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkTranslate(${i})">Check</button>
+        <div id="tr-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('translate-list').innerHTML = html;
+    triggerMathJax();
+  }
+
+  function checkTranslate(idx) {
+    const p = translateItems[idx];
+    const val = document.getElementById(`tr-${idx}-input`).value;
+    const fb = document.getElementById(`tr-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = p.accepted.map(normalizeWord).includes(normalizeWord(val));
+    LessonCheck.check(`tr-${idx}`, correct, fb, {
+      correct: `Correct! ${p.displayAnswer}`,
+      retry: "Not quite yet. Re-read the phrase carefully and try again.",
+      reveal: `Here's the correct answer: ${p.displayAnswer}`
+    }, { label: p.q, answer: val, section: '2. Reading & Writing Radical Notation' });
+  }
+
+  // ==========================================
+  // QUICK VOCABULARY CHECK (drag-and-drop match-up - see createVocabMatch()
+  // in lesson-shared.js and /CLAUDE.md's "Standards line" section's
+  // neighboring vocabulary-check notes)
+  // ==========================================
+  // Definitions/examples are the same text as Tab 1's glossary cards, so
+  // this stays self-consistent with the reference material by construction.
+  const VOCAB_TERMS = [
+    { key: 'radicand', term: 'Radicand', def: 'The number underneath the radical symbol - the number a root is being taken of.', example: 'In \\(\\sqrt{81}\\), the radicand is 81' },
+    { key: 'index', term: 'Index', def: "The small number tucked into the radical's checkmark showing which root to take - 2 (square root) is usually left off.", example: 'The 3 in \\(\\sqrt[3]{64}\\) is the index' },
+    { key: 'perfectsquare', term: 'Perfect Square', def: 'A number that is the square of a whole number.', example: '36 is a perfect square' },
+    { key: 'perfectcube', term: 'Perfect Cube', def: 'A number that is the cube of a whole number.', example: '64 is a perfect cube' },
+    { key: 'base', term: 'Base', def: 'The number being multiplied by itself in a square or cube.', example: 'In \\(7^2\\), the base is 7' },
+    { key: 'radical', term: 'Radical', def: 'The root symbol (\\(\\sqrt{\\phantom{x}}\\) or \\(\\sqrt[3]{\\phantom{x}}\\)), and any expression that uses it.', example: '\\(\\sqrt{49}\\) is a radical expression' }
+  ];
+
+  const vocabMatch = createVocabMatch({
+    termsId: 'vocab-terms', defsId: 'vocab-definitions', exsId: 'vocab-examples',
+    feedbackId: 'vocabmatch-feedback',
+    terms: VOCAB_TERMS,
+    progressKey: 'vocabmatch', progressLabel: 'Key Vocabulary Match-Up',
+    section: '3. Quick Vocabulary Check'
+  });
+
+  renderTranslate();
+  vocabMatch.render();
+
+  // Tab 2 is a hand-written render/check function (no shared keyed
+  // registry), so the teacher answer key is hand-written too - see
+  // /CLAUDE.md's "Role differentiation on lesson pages". Tab 3 delegates
+  // to vocabMatch.reveal() instead, since the match-up widget owns its
+  // own reveal state.
+  window.revealAnswerKey = function () {
+    const fillInput = (id, feedbackId, answer) => {
+      const input = document.getElementById(id);
+      const fb = document.getElementById(feedbackId);
+      if (!input || !fb) return;
+      input.value = answer.replace(/\\\(|\\\)/g, '');
+      input.disabled = true;
+      const container = input.closest('.guided-practice');
+      const btn = container && container.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
+    };
+    translateItems.forEach((p, i) => fillInput(`tr-${i}-input`, `tr-${i}-feedback`, p.displayAnswer));
+    vocabMatch.reveal();
+    triggerMathJax();
+  };
+</script>
+</body>
+</html>

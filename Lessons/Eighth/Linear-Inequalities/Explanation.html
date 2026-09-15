@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Solving Linear Inequalities - Explanation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
+  <style>
+    /* ===== Question-ladder worked examples - see
+       Eighth/Literal-Equations/Guided-Solving-Ladder.html for the
+       original pattern this is copied from (identical class names/
+       markup shape), adapted here with a "flip check" question added to
+       every round instead of the ladder's own "factoring" question. ===== */
+    .ladder {
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 12px;
+      padding: 18px 22px;
+      margin: 24px 0;
+      box-shadow: 0 8px 20px rgba(15,23,42,0.10);
+    }
+    .ladder-formula {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 2px dashed #cbd5e1;
+    }
+    .ladder-round {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+    }
+    .ladder-round-label {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .qa { display: flex; flex-wrap: wrap; gap: 6px; padding: 3px 0; }
+    .qa .q { font-weight: 700; color: #334155; }
+    .qa .a { font-weight: 800; color: var(--primary); }
+    .qa .a.flip-yes { color: var(--error); }
+    .qa .a.flip-no { color: var(--success); }
+    .ladder-eq {
+      background: #eff6ff;
+      border: 2px solid var(--primary-light);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin: 10px 0;
+      font-size: 1.05rem;
+      text-align: center;
+    }
+    .ladder-arithmetic {
+      font-size: 0.85rem;
+      color: #64748b;
+      font-style: italic;
+      text-align: center;
+      margin: 0 0 4px 0;
+    }
+    .ladder-result {
+      font-weight: 900;
+      color: var(--primary);
+      font-size: 1.15rem;
+      text-align: center;
+      margin: 4px 0 2px 0;
+    }
+    .ladder-check {
+      font-size: 0.92rem;
+      color: #334155;
+      text-align: center;
+      margin-top: 4px;
+    }
+    .ladder-check strong { color: var(--success); }
+    .type-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-radius: 20px;
+      padding: 3px 12px;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+    .type-tag.onestep { background: #dcfce7; color: #15803d; }
+    .type-tag.multistep { background: #dbeafe; color: #1d4ed8; }
+    .type-tag.flip { background: #fee2e2; color: #b91c1c; }
+  </style>
+</head>
+<body>
+
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Algebra I &middot; Solving Linear Inequalities</span>
+    <h1>Explanation</h1>
+    <p class="standards-line">Standards: HSA.CED.A.1, HSA.REI.A.1, HSA.REI.B.3</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Read through every tab in order - each one builds on the last. Nothing here is graded; it's worked examples to study before the Practice Set.
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('basics')">1. Symbols &amp; Graphing Basics</button>
+    <button class="tab-btn" onclick="switchTab('onetwostep')">2. One-Step &amp; Two-Step</button>
+    <button class="tab-btn" onclick="switchTab('fliprule')">3. The Flip Rule</button>
+    <button class="tab-btn" onclick="switchTab('multistep')">4. Multi-Step Inequalities</button>
+    <button class="tab-btn" onclick="switchTab('applications')">5. Worked Applications</button>
+  </nav>
+
+  <!-- TAB 1: SYMBOLS & GRAPHING BASICS -->
+  <div id="basics" class="panel active">
+    <div class="section-title">Inequality Symbols &amp; Graphing Basics</div>
+    <div class="explainer-box">
+      An inequality compares two expressions instead of setting them equal. Every inequality has a <strong>solution set</strong> - usually infinitely many values - which is why we graph it on a number line instead of naming just one number.
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Symbol</th><th>Meaning</th><th>Real-World Phrase</th><th>Circle</th></tr></thead>
+      <tbody>
+        <tr><td>\(>\)</td><td>Greater than</td><td>More than, exceeds</td><td>Open</td></tr>
+        <tr><td>\(<\)</td><td>Less than</td><td>Fewer than, below</td><td>Open</td></tr>
+        <tr><td>\(\geq\)</td><td>Greater than or equal to</td><td>At least, no less than</td><td>Closed (filled)</td></tr>
+        <tr><td>\(\leq\)</td><td>Less than or equal to</td><td>At most, no more than</td><td>Closed (filled)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The Two Questions Every Graph Answers</div>
+      <p style="margin:0;"><strong>1. What kind of circle?</strong> Open (\(<\) or \(>\)) means the boundary point itself is <em>not</em> a solution. Closed/filled (\(\leq\) or \(\geq\)) means it <em>is</em> a solution.<br><strong>2. Which direction?</strong> "Greater than" points right (toward bigger numbers); "less than" points left (toward smaller numbers).</p>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Graph \(x > 3\)</div>
+      <p style="margin:0 0 6px 0;">\(>\) is strict, so \(3\) is <strong>not</strong> included &rarr; open circle at \(3\). "Greater than" points right.</p>
+      <div id="nl-example-a"></div>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Graph \(x \leq -2\)</div>
+      <p style="margin:0 0 6px 0;">\(\leq\) includes the boundary &rarr; closed (filled) circle at \(-2\). "Less than" points left.</p>
+      <div id="nl-example-b"></div>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Worked Example: Graph \(x \geq -6\)</div>
+      <p style="margin:0 0 6px 0;">\(\geq\) includes the boundary &rarr; closed circle at \(-6\). "Greater than" points right.</p>
+      <div id="nl-example-c"></div>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Reading a Graph Backwards</div>
+      <p style="margin:0;">Given a graph, work the two questions in reverse: an <strong>open</strong> circle means a strict symbol (\(<\) or \(>\)); a filled circle means \(\leq\) or \(\geq\). An arrow pointing <strong>left</strong> means "less than"; pointing <strong>right</strong> means "greater than." An open circle at \(-1\) with an arrow to the left graphs \(x < -1\).</p>
+    </div>
+  </div>
+
+  <!-- TAB 2: ONE-STEP & TWO-STEP -->
+  <div id="onetwostep" class="panel">
+    <div class="section-title">One-Step and Two-Step Inequalities</div>
+    <div class="explainer-box">
+      Solving an inequality uses the <strong>exact same inverse-operations process</strong> as solving an equation. The only thing that changes is one extra question you ask on every single step.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The Question Ladder for Inequalities (repeat as many times as needed)</div>
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Question</th><th>What it's asking</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>What's the variable I need to isolate?</td><td>Name the target letter. It doesn't change round to round.</td></tr>
+          <tr><td>2</td><td>What is preventing me from doing so, and what is it doing?</td><td>Name whatever is attached to the variable right now, and whether it's adding, subtracting, multiplying, or dividing.</td></tr>
+          <tr><td>3</td><td>What's the inverse operation to remove it?</td><td>Name the opposite operation.</td></tr>
+          <tr><td>4</td><td>Am I multiplying or dividing by a negative?</td><td><strong>The one new question.</strong> If yes, the inequality symbol flips when you apply this step. If no - including every addition/subtraction step - it never flips.</td></tr>
+        </tbody>
+      </table>
+      <p style="margin:12px 0 0 0;">Apply question 3's answer to both sides (flipping the symbol if question 4 was "yes"), simplify, and ask: <strong>"Is the variable now isolated?"</strong> If not, the whole ladder repeats on whatever is preventing it next.</p>
+    </div>
+
+    <div class="ladder">
+      <div class="ladder-formula">1. \(x + 5 > 12\) <span class="type-tag onestep">One Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(x\)</span></div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(5\), adding</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Subtraction</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-no">No - this is subtraction, so the symbol never flips</span></div>
+      </div>
+      <div class="ladder-eq">\(x + 5 - 5 > 12 - 5\)</div>
+      <div class="ladder-arithmetic">\(5 - 5\) cancels to \(0\) on the left; \(12 - 5 = 7\) on the right</div>
+      <div class="ladder-result">\(x > 7\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <div class="ladder">
+      <div class="ladder-formula">2. \(x - 6 \leq 3\) <span class="type-tag onestep">One Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(x\)</span></div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(6\), subtracting</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Addition</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-no">No - this is addition, so the symbol never flips</span></div>
+      </div>
+      <div class="ladder-eq">\(x - 6 + 6 \leq 3 + 6\)</div>
+      <div class="ladder-arithmetic">\(-6 + 6\) cancels to \(0\) on the left; \(3 + 6 = 9\) on the right</div>
+      <div class="ladder-result">\(x \leq 9\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <div class="ladder">
+      <div class="ladder-formula">3. \(3x < 21\) <span class="type-tag onestep">One Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(x\)</span></div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(3\), multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Division by \(3\)</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-no">No - \(3\) is positive, so the symbol stays the same</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{3x}{3} < \dfrac{21}{3}\)</div>
+      <div class="ladder-arithmetic">\(\dfrac{3x}{3} = x\) on the left; \(\dfrac{21}{3} = 7\) on the right</div>
+      <div class="ladder-result">\(x < 7\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <div class="ladder">
+      <div class="ladder-formula">4. \(3x - 4 < 11\) <span class="type-tag multistep">Two-Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(x\)</span></div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(4\) subtracting, and \(3\) multiplying</span></div>
+        <div class="qa"><span class="q">Which one do I undo first?</span><span class="a">\(4\) subtracting - peel off addition/subtraction before multiplication/division</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Addition</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-no">No - this is addition, so the symbol never flips</span></div>
+      </div>
+      <div class="ladder-eq">\(3x - 4 + 4 < 11 + 4\)</div>
+      <div class="ladder-arithmetic">\(-4 + 4\) cancels to \(0\) on the left; \(11 + 4 = 15\) on the right</div>
+      <div class="ladder-result">\(3x < 15\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? No. Keep going - see next round.</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2</div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(3\), multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Division by \(3\)</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-no">No - \(3\) is positive, so the symbol stays the same</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{3x}{3} < \dfrac{15}{3}\)</div>
+      <div class="ladder-arithmetic">\(\dfrac{3x}{3} = x\) on the left; \(\dfrac{15}{3} = 5\) on the right</div>
+      <div class="ladder-result">\(x < 5\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <div class="ladder">
+      <div class="ladder-formula">5. \(2x + 7 \geq 15\) <span class="type-tag multistep">Two-Step</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(x\)</span></div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(7\) adding, and \(2\) multiplying</span></div>
+        <div class="qa"><span class="q">Which one do I undo first?</span><span class="a">\(7\) adding</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Subtraction</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-no">No - this is subtraction, so the symbol never flips</span></div>
+      </div>
+      <div class="ladder-eq">\(2x + 7 - 7 \geq 15 - 7\)</div>
+      <div class="ladder-arithmetic">\(7 - 7\) cancels to \(0\) on the left; \(15 - 7 = 8\) on the right</div>
+      <div class="ladder-result">\(2x \geq 8\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? No. Keep going - see next round.</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2</div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(2\), multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Division by \(2\)</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-no">No - \(2\) is positive, so the symbol stays the same</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{2x}{2} \geq \dfrac{8}{2}\)</div>
+      <div class="ladder-arithmetic">\(\dfrac{2x}{2} = x\) on the left; \(\dfrac{8}{2} = 4\) on the right</div>
+      <div class="ladder-result">\(x \geq 4\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? <strong>Yes.</strong></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: THE FLIP RULE -->
+  <div id="fliprule" class="panel">
+    <div class="section-title">The Flip Rule: Multiplying or Dividing by a Negative</div>
+    <div class="explainer-box">
+      This is the <strong>one rule that makes inequalities different from equations.</strong> Whenever you multiply or divide both sides of an inequality by a <strong>negative</strong> number, you must <strong>flip the direction</strong> of the inequality symbol. Forgetting this single step is the most common mistake in this whole topic.
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">Why Does the Symbol Have to Flip?</div>
+      <p style="margin:0 0 8px 0;">Start with a true statement: \(4 < 9\). Multiply both sides by \(-1\) without changing the symbol: \(-4 < -9\). Is that true? No - \(-4\) is actually <strong>greater</strong> than \(-9\) on the number line. To keep the statement true, the symbol has to flip: \(-4 > -9\). Multiplying by a negative number reverses which side is "bigger," so the inequality symbol has to reverse too.</p>
+    </div>
+
+    <div class="ladder">
+      <div class="ladder-formula">1. \(-2x > 8\) <span class="type-tag flip">Flip Required</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(x\)</span></div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(-2\), multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Division by \(-2\)</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-yes">Yes - \(-2\) is negative, so the symbol flips</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{-2x}{-2} < \dfrac{8}{-2}\) <span style="color:#b91c1c; font-weight:800; font-size:0.85rem;">(flipped from \(>\) to \(<\))</span></div>
+      <div class="ladder-arithmetic">\(\dfrac{-2x}{-2} = x\) on the left; \(\dfrac{8}{-2} = -4\) on the right</div>
+      <div class="ladder-result">\(x < -4\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? <strong>Yes.</strong></div>
+      <div class="ladder-check" style="margin-top:10px; color:#b45309;"><strong>Check it:</strong> try \(x = -5\) (should work, since \(-5 < -4\)): \(-2(-5) = 10 > 8\). True! Try \(x = -3\) (should <em>not</em> work, since \(-3\) is not less than \(-4\)): \(-2(-3) = 6 > 8\)? False - correctly excluded.</div>
+    </div>
+
+    <div class="ladder">
+      <div class="ladder-formula">2. \(-x \leq 5\) <span class="type-tag flip">Flip Required</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(x\)</span></div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(-1\), multiplying (\(-x\) means \(-1 \cdot x\))</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Multiply both sides by \(-1\)</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-yes">Yes - \(-1\) is negative, so the symbol flips</span></div>
+      </div>
+      <div class="ladder-eq">\(-1(-x) \geq -1(5)\) <span style="color:#b91c1c; font-weight:800; font-size:0.85rem;">(flipped from \(\leq\) to \(\geq\))</span></div>
+      <div class="ladder-arithmetic">\(-1 \times -x = x\) on the left; \(-1 \times 5 = -5\) on the right</div>
+      <div class="ladder-result">\(x \geq -5\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <div class="ladder">
+      <div class="ladder-formula">3. \(-3x + 4 > 19\) <span class="type-tag flip">Flip Required</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(x\)</span></div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(4\) adding, and \(-3\) multiplying</span></div>
+        <div class="qa"><span class="q">Which one do I undo first?</span><span class="a">\(4\) adding</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Subtraction</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-no">No - this is subtraction, so the symbol never flips here</span></div>
+      </div>
+      <div class="ladder-eq">\(-3x + 4 - 4 > 19 - 4\)</div>
+      <div class="ladder-arithmetic">\(4 - 4\) cancels to \(0\) on the left; \(19 - 4 = 15\) on the right</div>
+      <div class="ladder-result">\(-3x > 15\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? No. Keep going - see next round.</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2</div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(-3\), multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Division by \(-3\)</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-yes">Yes - \(-3\) is negative, so the symbol flips</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{-3x}{-3} < \dfrac{15}{-3}\) <span style="color:#b91c1c; font-weight:800; font-size:0.85rem;">(flipped from \(>\) to \(<\))</span></div>
+      <div class="ladder-arithmetic">\(\dfrac{-3x}{-3} = x\) on the left; \(\dfrac{15}{-3} = -5\) on the right</div>
+      <div class="ladder-result">\(x < -5\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <div class="notebook-box" style="background: rgba(239, 68, 68, 0.06); border-color: var(--error);">
+      <div class="notebook-header" style="color: var(--error);">The Mistake to Avoid</div>
+      <p style="margin:0;">Notice that Example 3's Round 1 asked the flip-check question too, and the answer was <strong>no</strong> - subtracting \(4\) never flips anything. The flip only ever happens on a multiplication/division-by-a-negative round. Ask the question on <em>every</em> round out of habit, even ones where you're sure the answer is no - that habit is exactly what prevents the single most common mistake in this topic.</p>
+    </div>
+  </div>
+
+  <!-- TAB 4: MULTI-STEP INEQUALITIES -->
+  <div id="multistep" class="panel">
+    <div class="section-title">Multi-Step Inequalities</div>
+    <div class="explainer-box">
+      Multi-step inequalities combine everything so far: distribute, combine like terms, collect the variable on one side, and isolate it - watching on every step for a multiplication or division by a negative.
+    </div>
+
+    <div class="ladder">
+      <div class="ladder-formula">1. \(2(x + 3) < 4x - 2\) <span class="type-tag multistep">Variable on Both Sides</span></div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1 - Distribute First</div>
+        <div class="qa"><span class="q">Is there a quantity to distribute before I can even see what's preventing \(x\)?</span><span class="a">Yes - distribute the \(2\) into \((x+3)\)</span></div>
+      </div>
+      <div class="ladder-eq">\(2x + 6 < 4x - 2\)</div>
+      <div class="ladder-arithmetic">\(2 \times x = 2x\), and \(2 \times 3 = 6\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? No - it's on <em>both</em> sides now. Keep going - see next round.</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2</div>
+        <div class="qa"><span class="q">What's the variable I need to isolate?</span><span class="a">\(x\)</span></div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(4x\) on the right side - move it over first</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Subtract \(4x\) from both sides</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-no">No - this is subtraction, so the symbol never flips</span></div>
+      </div>
+      <div class="ladder-eq">\(2x + 6 - 4x < 4x - 2 - 4x\)</div>
+      <div class="ladder-arithmetic">\(2x - 4x = -2x\) on the left; \(4x - 4x\) cancels to \(0\) on the right</div>
+      <div class="ladder-result">\(-2x + 6 < -2\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? No. Keep going - see next round.</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 3</div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(6\), adding</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Subtraction</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-no">No - this is subtraction, so the symbol never flips</span></div>
+      </div>
+      <div class="ladder-eq">\(-2x + 6 - 6 < -2 - 6\)</div>
+      <div class="ladder-arithmetic">\(6 - 6\) cancels to \(0\) on the left; \(-2 - 6 = -8\) on the right</div>
+      <div class="ladder-result">\(-2x < -8\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? No. Keep going - see next round.</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 4</div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(-2\), multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Division by \(-2\)</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-yes">Yes - \(-2\) is negative, so the symbol flips</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{-2x}{-2} > \dfrac{-8}{-2}\) <span style="color:#b91c1c; font-weight:800; font-size:0.85rem;">(flipped from \(<\) to \(>\))</span></div>
+      <div class="ladder-arithmetic">\(\dfrac{-2x}{-2} = x\) on the left; \(\dfrac{-8}{-2} = 4\) on the right</div>
+      <div class="ladder-result">\(x > 4\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? <strong>Yes.</strong></div>
+    </div>
+
+    <div class="challenge-box">
+      <h3 style="margin-top:0; color:#b45309;">Try It Yourself First: Distribute, Combine, and Flip</h3>
+      <p style="margin:0 0 10px 0;"><strong>Problem:</strong> \(-3(x - 2) + 5 \leq 2x + 17\)</p>
+      <p style="margin:0 0 10px 0;">Work through the Question Ladder on paper first - distribute, combine like terms, then isolate \(x\) exactly like Example 1 above. Reveal one round at a time to check your own work.</p>
+      <div id="ms-steps" style="margin-top:14px;"></div>
+      <div style="margin-top:14px;">
+        <button class="btn-lg" id="ms-reveal-btn" onclick="revealMsStep()">Reveal Next Round</button>
+        <button class="btn-secondary" onclick="resetMsStep()">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 5: WORKED APPLICATIONS -->
+  <div id="applications" class="panel">
+    <div class="section-title">Worked Applications: Real-World Inequalities</div>
+    <div class="explainer-box">
+      Word problems that use "at least," "at most," "more than," or "fewer than" are always inequalities, not equations - there's a limit or requirement, not one exact amount.
+    </div>
+
+    <div class="ladder">
+      <div class="ladder-formula" style="text-align:left;">Worked Example: A Budget Limit ("At Most") <span class="type-tag onestep">Two-Step</span></div>
+      <p style="margin:6px 0 10px 0;">A school trip costs \(\$45\) per student, plus a flat \(\$150\) bus fee. The total budget is <strong>at most \(\$600\)</strong>. How many students, \(n\), can go?</p>
+      <div class="qa"><span class="q"><strong>Define:</strong> what does the variable represent?</span><span class="a">\(n\) = the number of students who go</span></div>
+      <div class="qa"><span class="q"><strong>Write it:</strong> what phrase tells me the symbol?</span><span class="a">"at most" means \(\leq\)</span></div>
+      <div class="ladder-eq">\(45n + 150 \leq 600\)</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(150\), adding</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Subtraction</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-no">No - this is subtraction, so the symbol never flips</span></div>
+      </div>
+      <div class="ladder-eq">\(45n + 150 - 150 \leq 600 - 150\)</div>
+      <div class="ladder-arithmetic">\(150 - 150\) cancels to \(0\) on the left; \(600 - 150 = 450\) on the right</div>
+      <div class="ladder-result">\(45n \leq 450\)</div>
+      <div class="ladder-check">Is \(n\) now isolated? No. Keep going - see next round.</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2</div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(45\), multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Division by \(45\)</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-no">No - \(45\) is positive, so the symbol stays the same</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{45n}{45} \leq \dfrac{450}{45}\)</div>
+      <div class="ladder-arithmetic">\(\dfrac{45n}{45} = n\) on the left; \(\dfrac{450}{45} = 10\) on the right</div>
+      <div class="ladder-result">\(n \leq 10\)</div>
+      <div class="ladder-check">Is \(n\) now isolated? <strong>Yes.</strong></div>
+      <div class="ladder-check" style="margin-top:10px; color:#b45309;"><strong>Interpret:</strong> at most \(\mathbf{10}\) students can go on the trip.</div>
+    </div>
+
+    <div class="ladder">
+      <div class="ladder-formula" style="text-align:left;">Worked Example: A Minimum Requirement ("At Least") <span class="type-tag onestep">Two-Step</span></div>
+      <p style="margin:6px 0 10px 0;">You need <strong>at least 20 points</strong> to pass a class contest. You already have 12 points, and each additional assignment is worth 4 points. How many more assignments, \(x\), do you need?</p>
+      <div class="qa"><span class="q"><strong>Define:</strong> what does the variable represent?</span><span class="a">\(x\) = the number of additional assignments</span></div>
+      <div class="qa"><span class="q"><strong>Write it:</strong> what phrase tells me the symbol?</span><span class="a">"at least" means \(\geq\)</span></div>
+      <div class="ladder-eq">\(12 + 4x \geq 20\)</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 1</div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(12\), adding</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Subtraction</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-no">No - this is subtraction, so the symbol never flips</span></div>
+      </div>
+      <div class="ladder-eq">\(12 + 4x - 12 \geq 20 - 12\)</div>
+      <div class="ladder-arithmetic">\(12 - 12\) cancels to \(0\) on the left; \(20 - 12 = 8\) on the right</div>
+      <div class="ladder-result">\(4x \geq 8\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? No. Keep going - see next round.</div>
+      <div class="ladder-round">
+        <div class="ladder-round-label">Round 2</div>
+        <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\(4\), multiplying</span></div>
+        <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Division by \(4\)</span></div>
+        <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-no">No - \(4\) is positive, so the symbol stays the same</span></div>
+      </div>
+      <div class="ladder-eq">\(\dfrac{4x}{4} \geq \dfrac{8}{4}\)</div>
+      <div class="ladder-arithmetic">\(\dfrac{4x}{4} = x\) on the left; \(\dfrac{8}{4} = 2\) on the right</div>
+      <div class="ladder-result">\(x \geq 2\)</div>
+      <div class="ladder-check">Is \(x\) now isolated? <strong>Yes.</strong></div>
+      <div class="ladder-check" style="margin-top:10px; color:#b45309;"><strong>Interpret:</strong> you need at least \(\mathbf{2}\) more assignments.</div>
+    </div>
+
+    <div class="notebook-box">
+      <div class="notebook-header">The 4-Step Method for Word Problems</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Define:</strong> what does the variable represent, and what are its units?</li>
+        <li><strong>Write:</strong> find the limit/requirement phrase and translate it into an inequality.</li>
+        <li><strong>Solve:</strong> isolate the variable, watching for the flip rule.</li>
+        <li><strong>Interpret:</strong> answer the actual question in a full sentence, with units.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  LessonSync.init('8-linear-inequalities-explanation');
+
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // ==========================================
+  // NUMBER-LINE SVG (static diagrams, fixed -10..10 range - every boundary
+  // value on this page is a whole number in that range, so a fixed range
+  // keeps this simple; Practice-Set.html defines its own identical copy
+  // for the same reason every small helper on this site is duplicated
+  // per-page, not shared - see /CLAUDE.md's "Visual math input" note on
+  // readMathField()/normalizeExpr() being copied per page).
+  // ==========================================
+  function numberLineSvg(boundary, type, direction) {
+    const min = -10, max = 10, width = 480, height = 70, padX = 20;
+    const usableW = width - padX * 2;
+    const scale = (n) => padX + ((n - min) / (max - min)) * usableW;
+    const y = 36;
+    let ticks = '';
+    for (let n = min; n <= max; n++) {
+      const x = scale(n);
+      const major = n % 5 === 0;
+      ticks += `<line x1="${x}" y1="${y - (major ? 8 : 5)}" x2="${x}" y2="${y + (major ? 8 : 5)}" stroke="#64748b" stroke-width="${major ? 2 : 1}"/>`;
+      if (major) ticks += `<text x="${x}" y="${y + 24}" font-size="12" text-anchor="middle" fill="#334155">${n}</text>`;
+    }
+    const bx = scale(boundary);
+    const rayX2 = direction === 'right' ? scale(max) : scale(min);
+    const ray = `<line x1="${bx}" y1="${y}" x2="${rayX2}" y2="${y}" stroke="#1e3a8a" stroke-width="5" stroke-linecap="round"/>`;
+    const arrowPoints = direction === 'right'
+      ? `${rayX2 - 10},${y - 7} ${rayX2},${y} ${rayX2 - 10},${y + 7}`
+      : `${rayX2 + 10},${y - 7} ${rayX2},${y} ${rayX2 + 10},${y + 7}`;
+    const arrow = `<polygon points="${arrowPoints}" fill="#1e3a8a"/>`;
+    const circle = type === 'closed'
+      ? `<circle cx="${bx}" cy="${y}" r="7" fill="#1e3a8a" stroke="#1e3a8a" stroke-width="2"/>`
+      : `<circle cx="${bx}" cy="${y}" r="7" fill="#ffffff" stroke="#1e3a8a" stroke-width="2.5"/>`;
+    return `<svg viewBox="0 0 ${width} ${height}" style="width:100%; max-width:480px; display:block; margin:10px auto;">
+      <line x1="${padX}" y1="${y}" x2="${width - padX}" y2="${y}" stroke="#cbd5e1" stroke-width="2"/>
+      ${ticks}${ray}${arrow}${circle}
+    </svg>`;
+  }
+
+  document.getElementById('nl-example-a').innerHTML = numberLineSvg(3, 'open', 'right');
+  document.getElementById('nl-example-b').innerHTML = numberLineSvg(-2, 'closed', 'left');
+  document.getElementById('nl-example-c').innerHTML = numberLineSvg(-6, 'closed', 'right');
+
+  // ==========================================
+  // MULTI-STEP FLIP-RULE STEP-REVEAL
+  // ==========================================
+  const msSteps = [
+    `<div class="ladder-round">
+      <div class="ladder-round-label">Round 1 - Distribute First</div>
+      <div class="qa"><span class="q">Is there a quantity to distribute before I can see what's preventing \\(x\\)?</span><span class="a">Yes - distribute the \\(-3\\) into \\((x-2)\\)</span></div>
+    </div>
+    <div class="ladder-eq">\\(-3x + 6 + 5 \\leq 2x + 17\\)</div>
+    <div class="ladder-arithmetic">\\(-3 \\times x = -3x\\), and \\(-3 \\times -2 = +6\\)</div>
+    <div class="ladder-check">Is \\(x\\) now isolated? No. Keep going - see next round.</div>`,
+    `<div class="ladder-round">
+      <div class="ladder-round-label">Round 2 - Combine Like Terms</div>
+      <div class="qa"><span class="q">Are there like terms to combine before continuing?</span><span class="a">Yes - combine \\(6\\) and \\(5\\) on the left</span></div>
+    </div>
+    <div class="ladder-eq">\\(-3x + 11 \\leq 2x + 17\\)</div>
+    <div class="ladder-arithmetic">\\(6 + 5 = 11\\) on the left</div>
+    <div class="ladder-check">Is \\(x\\) now isolated? No - it's on both sides. Keep going - see next round.</div>`,
+    `<div class="ladder-round">
+      <div class="ladder-round-label">Round 3</div>
+      <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\\(2x\\) on the right side</span></div>
+      <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Subtract \\(2x\\) from both sides</span></div>
+      <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-no">No - this is subtraction, so the symbol never flips</span></div>
+    </div>
+    <div class="ladder-eq">\\(-3x + 11 - 2x \\leq 2x + 17 - 2x\\)</div>
+    <div class="ladder-arithmetic">\\(-3x - 2x = -5x\\) on the left; \\(2x - 2x\\) cancels to \\(0\\) on the right</div>
+    <div class="ladder-result">\\(-5x + 11 \\leq 17\\)</div>
+    <div class="ladder-check">Is \\(x\\) now isolated? No. Keep going - see next round.</div>`,
+    `<div class="ladder-round">
+      <div class="ladder-round-label">Round 4</div>
+      <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\\(11\\), adding</span></div>
+      <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Subtraction</span></div>
+      <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-no">No - this is subtraction, so the symbol never flips</span></div>
+    </div>
+    <div class="ladder-eq">\\(-5x + 11 - 11 \\leq 17 - 11\\)</div>
+    <div class="ladder-arithmetic">\\(11 - 11\\) cancels to \\(0\\) on the left; \\(17 - 11 = 6\\) on the right</div>
+    <div class="ladder-result">\\(-5x \\leq 6\\)</div>
+    <div class="ladder-check">Is \\(x\\) now isolated? No. Keep going - see next round.</div>`,
+    `<div class="ladder-round">
+      <div class="ladder-round-label">Round 5</div>
+      <div class="qa"><span class="q">What is preventing me, and what is it doing?</span><span class="a">\\(-5\\), multiplying</span></div>
+      <div class="qa"><span class="q">What's the inverse operation?</span><span class="a">Division by \\(-5\\)</span></div>
+      <div class="qa"><span class="q">Am I multiplying or dividing by a negative?</span><span class="a flip-yes">Yes - \\(-5\\) is negative, so the symbol flips</span></div>
+    </div>
+    <div class="ladder-eq">\\(\\dfrac{-5x}{-5} \\geq \\dfrac{6}{-5}\\) <span style="color:#b91c1c; font-weight:800; font-size:0.85rem;">(flipped from \\(\\leq\\) to \\(\\geq\\))</span></div>
+    <div class="ladder-arithmetic">\\(\\dfrac{-5x}{-5} = x\\) on the left; \\(\\dfrac{6}{-5} = -1.2\\) on the right</div>
+    <div class="ladder-result">\\(x \\geq -1.2\\)</div>
+    <div class="ladder-check">Is \\(x\\) now isolated? <strong>Yes.</strong></div>`
+  ];
+  let msStepCount = 0;
+  function renderMsSteps() {
+    const html = msSteps.slice(0, msStepCount).join('');
+    document.getElementById('ms-steps').innerHTML = html;
+    const btn = document.getElementById('ms-reveal-btn');
+    if (btn) {
+      const done = msStepCount >= msSteps.length;
+      btn.textContent = done ? 'All rounds revealed' : 'Reveal Next Round';
+      btn.disabled = done;
+    }
+    triggerMathJax();
+  }
+  function revealMsStep() {
+    if (msStepCount < msSteps.length) { msStepCount++; renderMsSteps(); }
+  }
+  function resetMsStep() { msStepCount = 0; renderMsSteps(); }
+
+  // No graded problems on this page and no shared listRegistry - a
+  // worked-example page shows the same fully-solved content to a teacher
+  // and a student alike, so there's nothing for window.revealAnswerKey to
+  // fill in (see /CLAUDE.md's "Explanation is gated too" note).
+</script>
+</body>
+</html>

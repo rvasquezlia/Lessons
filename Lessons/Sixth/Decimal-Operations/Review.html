@@ -22,6 +22,14 @@
 
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
   <style>
     .glossary-grid {
       display: grid;
@@ -54,7 +62,23 @@
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -62,12 +86,13 @@
     </div>
     <span class="badge">Decimal Operations &middot; Review</span>
     <h1>Review: Place Value &amp; Whole-Number Operations</h1>
+    <p class="standards-line">Standards: 6.NS.B.2, 6.NS.B.3</p>
     <p class="subtitle">Everything you need to remember before we start Decimal Operations</p>
   </header>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Nothing here is graded &ndash; this is a warm-up so old, shaky knowledge doesn't get in the way of new learning. Work through the tabs in order: vocabulary first, then place value, then the four operations, then a short practice check so you can see for yourself what's solid and what needs another look. Come back to any tab as often as you like, even after we've started the real lesson.
+    Nothing here is graded &ndash; this is a warm-up so old, shaky knowledge doesn't get in the way of new learning. Work through the tabs in order: vocabulary first, then place value, then the four operations, then a short practice check so you can see for yourself what's solid and what needs another look. Come back to any tab as often as you like, even after we've started the real lesson. Your teacher can see which tabs you opened and whether you reached the end, so it's worth actually doing.
   </div>
 
   <nav class="nav-tabs">
@@ -292,9 +317,11 @@
     <div class="challenge-box">
       <h3 style="margin-top:0; color:#b45309;">Step-by-Step: A Harder Multiplication</h3>
       <p style="margin:0 0 10px 0;"><strong>Problem:</strong> \(47 \times 26\)</p>
-      <button class="btn-lg" onclick="revealOpsStep()">Reveal Next Step</button>
-      <button class="btn-secondary" onclick="resetOpsStep()">Reset</button>
       <div id="ops-steps" style="margin-top:14px;"></div>
+      <div style="margin-top:14px;">
+        <button class="btn-lg" id="ops-reveal-btn" onclick="revealOpsStep()">Reveal Next Step</button>
+        <button class="btn-secondary" onclick="resetOpsStep()">Reset</button>
+      </div>
     </div>
   </div>
 
@@ -350,6 +377,8 @@
 </div>
 
 <script>
+  LessonSync.init('6-decimal-operations-review');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -393,6 +422,12 @@
   function renderOpsSteps() {
     const html = opsSteps.slice(0, opsStepCount).map(s => `<div class="step-item visible">${s}</div>`).join('');
     document.getElementById('ops-steps').innerHTML = html;
+    const btn = document.getElementById('ops-reveal-btn');
+    if (btn) {
+      const done = opsStepCount >= opsSteps.length;
+      btn.textContent = done ? 'All steps revealed' : 'Reveal Next Step';
+      btn.disabled = done;
+    }
     triggerMathJax();
   }
   function revealOpsStep() {
@@ -404,9 +439,10 @@
   // GENERIC CHECK-STYLE PRACTICE LIST (2 tries, then reveal)
   // ==========================================
   const checkListRegistry = {};
+  window.listRegistry = checkListRegistry; // read by lesson-auth.js's teacher answer-key view
 
-  function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
-    checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg, section) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg, section: section || '5. Are You Ready?' };
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
@@ -436,7 +472,7 @@
       correct: `Correct! ${p.displayAnswer || ('The answer is ' + p.a + '.')}`,
       retry: cfg.retry,
       reveal: `Here's the correct answer: ${p.displayAnswer || p.a}`
-    });
+    }, { label: p.label || p.q.replace(/\\\(|\\\)/g, ''), answer: val, section: cfg.section });
   }
 
   // ==========================================
@@ -448,7 +484,7 @@
     { q: "Which is greater: 7.4 or 7.36? Type the larger number.", a: 7.4, numeric: true, tol: 0.001 },
     { q: "Write 2,000 + 300 + 40 + 6 in standard form.", a: 2346, numeric: true, tol: 0 }
   ];
-  renderCheckList('pv-practice-list', pvPractice, 'pv', "Not quite yet. Re-check which place value column that digit sits in, then try again.");
+  renderCheckList('pv-practice-list', pvPractice, 'pv', "Not quite yet. Re-check which place value column that digit sits in, then try again.", "5. Are You Ready? - Place Value");
 
   const addsubPractice = [
     { q: "\\(468 + 275\\)", a: 743, numeric: true, tol: 0 },
@@ -456,7 +492,7 @@
     { q: "\\(1{,}045 + 987\\)", a: 2032, numeric: true, tol: 0 },
     { q: "\\(3{,}200 - 1{,}465\\)", a: 1735, numeric: true, tol: 0 }
   ];
-  renderCheckList('addsub-practice-list', addsubPractice, 'addsub', "Not quite yet. Line up your columns by place value, and double check every carry or borrow.");
+  renderCheckList('addsub-practice-list', addsubPractice, 'addsub', "Not quite yet. Line up your columns by place value, and double check every carry or borrow.", "5. Are You Ready? - Whole-Number Operations");
 
   const multdivPractice = [
     { q: "\\(36 \\times 24\\)", a: 864, numeric: true, tol: 0 },
@@ -464,7 +500,7 @@
     { q: "\\(624 \\div 8\\)", a: 78, numeric: true, tol: 0 },
     { q: "\\(455 \\div 5\\)", a: 91, numeric: true, tol: 0 }
   ];
-  renderCheckList('multdiv-practice-list', multdivPractice, 'multdiv', "Not quite yet. Walk back through the steps one at a time - for multiplication, check each partial product; for division, check each divide-multiply-subtract-bring down cycle.");
+  renderCheckList('multdiv-practice-list', multdivPractice, 'multdiv', "Not quite yet. Walk back through the steps one at a time - for multiplication, check each partial product; for division, check each divide-multiply-subtract-bring down cycle.", "5. Are You Ready? - Whole-Number Operations");
 </script>
 </body>
 </html>

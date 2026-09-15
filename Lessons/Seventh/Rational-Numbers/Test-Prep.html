@@ -20,12 +20,38 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin. Your progress will be saved to your account.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -33,17 +59,17 @@
     </div>
     <span class="badge">Rational Numbers - Test Prep</span>
     <h1>Test Prep: Understanding Rational Numbers</h1>
+    <p class="standards-line">Standards: 7.NS.A.1b, 7.NS.A.1c, 7.NS.A.1d, 7.NS.A.2a, 7.NS.A.2b, 7.NS.A.2c, 7.NS.A.2d</p>
   </header>
 
   <div class="progress-bar">
     <label for="student-name">Student Name:</label>
     <input type="text" id="student-name" placeholder="Type your full name">
-    <button class="btn-print" onclick="printProgressReport('Pre-Algebra 7 - Rational Numbers Test Prep')">Print My Progress</button>
   </div>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Work tabs 1-3 in order (2 tries + reveal). Tab 4 is a graded printable check (nothing revealed). Then print your progress.
+    Work tabs 1-3 in order (2 tries + reveal). Tab 4 is a graded printable check (nothing revealed).
   </div>
 
   <nav class="nav-tabs">
@@ -111,11 +137,7 @@
 
     <div class="challenge-box" style="margin-top:20px;">
       <p style="margin-top:0;">Jordan says \(0.\overline{3}\) is not exactly equal to \(\dfrac{1}{3}\) - just really close to it. Is Jordan correct?</p>
-      <select id="audit-choice" class="form-control-lg" style="max-width:260px;">
-        <option value="">Select...</option>
-        <option value="correct">Jordan is correct</option>
-        <option value="incorrect">Jordan is incorrect</option>
-      </select>
+      <div id="audit-choice" class="card-select"></div>
       <button class="btn-lg" style="margin-top:14px;" onclick="checkAudit()">Submit</button>
       <div id="audit-feedback" class="feedback-msg"></div>
     </div>
@@ -148,20 +170,14 @@
     <div class="step-box">
       <p><strong>1.</strong> Which set of numbers includes fractions, terminating decimals, and repeating decimals, but does NOT include numbers like \(\pi\)?<br>
       A. Whole Numbers&nbsp;&nbsp; B. Integers&nbsp;&nbsp; C. Rational Numbers&nbsp;&nbsp; D. Irrational Numbers</p>
-      <select id="qc-a0" class="form-control-lg" style="max-width:150px;">
-        <option value="">Choose...</option>
-        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
-      </select>
+      <div id="qc-a0" class="card-select"></div>
       <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('a', 0)">Check</button>
       <div id="qc-a0-feedback" class="feedback-msg" style="margin-top:8px;"></div>
     </div>
     <div class="step-box" style="margin-top:16px;">
       <p><strong>2.</strong> Which decimal represents an irrational number?<br>
       A. \(0.75\)&nbsp;&nbsp; B. \(0.333\ldots\)&nbsp;&nbsp; C. \(3.14159265358979\ldots\) (never repeats)&nbsp;&nbsp; D. \(0.125\)</p>
-      <select id="qc-a1" class="form-control-lg" style="max-width:150px;">
-        <option value="">Choose...</option>
-        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
-      </select>
+      <div id="qc-a1" class="card-select"></div>
       <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('a', 1)">Check</button>
       <div id="qc-a1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
     </div>
@@ -169,10 +185,7 @@
       <p><strong>3.</strong> The number line shows a point between 0 and 1. Which fraction does it represent?</p>
       <div id="qc-a2-numberline"></div>
       <p style="margin:0;">A. \(\dfrac{1}{6}\)&nbsp;&nbsp; B. \(\dfrac{3}{5}\)&nbsp;&nbsp; C. \(\dfrac{5}{6}\)&nbsp;&nbsp; D. \(\dfrac{2}{3}\)</p>
-      <select id="qc-a3" class="form-control-lg" style="max-width:150px;">
-        <option value="">Choose...</option>
-        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
-      </select>
+      <div id="qc-a3" class="card-select"></div>
       <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('a', 3)">Check</button>
       <div id="qc-a3-feedback" class="feedback-msg" style="margin-top:8px;"></div>
     </div>
@@ -186,17 +199,14 @@
     </div>
     <div class="step-box" style="margin-top:16px;">
       <p><strong>5.</strong> Convert \(0.45\) to a fraction in simplest form.</p>
-      <input type="text" id="qc-b1" class="form-control-lg" style="max-width:200px;" placeholder="e.g. 3/5">
+      <math-field id="qc-b1" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="\text{e.g. 3/5}"></math-field>
       <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('b', 1)">Check</button>
       <div id="qc-b1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
     </div>
     <div class="step-box" style="margin-top:16px;">
       <p><strong>6.</strong> Which fraction is equal to \(0.1\overline{6}\) (that is, \(0.16666\ldots\))?<br>
       A. \(\dfrac{1}{16}\)&nbsp;&nbsp; B. \(\dfrac{1}{6}\)&nbsp;&nbsp; C. \(\dfrac{5}{6}\)&nbsp;&nbsp; D. \(\dfrac{1}{60}\)</p>
-      <select id="qc-b2" class="form-control-lg" style="max-width:150px;">
-        <option value="">Choose...</option>
-        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
-      </select>
+      <div id="qc-b2" class="card-select"></div>
       <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('b', 2)">Check</button>
       <div id="qc-b2-feedback" class="feedback-msg" style="margin-top:8px;"></div>
     </div>
@@ -210,7 +220,7 @@
     </div>
     <div class="step-box" style="margin-top:16px;">
       <p><strong>8.</strong> \(\dfrac{3}{4} - \dfrac{5}{12} = \) ? (fraction, simplest form)</p>
-      <input type="text" id="qc-c1" class="form-control-lg" style="max-width:200px;" placeholder="Answer">
+      <math-field id="qc-c1" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="\text{Answer}"></math-field>
       <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkQC('c', 1)">Check</button>
       <div id="qc-c1-feedback" class="feedback-msg" style="margin-top:8px;"></div>
     </div>
@@ -240,6 +250,8 @@
 </div>
 
 <script>
+  LessonSync.init('7-rational-numbers-test-prep');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -258,6 +270,45 @@
     return String(s || '').toLowerCase().replace(/\s+/g, '');
   }
 
+  // ASCIIMath always double-parenthesizes every fraction (e.g. \dfrac{5}{12}
+  // reads back as "(5)/(12)"), so a typed math-field answer needs its
+  // redundant parens stripped before comparing against a plain "5/12" in
+  // accepted[] - see /CLAUDE.md's "Visual math input" note.
+  function stripRedundantParens(s) {
+    let prev;
+    do {
+      prev = s;
+      s = s.replace(/\(([^()+-]+)\)/g, '$1');
+    } while (s !== prev);
+    return s;
+  }
+
+  function normalizeExpr(s) {
+    return stripRedundantParens(normalizeFrac(s));
+  }
+
+  function answerMatches(val, accepted) {
+    const norm = normalizeExpr(val);
+    return (accepted || []).some((a) => normalizeExpr(a) === norm);
+  }
+
+  // Reads a <math-field>'s answer as ASCIIMath text, guarded against the
+  // MathLive script never loading (blocked network, ad blocker, cold CDN
+  // failure).
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
+  // Tab 3 mixes card-select multiple-choice, plain <input> (simple numbers/
+  // symbols), and <math-field> (fractions) under one id scheme - read
+  // whichever one is actually there.
+  const qcCardSelects = {};
+  function readAnswerField(id) {
+    if (qcCardSelects[id]) return qcCardSelects[id].getValue() || '';
+    const el = document.getElementById(id);
+    return el.tagName === 'MATH-FIELD' ? readMathField(el) : el.value;
+  }
+
   // ==========================================
   // TAB 1: CONCEPT REVIEW
   // ==========================================
@@ -271,21 +322,22 @@
     const html = cuProblems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
-        <input type="text" id="cu-${i}-input" class="form-control-lg" style="max-width:160px; display:inline-block;" placeholder="Answer">
+        <math-field id="cu-${i}-input" class="form-control-lg" style="max-width:190px; display:inline-block;" placeholder="\\text{Answer}"></math-field>
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkCU(${i})">Check</button>
         <div id="cu-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
     `).join('');
     document.getElementById('cu-list').innerHTML = html;
     cuProblems.forEach((p, i) => LessonProgress.preRegister(`cu-${i}`, `1. Concept Review #${i + 1}`, '1. Concept Review'));
+    triggerMathJax();
   }
   renderCU();
   function checkCU(idx) {
     const p = cuProblems[idx];
-    const raw = document.getElementById(`cu-${idx}-input`).value;
+    const raw = readMathField(document.getElementById(`cu-${idx}-input`));
     const fb = document.getElementById(`cu-${idx}-feedback`);
     if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
-    const correct = p.a !== undefined ? LessonCheck.numericMatch(raw, p.a, 0.01) : (p.accepted || []).includes(normalizeFrac(raw));
+    const correct = p.a !== undefined ? LessonCheck.numericMatch(raw, p.a, 0.01) : answerMatches(raw, p.accepted);
     const answerText = p.a !== undefined ? String(p.a) : p.accepted[0];
     LessonCheck.check(`cu-${idx}`, correct, fb, {
       correct: `Correct! Answer: <strong>${answerText}</strong>`,
@@ -313,7 +365,7 @@
           <textarea id="ea-${i}-explain" class="form-control-lg" rows="2" placeholder="What did the student do wrong?"></textarea>
         </div>
         <div style="margin-top:10px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-          <label style="font-weight:700; font-size:0.95rem;">Correct Answer: <input type="text" id="ea-${i}-answer" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="Correct value"></label>
+          <label style="font-weight:700; font-size:0.95rem;">Correct Answer: <math-field id="ea-${i}-answer" class="form-control-lg" style="max-width:140px; display:inline-block;" placeholder="\\text{Answer}"></math-field></label>
           <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkErrorAnalysis(${i})">Submit</button>
         </div>
         <div id="ea-${i}-feedback" class="feedback-msg" style="margin-top:10px;"></div>
@@ -321,22 +373,32 @@
     `).join('');
     document.getElementById('errors-list').innerHTML = html;
     errorAnalysisProblems.forEach((p, i) => LessonProgress.preRegister(`ea-${i}`, `2. Error Analysis #${i + 1}: ${p.student.replace(/\\\(|\\\)|\\dfrac/g, '')}`, '2. Error Analysis'));
+    triggerMathJax();
   }
   renderErrorAnalysis();
   function checkErrorAnalysis(idx) {
     const p = errorAnalysisProblems[idx];
     const explain = document.getElementById(`ea-${idx}-explain`).value.trim();
-    const answer = document.getElementById(`ea-${idx}-answer`).value;
+    const answer = readMathField(document.getElementById(`ea-${idx}-answer`));
     const fb = document.getElementById(`ea-${idx}-feedback`);
     if (explain.length <= 5 || !answer.trim()) { LessonCheck.incomplete(fb, "Explain the error and give the correct answer before submitting."); return; }
     const expected = p.correctAnswer;
-    const correct = normalizeFrac(answer) === normalizeFrac(expected) || LessonCheck.numericMatch(answer, parseFloat(expected), 0.01);
+    const correct = answerMatches(answer, [expected]) || LessonCheck.numericMatch(answer, parseFloat(expected), 0.01);
     LessonCheck.submit(fb, { key: `ea-${idx}`, label: `2. Error Analysis #${idx + 1}`, answer: `${explain} | Correct answer given: ${answer}`, section: '2. Error Analysis', correct });
   }
 
   LessonProgress.preRegister('audit', "2. Error Analysis: is Jordan's claim about 0.3-repeating correct?", '2. Error Analysis');
+  const auditCardSelect = createCardSelect('audit-choice', [
+    { value: 'correct', label: 'Jordan is correct' },
+    { value: 'incorrect', label: 'Jordan is incorrect' }
+  ]);
+  qcCardSelects['qc-a0'] = createCardSelect('qc-a0', [{ value: 'A', label: 'A' }, { value: 'B', label: 'B' }, { value: 'C', label: 'C' }, { value: 'D', label: 'D' }]);
+  qcCardSelects['qc-a1'] = createCardSelect('qc-a1', [{ value: 'A', label: 'A' }, { value: 'B', label: 'B' }, { value: 'C', label: 'C' }, { value: 'D', label: 'D' }]);
+  qcCardSelects['qc-a3'] = createCardSelect('qc-a3', [{ value: 'A', label: 'A' }, { value: 'B', label: 'B' }, { value: 'C', label: 'C' }, { value: 'D', label: 'D' }]);
+  qcCardSelects['qc-b2'] = createCardSelect('qc-b2', [{ value: 'A', label: 'A' }, { value: 'B', label: 'B' }, { value: 'C', label: 'C' }, { value: 'D', label: 'D' }]);
+
   function checkAudit() {
-    const val = document.getElementById('audit-choice').value;
+    const val = auditCardSelect.getValue() || '';
     const fb = document.getElementById('audit-feedback');
     if (!val) { LessonCheck.incomplete(fb, "Choose an answer before submitting."); return; }
     LessonCheck.submit(fb, {
@@ -365,7 +427,7 @@
   };
   function checkQC(set, idx) {
     const id = `qc-${set}${idx}`;
-    const raw = document.getElementById(id).value;
+    const raw = readAnswerField(id);
     const fb = document.getElementById(`${id}-feedback`);
     if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before checking."); return; }
     const expected = qcAnswers[set][idx];
@@ -377,7 +439,7 @@
     } else if (expected === "<" || expected === ">" || expected === "=") {
       correct = raw.trim() === expected;
     } else {
-      correct = normalizeFrac(raw) === normalizeFrac(expected);
+      correct = answerMatches(raw, [expected]);
     }
     LessonCheck.check(id, correct, fb, {
       correct: "Correct!",
@@ -391,7 +453,7 @@
   // TAB 4: MIXED PRACTICE (submit-only, no reveal - LessonCheck.submit only)
   // ==========================================
   const mpProblems = [
-    { q: "Is \\(-5\\) a rational number?", accepted: ["yes"], label: "Is -5 rational?" },
+    { q: "Is \\(-5\\) a rational number?", accepted: ["yes"], label: "Is -5 rational?", text: true },
     { q: "Simplify \\(\\dfrac{12}{16}\\).", accepted: ["3/4"], label: "Simplify 12/16" },
     { q: "Convert \\(\\dfrac{7}{8}\\) to a decimal.", a: 0.875, label: "7/8 to decimal" },
     { q: "Convert \\(0.24\\) to a fraction in simplest form.", accepted: ["6/25"], label: "0.24 to fraction" },
@@ -407,14 +469,19 @@
     { q: "Word Problem: A pitcher's strike rate is \\(0.6\\). Write this as a fraction in simplest form.", accepted: ["3/5"], label: "Strike rate as fraction" },
     { q: "Word Problem: Four friends split \\(\\dfrac{5}{8}\\) of a pizza evenly. What fraction does each friend get?", accepted: ["5/32"], label: "Pizza share" },
     { q: "Multi-Step: Evaluate \\(\\dfrac{1}{2} + \\dfrac{1}{4} \\times \\dfrac{2}{3}\\).", accepted: ["2/3"], label: "Order of operations with fractions" },
-    { q: "Multi-Step Word Problem: A runner's time was \\(15.8\\) minutes. She improved by \\(\\dfrac{3}{4}\\) of a minute in week 1, then by another \\(0.55\\) minute in week 2. What is her new time?", a: 14.5, label: "Runner's final time" }
+    { q: "Multi-Step Word Problem: A runner's time was \\(15.8\\) minutes. She improved by \\(\\dfrac{3}{4}\\) of a minute in week 1, then by another \\(0.55\\) minute in week 2. What is her new time?", a: 14.5, label: "Runner's final time" },
+    { q: "Word Problem: A recipe needs \\(2.5\\) cups of flour per batch. How much flour is needed for \\(3.5\\) batches?", a: 8.75, label: "Flour for 3.5 batches" },
+    { q: "\\(\\dfrac{4}{5} \\div \\dfrac{2}{15} = \\) ?", accepted: ["6"], label: "4/5 ÷ 2/15" }
   ];
   function renderMP() {
     const html = mpProblems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 16px; border-radius: 12px; margin-top: 10px;">
         <strong>${i + 1}.</strong> ${p.q}
         <div style="margin-top:10px;">
-          <input type="text" id="mp-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">
+          ${p.text
+            ? `<input type="text" id="mp-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;" placeholder="Answer">`
+            : `<math-field id="mp-${i}-input" class="form-control-lg" style="max-width:220px; display:inline-block;" placeholder="\\text{Answer}"></math-field>`
+          }
           <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkMP(${i})">Submit</button>
         </div>
         <div id="mp-${i}-feedback" class="feedback-msg" style="margin-top:8px;"></div>
@@ -422,18 +489,84 @@
     `).join('');
     document.getElementById('mp-list').innerHTML = html;
     mpProblems.forEach((p, i) => LessonProgress.preRegister(`mp-${i}`, `4. Mixed Practice #${i + 1}: ${p.label}`, '4. Mixed Practice'));
+    triggerMathJax();
   }
   renderMP();
   function checkMP(idx) {
     const p = mpProblems[idx];
-    const raw = document.getElementById(`mp-${idx}-input`).value;
+    const field = document.getElementById(`mp-${idx}-input`);
+    const raw = p.text ? field.value : readMathField(field);
     const fb = document.getElementById(`mp-${idx}-feedback`);
     if (!raw.trim()) { LessonCheck.incomplete(fb, "Enter an answer before submitting."); return; }
-    const correct = p.a !== undefined ? LessonCheck.numericMatch(raw, p.a, 0.01) : (p.accepted || []).includes(normalizeFrac(raw));
+    const correct = p.a !== undefined ? LessonCheck.numericMatch(raw, p.a, 0.01) : (p.text ? (p.accepted || []).includes(normalizeFrac(raw)) : answerMatches(raw, p.accepted));
     // submit-only: recorded for the printed report, never revealed on screen.
     LessonCheck.submit(fb, { key: `mp-${idx}`, label: `4. Mixed Practice #${idx + 1}: ${p.label}`, answer: raw, section: '4. Mixed Practice', correct });
   }
+
+  // This page has four different problem shapes, none using
+  // window.listRegistry, so lesson-auth.js's generic teacher-view reveal
+  // can't touch any of it - this fills in every tab's answer key directly.
+  window.revealAnswerKey = function () {
+    const fillInput = (id, feedbackId, answer) => {
+      const fb = document.getElementById(feedbackId);
+      if (!fb) return;
+      let container;
+      if (qcCardSelects[id]) {
+        qcCardSelects[id].setValue(answer);
+        qcCardSelects[id].disable();
+        container = document.getElementById(id).parentElement;
+      } else {
+        const input = document.getElementById(id);
+        if (!input) return;
+        input.value = answer;
+        input.disabled = true;
+        container = input.parentElement;
+      }
+      const btn = container && container.querySelector('button');
+      if (btn) { btn.disabled = true; btn.style.cursor = 'not-allowed'; }
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${answer}</strong>`;
+    };
+
+    cuProblems.forEach((p, i) => fillInput(`cu-${i}-input`, `cu-${i}-feedback`, p.a !== undefined ? String(p.a) : p.accepted[0]));
+
+    errorAnalysisProblems.forEach((p, i) => {
+      const explainEl = document.getElementById(`ea-${i}-explain`);
+      const answerEl = document.getElementById(`ea-${i}-answer`);
+      const fb = document.getElementById(`ea-${i}-feedback`);
+      if (!explainEl || !answerEl || !fb) return;
+      explainEl.value = p.rule;
+      answerEl.value = p.correctAnswer;
+      explainEl.disabled = true;
+      answerEl.disabled = true;
+      const btn = answerEl.closest('.guided-practice') && answerEl.closest('.guided-practice').querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${p.correctAnswer}</strong>`;
+    });
+
+    const auditFb = document.getElementById('audit-feedback');
+    if (auditCardSelect && auditFb) {
+      auditCardSelect.setValue('incorrect');
+      auditCardSelect.disable();
+      auditFb.style.display = 'block';
+      auditFb.className = 'feedback-msg success locked';
+      auditFb.innerHTML = 'Answer key: Jordan is incorrect.';
+      document.getElementById('audit-explain').style.display = 'block';
+    }
+
+    Object.keys(qcAnswers).forEach((set) => {
+      Object.keys(qcAnswers[set]).forEach((idx) => {
+        fillInput(`qc-${set}${idx}`, `qc-${set}${idx}-feedback`, String(qcAnswers[set][idx]));
+      });
+    });
+
+    mpProblems.forEach((p, i) => fillInput(`mp-${i}-input`, `mp-${i}-feedback`, p.a !== undefined ? String(p.a) : p.accepted[0]));
+
+    triggerMathJax();
+  };
 </script>
-<div id="print-report"></div>
 </body>
 </html>

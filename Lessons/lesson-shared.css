@@ -45,6 +45,36 @@ body {
   overflow: hidden;
 }
 
+/* Teacher-view-only banner, prepended as .app-container's first child by
+   lesson-auth.js's unlockTeacherView(). Deliberately full-width with no
+   margin so .app-container's own overflow:hidden clips it into the same
+   rounded top corners as everything else - it used to carry its own
+   margin/border-radius, which left a gap revealing the white background
+   behind it and made the header below look disconnected from the card. */
+.teacher-view-banner {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+  padding: 12px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.teacher-view-banner a {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 800;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 2px solid rgba(255,255,255,0.7);
+  white-space: nowrap;
+}
+.teacher-view-banner a:hover { background: rgba(255,255,255,0.32); }
+
 header {
   background: var(--primary);
   color: white;
@@ -59,7 +89,17 @@ header {
   gap: 10px;
   margin-bottom: 12px;
 }
-.brand-logo { height: 68px; width: auto; display: block; }
+/* The logo's own artwork (wordmark, "35th" numeral) is navy blue on a
+   transparent background - almost the same color as this header, so it
+   nearly vanished without a light backdrop of its own to sit on
+   regardless of what's behind it. */
+.brand-logo {
+  height: 68px; width: auto; display: block;
+  background: #fff;
+  padding: 6px 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
 .brand-name {
   font-size: 0.78rem;
   font-weight: 700;
@@ -84,8 +124,41 @@ header {
 
 h1 { margin: 8px 0; font-size: 2.3rem; font-weight: 800; }
 p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
+/* The standard(s) a page addresses, from the Math Department Curriculum
+   Map & Year Plan - a small muted line under the H1/subtitle, not
+   another loud .badge pill, since a topic badge already sits above the
+   title and this is reference info, not a label. */
+p.standards-line { margin: 6px 0 0 0; font-size: 0.85rem; font-weight: 700; opacity: 0.82; letter-spacing: 0.02em; }
 
-/* Print-progress utility bar (name field + print button), shown under the header */
+/* Sign-in gate - shown before any lesson content while a cached-token
+   resume is tried (or there was none to try). Built like a miniature
+   .app-container (rounded, bordered, its own branded <header>) so it's
+   the first thing a student sees and already looks like the rest of
+   the site, instead of a plain unbranded box. This used to be
+   duplicated, unbranded, in every single gated page's own <style>
+   block - centralized here instead, so every page gets the fix at
+   once and there's one place left to tune it. */
+.lesson-gate {
+  max-width: 440px;
+  margin: 80px auto;
+  background: var(--card);
+  border-radius: 16px;
+  border: 4px solid var(--primary);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  overflow: hidden;
+  text-align: center;
+}
+.lesson-gate header { padding: 22px 24px 16px; }
+.lesson-gate .brand-row { margin-bottom: 0; }
+.lesson-gate-body { padding: 26px 32px 32px; }
+.lesson-gate-body h2 { margin: 0 0 8px 0; color: var(--primary); font-size: 1.3rem; }
+.lesson-gate-body p { margin: 0; }
+.lesson-gate .g_id_signin { display: flex; justify-content: center; margin: 20px 0; }
+#lesson-gate-status { min-height: 1.2em; font-weight: 600; margin: 0; }
+.lesson-gate-disclosure { margin-top: 10px !important; font-size: 0.82rem; opacity: 0.75; }
+
+/* Signed-in-student identity bar (name field, auto-filled and locked by
+   lesson-auth.js's unlock()), shown under the header */
 .progress-bar {
   display: flex;
   flex-wrap: wrap;
@@ -111,19 +184,6 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
   min-width: 220px;
 }
 
-.progress-bar .btn-print {
-  background: var(--accent);
-  color: #000;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 800;
-  cursor: pointer;
-  font-size: 0.95rem;
-}
-
-.progress-bar .btn-print:hover { background: #b45309; color: white; }
-
 /* Human-readable "what to do" callout at the top of each panel */
 .howto-box {
   background: #ecfdf5;
@@ -144,9 +204,6 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
   margin-bottom: 6px;
 }
 
-/* Printable progress report - hidden on screen, shown only when printing */
-#print-report { display: none; }
-
 /* Real margin on every printed page - without this the browser falls back
    to whatever margin it last remembered (can be "None"), leaving content
    flush against the paper edge with the auto header/footer crowding it. */
@@ -165,28 +222,11 @@ p.subtitle { margin: 0; font-size: 1.15rem; opacity: 0.95; }
   margin: 0.65in 0.6in;
 }
 
+/* Generic "hide this when printing" escape hatch - used by the
+   standalone printables/ worksheet pages (their own local .btn-print,
+   unrelated to the .progress-bar one above) and available for anything
+   else that shouldn't show up on paper. */
 @media print {
-  /* Default print behavior: only the student's progress report prints.
-     Teacher Print Mode (below) overrides this to print the actual lesson
-     content instead, when the teacher is generating a "what we covered"
-     handout via TeacherPrint in lesson-shared.js. */
-  body:not(.teacher-print-mode) > *:not(#print-report) { display: none !important; }
-  #print-report {
-    display: block !important;
-    font-family: 'Montserrat', sans-serif;
-    color: #000;
-    padding: 0;
-  }
-  #print-report h1 { font-size: 1.6rem; margin-bottom: 4px; }
-  #print-report .print-meta { font-size: 1rem; margin: 4px 0; }
-  .print-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-  .print-table th, .print-table td { border: 1px solid #000; padding: 8px 10px; text-align: left; font-size: 0.9rem; }
-  .print-table th { background: #e2e8f0; }
-  .print-table tr { page-break-inside: avoid; break-inside: avoid; }
-  .print-table .print-section-row td { background: #cbd5e1; font-weight: 800; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.03em; }
-  .print-blank { color: #888; }
-  .print-footer { margin-top: 20px; font-size: 0.85rem; font-style: italic; color: #444; }
-
   .no-print { display: none !important; }
 }
 
@@ -737,6 +777,45 @@ button:disabled {
 
 .btn-secondary:hover { background: #475569; }
 
+/* Card-select: touch-friendly replacement for a plain <select> when the
+   choices are a short, fixed set. Rendered by createCardSelect() in
+   lesson-shared.js - a page places an empty container per choice group
+   (one .card-select-row per group, stacked so multiple groups read as
+   separate rows rather than side-by-side dropdowns) and the JS fills it
+   with one .card-select-option button per option. */
+.card-select-row { margin: 10px 0; }
+.card-select-row-label {
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 6px;
+}
+.card-select { display: flex; flex-wrap: wrap; gap: 10px; }
+.card-select-option {
+  border: 2px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  font-family: inherit;
+}
+.card-select-option:hover { border-color: var(--primary-light); background: #eff6ff; }
+.card-select-option.selected {
+  background: var(--primary-light);
+  border-color: var(--primary-light);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(37,99,235,0.3);
+}
+.card-select-option:disabled { opacity: 0.65; cursor: not-allowed; }
+.card-select-option:disabled:hover { border-color: var(--border); background: #fff; }
+.card-select-option.selected:disabled:hover { border-color: var(--primary-light); background: var(--primary-light); }
+
 .feedback-msg {
   margin-top: 20px;
   padding: 16px;
@@ -748,6 +827,20 @@ button:disabled {
 
 .feedback-msg.success { background: var(--success-bg); color: var(--success); border: 2px solid var(--success); }
 .feedback-msg.error { background: var(--error-bg); color: var(--error); border: 2px solid var(--error); }
+
+/* Colorblind-safe cue: every check message's own text already says
+   "Correct!"/gives specific guidance (never color-only), but a shape
+   distinguishes success from error at a glance too. `::before` can
+   only hold one `content` per element, and `.locked` (above) already
+   claims it for a plain locked message - these three-class combos are
+   deliberately MORE specific than both `.feedback-msg.locked::before`
+   and the plain `.success`/`.error::before` rules below, so a message
+   that's both e.g. "success" and "locked" keeps BOTH the checkmark and
+   the "Locked" text instead of one silently overwriting the other. */
+.feedback-msg.success.locked::before { content: "\2713  Locked - "; font-weight: 900; }
+.feedback-msg.error.locked::before { content: "\2717  Locked - "; font-weight: 900; }
+.feedback-msg.success::before { content: "\2713  "; font-weight: 900; }
+.feedback-msg.error::before { content: "\2717  "; font-weight: 900; }
 
 .problem-selector {
   display: flex;
@@ -863,7 +956,7 @@ button:disabled {
    QUESTION LADDER - shared worked-example mechanism, originated on
    the Literal Equations "Guided Solving Ladder" supplemental page.
    Every step of solving asks the SAME fixed set of self-diagnostic
-   questions ("What's the variable? What's obstructing it? What's it
+   questions ("What's the variable? What's preventing it? What's it
    doing? What's the inverse?"), repeated round by round until the
    target is isolated. Any indexed page teaching that same skill
    should use these classes instead of a plain numbered step list, so
@@ -1166,3 +1259,288 @@ button:disabled {
 .color-key { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 10px; font-size: 0.92rem; }
 .color-key span { display: inline-flex; align-items: center; gap: 6px; }
 .color-key i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; flex-shrink: 0; }
+
+/* Vocabulary Match-Up (drag-and-drop: term -> definition, term -> example).
+   Shared by every Vocabulary-Literacy.html "Quick Vocabulary Check" tab via
+   createVocabMatch() in lesson-shared.js - see /CLAUDE.md. */
+.match-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin: 16px 0; }
+.match-col { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.match-col-heading { text-align: center; font-weight: 800; color: var(--primary); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: -2px; }
+.match-card {
+  background: #eff6ff;
+  border: 3px solid var(--primary-light);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-weight: 800;
+  color: var(--primary);
+  cursor: grab;
+  text-align: center;
+  transition: transform 0.1s ease;
+}
+.match-card.selected { outline: 3px solid #f59e0b; outline-offset: 2px; }
+.match-card.matched { background: var(--success-bg); border-color: var(--success); color: var(--success); cursor: default; opacity: 0.85; }
+.match-badges { display: flex; gap: 6px; justify-content: center; margin-top: 6px; }
+.match-badge { font-size: 0.68rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: #e2e8f0; color: #64748b; }
+.match-badge.done { background: var(--success); color: #fff; }
+.match-slot {
+  border: 3px dashed var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  font-size: 0.88rem;
+  color: #334155;
+  cursor: pointer;
+}
+.match-slot.matched { border-style: solid; border-color: var(--success); background: var(--success-bg); cursor: default; }
+.match-slot.wrong-flash { border-color: var(--error); background: var(--error-bg); }
+.reveal-dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+
+/* ================================================================
+   COMPONENT STATES - every interactive element needs a visible
+   Default/Hover/Pressed/Disabled/Focus state, not just Default.
+   Hover/disabled mostly already existed per-component above; this
+   adds the one that was missing site-wide: a real, visible keyboard-
+   focus ring. `:focus-visible` (not plain `:focus`) so a mouse/touch
+   click never shows the ring - only actual keyboard navigation does,
+   matching how a modern browser's own default outline behaves, just
+   themed to the site instead of left as the browser's blue default
+   (which several of these dark-bordered/colored buttons made hard to
+   see - a plain `outline` on `.btn-nav`'s already-dark-blue background
+   was nearly invisible before this).
+   ================================================================ */
+button:focus-visible,
+.card-select-option:focus-visible,
+.tab-btn:focus-visible,
+.dot:focus-visible,
+.pv-column:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+.form-control-lg:focus-visible,
+math-field:focus-visible {
+  outline: 3px solid var(--primary-light);
+  outline-offset: 2px;
+}
+/* A focus ring on a button already filled with --primary/--primary-light
+   would nearly disappear against its own background - use a light,
+   high-contrast ring instead for exactly those buttons. */
+.btn-lg:focus-visible,
+.btn-nav:focus-visible,
+.btn-secondary:focus-visible,
+.problem-btn.active:focus-visible,
+.card-select-option.selected:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--primary-light);
+}
+
+/* ================================================================
+   TOUCH TARGETS - 44x44px minimum on any tappable control, per
+   standard mobile accessibility guidance. Most shared buttons already
+   clear this from padding + font-size alone; `.card-select-option`
+   (a touch-friendly <select> replacement - the one place this
+   actually mattered) gets an explicit floor so a short one-word
+   option (e.g. "Yes"/"No") never shrinks below it.
+   ================================================================ */
+.card-select-option { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+
+/* ================================================================
+   THEME TOGGLE - button injected by lesson-shared.js into every page
+   that loads it (see /CLAUDE.md). Fixed to the top-right corner,
+   site-wide, so it's reachable without scrolling regardless of which
+   tab/panel is open. SVG sun/moon icons (no emoji, per instruction) -
+   both are always present in the DOM and toggled via [hidden] rather
+   than swapped, so there's no icon flash while a font/image loads.
+   ================================================================ */
+.theme-toggle-btn {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 1000;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+.theme-toggle-btn:hover { transform: scale(1.08); }
+.theme-toggle-btn:active { transform: scale(0.94); }
+.theme-toggle-btn svg { width: 22px; height: 22px; }
+.theme-toggle-btn .icon-sun, .theme-toggle-btn .icon-moon { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ================================================================
+   DARK MODE - toggled via `data-theme="dark"` on <html> (the
+   .theme-toggle-btn above sets it, persisted to localStorage by
+   lesson-shared.js; defaults to the device's own prefers-color-scheme
+   on a page's first visit, same principle as the rest of this file's
+   "respect what's already there" approach to state). Every rule below
+   is new and purely additive - nothing above this comment was edited
+   to build this section, so light mode (the default, and the only
+   mode on a page/browser with JS disabled) is completely unchanged.
+
+   SCOPE - this file's own shared components only, as instructed: a
+   page's own local <style> block (a digit-box grid, a catalog card,
+   the Eco-Garden canvas, a Teacher-Guide's printable-styled sections,
+   ...) is not covered here and keeps its original light styling even
+   while the rest of the page around it goes dark. Extending dark mode
+   into page-specific content is a separate, later, file-by-file pass.
+   `teacher-dashboard.html` loads this stylesheet too, so its shared-
+   component usage (buttons, forms, `.card-select`-style pickers if
+   any) picks up these rules automatically, but the toggle button
+   itself is only injected by lesson-shared.js, which the dashboard
+   does not load (see /CLAUDE.md) - not in scope this round.
+   ================================================================ */
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --card: #161b22;
+  /* --text is inherited by `body { color: var(--text); }` (light-mode
+     rule, unedited) into EVERY element on the page that doesn't set its
+     own color - including a page's own local "white card" content this
+     dark-mode pass never touched (its background stays the original
+     light-mode white/pastel, since that's page-specific, out of scope
+     per /CLAUDE.md). A near-white value here read as invisible white-
+     on-white text on any such untouched card (a real regression found
+     live: "No answers in here" on a page-local vocabulary grid). A
+     mid-gray instead stays clearly legible against BOTH an untouched
+     light card AND this file's own new dark surfaces (~4.3:1 contrast
+     either way, by design) - not as sharp as a true near-white would
+     read against a fully dark page, but never invisible. The full fix
+     is per-page-local-component dark styling (deliberately out of
+     scope this round, see the note above) - this is a safe default
+     until that happens, not a substitute for it. */
+  --text: #717a85;
+  --border: #475569;
+  --notebook-bg: #2b2408;
+  --notebook-border: #92752a;
+  --success: #4ade80;
+  --success-bg: #0f2a1a;
+  --error: #f87171;
+  --error-bg: #2d1414;
+  --highlight-carry: #f87171;
+}
+
+/* Elements whose light-mode rule uses var(--primary) as TEXT color on
+   a light card/background (not as a background/border - those stay
+   unchanged, a dark-navy background reads fine on a dark page too) -
+   the original dark navy is unreadable as text once its background
+   goes dark, so each gets a lighter, still-on-brand blue instead. Kept
+   as one shared custom property rather than 16 separate hardcoded
+   values, so a future addition only needs var(--dark-heading). */
+[data-theme="dark"] {
+  --dark-heading: #7dd3fc;
+}
+[data-theme="dark"] .lesson-gate-body h2,
+[data-theme="dark"] .pv-val,
+[data-theme="dark"] .algo-table td.decimal-cell,
+[data-theme="dark"] .algo-table td.currency-cell,
+[data-theme="dark"] .decimal-point,
+[data-theme="dark"] .decimal-mark,
+[data-theme="dark"] .shifted-num,
+[data-theme="dark"] .ladder-formula,
+[data-theme="dark"] .ladder-result,
+[data-theme="dark"] .example-title,
+[data-theme="dark"] .qa .a,
+[data-theme="dark"] .qa-q,
+[data-theme="dark"] .match-col-heading,
+[data-theme="dark"] .section-title { color: var(--dark-heading); }
+
+/* Muted/secondary text that assumed a white background (dark slate
+   grays reading fine on white become too low-contrast on a dark
+   surface) - one shared lighter gray for all of them. */
+[data-theme="dark"] .pv-title,
+[data-theme="dark"] .card-select-row-label,
+[data-theme="dark"] .column-header,
+[data-theme="dark"] .qa .q,
+[data-theme="dark"] .qa-a,
+[data-theme="dark"] .step-text,
+[data-theme="dark"] .ladder-check,
+[data-theme="dark"] .flow-connector span,
+[data-theme="dark"] .struck-digit { color: #94a3b8; }
+
+/* Structural surfaces that were hardcoded white/near-white, expecting
+   to sit on the (also white) page background - now need to read as
+   raised panels against the new dark page/card background instead. */
+[data-theme="dark"] .progress-bar { background: #0a0e14; }
+[data-theme="dark"] .nav-tabs { background: #1e2530; border-bottom-color: var(--border); }
+[data-theme="dark"] .tab-btn { color: #94a3b8; }
+[data-theme="dark"] .tab-btn:hover { background: #263040; color: var(--text); }
+[data-theme="dark"] .tab-btn.active { background: var(--card); }
+[data-theme="dark"] .section-title { border-bottom-color: #263040; }
+[data-theme="dark"] .howto-box { background: #0f2a1a; border-color: #166534; }
+[data-theme="dark"] .explainer-box { background: #16233d; }
+[data-theme="dark"] .pv-chart { background: #1e2530; }
+[data-theme="dark"] .pv-column { background: #1e2530; border-color: var(--border); }
+[data-theme="dark"] .pv-column:hover, [data-theme="dark"] .pv-column.selected { background: #16233d; }
+[data-theme="dark"] .carousel-card { background: var(--card); }
+[data-theme="dark"] .carousel-nav { background: #1e2530; border-color: var(--border); }
+[data-theme="dark"] .dot { background: #475569; }
+[data-theme="dark"] .algo-table td.grid-cell { background: #1e2530; border-color: var(--border); }
+[data-theme="dark"] .step-box { background: #1e2530; }
+[data-theme="dark"] .step-item { background: var(--card); }
+[data-theme="dark"] .form-control-lg { background: var(--card); color: var(--text); border-color: var(--border); }
+[data-theme="dark"] .form-control-lg:disabled,
+[data-theme="dark"] input:disabled,
+[data-theme="dark"] textarea:disabled,
+[data-theme="dark"] select:disabled { background: #1e2530; color: #64748b; }
+[data-theme="dark"] .wb-grid { background: #1e2530; }
+[data-theme="dark"] .digit-box { background: var(--card); border-color: var(--border); }
+[data-theme="dark"] .digit-box.input { background: #16233d; }
+[data-theme="dark"] .card-select-option { background: var(--card); color: var(--text); border-color: var(--border); }
+[data-theme="dark"] .card-select-option:hover { background: #16233d; }
+[data-theme="dark"] .card-select-option:disabled:hover { background: var(--card); }
+[data-theme="dark"] .problem-btn { background: var(--card); border-color: var(--border); }
+[data-theme="dark"] .slider-container { background: var(--card); border-color: var(--border); }
+[data-theme="dark"] .data-table th { background: #16233d; color: var(--dark-heading); }
+[data-theme="dark"] .data-table th, [data-theme="dark"] .data-table td { border-color: var(--border); }
+[data-theme="dark"] .station-card { background: var(--card); border-color: var(--border); }
+[data-theme="dark"] .ladder { background: #0a0e14; border-color: var(--border); }
+[data-theme="dark"] .ladder-formula { border-bottom-color: var(--border); }
+[data-theme="dark"] .ladder-round { background: var(--card); border-color: var(--border); }
+[data-theme="dark"] .ladder-eq { background: #16233d; }
+[data-theme="dark"] .example-card { background: #0a0e14; border-color: var(--border); }
+[data-theme="dark"] .example-title { border-bottom-color: var(--border); }
+[data-theme="dark"] .example-steps li { border-bottom-color: #263040; }
+[data-theme="dark"] .example-steps.cols-2 li:nth-child(odd) { border-right-color: #263040; }
+[data-theme="dark"] .step-math { background: #16233d; }
+[data-theme="dark"] .qa-row { border-bottom-color: #263040; }
+[data-theme="dark"] .flow-math { background: #1e2530; border-color: var(--border); }
+[data-theme="dark"] .match-card { background: #16233d; color: var(--dark-heading); }
+[data-theme="dark"] .match-badge { background: #263040; color: #94a3b8; }
+[data-theme="dark"] .match-slot { color: #94a3b8; border-color: var(--border); }
+
+/* Color-coded pastel badges/tags/boxes - each was a light tint with
+   dark saturated text; inverted to a dark tint with light saturated
+   text so the same color coding still reads correctly, just against
+   a dark surface instead of white. */
+[data-theme="dark"] .notebook-header { color: #fbbf24; }
+[data-theme="dark"] .challenge-box { background: #2e2008; border-color: #92752a; }
+[data-theme="dark"] .ixl-box { background: #0f2a1a; border-color: #4ade80; }
+[data-theme="dark"] .ixl-code { background: #14291d; color: #4ade80; }
+[data-theme="dark"] .type-tag.onestep, [data-theme="dark"] .type-tag.addsub, [data-theme="dark"] .pill-same { background: #14291d; color: #4ade80; }
+[data-theme="dark"] .type-tag.multistep { background: #16233d; color: #93c5fd; }
+[data-theme="dark"] .type-tag.factor, [data-theme="dark"] .pill-sub, [data-theme="dark"] .resolve-box.sub { background: #2e2008; color: #fbbf24; }
+[data-theme="dark"] .type-tag.classify, [data-theme="dark"] .pill-add, [data-theme="dark"] .resolve-box.add { background: #0f2626; color: #5eead4; }
+[data-theme="dark"] .type-tag.convert, [data-theme="dark"] .resolve-box.convert { background: #2e1a26; color: #f0abfc; }
+[data-theme="dark"] .type-tag.word, [data-theme="dark"] .kcc-box { background: #241b3d; color: #c4b5fd; }
+[data-theme="dark"] .kcc-box .box-label, [data-theme="dark"] .kcc-arrow { color: #c4b5fd; }
+[data-theme="dark"] .kcc-chip { background: var(--card); border-color: #7c3aed; color: #c4b5fd; }
+[data-theme="dark"] .pill-diff { background: var(--error-bg); color: var(--error); }
+[data-theme="dark"] .running-box { background: #1e1b4b; border-color: #6366f1; color: #a5b4fc; }
+[data-theme="dark"] .flow-math.running { background: #1e1b4b; border-color: #6366f1; }
+[data-theme="dark"] .flow-math.running .expr-chip.active { border-color: #6366f1; background: var(--card); color: #a5b4fc; }
+[data-theme="dark"] .flow-math.final .expr-chip.active { background: var(--card); }
+[data-theme="dark"] .expr-chip.active { background: #16233d; color: var(--text); }
+
+/* Standards-line/teacher-view-banner/badge/header text on colored
+   backgrounds are already white/high-contrast and unaffected - no
+   override needed for those. */

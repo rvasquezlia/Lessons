@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Algebra 7 Honors: Squares, Cubes &amp; Roots - Explanation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">7 Honors &middot; Squares, Cubes &amp; Roots - Explanation</span>
+    <h1>Explanation: Squares, Cubes &amp; Roots</h1>
+    <p class="standards-line">Standards: 8.EE.A.2</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    Every worked example: <strong>math on the left</strong>, <strong>questions on the right</strong> - only the green box is the final answer. Use <strong>Previous / Next</strong> to browse examples. <strong>Calculators are not allowed.</strong>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('squarescubes')">1. Squares &amp; Cubes</button>
+    <button class="tab-btn" onclick="switchTab('roots')">2. Square &amp; Cube Roots</button>
+    <button class="tab-btn" onclick="switchTab('applications')">3. Real-World Applications</button>
+  </nav>
+
+  <!-- TAB 1: SQUARES & CUBES -->
+  <div id="squarescubes" class="panel active">
+    <div class="section-title">Finding a Square or a Cube</div>
+    <div class="notebook-box">
+      <div class="notebook-header">The Rules</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Square:</strong> \(n^2 = n \times n\).</li>
+        <li><strong>Cube:</strong> \(n^3 = n \times n \times n\).</li>
+      </ul>
+    </div>
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="sc-prev-btn" onclick="changeSc(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="sc-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="sc-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="sc-next-btn" onclick="changeSc(1)">Next &rarr;</button>
+      </div>
+      <div id="sc-content" style="min-height: 160px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: SQUARE & CUBE ROOTS -->
+  <div id="roots" class="panel">
+    <div class="section-title">Finding a Square Root or a Cube Root</div>
+    <div class="notebook-box">
+      <div class="notebook-header">The Rules</div>
+      <ul style="margin-bottom:0;">
+        <li><strong>Square root:</strong> \(\sqrt{n}\) asks "what number times itself equals \(n\)?"</li>
+        <li><strong>Cube root:</strong> \(\sqrt[3]{n}\) asks "what number, used three times as a factor, equals \(n\)?"</li>
+        <li>Recognizing a perfect square or perfect cube from the reference chart is the fastest way to answer either question.</li>
+      </ul>
+    </div>
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="rt-prev-btn" onclick="changeRt(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="rt-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 3</span>
+          <div class="carousel-indicators" id="rt-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="rt-next-btn" onclick="changeRt(1)">Next &rarr;</button>
+      </div>
+      <div id="rt-content" style="min-height: 160px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: REAL-WORLD APPLICATIONS -->
+  <div id="applications" class="panel">
+    <div class="section-title">Real-World Applications</div>
+    <div class="notebook-box">
+      <div class="notebook-header">The Connection</div>
+      <p style="margin:0;">A square's area is its side length squared, so working backward from area to side length is a square root. A cube's volume is its edge length cubed, so working backward from volume to edge length is a cube root.</p>
+    </div>
+    <div class="carousel-card">
+      <div class="carousel-nav">
+        <button class="btn-nav" id="app-prev-btn" onclick="changeApp(-1)">&larr; Previous</button>
+        <div style="text-align:center;">
+          <span id="app-title" style="font-weight:800; color:var(--primary); font-size:1.2rem;">Example 1 of 2</span>
+          <div class="carousel-indicators" id="app-dots" style="justify-content:center; margin-top:6px;"></div>
+        </div>
+        <button class="btn-nav" id="app-next-btn" onclick="changeApp(1)">Next &rarr;</button>
+      </div>
+      <div id="app-content" style="min-height: 160px;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  LessonSync.init('7-squares-cubes-and-roots-explanation');
+
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  function makeCarousel(prefix, examples) {
+    let current = 0;
+    function render() {
+      const ex = examples[current];
+      document.getElementById(`${prefix}-title`).innerText = `Example ${current + 1} of ${examples.length}`;
+      document.getElementById(`${prefix}-dots`).innerHTML = examples.map((_, i) =>
+        `<div class="dot ${i === current ? 'active' : ''}" onclick="${prefix}Jump(${i})"></div>`
+      ).join('');
+      document.getElementById(`${prefix}-content`).innerHTML = ex.html;
+      document.getElementById(`${prefix}-prev-btn`).disabled = current === 0;
+      document.getElementById(`${prefix}-next-btn`).disabled = current === examples.length - 1;
+      triggerMathJax();
+    }
+    function change(dir) { current = Math.max(0, Math.min(examples.length - 1, current + dir)); render(); }
+    function jump(idx) { current = idx; render(); }
+    function showAt(i) { current = i; render(); }
+    window[`change${cap(prefix)}`] = change;
+    window[`${prefix}Jump`] = jump;
+    render();
+    if (window.TeacherPrint) TeacherPrint.registerCarousel(`${prefix}-content`, examples.length, showAt);
+  }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  // ==========================================
+  // TAB 1: SQUARES & CUBES
+  // ==========================================
+  const scExamples = [
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Find \\(9^2\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(9^2\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">What does the exponent mean?</div><div class="qa-a">Multiply 9 by itself</div></div>
+          </div><div class="resolve-box add"><span class="box-label">Resolving</span>\\(9 \\times 9\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(9^2 = 81\\)</span></div>
+        </div>`
+    },
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Find \\(5^3\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(5^3\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">What does the exponent mean?</div><div class="qa-a">Multiply 5 by itself three times</div></div>
+          </div><div class="resolve-box add"><span class="box-label">Resolving</span>\\(5 \\times 5 \\times 5 = 25 \\times 5\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(5^3 = 125\\)</span></div>
+        </div>`
+    },
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Find \\(15^2\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(15^2\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">What does the exponent mean?</div><div class="qa-a">Multiply 15 by itself</div></div>
+          </div><div class="resolve-box add"><span class="box-label">Resolving</span>\\(15 \\times 15\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(15^2 = 225\\)</span></div>
+        </div>`
+    }
+  ];
+  makeCarousel('sc', scExamples);
+
+  // ==========================================
+  // TAB 2: SQUARE & CUBE ROOTS
+  // ==========================================
+  const rtExamples = [
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Find \\(\\sqrt{64}\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(\\sqrt{64}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">What question does this ask?</div><div class="qa-a">What number times itself equals 64?</div></div>
+            <div class="qa-row"><div class="qa-q">Check the reference chart</div><div class="qa-a">\\(8^2 = 64\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\sqrt{64} = 8\\)</span></div>
+        </div>`
+    },
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">Find \\(\\sqrt[3]{27}\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(\\sqrt[3]{27}\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">What question does this ask?</div><div class="qa-a">What number, cubed, equals 27?</div></div>
+            <div class="qa-row"><div class="qa-q">Check the reference chart</div><div class="qa-a">\\(3^3 = 27\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(\\sqrt[3]{27} = 3\\)</span></div>
+        </div>`
+    },
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">If \\(x^2 = 196\\), find \\(x\\)</div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">\\(x^2 = 196\\)</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">How do I undo squaring?</div><div class="qa-a">Take the square root of both sides</div></div>
+            <div class="qa-row"><div class="qa-q">Check the reference chart</div><div class="qa-a">\\(14^2 = 196\\)</div></div>
+          </div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">\\(x = 14\\)</span></div>
+        </div>`
+    }
+  ];
+  makeCarousel('rt', rtExamples);
+
+  // ==========================================
+  // TAB 3: REAL-WORLD APPLICATIONS
+  // ==========================================
+  const appExamples = [
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">A square garden has an area of 81 square feet. Find the side length. <span class="type-tag word">Area</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">Area \\(= 81\\) sq ft</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Area = side²  - how do I undo that?</div><div class="qa-a">Take the square root of the area</div></div>
+          </div><div class="resolve-box add"><span class="box-label">Resolving</span>\\(\\sqrt{81} = 9\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">Side length: \\(9\\) ft</span></div>
+        </div>`
+    },
+    {
+      html: `<div class="example-title" style="border:none; margin-bottom:8px; padding:0;">A cube-shaped box has a volume of 216 cubic inches. Find the edge length. <span class="type-tag word">Volume</span></div>
+        <div class="flow-row">
+          <div class="flow-math"><span class="expr-chip active">Volume \\(= 216\\) cubic in.</span></div>
+          <div class="flow-steps"><div class="qa-list">
+            <div class="qa-row"><div class="qa-q">Volume = edge³ - how do I undo that?</div><div class="qa-a">Take the cube root of the volume</div></div>
+          </div><div class="resolve-box add"><span class="box-label">Resolving</span>\\(\\sqrt[3]{216} = 6\\)</div></div>
+        </div>
+        <div class="flow-connector"><span>&darr;</span></div>
+        <div class="flow-row">
+          <div class="flow-math final"><span class="expr-chip active">Edge length: \\(6\\) in.</span></div>
+        </div>`
+    }
+  ];
+  makeCarousel('app', appExamples);
+</script>
+</body>
+</html>

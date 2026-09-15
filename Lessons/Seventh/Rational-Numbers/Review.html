@@ -20,9 +20,17 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
   <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
     .glossary-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -50,7 +58,23 @@
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -58,12 +82,13 @@
     </div>
     <span class="badge">Rational Numbers &middot; Review</span>
     <h1>Review: Integer Sign Rules &amp; Fraction Mechanics</h1>
+    <p class="standards-line">Standards: 7.NS.A.1b, 7.NS.A.1c, 7.NS.A.1d, 7.NS.A.2a, 7.NS.A.2b, 7.NS.A.2c, 7.NS.A.2d</p>
     <p class="subtitle">Everything you need to remember before we start Rational Numbers</p>
   </header>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Nothing here is graded &ndash; this is a warm-up. Rational Numbers is about classifying numbers and converting between fractions and decimals, and it leans hard on two skills from earlier: the sign rules you just learned in Integers, and fraction mechanics (simplifying, converting) from earlier grades. Work through the tabs in order, then use the practice tab honestly.
+    Nothing here is scored for a grade &ndash; this is a warm-up. Rational Numbers is about classifying numbers and converting between fractions and decimals, and it leans hard on two skills from earlier: the sign rules you just learned in Integers, and fraction mechanics (simplifying, converting) from earlier grades. Work through the tabs in order, then use the practice tab honestly &ndash; your teacher can see which tabs you opened and whether you reached the end, so it's worth actually doing.
   </div>
 
   <nav class="nav-tabs">
@@ -225,6 +250,8 @@
 </div>
 
 <script>
+  LessonSync.init('7-rational-numbers-review');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -243,13 +270,43 @@
   // GENERIC CHECK-STYLE PRACTICE LIST (2 tries, then reveal)
   // ==========================================
   const checkListRegistry = {};
+  window.listRegistry = checkListRegistry; // read by lesson-auth.js's teacher answer-key view
 
-  function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
-    checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
+  // ASCIIMath always double-parenthesizes every fraction (e.g. \frac{4}{5}
+  // reads back as "(4)/(5)"), so a typed math-field answer needs its
+  // redundant parens stripped before comparing against a plain "4/5" in
+  // accepted[] - see /CLAUDE.md's "Visual math input" note.
+  function stripRedundantParens(s) {
+    let prev;
+    do {
+      prev = s;
+      s = s.replace(/\(([^()+-]+)\)/g, '$1');
+    } while (s !== prev);
+    return s;
+  }
+
+  function normalizeExpr(s) {
+    return stripRedundantParens(String(s || '').toLowerCase().replace(/\s+/g, ''));
+  }
+
+  function answerMatches(val, accepted) {
+    const norm = normalizeExpr(val);
+    return (accepted || []).some((a) => normalizeExpr(a) === norm);
+  }
+
+  // Reads a <math-field>'s answer as ASCIIMath text, guarded against the
+  // MathLive script never loading (blocked network, ad blocker, cold CDN
+  // failure).
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg, section) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg, section: section || '5. Are You Ready?' };
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
-        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:170px; display:inline-block;" placeholder="Answer">
+        <math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:180px; display:inline-block;" placeholder="\\text{Answer}"></math-field>
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
@@ -261,21 +318,20 @@
   function checkListItem(keyPrefix, idx) {
     const cfg = checkListRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`${keyPrefix}-${idx}-input`));
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
       return;
     }
-    const norm = (s) => String(s || '').toLowerCase().replace(/[\s,]/g, '');
     const correct = p.numeric
       ? LessonCheck.numericMatch(val, p.a, p.tol || 0.01)
-      : (p.accepted || [String(p.a)]).map(norm).includes(norm(val));
+      : answerMatches(val, p.accepted || [String(p.a)]);
     LessonCheck.check(`${keyPrefix}-${idx}`, correct, fb, {
       correct: `Correct! ${p.displayAnswer || ('The answer is ' + p.a + '.')}`,
       retry: cfg.retry,
       reveal: `Here's the correct answer: ${p.displayAnswer || p.a}`
-    });
+    }, { label: p.label || p.q.replace(/\\\(|\\\)/g, ''), answer: val, section: cfg.section });
   }
 
   const signsPractice = [
@@ -284,14 +340,14 @@
     { q: "\\((-7) \\times 4\\)", a: -28, numeric: true, tol: 0 },
     { q: "\\((-36) \\div (-9)\\)", a: 4, numeric: true, tol: 0 }
   ];
-  renderCheckList('signs-practice-list', signsPractice, 'signs', "Not quite yet. Ask yourself: same signs, or different signs? Then apply that rule.");
+  renderCheckList('signs-practice-list', signsPractice, 'signs', "Not quite yet. Ask yourself: same signs, or different signs? Then apply that rule.", "5. Are You Ready? - Integer Sign Rules");
 
   const fractionsPractice = [
     { q: "Simplify \\(\\frac{16}{20}\\) to lowest terms. Type as a/b.", accepted: ["4/5"], displayAnswer: "\\(\\frac{4}{5}\\)" },
     { q: "Convert \\(\\frac{23}{6}\\) to a mixed number. Type as a b/c.", accepted: ["3 5/6", "35/6"], displayAnswer: "\\(3\\frac{5}{6}\\)" },
     { q: "Convert \\(5\\frac{1}{2}\\) to an improper fraction. Type as a/b.", accepted: ["11/2"], displayAnswer: "\\(\\frac{11}{2}\\)" }
   ];
-  renderCheckList('fractions-practice-list', fractionsPractice, 'fractions', "Not quite yet. Walk through the steps one at a time and try again.");
+  renderCheckList('fractions-practice-list', fractionsPractice, 'fractions', "Not quite yet. Walk through the steps one at a time and try again.", "5. Are You Ready? - Fraction Mechanics");
 </script>
 </body>
 </html>

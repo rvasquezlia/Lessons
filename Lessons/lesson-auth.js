@@ -1,0 +1,570 @@
+// Pilot integration with the shared progress-tracking backend documented
+// in /CLAUDE.md - see that file before changing the URL/Client ID below or
+// the request shapes. Only pages that include this script gate behind
+// Google sign-in and sync progress; every other lesson page is untouched.
+const LESSON_SYNC_API_URL = 'https://script.google.com/macros/s/AKfycbyC7mb1TKfg3JvhiZftXMf7oXkzrBMWJczZSURC7sIfoIxYnZrrumYfx-j7JYTY0A9i/exec';
+const LESSON_GOOGLE_CLIENT_ID = '478111261772-7l1qamohr0fjsa7ekosuhpj9jum1q4vc.apps.googleusercontent.com';
+// document.currentScript is only valid while this script is first
+// evaluating - captured here, at load time, rather than inside a later
+// callback where it would be null. teacher-dashboard.html always lives
+// next to lesson-auth.js regardless of how deeply nested the calling
+// lesson page is, so this resolves correctly from any page depth.
+const TEACHER_DASHBOARD_URL = new URL('teacher-dashboard.html', document.currentScript.src).href;
+
+const LessonSync = (() => {
+  let activityId = null;
+  let idToken = null;
+  let ready = false;
+  let googleLoaded = false;
+  let initCalled = false;
+  let googleInitialized = false;
+  // Guards against a slow, stale request "winning" after a faster later
+  // one already resolved things - without this, an earlier attempt that
+  // times out AFTER a second attempt already unlocked the page can still
+  // run its failure handler and re-reveal the sign-in gate on top of
+  // already-unlocked content. Every call into proceedWithToken() captures
+  // the generation at its start and checks it's still current before
+  // touching the DOM; resolved permanently retires all of them once one
+  // attempt actually succeeds.
+  let requestGeneration = 0;
+  let resolved = false;
+  // Captured before the patch below replaces LessonProgress.record, so
+  // restoreSubmissions() can update the on-page log directly without
+  // going back through onRecord() and re-posting to the backend every
+  // time the page loads.
+  const originalRecord = LessonProgress.record;
+
+  // Apps Script cold-starts can take a few seconds - without a timeout, a
+  // slow or stuck response leaves the gate showing "Checking access..."
+  // forever with no way to retry short of reloading.
+  function fetchWithTimeout(url, opts, timeoutMs) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs || 15000);
+    return fetch(url, Object.assign({}, opts, { signal: controller.signal })).finally(() => clearTimeout(timer));
+  }
+
+  function setStatus(msg, isError) {
+    const el = document.getElementById('lesson-gate-status');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.color = isError ? 'var(--error)' : 'var(--primary)';
+  }
+
+  // Re-locks and re-displays every previously answered problem on reload.
+  // Only works for the common single-input-per-problem pattern (an input
+  // and a feedback div both id'd "<key>-input" / "<key>-feedback", sharing
+  // a parent with the Check button) - that's what renderPracticeList()
+  // produces, and covers this pilot page's six tabs. A page with a
+  // different DOM shape (radio-button groups, multi-field problems) would
+  // silently skip restoring those items until this is extended.
+  //
+  // A key whose latest entry is a teacher reset (verdict 'reset' - see
+  // Code.gs's applyTeacherReset_ and /CLAUDE.md's reset-mechanism notes)
+  // is deliberately skipped here instead of restored/locked - that's the
+  // entire mechanism a reset relies on: nothing marks the field disabled,
+  // so the student just sees a normal, fresh field with their standard 2
+  // attempts, exactly as if they'd never touched it. Nothing else about
+  // this function needed to change - nowhere else "knows" a reset
+  // happened, because there's nothing left to lock.
+  function restoreSubmissions(submissionsLogJson) {
+    let submissions;
+    try { submissions = JSON.parse(submissionsLogJson || '[]'); } catch (e) { submissions = []; }
+    const latestByKey = {};
+    submissions.forEach((s) => { latestByKey[s.key] = s; }); // log is append-only; last entry per key wins
+    Object.keys(latestByKey).forEach((key) => {
+      const s = latestByKey[key];
+      if (s.verdict === 'reset') return;
+      const input = document.getElementById(`${key}-input`);
+      const feedback = document.getElementById(`${key}-feedback`);
+      if (!input || !feedback) return;
+      input.value = s.answer;
+      // An item LessonCheck.submit() was called on with
+      // { lockAfterSubmit: false } (see lesson-shared.js) never locks,
+      // including on a later reload - it's meant to be freely redone with
+      // no teacher intervention. Pre-fill the last answer so the student
+      // sees where they left off, but leave the field and button enabled
+      // and skip the rest of this function's locked-styling below.
+      if (s.lockAfterSubmit === false) {
+        feedback.style.display = 'block';
+        feedback.className = 'feedback-msg success';
+        feedback.innerHTML = 'Saved from your last session - you can edit and resubmit anytime. <span style="opacity:.75;">(restored)</span>';
+        originalRecord(key, s.label, s.answer, s.verdict, s.section, s.lockAfterSubmit);
+        return;
+      }
+      input.disabled = true;
+      const btn = input.parentElement && input.parentElement.querySelector('button');
+      if (btn) { btn.disabled = true; btn.style.cursor = 'not-allowed'; }
+      feedback.style.display = 'block';
+      if (s.verdict === 'correct') {
+        feedback.className = 'feedback-msg success locked';
+        feedback.innerHTML = 'Correct! <span style="opacity:.75;">(restored from your last session)</span>';
+      } else {
+        feedback.className = 'feedback-msg error locked';
+        feedback.innerHTML = 'Recorded from your last session - your teacher can review it on the dashboard. <span style="opacity:.75;">(restored)</span>';
+      }
+      originalRecord(key, s.label, s.answer, s.verdict, s.section);
+    });
+  }
+
+  // One sentence, injected once per page rather than requiring an edit to
+  // every gated page's own HTML - "activity on this page is recorded" per
+  // the teacher's own wording, deliberately generic so it covers every
+  // listener below (paste/focus/tab-view/answer submissions) without
+  // having to spell each one out or update this text every time a new
+  // signal is added. Idempotent (checks for its own class first) so a
+  // page that somehow calls init() twice never duplicates it.
+  function injectDisclosure() {
+    const body = document.querySelector('#lesson-gate .lesson-gate-body');
+    if (!body || body.querySelector('.lesson-gate-disclosure')) return;
+    const p = document.createElement('p');
+    p.className = 'lesson-gate-disclosure';
+    p.textContent = 'Activity performed on this page is recorded so your teacher can review your work.';
+    const status = document.getElementById('lesson-gate-status');
+    body.insertBefore(p, status || null);
+  }
+
+  // Paste detection - one shared listener (paste events bubble, including
+  // across a <math-field>'s shadow DOM, since clipboard events are
+  // "composed") instead of wiring every individual answer field on every
+  // page. Deliberately logs only the fact that a paste happened, never
+  // the clipboard content itself - a "did they paste" signal for the
+  // teacher, not a way to read what a student typed or copied elsewhere.
+  // Debounced to at most one logged event per 2 seconds so a single
+  // paste action that fires more than one browser paste event (some
+  // IME/clipboard-manager setups do this) doesn't log a duplicate burst.
+  // Every logged key is unique (`paste-<timestamp>`) rather than a fixed
+  // key, since each paste is its own occurrence, not a repeated attempt
+  // on one item - decorateRow() in teacher-dashboard.html excludes
+  // anything starting with "paste-" from graded-item scoring, the same
+  // way it already excludes "tab-*"/"reached-end".
+  let lastPasteLoggedAt = 0;
+  function onPaste(e) {
+    if (!ready || !idToken) return;
+    const tag = e.target && e.target.tagName;
+    if (!tag || !['INPUT', 'TEXTAREA', 'MATH-FIELD'].includes(tag)) return;
+    const now = Date.now();
+    if (now - lastPasteLoggedAt < 2000) return;
+    lastPasteLoggedAt = now;
+    onRecord({ key: `paste-${now}`, label: 'Pasted into an answer field', answer: '', verdict: 'paste-detected', section: 'Integrity' });
+  }
+
+  // Tab-focus tracking - logs when a student navigates away from this
+  // browser tab (switches apps/tabs, minimizes) and when they come back,
+  // as a matched pair of timestamped events. This is the Page Visibility
+  // API, not anything reading what's on another tab or app - it only
+  // ever knows "this tab is/isn't the visible one right now." The very
+  // first "visible" state on page load isn't a "return" from anywhere,
+  // so it's deliberately not logged. Recorded the same retrospective way
+  // as everything else here: nothing is evaluated live, a teacher only
+  // ever sees this later by opening the dashboard.
+  function onVisibilityChange() {
+    if (!ready || !idToken) return;
+    const now = Date.now();
+    if (document.visibilityState === 'hidden') {
+      onRecord({ key: `focus-lost-${now}`, label: 'Left this tab', answer: '', verdict: 'focus-lost', section: 'Integrity' });
+    } else {
+      onRecord({ key: `focus-back-${now}`, label: 'Returned to this tab', answer: '', verdict: 'focus-regained', section: 'Integrity' });
+    }
+  }
+  // Right-click detection - same scope and shape as paste detection
+  // above, deliberately: only a right-click (contextmenu) that lands on
+  // an actual answer field (INPUT/TEXTAREA/MATH-FIELD) is ever logged,
+  // never a right-click anywhere else on the page (branding, nav,
+  // question text) and never anything outside the page at all (a
+  // browser only ever exposes this event for its own document - there's
+  // no way for page JS to see a right-click on the OS desktop or another
+  // tab, so this is a real boundary, not just a policy). The context
+  // menu itself is never blocked (`e.preventDefault()` is deliberately
+  // never called) - a student may have a perfectly ordinary reason to
+  // right-click (spellcheck, "look up") - this only records that it
+  // happened, the same way paste does, for the teacher to review later.
+  let lastRightClickLoggedAt = 0;
+  function onContextMenu(e) {
+    if (!ready || !idToken) return;
+    const tag = e.target && e.target.tagName;
+    if (!tag || !['INPUT', 'TEXTAREA', 'MATH-FIELD'].includes(tag)) return;
+    const now = Date.now();
+    if (now - lastRightClickLoggedAt < 2000) return;
+    lastRightClickLoggedAt = now;
+    onRecord({ key: `rightclick-${now}`, label: 'Right-clicked in an answer field', answer: '', verdict: 'rightclick-detected', section: 'Integrity' });
+  }
+  document.addEventListener('paste', onPaste);
+  document.addEventListener('visibilitychange', onVisibilityChange);
+  document.addEventListener('contextmenu', onContextMenu);
+
+  function hideLoadingIndicator() {
+    const el = document.getElementById('lesson-loading');
+    // #lesson-loading has its own `display: flex` CSS rule (to center the
+    // spinner) which beats the browser's default [hidden] { display:none }
+    // on specificity - the hidden attribute alone doesn't hide it. Setting
+    // style.display directly always wins.
+    if (el) el.style.display = 'none';
+  }
+
+  function showAppContainer() {
+    hideLoadingIndicator();
+    document.getElementById('lesson-gate').hidden = true;
+    document.querySelector('.app-container').hidden = false;
+  }
+
+  function unlock(student, progress) {
+    ready = true;
+    showAppContainer();
+    const nameField = document.getElementById('student-name');
+    if (nameField && student && student.name) {
+      nameField.value = student.name;
+      nameField.disabled = true;
+    }
+    if (progress && progress.SubmissionsLog) restoreSubmissions(progress.SubmissionsLog);
+    trackCurrentTab(); // log whichever tab is visible by default, even if the student never clicks another one
+  }
+
+  // Logs which tab is currently visible as its own synced item, separate
+  // from LessonProgress/LessonCheck - this is what lets pages with no
+  // graded questions at all (or a teacher wanting engagement instead of
+  // scores) still show up on the dashboard: whether a student opened the
+  // page, which tabs they viewed, and whether they reached the last one.
+  // Reads DOM state (.active classes) rather than taking a tabId param,
+  // so it works identically whether called right after sign-in or right
+  // after a tab switch.
+  function trackCurrentTab() {
+    if (!ready || !idToken) return;
+    const activeBtn = document.querySelector('.tab-btn.active');
+    const activePanel = document.querySelector('.panel.active');
+    if (!activeBtn || !activePanel) return;
+    onRecord({ key: `tab-${activePanel.id}`, label: `Viewed tab: ${activeBtn.textContent.trim()}`, answer: '', verdict: 'viewed', section: 'Navigation' });
+    const allTabs = [...document.querySelectorAll('.tab-btn')];
+    if (allTabs.length && activeBtn === allTabs[allTabs.length - 1]) {
+      onRecord({ key: 'reached-end', label: 'Reached last tab', answer: 'yes', verdict: 'reached-end', section: 'Navigation' });
+    }
+  }
+
+  // switchTab() is declared with `function` (not const/let) on every
+  // lesson page, so it's a real window property we can wrap - same trick
+  // as the LessonProgress.record patch below. Only takes effect once the
+  // page's own script has defined it, which init() guarantees since
+  // function declarations are hoisted before any code in that script runs.
+  function patchSwitchTab() {
+    if (typeof window.switchTab !== 'function') return;
+    const originalSwitchTab = window.switchTab;
+    window.switchTab = function (tabId) {
+      originalSwitchTab(tabId);
+      trackCurrentTab();
+    };
+  }
+
+  // Fills in every problem with its correct answer instead of the
+  // interactive check flow. Reads window.listRegistry, which pages using
+  // the renderPracticeList()/checkPractice() pattern expose for exactly
+  // this - a page with a different DOM shape (radio groups, multi-field
+  // problems) won't have anything filled in until this is extended for
+  // that pattern too.
+  function unlockTeacherView(teacherName) {
+    showAppContainer();
+    const nameField = document.getElementById('student-name');
+    if (nameField) {
+      nameField.value = `Answer Key (viewed by ${teacherName || 'teacher'})`;
+      nameField.disabled = true;
+    }
+    // Full-width and flush against the container's own edges (no margin)
+    // so it sits inside .app-container's rounded top corners instead of
+    // floating above them - margins here used to leave a gap that broke
+    // the rounded-corner illusion and made the header look disconnected
+    // from the rest of the card. Styled via the .teacher-view-banner
+    // class in lesson-shared.css rather than inline, including a real
+    // pill-button treatment for the dashboard link instead of a plain
+    // underlined link.
+    const banner = document.createElement('div');
+    banner.className = 'teacher-view-banner';
+    banner.innerHTML = `<span>TEACHER VIEW - answer key shown below, not a student submission.</span>
+      <a href="${TEACHER_DASHBOARD_URL}" target="_blank">Open Teacher Dashboard &rarr;</a>`;
+    document.querySelector('.app-container').prepend(banner);
+
+    const registry = window.listRegistry || {};
+    Object.keys(registry).forEach((keyPrefix) => {
+      const problems = registry[keyPrefix].problems || [];
+      problems.forEach((p, i) => {
+        const input = document.getElementById(`${keyPrefix}-${i}-input`);
+        const feedback = document.getElementById(`${keyPrefix}-${i}-feedback`);
+        if (!input || !feedback) return;
+        const rawAnswer = p.displayAnswer || (p.a !== undefined ? String(p.a) : (p.accepted ? p.accepted[0] : ''));
+        // displayAnswer isn't stored consistently site-wide: most units
+        // store bare LaTeX ("\dfrac{V}{\pi r^2}"), but every Review.html
+        // (plus one Vocabulary-Literacy) bakes its own \( \) delimiters
+        // in already ("\(\frac{6}{9}\)"), since that string is also used
+        // directly inside a "Correct! ..." message elsewhere on those
+        // pages. Stripping any existing wrapper before using it either
+        // way means both conventions produce the same result here,
+        // instead of double-wrapping the second one into invalid,
+        // unrenderable LaTeX (a literal stray \( inside the math itself).
+        const answer = rawAnswer.replace(/^\\\(|\\\)$/g, '');
+        // A plain <input>/<select> can't render LaTeX at all - only a
+        // <math-field> parses it as real math. Several numeric-answer
+        // items (p.a defined) also carry a richer displayAnswer meant for
+        // the feedback text below (e.g. "-\frac{5}{6} \approx -0.83", the
+        // fraction-equivalent shown alongside a decimal answer) - filling
+        // that raw LaTeX into a plain input just showed the literal
+        // unrendered source, cut off by the box's width. On anything but
+        // a <math-field>, fall back to the bare numeric p.a instead - the
+        // feedback text below still gets the richer `answer` either way.
+        // A card-select (see /CLAUDE.md's "Card-select" note) has no real
+        // .value/.disabled - it's a plain <div> of buttons - so it's a
+        // third case: mark the button whose data-value matches the answer
+        // as selected, and disable every option directly via the DOM, with
+        // no dependency on that page's own createCardSelect() instance
+        // (unlockTeacherView only ever has the element id, never that).
+        if (input.classList && input.classList.contains('card-select')) {
+          input.querySelectorAll('.card-select-option').forEach((optBtn) => {
+            optBtn.classList.toggle('selected', optBtn.dataset.value === answer);
+            optBtn.disabled = true;
+          });
+        } else {
+          input.value = (input.tagName !== 'MATH-FIELD' && p.a !== undefined) ? String(p.a) : answer;
+          input.disabled = true;
+        }
+        const btn = input.parentElement && input.parentElement.querySelector('button');
+        if (btn) { btn.disabled = true; btn.style.cursor = 'not-allowed'; }
+        feedback.style.display = 'block';
+        feedback.className = 'feedback-msg success locked';
+        // Wrapped in \( \) so MathJax actually typesets it - unlike
+        // input.value (which a math-field renders directly from raw
+        // LaTeX with no MathJax involved), this is plain innerHTML text
+        // with no renderer of its own - without delimiters it used to
+        // show the literal LaTeX source instead of a rendered fraction,
+        // easy to miss on a plain <input> (which showed that same
+        // unrendered LaTeX as its own value, so nothing looked
+        // inconsistent) but glaring next to a math-field rendering the
+        // same answer correctly right above it.
+        feedback.innerHTML = `Answer key: <strong>\\(${answer}\\)</strong>`;
+      });
+    });
+
+    // Extension point for pages whose problems aren't in window.listRegistry
+    // (multiple bespoke check functions, select dropdowns, multi-field
+    // answers) - such a page defines window.revealAnswerKey itself and this
+    // just calls it.
+    if (typeof window.revealAnswerKey === 'function') window.revealAnswerKey();
+
+    // A teacher viewing the answer key has nothing to submit or check -
+    // only every problem this page's own reveal logic already knows about
+    // gets disabled above, so this final sweep disables every remaining
+    // enabled button/card-select option site-wide EXCEPT ones that only
+    // navigate/browse rather than submit or grade anything - a teacher
+    // should always be free to read every example, round, or student-
+    // choice branch a page has, exactly as if they were clicking through
+    // it themselves; the rule is "does this button submit/grade an
+    // answer" (disable it - already meaningless once every field is
+    // auto-filled), not "is this button graded content" (never disable
+    // pure navigation, even a "pick your strategy group" picker, since
+    // picking a group doesn't grade anything by itself - the exercises
+    // inside it do, and those are still individually disabled above).
+    //
+    // Matched by substring against the button's own onclick text, so this
+    // list has to track the site's real naming conventions, not just the
+    // words that sound like navigation. `change` covers every carousel's
+    // shared change(dir)-style Prev/Next handler (the actual convention
+    // used almost everywhere - a literal "next"/"prev" name is rare);
+    // `choose` covers a student-choice picker like Strategy Challenge's
+    // chooseStrategyGroup(); `load` covers a "load this problem/item"
+    // picker (loadWBProblem, loadGardenTokens) and, as a substring, every
+    // download*() artifact button (a certificate/badge/poster - never a
+    // submission either). Confirmed via a site-wide grep before adding
+    // any of these that nothing matching them is actually a
+    // Check/Submit-style grading function - see /CLAUDE.md's §6 note.
+    // A future carousel/picker/artifact function that doesn't happen to
+    // contain one of these words will still get wrongly disabled here -
+    // check this list first before assuming a "why won't this button
+    // work for a teacher" report is a bug somewhere else.
+    const SAFE_ONCLICK = /next|prev|change|choose|load|reveal|reset|toggle|switchtab|switchsubtab|print|scroll|jump|open|show|close/i;
+    document.querySelectorAll('.app-container button, .app-container .card-select-option').forEach((btn) => {
+      if (btn.disabled) return;
+      if (btn.classList.contains('tab-btn') || btn.classList.contains('sub-tab-btn')) return;
+      const onclick = btn.getAttribute('onclick') || '';
+      if (SAFE_ONCLICK.test(onclick)) return;
+      btn.disabled = true;
+      btn.style.cursor = 'not-allowed';
+    });
+
+    // Every gated page defines its own triggerMathJax() (checks
+    // window.MathJax/typesetPromise before calling) - the answer-key text
+    // just inserted above is new DOM content MathJax has never scanned,
+    // so nothing renders until this runs.
+    if (typeof triggerMathJax === 'function') triggerMathJax();
+  }
+
+  // Shared by a fresh button click/One Tap response and a cached token
+  // resumed silently on page load - both end up here with just the raw
+  // JWT string, so unlock()/unlockTeacherView() don't need to know which
+  // path got them here. The gate stays hidden (see init()/tryStart())
+  // until this actually fails, so a successful cached-token resume never
+  // flashes any sign-in UI at all - only a failure reveals the gate and
+  // brings up the real Google button/One Tap as a fallback.
+  //
+  // Apps Script's response time is genuinely variable (cold starts can
+  // take several seconds) - isRetry lets a single transient failure retry
+  // once with a longer timeout before actually giving up, instead of
+  // immediately showing an error for what's often just a slow first
+  // request. The generation check after every await is what stops a
+  // slow, now-superseded attempt from undoing a later one that already
+  // succeeded (see requestGeneration/resolved above).
+  async function proceedWithToken(rawToken, isRetry) {
+    const myGeneration = ++requestGeneration;
+    idToken = rawToken;
+    setStatus('Checking access...', false);
+    try {
+      const res = await fetchWithTimeout(LESSON_SYNC_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ idToken, type: 'access-check', activityId })
+      }, isRetry ? 25000 : 15000);
+      const result = await res.json();
+      if (resolved || myGeneration !== requestGeneration) return; // superseded - ignore this stale result entirely
+      if (!result.ok) {
+        TokenCache.clear(); // token was rejected outright (expired/invalid) - don't keep retrying it silently
+        showGateAndPromptSignIn();
+        setStatus(result.error || 'Could not verify your account.', true);
+        return;
+      }
+      TokenCache.save(rawToken);
+      if (!result.allowed) {
+        showGateAndPromptSignIn();
+        setStatus(result.reason || 'Access denied.', true);
+        return;
+      }
+      resolved = true;
+      if (result.role === 'teacher') {
+        // A page can opt out of the generic answer-key-reveal-then-lock
+        // behavior below by defining window.onTeacherUnlock itself - e.g.
+        // a free-form project page where "the answer" varies per team and
+        // a teacher instead wants unrestricted, unsaved free play plus an
+        // optional manual reveal. Undefined on every other page, so this
+        // is a no-op everywhere else and unlockTeacherView() runs exactly
+        // as before.
+        if (typeof window.onTeacherUnlock === 'function') { showAppContainer(); window.onTeacherUnlock(result); return; }
+        unlockTeacherView(result.student && result.student.name);
+        return;
+      }
+      unlock(result.student, result.progress);
+      // Optional hook for a page that needs more than the generic
+      // restoreSubmissions() flow above already gives it - e.g. a paired
+      // activity reading result.pairing/result.projectState (see
+      // /CLAUDE.md's "Paired activities" section) to apply a Navigator
+      // read-only lockout or restore free-form canvas/app state.
+      // Undefined on every other page, so this is a no-op everywhere else.
+      if (typeof window.onLessonUnlock === 'function') window.onLessonUnlock(result);
+    } catch (err) {
+      if (resolved || myGeneration !== requestGeneration) return;
+      if (!isRetry) {
+        setStatus('Still checking - the server is taking a moment...', false);
+        await new Promise((r) => setTimeout(r, 1200));
+        if (resolved || myGeneration !== requestGeneration) return;
+        return proceedWithToken(rawToken, true);
+      }
+      showGateAndPromptSignIn();
+      setStatus("Couldn't reach the roster - check your connection and try again.", true);
+    }
+  }
+
+  async function handleGoogleSignIn(response) {
+    await proceedWithToken(response.credential);
+  }
+  window.handleGoogleSignIn = handleGoogleSignIn;
+
+  // Reveals the gate and brings up Google's real sign-in UI (button +
+  // One Tap) - only called once we know a silent cached-token resume
+  // isn't going to work (none cached, or one failed after its retry).
+  // Guarded so a second call (e.g. one failure path triggering another)
+  // doesn't re-initialize or re-prompt on top of an already-visible
+  // button.
+  function showGateAndPromptSignIn() {
+    if (resolved) return; // a later attempt already succeeded - never reveal the gate over already-unlocked content
+    hideLoadingIndicator();
+    const gate = document.getElementById('lesson-gate');
+    if (gate) gate.hidden = false;
+    if (googleInitialized) return;
+    googleInitialized = true;
+    google.accounts.id.initialize({
+      client_id: LESSON_GOOGLE_CLIENT_ID,
+      callback: handleGoogleSignIn,
+      auto_select: true
+    });
+    const btnContainer = document.querySelector('#lesson-gate .g_id_signin');
+    if (btnContainer) google.accounts.id.renderButton(btnContainer, { type: 'standard' });
+    google.accounts.id.prompt();
+  }
+
+  // Only starts once both the page's own script has called init() (so
+  // activityId is known) and the GIS library has actually finished
+  // loading (it's async, so this can resolve before or after init() -
+  // see the onload="onGoogleLibraryLoad()" attribute on the gsi/client
+  // script tag). Whichever happens second runs this.
+  function tryStart() {
+    if (!googleLoaded || !initCalled) return;
+    const cached = TokenCache.load();
+    if (cached) {
+      proceedWithToken(cached);
+    } else {
+      showGateAndPromptSignIn();
+    }
+  }
+
+  function onGoogleLibraryLoad() {
+    googleLoaded = true;
+    tryStart();
+  }
+  window.onGoogleLibraryLoad = onGoogleLibraryLoad;
+
+  function onRecord(item) {
+    if (!ready || !idToken) return;
+    fetchWithTimeout(LESSON_SYNC_API_URL, {
+      method: 'POST',
+      body: JSON.stringify({ idToken, type: 'submission', activityId, item })
+    }).catch((err) => console.warn('Progress sync failed (kept on this page only):', err));
+  }
+
+  // LessonProgress.record() already exists (lesson-shared.js) and is
+  // called by every LessonCheck.check()/submit() - wrapping it here, only
+  // on pages that load this script, means no per-page call site needs to
+  // change to get synced.
+  LessonProgress.record = function (key, label, answer, verdict, section, lockAfterSubmit) {
+    originalRecord(key, label, answer, verdict, section, lockAfterSubmit);
+    onRecord({ key, label, answer, verdict, section, lockAfterSubmit });
+  };
+
+  function init(id) {
+    activityId = id;
+    injectDisclosure();
+    patchSwitchTab();
+    initCalled = true;
+    tryStart();
+  }
+
+  // Generic helpers for a paired/team project page (see /CLAUDE.md's
+  // "Paired activities" section) - not used by any single-answer lesson
+  // page, only by a page storing its own free-form app state (a canvas
+  // layout, a cart, etc.) that doesn't fit the per-item SubmissionsLog
+  // model. Both no-op (never throw) if called before sign-in succeeds -
+  // idToken is this closure's private copy, never exposed directly, so a
+  // page can't build its own competing request shape against it.
+  function saveProjectState(stateJson) {
+    if (!ready || !idToken) return;
+    fetchWithTimeout(LESSON_SYNC_API_URL, {
+      method: 'POST',
+      body: JSON.stringify({ idToken, type: 'project-state-save', activityId, stateJson })
+    }).catch((err) => console.warn('Project state sync failed (kept on this page only):', err));
+  }
+
+  async function checkDay2Code(code) {
+    if (!ready || !idToken) return { ok: false, error: 'Not signed in yet' };
+    try {
+      const res = await fetchWithTimeout(LESSON_SYNC_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ idToken, type: 'check-day2-code', activityId, code })
+      });
+      return await res.json();
+    } catch (err) {
+      return { ok: false, error: "That took too long - try again." };
+    }
+  }
+
+  return { init, saveProjectState, checkDay2Code };
+})();

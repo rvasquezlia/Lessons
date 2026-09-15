@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra I: Solving Linear Inequalities - Vocabulary &amp; Literacy</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Visual math input: registers the <math-field> custom element used
+       by the Translation Practice answer fields below. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
+  <link rel="stylesheet" href="../../lesson-shared.css">
+  <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
+  <style>
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .glossary-card {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-left: 8px solid var(--primary-light);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .glossary-term {
+      font-weight: 900;
+      color: var(--primary);
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .glossary-def { margin: 0 0 8px 0; }
+    .glossary-example {
+      background: #f1f5f9;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.92rem;
+      color: #334155;
+    }
+  </style>
+</head>
+<body>
+
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Algebra I &middot; Solving Linear Inequalities</span>
+    <h1>Vocabulary &amp; Literacy</h1>
+    <p class="standards-line">Standards: HSA.CED.A.1, HSA.REI.A.1, HSA.REI.B.3</p>
+  </header>
+
+  <div class="howto-box" style="margin:20px 24px 0 24px;">
+    <strong class="howto-label">How this page works</strong>
+    <ul style="margin:0; padding-left:20px;">
+      <li><strong>Tab 1:</strong> glossary of every term - read it once, then use it as a reference.</li>
+      <li><strong>Tab 2:</strong> translate real-world phrases into inequalities, with practice you can check.</li>
+      <li><strong>Tab 3:</strong> a short self-check of the vocabulary.</li>
+      <li>No printable progress report here - this page is a reference and warm-up, not graded.</li>
+    </ul>
+  </div>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('glossary')">1. Key Vocabulary</button>
+    <button class="tab-btn" onclick="switchTab('translate')">2. Translating Words to Inequalities</button>
+    <button class="tab-btn" onclick="switchTab('selfcheck')">3. Quick Vocabulary Check</button>
+  </nav>
+
+  <!-- TAB 1: GLOSSARY -->
+  <div id="glossary" class="panel active">
+    <div class="section-title">Key Vocabulary: Solving Linear Inequalities</div>
+    <div class="explainer-box">
+      Every term below shows up in this topic. Read through them once, then come back any time a word trips you up.
+    </div>
+
+    <h3 style="color:var(--primary);">Parts of an Inequality</h3>
+    <div class="glossary-grid">
+      <div class="glossary-card">
+        <span class="glossary-term">Inequality</span>
+        <p class="glossary-def">A mathematical sentence that compares two expressions using \(<\), \(>\), \(\leq\), or \(\geq\), showing they are not necessarily equal.</p>
+        <div class="glossary-example">Example: \(x + 3 > 10\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Solution of an Inequality</span>
+        <p class="glossary-def">A value that makes the inequality a true statement when substituted for the variable.</p>
+        <div class="glossary-example">\(x = 8\) is a solution of \(x > 5\), since \(8 > 5\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Solution Set</span>
+        <p class="glossary-def">The complete collection of every value that makes an inequality true - usually infinitely many values, not just one.</p>
+        <div class="glossary-example">"All values of \(x\) greater than 5"</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Boundary Point</span>
+        <p class="glossary-def">The number that separates the values that make the inequality true from the values that don't.</p>
+        <div class="glossary-example">In \(x > 5\), the boundary point is \(5\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Isolate the Variable</span>
+        <p class="glossary-def">The goal of solving: use inverse operations until the variable stands alone on one side - the same goal as solving an equation.</p>
+        <div class="glossary-example">\(3x > 15 \rightarrow x > 5\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Properties of Inequality</span>
+        <p class="glossary-def">Rules that let you add, subtract, multiply, or divide both sides of an inequality by the same amount - except multiplying or dividing by a <strong>negative</strong> number, which flips the direction of the inequality.</p>
+        <div class="glossary-example">If \(a < b\) and \(c\) is negative, then \(ac > bc\)</div>
+      </div>
+    </div>
+
+    <h3 style="color:var(--primary); margin-top:28px;">Graphing an Inequality</h3>
+    <div class="glossary-grid">
+      <div class="glossary-card">
+        <span class="glossary-term">Open Circle</span>
+        <p class="glossary-def">Used when graphing \(<\) or \(>\) - shows the boundary point itself is <strong>not</strong> a solution.</p>
+        <div class="glossary-example">Graphing \(x > 3\) uses an open circle at \(3\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Closed Circle</span>
+        <p class="glossary-def">Also called a filled circle. Used when graphing \(\leq\) or \(\geq\) - shows the boundary point itself <strong>is</strong> a solution.</p>
+        <div class="glossary-example">Graphing \(x \leq -2\) uses a closed circle at \(-2\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Direction of the Arrow</span>
+        <p class="glossary-def">The arrow on a number-line graph points toward every number that makes the inequality true - right for "greater than," left for "less than."</p>
+        <div class="glossary-example">\(x > 3\) shades/arrows to the right of \(3\)</div>
+      </div>
+    </div>
+
+    <h3 style="color:var(--primary); margin-top:28px;">Real-World Phrases</h3>
+    <div class="glossary-grid">
+      <div class="glossary-card">
+        <span class="glossary-term">At Least</span>
+        <p class="glossary-def">Means "greater than or equal to" - the minimum amount is itself allowed.</p>
+        <div class="glossary-example">"At least 5" means \(x \geq 5\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">At Most</span>
+        <p class="glossary-def">Means "less than or equal to" - the maximum amount is itself allowed.</p>
+        <div class="glossary-example">"At most 5" means \(x \leq 5\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">More Than</span>
+        <p class="glossary-def">Means "strictly greater than" - the boundary value itself does <strong>not</strong> count.</p>
+        <div class="glossary-example">"More than 5" means \(x > 5\)</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-term">Fewer Than / Less Than</span>
+        <p class="glossary-def">Means "strictly less than" - the boundary value itself does <strong>not</strong> count.</p>
+        <div class="glossary-example">"Fewer than 5" means \(x < 5\)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: TRANSLATING WORDS TO INEQUALITIES -->
+  <div id="translate" class="panel">
+    <div class="section-title">Translating Words to Inequalities</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Read the keyword table, then translate each phrase into an inequality. Use \(n\) to represent "a number." You get two tries per item.
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>Phrase</th><th>Meaning</th><th>Symbol</th></tr></thead>
+      <tbody>
+        <tr><td>At least, no less than, minimum of</td><td>Greater than or equal to</td><td>\(\geq\)</td></tr>
+        <tr><td>At most, no more than, maximum of</td><td>Less than or equal to</td><td>\(\leq\)</td></tr>
+        <tr><td>More than, greater than, exceeds</td><td>Strictly greater than</td><td>\(>\)</td></tr>
+        <tr><td>Fewer than, less than, below</td><td>Strictly less than</td><td>\(<\)</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:24px;">Translation Practice</h3>
+    <div id="translate-list"></div>
+  </div>
+
+  <!-- TAB 3: QUICK VOCABULARY CHECK -->
+  <div id="selfcheck" class="panel">
+    <div class="section-title">Quick Vocabulary Check</div>
+    <div class="howto-box">
+      <strong class="howto-label">What to do on this tab</strong>
+      Drag each term onto its matching <strong>definition</strong>, and onto its matching <strong>example</strong>, too - or tap a term and then tap a definition or example. A term only earns full credit once both its definition and its example are matched. There's no limit on tries.
+    </div>
+    <div class="match-wrap">
+      <div class="match-col"><div class="match-col-heading">Term</div><div id="vocab-terms"></div></div>
+      <div class="match-col"><div class="match-col-heading">Definition</div><div id="vocab-definitions"></div></div>
+      <div class="match-col"><div class="match-col-heading">Example</div><div id="vocab-examples"></div></div>
+    </div>
+    <div class="feedback-msg" id="vocabmatch-feedback"></div>
+  </div>
+</div>
+
+<script>
+  LessonSync.init('8-linear-inequalities-vocabulary-literacy');
+
+  function triggerMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise().catch((err) => console.log(err));
+    }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    triggerMathJax();
+  }
+
+  // Plain-text answer normalizer for a TRANSLATED (not yet solved)
+  // inequality string - strips spaces/parens/multiplication marks like the
+  // site's usual normalizeExpr() (see /CLAUDE.md's "Visual math input"),
+  // plus folds unicode >=/<= and the sloppy "=>"/"=<" spellings down to
+  // ASCII >=/<= so any of those typings compare equal.
+  function normalizeIneqExpr(s) {
+    let out = String(s || '').toLowerCase().replace(/\s+/g, '').replace(/\*/g, '').replace(/·/g, '');
+    out = out.replace(/≥/g, '>=').replace(/≤/g, '<=').replace(/=>/g, '>=').replace(/=</g, '<=');
+    return out;
+  }
+
+  function ineqAnswerMatches(val, accepted) {
+    const norm = normalizeIneqExpr(val);
+    return (accepted || []).some((a) => normalizeIneqExpr(a) === norm);
+  }
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
+  }
+
+  // ==========================================
+  // TRANSLATION PRACTICE
+  // ==========================================
+  const translateItems = [
+    { q: "A number is at least 12.", accepted: ["n>=12"], displayAnswer: "\\(n \\geq 12\\)" },
+    { q: "A number is at most -3.", accepted: ["n<=-3"], displayAnswer: "\\(n \\leq -3\\)" },
+    { q: "Five more than a number is greater than 20.", accepted: ["n+5>20"], displayAnswer: "\\(n + 5 > 20\\)" },
+    { q: "Three less than a number is at most 9.", accepted: ["n-3<=9"], displayAnswer: "\\(n - 3 \\leq 9\\)" },
+    { q: "Twice a number is at most 18.", accepted: ["2n<=18"], displayAnswer: "\\(2n \\leq 18\\)" },
+    { q: "Four times a number is greater than -20.", accepted: ["4n>-20"], displayAnswer: "\\(4n > -20\\)" },
+    { q: "A number decreased by 7 is at least 2.", accepted: ["n-7>=2"], displayAnswer: "\\(n - 7 \\geq 2\\)" },
+    { q: "The sum of a number and 9 is fewer than 15.", accepted: ["n+9<15"], displayAnswer: "\\(n + 9 < 15\\)" }
+  ];
+
+  function renderTranslate() {
+    const html = translateItems.map((p, i) => `
+      <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <strong>${i + 1}.</strong> ${p.q}
+        <math-field id="tr-${i}-input" class="form-control-lg" style="max-width:200px; display:inline-block;"></math-field>
+        <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkTranslate(${i})">Check</button>
+        <div id="tr-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
+      </div>
+    `).join('');
+    document.getElementById('translate-list').innerHTML = html;
+    triggerMathJax();
+  }
+
+  function checkTranslate(idx) {
+    const p = translateItems[idx];
+    const val = readMathField(document.getElementById(`tr-${idx}-input`));
+    const fb = document.getElementById(`tr-${idx}-feedback`);
+    if (!val.trim()) {
+      LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
+      return;
+    }
+    const correct = ineqAnswerMatches(val, p.accepted);
+    LessonCheck.check(`tr-${idx}`, correct, fb, {
+      correct: `Correct! ${p.displayAnswer}`,
+      retry: "Not quite yet. Find the keyword in the phrase (at least, at most, more than, fewer than) and match it to its symbol. Try again.",
+      reveal: `Here's the correct translation: ${p.displayAnswer}`
+    }, { label: `Translate: ${p.q}`, answer: val, section: '2. Translating Words to Inequalities' });
+  }
+
+  // ==========================================
+  // QUICK VOCABULARY CHECK (drag-and-drop match-up - see createVocabMatch()
+  // in lesson-shared.js and /CLAUDE.md's "Vocabulary Match-Up" section)
+  // ==========================================
+  // Definitions/examples are the same text as Tab 1's glossary cards, so
+  // this stays self-consistent with the reference material by construction.
+  const VOCAB_TERMS = [
+    { key: 'inequality', term: 'Inequality', def: 'A mathematical sentence that compares two expressions using \\(<\\), \\(>\\), \\(\\leq\\), or \\(\\geq\\), showing they are not necessarily equal.', example: '\\(x + 3 > 10\\)' },
+    { key: 'solutionset', term: 'Solution Set', def: 'The complete collection of every value that makes an inequality true - usually infinitely many values, not just one.', example: '"All values of \\(x\\) greater than 5"' },
+    { key: 'boundary', term: 'Boundary Point', def: "The number that separates the values that make the inequality true from the values that don't.", example: '\\(x > 5\\) has boundary point \\(5\\)' },
+    { key: 'opencircle', term: 'Open Circle', def: 'Used when graphing \\(<\\) or \\(>\\) - shows the boundary point itself is <strong>not</strong> a solution.', example: 'Graphing \\(x > 3\\) uses an open circle at 3' },
+    { key: 'atleast', term: 'At Least', def: 'A real-world phrase meaning "greater than or equal to" - the minimum is included.', example: '"At least 5" means \\(x \\geq 5\\)' },
+    { key: 'atmost', term: 'At Most', def: 'A real-world phrase meaning "less than or equal to" - the maximum is included.', example: '"At most 5" means \\(x \\leq 5\\)' }
+  ];
+
+  const vocabMatch = createVocabMatch({
+    termsId: 'vocab-terms', defsId: 'vocab-definitions', exsId: 'vocab-examples',
+    feedbackId: 'vocabmatch-feedback',
+    terms: VOCAB_TERMS,
+    progressKey: 'vocabmatch', progressLabel: 'Key Vocabulary Match-Up',
+    section: '3. Quick Vocabulary Check'
+  });
+
+  renderTranslate();
+  vocabMatch.render();
+
+  // Teacher answer key - see /CLAUDE.md's "Role differentiation on lesson
+  // pages". Tab 2 (checkTranslate) is hand-written, so this stays
+  // hand-written too; Tab 3 delegates to vocabMatch.reveal() since the
+  // match-up widget owns its own reveal state.
+  window.revealAnswerKey = function () {
+    // This page's answer fields are <math-field>, so the field itself is
+    // filled with displayAnswer's bare LaTeX (its \( \) wrapper stripped -
+    // see /CLAUDE.md's teacher-view reveal notes on this convention). The
+    // feedback line below keeps the delimited form, which MathJax renders.
+    const fillInput = (id, feedbackId, displayAnswer) => {
+      const input = document.getElementById(id);
+      const fb = document.getElementById(feedbackId);
+      if (!input || !fb) return;
+      input.value = displayAnswer.replace(/^\\\(|\\\)$/g, '');
+      input.disabled = true;
+      const container = input.closest('.guided-practice');
+      const btn = container && container.querySelector('button');
+      if (btn) btn.disabled = true;
+      fb.style.display = 'block';
+      fb.className = 'feedback-msg success locked';
+      fb.innerHTML = `Answer key: <strong>${displayAnswer}</strong>`;
+    };
+    translateItems.forEach((p, i) => fillInput(`tr-${i}-input`, `tr-${i}-feedback`, p.displayAnswer));
+    vocabMatch.reveal();
+  };
+</script>
+</body>
+</html>

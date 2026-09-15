@@ -20,8 +20,21 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+  <!-- Visual math input (site-wide rollout from the Eighth/Literal-Equations
+       pilot - see /CLAUDE.md's "Visual math input" note): registers the
+       <math-field> custom element used for this page's fraction answers. -->
+  <script src="https://cdn.jsdelivr.net/npm/mathlive@0.110.0/mathlive.min.js"></script>
+
   <link rel="stylesheet" href="../../lesson-shared.css">
   <script src="../../lesson-shared.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+  <script src="../../token-cache.js?v=2"></script>
+  <script src="../../lesson-auth.js?v=14"></script>
+  <style>
+    #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+    .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+    @keyframes lesson-spin { to { transform: rotate(360deg); } }
+  </style>
   <style>
     .glossary-grid {
       display: grid;
@@ -52,7 +65,23 @@
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Sign in to start this activity</h2>
+    <p>Sign in with your Lincoln International Academy Google account to begin.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -60,12 +89,13 @@
     </div>
     <span class="badge">Operations with Fractions &middot; Review</span>
     <h1>Review: Fractions Before We Add &amp; Subtract</h1>
+    <p class="standards-line">Standards: 5.NF.A.1, 6.NS.A.1</p>
     <p class="subtitle">Everything you need to remember before we start adding and subtracting fractions</p>
   </header>
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
     <strong class="howto-label">How this page works</strong>
-    Nothing here is graded &ndash; this is a warm-up so old, shaky knowledge doesn't get in the way of new learning. Work through the tabs in order: vocabulary first, then equivalent fractions, then common denominators and mixed numbers, then a short practice check so you can see for yourself what's solid and what needs another look. Come back to any tab as often as you like, even after we've started the real lesson.
+    Nothing here is graded &ndash; this is a warm-up so old, shaky knowledge doesn't get in the way of new learning. Work through the tabs in order: vocabulary first, then equivalent fractions, then common denominators and mixed numbers, then a short practice check so you can see for yourself what's solid and what needs another look. Come back to any tab as often as you like, even after we've started the real lesson. Your teacher can see which tabs you opened and whether you reached the end, so it's worth actually doing.
   </div>
 
   <nav class="nav-tabs">
@@ -282,6 +312,8 @@
 </div>
 
 <script>
+  LessonSync.init('6-operations-with-fractions-review');
+
   function triggerMathJax() {
     if (window.MathJax && window.MathJax.typesetPromise) {
       MathJax.typesetPromise().catch((err) => console.log(err));
@@ -318,13 +350,14 @@
   // GENERIC CHECK-STYLE PRACTICE LIST (2 tries, then reveal)
   // ==========================================
   const checkListRegistry = {};
+  window.listRegistry = checkListRegistry; // read by lesson-auth.js's teacher answer-key view
 
-  function renderCheckList(containerId, problems, keyPrefix, retryMsg) {
-    checkListRegistry[keyPrefix] = { problems, retry: retryMsg };
+  function renderCheckList(containerId, problems, keyPrefix, retryMsg, section) {
+    checkListRegistry[keyPrefix] = { problems, retry: retryMsg, section: section || '5. Are You Ready?' };
     const html = problems.map((p, i) => `
       <div class="guided-practice" style="background: rgba(74, 222, 128, 0.08); border: 2px dashed var(--success); padding: 14px; border-radius: 12px; margin-top: 10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
         <strong>${i + 1}.</strong> ${p.q}
-        <input type="text" id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:170px; display:inline-block;" placeholder="Answer">
+        <math-field id="${keyPrefix}-${i}-input" class="form-control-lg" style="max-width:170px; display:inline-block;"></math-field>
         <button class="btn-lg" style="padding:8px 16px; font-size:0.95rem;" onclick="checkListItem('${keyPrefix}', ${i})">Check</button>
         <div id="${keyPrefix}-${i}-feedback" class="feedback-msg" style="width:100%; margin-top:8px;"></div>
       </div>
@@ -333,14 +366,29 @@
     triggerMathJax();
   }
 
+  // See Practice-Set.html's stripRedundantParens/normFracStrict (same
+  // regex, different local name) and /CLAUDE.md's "Visual math input"
+  // note: MathLive's ascii-math always wraps both sides of a fraction in
+  // parens even when trivial, so this needs to undo that before
+  // comparing, not just lowercase/strip whitespace.
   function normFrac(s) {
-    return String(s || '').toLowerCase().replace(/\s+/g, '');
+    let out = String(s || '').toLowerCase().replace(/\s+/g, '');
+    let prev;
+    do { prev = out; out = out.replace(/\(([^()+-]+)\)/g, '$1'); } while (out !== prev);
+    return out;
+  }
+
+  // Reads a <math-field>'s answer as ASCIIMath text, guarded against the
+  // MathLive script never loading - see Eighth/Literal-Equations'
+  // Practice-Set.html for the identical helper.
+  function readMathField(field) {
+    return typeof field.getValue === 'function' ? field.getValue('ascii-math') : '';
   }
 
   function checkListItem(keyPrefix, idx) {
     const cfg = checkListRegistry[keyPrefix];
     const p = cfg.problems[idx];
-    const val = document.getElementById(`${keyPrefix}-${idx}-input`).value;
+    const val = readMathField(document.getElementById(`${keyPrefix}-${idx}-input`));
     const fb = document.getElementById(`${keyPrefix}-${idx}-feedback`);
     if (!val.trim()) {
       LessonCheck.incomplete(fb, "Enter an answer before checking - this won't count as an attempt yet.");
@@ -351,7 +399,7 @@
       correct: `Correct! ${p.displayAnswer || ('The answer is ' + p.a + '.')}`,
       retry: cfg.retry,
       reveal: `Here's the correct answer: ${p.displayAnswer || p.a}`
-    });
+    }, { label: p.label || p.q.replace(/\\\(|\\\)/g, ''), answer: val, section: cfg.section });
   }
 
   // ==========================================
@@ -363,7 +411,7 @@
     { q: "Write an equivalent fraction for \\(\\frac{3}{5}\\) with a denominator of 20.", accepted: ["12/20"], displayAnswer: "\\(\\frac{12}{20}\\)" },
     { q: "Simplify \\(\\frac{10}{15}\\) to simplest form.", accepted: ["2/3"], displayAnswer: "\\(\\frac{2}{3}\\)" }
   ];
-  renderCheckList('eq-practice-list', eqPractice, 'eq', "Not quite yet. Multiply or divide the numerator AND denominator by the same number, then try again.");
+  renderCheckList('eq-practice-list', eqPractice, 'eq', "Not quite yet. Multiply or divide the numerator AND denominator by the same number, then try again.", "5. Are You Ready? - Equivalent Fractions");
 
   const butterflyPractice = [
     { q: "Using the Butterfly Method, what is the new denominator for \\(\\frac{1}{3} + \\frac{1}{5}\\)?", accepted: ["15"], displayAnswer: "15" },
@@ -371,7 +419,7 @@
     { q: "Using the Butterfly Method, what is the new denominator for \\(\\frac{1}{2} + \\frac{1}{8}\\)?", accepted: ["16"], displayAnswer: "16" },
     { q: "Using the Butterfly Method, what is the new denominator for \\(\\frac{1}{6} - \\frac{1}{9}\\)?", accepted: ["54"], displayAnswer: "54" }
   ];
-  renderCheckList('butterfly-practice-list', butterflyPractice, 'butterfly', "Not quite yet. Cross-multiply each numerator by the denominator across from it for the wings, then multiply the two denominators for the new one.");
+  renderCheckList('butterfly-practice-list', butterflyPractice, 'butterfly', "Not quite yet. Cross-multiply each numerator by the denominator across from it for the wings, then multiply the two denominators for the new one.", "5. Are You Ready? - Butterfly Method & Mixed Numbers");
 
   const mixedPractice = [
     { q: "Convert \\(3\\frac{2}{5}\\) to an improper fraction.", accepted: ["17/5"], displayAnswer: "\\(\\frac{17}{5}\\)" },
@@ -379,7 +427,7 @@
     { q: "Convert \\(2\\frac{3}{7}\\) to an improper fraction.", accepted: ["17/7"], displayAnswer: "\\(\\frac{17}{7}\\)" },
     { q: "Convert \\(\\frac{22}{6}\\) to a mixed number (simplest form).", accepted: ["3 2/3", "32/3", "3,2/3"], displayAnswer: "\\(3\\frac{2}{3}\\)" }
   ];
-  renderCheckList('mixed-practice-list', mixedPractice, 'mixed', "Not quite yet. Remember: multiply the whole number by the denominator and add the numerator - or divide numerator by denominator to go the other way.");
+  renderCheckList('mixed-practice-list', mixedPractice, 'mixed', "Not quite yet. Remember: multiply the whole number by the denominator and add the numerator - or divide numerator by denominator to go the other way.", "5. Are You Ready? - Butterfly Method & Mixed Numbers");
 </script>
 </body>
 </html>

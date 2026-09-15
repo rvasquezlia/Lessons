@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects Dashboard - Lessons Progress</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson-shared.css">
+<script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+<script src="token-cache.js?v=2"></script>
+<style>
+  body { padding: 20px; }
+  #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 120px 20px; }
+  .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+  @keyframes lesson-spin { to { transform: rotate(360deg); } }
+
+  .filter-bar {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+    background: var(--bg); border-bottom: 4px solid var(--border); padding: 14px 24px;
+    position: sticky; top: 0; z-index: 20; box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  }
+  .filter-bar .filters { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+  .pill-filter-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .pill-filter-label { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+  .filter-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .filter-pill {
+    padding: 6px 14px; border-radius: 999px; border: 2px solid var(--border);
+    background: var(--card); color: var(--text); font-family: inherit;
+    font-weight: 700; font-size: 0.82rem; cursor: pointer;
+  }
+  .filter-pill:hover { border-color: var(--primary-light); }
+  .filter-pill.active { background: var(--primary); border-color: var(--primary); color: white; }
+  .btn-refresh {
+    background: var(--primary); color: white; border: none; padding: 9px 20px;
+    border-radius: 8px; font-weight: 800; cursor: pointer; font-family: inherit; font-size: 0.9rem;
+  }
+  .btn-refresh:hover { background: var(--primary-light); }
+  .back-link {
+    display: inline-block; margin: 0 0 14px 0; color: var(--primary); font-weight: 700;
+    text-decoration: none; font-size: 0.9rem;
+  }
+  .back-link:hover { text-decoration: underline; }
+
+  .section-title { font-size: 1.4rem; font-weight: 800; color: var(--primary); margin: 26px 0 14px 0; }
+
+  /* ===== STREAM hero: one ring per pillar, aggregated across every
+     project activity currently in view. A pillar with zero matching
+     graded sections across every project (never padded to a fake 0%)
+     renders as a dim "No data yet" ring instead of being omitted -
+     the whole point of this graphic is to show all six letters of
+     STREAM every time, so a genuinely-absent pillar has to visibly
+     say so rather than just disappear from the row. */
+  .stream-hero {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px;
+    background: var(--bg); border: 2px solid var(--border); border-radius: 16px;
+    padding: 24px 16px; margin-bottom: 8px;
+  }
+  .stream-pillar { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+  .stream-ring { position: relative; width: 96px; height: 96px; }
+  .stream-ring svg { transform: rotate(-90deg); }
+  .stream-ring-track { fill: none; stroke: var(--border); stroke-width: 9; }
+  .stream-ring-fill { fill: none; stroke: var(--primary); stroke-width: 9; stroke-linecap: round; transition: stroke-dashoffset 0.4s ease; }
+  .stream-ring.no-data .stream-ring-fill { stroke: transparent; }
+  .stream-ring-label {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; line-height: 1.05;
+  }
+  .stream-ring-letter { font-size: 1.6rem; font-weight: 900; color: var(--primary); }
+  .stream-ring.no-data .stream-ring-letter { color: var(--empty, #94a3b8); }
+  .stream-ring-pct { font-size: 0.78rem; font-weight: 700; color: var(--text); }
+  .stream-pillar-name { font-size: 0.82rem; font-weight: 700; color: var(--text); }
+  .stream-pillar-note { font-size: 0.72rem; color: var(--empty, #94a3b8); }
+  @media (max-width: 760px) {
+    .stream-hero { grid-template-columns: repeat(3, 1fr); row-gap: 24px; }
+  }
+  @media (max-width: 420px) {
+    .stream-hero { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .project-card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 22px; margin-bottom: 24px; }
+  .project-card { background: var(--card); border: 2px solid var(--border); border-radius: 14px; padding: 20px 22px; }
+  .project-card h3 { margin: 0 0 4px 0; color: var(--primary); font-size: 1.15rem; }
+  .project-card .grade-tag {
+    display: inline-block; background: var(--primary-light); color: #fff; font-size: 0.72rem;
+    font-weight: 800; padding: 2px 10px; border-radius: 999px; margin-bottom: 12px;
+  }
+  .project-stat-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .project-stat-tile { background: var(--bg); border: 2px solid var(--border); border-radius: 10px; padding: 8px 14px; min-width: 90px; flex: 1; text-align: center; }
+  .project-stat-tile .n { font-size: 1.25rem; font-weight: 800; color: var(--primary); }
+  .project-stat-tile .l { font-size: 0.7rem; opacity: 0.75; }
+
+  .mini-pillar-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .mini-pillar-chip {
+    display: flex; align-items: center; gap: 6px; background: var(--bg); border: 2px solid var(--border);
+    border-radius: 999px; padding: 4px 10px 4px 4px; font-size: 0.78rem; font-weight: 700;
+  }
+  .mini-pillar-chip .letter {
+    width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 900; flex-shrink: 0;
+  }
+
+  details.deliverables-toggle { margin-top: 6px; }
+  details.deliverables-toggle summary {
+    cursor: pointer; font-weight: 700; color: var(--primary); font-size: 0.88rem; padding: 6px 0;
+  }
+  .deliverables-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.85rem; }
+  .deliverables-table th, .deliverables-table td { border-bottom: 1px solid var(--border); padding: 6px 8px; text-align: left; }
+  .deliverables-table th { background: var(--primary); color: #fff; font-size: 0.78rem; }
+
+  .empty-note { color: var(--empty, #94a3b8); font-style: italic; }
+</style>
+</head>
+<body>
+
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Projects Dashboard</h2>
+    <p>Sign in with your school Google account.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" id="dashboard" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+    <span class="badge">Projects Dashboard</span>
+    <h1>STREAM Project Progress</h1>
+    <p class="subtitle" id="loaded-as"></p>
+  </header>
+
+  <div class="filter-bar">
+    <div class="filters">
+      <div class="pill-filter-group">
+        <span class="pill-filter-label">Grade:</span>
+        <div class="filter-pills" id="grade-pills"></div>
+      </div>
+      <div class="pill-filter-group" id="teacher-filter-group">
+        <span class="pill-filter-label">Teacher:</span>
+        <div class="filter-pills" id="teacher-pills"></div>
+      </div>
+    </div>
+    <button class="btn-refresh" id="refresh-btn">Refresh</button>
+  </div>
+
+  <div style="padding: 0 24px;">
+    <a class="back-link" href="teacher-dashboard.html">&larr; Back to the main Teacher Dashboard</a>
+
+    <div class="section-title">STREAM Pillar Progress</div>
+    <p style="margin: -8px 0 14px 0; color: var(--text); opacity: 0.85; font-size: 0.9rem;">
+      Aggregated across every STREAM project activity currently in view (see the Grade/Teacher filters above).
+      Each pillar's % is item-completion among the graded items its own content actually covers - a pillar with
+      no matching graded content anywhere in view shows "No data yet" rather than a fabricated 0%.
+    </p>
+    <div class="stream-hero" id="stream-hero"></div>
+
+    <div class="section-title">Projects</div>
+    <div id="project-list"></div>
+  </div>
+</div>
+
+<script>
+  const LESSON_SYNC_API_URL = 'https://script.google.com/macros/s/AKfycbyC7mb1TKfg3JvhiZftXMf7oXkzrBMWJczZSURC7sIfoIxYnZrrumYfx-j7JYTY0A9i/exec';
+  const GOOGLE_CLIENT_ID = '478111261772-7l1qamohr0fjsa7ekosuhpj9jum1q4vc.apps.googleusercontent.com';
+
+  let allRows = [];
+  let roster = [];
+  let activityCatalog = [];
+  let teacherScope = null;
+  let allProjectStates = [];
+
+  let currentGradeFilter = '';
+  let currentTeacherFilter = '';
+  let gradeFilterInitialized = false;
+
+  // requestGeneration/resolved stop a slow, now-superseded sign-in attempt
+  // from undoing a later one that already succeeded - see /CLAUDE.md's
+  // "Stale in-flight requests" note. Same pattern as teacher-dashboard.html.
+  let requestGeneration = 0;
+  let resolved = false;
+  let googleInitialized = false;
+  let googleLibraryLoaded = false;
+
+  function fetchWithTimeout(url, opts, timeoutMs) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs || 15000);
+    return fetch(url, Object.assign({}, opts, { signal: controller.signal })).finally(() => clearTimeout(timer));
+  }
+
+  function hideLoadingIndicator() {
+    const el = document.getElementById('lesson-loading');
+    if (el) el.style.display = 'none';
+  }
+
+  function setGateStatus(msg, isError) {
+    const el = document.getElementById('lesson-gate-status');
+    el.textContent = msg;
+    el.style.color = isError ? 'var(--error)' : 'var(--primary)';
+  }
+
+  async function proceedWithToken(rawToken, isRetry) {
+    const myGeneration = ++requestGeneration;
+    setGateStatus('Checking your account...', false);
+    try {
+      const res = await fetchWithTimeout(LESSON_SYNC_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ idToken: rawToken, type: 'teacher-data' })
+      }, isRetry ? 25000 : 15000);
+      const result = await res.json();
+      if (resolved || myGeneration !== requestGeneration) return;
+      if (!result.ok) {
+        TokenCache.clear();
+        showGateAndPromptSignIn();
+        setGateStatus(result.error || 'Not authorized for the dashboard.', true);
+        return;
+      }
+      TokenCache.save(rawToken);
+      resolved = true;
+      onDataLoaded(result);
+    } catch (err) {
+      if (resolved || myGeneration !== requestGeneration) return;
+      if (!isRetry) {
+        setGateStatus('Still checking - the server is taking a moment...', false);
+        await new Promise((r) => setTimeout(r, 1200));
+        if (resolved || myGeneration !== requestGeneration) return;
+        return proceedWithToken(rawToken, true);
+      }
+      showGateAndPromptSignIn();
+      setGateStatus("Couldn't reach the backend - check your connection and try again.", true);
+    }
+  }
+
+  async function handleGoogleSignIn(response) {
+    resolved = false;
+    await proceedWithToken(response.credential);
+  }
+  window.handleGoogleSignIn = handleGoogleSignIn;
+
+  function showGateWithError(msg) {
+    hideLoadingIndicator();
+    const gate = document.getElementById('lesson-gate');
+    if (gate) gate.hidden = false;
+    setGateStatus(msg, true);
+  }
+
+  function showGateAndPromptSignIn() {
+    hideLoadingIndicator();
+    const gate = document.getElementById('lesson-gate');
+    if (gate) gate.hidden = false;
+    if (googleInitialized) return;
+    googleInitialized = true;
+    google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleSignIn, auto_select: true });
+    const btnContainer = document.querySelector('#lesson-gate .g_id_signin');
+    if (btnContainer) google.accounts.id.renderButton(btnContainer, { type: 'standard' });
+    google.accounts.id.prompt();
+  }
+
+  function onGoogleLibraryLoad() {
+    googleLibraryLoaded = true;
+    try {
+      const cached = TokenCache.load();
+      if (cached) proceedWithToken(cached); else showGateAndPromptSignIn();
+    } catch (err) {
+      showGateWithError("Something went wrong loading the sign-in page - try reloading.");
+    }
+  }
+  window.onGoogleLibraryLoad = onGoogleLibraryLoad;
+
+  setTimeout(() => {
+    if (!googleLibraryLoaded) {
+      showGateWithError("Couldn't load Google Sign-In - check your connection and reload the page.");
+    }
+  }, 10000);
+
+  document.getElementById('refresh-btn').addEventListener('click', () => {
+    const cached = TokenCache.load();
+    if (cached) { resolved = false; proceedWithToken(cached); }
+  });
+
+  // ===== Data shaping (a light version of teacher-dashboard.html's own
+  // decorateRow() - only what this page needs: the graded-item list with
+  // integrity/tab-view noise already filtered out, per /CLAUDE.md's
+  // "Data-quality note" - the full integrity/effort flagging engine
+  // belongs to the main dashboard, not duplicated here. =====
+  function decorateProjectRow(row) {
+    let allSubmissions = [];
+    try { allSubmissions = JSON.parse(row.submissionsLog || '[]'); } catch (e) { allSubmissions = []; }
+    allSubmissions.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    const isIntegrityKey = (key) => key.startsWith('paste-') || key.startsWith('focus-lost-') || key.startsWith('focus-back-') || key.startsWith('rightclick-');
+    const submissions = allSubmissions.filter((s) => !s.key.startsWith('tab-') && s.key !== 'reached-end' && !isIntegrityKey(s.key));
+    return Object.assign({}, row, { submissions });
+  }
+
+  function isActiveStatus(status) {
+    return String(status || '').trim().toLowerCase() === 'active';
+  }
+
+  function gradeListIncludes(gradeField, singleGrade) {
+    return String(gradeField || '').split(',').map((g) => g.trim()).includes(String(singleGrade));
+  }
+
+  function formatGradeLabel(gradeField) {
+    return String(gradeField || '').split(',').map((g) => g.trim()).join(', ');
+  }
+
+  // Same detection teacher-dashboard.html's Project Insights panel uses -
+  // gradeAttempt()-style unlimited-attempt pages (every port under §18)
+  // embed " - N attempt(s)" on a correct answer; an ordinary graded page
+  // never produces that suffix.
+  const ATTEMPT_SUFFIX_RE = / - (\d+) attempts?$/;
+  function parseAttemptCount(answer) {
+    const m = ATTEMPT_SUFFIX_RE.exec(String(answer || ''));
+    return m ? parseInt(m[1], 10) : null;
+  }
+  function lastEntriesByKey(row) {
+    const lastIdx = {};
+    row.submissions.forEach((s, i) => { if (s.verdict !== 'reset') lastIdx[s.key] = i; });
+    return Object.values(lastIdx).map((i) => row.submissions[i]);
+  }
+  function looksLikeProject(rows) {
+    return rows.some((r) => lastEntriesByKey(r).some((s) => parseAttemptCount(s.answer) !== null));
+  }
+
+  // Same six content-area rules as teacher-dashboard.html's own
+  // STREAM_PILLAR_RULES (kept in sync deliberately - see /CLAUDE.md's
+  // "Paired activities" section) - matched by keyword against a graded
+  // item's own `section` label, not hardcoded per activity, so a future
+  // project's differently-named sections have a reasonable chance of
+  // matching too. A section that matches nothing is simply excluded,
+  // never forced into a pillar it doesn't belong to.
+  // `color` is this page's own addition, not mirrored to
+  // teacher-dashboard.html's copy of this array (that page's Project
+  // Insights panel renders a plain table, no rings/chips to color) -
+  // reuses the exact hex values lesson-shared.css's own color-coded
+  // pastel badges already use (.type-tag.*/.pill-*), rather than
+  // inventing a new palette, so a pillar's color reads consistently
+  // with the rest of the site's existing category-color convention.
+  const STREAM_PILLAR_RULES = [
+    { match: /science|sun|shade|sustainab/i, pillar: 'Science', letter: 'S', color: '#0f766e' },
+    { match: /technology|calculator|what-if/i, pillar: 'Technology', letter: 'T', color: '#1d4ed8' },
+    { match: /religion|stewardship|celebrate|reflection|charity/i, pillar: 'Religion', letter: 'R', color: '#7c3aed' },
+    { match: /engineer|garden|layout|build/i, pillar: 'Engineering', letter: 'E', color: '#92400e' },
+    { match: /art|sign|design|creative|flyer/i, pillar: 'Art', letter: 'A', color: '#a21caf' },
+    { match: /math|ledger|budget|division|decimal|optimization|model|solv/i, pillar: 'Math', letter: 'M', color: '#15803d' }
+  ];
+  function pillarForSection(section) {
+    const rule = STREAM_PILLAR_RULES.find((r) => r.match.test(section || ''));
+    return rule || null;
+  }
+
+  function computeStreamPillarBreakdown(rows) {
+    const byPillar = {};
+    rows.forEach((r) => {
+      lastEntriesByKey(r).forEach((s) => {
+        const rule = pillarForSection(s.section);
+        if (!rule) return;
+        if (!byPillar[rule.pillar]) byPillar[rule.pillar] = { itemsAttempted: 0, itemsCorrect: 0, students: new Set() };
+        byPillar[rule.pillar].itemsAttempted++;
+        if (s.verdict === 'correct') byPillar[rule.pillar].itemsCorrect++;
+        byPillar[rule.pillar].students.add(r.email);
+      });
+    });
+    return byPillar;
+  }
+
+  function computeAttemptInsights(rows) {
+    let totalAttempts = 0, solvedCount = 0;
+    rows.forEach((r) => {
+      lastEntriesByKey(r).forEach((s) => {
+        const n = parseAttemptCount(s.answer);
+        if (n === null) return;
+        totalAttempts += n;
+        solvedCount++;
+      });
+    });
+    return { totalAttempts, solvedCount, avgAttemptsOverall: solvedCount ? Math.round((totalAttempts / solvedCount) * 10) / 10 : null };
+  }
+
+  // Every project field below is authored/serialized by that specific
+  // project page's own buildStatePayload()/restoreState() - StateJSON's
+  // shape isn't standardized across projects, so this reads defensively
+  // (every field optional) rather than assuming any key exists.
+  function deliverableSummaryHtml(email, activityId) {
+    const row = allProjectStates.find((p) => p.email === email && p.activityId === activityId);
+    if (!row || !row.stateJson) return '<em>No saved work yet.</em>';
+    let state;
+    try { state = JSON.parse(row.stateJson); } catch (e) { return '<em>Could not read saved state.</em>'; }
+    const parts = [];
+    if (state.cartOrder) parts.push(`<strong>Purchased:</strong> ${state.cartOrder.length ? state.cartOrder.join(', ') : '(nothing yet)'}`);
+    if (state.grandTotal != null) parts.push(`<strong>Grand Total:</strong> $${Number(state.grandTotal).toFixed(2)}`);
+    if (state.tokens) {
+      const placed = (state.gardenElements || []).length;
+      parts.push(`<strong>Garden:</strong> ${placed} of ${state.tokens.length} item${state.tokens.length === 1 ? '' : 's'} placed${state.gardenLocked ? ' (locked in)' : ''}`);
+    }
+    if (state.sign) {
+      const elCount = (state.sign.elements || []).length;
+      parts.push(`<strong>Sign:</strong> ${state.sign.material || '?'} material, ${elCount} element${elCount === 1 ? '' : 's'}${state.sign.locked ? ' (locked in)' : ''}`);
+    }
+    if (state.flyer) {
+      const elCount = (state.flyer.elements || []).length;
+      parts.push(`<strong>Flyer:</strong> ${state.flyer.material || '?'} material, ${elCount} element${elCount === 1 ? '' : 's'}${state.flyer.locked ? ' (locked in)' : ''}`);
+    }
+    if (state.infographicConfig) {
+      parts.push(`<strong>Infographic:</strong> "${state.infographicConfig.title || '(untitled)'}"${state.infographicLocked ? ' (locked in)' : ''}`);
+    }
+    return parts.length ? parts.join('<br>') : '<em>No saved work yet.</em>';
+  }
+
+  // ===== Filters (grade/teacher pills only - same pattern as
+  // teacher-dashboard.html's own, no activity multiselect since every
+  // row on this page is already a project). =====
+  function populateFilters() {
+    const gradesFromRoster = roster.map((s) => String(s.grade || ''));
+    const gradesFromCatalog = activityCatalog.flatMap((a) => String(a.grade || '').split(',').map((g) => g.trim()));
+    const teachersFromRoster = roster.map((s) => s.teacher);
+    const grades = [...new Set([...gradesFromRoster, ...gradesFromCatalog])].filter(Boolean).sort();
+    const teachers = [...new Set(teachersFromRoster)].filter(Boolean).sort();
+
+    if (!gradeFilterInitialized) {
+      gradeFilterInitialized = true;
+      if (grades.length) currentGradeFilter = grades[0];
+    } else if (currentGradeFilter && !grades.includes(currentGradeFilter)) {
+      currentGradeFilter = '';
+    }
+    if (currentTeacherFilter && !teachers.includes(currentTeacherFilter)) currentTeacherFilter = '';
+
+    renderFilterPills('grade-pills', grades, currentGradeFilter, 'All Grades', selectGrade);
+    const teacherGroup = document.getElementById('teacher-filter-group');
+    if (teacherGroup) teacherGroup.style.display = teacherScope ? 'none' : '';
+    if (!teacherScope) renderFilterPills('teacher-pills', teachers, currentTeacherFilter, 'All Teachers', selectTeacher);
+  }
+
+  function renderFilterPills(containerId, values, current, allLabel, onSelect) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    const options = [{ value: '', label: allLabel }, ...values.map((v) => ({ value: v, label: v }))];
+    el.innerHTML = options.map((o) =>
+      `<button type="button" class="filter-pill${o.value === current ? ' active' : ''}" data-value="${o.value}">${o.label}</button>`
+    ).join('');
+    el.querySelectorAll('.filter-pill').forEach((btn) => {
+      btn.addEventListener('click', () => onSelect(btn.dataset.value));
+    });
+  }
+
+  function selectGrade(value) { currentGradeFilter = value; populateFilters(); renderAll(); }
+  function selectTeacher(value) { currentTeacherFilter = value; populateFilters(); renderAll(); }
+
+  // ActivityCatalog rows carry no Teacher field (only Progress rows and
+  // Roster do) - the Teacher filter only narrows filteredRows()/
+  // eligibleRosterCount() below, never which activities are listed.
+  function filteredCatalog() {
+    return activityCatalog.filter((a) =>
+      a.active && (!currentGradeFilter || gradeListIncludes(a.grade, currentGradeFilter))
+    );
+  }
+
+  function filteredRows(activityId) {
+    return allRows.filter((r) =>
+      r.activityId === activityId &&
+      (!currentGradeFilter || String(r.grade) === currentGradeFilter) &&
+      (!currentTeacherFilter || r.teacher === currentTeacherFilter)
+    );
+  }
+
+  function eligibleRosterCount(grade) {
+    return roster.filter((s) =>
+      isActiveStatus(s.status) &&
+      gradeListIncludes(grade, String(s.grade)) &&
+      (!currentTeacherFilter || s.teacher === currentTeacherFilter)
+    ).length;
+  }
+
+  // ===== Rendering =====
+  function ringCircumference(r) { return 2 * Math.PI * r; }
+
+  function renderStreamHero(projectActivities) {
+    const allRowsInView = projectActivities.flatMap((a) => a.rows);
+    const byPillar = computeStreamPillarBreakdown(allRowsInView);
+    const R = 39;
+    const circ = ringCircumference(R);
+    const html = STREAM_PILLAR_RULES.map((rule) => {
+      const data = byPillar[rule.pillar];
+      const pct = data && data.itemsAttempted ? Math.round((data.itemsCorrect / data.itemsAttempted) * 100) : null;
+      const offset = pct === null ? circ : circ - (circ * pct / 100);
+      return `
+        <div class="stream-pillar">
+          <div class="stream-ring${pct === null ? ' no-data' : ''}">
+            <svg width="96" height="96" viewBox="0 0 96 96">
+              <circle class="stream-ring-track" cx="48" cy="48" r="${R}"></circle>
+              <circle class="stream-ring-fill" cx="48" cy="48" r="${R}" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"${pct === null ? '' : ` style="stroke:${rule.color};"`}></circle>
+            </svg>
+            <div class="stream-ring-label">
+              <div class="stream-ring-letter" style="color:${pct === null ? '' : rule.color};">${rule.letter}</div>
+              <div class="stream-ring-pct">${pct === null ? '&ndash;' : pct + '%'}</div>
+            </div>
+          </div>
+          <div class="stream-pillar-name">${rule.pillar}</div>
+          <div class="stream-pillar-note">${pct === null ? 'No data yet' : `${data.students.size} student${data.students.size === 1 ? '' : 's'}`}</div>
+        </div>`;
+    }).join('');
+    document.getElementById('stream-hero').innerHTML = html;
+  }
+
+  function renderProjectCard(a) {
+    const attempts = computeAttemptInsights(a.rows);
+    const byPillar = computeStreamPillarBreakdown(a.rows);
+    const pillarChips = STREAM_PILLAR_RULES
+      .filter((rule) => byPillar[rule.pillar] && byPillar[rule.pillar].itemsAttempted)
+      .map((rule) => {
+        const data = byPillar[rule.pillar];
+        const pct = Math.round((data.itemsCorrect / data.itemsAttempted) * 100);
+        return `<span class="mini-pillar-chip"><span class="letter" style="background:${rule.color};">${rule.letter}</span>${pct}%</span>`;
+      }).join('');
+    const eligible = eligibleRosterCount(a.grade);
+    const startedCount = a.rows.length;
+    const deliverableRows = a.rows
+      .slice()
+      .sort((x, y) => x.studentName.localeCompare(y.studentName))
+      .map((r) => `<tr><td>${r.studentName}</td><td>${deliverableSummaryHtml(r.email, a.activityId)}</td></tr>`)
+      .join('');
+    return `
+      <div class="project-card">
+        <h3>${a.activityTitle}</h3>
+        <span class="grade-tag">Grade ${formatGradeLabel(a.grade)}</span>
+        <div class="project-stat-row">
+          <div class="project-stat-tile"><div class="n">${startedCount} / ${eligible}</div><div class="l">Started</div></div>
+          <div class="project-stat-tile"><div class="n">${attempts.avgAttemptsOverall === null ? '-' : attempts.avgAttemptsOverall}</div><div class="l">Avg attempts/item</div></div>
+          <div class="project-stat-tile"><div class="n">${attempts.solvedCount}</div><div class="l">Items solved</div></div>
+        </div>
+        ${pillarChips ? `<div class="mini-pillar-row">${pillarChips}</div>` : '<p class="empty-note">No pillar data yet.</p>'}
+        <details class="deliverables-toggle">
+          <summary>Deliverables (${startedCount} student${startedCount === 1 ? '' : 's'})</summary>
+          ${startedCount ? `
+            <table class="deliverables-table">
+              <thead><tr><th>Student</th><th>What they built</th></tr></thead>
+              <tbody>${deliverableRows}</tbody>
+            </table>` : '<p class="empty-note">No student has started this project yet.</p>'}
+        </details>
+      </div>`;
+  }
+
+  function renderAll() {
+    const catalog = filteredCatalog();
+    const projectActivities = catalog
+      .map((a) => ({
+        activityId: a.activityId,
+        activityTitle: a.title,
+        grade: a.grade,
+        rows: filteredRows(a.activityId)
+      }))
+      // A project activity is either a known port (by ActivityId prefix -
+      // see isKnownProjectId) or, for a future project this page doesn't
+      // know about yet, one whose actual submitted data looks like a
+      // project (looksLikeProject()) once at least one student has real
+      // attempts logged.
+      .filter((a) => isKnownProjectId(a.activityId) || looksLikeProject(a.rows));
+
+    renderStreamHero(projectActivities);
+
+    const list = document.getElementById('project-list');
+    if (!projectActivities.length) {
+      list.innerHTML = '<p class="empty-note">No STREAM project activities for the current filter - try a different Grade.</p>';
+      return;
+    }
+    list.innerHTML = `<div class="project-card-grid">${projectActivities.map(renderProjectCard).join('')}</div>`;
+  }
+
+  // A project activity is only unambiguously detectable by its actual
+  // submitted data (looksLikeProject(), same signature teacher-dashboard.html
+  // uses) once at least one student has real attempts logged. Before that,
+  // this page would show nothing for a project nobody has opened yet -
+  // so it also recognizes the three known ports by ActivityId prefix as a
+  // fallback, purely so a brand-new project still gets a (empty) card
+  // instead of silently not appearing until someone starts it.
+  const KNOWN_PROJECT_ID_PREFIXES = ['6-laudato-si-ecogarden', '7-ethical-auditor-community-engineer', '8-youth-festival-logistics', '8-ethical-linear-budgeting'];
+  function isKnownProjectId(activityId) {
+    return KNOWN_PROJECT_ID_PREFIXES.some((p) => activityId === p || activityId.startsWith(p + '-'));
+  }
+
+  function onDataLoaded(result) {
+    allRows = (result.rows || []).map(decorateProjectRow);
+    roster = result.roster || [];
+    activityCatalog = result.activityCatalog || [];
+    teacherScope = result.scope || null;
+    allProjectStates = result.projectStates || [];
+
+    hideLoadingIndicator();
+    document.getElementById('lesson-gate').hidden = true;
+    document.getElementById('dashboard').hidden = false;
+    const activeStudents = roster.filter((s) => isActiveStatus(s.status)).length;
+    const scopeNote = teacherScope ? ` - showing only ${teacherScope}'s students` : '';
+    document.getElementById('loaded-as').textContent = `${activeStudents} active students${scopeNote}.`;
+
+    try {
+      populateFilters();
+      renderAll();
+    } catch (err) {
+      console.error('Projects dashboard render failed:', err);
+      document.getElementById('loaded-as').textContent =
+        'Something went wrong rendering the dashboard - try Refresh, or reload the page. (' + err.message + ')';
+    }
+  }
+</script>
+
+</body>
+</html>
