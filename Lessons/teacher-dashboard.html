@@ -255,7 +255,10 @@
       </div>
       <label><input type="checkbox" id="filter-flagged-only"> Flagged only</label>
     </div>
-    <button class="btn-refresh" id="refresh-btn">Refresh</button>
+    <div style="display:flex; gap:10px;">
+      <button class="btn-refresh" id="export-csv-btn" style="background:var(--success);">Export CSV</button>
+      <button class="btn-refresh" id="refresh-btn">Refresh</button>
+    </div>
   </div>
 
   <nav class="nav-tabs">
@@ -2969,6 +2972,50 @@
   document.getElementById('refresh-btn').addEventListener('click', () => {
     if (idToken) { resolved = false; proceedWithToken(idToken); }
   });
+
+  // A quotes/commas/newlines-safe CSV field - wrapped in double quotes
+  // whenever any of those appear, with an embedded quote doubled (the
+  // standard CSV escaping rule), left bare otherwise for readability.
+  function csvField(val) {
+    const s = val === null || val === undefined ? '' : String(val);
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  }
+
+  // Exports exactly the rows the Grade/Teacher/Activity/Flagged-only
+  // filters currently show (filteredRows() - the same set every tab's own
+  // table is built from), since a teacher reaching for this button has
+  // usually already narrowed the view to the class/unit they want a
+  // gradebook-style sheet for, not the entire roster across every grade.
+  function exportGradebookCsv() {
+    const rows = filteredRows();
+    const header = ['Student', 'Grade', 'Teacher', 'Activity', 'Score %', 'Items Attempted', 'Items Correct', 'Status', 'Last Submitted', 'Flags', 'Reviewed', 'Review Classification'];
+    const lines = [header.map(csvField).join(',')];
+    rows.forEach((r) => {
+      lines.push([
+        r.studentName, r.grade, r.teacher, r.activityTitle,
+        r.scorePct === null ? '' : r.scorePct,
+        r.itemsAttempted, r.itemsCorrect, r.status,
+        r.lastSubmittedAt ? new Date(r.lastSubmittedAt).toLocaleString() : '',
+        r.flags.join('; '),
+        r.reviewedByTeacher ? 'Yes' : 'No',
+        r.reviewedByTeacher ? (r.reviewValid === 'valid' ? 'Valid concern' : 'Not an issue') : ''
+      ].map(csvField).join(','));
+    });
+    // A leading UTF-8 BOM so Excel (which otherwise guesses Windows-1252)
+    // renders accented characters in a student's name correctly, rather
+    // than only working correctly in Sheets/a text editor.
+    const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const stamp = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `gradebook-export-${stamp}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+  document.getElementById('export-csv-btn').addEventListener('click', exportGradebookCsv);
 </script>
 </body>
 </html>
