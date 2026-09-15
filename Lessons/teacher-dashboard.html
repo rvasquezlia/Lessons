@@ -2988,11 +2988,21 @@
   // gradebook-style sheet for, not the entire roster across every grade.
   function exportGradebookCsv() {
     const rows = filteredRows();
-    const header = ['Student', 'Grade', 'Teacher', 'Activity', 'Score %', 'Items Attempted', 'Items Correct', 'Status', 'Last Submitted', 'Flags', 'Reviewed', 'Review Classification'];
+    const header = ['Student', 'Grade', 'Teacher', 'Activity', 'Role', 'Teammate(s)', 'Score %', 'Items Attempted', 'Items Correct', 'Status', 'Last Submitted', 'Flags', 'Reviewed', 'Review Classification'];
     const lines = [header.map(csvField).join(',')];
     rows.forEach((r) => {
+      // Role/Teammate(s) are blank for a non-paired row (pairingForRow
+      // returns null) - a paired/team activity's Driver and Navigator(s)
+      // each get their own roster row here (mirroring writes to each
+      // teammate's own Progress row independently), so this is the only
+      // way to tell from the export alone who had the device (Driver)
+      // and who was read-only (Navigator) on any given team.
+      const pairing = pairingForRow(r);
+      const mates = pairing ? teammatesForRow(r) : [];
+      const role = pairing ? (String(pairing.role || '').trim().toLowerCase() === 'navigator' ? 'Navigator' : 'Driver') : '';
+      const mateNames = mates.map((m) => `${partnerNameFor(m.email)} (${String(m.role || '').trim().toLowerCase() === 'navigator' ? 'Navigator' : 'Driver'})`).join('; ');
       lines.push([
-        r.studentName, r.grade, r.teacher, r.activityTitle,
+        r.studentName, r.grade, r.teacher, r.activityTitle, role, mateNames,
         r.scorePct === null ? '' : r.scorePct,
         r.itemsAttempted, r.itemsCorrect, r.status,
         r.lastSubmittedAt ? new Date(r.lastSubmittedAt).toLocaleString() : '',
