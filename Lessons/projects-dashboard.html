@@ -8,6 +8,77 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="lesson-shared.css">
+<script>
+  // Dark mode toggle - a standalone copy of lesson-shared.js's own
+  // ThemeToggle module (see /CLAUDE.md's "Dark mode" section), duplicated
+  // here rather than loading the whole file, matching this page's existing
+  // "self-contained dashboard page" convention (see STREAM_PILLAR_RULES
+  // below). Only sets data-theme on <html> (synchronously, before <body>
+  // is parsed, so there's no flash of the wrong theme) and injects its own
+  // toggle button once the DOM is ready. The button's own CSS
+  // (.theme-toggle-btn) already ships in lesson-shared.css, loaded above.
+  const ThemeToggle = (() => {
+    const STORAGE_KEY = 'lia_theme';
+    function preferredTheme() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored === 'light' || stored === 'dark') return stored;
+      } catch (e) { /* private window or storage blocked - fall through to system preference */ }
+      return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    }
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      const btn = document.querySelector('.theme-toggle-btn');
+      if (!btn) return;
+      const sunIcon = btn.querySelector('.icon-sun');
+      const moonIcon = btn.querySelector('.icon-moon');
+      if (sunIcon) sunIcon.hidden = theme !== 'dark';
+      if (moonIcon) moonIcon.hidden = theme === 'dark';
+      btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+      btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    }
+    let currentTheme = preferredTheme();
+    applyTheme(currentTheme);
+    function toggle() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme(currentTheme);
+      try { localStorage.setItem(STORAGE_KEY, currentTheme); } catch (e) { /* nothing to persist to - theme still applies for this page view */ }
+    }
+    function buildButton() {
+      if (document.querySelector('.theme-toggle-btn')) return;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'theme-toggle-btn';
+      btn.innerHTML = `
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>`;
+      btn.addEventListener('click', toggle);
+      document.body.prepend(btn);
+      applyTheme(currentTheme);
+    }
+    function init() {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', buildButton);
+      } else {
+        buildButton();
+      }
+    }
+    init();
+    return { toggle };
+  })();
+</script>
 <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
 <script src="token-cache.js?v=2"></script>
 <style>
@@ -116,6 +187,14 @@
   .deliverables-table th { background: var(--primary); color: #fff; font-size: 0.78rem; }
 
   .empty-note { color: var(--empty, #94a3b8); font-style: italic; }
+
+  /* Dark-mode override for this page's own hardcoded "primary as text
+     color" spot - everything else here already uses lesson-shared.css's
+     shared custom properties and flips automatically. The STREAM ring
+     stroke/letter colors are set inline per-pillar (see stream-hero
+     rendering below) whenever real data exists, so they need no override
+     here. */
+  [data-theme="dark"] details.deliverables-toggle summary { color: var(--dark-heading); }
 </style>
 </head>
 <body>

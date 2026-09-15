@@ -196,7 +196,7 @@ One spreadsheet, five tabs.
 | `Roster` | **Manual** — teacher: `Email, StudentName, Grade, Teacher, Section, Status` | Who's allowed in, and their grade/teacher. Add/remove students directly in the Sheet. |
 | `ActivityCatalog` | **Manual** — teacher: `ActivityId, Title, Grade, Unit, Active` | Drives the grade-gate check. One row per activity. |
 | `Teachers` | **Manual** — `Email, Scope` (optional) | Gates the `teacher-data` endpoint. Being on `Roster.Teacher` does NOT by itself grant dashboard access — only an email listed on `Teachers` can. `Scope` blank/`All`/missing = unrestricted (sees every student). Any other value must exactly match a `Roster.Teacher` value — a typo (case/spelling) makes that teacher silently see nobody, not an error. |
-| `Progress` | **Automatic** — Apps Script only | One row per (student, activity), upserted on every save. Columns: `Email, StudentName, Grade, Teacher, ActivityId, ActivityTitle, FirstStartedAt, LastSubmittedAt, ItemsTotal, ItemsAttempted, ItemsCorrect, ScorePct, Status, SubmissionsLog (JSON), FlagReason, ReviewedByTeacher, ReviewedAt`. Only the last two are ever hand-edited by a teacher. |
+| `Progress` | **Automatic** — Apps Script only | One row per (student, activity), upserted on every save. Columns: `Email, StudentName, Grade, Teacher, ActivityId, ActivityTitle, FirstStartedAt, LastSubmittedAt, ItemsTotal, ItemsAttempted, ItemsCorrect, ScorePct, Status, SubmissionsLog (JSON), FlagReason, ReviewedByTeacher, ReviewedAt`, plus an optional `ReviewValid` (`'valid'`/`'invalid'`/blank — see §13's "Marking a flag reviewed"). None of these five are ever hand-edited directly — the Teacher Dashboard's own review UI writes `ReviewedByTeacher`/`ReviewedAt`/`ReviewValid` via a `teacher-review` backend request. |
 | `AccessLog` | **Automatic** — Apps Script only | **Denied access attempts only.** Allowed opens are never logged here (redundant with `Progress`, and a duplicate-row source of their own — see `checkAccess_` in `Code.gs`). Older rows may still say `Allowed`; not backfilled away. |
 
 ---
@@ -627,12 +627,54 @@ page in one unit. See §15 for the sourcing rule and the current table.
     separate, later, file-by-file pass — expect a page with heavy local
     styling to look like a light card floating inside a dark shell
     until that pass happens, not a bug in this mechanism.
-  - **`teacher-dashboard.html` loads `lesson-shared.css` but not
-    `lesson-shared.js`** (§13) — its own shared-component usage
-    benefits from the dark variables/overrides automatically, but it
-    never gets the toggle button and has no way to actually enter dark
-    mode yet. `index.html` (§12) loads neither file at all and is
-    entirely unaffected.
+  - **`teacher-dashboard.html`/`projects-dashboard.html`/`Teacher-
+    Help.html` load `lesson-shared.css` but never `lesson-shared.js`**
+    (§13) — loading the whole file would also auto-inject
+    `TeacherPrint`'s "Print Class Progress" bar the moment it finds any
+    `.tab-btn` element, which `teacher-dashboard.html`'s own nav tabs
+    are (they use `switchDashTab()`, not the lesson-page `switchTab()`
+    that bar expects — the bar would render with an empty checklist, a
+    real bug, not a hypothetical one). All three pages instead carry
+    their own standalone copy of just the `ThemeToggle` module (a
+    `<script>` in `<head>`, before `<body>` — same "no flash of the
+    wrong theme" ordering as `lesson-shared.js`'s own copy), duplicated
+    rather than shared, matching this codebase's existing
+    "self-contained dashboard page" convention (see `projects-
+    dashboard.html`'s own `STREAM_PILLAR_RULES` duplication). Each adds
+    a small `[data-theme="dark"]` block for its own hardcoded (non
+    `var()`) colors — `teacher-dashboard.html`'s `.pill.neutral`/
+    `.pill.progress`/`.detail-row td`/the shared `.info-bar` class (see
+    below); `projects-dashboard.html`'s `details.deliverables-toggle
+    summary`; `Teacher-Help.html`'s `.chip.*`/`.note-box`/`code.k`. Any
+    other selector in these three files already uses
+    `lesson-shared.css`'s own shared custom properties and flips
+    automatically once `[data-theme="dark"]` is set — check for `var(
+    --...)` usage before assuming a new hardcoded color needs its own
+    override.
+  - **`teacher-dashboard.html`'s `.info-bar` class** — the small utility
+    bars `pairingHtml()`/`reviewToolbarHtml()`/`submissionDetailTable()`'s
+    reset toolbar each render (§9/§13/§18) used to be inline
+    `style="background:#f8fafc..."` on each call site — converted to a
+    shared `.info-bar` class (`.tint-blue` variant for `pairingHtml()`'s
+    lighter tint) specifically so dark mode can override them in one
+    place instead of five. Any new small inline-styled info box in this
+    file should use (or extend) this class rather than a fresh inline
+    background, or it silently stays light-mode-only.
+  - **`index.html` (§12) keeps its own separate `:root` block** (not
+    shared with `lesson-shared.css` — this page loads neither shared
+    file, its own separate gate implementation) — it has its own
+    `[data-theme="dark"]` redefinition of the same variable names
+    (`--bg`/`--card`/`--text`/`--border`/`--dark-heading`) plus its own
+    six `--c-*`/`--c-*-bg` topic-chip pairs, inverted the same
+    dark-tinted-background-plus-lighter-foreground way as every other
+    pastel badge on the site. It also carries its own duplicated
+    `.theme-toggle-btn` CSS and `ThemeToggle` module (no shared file to
+    load at all) — a third copy of both, alongside the three dashboard-
+    style pages' copies above. **Every dashboard-adjacent page (all
+    four now) has real, working dark mode** — the one remaining gap is
+    genuinely page-local lesson-page content (a digit-box grid, a
+    catalog card, a Konva canvas, ...), unchanged from the scope note
+    above.
   - **`--text` is deliberately a mid-gray (`#717a85`), never a near-
     white, in dark mode** — `body { color: var(--text); }` (light-mode,
     unedited) means every element on the page inherits this as its
@@ -795,11 +837,14 @@ first try).
 
 **Deliberately deferred** (need either new client-side instrumentation
 or are inherently a live feature the "no live monitoring" rule
-excludes): a Printable PDF/Report Generator, the *full* structured
-per-distractor Item Diagnostics (a free-text "lite" version exists —
-see §13's Item Diagnostics entry), true DevTools/concurrent-session
-detection, Vocabulary flashcard rapid-flip tracking, any Live
-Classroom View. Don't build these without a separate, explicit request.
+excludes): the *full* structured per-distractor Item Diagnostics (a
+free-text "lite" version exists — see §13's Item Diagnostics entry),
+true DevTools/concurrent-session detection, Vocabulary flashcard
+rapid-flip tracking, any Live Classroom View. Don't build these without
+a separate, explicit request. **Closed**: a Printable PDF/Report
+Generator — see §13's CSV gradebook export (a filtered CSV, not a
+formatted PDF/printable page; a real print-formatted report is still
+open if that specific format is ever wanted).
 
 ---
 
@@ -1093,6 +1138,14 @@ role + grade only).
   backend, pairing) exactly as if it were indexed; only its discovery
   path differs. Don't re-add a `CURRICULUM` entry for it without asking
   first — this was a deliberate access-control choice, not an oversight.
+- **A teacher-only nav row** (`#teacher-nav-links`, hidden by default,
+  unhidden inside `renderForTeacher()`) sits under the header subtitle —
+  links to `teacher-dashboard.html`, `projects-dashboard.html`, and
+  `Teacher-Help.html`. A student never sees it (`renderForStudent()`
+  never unhides it). Same `.dash-nav-links`/`.dash-nav-link` CSS class
+  names as the three teacher-only pages below, each page keeping its own
+  copy in its own `<style>` block (this page's own convention: no shared
+  CSS file with the dashboards).
 
 ---
 
@@ -1109,6 +1162,20 @@ zero-submission students show up), `activityCatalog` (every
 `accessLog` (returned but unused by current UI), and `scope` (`null` or
 the matched teacher name).
 
+**`Lessons/Teacher-Help.html`** — a fourth teacher-only page, alongside
+this dashboard, `projects-dashboard.html`, and (for a signed-in teacher)
+`index.html`. Same gate pattern as this file (hand-written, `type:
+'teacher-data'` used purely as the teacher-only check — it ignores
+every field of the response except `ok`/`scope`, since this page has no
+data of its own to show). A static, styled reference explaining the
+site map, the 7 per-unit page types, grade tracks, sign-in/access rules,
+both dashboards' tabs/flags, STREAM project pairing setup, which Sheet
+tabs a teacher edits directly, and an FAQ — written for a teacher
+reading it, not a developer. **Keep it in sync by hand** whenever a
+dashboard-facing feature changes (a new flag type, a new tab, a new
+Sheet column a teacher might touch) — nothing generates its content
+from the dashboards' own code.
+
 **Field casing from the backend is always lowercase camelCase**
 (`email`, `studentName`, `grade`, `activityId`, `scorePct`, etc. — see
 `rowToDashboardRow_`/`getRosterForDashboard_`/
@@ -1122,6 +1189,58 @@ every filter/grouping silently reads `undefined`.
 ever leave `Code.gs`; a scoped teacher's browser never receives another
 teacher's rows to filter out client-side. `activityCatalog` is never
 filtered.
+
+**Cross-page nav row** — same `.dash-nav-links` header row as
+`projects-dashboard.html`/`Teacher-Help.html`/index.html's teacher-only
+row (see §12); links to the other two teacher pages plus the Lessons
+Index, never to this page itself.
+
+**CSV gradebook export** — an "Export CSV" button next to Refresh calls
+`exportGradebookCsv()`, which exports exactly `filteredRows()` (the same
+Grade/Teacher/Activity/Flagged-only-filtered set every tab's own table
+already reads from) as a UTF-8-BOM CSV (Student, Grade, Teacher,
+Activity, Score %, Items Attempted, Items Correct, Status, Last
+Submitted, Flags, Reviewed, Review Classification). Client-side only —
+no backend call.
+
+### Marking a flag reviewed (Valid concern / Not an issue)
+`ReviewedByTeacher`/`ReviewedAt` existed as real `Progress` columns with
+no UI to set them until a `teacher-review` request type
+(`applyTeacherReview_` in `Code.gs`) and a matching dashboard UI closed
+that gap. A flagged row can be marked reviewed and classified
+`'valid'` (a real concern, followed up on) or `'invalid'` (a false
+alarm) — or unmarked (`''` clears all three fields). This never touches
+`SubmissionsLog`/scoring — it's a note for whoever reads the dashboard
+next, not a correction to the record.
+
+- **`ReviewValid`** is an optional `Progress` column (add it as a 6th
+  header if you want the classification persisted — everything degrades
+  cleanly without it, same pattern as `Day2Code`/`TeamId`: reviewed/
+  unreviewed still works, the row's classification just reads as
+  `''`/"Not an issue" until the column exists).
+- **`reviewToolbarHtml(r)`** — the full toolbar (status pill + Mark
+  Valid/Mark Not an issue buttons, or the reviewed pill + Undo),
+  prepended inside `submissionDetailTable()` so it shows on every detail
+  view that function already serves (Student Roster, By Activity, Full
+  Submission Log) — same "one shared function, three call sites" pattern
+  the reset toolbar (§9) uses.
+- **`reviewCellHtml(r)`** — the compact version (buttons or a pill,
+  no label) for the Flags & Behavior list row itself, so a teacher can
+  classify a flag without opening its detail view first.
+- **`teacherReview(email, activityId, reviewValid, btn)`** — the one
+  client function both call, mirroring `teacherReset()`'s shape exactly
+  (fetch, `decorateRow(result.progress)` back into `allRows`, `renderAll()`).
+- Requires a `Code.gs` redeploy (§1) to take effect live.
+
+### Duplicate-answer flag skips known teammates
+`applyDuplicateAnswerFlags()` (§8) now excludes a match against anyone
+`teammatesForRow()` already reports as this row's own teammate before
+counting it — a paired/team activity mirrors the Driver's every
+submission onto each teammate's row by design (§18), so two teammates
+converging on the same wrong answer is expected, not suspicious.
+`allPairs` must be populated (inside `onDataLoaded`) **before**
+`applyDuplicateAnswerFlags()` runs, not after — the two were reordered
+for this reason.
 
 ### Four top-level tabs, in this order
 **Never re-introduce a fifth+ top-level tab** as the default way to add
@@ -1653,11 +1772,33 @@ pairing is completely unaffected)
   team) to build their `pairing-status` text — a `teammates.length > 1`
   branch renders `"Team: <name> (<role>), <name> (<role>), ..."`
   instead of the single-partner `"Partner: <name> (<role>)"` line. The
-  hidden `team-name-2` field feeding each page's certificate/badge
-  canvas still only ever holds the **first** teammate's name regardless
-  of team size — a 3+-person team's downloaded certificate still only
-  names two people until that canvas layout is deliberately redesigned
-  to fit more; not yet done anywhere on the site.
+  hidden `team-name-2` field still only ever holds the **first**
+  teammate's name (kept only for a page reading it directly, e.g.
+  Teacher Preview); a third, `team-name-3`, holds the **second**
+  teammate's name when one exists. **The certificate/stamp/badge
+  renderers now support 3+ names** — `window.allTeamNames` (set here,
+  right alongside `team-name-2`/`team-name-3`) is `[selfName, ...every
+  teammate's name]`; `getAllTeamNames()` (falls back to the three hidden
+  inputs for Teacher Preview, which sets those directly and never calls
+  this hook) and `joinNames()` (Oxford-comma-style: `"A"` / `"A & B"` /
+  `"A, B & C"`) are the two small helpers every one of
+  `downloadCertificate()`/`downloadSoloBadge(memberNum)`/
+  `downloadStamp()` on all four paired pages now goes through instead of
+  reading `team-name-1`/`team-name-2` directly. The certificate's name
+  line shrinks its own font (34px down to a 22px floor, `ctx.measureText`
+  against the canvas's own fixed width) so three names don't overflow —
+  a per-line adjustment, every other line's size is untouched. A 3rd
+  "Download Badge - Team Member 3" button exists on every page,
+  `hidden` by default, unhidden here only when `teammates.length > 1`
+  (a real 3+-person team) — `downloadSoloBadge(3)` reads the same
+  `getAllTeamNames()` array, so it needs no special-casing beyond that
+  button's own visibility. **Not yet done**: the badge canvas layout was
+  never designed to show a *group* — for 4+ people, `downloadSoloBadge`
+  still works (each member downloads their own badge, "Teamed up with"
+  lists everyone else via `joinNames`), but there is no 4th+ badge
+  button in the markup — extend the same pattern (one more hidden
+  button + `getAllTeamNames().length > 3` check) if a 4-person team is
+  ever actually used.
 - **`window.onTeacherUnlock(result)`** — a second, separate optional
   hook, called instead of the generic `unlockTeacherView()` (§6) when a
   **teacher** signs in, if the page defines it. Exists for a page where
