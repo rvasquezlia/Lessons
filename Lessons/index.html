@@ -136,6 +136,10 @@
       font-weight: 700; font-size: 0.85rem; text-decoration: none; transition: background 0.15s;
     }
     .dash-nav-link:hover { background: rgba(255,255,255,0.32); }
+    /* Small line-style icon per destination (matches the ThemeToggle
+       sun/moon icons already used site-wide) instead of a "?"/arrow
+       character in the link text. */
+    .dash-nav-link .nav-icon { width: 16px; height: 16px; flex-shrink: 0; }
 
     .content { padding: 28px 32px 36px 32px; }
 
@@ -401,9 +405,9 @@
     <h1>Lesson Plans</h1>
     <p class="subtitle">Digital lessons organized by topic - vocabulary, explanation, practice, word problems, test prep, and teacher guides</p>
     <div class="dash-nav-links" id="teacher-nav-links" hidden>
-      <a class="dash-nav-link" href="teacher-dashboard.html">Teacher Dashboard &rarr;</a>
-      <a class="dash-nav-link" href="projects-dashboard.html">STREAM Projects Dashboard &rarr;</a>
-      <a class="dash-nav-link" href="Teacher-Help.html">? Teacher Help</a>
+      <a class="dash-nav-link" href="teacher-dashboard.html"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="20" x2="5" y2="12"/><line x1="12" y1="20" x2="12" y2="6"/><line x1="19" y1="20" x2="19" y2="15"/></svg><span>Teacher Dashboard</span></a>
+      <a class="dash-nav-link" href="projects-dashboard.html"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6l-6 10a1 1 0 0 0 .9 1.5h14.2a1 1 0 0 0 .9-1.5L14 9V3"/></svg><span>STREAM Projects Dashboard</span></a>
+      <a class="dash-nav-link" href="Teacher-Help.html"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 4.8 1c0 1.4-1.2 1.8-1.9 2.6-.4.5-.4.9-.4 1.4"/><line x1="12" y1="16.8" x2="12" y2="16.9"/></svg><span>Teacher Help</span></a>
     </div>
   </header>
 

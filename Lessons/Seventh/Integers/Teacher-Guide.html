@@ -62,10 +62,34 @@
       margin: 4px 0 20px 0;
     }
   </style>
+<script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+<script src="../../token-cache.js?v=2"></script>
+<style>
+  #lesson-loading { display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
+  .lesson-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: lesson-spin 0.8s linear infinite; }
+  @keyframes lesson-spin { to { transform: rotate(360deg); } }
+</style>
 </head>
 <body>
 
-<div class="app-container">
+<div id="lesson-loading"><div class="lesson-spinner"></div></div>
+
+<div id="lesson-gate" class="lesson-gate" hidden>
+  <header>
+    <div class="brand-row">
+      <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
+      <span class="brand-name">Lincoln International Academy</span>
+    </div>
+  </header>
+  <div class="lesson-gate-body">
+    <h2>Teacher's Guide</h2>
+    <p>Sign in with your school Google account. This page is for teachers only.</p>
+    <div class="g_id_signin"></div>
+    <p id="lesson-gate-status"></p>
+  </div>
+</div>
+
+<div class="app-container" id="guide-app" hidden>
   <header>
     <div class="brand-row">
       <img src="../../assets/lia-logo.png" alt="Lincoln International Academy logo" class="brand-logo">
@@ -585,5 +609,133 @@
     }
   }
 </script>
+<script>
+  const LESSON_SYNC_API_URL = 'https://script.google.com/macros/s/AKfycbyC7mb1TKfg3JvhiZftXMf7oXkzrBMWJczZSURC7sIfoIxYnZrrumYfx-j7JYTY0A9i/exec';
+  const GOOGLE_CLIENT_ID = '478111261772-7l1qamohr0fjsa7ekosuhpj9jum1q4vc.apps.googleusercontent.com';
+
+  // requestGeneration/resolved stop a slow, now-superseded sign-in attempt
+  // from undoing a later one that already succeeded - see CLAUDE.md's
+  // "Stale in-flight requests" note. Same pattern as the two dashboards
+  // and Teacher-Help.html.
+  let requestGeneration = 0;
+  let resolved = false;
+  let googleInitialized = false;
+  let googleLibraryLoaded = false;
+
+  function fetchWithTimeout(url, opts, timeoutMs) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs || 15000);
+    return fetch(url, Object.assign({}, opts, { signal: controller.signal })).finally(() => clearTimeout(timer));
+  }
+
+  function hideLoadingIndicator() {
+    const el = document.getElementById('lesson-loading');
+    if (el) el.style.display = 'none';
+  }
+
+  function setGateStatus(msg, isError) {
+    const el = document.getElementById('lesson-gate-status');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.color = isError ? 'var(--error)' : 'var(--primary)';
+  }
+
+  function showAppContainer() {
+    hideLoadingIndicator();
+    document.getElementById('lesson-gate').hidden = true;
+    document.getElementById('guide-app').hidden = false;
+  }
+
+  async function proceedWithToken(rawToken, isRetry) {
+    const myGeneration = ++requestGeneration;
+    setGateStatus('Checking your account...', false);
+    try {
+      // Reuses the exact same teacher-only check the dashboards and
+      // Teacher-Help.html use - this page has no data of its own to
+      // fetch, so the response body beyond `ok` is simply ignored.
+      const res = await fetchWithTimeout(LESSON_SYNC_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ idToken: rawToken, type: 'teacher-data' })
+      }, isRetry ? 25000 : 15000);
+      const result = await res.json();
+      if (resolved || myGeneration !== requestGeneration) return;
+      if (!result.ok) {
+        TokenCache.clear();
+        showGateAndPromptSignIn();
+        setGateStatus(result.error || "This page is for teachers only.", true);
+        return;
+      }
+      TokenCache.save(rawToken);
+      resolved = true;
+      showAppContainer();
+    } catch (err) {
+      if (resolved || myGeneration !== requestGeneration) return;
+      if (!isRetry) {
+        setGateStatus('Still checking - the server is taking a moment...', false);
+        await new Promise((r) => setTimeout(r, 1200));
+        if (resolved || myGeneration !== requestGeneration) return;
+        return proceedWithToken(rawToken, true);
+      }
+      showGateAndPromptSignIn();
+      setGateStatus("Couldn't reach the backend - check your connection and try again.", true);
+    }
+  }
+
+  async function handleGoogleSignIn(response) {
+    resolved = false;
+    await proceedWithToken(response.credential);
+  }
+  window.handleGoogleSignIn = handleGoogleSignIn;
+
+  function showGateWithError(msg) {
+    hideLoadingIndicator();
+    const gate = document.getElementById('lesson-gate');
+    if (gate) gate.hidden = false;
+    setGateStatus(msg, true);
+  }
+
+  function showGateAndPromptSignIn() {
+    if (resolved) return;
+    hideLoadingIndicator();
+    const gate = document.getElementById('lesson-gate');
+    if (gate) gate.hidden = false;
+    if (!googleLibraryLoaded || googleInitialized) return;
+    googleInitialized = true;
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleSignIn,
+      auto_select: true
+    });
+    const btnContainer = document.querySelector('#lesson-gate .g_id_signin');
+    if (btnContainer) google.accounts.id.renderButton(btnContainer, { type: 'standard' });
+    try { google.accounts.id.prompt(); } catch (e) {}
+  }
+
+  function onGoogleLibraryLoad() {
+    try {
+      googleLibraryLoaded = true;
+      const cached = TokenCache.load();
+      if (cached) {
+        proceedWithToken(cached).then(() => {
+          if (!resolved) showGateAndPromptSignIn();
+        });
+      } else {
+        showGateAndPromptSignIn();
+      }
+    } catch (err) {
+      showGateWithError('Something went wrong loading sign-in. Please refresh the page.');
+    }
+  }
+  window.onGoogleLibraryLoad = onGoogleLibraryLoad;
+
+  // Fallback if the GIS script's own onload never fires (network filter,
+  // ad blocker) - same 10s pattern as the dashboards/lesson pages.
+  setTimeout(() => {
+    if (!resolved && !googleLibraryLoaded) {
+      showGateWithError('Sign-in is taking longer than expected. Please refresh the page.');
+    }
+  }, 10000);
+</script>
+
 </body>
 </html>

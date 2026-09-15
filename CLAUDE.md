@@ -1213,9 +1213,11 @@ alarm) — or unmarked (`''` clears all three fields). This never touches
 `SubmissionsLog`/scoring — it's a note for whoever reads the dashboard
 next, not a correction to the record.
 
-- **`ReviewValid`** is an optional `Progress` column (add it as a 6th
-  header if you want the classification persisted — everything degrades
-  cleanly without it, same pattern as `Day2Code`/`TeamId`: reviewed/
+- **`ReviewValid`** is an optional `Progress` column (add it as a new
+  header, anywhere after `ReviewedAt` is the natural spot, if you want
+  the classification persisted — `colMap_()` looks columns up by name,
+  not position, so where it sits doesn't matter to the code; everything
+  degrades cleanly without it, same pattern as `Day2Code`/`TeamId`: reviewed/
   unreviewed still works, the row's classification just reads as
   `''`/"Not an issue" until the column exists).
 - **`reviewToolbarHtml(r)`** — the full toolbar (status pill + Mark
