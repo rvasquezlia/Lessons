@@ -482,6 +482,7 @@
   <p id="team-status" style="text-align:center; margin:10px 24px 0 24px; font-weight:700; color:var(--primary);"></p>
   <input type="hidden" id="team-name-1">
   <input type="hidden" id="team-name-2">
+  <input type="hidden" id="team-name-3">
   <input type="hidden" id="student-name">
 
   <div class="howto-box" style="margin:20px 24px 0 24px;">
@@ -895,6 +896,7 @@
             <button class="row-check-btn celebrate-btn" style="background:var(--success); margin-top:10px;" onclick="downloadStamp()">Download Math Quality Stamp</button>
             <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(1)">Download Badge - Team Member 1</button>
             <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(2)">Download Badge - Team Member 2</button>
+            <button class="row-check-btn celebrate-btn" style="background:var(--accent); margin-top:10px;" onclick="downloadSoloBadge(3)" hidden>Download Badge - Team Member 3</button>
           </div>
           <div class="feedback-msg" id="certificate-feedback"></div>
           <div class="feedback-msg" id="badge-feedback"></div>
@@ -2577,11 +2579,29 @@
     return missing;
   }
 
+  // Every name on this team, in a stable order - window.allTeamNames is set
+  // by window.onLessonUnlock below for a real signed-in student/team;
+  // Teacher Preview mode (which sets team-name-1/2 directly, bypassing
+  // onLessonUnlock) falls back to whatever's in the hidden name inputs.
+  function getAllTeamNames() {
+    if (window.allTeamNames && window.allTeamNames.length) return window.allTeamNames;
+    return ['team-name-1', 'team-name-2', 'team-name-3']
+      .map((id) => document.getElementById(id).value.trim())
+      .filter(Boolean);
+  }
+  // "A" / "A & B" / "A, B & C" / "A, B, C & D" - an Oxford-comma-style join
+  // that reads naturally for a pair or a trio alike, unlike a bare ", "
+  // join or always using "&" between every name.
+  function joinNames(names) {
+    if (names.length <= 1) return names.join('');
+    if (names.length === 2) return names.join(' & ');
+    return `${names.slice(0, -1).join(', ')} & ${names[names.length - 1]}`;
+  }
+
   async function downloadCertificate() {
     const feedbackEl = document.getElementById('certificate-feedback');
-    const name1 = document.getElementById('team-name-1').value.trim();
-    const name2 = document.getElementById('team-name-2').value.trim();
-    if (!name1 || !name2) {
+    const names = getAllTeamNames();
+    if (names.length < 2) {
       LessonCheck.incomplete(feedbackEl, 'Type both team member names at the top of the page first.');
       return;
     }
@@ -2635,9 +2655,15 @@
     ctx.fillStyle = '#0f172a';
     ctx.fillText('This certifies that', 500, 315);
 
-    ctx.font = "900 34px 'Montserrat', sans-serif";
+    const teamNameLine = joinNames(names);
+    let teamNameFontSize = 34;
+    ctx.font = `900 ${teamNameFontSize}px 'Montserrat', sans-serif`;
+    while (ctx.measureText(teamNameLine).width > 860 && teamNameFontSize > 22) {
+      teamNameFontSize -= 2;
+      ctx.font = `900 ${teamNameFontSize}px 'Montserrat', sans-serif`;
+    }
     ctx.fillStyle = '#1e3a8a';
-    ctx.fillText(`${name1} & ${name2}`, 500, 358);
+    ctx.fillText(teamNameLine, 500, 358);
 
     ctx.font = "800 15px 'Montserrat', sans-serif";
     ctx.fillStyle = '#1e3a8a';
@@ -2664,11 +2690,11 @@
 
     const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.92);
     const pdfBlob = buildMultiPagePdf([{ jpegDataUrl, widthPx: canvas.width, heightPx: canvas.height }]);
-    triggerBlobDownload(pdfBlob, `Festival-Certificate-${slug(name1)}-and-${slug(name2)}.pdf`);
+    triggerBlobDownload(pdfBlob, `Festival-Certificate-${names.map(slug).join('-and-')}.pdf`);
     LessonCheck.submit(feedbackEl, {
       key: 'certificate-download',
       label: 'Team Certificate Downloaded',
-      answer: `${name1} & ${name2}`,
+      answer: joinNames(names),
       section: 'Day 2 - Celebrate'
     }, 'Certificate downloaded! Check your Downloads folder.');
     window.certificateDownloaded = true;
@@ -2728,9 +2754,8 @@
 
   async function downloadSoloBadge(memberNum) {
     const feedbackEl = document.getElementById('badge-feedback');
-    const name1 = document.getElementById('team-name-1').value.trim();
-    const name2 = document.getElementById('team-name-2').value.trim();
-    if (!name1 || !name2) {
+    const names = getAllTeamNames();
+    if (names.length < 2) {
       LessonCheck.incomplete(feedbackEl, 'Type both team member names at the top of the page first.');
       return;
     }
@@ -2739,8 +2764,8 @@
       LessonCheck.incomplete(feedbackEl, `Finish Day 2 first - still need: ${missing.join(', ')}.`);
       return;
     }
-    const myName = memberNum === 1 ? name1 : name2;
-    const partnerName = memberNum === 1 ? name2 : name1;
+    const myName = names[memberNum - 1];
+    const partnerNames = names.filter((_, i) => i !== memberNum - 1);
     const logo = await ensureLogoAndFont("800 30px 'Baloo 2'");
 
     const SCALE = 2;
@@ -2791,7 +2816,7 @@
 
     ctx.font = "600 16px 'Montserrat', sans-serif";
     ctx.fillStyle = '#334155';
-    ctx.fillText(`Teamed up with ${partnerName}`, 250, 468);
+    ctx.fillText(`Teamed up with ${joinNames(partnerNames)}`, 250, 468);
     ctx.fillText('to plan a Youth Festival with algebra', 250, 490);
 
     const stats = computeAttemptStats();
@@ -2822,8 +2847,7 @@
 
   async function downloadStamp() {
     const feedbackEl = document.getElementById('badge-feedback');
-    const name1 = document.getElementById('team-name-1').value.trim();
-    const name2 = document.getElementById('team-name-2').value.trim();
+    const names = getAllTeamNames();
     if (!document.getElementById('stamp-display').classList.contains('show')) {
       LessonCheck.incomplete(feedbackEl, 'Finish Day 2 first to unlock your Math Quality Stamp.');
       return;
@@ -2862,12 +2886,12 @@
     ctx.fillText('MATH QUALITY', W / 2, H / 2 - 12);
     ctx.fillText('STAMP', W / 2, H / 2 + 30);
     ctx.font = "700 15px 'Montserrat', sans-serif";
-    ctx.fillText(`Confirmed together by ${name1} & ${name2}`, W / 2, H / 2 + 68);
+    ctx.fillText(`Confirmed together by ${joinNames(names)}`, W / 2, H / 2 + 68);
     const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     ctx.fillText(today, W / 2, H / 2 + 90);
     ctx.restore();
 
-    triggerDownload(canvas, `Festival-Stamp-${slug(name1)}-and-${slug(name2)}.png`);
+    triggerDownload(canvas, `Festival-Stamp-${names.map(slug).join('-and-')}.png`);
     reenableCelebrateButtons();
   }
 
@@ -3012,14 +3036,19 @@
       ]
     });
 
+    const celebrateNames = getAllTeamNames();
+    const celebrateRows = [
+      { label: 'Team Certificate', detail: window.certificateDownloaded ? 'Downloaded' : 'Not downloaded yet' },
+      { label: `${name1}'s Badge`, detail: window.badge1Downloaded ? 'Downloaded' : 'Not downloaded yet' },
+      { label: `${name2}'s Badge`, detail: window.badge2Downloaded ? 'Downloaded' : 'Not downloaded yet' }
+    ];
+    if (celebrateNames.length > 2) {
+      celebrateRows.push({ label: `${celebrateNames[2]}'s Badge`, detail: window.badge3Downloaded ? 'Downloaded' : 'Not downloaded yet' });
+    }
+    celebrateRows.push({ label: 'Math Quality Stamp', detail: document.getElementById('stamp-display').classList.contains('show') ? 'Awarded' : 'Not awarded yet' });
     sections.push({
       title: 'Celebrate',
-      rows: [
-        { label: 'Team Certificate', detail: window.certificateDownloaded ? 'Downloaded' : 'Not downloaded yet' },
-        { label: `${name1}'s Badge`, detail: window.badge1Downloaded ? 'Downloaded' : 'Not downloaded yet' },
-        { label: `${name2}'s Badge`, detail: window.badge2Downloaded ? 'Downloaded' : 'Not downloaded yet' },
-        { label: 'Math Quality Stamp', detail: document.getElementById('stamp-display').classList.contains('show') ? 'Awarded' : 'Not awarded yet' }
-      ]
+      rows: celebrateRows
     });
 
     const stats = computeAttemptStats();
@@ -3077,6 +3106,10 @@
     const firstMateName = teammates.length ? teammates[0].name : '';
     document.getElementById('team-name-1').value = selfName;
     document.getElementById('team-name-2').value = firstMateName;
+    window.allTeamNames = [selfName, ...teammates.map((m) => m.name)].filter(Boolean);
+    document.getElementById('team-name-3').value = teammates.length > 1 ? teammates[1].name : '';
+    const badge3Btn = document.querySelector('[onclick="downloadSoloBadge(3)"]');
+    if (badge3Btn) badge3Btn.hidden = teammates.length <= 1;
     syncTeamName();
 
     const statusEl = document.getElementById('pairing-status');
