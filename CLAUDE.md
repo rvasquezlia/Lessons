@@ -1916,61 +1916,10 @@ pairing is completely unaffected)
     `tokens`+`gardenElements`/`sign` fields are present, defensively
     (every field optional — `StateJSON`'s shape is whatever that
     specific project's own `buildStatePayload()` produces, never
-    standardized across projects), **plus an actual thumbnail image**
-    when a `*Snapshot` field is present (see below) — click it to open
-    the same (still low-res) image full size in a new tab.
-
-**Real canvas snapshots, not just a text summary.** Each paired page
-captures a small, compressed JPEG of its own canvas/infographic at
-**lock time** and carries it in `ProjectState` alongside everything
-else — `gardenSnapshot`/`signSnapshot` (Eco-Garden), `flyerSnapshot`
-(Youth Festival Logistics), `infographicSnapshot` (Ethical Auditor,
-Ethical Linear Budgeting).
-- **Konva-canvas pages** (`gardenSnapshot`/`signSnapshot`/
-  `flyerSnapshot`): `stageSnapshotUrl(stage, transformer, layer)` —
-  clears the transformer's selection first (same as that page's own
-  `getGardenDataUrl()`/`getSignDataUrl()`/`getFlyerDataUrl()`, so resize
-  handles never end up baked into the image), then
-  `stage.toDataURL({ pixelRatio: 0.5, mimeType: 'image/jpeg', quality:
-  0.5 })` — deliberately low-res/compressed, not the `pixelRatio: 2`
-  those download functions use for a real printable/downloadable image.
-- **SVG-based Infographic Studio pages** (`infographicSnapshot`):
-  `captureInfographicSnapshot()` — reuses `buildInfographicSVG()` +
-  `svgToImage()` (the same pipeline `downloadInfographicArt()` already
-  uses), draws onto an offscreen canvas at `STUDIO_W/H * 0.35`, then
-  `canvas.toDataURL('image/jpeg', 0.5)`.
-- **Rule: never name this capture function the same as the `window.*`
-  property it gets assigned to** (e.g. a function literally named
-  `infographicSnapshotUrl` assigned into `window.infographicSnapshotUrl`)
-  — a top-level `function` declaration in a classic (non-`module`)
-  `<script>` **is** a `window` property; the first assignment silently
-  replaces the function itself with a string, and every call after that
-  throws `TypeError: ... is not a function`. This was a real bug caught
-  before shipping — `captureInfographicSnapshot()` is named distinctly
-  from `window.infographicSnapshotUrl` for exactly this reason. The
-  Konva-page helper (`stageSnapshotUrl`) never had this problem since
-  it's a single, generic, differently-named function shared by both
-  `window.gardenSnapshotUrl`/`window.signSnapshotUrl` (or
-  `window.flyerSnapshotUrl`) — never assumed to be a foolproof pattern
-  on its own, just naturally clear of the collision.
-- **Every capture wraps in try/catch and checks its own output length**
-  (`url.length <= 40000`, `null` otherwise) — a Google Sheets cell caps
-  at ~50,000 characters, and a tainted/un-rendered canvas throws rather
-  than returning a valid data URL; neither should ever risk a failed
-  save. `restoreState()` on every page carries a previously-saved
-  `*Snapshot` field forward into `window.*SnapshotUrl` on load, so a
-  save triggered before the student re-locks anything on a later visit
-  doesn't blank out a snapshot already captured on an earlier one.
-- **Dashboard rendering**: `snapshotImgHtml(dataUrl, label)` (identical
-  copy in `teacher-dashboard.html` and `projects-dashboard.html`, same
-  "keep in sync by hand" convention as `STREAM_PILLAR_RULES`) renders a
-  160×120px thumbnail linked to the same data URL for a full-size open.
-  `deliverableSummaryHtml()` calls it once per `*Snapshot` field present.
-- **Not done**: no snapshot is captured for a project's *other* graded
-  content (only the one designated canvas/infographic per project) or
-  re-captured on every save (only at lock time) — a student who edits
-  and re-locks gets a fresh snapshot overwriting the old one, but there
-  is no history of earlier versions.
+    standardized across projects). This is a **structured summary**, not
+    a visual snapshot — no canvas-to-image capture/storage exists
+    site-wide; a garden/sign's actual on-canvas image is not
+    reproducible from the dashboard today.
 
 ### Projects Dashboard (`Lessons/projects-dashboard.html`)
 A separate, standalone, teacher-only page — never a 5th top-level tab on

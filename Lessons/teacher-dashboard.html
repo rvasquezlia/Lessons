@@ -2377,23 +2377,6 @@
   // Eco-Garden's own copy) - StateJSON's shape isn't standardized across
   // projects, so this reads defensively (every field optional) rather
   // than assuming any key exists.
-  // A small thumbnail of an actual captured canvas/infographic snapshot
-  // (see /CLAUDE.md's "Paired/team activities" - each paired page now
-  // captures one of these at lock time and carries it in ProjectState),
-  // wrapped in a link to the same data URL so a teacher can open/save the
-  // full (still low-res, but larger than the thumbnail) image. '' when
-  // this student's saved state has no snapshot for this field yet (not
-  // locked in, or the page's own save predates this feature).
-  function snapshotImgHtml(dataUrl, label) {
-    if (!dataUrl) return '';
-    return `<div style="margin-top:8px;">
-      <a href="${dataUrl}" target="_blank" rel="noopener" title="Open full size">
-        <img src="${dataUrl}" alt="${label}" style="max-width:160px; max-height:120px; border:2px solid var(--border); border-radius:8px; display:block; object-fit:contain;">
-      </a>
-      <span style="font-size:0.72rem; color:var(--text); opacity:0.75;">${label} - click to open full size</span>
-    </div>`;
-  }
-
   function deliverableSummaryHtml(email, activityId) {
     const row = allProjectStates.find((p) => p.email === email && p.activityId === activityId);
     if (!row || !row.stateJson) return '<em>No saved work yet.</em>';
@@ -2417,14 +2400,7 @@
     if (state.infographicConfig) {
       parts.push(`<strong>Infographic:</strong> "${state.infographicConfig.title || '(untitled)'}"${state.infographicLocked ? ' (locked in)' : ''}`);
     }
-    const images = [
-      snapshotImgHtml(state.gardenSnapshot, 'Garden layout'),
-      snapshotImgHtml(state.signSnapshot, 'Creation sign'),
-      snapshotImgHtml(state.flyerSnapshot, 'Event flyer'),
-      snapshotImgHtml(state.infographicSnapshot, 'Infographic')
-    ].join('');
-    if (!parts.length && !images) return '<em>No saved work yet.</em>';
-    return parts.join('<br>') + images;
+    return parts.length ? parts.join('<br>') : '<em>No saved work yet.</em>';
   }
 
   function projectInsightsHtml(a) {
