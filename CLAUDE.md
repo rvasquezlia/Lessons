@@ -1852,15 +1852,18 @@ stations, two 4-and-3-item Mixed Practice sets, a renamed "Linear
 Function Challenge" 2-column drag-match (5 scenario→function pairs,
 replacing Ethical-Auditor's "Rational Number Challenge" engine
 verbatim-but-renamed), an Engineering budget-structure-percent station,
-a Math solve-for-x station, and an ungraded Technology "What-If
-Calculator" sandbox (a slider, no `LessonCheck` call — Technology's
-STREAM pillar here is satisfied by an interactive tool, not a graded
-item, so it has no `SubmissionsLog` section at all). This is the one
-deliberate pillar gap on this activity (see §18's `PILOT_PILLAR_GAPS`)
-— every other pillar has real graded content correctly tagged, and
-both dashboards render Technology as 100% with a "no content" badge
-for this activity rather than "No data yet." The Infographic Studio's
-two ledger-style cards were repurposed
+a Math solve-for-x station, and a Technology "What-If Calculator"
+station: an ungraded slider sandbox (still no `LessonCheck` call on the
+slider itself) immediately followed by a genuine graded target question
+— "drag the slider until the total reads $2,950.00 - how many meals is
+that?" (`checkWhatIfTarget()`, key `whatiftarget`, `section: 'Day 2 -
+What-If Calculator (Technology)'`) — that requires actually using the
+tool rather than just reading a definition. **This activity is not a
+grandfathered pilot** (see the standing rule in §18) and carries no
+entry in `PILOT_PILLAR_GAPS` — every one of the six pillars has real,
+correctly-tagged graded content, `whatiftarget` included in
+`missingDay2Work()`'s gate alongside every other Day 2 station. The
+Infographic Studio's two ledger-style cards were repurposed
 from Ethical-Auditor's surplus/deficit framing into "FIXED COST"/
 "VARIABLE COST" cards populated from `solvedKeys` instead. Certificate
 citation is Luke 14:28 ("...does not first sit down and count the
@@ -2217,53 +2220,61 @@ pairing is completely unaffected)
     — a `label` is display-only and never reaches
     `pillarsForSection()`, only `section` does.
   - **Pilot projects' by-design pillar gaps read as 100% + a badge, not
-    "No data yet."** The three ports (Eco-Garden, Ethical-Auditor,
-    Youth-Festival-Logistics) plus the from-scratch Ethical-Linear-
-    Budgeting build all shipped with real students already using them
-    before every pillar had graded content behind it — retrofitting new
-    content onto work students already completed doesn't make sense, so
-    `PILOT_PILLAR_GAPS` (`teacher-dashboard.html` and
-    `projects-dashboard.html`, kept in sync by hand like
+    "No data yet."** The three STREAM ports (Eco-Garden, Ethical-
+    Auditor, Youth-Festival-Logistics) shipped with real students
+    already using them before every pillar had graded content behind
+    it — retrofitting new content onto work students already completed
+    doesn't make sense, so `PILOT_PILLAR_GAPS` (`teacher-dashboard.html`
+    and `projects-dashboard.html`, kept in sync by hand like
     `STREAM_PILLAR_RULES`) lists each activityId's known, deliberate
-    no-content pillars: Technology (an ungraded "what-if" sandbox tool
-    on all four) everywhere, plus Science specifically on Eco-Garden
-    (no Science station exists on that unit at all). A pillar on this
-    list renders 100% with a "Pilot - no content" pill
+    no-content pillars: Technology (an ungraded "what-if"-style sandbox
+    tool) on all three, plus Science specifically on Eco-Garden (no
+    Science station exists on that unit at all). A pillar on this list
+    renders 100% with a "Pilot - no content" pill
     (`teacher-dashboard.html`'s Project Insights table) or a dashed
     "100%\*" chip / dashed muted ring (`projects-dashboard.html`'s
     per-project chips and STREAM hero, via `pilotGapInfo()`) instead of
-    a real percentage or "No data yet." **Rule**: only add an
-    activityId/pillar pair here when the team has explicitly decided
-    that pillar has no graded content by design — every other
-    zero-content pillar must keep surfacing as "No data yet" so a real,
-    unnoticed gap doesn't get silently hidden behind this exception.
-    Every other pillar on these four activities has real graded content
-    correctly tagged (see the retagging fixes below) — Technology (and
-    Science on Eco-Garden) are the only pillars anywhere on the site
-    that use this exception.
-  - **Retagging fixes that closed every other pillar gap on the four
-    pilot/PreAP projects** — each was real, already-existing content
-    whose `section` string just didn't contain a `STREAM_PILLAR_RULES`
-    keyword yet; no new questions were added to any of the four.
-    `Seventh/Ethical-Auditor-Community-Engineer`: Ledger Audit items →
-    `(Science)`, Sustainable Center Budget items → `(Engineering)`, the
-    Stewardship reflection → `(Engineering)`.
-    `Eighth/Youth-Festival-Logistics`: the booth-size items (Stations
-    4A/4B) → `(Engineering)`, the electrical-load items (Stations 5A/5B)
-    → `(Science & Engineering)` — split out of the plain Math-only
-    Logistics Stations section; the ticket/break-even/vendor-hours items
-    stay Math-only. `Eighth/Ethical-Linear-Budgeting` (8-PreAP, not a
-    grandfathered pilot — see below): the Option for the Poor item →
+    a real percentage or "No data yet." **`PILOT_PILLAR_GAPS` is closed
+    to exactly these three activityIds** — never add a fourth, including
+    a future project or `Eighth/Ethical-Linear-Budgeting` (8-PreAP,
+    which is *not* on this list — see below and the standing rule that
+    follows it). Every other pillar on these three activities has real
+    graded content correctly tagged (see the retagging fixes below) —
+    Technology (and Science on Eco-Garden) are the only pillars
+    anywhere on the site that use this exception.
+  - **Retagging fixes that closed every other pillar gap on the three
+    pilot ports, plus a real Technology item added to Ethical-Linear-
+    Budgeting** — the pilot retags were all real, already-existing
+    content whose `section` string just didn't contain a
+    `STREAM_PILLAR_RULES` keyword yet; no new questions were needed on
+    any of the three ports. `Seventh/Ethical-Auditor-Community-
+    Engineer`: Ledger Audit items → `(Science)`, Sustainable Center
+    Budget items → `(Engineering)`, the Stewardship reflection →
+    `(Engineering)`. `Eighth/Youth-Festival-Logistics`: the booth-size
+    items (Stations 4A/4B) → `(Engineering)`, the electrical-load items
+    (Stations 5A/5B) → `(Science & Engineering)` — split out of the
+    plain Math-only Logistics Stations section; the ticket/break-even/
+    vendor-hours items stay Math-only. `Eighth/Ethical-Linear-Budgeting`
+    (8-PreAP, not a pilot and not on `PILOT_PILLAR_GAPS` — real students
+    hadn't used it yet when this was found, so it's held to the full
+    standing rule below, no exception): the Option for the Poor item →
     added `(Religion)` alongside its existing Science tag (the item is
     genuinely a Catholic-Social-Teaching critical-thinking question, not
     Science, even though it sits in the Sustainability station), the
     budget-structure item → `(Engineering)` (was matching Math only via
-    the literal word "budget"), and both Mixed Practice sets →
-    `(Math)` (the bare "Mixed Practice" section name matched nothing at
-    all). After these fixes, Ethical-Linear-Budgeting has real content
-    behind every pillar except Technology's ungraded sandbox — the same
-    single-pillar-gap shape as the three ports, even though it isn't a
-    pilot itself (see the standing rule below).
+    the literal word "budget"), both Mixed Practice sets → `(Math)`
+    (the bare "Mixed Practice" section name matched nothing at all),
+    and — since the What-If Calculator itself had no graded content to
+    retag — a genuine new graded item, `checkWhatIfTarget()` (key
+    `whatiftarget`, `section: 'Day 2 - What-If Calculator (Technology)'`,
+    added to `missingDay2Work()`'s Day 2 completion gate), that requires
+    dragging the slider to a specific target total and typing the
+    resulting number of meals. After these fixes, Ethical-Linear-
+    Budgeting has real, correctly-tagged graded content behind all six
+    pillars with zero exceptions — verified live via Playwright (the
+    check records the right key/section/verdict, and the dashboard's
+    STREAM pillar table shows a real 100% for every pillar, no pilot
+    badge on any of them).
   - **Deliverables** — `deliverableSummaryHtml(email, activityId)` reads
     that student's own `ProjectState.StateJSON` (**not**
     `SubmissionsLog`) and renders whichever of `cartOrder`/`grandTotal`/
@@ -2494,24 +2505,31 @@ gate identical in shape to `teacher-dashboard.html`'s own (same
   copy, which gained the identical two fields at the same time.
 
 ### Standing rule: every future STREAM project must cover all six pillars
-The four existing projects (the three pilot ports plus Ethical-Linear-
-Budgeting) were allowed to ship with a genuinely content-free pillar or
-two (see "Pilot projects' by-design pillar gaps" above) because they
-predate this rule and real students were already using them by the
-time the gap was found. **Every STREAM project designed from here on
-does not get that exception**: every graded item's `section` string
-must resolve to at least one `STREAM_PILLAR_RULES` pillar (check with
-`pillarsForSection()`/a quick regex test before the page ships, not
-after), and all six pillars (S/T/R/E/A/M) must have at least one real
-graded item behind them. **If a new project can't satisfy both of
-these, it cannot be created** — don't ship it with a planned gap and a
-promise to retag later, and don't add it to `PILOT_PILLAR_GAPS`
-(that list is closed to the four grandfathered activities above, not a
-template for future ones). This also means: don't invent a throwaway
-question just to check a pillar off the list — design the project so
-each of the six STREAM areas has a genuine activity, and if one area
-truly doesn't fit the project's real content, redesign the project's
-scope rather than padding it.
+Only the three pilot ports (Eco-Garden, Ethical-Auditor, Youth-
+Festival-Logistics) were allowed to ship with a genuinely content-free
+pillar or two (see "Pilot projects' by-design pillar gaps" above),
+because they predate this rule and real students were already using
+them by the time the gap was found. **Every STREAM project designed
+from here on does not get that exception** — `Eighth/Ethical-Linear-
+Budgeting` (8-PreAP) is the first project actually held to it: it
+wasn't a pilot port, real students hadn't started it yet when its
+pillar coverage was audited, so instead of a `PILOT_PILLAR_GAPS` badge
+it got retagging fixes plus one genuine new graded item (the What-If
+Calculator's target question — see above) until all six pillars had
+real content, with zero exceptions. That's the model going forward:
+every graded item's `section` string must resolve to at least one
+`STREAM_PILLAR_RULES` pillar (check with `pillarsForSection()`/a quick
+regex test before the page ships, not after), and all six pillars
+(S/T/R/E/A/M) must have at least one real graded item behind them. **If
+a new project can't satisfy both of these, it cannot be created** —
+don't ship it with a planned gap and a promise to retag later, and
+don't add it to `PILOT_PILLAR_GAPS` (that list is closed to the three
+pilot ports, not a template for future ones — see its own comment).
+This also means: don't invent a throwaway question just to check a
+pillar off the list — design the project so each of the six STREAM
+areas has a genuine activity, and if one area truly doesn't fit the
+project's real content, redesign the project's scope rather than
+padding it.
 
 ### Setting up a new paired activity (teacher/manual steps — Claude
 cannot edit the live Sheet or redeploy Apps Script itself; see §1)

@@ -2592,25 +2592,28 @@
     return key === 'certificate-download' || /^solo-badge-\d+$/.test(key);
   }
 
-  // The pilot STREAM projects (the three ports plus the from-scratch
-  // Ethical-Linear-Budgeting build - see /CLAUDE.md's "Paired/team
-  // activities") shipped with one or two pillars that have no real
-  // graded content behind them at all, by deliberate decision: an
-  // ungraded Technology "sandbox" tool on every one of the four, and no
-  // Science station specifically on Eco-Garden. Retrofitting new graded
-  // content onto a project real students already completed doesn't make
-  // sense, so a pillar listed here reads as 100% with a "Pilot - no
-  // content" badge instead of a real percentage or "No data yet" - see
-  // computeStreamPillarBreakdown()'s own use of this map. Never add an
-  // activityId/pillar here for any reason other than "the team
-  // explicitly decided this pillar has no graded content by design" -
-  // anything else is a real gap and should keep surfacing as "No data
-  // yet" so it gets noticed and fixed via retagging or new content.
+  // The three pilot STREAM projects (the ports - see /CLAUDE.md's
+  // "Paired/team activities") shipped with one or two pillars that have
+  // no real graded content behind them at all, by deliberate decision:
+  // an ungraded Technology "sandbox" tool on all three, and no Science
+  // station specifically on Eco-Garden. Retrofitting new graded content
+  // onto a project real students already completed doesn't make sense,
+  // so a pillar listed here reads as 100% with a "Pilot - no content"
+  // badge instead of a real percentage or "No data yet" - see
+  // computeStreamPillarBreakdown()'s own use of this map. **This list is
+  // closed to these three pilots** - never add an activityId here for
+  // any other project, including a future one or Ethical-Linear-
+  // Budgeting (8-PreAP, not a pilot - it was given a real graded
+  // Technology item, the What-If Calculator's target question, instead
+  // of this exception; see its own Technology station). Every STREAM
+  // project designed from here on must cover all six pillars with real
+  // content - a pillar with no matching content should surface as "No
+  // data yet" so a real gap gets noticed and fixed via retagging or new
+  // content, never silently added to this list.
   const PILOT_PILLAR_GAPS = {
     '6-laudato-si-ecogarden': ['Science (S)', 'Technology (T)'],
     '7-ethical-auditor-community-engineer': ['Technology (T)'],
-    '8-youth-festival-logistics': ['Technology (T)'],
-    '8-ethical-linear-budgeting': ['Technology (T)']
+    '8-youth-festival-logistics': ['Technology (T)']
   };
 
   // One row's own final attempt count per key (excludes a reset entry
