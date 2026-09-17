@@ -2412,7 +2412,28 @@ gate identical in shape to `teacher-dashboard.html`'s own (same
   existing keywords at all — see each project's own section list before
   assuming a new one's content will show up here automatically; a
   section name with no matching keyword is simply excluded, not an
-  error to chase. `deliverableSummaryHtml()` also gained two more
+  error to chase. **A real gap found migrating pre-existing Youth
+  Festival Logistics data**: `flyer`/`optimization` alone left most of
+  that unit's own content untagged — `Day 1 - Logistics Stations`,
+  `Day 1 - Check Your Understanding`, `Day 2 - Bonus Challenge`, and
+  `Day 2 - Exit Ticket` matched nothing at all (10 of ~14 graded items
+  per team), so Math/Religion read "No data yet" or badly undercounted
+  even for teams that had genuinely finished the unit. Fixed two ways,
+  same pattern as the Eco-Garden Creation Sign fix: widened Math to add
+  `logistics|understanding|challenge|ticket` (this unit's actual station/
+  concept-check/exit-ticket work is fundamentally algebra content, per
+  its own Linear-Equations standards mapping), widened Religion to add
+  `ethical`, and — since `reflect4`/`reflect5`/`bonusreflect`
+  (`index.html`'s own `submitReflection()` calls) already had labels
+  naming a pillar their `section` string didn't ("Precision and
+  **Stewardship**", "**Ethical** Impact of Planning") — widened those
+  three `section` strings themselves to
+  `Day 2 - Exit Ticket (Stewardship)` /
+  `Day 2 - Exit Ticket (Ethical Impact)` /
+  `Day 2 - Bonus Challenge (Stewardship)` so the dashboard's tagging
+  finally agrees with what the page already told the student, exactly
+  per this section's own "label is display-only, only section reaches
+  `pillarsForSection()`" rule above. `deliverableSummaryHtml()` also gained two more
   optional fields — `state.flyer` (Youth Festival Logistics) and
   `state.infographicConfig` (Ethical Auditor, reused as-is by Ethical
   Linear Budgeting) — kept in sync with `teacher-dashboard.html`'s own
