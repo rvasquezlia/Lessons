@@ -1527,15 +1527,40 @@ is drill-in-only with no quick-switch button of its own.
   list of a dozen+ activities was hard to scan even after the Grade
   filter narrowed it down. The "no catalog data" fallback (activity
   titles pulled from `allRows` instead of `activityCatalog`) has no Unit
-  to offer, so those bucket under "Unassigned." `.multiselect-toggle`'s
-  `max-width` is `550px` (up from an original `220px`) so a long
-  activity title or a multi-selection count isn't clipped as
-  aggressively — the filter bar's own `flex-wrap` still lets the
-  Export CSV/Refresh buttons drop to a second line if the combined
-  Grade+Activity+Teacher+checkbox row runs out of room (an unrestricted
-  "All"-scope account with several Teacher pills at a narrow viewport),
-  the same graceful-overflow behavior the bar already had before this
-  change.
+  to offer, so those bucket under "Unassigned."
+  - **`.multiselect-toggle`'s width is `min-width`+`max-width` set to
+    the same `350px`, not just `max-width` alone.** A `<button>` sizes
+    to its own content by default — an earlier version only raised
+    `max-width` (220px → 550px), which did nothing for the common short
+    "All Activities" label (a `max-width` can only ever shrink a box,
+    never grow one past its content) and rendered no wider than before.
+    `min-width` is what actually forces the box open regardless of what
+    it currently says. **350px, not the full ~2.5x of the original
+    220px `max-width`**, because `.app-container` caps at `1200px`
+    site-wide (`lesson-shared.css`) — past ~400-420px the Grade pills +
+    a wider Activity toggle + the Flagged-only checkbox + Export CSV/
+    Refresh no longer fit on one line for a scoped (single-Teacher)
+    account, which is the common case; 350px was measured to clear that
+    with margin. An unrestricted "All"-scope account with several
+    Teacher pills at a narrow viewport can still wrap the buttons to a
+    second line — the same graceful-overflow behavior (`.filter-bar`'s
+    own `flex-wrap`) the bar already had before any of this, not a
+    regression. **Rule**: before widening any filter-bar control
+    further, measure against the 1200px cap (`getBoundingClientRect()`
+    on `.filter-bar`'s own children) rather than assuming more room is
+    available just because the viewport is wider — the viewport stops
+    mattering once `.app-container`'s own max-width is reached.
+  - **Clicking a Grade/Teacher pill never closes an already-open
+    Activity popover.** The generic "close on any outside click"
+    listener explicitly exempts `.filter-pill` targets
+    (`!e.target.closest('.filter-pill')`) — a pill is technically
+    outside `#activity-multiselect`, and closing the popover the
+    instant one was clicked hid the very re-narrowing
+    (`populateFilters()` → `catalogForGrade` → `availableActivityTitles`)
+    that click had just correctly triggered, reading as "the grade
+    filter isn't doing anything" when it silently was. Keeping the
+    popover open lets a teacher watch the option list actually narrow
+    in place.
 - **Default sort**: alphabetical everywhere (`sortState`:
   `activityTitle`/`unit`/`studentName` ascending), **except** Flags &
   Behavior, which defaults to `lastSubmittedAt` descending.
