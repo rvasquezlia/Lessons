@@ -113,7 +113,17 @@
   .multiselect-toggle {
     padding: 6px 14px; border-radius: 999px; border: 2px solid var(--border);
     background: var(--card); color: var(--text); font-family: inherit;
-    font-weight: 700; font-size: 0.82rem; cursor: pointer; max-width: 550px;
+    font-weight: 700; font-size: 0.82rem; cursor: pointer;
+    /* A `<button>` sizes to its own content by default - max-width alone
+       never actually widened this for the common short "All Activities"
+       label, only for a long selected title. min-width is what actually
+       makes the box bigger regardless of what it currently says. Capped
+       at 350px (not the full 2.5x of the original 220px max-width) so
+       the rest of the filter bar - Grade pills, Teacher pills when
+       unscoped, the Flagged-only checkbox, Export CSV/Refresh - still
+       fits on one line inside .app-container's 1200px cap; see
+       /CLAUDE.md for the exact math. */
+    min-width: 350px; max-width: 350px;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .multiselect-toggle:hover { border-color: var(--primary-light); }
@@ -3576,9 +3586,17 @@
     // Close the Activity multiselect panel on any click outside it -
     // its own toggle/checkboxes/search box are handled by their own
     // listeners below, so this only ever fires for an outside click.
+    // A Grade/Teacher filter pill is the one deliberate exception: it's
+    // outside #activity-multiselect too, but selecting one legitimately
+    // re-narrows the Activity list via populateFilters() (Grade change ->
+    // catalogForGrade -> availableActivityTitles) while this popover is
+    // already open - closing it right then hid that update from view
+    // entirely, reading as "the grade filter isn't doing anything" when
+    // it actually was. Keeping the popover open here lets a teacher watch
+    // the list actually narrow.
     const group = document.getElementById('activity-multiselect');
     const panel = document.getElementById('activity-panel');
-    if (group && panel && !panel.hidden && !group.contains(e.target)) panel.hidden = true;
+    if (group && panel && !panel.hidden && !group.contains(e.target) && !e.target.closest('.filter-pill')) panel.hidden = true;
     // Same pattern for the student-search results dropdown - a click on
     // a result itself is handled by its own onclick before this ever
     // sees it (the result buttons live inside home-search-card, so
