@@ -2155,7 +2155,61 @@ pairing is completely unaffected)
     pillar it actually found. A pillar with zero matching sections on
     this activity (e.g. Science/Technology on the canonical example,
     which has no graded item under either) simply doesn't appear —
-    never padded with a fabricated 0%.
+    never padded with a fabricated 0%. **A pillar's completion % counts
+    a `'correct'` verdict *and* a `'reflection'` verdict as done** — a
+    pillar measures engagement with that STREAM area, not
+    right-vs-wrong, and a project's own creative/reflective checks
+    (Garden Grid Layout, Creation Sign, an Infographic/Flyer lock, a
+    real reflection question) are genuinely un-gradeable
+    `LessonCheck.submit()` calls with no `correct` field, which always
+    log as `'reflection'` (§8's scoring formula still excludes
+    `'reflection'` from `ItemsAttempted`/`ItemsCorrect`/`ScorePct` —
+    that's a different, unchanged metric measuring being right, not
+    having done the work). Before this rule only counted `'correct'`,
+    so a project's own creative/reflective checks could never
+    contribute to their pillar's percentage even when every student had
+    genuinely submitted them — caught migrating pre-existing Eco-Garden
+    data where every team had completed the Garden Layout/Creation Sign
+    steps but those pillars still read 0%.
+  - **A certificate/badge download never counts toward a pillar, even
+    though it also logs verdict `'reflection'`.**
+    `isCelebrationDownloadKey(key)` (`key === 'certificate-download'` or
+    `/^solo-badge-\d+$/`) is checked before `pillarsForSection()` in
+    `computeStreamPillarBreakdown()` and skips the entry entirely — a
+    certificate/badge download is a one-click reward available once a
+    team has already finished everything else, not itself STREAM work,
+    so it shouldn't inflate whichever pillar its section (`Day N -
+    Celebrate`, which the Religion regex also happens to match via
+    `celebrate`) would otherwise tag it under. **Rule**: never let a
+    celebration/download action be the only thing backing a pillar's
+    number — a pillar with only a download behind it should read "No
+    data yet," not a percentage that isn't really measuring the pillar
+    it claims to. A project's *real* Religion-pillar content is its own
+    separate reflection question or cross-pillar creative check (see
+    the next bullet) — `Sixth/Laudato-Si-EcoGarden`'s is its Creation
+    Sign check, not the certificate download.
+  - **One item can count toward more than one pillar.**
+    `pillarsForSection(section)` returns *every* `STREAM_PILLAR_RULES`
+    match for that section string, not just the first — `computeStream
+    PillarBreakdown()` then credits the same submission's
+    attempted/correct tally to each pillar it names. Most sections
+    still only ever match one rule; a genuinely cross-pillar task
+    should say so in its own `section` string so both rules fire.
+    `Sixth/Laudato-Si-EcoGarden`'s Creation Sign check is the working
+    example: the page's own heading and instructions already call it
+    "Art & Religion: Creation Sign Studio" and include a real verse
+    picker (`#sign-verse-select`/`VERSES`, e.g. Psalm 104:24) a student
+    inserts before locking it in — the `LessonCheck.submit()` call's
+    `section` was `'Day 2 - Creation Sign'` (Art only, via `sign`) even
+    though its own `label` already said `'Creation Sign (Art &
+    Religion)'`. Widened to `'Day 2 - Creation Sign (Art & Religion)'`
+    so the section string itself matches both the Art regex (`sign`)
+    and the Religion regex (`religion`), and the dashboard's tagging
+    finally agrees with what the page already told the student.
+    **Rule**: when a check's own `label` already names two pillars,
+    make sure its `section` string contains a keyword for each one too
+    — a `label` is display-only and never reaches
+    `pillarsForSection()`, only `section` does.
   - **Deliverables** — `deliverableSummaryHtml(email, activityId)` reads
     that student's own `ProjectState.StateJSON` (**not**
     `SubmissionsLog`) and renders whichever of `cartOrder`/`grandTotal`/

@@ -449,21 +449,40 @@
     { match: /art|sign|design|creative|flyer/i, pillar: 'Art', letter: 'A', color: '#a21caf' },
     { match: /math|ledger|budget|division|decimal|optimization|model|solv/i, pillar: 'Math', letter: 'M', color: '#15803d' }
   ];
-  function pillarForSection(section) {
-    const rule = STREAM_PILLAR_RULES.find((r) => r.match.test(section || ''));
-    return rule || null;
+  // Returns every matching rule, not just the first - kept in sync with
+  // teacher-dashboard.html's identical pillarsForSection(); see that
+  // copy's own comment for why a section can legitimately name more
+  // than one pillar.
+  function pillarsForSection(section) {
+    return STREAM_PILLAR_RULES.filter((r) => r.match.test(section || ''));
+  }
+
+  // Kept in sync with teacher-dashboard.html's identical copy - a
+  // certificate/badge download is a one-click reward, not itself STREAM
+  // work, so it's never counted toward a pillar's completion; see that
+  // copy's own comment for the full reasoning.
+  function isCelebrationDownloadKey(key) {
+    return key === 'certificate-download' || /^solo-badge-\d+$/.test(key);
   }
 
   function computeStreamPillarBreakdown(rows) {
     const byPillar = {};
     rows.forEach((r) => {
       lastEntriesByKey(r).forEach((s) => {
-        const rule = pillarForSection(s.section);
-        if (!rule) return;
-        if (!byPillar[rule.pillar]) byPillar[rule.pillar] = { itemsAttempted: 0, itemsCorrect: 0, students: new Set() };
-        byPillar[rule.pillar].itemsAttempted++;
-        if (s.verdict === 'correct') byPillar[rule.pillar].itemsCorrect++;
-        byPillar[rule.pillar].students.add(r.email);
+        if (isCelebrationDownloadKey(s.key)) return;
+        const rules = pillarsForSection(s.section);
+        // A genuinely cross-pillar item (see pillarsForSection) counts
+        // toward every pillar it names, not just one.
+        rules.forEach((rule) => {
+          if (!byPillar[rule.pillar]) byPillar[rule.pillar] = { itemsAttempted: 0, itemsCorrect: 0, students: new Set() };
+          byPillar[rule.pillar].itemsAttempted++;
+          // Kept in sync with teacher-dashboard.html's identical copy - a
+          // submitted creative/reflective item (verdict 'reflection') counts
+          // as pillar-complete exactly like a graded 'correct' item does;
+          // see that copy's own comment for the full reasoning.
+          if (s.verdict === 'correct' || s.verdict === 'reflection') byPillar[rule.pillar].itemsCorrect++;
+          byPillar[rule.pillar].students.add(r.email);
+        });
       });
     });
     return byPillar;
