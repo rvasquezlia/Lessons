@@ -926,7 +926,7 @@
         make decisions that balanced financial reality with ethical responsibility.</p>
         <textarea id="stewardship-reflection" class="form-control-lg" rows="4" placeholder="Type your answer..." onpaste="return blockPaste(event)" ondrop="return blockPaste(event)"></textarea>
         <p class="no-paste-note">Type your own answer - pasting is disabled.</p>
-        <div style="text-align:center;"><button class="row-check-btn" onclick="submitReflection('stewardship-reflection','stewardship-reflection-feedback','stewardreflect','Stewardship &amp; Engineering Reflection','Day 2 - Reflection')">Submit</button></div>
+        <div style="text-align:center;"><button class="row-check-btn" onclick="submitReflection('stewardship-reflection','stewardship-reflection-feedback','stewardreflect','Stewardship &amp; Engineering Reflection','Day 2 - Reflection (Engineering)')">Submit</button></div>
         <div class="feedback-msg" id="stewardship-reflection-feedback"></div>
       </div>
 
@@ -1600,7 +1600,7 @@
     const outcome = gradeAttempt('fuel', isCorrect, feedbackEl, {
       correct: 'Correct! Fuel is an expense, so it is negative: &minus;$186.75.',
       retry: 'Tip: money spent by the parish is an expense - a negative number.'
-    }, { label: 'Step 1 - Delivery Truck Fuel', answer: given, section: 'Day 1 - Ledger Audit' });
+    }, { label: 'Step 1 - Delivery Truck Fuel', answer: given, section: 'Day 1 - Ledger Audit (Science)' });
     if (outcome === 'correct') {
       if (!window.teacherPreviewMode) document.getElementById('fuel-input').disabled = true;
       maybeCompleteDay1();
@@ -1616,7 +1616,7 @@
     const outcome = gradeAttempt('electricity', isCorrect, feedbackEl, {
       correct: 'Correct! Paying a bill is an expense, so it is negative: &minus;$124.80.',
       retry: 'Tip: a bill paid out of the account is a negative number.'
-    }, { label: 'Step 1 - Office Electricity', answer: given, section: 'Day 1 - Ledger Audit' });
+    }, { label: 'Step 1 - Office Electricity', answer: given, section: 'Day 1 - Ledger Audit (Science)' });
     if (outcome === 'correct') {
       if (!window.teacherPreviewMode) document.getElementById('electricity-input').disabled = true;
       maybeCompleteDay1();
@@ -1632,7 +1632,7 @@
     const outcome = gradeAttempt('solarcredit', isCorrect, feedbackEl, {
       correct: 'Correct! A credit refunded to the account is positive: +$82.50.',
       retry: 'Tip: a credit refunded into the account adds money - a positive number.'
-    }, { label: 'Step 1 - Solar Credit', answer: given, section: 'Day 1 - Ledger Audit' });
+    }, { label: 'Step 1 - Solar Credit', answer: given, section: 'Day 1 - Ledger Audit (Science)' });
     if (outcome === 'correct') {
       if (!window.teacherPreviewMode) document.getElementById('solarcredit-input').disabled = true;
       maybeCompleteDay1();
@@ -1648,7 +1648,7 @@
     const outcome = gradeAttempt('supplies', isCorrect, feedbackEl, {
       correct: 'Correct! A purchase is an expense, so it is negative: &minus;$236.25.',
       retry: 'Tip: buying supplies spends money - a negative number.'
-    }, { label: 'Step 1 - Pantry Supplies', answer: given, section: 'Day 1 - Ledger Audit' });
+    }, { label: 'Step 1 - Pantry Supplies', answer: given, section: 'Day 1 - Ledger Audit (Science)' });
     if (outcome === 'correct') {
       if (!window.teacherPreviewMode) document.getElementById('supplies-input').disabled = true;
       maybeCompleteDay1();
@@ -1676,7 +1676,7 @@
       key: 'stewardchoice',
       label: 'Step 2 - Stewardship Investment Choice',
       answer: `Option ${selected.value}: ${text}`,
-      section: 'Day 1 - Ledger Audit'
+      section: 'Day 1 - Ledger Audit (Science)'
     }, `Choice locked in: Option ${selected.value}.`);
     maybeCompleteDay1();
     saveProgress();
@@ -1695,7 +1695,7 @@
     const outcome = gradeAttempt('day1ledger', isCorrect, feedbackEl, {
       correct: `Correct! $500.00 &minus; $186.75 &minus; $124.80 + $82.50 &minus; $236.25 &minus; $${fmt2(Math.abs(window.stewardCost))} = $${fmt2(expected)}.`,
       retry: 'Tip: add the grant and all five signed numbers together.'
-    }, { label: 'Step 3 - Day 1 Ledger Balance', answer: given, section: 'Day 1 - Ledger Audit' });
+    }, { label: 'Step 3 - Day 1 Ledger Balance', answer: given, section: 'Day 1 - Ledger Audit (Science)' });
     if (outcome === 'correct') {
       if (!window.teacherPreviewMode) document.getElementById('day1ledger-input').disabled = true;
       window.day1LedgerBalance = expected;
@@ -1710,7 +1710,7 @@
     const outcome = checkMC('errordecimal', 'B', 'errordecimal-feedback',
       'Correct! $236.25 &minus; $23.625 = $212.625, so the ledger would look about $212.63 richer than it really is - a failure of stewardship because it hides real overspending.',
       'Tip: compare the true cost to the recorded cost, and think about which direction the ledger error pushes the total.',
-      { label: 'Step 4 - Error Analysis (Misplaced Decimal)', answer: document.querySelector('input[name="errordecimal"]:checked').value, section: 'Day 1 - Ledger Audit' });
+      { label: 'Step 4 - Error Analysis (Misplaced Decimal)', answer: document.querySelector('input[name="errordecimal"]:checked').value, section: 'Day 1 - Ledger Audit (Science)' });
     if (outcome === 'correct') { maybeCompleteDay1(); saveProgress(); }
   }
 
@@ -1723,7 +1723,7 @@
     const outcome = gradeAttempt('weektracker', isCorrect, feedbackEl, {
       correct: 'Correct! 0 + 150.25 &minus; 85.40 + 62.10 &minus; 40.75 = $86.20.',
       retry: 'Tip: add each signed weekly change to your running total, one week at a time.'
-    }, { label: 'Step 5 - Four-Week Balance Tracker', answer: given, section: 'Day 1 - Ledger Audit' });
+    }, { label: 'Step 5 - Four-Week Balance Tracker', answer: given, section: 'Day 1 - Ledger Audit (Science)' });
     if (outcome === 'correct') {
       if (!window.teacherPreviewMode) document.getElementById('weektracker-input').disabled = true;
       window.weekTrackerBalance = expected;
@@ -1738,7 +1738,7 @@
     const outcome = checkMC('criticalthinking', 'B', 'criticalthinking-feedback',
       'Correct! A negative ledger balance means the parish spent more than it had, which is not good stewardship.',
       'Tip: think about what it means to spend more money than you were given.',
-      { label: 'Critical Thinking - Negative Ledger Balance', answer: document.querySelector('input[name="criticalthinking"]:checked').value, section: 'Day 1 - Ledger Audit' });
+      { label: 'Critical Thinking - Negative Ledger Balance', answer: document.querySelector('input[name="criticalthinking"]:checked').value, section: 'Day 1 - Ledger Audit (Science)' });
     if (outcome === 'correct') { maybeCompleteDay1(); saveProgress(); }
   }
 
@@ -1780,7 +1780,7 @@
     const outcome = gradeAttempt('phases', isCorrect, feedbackEl, {
       correct: `Correct! 3/8 &times; $1,200,000 = $${fmt2(SOLAR_COST)}; 1/12 &times; $1,200,000 = $${fmt2(RAINWATER_COST)}; 1/5 &times; $1,200,000 = $${fmt2(FOUNDATION_COST)}.`,
       retry: 'Tip: multiply the fraction by $1,200,000 for each phase - check each one separately.'
-    }, { label: 'Step 1 - Solar, Rainwater, and Foundation Costs', answer: `${solarGiven}, ${rainwaterGiven}, ${foundationGiven}`, section: 'Day 2 - Sustainable Center Budget' });
+    }, { label: 'Step 1 - Solar, Rainwater, and Foundation Costs', answer: `${solarGiven}, ${rainwaterGiven}, ${foundationGiven}`, section: 'Day 2 - Sustainable Center Budget (Engineering)' });
     if (outcome === 'correct') {
       solvedKeys['solar'] = true; solvedKeys['rainwater'] = true; solvedKeys['foundation'] = true;
       if (!window.teacherPreviewMode) {
@@ -1804,7 +1804,7 @@
     const outcome = gradeAttempt('communitygarden', isCorrect, feedbackEl, {
       correct: `Correct! 1 &minus; 3/8 &minus; 1/12 &minus; 1/5 = 41/120 of the budget, and 41/120 &times; $1,200,000 = $${fmt2(COMMUNITY_GARDEN_COST)}.`,
       retry: 'Tip: rewrite 3/8, 1/12, and 1/5 with a common denominator of 120 before subtracting from 1.'
-    }, { label: 'Step 1 - Community Garden & Green Roof', answer: given, section: 'Day 2 - Sustainable Center Budget' });
+    }, { label: 'Step 1 - Community Garden & Green Roof', answer: given, section: 'Day 2 - Sustainable Center Budget (Engineering)' });
     if (outcome === 'correct') {
       if (!window.teacherPreviewMode) document.getElementById('communitygarden-input').disabled = true;
       saveProgress();
@@ -1823,7 +1823,7 @@
     const outcome = gradeAttempt('overrun', isCorrect, feedbackEl, {
       correct: `Correct! 1/4 &times; $${fmt2(FOUNDATION_COST)} = $${fmt2(Math.abs(OVERRUN))}.`,
       retry: 'Tip: multiply 1/4 by the Insulated Foundation cost you found in Step 1.'
-    }, { label: 'Step 2 - Rocky Soil Overrun', answer: given, section: 'Day 2 - Sustainable Center Budget' });
+    }, { label: 'Step 2 - Rocky Soil Overrun', answer: given, section: 'Day 2 - Sustainable Center Budget (Engineering)' });
     if (outcome === 'correct') {
       if (!window.teacherPreviewMode) document.getElementById('overrun-input').disabled = true;
       saveProgress();
@@ -1844,7 +1844,7 @@
     const outcome = gradeAttempt('day2finalbalance', isCorrect, feedbackEl, {
       correct: `Correct! $1,200,000 &minus; $${fmt2(totalSpent)} = ${dollar(expected)} - a $${fmt2(Math.abs(expected))} deficit.`,
       retry: 'Tip: add all four phase costs and the overrun, then subtract that total from $1,200,000.'
-    }, { label: 'Step 3 - Final Project Balance', answer: given, section: 'Day 2 - Sustainable Center Budget' });
+    }, { label: 'Step 3 - Final Project Balance', answer: given, section: 'Day 2 - Sustainable Center Budget (Engineering)' });
     if (outcome === 'correct') {
       if (!window.teacherPreviewMode) document.getElementById('day2finalbalance-input').disabled = true;
       window.day2FinalBalance = expected;
@@ -1856,7 +1856,7 @@
     const outcome = checkMC('day2criticalthinking', 'B', 'day2criticalthinking-feedback',
       'Correct! A $60,000 deficit means the project spent more than its budget, so the parish must raise more funds or cut costs elsewhere.',
       'Tip: a deficit means spending exceeded what was budgeted - think about what a parish would need to do next.',
-      { label: 'Critical Thinking - Day 2 Deficit', answer: document.querySelector('input[name="day2criticalthinking"]:checked').value, section: 'Day 2 - Sustainable Center Budget' });
+      { label: 'Critical Thinking - Day 2 Deficit', answer: document.querySelector('input[name="day2criticalthinking"]:checked').value, section: 'Day 2 - Sustainable Center Budget (Engineering)' });
     if (outcome === 'correct') saveProgress();
   }
 
@@ -1874,7 +1874,7 @@
     const outcome = gradeAttempt('stewardshipscore', isCorrect, feedbackEl, {
       correct: `Correct! Using your own S, C, and D, the Final Stewardship Score is ${fmt2(expected)}.`,
       retry: 'Tip: work inside the parentheses first, then find |D| / 1000, then subtract.'
-    }, { label: 'Step 4 - Final Stewardship Score', answer: given, section: 'Day 2 - Sustainable Center Budget' });
+    }, { label: 'Step 4 - Final Stewardship Score', answer: given, section: 'Day 2 - Sustainable Center Budget (Engineering)' });
     if (outcome === 'correct') {
       if (!window.teacherPreviewMode) document.getElementById('stewardshipscore-input').disabled = true;
       window.stewardshipScore = expected;
