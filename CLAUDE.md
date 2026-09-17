@@ -1308,6 +1308,75 @@ converging on the same wrong answer is expected, not suspicious.
 `applyDuplicateAnswerFlags()` runs, not after — the two were reordered
 for this reason.
 
+### Home — the default landing view
+The four top-level tabs below used to be the very first thing a teacher
+saw, with no ranking or entry point — a flat row of equally-weighted
+options a teacher had to already know how to read. **`#home`** is now
+the default `.panel.active` on load instead of `#overview`: a
+task-oriented landing screen with three big tiles — **My Class**
+(`switchDashTab('overview')`), **Students** (`switchDashTab('students')`),
+**Flags to Review** (`switchDashTab('integrity')` +
+`switchSubTab('integrity', 'flags')`) — plus a secondary row of plain
+links into By Activity, Engagement Funnel, and Full Submission Log
+(still exactly the same panels/sub-panels, nothing removed or
+duplicated) and a link out to `Teacher-Help.html` for roster/Sheet
+management. **This is not a fifth top-level tab** — `#nav-tabs` itself
+is hidden while on Home (see below) and Home has no `.tab-btn` of its
+own; it's a routing screen that sits *above* the existing four, not a
+peer of them.
+- **`renderHome()`** (called from `renderAll()`, after the other six
+  render passes so it never disagrees with the tab it links into) reads
+  the exact same `filteredRows()`/`filteredRoster()`/
+  `computeStudentSummaries()` every other tab already reads from —
+  there is no separate "Home filter state"; the filter bar above the
+  (hidden-on-Home) tab row already applies to every panel including
+  this one.
+- **Score and completion are shown as two separate numbers everywhere
+  a "who needs a look" list appears on Home** (My Class tile's stat
+  row, Students tile's preview rows) — never collapsed into one, and
+  the preview ranks by *whichever of the two is worse*
+  (`Math.min(avgScore, overallCompletionPct)`), since a student can be
+  acing every attempted item while barely having started the unit, or
+  the reverse, and only showing score would hide the second case
+  entirely.
+- **`switchDashTab(tabId)`** now also toggles `#nav-tabs`/`#crumb-bar`
+  visibility: hidden/hidden on Home, shown/shown on every other tab.
+  `#crumb-bar`'s one link (`&larr; Teacher Dashboard Home`) is the way
+  back. **Rule**: `#nav-tabs[hidden]` needs its own
+  `display: none !important` override in this file's own `<style>` —
+  `lesson-shared.css`'s `.nav-tabs { display: flex; ... }` is an
+  author-stylesheet rule of equal specificity to the browser's built-in
+  `[hidden] { display: none }`, and author rules beat user-agent ones
+  regardless of specificity order, so the plain `hidden` attribute
+  silently does nothing without it. Same trap §2 already documents for
+  `#lesson-loading` — check for a competing explicit `display` rule
+  before assuming `hidden`/`.hidden` alone will work on any new element
+  here.
+- **`jumpToStudentByName(name)`** — Home's own "Jump to a student"
+  input, wired to fire on **Enter only**
+  (`onkeydown="if (event.key === 'Enter') jumpToStudentByName(this.value)"`),
+  never on every keystroke — a result on the first matching letter
+  would jump the page before the teacher finished typing the name.
+  Looks the name up in `lastStudentSummaries` (already populated by the
+  `renderByStudent()` call earlier in the same `renderAll()` pass) and
+  calls `switchDashTab('students')` + `openStudentDetail(idx)` directly
+  — the exact same detail view a click from the Student Roster table
+  opens, not a separate lookup path.
+- **`openExportPreview()`** — "Export CSV" (in the always-visible filter
+  bar, not Home-specific) no longer downloads immediately; it shows a
+  modal naming the current Grade/Teacher filter, the exact student/row
+  count `filteredRows()` will export, and the full `EXPORT_COLUMNS`
+  list, with "Download CSV (N)" calling the original
+  `exportGradebookCsv()` only once confirmed. Built/torn down on demand
+  (`#export-preview-backdrop`, closed by its own Cancel button,
+  clicking the backdrop, or Escape) rather than static markup, same
+  pattern as every other on-demand overlay on this page.
+- **`projects-dashboard.html` was checked and doesn't need this** — it
+  has no tab bar at all (`.section-title`-separated sections on one
+  scrollable page, `<details>` for Deliverables), so there's no "which
+  of several tabs has what I want" problem for a Home-style landing
+  screen to solve there.
+
 ### Four top-level tabs, in this order
 **Never re-introduce a fifth+ top-level tab** as the default way to add
 a capability — it belongs inside one of these four as a new sub-tab

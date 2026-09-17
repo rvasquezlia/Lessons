@@ -297,6 +297,82 @@
   .sub-tab-btn.active { color: var(--primary); border-bottom-color: var(--primary-light); }
   .sub-panel { display: none; }
   .sub-panel.active { display: block; }
+
+  /* ===== Home - the new default landing view (see /CLAUDE.md's "Home
+     landing view" note). Task-oriented entry points instead of the flat
+     .nav-tabs row, which stays hidden until you're inside a section -
+     the filter bar above still applies to Home exactly like every other
+     panel, since it already sits outside the tab system. ===== */
+  .crumb-bar { padding: 10px 24px; background: var(--card); border-bottom: 2px solid var(--border); }
+  .crumb-home-btn {
+    background: none; border: none; padding: 0; font: inherit; font-weight: 700; font-size: 0.88rem;
+    color: var(--primary); cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .crumb-home-btn:hover { text-decoration: underline; }
+  .home-search-card {
+    display: flex; align-items: center; gap: 10px; background: var(--card); border: 2px solid var(--border);
+    border-radius: 12px; padding: 14px 18px; margin-bottom: 20px;
+  }
+  .home-search-card svg { flex-shrink: 0; color: #94a3b8; }
+  .home-search-card input { flex: 1; border: none; background: none; font: inherit; font-size: 1rem; color: var(--text); outline: none; }
+  .home-search-hint { font-size: 0.78rem; color: #94a3b8; white-space: nowrap; }
+  .home-tile-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 20px; }
+  @media (max-width: 820px) { .home-tile-grid { grid-template-columns: 1fr; } }
+  .home-tile {
+    background: var(--bg); border: 2px solid var(--border); border-top: 5px solid var(--tile-accent, var(--primary));
+    border-radius: 12px; padding: 20px; text-align: left; cursor: pointer; font-family: inherit; color: inherit;
+    display: flex; flex-direction: column; gap: 8px; transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .home-tile:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+  .home-tile:focus-visible { outline: 3px solid var(--primary-light); outline-offset: 2px; }
+  .home-tile h2 { margin: 0; font-size: 1.15rem; color: var(--tile-accent, var(--primary)); }
+  .home-tile p { margin: 0; font-size: 0.86rem; color: var(--text); opacity: 0.8; line-height: 1.4; }
+  .home-tile-stats { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 2px; }
+  .home-tile-stats b { display: block; font-size: 1.4rem; font-weight: 800; }
+  .home-tile-stats span { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.03em; opacity: 0.65; }
+  .home-tile-preview { display: flex; flex-direction: column; gap: 6px; margin-top: 2px; }
+  .home-tile-preview-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.85rem; }
+  .home-secondary-row {
+    display: flex; gap: 8px 22px; flex-wrap: wrap; align-items: center; padding: 12px 16px;
+    background: var(--bg); border: 2px solid var(--border); border-radius: 10px; font-size: 0.85rem;
+  }
+  .home-secondary-row a, .home-secondary-row button {
+    background: none; border: none; padding: 0; font: inherit; color: var(--primary); font-weight: 700;
+    cursor: pointer; text-decoration: none;
+  }
+  .home-secondary-row a:hover, .home-secondary-row button:hover { text-decoration: underline; }
+  .home-secondary-row .label { opacity: 0.6; font-weight: 600; }
+
+  /* Export CSV preview modal - built and torn down by openExportPreview()/
+     closeExportPreview(), never static markup, same "append on demand"
+     pattern as this file's other on-demand overlays. */
+  .export-modal-backdrop {
+    position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 200;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  .export-modal-card {
+    background: var(--card); border-radius: 14px; max-width: 480px; width: 100%;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3); padding: 24px; max-height: 90vh; overflow-y: auto;
+  }
+  .export-modal-card h3 { margin: 0 0 4px; font-size: 1.2rem; color: var(--primary); }
+  .export-modal-sub { margin: 0 0 16px; color: var(--text); opacity: 0.75; font-size: 0.86rem; }
+  .export-modal-scope { background: var(--bg); border: 2px solid var(--border); border-radius: 10px; padding: 12px 14px; font-size: 0.85rem; margin-bottom: 14px; }
+  .export-modal-scope b { color: var(--primary); }
+  .export-modal-label { font-weight: 700; font-size: 0.78rem; color: var(--text); opacity: 0.65; margin-bottom: 8px; }
+  .export-col-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 20px; padding: 0; list-style: none; }
+  .export-col-list li { font-size: 0.74rem; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 3px 9px; border-radius: 6px; }
+  .export-modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+  [data-theme="dark"] .home-search-card,
+  [data-theme="dark"] .crumb-bar { background: var(--card); }
+
+  /* lesson-shared.css's own .nav-tabs{display:flex} rule is an author
+     rule of equal specificity to the browser's built-in [hidden]{display:
+     none}, and author rules beat user-agent ones regardless of order -
+     so a plain `hidden` attribute silently does nothing here, same trap
+     /CLAUDE.md documents for #lesson-loading. This override wins for
+     real. */
+  #nav-tabs[hidden] { display: none !important; }
 </style>
 </head>
 <body>
@@ -325,7 +401,7 @@
       <span class="brand-name">Lincoln International Academy</span>
     </div>
     <span class="badge">Teacher Dashboard</span>
-    <h1>Class Progress Overview</h1>
+    <h1>Teacher Dashboard</h1>
     <p class="subtitle" id="loaded-as"></p>
     <div class="dash-nav-links">
       <a class="dash-nav-link" href="index.html"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>Lessons Index</span></a>
@@ -363,14 +439,62 @@
     </div>
   </div>
 
-  <nav class="nav-tabs">
-    <button class="tab-btn active" data-tab="overview" onclick="switchDashTab('overview')">Overview</button>
+  <!-- Shown only once you're inside a section (see switchDashTab) - Home
+       itself has no tab bar, just the search/tiles below, so there's
+       never a flat row of options to get lost in on first load. -->
+  <div class="crumb-bar" id="crumb-bar" hidden>
+    <button type="button" class="crumb-home-btn" onclick="switchDashTab('home')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+      Teacher Dashboard Home
+    </button>
+  </div>
+
+  <nav class="nav-tabs" id="nav-tabs" hidden>
+    <button class="tab-btn" data-tab="overview" onclick="switchDashTab('overview')">Overview</button>
     <button class="tab-btn" data-tab="unit-lesson" onclick="switchDashTab('unit-lesson')">Unit &amp; Lesson Deep Dive</button>
     <button class="tab-btn" data-tab="students" onclick="switchDashTab('students')">Student Roster &amp; Profiles</button>
     <button class="tab-btn" data-tab="integrity" onclick="switchDashTab('integrity')">Integrity &amp; Behavior Monitor</button>
   </nav>
 
-  <div id="overview" class="panel active">
+  <!-- The default landing panel - three task-oriented entry points
+       instead of the tab row above, reactive to the same Grade/Teacher/
+       Activity/Flagged-only filters every other panel already reads
+       from (filteredRows()/filteredRoster()), so there's no separate
+       filter state to keep in sync. See renderHome(). -->
+  <div id="home" class="panel active">
+    <div class="section-title">Teacher Dashboard</div>
+    <div class="home-search-card">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="home-student-search" placeholder="Jump to a student by name&hellip;" onkeydown="if (event.key === 'Enter') jumpToStudentByName(this.value);">
+      <span class="home-search-hint">Press Enter</span>
+    </div>
+    <div class="home-tile-grid">
+      <button class="home-tile" style="--tile-accent:var(--primary);" onclick="switchDashTab('overview')">
+        <h2>My Class</h2>
+        <p>How the whole class is doing &mdash; scores, completion, progress by unit.</p>
+        <div class="home-tile-stats" id="home-class-stats"></div>
+      </button>
+      <button class="home-tile" style="--tile-accent:#7c3aed;" onclick="switchDashTab('students')">
+        <h2>Students</h2>
+        <p>Look up one student&rsquo;s work, history, and give them attempts back.</p>
+        <div class="home-tile-preview" id="home-students-preview"></div>
+      </button>
+      <button class="home-tile" style="--tile-accent:var(--error);" onclick="switchDashTab('integrity'); switchSubTab('integrity', 'flags');">
+        <h2>Flags to Review</h2>
+        <p>Anything worth a second look, waiting in one queue.</p>
+        <div class="home-tile-stats" id="home-flags-stats"></div>
+      </button>
+    </div>
+    <div class="home-secondary-row">
+      <span class="label">Also:</span>
+      <button type="button" onclick="switchDashTab('unit-lesson'); switchSubTab('unit-lesson', 'activities');">By Activity</button>
+      <button type="button" onclick="switchDashTab('integrity'); switchSubTab('integrity', 'engagement');">Engagement Funnel</button>
+      <button type="button" onclick="switchDashTab('integrity'); switchSubTab('integrity', 'submissions');">Full Submission Log</button>
+      <a href="Teacher-Help.html">Manage roster &amp; Sheet</a>
+    </div>
+  </div>
+
+  <div id="overview" class="panel">
     <div class="section-title">Class Overview</div>
     <div class="stat-row" id="overview-stats"></div>
     <div class="card-grid">
@@ -3115,7 +3239,69 @@
     renderByStudent();
     renderIntegrityMonitor();
     renderAllSubmissions();
+    // Reads the same computed summaries the tabs above just built
+    // (lastStudentSummaries, computeIntegrityRows()) - called after them
+    // so Home's tiles never disagree with the section they link into.
+    renderHome();
   }
+
+  // Home's three tiles - same filteredRows()/filteredRoster()/
+  // computeStudentSummaries() every other tab already reads from, so
+  // there's no separate "Home filter state" to keep in sync; the filter
+  // bar above applies here exactly like it does on every other panel.
+  function renderHome() {
+    const rosterRows = filteredRoster();
+    const studentSummaries = computeStudentSummaries();
+    const overallAvg = avg(filteredRows().map((r) => r.scorePct));
+    const overallCompletion = avg(studentSummaries.map((s) => s.overallCompletionPct));
+    document.getElementById('home-class-stats').innerHTML = `
+      <div><b>${overallAvg === null ? '-' : overallAvg + '%'}</b><span>Avg score</span></div>
+      <div><b>${overallCompletion === null ? '-' : overallCompletion + '%'}</b><span>Avg completion</span></div>
+      <div><b>${rosterRows.length}</b><span>Students</span></div>
+    `;
+
+    // Score and completion are different problems (a student can be
+    // acing every attempted item but have barely started the unit, or
+    // the reverse - see /CLAUDE.md's "Lesson Completion %... a different
+    // metric" note) - ranked here by whichever of the two is worse, so
+    // this preview surfaces either kind of student needing a look, not
+    // just low scorers.
+    const worseOf = (s) => Math.min(s.avgScore === null ? 100 : s.avgScore, s.overallCompletionPct === null ? 100 : s.overallCompletionPct);
+    const needHelp = studentSummaries
+      .filter((s) => s.avgScore !== null || s.overallCompletionPct !== null)
+      .slice()
+      .sort((a, b) => worseOf(a) - worseOf(b))
+      .slice(0, 2);
+    document.getElementById('home-students-preview').innerHTML = needHelp.length
+      ? needHelp.map((s) => `
+          <div class="home-tile-preview-row">
+            <span>${s.studentName}</span>
+            <span>${s.avgScore === null ? '' : `<span class="pill ${s.avgScore >= 85 ? 'ok' : s.avgScore >= 65 ? 'progress' : 'flag'}">${s.avgScore}%</span>`} ${s.overallCompletionPct === null ? '' : `<span class="pill neutral">${s.overallCompletionPct}% done</span>`}</span>
+          </div>
+        `).join('')
+      : '<p class="empty-note" style="padding:0;">No students in the current filter.</p>';
+
+    const openFlagCount = computeIntegrityRows().length;
+    document.getElementById('home-flags-stats').innerHTML = `
+      <div><b style="color:${openFlagCount ? 'var(--error)' : 'var(--primary)'};">${openFlagCount}</b><span>Open</span></div>
+    `;
+  }
+
+  // Enter-triggered on purpose (see the "let them type" feedback) - a
+  // result on every keystroke would jump the page as soon as a single
+  // matching letter was typed, before the teacher finished the name.
+  function jumpToStudentByName(name) {
+    const q = name.trim().toLowerCase();
+    if (!q) return;
+    const idx = lastStudentSummaries.findIndex((s) => s.studentName.toLowerCase().includes(q));
+    if (idx === -1) {
+      alert(`No student matching "${name}" in the current filter - try clearing a filter above, or check the spelling.`);
+      return;
+    }
+    switchDashTab('students');
+    openStudentDetail(idx);
+  }
+  window.jumpToStudentByName = jumpToStudentByName;
 
   // All Submissions is the one remaining flat table with an inline
   // expand - it's already the raw per-(student,activity) detail layer
@@ -3137,6 +3323,13 @@
     document.getElementById(tabId).classList.add('active');
     const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
     if (btn) btn.classList.add('active');
+    // Home has no tab bar of its own (see the Home panel's own comment) -
+    // the row of four tabs and the "back to Home" crumb only ever show
+    // once you're inside one of them, never both/neither at once.
+    const navTabs = document.getElementById('nav-tabs');
+    const crumbBar = document.getElementById('crumb-bar');
+    if (navTabs) navTabs.hidden = tabId === 'home';
+    if (crumbBar) crumbBar.hidden = tabId === 'home';
     // Switching tabs after scrolling deep into a long table used to leave
     // the new tab's content wherever the old scroll position happened to
     // land - jumping back to the top makes the switch actually register,
@@ -3246,7 +3439,45 @@
     a.remove();
     URL.revokeObjectURL(url);
   }
-  document.getElementById('export-csv-btn').addEventListener('click', exportGradebookCsv);
+  const EXPORT_COLUMNS = ['Student', 'Grade', 'Teacher', 'Activity', 'Role', 'Teammate(s)', 'Score %', 'Items Attempted', 'Items Correct', 'Status', 'Last Submitted', 'Flags', 'Reviewed', 'Review Classification'];
+
+  // Shows exactly what "Export CSV" would produce - scope, row/student
+  // count, and every column - before anything downloads, so the button
+  // answers "what would be exported" and "how do I control that" (the
+  // current Grade/Teacher pills, same as everywhere else on this page)
+  // instead of just silently doing it.
+  function openExportPreview() {
+    const rows = filteredRows();
+    const studentCount = new Set(rows.map((r) => r.email)).size;
+    const gradeLabel = currentGradeFilter ? `Grade ${currentGradeFilter}` : 'All grades';
+    const teacherLabel = currentTeacherFilter || 'All teachers';
+    const div = document.createElement('div');
+    div.id = 'export-preview-backdrop';
+    div.className = 'export-modal-backdrop';
+    div.innerHTML = `
+      <div class="export-modal-card" role="dialog" aria-label="Export CSV">
+        <h3>Export class data</h3>
+        <p class="export-modal-sub">Exports exactly what you're currently filtered to - change the Grade/Teacher/Activity filters above, then export again for a different slice.</p>
+        <div class="export-modal-scope">Current filter: <b>${gradeLabel}</b> &middot; <b>${teacherLabel}</b><br>
+          Will include <b>${studentCount}</b> student${studentCount === 1 ? '' : 's'}, <b>${rows.length}</b> activity row${rows.length === 1 ? '' : 's'} (one row per student per activity).</div>
+        <div class="export-modal-label">COLUMNS INCLUDED</div>
+        <ul class="export-col-list">${EXPORT_COLUMNS.map((c) => `<li>${c}</li>`).join('')}</ul>
+        <div class="export-modal-actions">
+          <button class="btn-back" style="margin:0;" onclick="closeExportPreview()">Cancel</button>
+          <button class="btn-refresh" onclick="exportGradebookCsv(); closeExportPreview();">Download CSV (${studentCount})</button>
+        </div>
+      </div>`;
+    document.body.appendChild(div);
+  }
+  function closeExportPreview() {
+    const el = document.getElementById('export-preview-backdrop');
+    if (el) el.remove();
+  }
+  window.closeExportPreview = closeExportPreview;
+  document.addEventListener('click', (e) => { if (e.target.id === 'export-preview-backdrop') closeExportPreview(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeExportPreview(); });
+
+  document.getElementById('export-csv-btn').addEventListener('click', openExportPreview);
 </script>
 </body>
 </html>
