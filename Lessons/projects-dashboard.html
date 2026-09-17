@@ -144,6 +144,12 @@
   .stream-ring-track { fill: none; stroke: var(--border); stroke-width: 9; }
   .stream-ring-fill { fill: none; stroke: var(--primary); stroke-width: 9; stroke-linecap: round; transition: stroke-dashoffset 0.4s ease; }
   .stream-ring.no-data .stream-ring-fill { stroke: transparent; }
+  /* A pilot's known no-content-by-design pillar (see PILOT_PILLAR_GAPS)
+     still fills the ring to 100% so it doesn't read as incomplete, but
+     dashed and muted rather than a solid pillar color - visually
+     distinct from a genuine 100%, which stream-pillar-note's own
+     "no content (pilot)" text then makes explicit. */
+  .stream-ring.pilot-gap .stream-ring-fill { stroke-dasharray: 5 4 !important; opacity: 0.6; }
   .stream-ring-label {
     position: absolute; inset: 0; display: flex; flex-direction: column;
     align-items: center; justify-content: center; line-height: 1.05;
@@ -181,6 +187,10 @@
     width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: #fff;
     display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 900; flex-shrink: 0;
   }
+  /* A pilot's known no-content-by-design pillar chip (see
+     PILOT_PILLAR_GAPS) - dashed border and a muted "100%*" label,
+     visually distinct from a genuinely-earned percentage chip. */
+  .mini-pillar-chip.pilot-gap { border-style: dashed; opacity: 0.75; }
 
   details.deliverables-toggle { margin-top: 6px; }
   details.deliverables-toggle summary {
@@ -465,6 +475,33 @@
     return key === 'certificate-download' || /^solo-badge-\d+$/.test(key);
   }
 
+  // Kept in sync with teacher-dashboard.html's identical
+  // PILOT_PILLAR_GAPS - see that copy's own comment for the full
+  // reasoning (a pilot project's own deliberate no-content pillars read
+  // as 100% with a "no content" badge here too, via pilotGapInfo()
+  // below, never as a real percentage or "No data yet").
+  const PILOT_PILLAR_GAPS = {
+    '6-laudato-si-ecogarden': ['Science', 'Technology'],
+    '7-ethical-auditor-community-engineer': ['Technology'],
+    '8-youth-festival-logistics': ['Technology'],
+    '8-ethical-linear-budgeting': ['Technology']
+  };
+
+  // A pillar with zero real content across every activity passed in
+  // reads as "100% - no content (pilot)" only when EVERY one of those
+  // activities is a recognized, deliberate design gap for that pillar
+  // (PILOT_PILLAR_GAPS) - a real, unexplained gap (a future project
+  // that simply never covered a pillar) still surfaces as "No data
+  // yet" rather than being silently hidden behind this exception.
+  function pilotGapInfo(pillarName, activities) {
+    if (!activities.length) return null;
+    const allExempt = activities.every((a) => (PILOT_PILLAR_GAPS[a.activityId] || []).includes(pillarName));
+    if (!allExempt) return null;
+    const students = new Set();
+    activities.forEach((a) => a.rows.forEach((r) => students.add(r.email)));
+    return { students: students.size };
+  }
+
   function computeStreamPillarBreakdown(rows) {
     const byPillar = {};
     rows.forEach((r) => {
@@ -739,22 +776,25 @@
     const circ = ringCircumference(R);
     const html = STREAM_PILLAR_RULES.map((rule) => {
       const data = byPillar[rule.pillar];
-      const pct = data && data.itemsAttempted ? Math.round((data.itemsCorrect / data.itemsAttempted) * 100) : null;
+      let pct = data && data.itemsAttempted ? Math.round((data.itemsCorrect / data.itemsAttempted) * 100) : null;
+      const gap = pct === null ? pilotGapInfo(rule.pillar, projectActivities) : null;
+      if (gap) pct = 100;
       const offset = pct === null ? circ : circ - (circ * pct / 100);
+      const ringColor = gap ? '#94a3b8' : rule.color;
       return `
         <div class="stream-pillar">
-          <div class="stream-ring${pct === null ? ' no-data' : ''}">
+          <div class="stream-ring${pct === null ? ' no-data' : ''}${gap ? ' pilot-gap' : ''}">
             <svg width="96" height="96" viewBox="0 0 96 96">
               <circle class="stream-ring-track" cx="48" cy="48" r="${R}"></circle>
-              <circle class="stream-ring-fill" cx="48" cy="48" r="${R}" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"${pct === null ? '' : ` style="stroke:${rule.color};"`}></circle>
+              <circle class="stream-ring-fill" cx="48" cy="48" r="${R}" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"${pct === null ? '' : ` style="stroke:${ringColor};"`}></circle>
             </svg>
             <div class="stream-ring-label">
-              <div class="stream-ring-letter" style="color:${pct === null ? '' : rule.color};">${rule.letter}</div>
+              <div class="stream-ring-letter" style="color:${pct === null ? '' : ringColor};">${rule.letter}</div>
               <div class="stream-ring-pct">${pct === null ? '&ndash;' : pct + '%'}</div>
             </div>
           </div>
           <div class="stream-pillar-name">${rule.pillar}</div>
-          <div class="stream-pillar-note">${pct === null ? 'No data yet' : `${data.students.size} student${data.students.size === 1 ? '' : 's'}`}</div>
+          <div class="stream-pillar-note"${gap ? ' title="No graded content for this pillar in this pilot project - by design, not a real gap."' : ''}>${pct === null ? 'No data yet' : gap ? `${gap.students} student${gap.students === 1 ? '' : 's'} - no content (pilot)` : `${data.students.size} student${data.students.size === 1 ? '' : 's'}`}</div>
         </div>`;
     }).join('');
     document.getElementById('stream-hero').innerHTML = html;
@@ -763,13 +803,20 @@
   function renderProjectCard(a) {
     const attempts = computeAttemptInsights(a.rows);
     const byPillar = computeStreamPillarBreakdown(a.rows);
+    let hasPilotGap = false;
     const pillarChips = STREAM_PILLAR_RULES
-      .filter((rule) => byPillar[rule.pillar] && byPillar[rule.pillar].itemsAttempted)
       .map((rule) => {
         const data = byPillar[rule.pillar];
-        const pct = Math.round((data.itemsCorrect / data.itemsAttempted) * 100);
-        return `<span class="mini-pillar-chip"><span class="letter" style="background:${rule.color};">${rule.letter}</span>${pct}%</span>`;
-      }).join('');
+        if (data && data.itemsAttempted) {
+          const pct = Math.round((data.itemsCorrect / data.itemsAttempted) * 100);
+          return `<span class="mini-pillar-chip"><span class="letter" style="background:${rule.color};">${rule.letter}</span>${pct}%</span>`;
+        }
+        const gap = pilotGapInfo(rule.pillar, [a]);
+        if (!gap) return null;
+        hasPilotGap = true;
+        return `<span class="mini-pillar-chip pilot-gap" title="No graded content for this pillar - by design (pilot project)."><span class="letter" style="background:${rule.color};">${rule.letter}</span>100%*</span>`;
+      })
+      .filter(Boolean).join('');
     const eligible = eligibleRosterCount(a.grade);
     const startedCount = a.rows.length;
     const deliverableRows = a.rows
@@ -787,6 +834,7 @@
           <div class="project-stat-tile"><div class="n">${attempts.solvedCount}</div><div class="l">Items solved</div></div>
         </div>
         ${pillarChips ? `<div class="mini-pillar-row">${pillarChips}</div>` : '<p class="empty-note">No pillar data yet.</p>'}
+        ${hasPilotGap ? '<p class="empty-note" style="margin-top:-8px;">* No graded content for this pillar - by design (pilot project), not a real gap.</p>' : ''}
         <details class="deliverables-toggle">
           <summary>Deliverables (${startedCount} student${startedCount === 1 ? '' : 's'})</summary>
           ${startedCount ? `
