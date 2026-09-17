@@ -2592,6 +2592,27 @@
     return key === 'certificate-download' || /^solo-badge-\d+$/.test(key);
   }
 
+  // The pilot STREAM projects (the three ports plus the from-scratch
+  // Ethical-Linear-Budgeting build - see /CLAUDE.md's "Paired/team
+  // activities") shipped with one or two pillars that have no real
+  // graded content behind them at all, by deliberate decision: an
+  // ungraded Technology "sandbox" tool on every one of the four, and no
+  // Science station specifically on Eco-Garden. Retrofitting new graded
+  // content onto a project real students already completed doesn't make
+  // sense, so a pillar listed here reads as 100% with a "Pilot - no
+  // content" badge instead of a real percentage or "No data yet" - see
+  // computeStreamPillarBreakdown()'s own use of this map. Never add an
+  // activityId/pillar here for any reason other than "the team
+  // explicitly decided this pillar has no graded content by design" -
+  // anything else is a real gap and should keep surfacing as "No data
+  // yet" so it gets noticed and fixed via retagging or new content.
+  const PILOT_PILLAR_GAPS = {
+    '6-laudato-si-ecogarden': ['Science (S)', 'Technology (T)'],
+    '7-ethical-auditor-community-engineer': ['Technology (T)'],
+    '8-youth-festival-logistics': ['Technology (T)'],
+    '8-ethical-linear-budgeting': ['Technology (T)']
+  };
+
   // One row's own final attempt count per key (excludes a reset entry
   // and every earlier retry - the item's own submissions are already
   // sorted ascending by timestamp, so the last non-reset entry per key
@@ -2642,7 +2663,11 @@
     };
   }
 
-  function computeStreamPillarBreakdown(rows) {
+  // `activityId` is optional - pass it only when the caller wants a
+  // pilot's known design gaps (see PILOT_PILLAR_GAPS) rendered as 100%
+  // instead of the default null/"No data yet" for a pillar with zero
+  // real matching content.
+  function computeStreamPillarBreakdown(rows, activityId) {
     const byPillar = {};
     rows.forEach((r) => {
       lastEntriesByKey(r).forEach((s) => {
@@ -2668,11 +2693,17 @@
         });
       });
     });
-    return Object.keys(byPillar).map((p) => ({
+    const result = Object.keys(byPillar).map((p) => ({
       pillar: p,
       students: byPillar[p].students.size,
-      completionPct: byPillar[p].itemsAttempted ? Math.round((byPillar[p].itemsCorrect / byPillar[p].itemsAttempted) * 100) : null
-    })).sort((a, b) => a.pillar.localeCompare(b.pillar));
+      completionPct: byPillar[p].itemsAttempted ? Math.round((byPillar[p].itemsCorrect / byPillar[p].itemsAttempted) * 100) : null,
+      designGap: false
+    }));
+    (PILOT_PILLAR_GAPS[activityId] || []).forEach((pillar) => {
+      if (byPillar[pillar]) return;
+      result.push({ pillar, students: rows.length, completionPct: 100, designGap: true });
+    });
+    return result.sort((a, b) => a.pillar.localeCompare(b.pillar));
   }
 
   // Every project field below is authored/serialized by that specific
@@ -2823,7 +2854,7 @@
   function projectInsightsHtml(a) {
     if (!looksLikeProject(a.rows)) return '';
     const attempts = computeAttemptInsights(a.rows);
-    const pillars = computeStreamPillarBreakdown(a.rows);
+    const pillars = computeStreamPillarBreakdown(a.rows, a.activityId);
     const attemptsCard = `
       <div class="card">
         <h3>Attempts to reach the answer (unlimited-attempt items)</h3>
@@ -2841,7 +2872,7 @@
       <div class="card">
         <h3>STREAM pillar progress</h3>
         <table><thead><tr><th>Pillar</th><th>Students with activity</th><th>Item completion</th></tr></thead><tbody>
-          ${pillars.map((p) => `<tr><td>${p.pillar}</td><td>${p.students}</td><td>${p.completionPct === null ? '-' : p.completionPct + '%'}</td></tr>`).join('')}
+          ${pillars.map((p) => `<tr><td>${p.pillar}</td><td>${p.students}</td><td>${p.completionPct === null ? '-' : p.completionPct + '%'}${p.designGap ? ' <span class="pill neutral" title="This pilot project has no graded content for this pillar by design - not a real gap to fix.">Pilot - no content</span>' : ''}</td></tr>`).join('')}
         </tbody></table>
       </div>` : '';
     const deliverablesCard = `
