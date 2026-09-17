@@ -909,9 +909,9 @@ one mechanism, all going through `applyTeacherReset_` in `Code.gs`
   changes display.
 - UI: a "Give attempts back" toolbar (section `<select>` + "Reset
   section" / "Reset entire activity" buttons) sits above the Attempts
-  table in `submissionDetailTable()` — reused by Student Roster &
-  Profiles, Unit & Lesson Deep Dive's By Activity, and Full Submission
-  Log, so it appears in all three with one change. A per-item "Reset"
+  table in `submissionDetailTable()` — reused by Students' own student
+  detail view, Unit & Lesson Deep Dive's By Activity, and Full
+  Submission Log, so it appears in all three with one change. A per-item "Reset"
   link appears only on each key's most recent row via
   `teacherReset(email, activityId, scope, target, label, btn)`.
   `resetTagHtml(r)` renders a "Reset applied (scope)" tag next to any
@@ -1308,38 +1308,58 @@ converging on the same wrong answer is expected, not suspicious.
 `applyDuplicateAnswerFlags()` runs, not after — the two were reordered
 for this reason.
 
-### Home — the default landing view
-The four top-level tabs below used to be the very first thing a teacher
-saw, with no ranking or entry point — a flat row of equally-weighted
-options a teacher had to already know how to read. **`#home`** is now
-the default `.panel.active` on load instead of `#overview`: a
-task-oriented landing screen with three big tiles — **My Class**
-(`switchDashTab('overview')`), **Students** (`switchDashTab('students')`),
-**Flags to Review** (`switchDashTab('integrity')` +
-`switchSubTab('integrity', 'flags')`) — plus a secondary row of plain
-links into By Activity, Engagement Funnel, and Full Submission Log
-(still exactly the same panels/sub-panels, nothing removed or
-duplicated) and a link out to `Teacher-Help.html` for roster/Sheet
-management. **This is not a fifth top-level tab** — `#nav-tabs` itself
-is hidden while on Home (see below) and Home has no `.tab-btn` of its
-own; it's a routing screen that sits *above* the existing four, not a
-peer of them.
+### Home, quick-switch, and the three real destinations
+The dashboard used to open straight into a flat row of four
+equally-weighted tabs (Overview/Unit & Lesson Deep Dive/Student
+Roster/Integrity & Behavior Monitor) with no ranking or entry point. A
+first pass only bolted a landing page in front of that same row without
+touching it — clicking through still dropped a teacher into the
+identical wall of stat tiles and a 10-column roster table. The rule
+going forward: **a redesign changes what the destination itself shows,
+not just how you get there.**
+
+**`#home`** is the default `.panel.active` on load: a search card
+(see below) plus three tiles — **My Class** (`switchDashTab('overview')`),
+**Students** (`switchDashTab('students')`), **Flags to Review**
+(`switchDashTab('integrity')` + `switchSubTab('integrity', 'flags')`)
+— plus a secondary row of plain links into By Unit, By Activity,
+Engagement Funnel, and Full Submission Log (the drill-in views below)
+and a link out to `Teacher-Help.html` for roster/Sheet management.
+**These three tiles are the only real top-level destinations now** —
+By Unit/By Activity/Engagement Funnel/Full Submission Log are never
+shown as an equal fourth option anywhere; they're reached only as
+drill-in links from inside one of the three (or from Home's own
+secondary row). Internally the four original panel ids (`overview`/
+`unit-lesson`/`students`/`integrity`) and their render functions are
+unchanged — only which ones get top-level buttons, and what each one's
+own content looks like, changed.
+
+- **`#nav-tabs` is now a lightweight three-button "quick switch"**
+  (My Class/Students/Flags to Review, same `data-tab`/`.tab-btn`
+  wiring `switchDashTab()` already had — only the CSS and the button
+  count changed), not a fourth-tab-wide nav bar. It sits next to
+  `#crumb-bar` and lets a teacher jump directly between the three real
+  destinations without returning Home first; hidden together with the
+  crumb bar while on Home (see the `switchDashTab()` note below).
+  `unit-lesson` has no quick-switch button of its own — while inside a
+  drill-in view, no pill is highlighted, which is the intended signal
+  that you're one level deeper than the three main destinations.
 - **`renderHome()`** (called from `renderAll()`, after the other six
   render passes so it never disagrees with the tab it links into) reads
   the exact same `filteredRows()`/`filteredRoster()`/
-  `computeStudentSummaries()` every other tab already reads from —
+  `computeStudentSummaries()` every other view already reads from —
   there is no separate "Home filter state"; the filter bar above the
-  (hidden-on-Home) tab row already applies to every panel including
-  this one.
+  (hidden-on-Home) quick-switch row already applies to every panel
+  including this one.
 - **Score and completion are shown as two separate numbers everywhere
-  a "who needs a look" list appears on Home** (My Class tile's stat
-  row, Students tile's preview rows) — never collapsed into one, and
-  the preview ranks by *whichever of the two is worse*
-  (`Math.min(avgScore, overallCompletionPct)`), since a student can be
-  acing every attempted item while barely having started the unit, or
-  the reverse, and only showing score would hide the second case
-  entirely.
-- **`switchDashTab(tabId)`** now also toggles `#nav-tabs`/`#crumb-bar`
+  a "who needs a look" list appears** (Home's My Class tile stat row
+  and Students tile preview rows, My Class's own attention cards) —
+  never collapsed into one, and a ranked list uses *whichever of the
+  two is worse* (`Math.min(avgScore, overallCompletionPct)`), since a
+  student can be acing every attempted item while barely having started
+  the unit, or the reverse, and only showing score would hide the
+  second case entirely.
+- **`switchDashTab(tabId)`** toggles `#nav-tabs`/`#crumb-bar`
   visibility: hidden/hidden on Home, shown/shown on every other tab.
   `#crumb-bar`'s one link (`&larr; Teacher Dashboard Home`) is the way
   back. **Rule**: `#nav-tabs[hidden]` needs its own
@@ -1352,16 +1372,24 @@ peer of them.
   `#lesson-loading` — check for a competing explicit `display` rule
   before assuming `hidden`/`.hidden` alone will work on any new element
   here.
-- **`jumpToStudentByName(name)`** — Home's own "Jump to a student"
-  input, wired to fire on **Enter only**
-  (`onkeydown="if (event.key === 'Enter') jumpToStudentByName(this.value)"`),
-  never on every keystroke — a result on the first matching letter
-  would jump the page before the teacher finished typing the name.
-  Looks the name up in `lastStudentSummaries` (already populated by the
-  `renderByStudent()` call earlier in the same `renderAll()` pass) and
-  calls `switchDashTab('students')` + `openStudentDetail(idx)` directly
-  — the exact same detail view a click from the Student Roster table
-  opens, not a separate lookup path.
+- **Student search is a live, filter-independent autocomplete dropdown**
+  (`renderHomeSearchResults()`/`handleHomeSearchKeydown()`/
+  `selectHomeSearchResult()`), not a single-match Enter-to-jump input.
+  An earlier version jumped straight to whichever student's name
+  happened to sort first among substring matches (typing "rio" silently
+  opened "Briones" instead of the "Rio Onda" a teacher actually meant,
+  with no way to pick the other) — this shows every match as a clickable
+  row (arrow keys + Enter also work) and never navigates on typing
+  alone. It also searches the **full active `roster`**, not
+  `lastStudentSummaries` (which is already scoped to the current Grade/
+  Teacher filter, so a student outside that filter used to be invisible
+  to search) — `selectHomeSearchResult()` widens `currentGradeFilter`/
+  `currentTeacherFilter` to include whoever gets picked, calls
+  `populateFilters(); renderAll();`, then looks them up in the freshly
+  rebuilt `lastStudentSummaries` before opening their detail view.
+  **Rule**: any future rewrite of this search must keep reading from
+  `roster` (not a filter-scoped list) for the candidate set — that's
+  the actual fix, not the dropdown UI on its own.
 - **`openExportPreview()`** — "Export CSV" (in the always-visible filter
   bar, not Home-specific) no longer downloads immediately; it shows a
   modal naming the current Grade/Teacher filter, the exact student/row
@@ -1377,51 +1405,77 @@ peer of them.
   of several tabs has what I want" problem for a Home-style landing
   screen to solve there.
 
-### Four top-level tabs, in this order
-**Never re-introduce a fifth+ top-level tab** as the default way to add
-a capability — it belongs inside one of these four as a new sub-tab
-(`switchSubTab(panelId, subId)`, scoped via `:scope` to one panel's own
-`.sub-nav`/`.sub-panel`), or is a sign it needs its own separate product
-decision.
+### The three real destinations (plus two drill-in-only views)
+**Never re-introduce a fourth top-level quick-switch button** as the
+default way to add a capability — it belongs inside one of the three
+real destinations as a new sub-tab (`switchSubTab(panelId, subId)`,
+scoped via `:scope` to one panel's own `.sub-nav`/`.sub-panel`) or a
+new drill-in link, or is a sign it needs its own separate product
+decision. The four original panel ids still exist internally
+(`overview`/`unit-lesson`/`students`/`integrity`) — only `unit-lesson`
+is drill-in-only with no quick-switch button of its own.
 
-1. **Overview** — stat tiles, "Progress by unit" bar chart,
-   lowest-scoring-activity/student charts, a Flags card (by category),
-   a "When students work" 24-hour histogram
-   (`computeHourHistogram()`/`renderHourHistogram()`). Summary only —
-   no individual-student list or raw event feed (those live in
-   per-student/per-activity detail views instead).
-2. **Unit & Lesson Deep Dive** — sub-tabs **By Unit**
-   (`computeUnitSummaries()`, groups `computeActivitySummaries()`'s own
-   numbers, so it can't disagree with By Activity) and **By Activity**
-   (`computeActivitySummaries()`; includes zero-submission activities;
-   completion % against eligible roster). By Activity's detail view
-   includes "Item Diagnostics, lite"
-   (`computeDistractorAnalysis()`/`distractorAnalysisHtml()` — most
-   common wrong answer per item, only for items with 2+ wrong attempts;
-   free-text bucketing, not structured multiple-choice analysis).
-3. **Student Roster & Profiles** — one list, `renderByStudent()`, one
-   row per roster student including zero-`Progress` students. Columns:
-   Student, Grade, Teacher, Activities started, Avg score, Effort Score
-   Index, Lesson Completion % (`computeStudentUnitCompletion()` — a
+1. **My Class** (panel id `overview`) — leads with `renderOverviewAttention()`'s
+   four "needs a look" cards (Flags to review, Stalled/not-started,
+   lowest average score by activity, lowest average score by student —
+   each linking straight into the view with the full detail) before a
+   compact four-tile stat strip (Active students, Activities, Average
+   score, Avg Effort Score Index). The full chart set (Progress by unit,
+   the two lowest-score bar charts, the "When students work" histogram)
+   lives inside a closed-by-default `<details class="overview-more">`
+   — still there, just not competing with the attention cards for
+   attention on first look. Two `.drilldown-links` buttons ("See full
+   breakdown by unit/activity") route into the panel below. No
+   individual-student list or raw event feed here — those live in
+   per-student/per-activity detail views instead.
+2. **Students** (panel id `students`) — one list, `renderByStudent()`,
+   one row per roster student including zero-`Progress` students.
+   Columns: Grade, Student, Teacher, Activities started, Avg score,
+   Lesson Completion % (`computeStudentUnitCompletion()` — a
    **different** metric from `completionPct` above: per-student
    per-unit "what fraction of this student's own wired units are they
-   done with," not roster-wide participation), Attempt-2 Recovery
-   Index, Flags, Last activity (reads "Stalled - Nd" past
-   `STALLED_DAYS`).
-4. **Integrity & Behavior Monitor** — sub-tabs **Engagement Funnel**
-   (`computeActivityStatusBreakdown()`/`progressStatus()`: Not started
-   / Opened only / In progress / Completed-Passed / Completed-Locked
-   Out — the five-state read of "is this being opened, and are they
-   passing it," replacing the old `AccessLog`-based Access Log tab
-   which is gone entirely), **Flags & Behavior**
+   done with," not roster-wide participation), Flags, Last activity
+   (reads "Stalled - Nd" past `STALLED_DAYS`). **Effort Score Index and
+   Attempt-2 Recovery Index are deliberately not roster columns** — a
+   10-column table was hard to scan at a glance, and both numbers are
+   still shown (unchanged) inside `openStudentDetail()`'s own stat
+   rows, one click away; a one-line hint above the table says so
+   explicitly rather than silently dropping them. **Rule**: don't
+   re-add a metric to this table just because it used to be there —
+   check whether it's already surfaced in the detail view first, and if
+   so, a table column is usually redundant, not a restoration.
+3. **Flags to Review** (panel id `integrity`) — **Flags & Behavior**
    (`renderIntegrityMonitor()` + `renderIntegrityScatter()`
-   time-on-task-vs-score SVG scatter), **Full Submission Log**
-   (`renderAllSubmissions()`, the original flat table, kept as the
-   detail layer everything else summarizes from — the one view that
-   still uses inline-expand `toggleDetail()` instead of a separate
-   detail pane).
+   time-on-task-vs-score SVG scatter) is the sub-tab shown by default
+   and the one the section title/quick-switch button both name; the
+   other two sub-tabs render with `.sub-tab-btn.secondary` (visually
+   lighter, not equal-weight) since they're supporting drill-ins, not
+   the destination itself:
+   - **Engagement Funnel** (`computeActivityStatusBreakdown()`/
+     `progressStatus()`: Not started / Opened only / In progress /
+     Completed-Passed / Completed-Locked Out — the five-state read of
+     "is this being opened, and are they passing it," replacing the old
+     `AccessLog`-based Access Log tab which is gone entirely).
+   - **Full Submission Log** (`renderAllSubmissions()`, the original
+     flat table, kept as the detail layer everything else summarizes
+     from — the one view that still uses inline-expand `toggleDetail()`
+     instead of a separate detail pane).
 
-### Shared conventions across all four tabs
+**Drill-in only, no quick-switch button:**
+
+- **Unit & Lesson Deep Dive** (panel id `unit-lesson`) — sub-tabs **By
+  Unit** (`computeUnitSummaries()`, groups `computeActivitySummaries()`'s
+  own numbers, so it can't disagree with By Activity) and **By
+  Activity** (`computeActivitySummaries()`; includes zero-submission
+  activities; completion % against eligible roster). By Activity's
+  detail view includes "Item Diagnostics, lite"
+  (`computeDistractorAnalysis()`/`distractorAnalysisHtml()` — most
+  common wrong answer per item, only for items with 2+ wrong attempts;
+  free-text bucketing, not structured multiple-choice analysis). Reached
+  from My Class's own `.drilldown-links`, Home's secondary row, or
+  directly (`switchDashTab('unit-lesson')` + `switchSubTab(...)`).
+
+### Shared conventions across the four content panels
 - **List-then-detail pattern**: `showListView(tabKey)`/
   `showDetailView(tabKey, html)`, keyed off `#<tabKey>-list`/
   `#<tabKey>-detail`. `lastUnitSummaries`/`lastActivitySummaries`/
@@ -1466,6 +1520,22 @@ decision.
   `populateFilters()` had the identical bug and got the identical fix.
 - **Activity filter** is a multi-select checkbox popover
   (`currentActivityFilter` is an array), not a pill row or `<select>`.
+  `renderActivityOptions()` groups the popover's option list by Unit
+  (`activityUnitByTitle`, a title → Unit map rebuilt alongside
+  `availableActivityTitles` in every `populateFilters()` call) via a
+  `.multiselect-group-label` divider row per unit — a flat alphabetical
+  list of a dozen+ activities was hard to scan even after the Grade
+  filter narrowed it down. The "no catalog data" fallback (activity
+  titles pulled from `allRows` instead of `activityCatalog`) has no Unit
+  to offer, so those bucket under "Unassigned." `.multiselect-toggle`'s
+  `max-width` is `550px` (up from an original `220px`) so a long
+  activity title or a multi-selection count isn't clipped as
+  aggressively — the filter bar's own `flex-wrap` still lets the
+  Export CSV/Refresh buttons drop to a second line if the combined
+  Grade+Activity+Teacher+checkbox row runs out of room (an unrestricted
+  "All"-scope account with several Teacher pills at a narrow viewport),
+  the same graceful-overflow behavior the bar already had before this
+  change.
 - **Default sort**: alphabetical everywhere (`sortState`:
   `activityTitle`/`unit`/`studentName` ascending), **except** Flags &
   Behavior, which defaults to `lastSubmittedAt` descending.
@@ -2014,8 +2084,8 @@ pairing is completely unaffected)
   `partnerEmail` (with their real role looked up from *their* own
   `allPairs` row, never assumed); a set `teamId` returns every other
   `allPairs` row sharing that exact `teamId` + `activityId`.
-- `submissionDetailTable(r)` (Student Roster & Profiles' per-activity
-  rows, By Activity's per-student rows, Full Submission Log — same
+- `submissionDetailTable(r)` (Students' own per-student detail rows,
+  By Activity's per-student rows, Full Submission Log — same
   shared function as §9/§13) prepends a "Paired activity" block — role
   pill, every teammate's name + role (`teammatesForRow(r)` +
   `partnerNameFor()`, resolved from `roster` — "Partnered with `<name>`"
