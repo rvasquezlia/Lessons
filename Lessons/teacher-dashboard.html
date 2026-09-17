@@ -113,15 +113,24 @@
   .multiselect-toggle {
     padding: 6px 14px; border-radius: 999px; border: 2px solid var(--border);
     background: var(--card); color: var(--text); font-family: inherit;
-    font-weight: 700; font-size: 0.82rem; cursor: pointer; max-width: 220px;
+    font-weight: 700; font-size: 0.82rem; cursor: pointer; max-width: 550px;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .multiselect-toggle:hover { border-color: var(--primary-light); }
   .multiselect-panel {
-    position: absolute; top: calc(100% + 6px); left: 0; z-index: 30; width: 300px;
+    position: absolute; top: calc(100% + 6px); left: 0; z-index: 30; width: 340px;
     background: var(--card); border: 2px solid var(--border); border-radius: 10px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.12); padding: 10px;
   }
+  /* Groups the option list by Unit so a grade-narrowed list of a dozen+
+     activities is still scannable instead of one flat alphabetical wall
+     of titles - see renderActivityOptions()/activityUnitByTitle. */
+  .multiselect-group-label {
+    font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em;
+    color: var(--primary); opacity: 0.85; padding: 8px 4px 3px; margin-top: 4px;
+    border-top: 1px solid var(--border);
+  }
+  .multiselect-group-label:first-child { border-top: none; margin-top: 0; padding-top: 2px; }
   .multiselect-search {
     width: 100%; padding: 7px 10px; border-radius: 8px; border: 2px solid var(--border);
     font-family: inherit; font-size: 0.85rem; margin-bottom: 8px; box-sizing: border-box;
@@ -315,7 +324,6 @@
   }
   .home-search-card svg { flex-shrink: 0; color: #94a3b8; }
   .home-search-card input { flex: 1; border: none; background: none; font: inherit; font-size: 1rem; color: var(--text); outline: none; }
-  .home-search-hint { font-size: 0.78rem; color: #94a3b8; white-space: nowrap; }
   .home-tile-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 20px; }
   @media (max-width: 820px) { .home-tile-grid { grid-template-columns: 1fr; } }
   .home-tile {
@@ -342,6 +350,77 @@
   }
   .home-secondary-row a:hover, .home-secondary-row button:hover { text-decoration: underline; }
   .home-secondary-row .label { opacity: 0.6; font-weight: 600; }
+
+  /* Live student-search dropdown - shows every match as you type instead
+     of silently jumping to whichever one happens to be first (a name
+     containing the same letters as another was picking the wrong
+     student). Searches the full roster, not the currently filtered
+     list - see selectHomeSearchResult()'s own note. */
+  .home-search-results {
+    position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 25;
+    background: var(--card); border: 2px solid var(--border); border-radius: 10px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.14); max-height: 320px; overflow-y: auto; padding: 6px;
+  }
+  .home-search-result {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 9px 10px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; text-align: left;
+    background: none; border: none; width: 100%; font-family: inherit; color: var(--text);
+  }
+  .home-search-result:hover, .home-search-result.active { background: var(--bg); }
+  .home-search-result .name { font-weight: 700; }
+  .home-search-result .meta { font-size: 0.76rem; opacity: 0.65; white-space: nowrap; }
+  .home-search-results .empty-note { padding: 8px 10px; margin: 0; }
+
+  /* Quick switch - replaces the old equal-weight 4-tab bar. Only the
+     three real destinations (My Class/Students/Flags to Review) are
+     ever top-level buttons now; By Unit, By Activity, Engagement
+     Funnel, and Full Submission Log are secondary drill-in links
+     reached from inside those three or from Home's own secondary row
+     (see /CLAUDE.md). Reuses #nav-tabs/.tab-btn's existing hidden- and
+     active-class wiring in switchDashTab() - only the visual weight
+     changes here, from a full-width tab bar to a lighter pill row. */
+  #nav-tabs { padding: 8px 24px; gap: 8px; border-bottom: 2px solid var(--border); background: var(--card); }
+  #nav-tabs .tab-btn {
+    padding: 7px 16px; border-radius: 999px; border: 2px solid var(--border); background: var(--bg);
+    color: var(--text); font-weight: 700; font-size: 0.85rem; cursor: pointer; font-family: inherit;
+  }
+  #nav-tabs .tab-btn:hover { border-color: var(--primary-light); }
+  #nav-tabs .tab-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+  /* My Class - leads with what needs a look (attention-grid) instead of
+     a flat dump of every stat tile and chart at once; the full charts
+     move into a closed-by-default <details> below. */
+  .attention-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .attention-card {
+    background: var(--bg); border: 2px solid var(--border); border-left: 6px solid var(--tile-accent, var(--primary));
+    border-radius: 12px; padding: 16px 18px;
+  }
+  .attention-card h4 { margin: 0 0 8px; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.03em; opacity: 0.65; }
+  .attention-card .big { font-size: 1.7rem; font-weight: 800; color: var(--tile-accent, var(--primary)); }
+  .attention-card ul { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .attention-card li { display: flex; justify-content: space-between; gap: 8px; font-size: 0.84rem; }
+  .attention-card li span:last-child { font-weight: 700; color: var(--error); flex-shrink: 0; }
+  .attention-card .attention-link { display: inline-block; margin-top: 10px; font-size: 0.82rem; font-weight: 700; color: var(--primary); cursor: pointer; }
+  .attention-card .attention-link:hover { text-decoration: underline; }
+
+  .overview-more { margin-top: 4px; }
+  .overview-more summary { cursor: pointer; font-weight: 700; color: var(--primary); padding: 10px 0; list-style: none; }
+  .overview-more summary::-webkit-details-marker { display: none; }
+  .overview-more summary::before { content: '\25B8  '; }
+  .overview-more[open] summary::before { content: '\25BE  '; }
+
+  .drilldown-links { display: flex; gap: 20px; flex-wrap: wrap; margin: 2px 0 20px; }
+  .drilldown-links button {
+    background: none; border: none; padding: 0; font: inherit; color: var(--primary); font-weight: 700;
+    cursor: pointer; font-size: 0.85rem;
+  }
+  .drilldown-links button:hover { text-decoration: underline; }
+
+  /* Flags to Review - Flags & Behavior is the real destination now, so
+     the other two sub-views read visually lighter, like a secondary
+     link rather than an equal-weight tab. */
+  .sub-tab-btn.secondary { font-size: 0.8rem; opacity: 0.7; }
+  .sub-tab-btn.secondary.active { opacity: 1; }
 
   /* Export CSV preview modal - built and torn down by openExportPreview()/
      closeExportPreview(), never static markup, same "append on demand"
@@ -449,11 +528,15 @@
     </button>
   </div>
 
+  <!-- Only the three real destinations - see the .home-tile buttons
+       below and /CLAUDE.md's "Home" section. By Unit/By Activity/
+       Engagement Funnel/Full Submission Log are never listed here as a
+       fourth equal option - they're drill-in links reached from inside
+       these three (or from Home's own secondary row). -->
   <nav class="nav-tabs" id="nav-tabs" hidden>
-    <button class="tab-btn" data-tab="overview" onclick="switchDashTab('overview')">Overview</button>
-    <button class="tab-btn" data-tab="unit-lesson" onclick="switchDashTab('unit-lesson')">Unit &amp; Lesson Deep Dive</button>
-    <button class="tab-btn" data-tab="students" onclick="switchDashTab('students')">Student Roster &amp; Profiles</button>
-    <button class="tab-btn" data-tab="integrity" onclick="switchDashTab('integrity')">Integrity &amp; Behavior Monitor</button>
+    <button class="tab-btn" data-tab="overview" onclick="switchDashTab('overview')">My Class</button>
+    <button class="tab-btn" data-tab="students" onclick="switchDashTab('students')">Students</button>
+    <button class="tab-btn" data-tab="integrity" onclick="switchDashTab('integrity'); switchSubTab('integrity', 'flags');">Flags to Review</button>
   </nav>
 
   <!-- The default landing panel - three task-oriented entry points
@@ -463,10 +546,10 @@
        filter state to keep in sync. See renderHome(). -->
   <div id="home" class="panel active">
     <div class="section-title">Teacher Dashboard</div>
-    <div class="home-search-card">
+    <div class="home-search-card" style="position:relative;">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="home-student-search" placeholder="Jump to a student by name&hellip;" onkeydown="if (event.key === 'Enter') jumpToStudentByName(this.value);">
-      <span class="home-search-hint">Press Enter</span>
+      <input type="text" id="home-student-search" autocomplete="off" placeholder="Search for a student by name&hellip;" oninput="renderHomeSearchResults(this.value)" onkeydown="handleHomeSearchKeydown(event)">
+      <div class="home-search-results" id="home-search-results" hidden></div>
     </div>
     <div class="home-tile-grid">
       <button class="home-tile" style="--tile-accent:var(--primary);" onclick="switchDashTab('overview')">
@@ -487,6 +570,7 @@
     </div>
     <div class="home-secondary-row">
       <span class="label">Also:</span>
+      <button type="button" onclick="switchDashTab('unit-lesson'); switchSubTab('unit-lesson', 'units');">By Unit</button>
       <button type="button" onclick="switchDashTab('unit-lesson'); switchSubTab('unit-lesson', 'activities');">By Activity</button>
       <button type="button" onclick="switchDashTab('integrity'); switchSubTab('integrity', 'engagement');">Engagement Funnel</button>
       <button type="button" onclick="switchDashTab('integrity'); switchSubTab('integrity', 'submissions');">Full Submission Log</button>
@@ -495,36 +579,44 @@
   </div>
 
   <div id="overview" class="panel">
-    <div class="section-title">Class Overview</div>
+    <div class="section-title">My Class</div>
+    <!-- Leads with what actually needs a look (renderOverview()'s
+         attention cards) instead of a flat wall of stat tiles and
+         charts - the full chart set is still here, just moved into the
+         closed-by-default "More charts" section below, and the deep
+         per-unit/per-activity tables live one click away via the links
+         under it. See /CLAUDE.md's "My Class" note. -->
+    <div class="attention-grid" id="overview-attention"></div>
     <div class="stat-row" id="overview-stats"></div>
-    <div class="card-grid">
-      <div class="card" style="grid-column: 1 / -1;">
-        <h3>Progress by unit</h3>
-        <div id="bars-unit-score"></div>
-      </div>
+    <div class="drilldown-links">
+      <button onclick="switchDashTab('unit-lesson'); switchSubTab('unit-lesson', 'units');">See full breakdown by unit &rarr;</button>
+      <button onclick="switchDashTab('unit-lesson'); switchSubTab('unit-lesson', 'activities');">See full breakdown by activity &rarr;</button>
     </div>
-    <div class="card-grid">
-      <div class="card">
-        <h3>Lowest average score by activity</h3>
-        <div id="bars-activity-score"></div>
+    <details class="overview-more">
+      <summary>More charts &amp; detail</summary>
+      <div class="card-grid">
+        <div class="card" style="grid-column: 1 / -1;">
+          <h3>Progress by unit</h3>
+          <div id="bars-unit-score"></div>
+        </div>
       </div>
-      <div class="card">
-        <h3>Lowest average score by student</h3>
-        <div id="bars-student-score"></div>
+      <div class="card-grid">
+        <div class="card">
+          <h3>Lowest average score by activity</h3>
+          <div id="bars-activity-score"></div>
+        </div>
+        <div class="card">
+          <h3>Lowest average score by student</h3>
+          <div id="bars-student-score"></div>
+        </div>
       </div>
-    </div>
-    <div class="card-grid">
-      <div class="card" style="grid-column: 1 / -1;">
-        <h3>Flags</h3>
-        <div id="flags-summary"></div>
+      <div class="card-grid">
+        <div class="card" style="grid-column: 1 / -1;">
+          <h3>When students work</h3>
+          <div id="hour-histogram"></div>
+        </div>
       </div>
-    </div>
-    <div class="card-grid">
-      <div class="card" style="grid-column: 1 / -1;">
-        <h3>When students work</h3>
-        <div id="hour-histogram"></div>
-      </div>
-    </div>
+    </details>
   </div>
 
   <!-- Merges the former By Unit / By Activity tabs into one "deep dive"
@@ -587,9 +679,10 @@
        it was the same student list as By Student with a few extra
        columns, just shown twice; those columns now live here instead. -->
   <div id="students" class="panel">
-    <div class="section-title">Student Roster &amp; Profiles</div>
+    <div class="section-title">Students</div>
     <div id="by-student-list">
       <div class="legend-row"><span><i class="legend-dot" style="background:var(--error);"></i>Flagged or stalled</span><span><i class="legend-dot" style="background:var(--accent);"></i>Hasn't started anything yet</span></div>
+      <p class="empty-note" style="margin:-8px 0 12px;">Click a student's name for their full profile - Effort Score Index and Attempt-2 Recovery live there, not in this table.</p>
       <div class="table-wrap">
         <table>
           <thead>
@@ -599,9 +692,7 @@
               <th data-table="by-student" data-sort="teacher">Teacher</th>
               <th data-table="by-student" data-sort="activitiesStarted">Started</th>
               <th data-table="by-student" data-sort="avgScore">Avg score</th>
-              <th data-table="by-student" data-sort="effortScore">Effort Score</th>
               <th data-table="by-student" data-sort="overallCompletionPct">Completion</th>
-              <th data-table="by-student" data-sort="recoveryIndex">Attempt-2 recovery</th>
               <th data-table="by-student" data-sort="totalFlags">Flags</th>
               <th data-table="by-student" data-sort="daysSinceLastActive">Last activity</th>
             </tr>
@@ -619,14 +710,17 @@
        and the flat raw log everything else summarizes from, all in one
        place instead of scattered across three separate top-level tabs. -->
   <div id="integrity" class="panel">
-    <div class="section-title">Integrity &amp; Behavior Monitor</div>
+    <div class="section-title">Flags to Review</div>
+    <!-- Flags & Behavior is the real destination now - Engagement Funnel
+         and Full Submission Log are supporting drill-ins, styled lighter
+         (.secondary) so this doesn't read as three equal-weight tabs. -->
     <div class="sub-nav">
-      <button class="sub-tab-btn active" data-subtab="engagement" onclick="switchSubTab('integrity', 'engagement')">Engagement Funnel</button>
-      <button class="sub-tab-btn" data-subtab="flags" onclick="switchSubTab('integrity', 'flags')">Flags &amp; Behavior</button>
-      <button class="sub-tab-btn" data-subtab="submissions" onclick="switchSubTab('integrity', 'submissions')">Full Submission Log</button>
+      <button class="sub-tab-btn active" data-subtab="flags" onclick="switchSubTab('integrity', 'flags')">Flags &amp; Behavior</button>
+      <button class="sub-tab-btn secondary" data-subtab="engagement" onclick="switchSubTab('integrity', 'engagement')">Engagement Funnel</button>
+      <button class="sub-tab-btn secondary" data-subtab="submissions" onclick="switchSubTab('integrity', 'submissions')">Full Submission Log</button>
     </div>
 
-    <div id="integrity-engagement" class="sub-panel active">
+    <div id="integrity-engagement" class="sub-panel">
       <div id="activity-status-list">
         <div class="card" id="activity-status-chart" style="margin-bottom:20px;"></div>
         <div class="legend-row"><span><i class="legend-dot" style="background:var(--accent);"></i>Nobody has started yet</span></div>
@@ -650,7 +744,7 @@
       <div id="activity-status-detail" class="detail-view" hidden></div>
     </div>
 
-    <div id="integrity-flags" class="sub-panel">
+    <div id="integrity-flags" class="sub-panel active">
       <div class="stat-row" id="integrity-stats"></div>
       <div class="card-grid">
         <div class="card" style="grid-column: 1 / -1;">
@@ -1400,10 +1494,12 @@
     // keying the fallback on it silently leaked every OTHER grade's
     // activities into the dropdown (e.g. Grade 6 selected, Grade 7/8 titles
     // still showing) instead of correctly showing none. Only fall back to
-    // every row's own activityTitle when there's no catalog data at all.
-    const activityTitles = activityCatalog.length
-      ? catalogForGrade.map((a) => a.title)
-      : [...new Set(allRows.map((r) => r.activityTitle))];
+    // every row's own activityTitle when there's no catalog data at all -
+    // that fallback has no Unit to offer, so those titles group under
+    // "Unassigned" in the popover below (renderActivityOptions()).
+    const activityTitleUnitPairs = activityCatalog.length
+      ? catalogForGrade.map((a) => ({ title: a.title, unit: a.unit || 'Unassigned' }))
+      : [...new Set(allRows.map((r) => r.activityTitle))].map((t) => ({ title: t, unit: 'Unassigned' }));
 
     const grades = [...new Set(gradesFromRoster)].filter(Boolean).sort();
     const teachers = [...new Set(teachersFromRoster)].filter(Boolean).sort();
@@ -1430,7 +1526,12 @@
     if (teacherGroup) teacherGroup.style.display = teacherScope ? 'none' : '';
     if (!teacherScope) renderFilterPills('teacher-pills', teachers, currentTeacherFilter, 'All Teachers', selectTeacher);
 
-    availableActivityTitles = [...new Set(activityTitles)].filter(Boolean).sort();
+    availableActivityTitles = [...new Set(activityTitleUnitPairs.map((p) => p.title))].filter(Boolean).sort();
+    // Unit lookup for the option list's group headers (renderActivityOptions())
+    // - last-write-wins on a title collision, which never happens in
+    // practice since ActivityId (not title) is the real unique key.
+    activityUnitByTitle = {};
+    activityTitleUnitPairs.forEach((p) => { if (p.title) activityUnitByTitle[p.title] = p.unit; });
     // Drop any previously-checked activities that no longer exist for the
     // grade now in view, same "prune what's gone stale" rule grade/teacher
     // already follow above.
@@ -1442,6 +1543,10 @@
   // kept separate from currentActivityFilter so the search box can filter
   // which options are shown without touching what's actually selected.
   let availableActivityTitles = [];
+  // title -> Unit, rebuilt alongside availableActivityTitles every
+  // populateFilters() call - lets renderActivityOptions() group the
+  // popover's option list by Unit instead of one flat alphabetical list.
+  let activityUnitByTitle = {};
 
   function updateActivityToggleLabel() {
     const btn = document.getElementById('activity-toggle');
@@ -1463,10 +1568,24 @@
     if (!visible.length) {
       optionsEl.innerHTML = '<p class="empty-note">No matching activities.</p>';
     } else {
-      optionsEl.innerHTML = visible.map((t) => {
-        const escaped = t.replace(/"/g, '&quot;');
-        return `<label class="multiselect-option"><input type="checkbox" value="${escaped}" ${currentActivityFilter.includes(t) ? 'checked' : ''}><span>${t}</span></label>`;
-      }).join('');
+      // Grouped by Unit (activityUnitByTitle, built alongside
+      // availableActivityTitles in populateFilters()) instead of one flat
+      // alphabetical list - even grade-narrowed, a unit's worth of
+      // activities was still hard to pick out of an undifferentiated wall
+      // of titles. Units themselves sort alphabetically; there's no
+      // teaching-sequence data available here to order them by instead.
+      const byUnit = {};
+      visible.forEach((t) => {
+        const unit = activityUnitByTitle[t] || 'Unassigned';
+        (byUnit[unit] = byUnit[unit] || []).push(t);
+      });
+      optionsEl.innerHTML = Object.keys(byUnit).sort().map((unit) => `
+        <div class="multiselect-group-label">${unit}</div>
+        ${byUnit[unit].map((t) => {
+          const escaped = t.replace(/"/g, '&quot;');
+          return `<label class="multiselect-option"><input type="checkbox" value="${escaped}" ${currentActivityFilter.includes(t) ? 'checked' : ''}><span>${t}</span></label>`;
+        }).join('')}
+      `).join('');
       optionsEl.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
         cb.addEventListener('change', () => {
           if (cb.checked) currentActivityFilter.push(cb.value);
@@ -2021,21 +2140,66 @@
     const avgEffort = avg(studentSummaries.map((s) => s.effortScore));
     const stalledCount = studentSummaries.filter((s) => s.stalled).length;
 
+    renderOverviewAttention(studentSummaries, activitySummaries, flaggedCount, notStartedCount, stalledCount);
+
+    // A compact secondary strip - the four numbers that don't already
+    // have their own attention card above.
     document.getElementById('overview-stats').innerHTML = `
       <div class="stat-tile"><div class="n">${rosterRows.length}</div><div class="l">Active students (filtered)</div></div>
       <div class="stat-tile"><div class="n">${activitySummaries.length}</div><div class="l">Activities (filtered)</div></div>
       <div class="stat-tile"><div class="n">${overallAvg === null ? '-' : overallAvg + '%'}</div><div class="l">Average score</div></div>
       <div class="stat-tile"><div class="n">${avgEffort === null ? '-' : avgEffort}</div><div class="l">Avg Effort Score Index</div></div>
-      <div class="stat-tile"><div class="n ${notStartedCount ? 'warn' : ''}">${notStartedCount}</div><div class="l">Not started anything</div></div>
-      <div class="stat-tile"><div class="n ${stalledCount ? 'warn' : ''}">${stalledCount}</div><div class="l">Stalled (${STALLED_DAYS}+ days)</div></div>
-      <div class="stat-tile"><div class="n ${flaggedCount ? 'warn' : ''}">${flaggedCount}</div><div class="l">Flagged submissions</div></div>
     `;
 
     renderScoreBars('bars-unit-score', unitSummaries, 'unit');
     renderScoreBars('bars-activity-score', activitySummaries, 'activityTitle');
     renderScoreBars('bars-student-score', studentSummaries, 'studentName');
-    renderFlagsSummary(rows);
     renderHourHistogram(rows);
+  }
+
+  // Leads My Class with what's actually worth a look - lowest-scoring
+  // activities/students, stalled/not-started counts, and the open flag
+  // count - each linking straight into the view that has the full
+  // detail, instead of making a teacher scan every stat tile and chart
+  // on the page to notice the same thing. See /CLAUDE.md's "My Class"
+  // note.
+  function renderOverviewAttention(studentSummaries, activitySummaries, flaggedCount, notStartedCount, stalledCount) {
+    const el = document.getElementById('overview-attention');
+    if (!el) return;
+    const lowestActivities = activitySummaries.filter((a) => a.avgScore !== null)
+      .slice().sort((a, b) => a.avgScore - b.avgScore).slice(0, 3);
+    const lowestStudents = studentSummaries.filter((s) => s.avgScore !== null)
+      .slice().sort((a, b) => a.avgScore - b.avgScore).slice(0, 3);
+
+    el.innerHTML = `
+      <div class="attention-card" style="--tile-accent:var(--error);">
+        <h4>Flags to review</h4>
+        <div class="big">${flaggedCount}</div>
+        ${flaggedCount
+          ? `<span class="attention-link" onclick="jumpToIntegrityFlags()">Review flags &rarr;</span>`
+          : '<p class="empty-note" style="padding:4px 0 0;">Nothing flagged in the current filter.</p>'}
+      </div>
+      <div class="attention-card" style="--tile-accent:var(--accent);">
+        <h4>Stalled / not started</h4>
+        <div class="big">${stalledCount + notStartedCount}</div>
+        <p style="margin:4px 0 0; font-size:0.8rem; opacity:0.75;">${stalledCount} stalled (${STALLED_DAYS}+ days) &middot; ${notStartedCount} haven't started anything</p>
+        <span class="attention-link" onclick="switchDashTab('students')">View students &rarr;</span>
+      </div>
+      <div class="attention-card">
+        <h4>Lowest average score - activities</h4>
+        ${lowestActivities.length
+          ? `<ul>${lowestActivities.map((a) => `<li><span>${a.activityTitle}</span><span>${a.avgScore}%</span></li>`).join('')}</ul>`
+          : '<p class="empty-note" style="padding:4px 0 0;">No scored activities yet.</p>'}
+        <span class="attention-link" onclick="switchDashTab('unit-lesson'); switchSubTab('unit-lesson', 'activities');">See all activities &rarr;</span>
+      </div>
+      <div class="attention-card">
+        <h4>Lowest average score - students</h4>
+        ${lowestStudents.length
+          ? `<ul>${lowestStudents.map((s) => `<li><span>${s.studentName}</span><span>${s.avgScore}%</span></li>`).join('')}</ul>`
+          : '<p class="empty-note" style="padding:4px 0 0;">No scored students yet.</p>'}
+        <span class="attention-link" onclick="switchDashTab('students')">View all students &rarr;</span>
+      </div>
+    `;
   }
 
   // "When do students actually work on this" - a 24-hour distribution of
@@ -2071,37 +2235,6 @@
       <p class="empty-note" style="margin-top:6px;">Hour of day (your local time) across every logged event in the current filter.</p>
     `;
   }
-
-  function renderFlagsSummary(rows) {
-    const flaggedRows = rows.filter((r) => r.flags.length > 0);
-    const el = document.getElementById('flags-summary');
-    if (!flaggedRows.length) { el.innerHTML = '<p class="empty-note">Nothing flagged in the current filter.</p>'; return; }
-    // Bucketed by category (flagCategory), not the raw flag string - most
-    // of these strings carry their own per-row count (e.g. "Fast-guessing
-    // on 2 items"), so grouping on the literal text would make almost
-    // every flag its own singleton bucket.
-    const categoryCounts = {};
-    flaggedRows.forEach((r) => r.flags.forEach((fl) => {
-      const c = flagCategory(fl);
-      categoryCounts[c] = (categoryCounts[c] || 0) + 1;
-    }));
-    el.innerHTML = `
-      <div class="stat-row" style="margin-bottom:8px;">
-        <div class="stat-tile"><div class="n warn">${flaggedRows.length}</div><div class="l">Flagged submissions</div></div>
-        ${Object.keys(categoryCounts).map((c) => `<div class="stat-tile"><div class="n">${categoryCounts[c]}</div><div class="l">${c}</div></div>`).join('')}
-      </div>
-      <span class="expand-btn" onclick="jumpToFlagged()">View all flagged submissions &rarr;</span>
-      <span class="expand-btn" style="margin-left:16px;" onclick="jumpToIntegrityFlags()">Open Integrity Monitor &rarr;</span>
-    `;
-  }
-
-  function jumpToFlagged() {
-    document.getElementById('filter-flagged-only').checked = true;
-    renderAll();
-    switchDashTab('integrity');
-    switchSubTab('integrity', 'submissions');
-  }
-  window.jumpToFlagged = jumpToFlagged;
 
   function jumpToIntegrityFlags() {
     switchDashTab('integrity');
@@ -2747,7 +2880,7 @@
     const items = sortItems(computeStudentSummaries(), 'by-student', 'studentName');
     lastStudentSummaries = items;
     const tbody = document.getElementById('by-student-body');
-    if (!items.length) { tbody.innerHTML = '<tr><td colspan="10" class="empty-note">No students match the current filter.</td></tr>'; return; }
+    if (!items.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-note">No students match the current filter.</td></tr>'; return; }
     tbody.innerHTML = items.map((s, i) => `
       <tr class="${s.stalled || s.totalFlags ? 'flagged' : (s.activitiesStarted === 0 ? 'zero-activity' : '')}">
         <td>${formatGradeLabel(s.grade)}</td>
@@ -2755,9 +2888,7 @@
         <td>${s.teacher || '-'}</td>
         <td>${s.activitiesStarted}</td>
         <td>${s.avgScore === null ? '-' : s.avgScore + '%'}</td>
-        <td>${s.effortScore === null ? '-' : s.effortScore}</td>
         <td>${s.overallCompletionPct === null ? '-' : s.overallCompletionPct + '%'}</td>
-        <td>${s.recoveryIndex === null ? '-' : s.recoveryIndex + '%'}</td>
         <td>${s.totalFlags ? `<span class="pill flag">${s.totalFlags}</span>` : '<span class="pill ok">0</span>'}</td>
         <td>${s.stalled ? `<span class="pill flag">Stalled - ${s.daysSinceLastActive}d</span>` : (s.daysSinceLastActive === null ? '-' : s.daysSinceLastActive + 'd ago')}</td>
       </tr>
@@ -3287,21 +3418,93 @@
     `;
   }
 
-  // Enter-triggered on purpose (see the "let them type" feedback) - a
-  // result on every keystroke would jump the page as soon as a single
-  // matching letter was typed, before the teacher finished the name.
-  function jumpToStudentByName(name) {
-    const q = name.trim().toLowerCase();
-    if (!q) return;
-    const idx = lastStudentSummaries.findIndex((s) => s.studentName.toLowerCase().includes(q));
-    if (idx === -1) {
-      alert(`No student matching "${name}" in the current filter - try clearing a filter above, or check the spelling.`);
-      return;
+  // Live student-search dropdown. Two things the earlier Enter-to-jump
+  // version got wrong, per direct feedback: (1) typing a substring that
+  // matched more than one student (e.g. "rio" matching both "Briones"
+  // and "Rio Onda") silently opened whichever one sorted first, with no
+  // way to pick the other - this shows every match and only navigates on
+  // a click/Enter-on-a-highlighted-result; (2) it only searched
+  // lastStudentSummaries, which is already scoped to the current Grade/
+  // Teacher filter, so a student outside that filter was invisible to
+  // search - this searches the full active roster instead, then widens
+  // the filter to include whoever gets picked (selectHomeSearchResult()).
+  let homeSearchMatches = [];
+  let homeSearchActiveIndex = -1;
+
+  function renderHomeSearchResults(query) {
+    const q = query.trim().toLowerCase();
+    const resultsEl = document.getElementById('home-search-results');
+    homeSearchActiveIndex = -1;
+    if (!q) { resultsEl.hidden = true; resultsEl.innerHTML = ''; homeSearchMatches = []; return; }
+    homeSearchMatches = roster
+      .filter((s) => isActiveStatus(s.status) && s.studentName && s.studentName.toLowerCase().includes(q))
+      .sort((a, b) => a.studentName.localeCompare(b.studentName))
+      .slice(0, 8);
+    resultsEl.innerHTML = homeSearchMatches.length
+      ? homeSearchMatches.map((s, i) => `
+          <button type="button" class="home-search-result" data-idx="${i}" onclick="selectHomeSearchResult(${i})">
+            <span class="name">${s.studentName}</span>
+            <span class="meta">Grade ${formatGradeLabel(s.grade)}${s.teacher ? ' &middot; ' + s.teacher : ''}</span>
+          </button>
+        `).join('')
+      : '<p class="empty-note">No matching students.</p>';
+    resultsEl.hidden = false;
+  }
+  window.renderHomeSearchResults = renderHomeSearchResults;
+
+  function highlightHomeSearchResult() {
+    document.querySelectorAll('.home-search-result').forEach((el, i) => {
+      el.classList.toggle('active', i === homeSearchActiveIndex);
+    });
+  }
+
+  function hideHomeSearchResults() {
+    const resultsEl = document.getElementById('home-search-results');
+    resultsEl.hidden = true;
+    resultsEl.innerHTML = '';
+    homeSearchMatches = [];
+    homeSearchActiveIndex = -1;
+  }
+
+  function handleHomeSearchKeydown(e) {
+    const resultsEl = document.getElementById('home-search-results');
+    if (resultsEl.hidden || !homeSearchMatches.length) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      homeSearchActiveIndex = Math.min(homeSearchActiveIndex + 1, homeSearchMatches.length - 1);
+      highlightHomeSearchResult();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      homeSearchActiveIndex = Math.max(homeSearchActiveIndex - 1, 0);
+      highlightHomeSearchResult();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      selectHomeSearchResult(homeSearchActiveIndex >= 0 ? homeSearchActiveIndex : 0);
+    } else if (e.key === 'Escape') {
+      hideHomeSearchResults();
     }
+  }
+  window.handleHomeSearchKeydown = handleHomeSearchKeydown;
+
+  function selectHomeSearchResult(i) {
+    const student = homeSearchMatches[i];
+    if (!student) return;
+    document.getElementById('home-student-search').value = '';
+    hideHomeSearchResults();
+    // The picked student might sit outside the current Grade/Teacher
+    // filter (search deliberately looks past it, above) - widen the
+    // filter to include them before looking them up in
+    // lastStudentSummaries, or there'd be nothing to open.
+    if (currentGradeFilter && String(student.grade) !== currentGradeFilter) currentGradeFilter = '';
+    if (currentTeacherFilter && currentTeacherFilter !== student.teacher) currentTeacherFilter = '';
+    populateFilters();
+    renderAll();
+    const idx = lastStudentSummaries.findIndex((s) => s.email === student.email);
+    if (idx === -1) { alert(`Could not open ${student.studentName}'s profile - try Refresh and search again.`); return; }
     switchDashTab('students');
     openStudentDetail(idx);
   }
-  window.jumpToStudentByName = jumpToStudentByName;
+  window.selectHomeSearchResult = selectHomeSearchResult;
 
   // All Submissions is the one remaining flat table with an inline
   // expand - it's already the raw per-(student,activity) detail layer
@@ -3316,7 +3519,8 @@
 
   // Looks the button up by its data-tab attribute instead of relying on
   // the global `event` object, so this is safe to call programmatically
-  // (jumpToFlagged/jumpToActivity) and not just from an inline onclick.
+  // (jumpToIntegrityFlags, the Home tiles' own onclick handlers) and not
+  // just from an inline onclick.
   function switchDashTab(tabId) {
     document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
@@ -3375,6 +3579,13 @@
     const group = document.getElementById('activity-multiselect');
     const panel = document.getElementById('activity-panel');
     if (group && panel && !panel.hidden && !group.contains(e.target)) panel.hidden = true;
+    // Same pattern for the student-search results dropdown - a click on
+    // a result itself is handled by its own onclick before this ever
+    // sees it (the result buttons live inside home-search-card, so
+    // .contains(e.target) is still true for those).
+    const searchCard = document.getElementById('home-student-search') && document.getElementById('home-student-search').closest('.home-search-card');
+    const searchResults = document.getElementById('home-search-results');
+    if (searchCard && searchResults && !searchResults.hidden && !searchCard.contains(e.target)) hideHomeSearchResults();
   });
   document.getElementById('activity-toggle').addEventListener('click', toggleActivityPanel);
   document.getElementById('activity-search').addEventListener('input', renderActivityOptions);
