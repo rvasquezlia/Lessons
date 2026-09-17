@@ -1398,7 +1398,7 @@
     const outcome = checkMC('boothformula', 'A', 'boothformula-feedback',
       'Correct! l = (P &minus; 2w) / 2.',
       'Tip: undo the addition of 2w before you divide by 2.',
-      { label: 'Station 4A - Rearrange for Length', answer: document.querySelector('input[name="boothformula"]:checked').value, section: 'Day 1 - Logistics Stations' });
+      { label: 'Station 4A - Rearrange for Length', answer: document.querySelector('input[name="boothformula"]:checked').value, section: 'Day 1 - Logistics Stations (Engineering)' });
     if (outcome === 'correct') { maybeCompleteDay1(); saveProgress(); }
   }
 
@@ -1410,7 +1410,7 @@
     const outcome = gradeAttempt('boothlength', isCorrect, feedbackEl, {
       correct: 'Correct! l = (24 &minus; 10) / 2 = 7 feet.',
       retry: 'Tip: plug P = 24 and w = 5 into your rearranged formula from Part A.'
-    }, { label: 'Station 4B - Booth Length', answer: given, section: 'Day 1 - Logistics Stations' });
+    }, { label: 'Station 4B - Booth Length', answer: given, section: 'Day 1 - Logistics Stations (Engineering)' });
     if (outcome === 'correct') {
       if (!window.teacherPreviewMode) document.getElementById('boothlength-input').disabled = true;
       window.boothLength = 7;
@@ -1427,7 +1427,7 @@
     const outcome = checkMC('ampformula', 'A', 'ampformula-feedback',
       'Correct! I = P / V.',
       'Tip: divide both sides by V to isolate I.',
-      { label: 'Station 5A - Rearrange for Current', answer: document.querySelector('input[name="ampformula"]:checked').value, section: 'Day 1 - Logistics Stations' });
+      { label: 'Station 5A - Rearrange for Current', answer: document.querySelector('input[name="ampformula"]:checked').value, section: 'Day 1 - Logistics Stations (Science & Engineering)' });
     if (outcome === 'correct') { maybeCompleteDay1(); saveProgress(); }
   }
 
@@ -1439,7 +1439,7 @@
     const outcome = gradeAttempt('stagecurrent', isCorrect, feedbackEl, {
       correct: 'Correct! I = 2,400 / 120 = 20 Amps.',
       retry: 'Tip: divide the Watts by the Volts.'
-    }, { label: 'Station 5B - Stage Current Load', answer: given, section: 'Day 1 - Logistics Stations' });
+    }, { label: 'Station 5B - Stage Current Load', answer: given, section: 'Day 1 - Logistics Stations (Science & Engineering)' });
     if (outcome === 'correct') {
       if (!window.teacherPreviewMode) document.getElementById('stagecurrent-input').disabled = true;
       window.stageCurrent = 20;
