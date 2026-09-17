@@ -2155,7 +2155,22 @@ pairing is completely unaffected)
     pillar it actually found. A pillar with zero matching sections on
     this activity (e.g. Science/Technology on the canonical example,
     which has no graded item under either) simply doesn't appear —
-    never padded with a fabricated 0%.
+    never padded with a fabricated 0%. **A pillar's completion % counts
+    a `'correct'` verdict *and* a `'reflection'` verdict as done** — a
+    pillar measures engagement with that STREAM area, not
+    right-vs-wrong, and several of the canonical example's own items
+    (Garden Grid Layout, Creation Sign, the Celebrate certificate/badge
+    downloads) are genuinely un-gradeable `LessonCheck.submit()` calls
+    with no `correct` field, which always log as `'reflection'` (§8's
+    scoring formula still excludes `'reflection'` from
+    `ItemsAttempted`/`ItemsCorrect`/`ScorePct` — that's a different,
+    unchanged metric measuring being right, not having done the work).
+    Before this rule only counted `'correct'`, so a project's own
+    creative/reflective checks could never contribute to their pillar's
+    percentage even when every student had genuinely submitted them —
+    caught migrating pre-existing Eco-Garden data where every team had
+    completed the Garden Layout/Creation Sign/Certificate steps but
+    those pillars still read 0%.
   - **Deliverables** — `deliverableSummaryHtml(email, activityId)` reads
     that student's own `ProjectState.StateJSON` (**not**
     `SubmissionsLog`) and renders whichever of `cartOrder`/`grandTotal`/

@@ -2634,7 +2634,16 @@
         if (!pillar) return;
         if (!byPillar[pillar]) byPillar[pillar] = { itemsAttempted: 0, itemsCorrect: 0, students: new Set() };
         byPillar[pillar].itemsAttempted++;
-        if (s.verdict === 'correct') byPillar[pillar].itemsCorrect++;
+        // A pillar tracks *engagement* with that STREAM area, not right/
+        // wrong - a submitted creative/reflective item (verdict
+        // 'reflection', e.g. a STREAM project's Garden Layout/Creation
+        // Sign/Celebrate checks, which have no objectively correct
+        // answer) counts as complete here exactly like a graded 'correct'
+        // item does. This is deliberately different from the academic
+        // ScorePct/ItemsAttempted/ItemsCorrect formula (§8), which still
+        // excludes 'reflection' entirely - that formula measures being
+        // right, this one measures having done the work.
+        if (s.verdict === 'correct' || s.verdict === 'reflection') byPillar[pillar].itemsCorrect++;
         byPillar[pillar].students.add(r.email);
       });
     });

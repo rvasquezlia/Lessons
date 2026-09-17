@@ -462,7 +462,11 @@
         if (!rule) return;
         if (!byPillar[rule.pillar]) byPillar[rule.pillar] = { itemsAttempted: 0, itemsCorrect: 0, students: new Set() };
         byPillar[rule.pillar].itemsAttempted++;
-        if (s.verdict === 'correct') byPillar[rule.pillar].itemsCorrect++;
+        // Kept in sync with teacher-dashboard.html's identical copy - a
+        // submitted creative/reflective item (verdict 'reflection') counts
+        // as pillar-complete exactly like a graded 'correct' item does;
+        // see that copy's own comment for the full reasoning.
+        if (s.verdict === 'correct' || s.verdict === 'reflection') byPillar[rule.pillar].itemsCorrect++;
         byPillar[rule.pillar].students.add(r.email);
       });
     });
