@@ -1087,7 +1087,12 @@ Eighth, Seventh Honors, Pre-AP Algebra I) for interactive widgets on
 `Review.html`/`Test-Prep.html`) — a different category from §18's
 STREAM project idea bank, which is for a whole two-day project's Art
 studio. Not a build queue; a reference to draw from when asked to
-build a new widget for a specific unit.
+build a new widget for a specific unit. **§14's `STREAM Math
+Curriculum Resources.xlsx`** is a fuller, separate 375-row raw source
+covering the same two categories (plus a whole-project one) — check it
+too, especially its `Activity Type / Exercise` category, which is
+organized by lesson phase rather than by topic and so attaches to any
+already-built unit regardless of grade.
 
 **Feasibility tiers** (same framework as §18's idea bank):
 - **Native, zero dependency** — the large majority: any Canvas/SVG-
@@ -1824,6 +1829,88 @@ standard citation.**
   Use `openpyxl` (`pip install openpyxl` first, not preinstalled) to
   read raw cell values. One unit can span several weekly rows; collect
   every standard from every genuinely-matching row before finalizing.
+- **`STREAM Math Curriculum Resources.xlsx` (repo root)** — a 375-row
+  raw idea bank (5 sheets, one per grade/track: `Math 6`, `Math 7`,
+  `Math 8`, `Math 7 Honors`, `Pre-AP Algebra I`; 75 rows per sheet, 7
+  columns: `Category`, `Number`, `Title`, `Aligned Math Topic`,
+  `Description`, `Tech / Tools Needed`, `STREAM / Phase / Mechanic`).
+  **Browse it directly with `openpyxl` rather than expecting every row
+  reproduced here** — §10's own "Candidate lesson-widget idea bank"
+  and §18's own "Digital deliverable idea bank" are curated, evaluated
+  subsets of this same material (plus an earlier, separate 120-idea
+  batch); this file is the fuller raw source behind them.
+  - **Three categories per sheet, 25 rows each**: `Digital Arts
+    Project` (a whole-project STREAM idea, same shape as §18's bank),
+    `Lesson Digital Resource` (a reusable widget/mechanic, same shape
+    as §10's bank), `Activity Type / Exercise` (a technique tied to
+    one lesson **phase** — Vocabulary/Review/Explanation/Practice/
+    Test Prep/Word Problems, the site's own six graded page types
+    per §10 — e.g. "Find the Lie" for Review, "Translation Matrix" for
+    Word Problems, "Timed Challenge" for Test Prep).
+  - **`Activity Type / Exercise` is the most immediately usable
+    category** — unlike the other two, its ideas are genuinely
+    topic-agnostic techniques for an existing page type, so they
+    attach to any already-built unit's matching page regardless of
+    grade; the other two categories mostly describe whole new
+    STREAM projects or generic widgets tied to a not-yet-built topic
+    (see the fit check below).
+  - **`Aligned Math Topic` is a recycled 11-13-item list per grade,
+    not a per-row curation** — each grade's 25 rows just cycle
+    through that grade's own short topic list twice; `Activity Type /
+    Exercise`'s own `Tech / Tools Needed` column duplicates its
+    `STREAM / Phase / Mechanic` column verbatim (both just say
+    `Phase: <name>`) rather than naming real tech for that row. Don't
+    over-trust either column's specificity on this category.
+  - **Honest fit check against this site's actual built units**
+    (same exercise as §10's own idea bank, and the same finding):
+    **Sixth**'s 13 topics (Coordinate Plane, GCF/LCM, Exponents,
+    Expressions, One-Step Eqs, Inequalities, Area, Surface Area,
+    Volume, Statistics, Box Plots, Ratios, Percents) — none overlap
+    the two real units (Decimal-Operations, Operations-with-
+    Fractions). **Seventh**'s 12 topics — `Rational Numbers` directly
+    overlaps Rational-Numbers/Operations-with-Rationals; the rest
+    (Proportionality, two-step equations/inequalities, scale
+    drawings, probability, angles, volume, cross-sections) don't.
+    **Eighth**'s 11 topics — `Linear Eqs` and `Slope/y-int` overlap
+    Linear-Equations; the rest (Pythagorean theorem, systems, sci
+    notation, transformations, scatter plots, bivariate data,
+    radicals) don't. **Seventh Honors**'s 11 topics — **none**
+    mention squares, cubes, or roots at all, so nothing here overlaps
+    the actual built unit (Squares-Cubes-and-Roots); this sheet's
+    topics (multi-step equations, compound inequalities, polynomials,
+    literal equations, probability trees) describe a different,
+    broader pre-algebra course. **Pre-AP Algebra I**'s 11 topics —
+    `Domain/Range` overlaps Linear-Functions; the rest (quadratics,
+    factoring, exponential growth/decay, piecewise, absolute value,
+    rational exponents, sequences) describe a fuller Algebra I course
+    this one unit doesn't cover — same pattern §10's own idea bank
+    already found.
+  - **A few genuinely new tools/techniques worth naming** (beyond what
+    §10/§18 already catalog): native HTML `<details>`/`<summary>` for
+    a step-reveal (zero JS, zero library — prefer this over a
+    hand-rolled reveal function for a simple show/hide); `window.
+    localStorage` for a badge/gamification system (real site precedent
+    already exists — `token-cache.js`'s token cache, `ThemeToggle`'s
+    `lia_theme` — same "per-viewer convenience only" caveat as
+    anywhere else localStorage is used on this site: never a
+    substitute for the real `Progress` save); JSXGraph (a coordinate-
+    grid-plotting library, CDN script, no account — a Tier-1-style
+    alternative to a Desmos/GeoGebra embed when the grid itself needs
+    to be custom-styled rather than just displayed); KaTeX (a lighter
+    CDN alternative to the `mathjax@3` this site already loads for
+    feedback-text LaTeX — evaluate before swapping, since MathJax is
+    already the established, working convention per §7); Matter.js (a
+    2D physics engine, CDN script — for a genuine collision/projectile-
+    motion idea, heavier than plain Canvas math); Fabric.js (an
+    object-model canvas library — prefer plain `<canvas>`/native HTML5
+    drag unless Fabric's specific object-manipulation API is actually
+    needed); Three.js (WebGL, for a genuinely custom 3D scene beyond
+    what `<model-viewer>` + a static exported asset already covers).
+    **`CryptoJS`/a "SHA-256 JS library"** appears here for the same
+    hash-lock idea §10 already flags — prefer the native
+    `crypto.subtle.digest('SHA-256', ...)` Web Crypto API over adding
+    CryptoJS as a dependency; zero library either way, but only one of
+    them needs zero `<script>` tags.
 
 ---
 
@@ -2762,7 +2849,10 @@ anything here must run as static HTML/CSS/JS or a third-party iframe/
 web-component embed, never a piece needing its own backend). The same
 list is mirrored in the STREAM Project Kit artifact (the reusable
 Diffit-prompt reference — see the "Standing rule" above) for browsing
-alongside the prompt itself.
+alongside the prompt itself. **§14's `STREAM Math Curriculum
+Resources.xlsx`** is a fuller, separate 375-row raw source with its
+own whole-project `Digital Arts Project` category per grade — check it
+too before designing a new project's Art deliverable.
 
 **Tier 1 — zero external account, everything lives in the repo.**
 Prefer this tier by default; it matches the site's existing
