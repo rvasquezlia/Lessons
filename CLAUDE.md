@@ -2158,19 +2158,39 @@ pairing is completely unaffected)
     never padded with a fabricated 0%. **A pillar's completion % counts
     a `'correct'` verdict *and* a `'reflection'` verdict as done** — a
     pillar measures engagement with that STREAM area, not
-    right-vs-wrong, and several of the canonical example's own items
-    (Garden Grid Layout, Creation Sign, the Celebrate certificate/badge
-    downloads) are genuinely un-gradeable `LessonCheck.submit()` calls
-    with no `correct` field, which always log as `'reflection'` (§8's
-    scoring formula still excludes `'reflection'` from
-    `ItemsAttempted`/`ItemsCorrect`/`ScorePct` — that's a different,
-    unchanged metric measuring being right, not having done the work).
-    Before this rule only counted `'correct'`, so a project's own
-    creative/reflective checks could never contribute to their pillar's
-    percentage even when every student had genuinely submitted them —
-    caught migrating pre-existing Eco-Garden data where every team had
-    completed the Garden Layout/Creation Sign/Certificate steps but
-    those pillars still read 0%.
+    right-vs-wrong, and a project's own creative/reflective checks
+    (Garden Grid Layout, Creation Sign, an Infographic/Flyer lock, a
+    real reflection question) are genuinely un-gradeable
+    `LessonCheck.submit()` calls with no `correct` field, which always
+    log as `'reflection'` (§8's scoring formula still excludes
+    `'reflection'` from `ItemsAttempted`/`ItemsCorrect`/`ScorePct` —
+    that's a different, unchanged metric measuring being right, not
+    having done the work). Before this rule only counted `'correct'`,
+    so a project's own creative/reflective checks could never
+    contribute to their pillar's percentage even when every student had
+    genuinely submitted them — caught migrating pre-existing Eco-Garden
+    data where every team had completed the Garden Layout/Creation Sign
+    steps but those pillars still read 0%.
+  - **A certificate/badge download never counts toward a pillar, even
+    though it also logs verdict `'reflection'`.**
+    `isCelebrationDownloadKey(key)` (`key === 'certificate-download'` or
+    `/^solo-badge-\d+$/`) is checked before `pillarForSection()` in
+    `computeStreamPillarBreakdown()` and skips the entry entirely — a
+    certificate/badge download is a one-click reward available once a
+    team has already finished everything else, not itself STREAM work,
+    so it shouldn't inflate whichever pillar its section (`Day N -
+    Celebrate`, which the Religion regex also happens to match via
+    `celebrate`) would otherwise tag it under. A project's *real*
+    Religion-pillar content is its own separate reflection question(s)
+    under a `Reflection`-named section, where one exists —
+    `Sixth/Laudato-Si-EcoGarden` has no such question (only
+    Math/Engineering/Art), so its Religion pillar is correctly "No data
+    yet," not a fabricated number from download clicks alone. **Rule**:
+    never let a celebration/download action be the only thing backing a
+    pillar's number — if a future project's certificate/badge mechanic
+    is the *only* source for some pillar, that pillar should read "No
+    data yet," not a percentage that isn't really measuring the pillar
+    it claims to.
   - **Deliverables** — `deliverableSummaryHtml(email, activityId)` reads
     that student's own `ProjectState.StateJSON` (**not**
     `SubmissionsLog`) and renders whichever of `cartOrder`/`grandTotal`/

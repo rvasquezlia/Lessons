@@ -2576,6 +2576,18 @@
     return rule ? rule.pillar : null;
   }
 
+  // A certificate/badge download is a one-click reward available once a
+  // team has already finished everything else - it's not itself STREAM
+  // work, so it should never count toward a pillar's completion the way
+  // a genuine reflection or creative-lock item (Garden Layout, Creation
+  // Sign, an Infographic/Flyer lock, a real reflection question) does.
+  // All four STREAM pages share this exact key shape for their
+  // `downloadCertificate()`/`downloadSoloBadge(memberNum)` calls (see
+  // /CLAUDE.md's "Paired/team activities" - certificate/badge mechanic).
+  function isCelebrationDownloadKey(key) {
+    return key === 'certificate-download' || /^solo-badge-\d+$/.test(key);
+  }
+
   // One row's own final attempt count per key (excludes a reset entry
   // and every earlier retry - the item's own submissions are already
   // sorted ascending by timestamp, so the last non-reset entry per key
@@ -2630,6 +2642,7 @@
     const byPillar = {};
     rows.forEach((r) => {
       lastEntriesByKey(r).forEach((s) => {
+        if (isCelebrationDownloadKey(s.key)) return;
         const pillar = pillarForSection(s.section);
         if (!pillar) return;
         if (!byPillar[pillar]) byPillar[pillar] = { itemsAttempted: 0, itemsCorrect: 0, students: new Set() };
