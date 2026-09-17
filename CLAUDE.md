@@ -2531,6 +2531,72 @@ areas has a genuine activity, and if one area truly doesn't fit the
 project's real content, redesign the project's scope rather than
 padding it.
 
+### Digital deliverable idea bank (Art pillar and beyond)
+A reference list to browse when a new project needs its Art-pillar
+"studio" deliverable (§18's own spec above) or any other pillar's
+interactive piece — not a build queue, just candidate techniques,
+each one client-side and GitHub-Pages-compatible (this repo has no
+server beyond the one shared Apps Script backend — see §1 — so
+anything here must run as static HTML/CSS/JS or a third-party iframe/
+web-component embed, never a piece needing its own backend). The same
+list is mirrored in the STREAM Project Kit artifact (the reusable
+Diffit-prompt reference — see the "Standing rule" above) for browsing
+alongside the prompt itself.
+
+**Tier 1 — zero external account, everything lives in the repo.**
+Prefer this tier by default; it matches the site's existing
+`<script src=".../mathlive...">`/native-Canvas convention exactly, and
+needs no third-party sign-in for a teacher or student to hit.
+
+| Idea | Core tech | Math topic focus |
+|---|---|---|
+| p5.js sacred-geometry fractals (Sierpinski/Koch) | p5.js via CDN `<script>` | Geometric sequences, ratios, scale factor |
+| Animated SVG coordinate journey (a mapped route) | Inline SVG + CSS keyframes | Coordinate plane, distance formula, slope |
+| Color-mixing ratio mixer (RGB/HSL sliders) | `<input type="range">` + JS | Ratios, proportions, percentages |
+| Pixel-art coordinate-transformation grid | Canvas or CSS Grid + JS | Translations, reflections, rotations, dilations |
+| Web Audio frequency/harmonic synth | Native Web Audio API (no library) | Exponential functions, frequency ratios |
+| CSS 3D flip-cards (functions vs. relations) | Pure CSS 3D transforms | Functions, relations, domain/range, vertical line test |
+| p5.js trigonometric rose window | p5.js via CDN `<script>` | Circle properties, angles, radial symmetry, trig ratios |
+| Chart.js community-service data dashboard | Chart.js via CDN `<script>` + static data | Scatter plots, line of best fit, linear regression |
+| CSS parallax history-of-algebra timeline | Pure CSS `perspective`/`transform-style` | History of variables/expressions (narrative, not graded on its own) |
+| Canvas systems-of-inequalities shading art | Native Canvas API | Linear inequalities, systems, feasible regions |
+| p5.js recursive fractal tree | p5.js via CDN `<script>` | Geometric sequences, exponents, recursive functions |
+| Pure-CSS grid reflection/symmetry art | Pure CSS Grid + `:hover` | Axis reflections, symmetry, coordinate geometry |
+| Themed financial calculator (illuminated-manuscript skin, stewardship budget) | Plain JS arithmetic + custom CSS skin | Simple/compound interest, exponential growth — **the closest existing precedent is this site's own What-If Calculator pattern (§18, Ethical-Linear-Budgeting)**, skin it differently per project rather than reinventing the mechanic |
+
+**Tier 2 — needs a third-party tool to author the asset first, then an
+iframe/web-component embed (still fully static/GitHub-Pages-compatible
+once embedded, but adds an external account and an authoring step
+outside this repo).** Note which ones need an ongoing live embed of
+someone else's site (Desmos/GeoGebra/Canva/ThingLink/Scratch/PhET/
+Spline — that site's own uptime/policy becomes a dependency) versus
+which ones export one self-contained static file you commit into the
+repo like any other asset (Twine, Bitsy, Tinkercad's `.glb` + Lottie's
+`.json` — no ongoing dependency on the authoring tool once exported).
+
+| Idea | Embed mechanism | Math topic focus | Dependency note |
+|---|---|---|---|
+| Desmos stained-glass function art | Desmos Graphing Calculator iframe/API embed | Piecewise functions, domain/range | Free, no login needed to view a public embed |
+| GeoGebra arch/cathedral modeling | GeoGebra applet embed | Quadratics, vertex form, axis of symmetry | Free GeoGebra account to author |
+| Canva scale/proportions infographic | Canva published-design iframe embed | Unit conversion, scale factor | Free Canva account; embed is a static design, not code-driven |
+| Tinkercad 3D artifact via `<model-viewer>` | Google's `<model-viewer>` web component + exported `.glb` file committed to the repo | Surface area, volume, nets | Free Tinkercad account to model; once exported, zero ongoing dependency |
+| ThingLink interactive golden-ratio art overlay | ThingLink iframe embed | Golden ratio, Fibonacci, proportions | Needs a ThingLink account (free tier limited) |
+| PhET simulation + Canvas sketch overlay | Official PhET iframe embed + a Canvas layer on top | Slope-intercept, rate of change | Free, no account, official embed codes (University of Colorado) |
+| Twine interactive math-parable narrative | Twine exports one self-contained `.html` file | Systems of equations, multi-step equations | Free tool; commit the exported file like any other page asset |
+| Bitsy 8-bit virtual museum | Bitsy exports one self-contained `.html` file | Perimeter, area, scale | Same as Twine — export once, commit, no ongoing dependency |
+| Scratch embedded projectile-motion game | Official Scratch iframe embed | Quadratics, parabolas, trajectories | Needs a (free) scratch.mit.edu account; the game logic lives on Scratch's own site, only playback embeds here |
+| Lottie vector function-transformation animations | `lottie-web` player via CDN `<script>` + an exported animation `.json` | Function transformations (shifts, stretches) | Needs LottieFiles/SVGator/After-Effects+Bodymovin to author the `.json` first |
+| Spline WebGL 3D-solids showcase | Spline iframe/web-component embed | Euler's formula, 3D polyhedra, cross-sections | Free-tier Spline account; heavier WebGL load — check it runs acceptably on the school's actual Chromebooks before committing to it |
+
+**Rule**: default to Tier 1 unless a project's content genuinely needs
+a Tier 2 tool's specific capability (true 3D manipulation, a
+pre-built physics sim, an exported game) — Tier 1 has no external
+account for a teacher to manage, no third-party outage risk, and
+matches every other page on this site. When a Tier 2 idea is used,
+note in that project's own build notes (mirroring this file's own
+"resulting state" convention) which external tool/account it now
+depends on, so a future maintainer isn't surprised by it.
+
 ### Setting up a new paired activity (teacher/manual steps — Claude
 cannot edit the live Sheet or redeploy Apps Script itself; see §1)
 1. Add the activity's row to `ActivityCatalog` as normal (§3) — set
