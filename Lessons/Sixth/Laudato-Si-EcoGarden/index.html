@@ -2786,7 +2786,15 @@
       key: 'creation-sign',
       label: 'Creation Sign (Art & Religion)',
       answer: textSummary,
-      section: 'Day 2 - Creation Sign'
+      // Matches the label above and this page's own "Art & Religion:
+      // Creation Sign Studio" heading (verse picker included - see
+      // VERSES/#sign-verse-select) - the dashboard's pillar-tagging
+      // (pillarsForSection() in teacher-dashboard.html/
+      // projects-dashboard.html) matches this exact section string
+      // against keywords for BOTH pillars, so this one check counts
+      // toward Art and Religion, not just whichever the section string
+      // happened to name first.
+      section: 'Day 2 - Creation Sign (Art & Religion)'
     }, 'Your creation sign is locked in!');
     saveProgress();
   }

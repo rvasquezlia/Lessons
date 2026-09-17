@@ -2571,9 +2571,13 @@
     { match: /art|sign|design|creative|flyer/i, pillar: 'Art (A)' },
     { match: /math|ledger|budget|division|decimal|optimization|model|solv/i, pillar: 'Math (M)' }
   ];
-  function pillarForSection(section) {
-    const rule = STREAM_PILLAR_RULES.find((r) => r.match.test(section || ''));
-    return rule ? rule.pillar : null;
+  // Returns every matching pillar, not just the first - a section string
+  // naming more than one pillar (e.g. "Day 2 - Creation Sign (Art &
+  // Religion)") deliberately counts toward each one it names, since a
+  // real cross-pillar activity (a sign that must include a Bible verse,
+  // say) genuinely is both. Most sections still only ever match one.
+  function pillarsForSection(section) {
+    return STREAM_PILLAR_RULES.filter((r) => r.match.test(section || '')).map((r) => r.pillar);
   }
 
   // A certificate/badge download is a one-click reward available once a
@@ -2643,21 +2647,25 @@
     rows.forEach((r) => {
       lastEntriesByKey(r).forEach((s) => {
         if (isCelebrationDownloadKey(s.key)) return;
-        const pillar = pillarForSection(s.section);
-        if (!pillar) return;
-        if (!byPillar[pillar]) byPillar[pillar] = { itemsAttempted: 0, itemsCorrect: 0, students: new Set() };
-        byPillar[pillar].itemsAttempted++;
-        // A pillar tracks *engagement* with that STREAM area, not right/
-        // wrong - a submitted creative/reflective item (verdict
-        // 'reflection', e.g. a STREAM project's Garden Layout/Creation
-        // Sign/Celebrate checks, which have no objectively correct
-        // answer) counts as complete here exactly like a graded 'correct'
-        // item does. This is deliberately different from the academic
-        // ScorePct/ItemsAttempted/ItemsCorrect formula (§8), which still
-        // excludes 'reflection' entirely - that formula measures being
-        // right, this one measures having done the work.
-        if (s.verdict === 'correct' || s.verdict === 'reflection') byPillar[pillar].itemsCorrect++;
-        byPillar[pillar].students.add(r.email);
+        const pillars = pillarsForSection(s.section);
+        // A genuinely cross-pillar item (see pillarsForSection) counts
+        // toward every pillar it names, not just one - each gets its own
+        // full attempted/correct tally from this same submission.
+        pillars.forEach((pillar) => {
+          if (!byPillar[pillar]) byPillar[pillar] = { itemsAttempted: 0, itemsCorrect: 0, students: new Set() };
+          byPillar[pillar].itemsAttempted++;
+          // A pillar tracks *engagement* with that STREAM area, not right/
+          // wrong - a submitted creative/reflective item (verdict
+          // 'reflection', e.g. a STREAM project's Garden Layout/Creation
+          // Sign/Celebrate checks, which have no objectively correct
+          // answer) counts as complete here exactly like a graded 'correct'
+          // item does. This is deliberately different from the academic
+          // ScorePct/ItemsAttempted/ItemsCorrect formula (§8), which still
+          // excludes 'reflection' entirely - that formula measures being
+          // right, this one measures having done the work.
+          if (s.verdict === 'correct' || s.verdict === 'reflection') byPillar[pillar].itemsCorrect++;
+          byPillar[pillar].students.add(r.email);
+        });
       });
     });
     return Object.keys(byPillar).map((p) => ({
