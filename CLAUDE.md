@@ -179,7 +179,26 @@ directly instead.
 `onload` never fires (network filter, ad blocker). `onDataLoaded()`'s
 `populateFilters()`/`renderAll()` call (dashboard) is wrapped in
 try/catch the same way, so a render bug surfaces as a visible message
-instead of a silent partial render or a stuck spinner.
+instead of a silent partial render or a stuck spinner. **A second,
+earlier try/catch wraps `decorateRow`/`applyDuplicateAnswerFlags`/
+`applyLookedUpFlags`** (`teacher-dashboard.html`) and `decorateProjectRow`
+(`projects-dashboard.html`) too — these run *before*
+`hideLoadingIndicator()`/the gate-hiding lines, so without their own
+guard a throw there (not just in the render pass) would leave the page
+stuck on the spinner or gate with no visible error at all. **Why:**
+`teacher-dashboard.html` is the only page doing this per-row/cross-row
+analysis at all — `projects-dashboard.html` skips the two cross-row
+passes (`decorateProjectRow` is deliberately lighter, no integrity
+engine — see §18), and `index.html` never touches `Progress`/
+`SubmissionsLog` data in the first place (its own `identify` payload
+is just email/role/grade) — so this exact failure mode was only ever
+reachable from the teacher dashboard, which is why it was the one page
+that would intermittently "just not load" while the other two never
+did. `decorateRow`/`decorateProjectRow` also normalize every parsed
+submission's `key` to a string right after parsing
+(`String(s.key || '')`) — every downstream check calls
+`.startsWith()`/`.slice()`/`===` on it, and a legacy or hand-edited
+`SubmissionsLog` entry missing `key` used to throw exactly there.
 
 ### Cache-busting
 Every page references `token-cache.js`/`lesson-auth.js` with a `?v=`
@@ -1080,6 +1099,232 @@ teacher-view reveal only ever shows whichever group is currently
 selected in that browser session (no way to see all groups at once
 without picking each via `chooseStrategyGroup()`).
 
+### Candidate lesson-widget idea bank (regular pages — not STREAM projects)
+A 120-idea brainstorm (six per-grade-track batches: Sixth, Seventh,
+Eighth, Seventh Honors, Pre-AP Algebra I) for interactive widgets on
+**regular per-unit pages** (`Practice-Set.html`/`Word-Problems.html`/
+`Review.html`/`Test-Prep.html`) — a different category from §18's
+STREAM project idea bank, which is for a whole two-day project's Art
+studio. Not a build queue; a reference to draw from when asked to
+build a new widget for a specific unit. **§14's `STREAM Math
+Curriculum Resources.xlsx`** is a fuller, separate 375-row raw source
+covering the same two categories (plus a whole-project one) — check it
+too, especially its `Activity Type / Exercise` category, which is
+organized by lesson phase rather than by topic and so attaches to any
+already-built unit regardless of grade.
+
+**Feasibility tiers** (same framework as §18's idea bank):
+- **Native, zero dependency** — the large majority: any Canvas/SVG-
+  based plotter, drag-and-drop, slider, protractor, branching-path
+  engine, click-to-fix inspector, node/tree graph, financial ledger,
+  Web Audio generator, or number-line widget. All match patterns the
+  site already has real precedent for (`renderNumberLine()`,
+  `numberLineSvg()`, `createVocabMatch()`'s drag mechanics, `<canvas>`
+  usage across several units).
+- **New small CDN library, still no account** — Chart.js (already a
+  real, vetted precedent — see §18's idea bank and Youth-Festival-
+  Logistics's own dashboard; the safe default for any scatter-plot/
+  box-plot/statistics idea over the heavier, unprecedented Plotly.js),
+  p5.js (also already vetted), SortableJS (a drag-sort list library —
+  prefer reusing `createVocabMatch`'s existing hand-rolled drag
+  mechanics unless SortableJS's specific reordering behavior is
+  genuinely needed), Leaflet.js (an interactive zoomable map — only
+  worth the new dependency for a genuine map-based idea).
+- **Tier 2 — third-party tool + embed** (same shape as §18's own Tier
+  2): Desmos/GeoGebra (2D and 3D) embeds, ThingLink/Genially embeds,
+  `<model-viewer>` + an exported `.glb` (Tinkercad-style), Twine
+  (exports one self-contained `.html` file), Lottie (`lottie-web`
+  player + an exported `.json`).
+- **Genuinely new, standout technique**: a **SHA-256 hash-lock**
+  ("SHA-256 Hash Quiz/Unlock Engine/Matrix," several grades) — native
+  `crypto.subtle.digest('SHA-256', ...)`, zero library, zero account.
+  Hash the correct answer once at build time; compare the hash of the
+  student's typed answer instead of storing the plaintext correct
+  value in page source, so a curious student can't find answers via
+  View Source/DevTools before attempting. **This is additive, not a
+  replacement for saving** — it still must call `LessonCheck.check()`/
+  `.submit()` with a real `record` exactly per §5's rule, storing the
+  student's actual plaintext answer for the teacher dashboard; the
+  hash only gates what's visible in the page's own source, never what
+  reaches `SubmissionsLog`.
+- **§5's rule applies to every idea here without exception** — however
+  novel the front-end interaction, it still isn't graded/visible to a
+  teacher until it ends in a real `LessonCheck.check()`/`.submit()`
+  call with its record argument. This is the single most common way a
+  fancy new widget silently loses the exact data it was built to
+  collect.
+- **Prefer an existing shared component over a new one that does the
+  same job** — any "sort/categorize into groups" idea should reach for
+  `createCardSelect`/`createVocabMatch` (§7) before a new drag-and-drop
+  library; a raw `<select>` is still never used for student-facing
+  graded content (§7's own rule).
+
+**Honest fit check against this site's actual built units** — most of
+these 120 ideas describe topics for units this site hasn't built yet,
+not widgets for an existing page. Before treating any idea below as
+"ready to attach," check it against what that grade's units actually
+cover today (§10's own capability matrix, §11 for Honors/Pre-AP):
+- **Sixth** (real units: Decimal-Operations, Operations-with-
+  Fractions — decimal/fraction arithmetic only): none of the 20 ideas
+  below overlap either unit's actual scope (ratios, percents, integers,
+  one-step equations, geometry nets/area, statistics, exponents are
+  all future-curriculum topics with no built unit yet).
+- **Seventh** (real units: Integers, Rational-Numbers, Operations-with-
+  Rationals — signed rational-number arithmetic): only *Ledger Account
+  Tracker* and *Rational Number Maze* genuinely overlap (Rational-
+  Numbers/Operations-with-Rationals). Scale drawings, percent change,
+  inequalities, circles/angles, two-step equations, probability, and
+  proportional relationships are future-curriculum topics.
+- **Eighth** (real units: Linear-Equations, Literal-Equations, Linear-
+  Inequalities — single-unknown solving, formula rearrangement,
+  inequalities): only *Equation Line Debugger* (variables on both
+  sides) directly overlaps Linear-Equations. Systems, Pythagorean
+  theorem, transformations, scientific notation, and functions-in-
+  general are future-curriculum topics.
+- **Seventh Honors** (real unit: Squares-Cubes-and-Roots — perfect
+  squares/cubes 1-20/1-15, working backward with roots, nothing
+  broader): only *3D Pythagorean Distance* (roots) and loosely
+  *Exponent Mosaic Puzzle* (exponent laws) brush against this narrow
+  scope; compound inequalities, real-number classification, 3D volume,
+  dilations, variation, angle proofs, polynomials, and fractals are
+  well beyond it.
+- **Pre-AP Algebra I** (real unit: Linear-Functions — domain/range,
+  slope, slope-intercept form, function notation, real-world linear
+  modeling, nothing broader): *Slope Scaffolder*, *Domain/Range Card
+  Sort*, *Function Family Sorter*, and *Vertical Line Tester* genuinely
+  overlap. Piecewise functions, quadratics, systems, exponential
+  growth, radicals, and literal equations describe a fuller Algebra I
+  course this one unit doesn't cover.
+
+The full lists (kept here so a future session building any of these
+not-yet-existing units has real starting material, not just a topic
+name):
+
+**Sixth Grade**
+
+| Activity | Math focus | Tech | Integration note |
+|---|---|---|---|
+| Ratio Mosaic Blender | Ratios | JS color sliders, SVG canvas | Blends HSL color ratios into digital mosaic tiles from ratio equivalencies. |
+| Unit Rate Drag-Drop | Rates & prices | SortableJS | Drags items onto a virtual scale to compare unit prices/optimize budgets. |
+| Percent Window Shading | Percents | Interactive grid canvas | Shades grid proportions to design virtual stained-glass windows from target percents. |
+| F-D-P Equivalence Cards | Fraction/decimal/percent equivalence | Drag-and-drop JS | Matches equivalent representations to build structural brick towers. |
+| Absolute Value Explorer | Integers & elevation | Vertical number-line widget | Maps sea level/temperature variation above and below zero. |
+| Coordinate Art Hunt | Quadrant I grid | Coordinate plot engine | Plots ordered pairs to reveal a hidden symbol via vector lines. |
+| Balance Scale Solver | One-step equations | HTML5 canvas manipulative | Balances visual weights on a beam scale to isolate a variable. |
+| Inequality Thermometer | One-variable inequalities | Interactive number-line widget | Plots temperature thresholds using open/closed ray endpoints. |
+| Expression Translator | Algebraic expressions | Text highlighter + drag JS | Highlights problem phrases to build expressions from dragged symbols. |
+| Net Unfolder 3D | Surface area nets | CSS 3D perspective transforms | Unfolds 3D prisms into flat nets to compute paint coverage. |
+| Composite Area Painter | Area of polygons | HTML5 drawing canvas | Decomposes floor plans into rectangles/triangles to total the area. |
+| Statistical Dashboard | Mean, median, IQR | Chart.js | Displays growth data as box plots/histograms. |
+| Symmetry Mirror Plotter | Polygon symmetry | SVG mirror-plot engine | Auto-reflects a plotted polygon's vertices across an axis. |
+| Order of Ops Path Maze | PEMDAS evaluation | Branching HTML/JS engine | Solves multi-step expressions to navigate a maze. |
+| Exponent Tile Builder | Exponents & area models | HTML canvas tile engine | Builds square arrays to show squared/cubed values visually. |
+| Word Problem Scaffolder | Keyword translation | Sentence-to-symbol dragger | Connects operation words (sum, product, less than) to symbols. |
+| Box Plot Mass Analyzer | Data distributions | Chart.js/Plotly.js | Compares measures of center for a data set. |
+| Stained Glass Circles | Perimeter & area (intro) | Desmos/GeoGebra embed | Builds concentric-circle art from radius/diameter parameters. |
+| Ratio Table Escape Room | Equivalent ratios | SHA-256 hash-lock engine | Fills missing proportional-table values to unlock a virtual room. |
+| Sacred Geometry Hotspots | Mastery review | ThingLink/Genially embed | Solves review problems pinned to artwork to unlock exhibits. |
+
+**Seventh Grade**
+
+| Activity | Math focus | Tech | Integration note |
+|---|---|---|---|
+| Scale Blueprint Renderer | Scale drawings | GeoGebra applet embed | Resizes a blueprint dynamically via a scale factor. |
+| Ledger Account Tracker | Rational numbers | JS financial-ledger widget | Tracks a fund balance with signed decimals/fractions. |
+| Percent Change Calculator | Percents & discounts | HTML form + canvas bar | Computes percent change in a population over time. |
+| Two-Step Island Navigator | Multi-step inequalities | Interactive number line | Graphs a solution set as a bounded "safe zone." |
+| Rose Window Circumference | Area & circumference (`\pi`) | SVG canvas engine | Calculates tubing length/panel area for a circular design. |
+| Angle Inspector | Supplementary/complementary angles | Interactive protractor widget | Measures/solves for a missing angle in a truss joint. |
+| Algebra Tile Balance | Two-step equations | HTML drag-and-drop tiles | Zeroes integer pairs to solve `ax + b = c`. |
+| Cross-Section Sculptor | 3D slicing | `<model-viewer>`/WebGL | Slices a 3D solid to reveal a 2D cross-section. |
+| Probability Spinner Sim | Theoretical vs. experimental probability | Native JS random simulator | Runs many trial spins to compare live vs. theoretical odds. |
+| Proportional Card Sort | Linear vs. non-proportional | SortableJS card sort | Sorts tables/graphs/equations into proportional categories. |
+| Scale Map Explorer | Proportions & maps | Leaflet.js zoomable map | Computes real distance from a map scale ratio. |
+| Receipt Tax Debugger | Tax, tip, markup | Click-to-fix error JS | Finds and corrects an error on a sample receipt. |
+| Direct Variation Visualizer | Constant of proportionality (`k`) | Coordinate plot engine | Plots `y = kx` for a real flow-rate scenario. |
+| Sentence-to-Symbol Builder | Two-step equation word problems | Sentence-to-symbol dragger | Converts a multi-sentence scenario into an equation. |
+| Compound Event Tree | Compound probability | Interactive node-graph JS | Builds a tree diagram to compute a sample space. |
+| Rational Number Maze | Fraction/decimal operations | Branching HTML engine | Solves signed operations to advance through a timeline path. |
+| Prism Volume Calculator | Volume & surface area | CSS 3D view engine | Computes volume/surface area for a modular container. |
+| Pixel Art Resizer | Scale factors & dilations | HTML canvas pixel grid | Multiplies pixel coordinates by a scale factor. |
+| Frayer Model Flip Cards | Vocabulary | Pure CSS 3D flip cards | Uncovers a definition/example/metaphor per term. |
+| Semester Benchmark Matrix | Mastery review | SHA-256 hash-lock engine | Solves benchmark problems to assemble a certification mosaic. |
+
+**Eighth Grade**
+
+| Activity | Math focus | Tech | Integration note |
+|---|---|---|---|
+| Roof Slope Designer | Slope-intercept form (`y = mx + b`) | Desmos graph embed | Adjusts `m`/`b` to design a rooflines's pitch. |
+| Linear Collision Simulator | Systems of equations | HTML canvas animation | Animates two trajectories to find their intersection. |
+| Pythagorean Blueprint | Pythagorean theorem (`a^2 + b^2 = c^2`) | Interactive right-triangle JS | Computes a diagonal support-beam length. |
+| Sprite Transformation Grid | Rigid transformations | Coordinate grid canvas | Rotates/translates/reflects an 8-bit sprite. |
+| Cosmic Scale Explorer | Scientific notation | Interactive zoom-slider JS | Expresses astronomical/microscopic scales in scientific notation. |
+| Real Number Tree Sort | Rational vs. irrational | Drag-and-drop categorizer | Classifies numbers into real-number subsets. |
+| Stewardship Scatter Plot | Scatter plots & best-fit line | Chart.js | Plots service hours vs. impact with a trendline. |
+| 3D Curved Vessel Modeler | Volume (cylinders/cones/spheres) | GeoGebra 3D embed | Computes fluid capacity of a custom 3D vessel. |
+| Equation Line Debugger | Variables on both sides | Interactive line inspector | Finds distribution/sign errors in multi-step work. |
+| Transversal Line Angle Tool | Angle relationships | Interactive vector-plot JS | Analyzes parallel lines cut by a transversal. |
+| Function Mapper | Functions vs. relations | Drag-arrow SVG engine | Connects inputs to outputs to test a function rule. |
+| Linear vs. Non-Linear Match | Rate of change | Card-sort engine | Categorizes graphs/tables/equations by rate-of-change type. |
+| Distance Formula Map | Coordinate distance | Coordinate plot engine | Applies the distance formula to a supply-route map. |
+| Exterior Angle Theorem Tool | Triangle angle sums | p5.js dynamic geometry | Manipulates triangle vertices to verify the exterior-angle rule. |
+| Slope Scaffolder | Slope word problems | Text highlighter widget | Extracts a rate/initial value to build `y = mx + b`. |
+| Scientific Notation Mosaic | Exponent rules & notation | p5.js canvas generator | Solves sci-notation operations to unlock mosaic tiles. |
+| Graphing Systems Target | Systems of equations | Coordinate plot engine | Adjusts two lines to hit a target coordinate. |
+| Transformational Mosaic | Rotations & dilations | SVG vector plotter | Programs a transformation sequence into tessellation art. |
+| Bivariate Data Inspector | Association & clustering | SHA-256 hash-lock engine | Evaluates scatter-plot clusters/outliers/trends. |
+| 8th Grade Algebra Readiness | Comprehensive mastery | Branching Twine HTML game | Solves cumulative problems through a narrative quest. |
+
+**Seventh Honors (Accelerated)**
+
+| Activity | Math focus | Tech | Integration note |
+|---|---|---|---|
+| Compound Inequality Range | Multi-step compound inequalities | Dual number-line widget | Models an AND/OR range (e.g. a safe pH range). |
+| Proportions to Slope Bridge | Unit rate to slope (`m`) | GeoGebra dynamic graph | Turns a unit-rate table into a `y = mx` graph. |
+| Complex Symbol Translator | Multi-step word problems | Sentence-to-symbol builder | Parses a dense scenario into an equation with grouping symbols. |
+| Venn Real Number Sorter | Number systems | Drag & drop Venn diagram | Categorizes real/rational/irrational/integer/natural numbers. |
+| Cathedral Volume Modeler | Composite 3D volume & surface area | `<model-viewer>`/WebGL | Computes volume/surface area of combined solids. |
+| Exponent Mosaic Puzzle | Exponent laws | Canvas puzzle-snap JS | Simplifies exponential expressions to snap puzzle pieces together. |
+| Form Conversion Studio | Slope-intercept ↔ standard form | Dynamic step canvas | Converts `y = mx + b` into `Ax + By = C`. |
+| 3D Pythagorean Distance | Pythagorean theorem in 3D | Interactive 3D canvas | Computes a diagonal space distance inside a rectangular prism. |
+| Dilation Art Resizer | Transformations & dilations | Coordinate grid engine | Performs a center-of-dilation transform on an art polygon. |
+| Variation Simulator | Direct vs. inverse variation | Interactive slider graph | Models `y = kx` vs. `y = k/x` for a physics scenario. |
+| Angle Proof Scaffolder | Geometric angle logic | Dropdown logic flowchart | Assembles a formal multi-step angle proof. |
+| Stewardship Dashboard | Percent error & absolute change | Chart.js dashboard | Computes percent error in a resource-allocation prediction. |
+| Break-Even Point Analyzer | Systems of equations | Interactive graph overlay | Solves a fundraising break-even scenario. |
+| Area Model Polynomials | Intro polynomial multiplication | Interactive tile canvas | Multiplies binomials via a visual area grid. |
+| Sci-Notation Inspector | Scientific-notation operations | Interactive step reveal | Debugs an addition/multiplication with mismatched powers of 10. |
+| Residual Plot Analyzer | Bivariate statistics & residuals | Chart.js scatter engine | Evaluates whether a linear model fits the data. |
+| Fractal Sequence Generator | Geometric sequences & fractals | p5.js canvas generator | Codes a recursive fractal tree from a sequence ratio. |
+| Multistep Error Traps | Equation solving | Line-by-line click inspector | Flags distribution/sign-flip errors in accelerated work. |
+| Honors Vocab Match Wheel | Accelerated terms | Interactive SVG wheel | Matches terms (radicand, hypotenuse, bivariate, ...) to definitions. |
+| Honors Mastery Challenge | Cumulative review | SHA-256 hash-lock matrix | Validates multi-step solutions to complete a final project. |
+
+**Pre-AP Algebra I**
+
+| Activity | Math focus | Tech | Integration note |
+|---|---|---|---|
+| Piecewise Stained Glass | Piecewise functions, domain/range | Desmos/GeoGebra embed | Restricts domains to compose stained-glass art. |
+| Parabola Arch Modeler | Quadratics (`y = a(x-h)^2 + k`) | Coordinate plot/GeoGebra | Fits a parabola over a historical archway. |
+| Feasible Region Shader | Systems of linear inequalities | HTML5 canvas shading | Colors overlapping half-planes into a constraint region. |
+| Growth Parable Simulator | Exponential functions (`y = a·b^x`) | Chart.js interactive curves | Compares linear vs. exponential growth curves. |
+| Vector Motion Animator | Function transformations | Lottie/SVG keyframe engine | Animates `f(x)+k`/`f(x-h)`/`af(x)` shifts. |
+| Factoring Area Model | Quadratic factoring (`ax^2+bx+c`) | Interactive tile canvas | Arranges tiles into a rectangle to factor an expression. |
+| System Scenario Builder | Linear systems word problems | Sentence-to-symbol scaffolder | Translates a mixture/rate scenario into a 2x2 system. |
+| Linear Regression Dashboard | Scatter plots & correlation (`r`) | Chart.js | Computes a correlation coefficient and best-fit line. |
+| Radical Simplifier Staircase | Simplifying radicals | Step-by-step reveal engine | Simplifies a radical via a factor tree. |
+| Domain/Range Card Sort | Domain & range notation | SortableJS card sort | Matches graphs to interval/inequality notation. |
+| Literal Variable Isolator | Literal equations & formulas | Step drag manipulative | Rearranges a formula (`F = ma`, `V = lwh`) to isolate a variable. |
+| Discriminant Visualizer | Quadratic formula & roots | Dynamic graphing engine | Computes `b^2-4ac` to show 2/1/0 real roots. |
+| Sequence Audio Synth | Arithmetic & geometric sequences | Web Audio API generator | Generates pitch frequencies from a sequence's step pattern. |
+| Trajectory Motion Canvas | Quadratic projectile word problems | HTML5 motion canvas | Models `h(t) = -16t^2 + v_0 t + h_0`. |
+| Vertical Line Tester | Functions vs. relations | Interactive SVG mapper | Drags a vertical line across a curve to test the function rule. |
+| Factoring Trap Debugger | Quadratic equations | Interactive line inspector | Corrects a common factoring error. |
+| Decay Formula Calculator | Exponential decay word problems | JS dynamic form engine | Calculates half-life decay/depreciation over time. |
+| Function Family Sorter | Linear vs. exponential vs. quadratic | Multi-column drag-drop | Sorts equations/graphs/tables by function family. |
+| Systems Inequality Puzzle | Feasible region constraints | Canvas validator engine | Tests whether a point satisfies a system of inequalities. |
+| Pre-AP Algebra Quest | Comprehensive course mastery | Branching Twine HTML engine | Solves cumulative problems through a narrative project. |
+
 ---
 
 ## 11. Grade tracks beyond 6/7/8
@@ -1603,6 +1848,88 @@ standard citation.**
   Use `openpyxl` (`pip install openpyxl` first, not preinstalled) to
   read raw cell values. One unit can span several weekly rows; collect
   every standard from every genuinely-matching row before finalizing.
+- **`STREAM Math Curriculum Resources.xlsx` (repo root)** — a 375-row
+  raw idea bank (5 sheets, one per grade/track: `Math 6`, `Math 7`,
+  `Math 8`, `Math 7 Honors`, `Pre-AP Algebra I`; 75 rows per sheet, 7
+  columns: `Category`, `Number`, `Title`, `Aligned Math Topic`,
+  `Description`, `Tech / Tools Needed`, `STREAM / Phase / Mechanic`).
+  **Browse it directly with `openpyxl` rather than expecting every row
+  reproduced here** — §10's own "Candidate lesson-widget idea bank"
+  and §18's own "Digital deliverable idea bank" are curated, evaluated
+  subsets of this same material (plus an earlier, separate 120-idea
+  batch); this file is the fuller raw source behind them.
+  - **Three categories per sheet, 25 rows each**: `Digital Arts
+    Project` (a whole-project STREAM idea, same shape as §18's bank),
+    `Lesson Digital Resource` (a reusable widget/mechanic, same shape
+    as §10's bank), `Activity Type / Exercise` (a technique tied to
+    one lesson **phase** — Vocabulary/Review/Explanation/Practice/
+    Test Prep/Word Problems, the site's own six graded page types
+    per §10 — e.g. "Find the Lie" for Review, "Translation Matrix" for
+    Word Problems, "Timed Challenge" for Test Prep).
+  - **`Activity Type / Exercise` is the most immediately usable
+    category** — unlike the other two, its ideas are genuinely
+    topic-agnostic techniques for an existing page type, so they
+    attach to any already-built unit's matching page regardless of
+    grade; the other two categories mostly describe whole new
+    STREAM projects or generic widgets tied to a not-yet-built topic
+    (see the fit check below).
+  - **`Aligned Math Topic` is a recycled 11-13-item list per grade,
+    not a per-row curation** — each grade's 25 rows just cycle
+    through that grade's own short topic list twice; `Activity Type /
+    Exercise`'s own `Tech / Tools Needed` column duplicates its
+    `STREAM / Phase / Mechanic` column verbatim (both just say
+    `Phase: <name>`) rather than naming real tech for that row. Don't
+    over-trust either column's specificity on this category.
+  - **Honest fit check against this site's actual built units**
+    (same exercise as §10's own idea bank, and the same finding):
+    **Sixth**'s 13 topics (Coordinate Plane, GCF/LCM, Exponents,
+    Expressions, One-Step Eqs, Inequalities, Area, Surface Area,
+    Volume, Statistics, Box Plots, Ratios, Percents) — none overlap
+    the two real units (Decimal-Operations, Operations-with-
+    Fractions). **Seventh**'s 12 topics — `Rational Numbers` directly
+    overlaps Rational-Numbers/Operations-with-Rationals; the rest
+    (Proportionality, two-step equations/inequalities, scale
+    drawings, probability, angles, volume, cross-sections) don't.
+    **Eighth**'s 11 topics — `Linear Eqs` and `Slope/y-int` overlap
+    Linear-Equations; the rest (Pythagorean theorem, systems, sci
+    notation, transformations, scatter plots, bivariate data,
+    radicals) don't. **Seventh Honors**'s 11 topics — **none**
+    mention squares, cubes, or roots at all, so nothing here overlaps
+    the actual built unit (Squares-Cubes-and-Roots); this sheet's
+    topics (multi-step equations, compound inequalities, polynomials,
+    literal equations, probability trees) describe a different,
+    broader pre-algebra course. **Pre-AP Algebra I**'s 11 topics —
+    `Domain/Range` overlaps Linear-Functions; the rest (quadratics,
+    factoring, exponential growth/decay, piecewise, absolute value,
+    rational exponents, sequences) describe a fuller Algebra I course
+    this one unit doesn't cover — same pattern §10's own idea bank
+    already found.
+  - **A few genuinely new tools/techniques worth naming** (beyond what
+    §10/§18 already catalog): native HTML `<details>`/`<summary>` for
+    a step-reveal (zero JS, zero library — prefer this over a
+    hand-rolled reveal function for a simple show/hide); `window.
+    localStorage` for a badge/gamification system (real site precedent
+    already exists — `token-cache.js`'s token cache, `ThemeToggle`'s
+    `lia_theme` — same "per-viewer convenience only" caveat as
+    anywhere else localStorage is used on this site: never a
+    substitute for the real `Progress` save); JSXGraph (a coordinate-
+    grid-plotting library, CDN script, no account — a Tier-1-style
+    alternative to a Desmos/GeoGebra embed when the grid itself needs
+    to be custom-styled rather than just displayed); KaTeX (a lighter
+    CDN alternative to the `mathjax@3` this site already loads for
+    feedback-text LaTeX — evaluate before swapping, since MathJax is
+    already the established, working convention per §7); Matter.js (a
+    2D physics engine, CDN script — for a genuine collision/projectile-
+    motion idea, heavier than plain Canvas math); Fabric.js (an
+    object-model canvas library — prefer plain `<canvas>`/native HTML5
+    drag unless Fabric's specific object-manipulation API is actually
+    needed); Three.js (WebGL, for a genuinely custom 3D scene beyond
+    what `<model-viewer>` + a static exported asset already covers).
+    **`CryptoJS`/a "SHA-256 JS library"** appears here for the same
+    hash-lock idea §10 already flags — prefer the native
+    `crypto.subtle.digest('SHA-256', ...)` Web Crypto API over adding
+    CryptoJS as a dependency; zero library either way, but only one of
+    them needs zero `<script>` tags.
 
 ---
 
@@ -2530,6 +2857,75 @@ pillar off the list — design the project so each of the six STREAM
 areas has a genuine activity, and if one area truly doesn't fit the
 project's real content, redesign the project's scope rather than
 padding it.
+
+### Digital deliverable idea bank (Art pillar and beyond)
+A reference list to browse when a new project needs its Art-pillar
+"studio" deliverable (§18's own spec above) or any other pillar's
+interactive piece — not a build queue, just candidate techniques,
+each one client-side and GitHub-Pages-compatible (this repo has no
+server beyond the one shared Apps Script backend — see §1 — so
+anything here must run as static HTML/CSS/JS or a third-party iframe/
+web-component embed, never a piece needing its own backend). The same
+list is mirrored in the STREAM Project Kit artifact (the reusable
+Diffit-prompt reference — see the "Standing rule" above) for browsing
+alongside the prompt itself. **§14's `STREAM Math Curriculum
+Resources.xlsx`** is a fuller, separate 375-row raw source with its
+own whole-project `Digital Arts Project` category per grade — check it
+too before designing a new project's Art deliverable.
+
+**Tier 1 — zero external account, everything lives in the repo.**
+Prefer this tier by default; it matches the site's existing
+`<script src=".../mathlive...">`/native-Canvas convention exactly, and
+needs no third-party sign-in for a teacher or student to hit.
+
+| Idea | Core tech | Math topic focus |
+|---|---|---|
+| p5.js sacred-geometry fractals (Sierpinski/Koch) | p5.js via CDN `<script>` | Geometric sequences, ratios, scale factor |
+| Animated SVG coordinate journey (a mapped route) | Inline SVG + CSS keyframes | Coordinate plane, distance formula, slope |
+| Color-mixing ratio mixer (RGB/HSL sliders) | `<input type="range">` + JS | Ratios, proportions, percentages |
+| Pixel-art coordinate-transformation grid | Canvas or CSS Grid + JS | Translations, reflections, rotations, dilations |
+| Web Audio frequency/harmonic synth | Native Web Audio API (no library) | Exponential functions, frequency ratios |
+| CSS 3D flip-cards (functions vs. relations) | Pure CSS 3D transforms | Functions, relations, domain/range, vertical line test |
+| p5.js trigonometric rose window | p5.js via CDN `<script>` | Circle properties, angles, radial symmetry, trig ratios |
+| Chart.js community-service data dashboard | Chart.js via CDN `<script>` + static data | Scatter plots, line of best fit, linear regression |
+| CSS parallax history-of-algebra timeline | Pure CSS `perspective`/`transform-style` | History of variables/expressions (narrative, not graded on its own) |
+| Canvas systems-of-inequalities shading art | Native Canvas API | Linear inequalities, systems, feasible regions |
+| p5.js recursive fractal tree | p5.js via CDN `<script>` | Geometric sequences, exponents, recursive functions |
+| Pure-CSS grid reflection/symmetry art | Pure CSS Grid + `:hover` | Axis reflections, symmetry, coordinate geometry |
+| Themed financial calculator (illuminated-manuscript skin, stewardship budget) | Plain JS arithmetic + custom CSS skin | Simple/compound interest, exponential growth — **the closest existing precedent is this site's own What-If Calculator pattern (§18, Ethical-Linear-Budgeting)**, skin it differently per project rather than reinventing the mechanic |
+
+**Tier 2 — needs a third-party tool to author the asset first, then an
+iframe/web-component embed (still fully static/GitHub-Pages-compatible
+once embedded, but adds an external account and an authoring step
+outside this repo).** Note which ones need an ongoing live embed of
+someone else's site (Desmos/GeoGebra/Canva/ThingLink/Scratch/PhET/
+Spline — that site's own uptime/policy becomes a dependency) versus
+which ones export one self-contained static file you commit into the
+repo like any other asset (Twine, Bitsy, Tinkercad's `.glb` + Lottie's
+`.json` — no ongoing dependency on the authoring tool once exported).
+
+| Idea | Embed mechanism | Math topic focus | Dependency note |
+|---|---|---|---|
+| Desmos stained-glass function art | Desmos Graphing Calculator iframe/API embed | Piecewise functions, domain/range | Free, no login needed to view a public embed |
+| GeoGebra arch/cathedral modeling | GeoGebra applet embed | Quadratics, vertex form, axis of symmetry | Free GeoGebra account to author |
+| Canva scale/proportions infographic | Canva published-design iframe embed | Unit conversion, scale factor | Free Canva account; embed is a static design, not code-driven |
+| Tinkercad 3D artifact via `<model-viewer>` | Google's `<model-viewer>` web component + exported `.glb` file committed to the repo | Surface area, volume, nets | Free Tinkercad account to model; once exported, zero ongoing dependency |
+| ThingLink interactive golden-ratio art overlay | ThingLink iframe embed | Golden ratio, Fibonacci, proportions | Needs a ThingLink account (free tier limited) |
+| PhET simulation + Canvas sketch overlay | Official PhET iframe embed + a Canvas layer on top | Slope-intercept, rate of change | Free, no account, official embed codes (University of Colorado) |
+| Twine interactive math-parable narrative | Twine exports one self-contained `.html` file | Systems of equations, multi-step equations | Free tool; commit the exported file like any other page asset |
+| Bitsy 8-bit virtual museum | Bitsy exports one self-contained `.html` file | Perimeter, area, scale | Same as Twine — export once, commit, no ongoing dependency |
+| Scratch embedded projectile-motion game | Official Scratch iframe embed | Quadratics, parabolas, trajectories | Needs a (free) scratch.mit.edu account; the game logic lives on Scratch's own site, only playback embeds here |
+| Lottie vector function-transformation animations | `lottie-web` player via CDN `<script>` + an exported animation `.json` | Function transformations (shifts, stretches) | Needs LottieFiles/SVGator/After-Effects+Bodymovin to author the `.json` first |
+| Spline WebGL 3D-solids showcase | Spline iframe/web-component embed | Euler's formula, 3D polyhedra, cross-sections | Free-tier Spline account; heavier WebGL load — check it runs acceptably on the school's actual Chromebooks before committing to it |
+
+**Rule**: default to Tier 1 unless a project's content genuinely needs
+a Tier 2 tool's specific capability (true 3D manipulation, a
+pre-built physics sim, an exported game) — Tier 1 has no external
+account for a teacher to manage, no third-party outage risk, and
+matches every other page on this site. When a Tier 2 idea is used,
+note in that project's own build notes (mirroring this file's own
+"resulting state" convention) which external tool/account it now
+depends on, so a future maintainer isn't surprised by it.
 
 ### Setting up a new paired activity (teacher/manual steps — Claude
 cannot edit the live Sheet or redeploy Apps Script itself; see §1)

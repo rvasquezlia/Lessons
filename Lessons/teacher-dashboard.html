@@ -985,7 +985,6 @@
   }, 10000);
 
   function onDataLoaded(result) {
-    allRows = (result.rows || []).map(decorateRow);
     roster = result.roster || [];
     activityCatalog = result.activityCatalog || [];
     teacherScope = result.scope || null;
@@ -993,12 +992,37 @@
     // it reads teammatesForRow() to skip a mirrored teammate answer.
     allPairs = result.pairs || [];
     allProjectStates = result.projectStates || [];
-    applyDuplicateAnswerFlags(allRows);
-    applyLookedUpFlags(allRows);
+
+    // decorateRow/applyDuplicateAnswerFlags/applyLookedUpFlags are the
+    // only per-row/cross-row analysis this page does that
+    // projects-dashboard.html and index.html never touch at all (see
+    // /CLAUDE.md) - a throw in any of them used to abort onDataLoaded
+    // before hideLoadingIndicator()/the gate ever ran, leaving the page
+    // stuck on the spinner or sign-in gate with zero visible error. Wrap
+    // them the same way the render pass below already is, so a bad row
+    // or an edge case shows up as a readable message instead of a
+    // silent, unexplained "the dashboard just didn't load."
+    let decorateFailed = false;
+    try {
+      allRows = (result.rows || []).map(decorateRow);
+      applyDuplicateAnswerFlags(allRows);
+      applyLookedUpFlags(allRows);
+    } catch (err) {
+      console.error('Dashboard data processing failed:', err);
+      allRows = allRows || [];
+      decorateFailed = true;
+    }
 
     hideLoadingIndicator();
     document.getElementById('lesson-gate').hidden = true;
     document.getElementById('dashboard').hidden = false;
+
+    if (decorateFailed) {
+      document.getElementById('loaded-as').textContent =
+        'Something went wrong reading the submitted data - try Refresh, or reload the page.';
+      return;
+    }
+
     const activeStudents = roster.filter((s) => isActiveStatus(s.status)).length;
     const scopeNote = teacherScope ? ` - showing only ${teacherScope}'s students` : '';
     document.getElementById('loaded-as').textContent =
@@ -1123,6 +1147,12 @@
     let allSubmissions = [];
     try { allSubmissions = JSON.parse(row.submissionsLog || '[]'); } catch (e) { allSubmissions = []; }
     allSubmissions.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    // Every downstream check below assumes `key` is a real string
+    // (`.startsWith`/`.slice`/`===` against it) - a malformed or
+    // hand-edited SubmissionsLog entry missing `key` would otherwise
+    // throw here and silently abort the whole dashboard load, since this
+    // function runs before onDataLoaded's own try/catch (see there).
+    allSubmissions.forEach((s) => { s.key = String(s.key || ''); });
 
     // Seconds since the previous logged event (any type - graded answer,
     // tab view, or reached-end), attached directly onto each object in
