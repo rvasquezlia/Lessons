@@ -214,11 +214,67 @@ Verify before trusting this table stale: `grep -rhoE "lesson-auth\.js\?v=[0-9]+"
 pages were missed on the last bump).
 
 ### Backend lock scope
-`identify` and `teacher-data` never write, so they run before
-`LockService.getScriptLock()` in `doPost` — only `access-check`/
-`submission`/`teacher-reset` (which can append/update `Progress` or
-`AccessLog`) hold the lock. A plain read is never blocked behind a
-slow, unrelated write.
+`identify` and `teacher-data` never write, so they never touch
+`LockService.getScriptLock()` in `doPost` at all. A plain read is never
+blocked behind a slow, unrelated write.
+
+**Every write path locks only its own critical section, not its whole
+handler.** `LockService.getScriptLock()` is **script-wide** — every
+simultaneous execution, for every student, every activity, every
+classroom, shares the exact same lock — and `access-check` alone runs on
+every single page load/navigation site-wide. An earlier version wrapped
+`doPost`'s entire `access-check`/`submission`/`project-state-save`/
+`teacher-*` dispatch block in one `lock.waitLock(10000)` acquired up
+front, which meant a single student's slow multi-sheet-scan request
+(`checkAccess_`'s `Roster`+`ActivityCatalog` scan, `Progress`'s
+find-or-create, `Pairs`/`ProjectState` lookups, and for a paired
+activity, a fresh `Roster`+`ActivityCatalog` scan **per teammate** in
+`mirrorSubmissionToPartner_`) held that global lock for its entire
+duration — routinely queuing every other student's unrelated
+`access-check`/`submission` behind it. This was the real cause of a
+site-wide symptom that looked like general slowness rather than one
+page's bug: slow sign-in, latency moving from page to page (every
+navigation fires `access-check`), intermittent `waitLock` timeouts under
+real classroom load, and `proceedWithToken`'s 15s-then-25s retry
+sequence (§2 above) turning a merely-queued request into a
+long-spinning "looooong circling" loading indicator.
+
+Each of the following now acquires and releases the lock itself, only
+around the specific read-modify-write that actually needs mutual
+exclusion, and returns it immediately after: `getOrCreateProgressRow_`
+(only on its create-a-new-row path — the common case, an already-
+existing row, is a **plain lock-free read**, since the vast majority of
+`access-check` calls are a return visit to a page already opened, not a
+first visit), `recordSubmission_`, `saveProjectState_`, `unpair_`,
+`applyTeacherReset_`, `applyTeacherReview_`, and `logAccess_` (a denial
+`appendRow`, previously also inside the old outer lock). Every other
+read these handlers do — `checkAccess_`'s `Roster`/`ActivityCatalog`
+lookup, `getPairing_`/`getPairingWithPartnerName_`, `getProjectState_` —
+now runs completely lock-free, since a plain read never needed mutual
+exclusion with anything. **Rule**: never reintroduce one shared lock
+wrapping a whole `doPost` dispatch block or a whole request handler
+again — acquire the lock inside the specific function doing the actual
+read-modify-write, hold it for as little code as possible, and release
+it before returning.
+
+**`mirrorSubmissionToPartner_` no longer re-derives `activityTitle`** via
+its own fresh `ActivityCatalog` scan — the caller (`submission`'s
+handler in `doPost`) now passes through `access.activityTitle`, the
+driver's own already-resolved value, which is identical for every
+teammate since it's a property of the activity, not the student. This
+was the single most expensive part of a paired-activity submission
+(§18) — a full `ActivityCatalog` scan **per teammate**, on every answer,
+for every team using Eco-Garden/Ethical-Auditor/Youth-Festival-
+Logistics/Ethical-Linear-Budgeting — and was previously paid inside the
+old global lock on every single submission.
+
+**Redeploy required, cannot be pushed live from here.** Claude cannot
+edit the live Apps Script deployment (see §1) — this file
+(`automation/apps-script/Code.gs`) is the source of truth, but taking
+effect requires a human to paste its full contents into the Apps Script
+editor and Deploy → Manage deployments → edit the existing deployment →
+New version (keeps the `/exec` URL stable). Until that redeploy happens,
+the live backend still runs the old, single-global-lock version.
 
 ---
 

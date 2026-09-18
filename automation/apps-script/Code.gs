@@ -70,9 +70,21 @@ function isActiveStatus_(status) {
   return String(status || '').trim().toLowerCase() === 'active';
 }
 
+// Locked tightly around just the append - checkAccess_ (this function's
+// only caller) now runs lock-free otherwise (see doPost's locking
+// comment), and two simultaneous denials appendRow-ing at once can
+// otherwise land on the same "next empty row" and clobber each other.
+// Denials are rare (see the big comment on checkAccess_ below), so this
+// never becomes a contention point of its own.
 function logAccess_(email, activityId, studentGrade, requiredGrade, result, reason) {
-  const sheet = ss_().getSheetByName('AccessLog');
-  sheet.appendRow([new Date(), email, activityId, studentGrade, requiredGrade, result, reason]);
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const sheet = ss_().getSheetByName('AccessLog');
+    sheet.appendRow([new Date(), email, activityId, studentGrade, requiredGrade, result, reason]);
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 // Pure access computation - no logging here. Verified email must be on
@@ -248,7 +260,16 @@ function getPairingWithPartnerName_(email, activityId) {
 // same account the next time the partner signs in themselves - see the
 // normalizeEmail_ comparison now used in both of those functions' own
 // row-lookups for the other half of this fix.
-function mirrorSubmissionToPartner_(partnerEmail, activityId, item) {
+// activityTitle is passed in by the caller (the driver's own already-
+// resolved access.activityTitle - identical for every teammate, since
+// it's a property of the activity, not the student) rather than
+// re-derived here via a fresh ActivityCatalog scan per teammate. On a
+// team of 3+, that used to mean a full ActivityCatalog scan (plus the
+// Roster scan still needed below) for every single teammate, on every
+// single submission, all while the old shared script-wide lock was held -
+// the most expensive part of the "paired activity submission" path (see
+// doPost's locking comment).
+function mirrorSubmissionToPartner_(partnerEmail, activityId, activityTitle, item) {
   const roster = ss_().getSheetByName('Roster');
   const rMap = colMap_(roster);
   const partnerRow = findRowByEmail_(roster, rMap['Email'], partnerEmail);
@@ -258,10 +279,6 @@ function mirrorSubmissionToPartner_(partnerEmail, activityId, item) {
     grade: partnerRow.row[rMap['Grade']],
     teacher: partnerRow.row[rMap['Teacher']]
   };
-  const catalog = ss_().getSheetByName('ActivityCatalog');
-  const cMap = colMap_(catalog);
-  const activityRow = findRow_(catalog, cMap['ActivityId'], activityId);
-  const activityTitle = activityRow ? activityRow.row[cMap['Title']] : '';
   recordSubmission_(normalizeEmail_(partnerEmail), activityId, partnerStudent, activityTitle, item);
 }
 
@@ -284,25 +301,34 @@ function getProjectState_(email, activityId) {
   return '';
 }
 
+// Locked tightly around the actual upsert only - two concurrent saves for
+// the same (student, activity) could otherwise both scan, find no
+// existing row, and appendRow a duplicate.
 function saveProjectState_(email, activityId, stateJson) {
   const sheet = ss_().getSheetByName('ProjectState');
   if (!sheet) return;
   const map = colMap_(sheet);
-  const data = sheet.getDataRange().getValues();
-  const now = new Date();
-  for (let r = 1; r < data.length; r++) {
-    if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(email) && data[r][map['ActivityId']] === activityId) {
-      sheet.getRange(r + 1, map['StateJSON'] + 1).setValue(stateJson);
-      sheet.getRange(r + 1, map['UpdatedAt'] + 1).setValue(now);
-      return;
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const data = sheet.getDataRange().getValues();
+    const now = new Date();
+    for (let r = 1; r < data.length; r++) {
+      if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(email) && data[r][map['ActivityId']] === activityId) {
+        sheet.getRange(r + 1, map['StateJSON'] + 1).setValue(stateJson);
+        sheet.getRange(r + 1, map['UpdatedAt'] + 1).setValue(now);
+        return;
+      }
     }
+    const newRow = [];
+    newRow[map['Email']] = email;
+    newRow[map['ActivityId']] = activityId;
+    newRow[map['StateJSON']] = stateJson;
+    newRow[map['UpdatedAt']] = now;
+    sheet.appendRow(newRow);
+  } finally {
+    lock.releaseLock();
   }
-  const newRow = [];
-  newRow[map['Email']] = email;
-  newRow[map['ActivityId']] = activityId;
-  newRow[map['StateJSON']] = stateJson;
-  newRow[map['UpdatedAt']] = now;
-  sheet.appendRow(newRow);
 }
 
 // Teacher-initiated: removes this student from a pairing, so it stops
@@ -321,41 +347,51 @@ function saveProjectState_(email, activityId, stateJson) {
 //    since each side's own row references the other directly; leaving
 //    one behind would dangle a reference to a partner who's no longer
 //    actually paired.
+// Locked around the whole scan+delete - a teacher clicking this is rare
+// (never a contention source), but deleteRow shifts every later row
+// number, so a concurrent read/write against this same sheet mid-delete
+// could otherwise target the wrong row.
 function unpair_(studentEmail, activityId) {
   const sheet = ss_().getSheetByName('Pairs');
   if (!sheet) return { ok: false, error: 'No Pairs tab found' };
   const map = colMap_(sheet);
-  const data = sheet.getDataRange().getValues();
-  let studentRowNum = -1;
-  let teamId = '';
-  let partnerEmail = null;
-  for (let r = 1; r < data.length; r++) {
-    if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(studentEmail) && data[r][map['ActivityId']] === activityId) {
-      studentRowNum = r + 1;
-      teamId = map['TeamId'] !== undefined ? String(data[r][map['TeamId']] || '') : '';
-      partnerEmail = data[r][map['PartnerEmail']];
-      break;
-    }
-  }
-  if (studentRowNum === -1) return { ok: false, error: 'No pairing found for that student/activity' };
-
-  if (teamId) {
-    sheet.deleteRow(studentRowNum);
-    return { ok: true, unpaired: 1 };
-  }
-
-  const rowsToDelete = [studentRowNum];
-  if (partnerEmail) {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const data = sheet.getDataRange().getValues();
+    let studentRowNum = -1;
+    let teamId = '';
+    let partnerEmail = null;
     for (let r = 1; r < data.length; r++) {
-      if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(partnerEmail) && data[r][map['ActivityId']] === activityId) {
-        rowsToDelete.push(r + 1);
+      if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(studentEmail) && data[r][map['ActivityId']] === activityId) {
+        studentRowNum = r + 1;
+        teamId = map['TeamId'] !== undefined ? String(data[r][map['TeamId']] || '') : '';
+        partnerEmail = data[r][map['PartnerEmail']];
+        break;
       }
     }
+    if (studentRowNum === -1) return { ok: false, error: 'No pairing found for that student/activity' };
+
+    if (teamId) {
+      sheet.deleteRow(studentRowNum);
+      return { ok: true, unpaired: 1 };
+    }
+
+    const rowsToDelete = [studentRowNum];
+    if (partnerEmail) {
+      for (let r = 1; r < data.length; r++) {
+        if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(partnerEmail) && data[r][map['ActivityId']] === activityId) {
+          rowsToDelete.push(r + 1);
+        }
+      }
+    }
+    // Delete from bottom to top so earlier row numbers in the list don't
+    // shift out from under the later deletions.
+    rowsToDelete.sort((a, b) => b - a).forEach((rowNum) => sheet.deleteRow(rowNum));
+    return { ok: true, unpaired: rowsToDelete.length };
+  } finally {
+    lock.releaseLock();
   }
-  // Delete from bottom to top so earlier row numbers in the list don't
-  // shift out from under the later deletions.
-  rowsToDelete.sort((a, b) => b - a).forEach((rowNum) => sheet.deleteRow(rowNum));
-  return { ok: true, unpaired: rowsToDelete.length };
 }
 
 function getPairsForDashboard_(emailSet) {
@@ -417,12 +453,30 @@ function computeFlag_(row) {
 // Token verification is a network call to Google - it doesn't touch the
 // Sheet at all, so it happens before any lock is acquired. Same for
 // identify/teacher-data below: neither ever writes, so they never wait on
-// the lock that access-check/submission need for their writes. Every
-// request used to share one lock regardless of type, which meant a
-// simple read (e.g. index.html's identify, fired on every page load)
-// could sit blocked behind a slow write from a completely unrelated
-// request - a real source of the "sometimes fast, sometimes times out"
-// inconsistency.
+// a lock at all. Every request used to share one lock regardless of type,
+// which meant a simple read (e.g. index.html's identify, fired on every
+// page load) could sit blocked behind a slow write from a completely
+// unrelated request - a real source of the "sometimes fast, sometimes
+// times out" inconsistency.
+//
+// access-check/submission/project-state-save/teacher-* below no longer
+// wrap their ENTIRE handler in one shared LockService.getScriptLock() -
+// that lock is script-wide (every simultaneous execution, for every
+// student, every activity, every classroom, all share the exact same
+// lock), and access-check alone runs on every single page load/
+// navigation site-wide. Holding it across every Roster/ActivityCatalog/
+// Pairs/ProjectState read plus the Progress lookup meant one student's
+// slow multi-sheet-scan request routinely blocked every other student's
+// unrelated request behind it - the real cause of "slow sign-in" and
+// "latency moving from page to page" (see /CLAUDE.md's §2 note on this).
+// Each write path below now acquires the lock itself, only around the
+// specific read-modify-write that actually needs mutual exclusion
+// (getOrCreateProgressRow_'s create-a-row path, recordSubmission_,
+// saveProjectState_, unpair_, applyTeacherReset_, applyTeacherReview_,
+// logAccess_) - every other read in these handlers (checkAccess_'s
+// Roster/ActivityCatalog lookup, getPairing_/getPairingWithPartnerName_,
+// getProjectState_) runs lock-free, since a plain read never needed
+// mutual exclusion in the first place.
 function doPost(e) {
   const body = JSON.parse(e.postData.contents);
   const auth = verifyIdToken_(body.idToken);
@@ -497,170 +551,198 @@ function doPost(e) {
   }
 
   // Everything below this line can write (Progress/AccessLog/Pairs/
-  // ProjectState) - only these request types hold the lock.
-  const lock = LockService.getScriptLock();
-  lock.waitLock(10000);
-  try {
-    if (body.type === 'access-check') {
-      // Teachers bypass the grade-gate entirely and never get a Progress
-      // row - they're viewing the answer key, not doing the activity.
-      // Checked before the roster lookup since a teacher's email has no
-      // reason to be in Roster (which is grade/student-specific).
-      if (isTeacher_(auth.email)) {
-        return jsonOut_({ ok: true, allowed: true, role: 'teacher', student: { name: auth.name } });
-      }
-      const access = checkAccess_(auth.email, body.activityId);
-      if (!access.allowed) return jsonOut_({ ok: true, allowed: false, reason: access.reason });
-      const progress = getOrCreateProgressRow_(auth.email, body.activityId, access.student, access.activityTitle);
-      // pairing/projectState are both undefined (dropped by JSON.stringify)
-      // for the vast majority of activities, which have no Pairs/
-      // ProjectState rows at all - every existing page's response shape is
-      // unchanged.
-      const pairing = getPairingWithPartnerName_(auth.email, body.activityId);
-      const projectState = getProjectState_(auth.email, body.activityId);
-      return jsonOut_({
-        ok: true, allowed: true, role: 'student', student: access.student, progress,
-        pairing: pairing || undefined,
-        projectState: projectState || undefined
-      });
+  // ProjectState) - each write path locks only its own critical section
+  // now (see the comment above doPost), not this whole dispatch block.
+  if (body.type === 'access-check') {
+    // Teachers bypass the grade-gate entirely and never get a Progress
+    // row - they're viewing the answer key, not doing the activity.
+    // Checked before the roster lookup since a teacher's email has no
+    // reason to be in Roster (which is grade/student-specific).
+    if (isTeacher_(auth.email)) {
+      return jsonOut_({ ok: true, allowed: true, role: 'teacher', student: { name: auth.name } });
     }
-
-    if (body.type === 'submission') {
-      const access = checkAccess_(auth.email, body.activityId);
-      if (!access.allowed) return jsonOut_({ ok: false, error: access.reason });
-      const pairing = getPairing_(auth.email, body.activityId);
-      // Defense in depth: a Navigator's own inputs are disabled client-side
-      // and never call LessonCheck.check()/.submit() in the first place,
-      // but the backend never trusts the front-end's claimed role either -
-      // same principle as every other access check in this file.
-      if (pairing && normalizeRole_(pairing.role) === 'navigator') {
-        return jsonOut_({ ok: false, error: "Your partner is driving this activity - you can only view their answers." });
-      }
-      const updated = recordSubmission_(auth.email, body.activityId, access.student, access.activityTitle, body.item);
-      if (pairing) {
-        // getTeammates_() is 1 entry for a classic pair (identical to the
-        // old pairing.partnerEmail-only mirror) or 2+ for a team - either
-        // way, every OTHER student on the team gets this item mirrored.
-        getTeammates_(auth.email, body.activityId).forEach((m) => mirrorSubmissionToPartner_(m.email, body.activityId, body.item));
-      }
-      return jsonOut_({ ok: true, progress: updated });
-    }
-
-    // Free-form app-state save (see the "Paired/team activities" block
-    // above) - mirrored to every teammate's own ProjectState row the same
-    // way a submission mirrors, and rejected from a Navigator the same way.
-    if (body.type === 'project-state-save') {
-      const access = checkAccess_(auth.email, body.activityId);
-      if (!access.allowed) return jsonOut_({ ok: false, error: access.reason });
-      const pairing = getPairing_(auth.email, body.activityId);
-      if (pairing && normalizeRole_(pairing.role) === 'navigator') {
-        return jsonOut_({ ok: false, error: "Your partner is driving this activity - you can only view their progress." });
-      }
-      saveProjectState_(normalizeEmail_(auth.email), body.activityId, body.stateJson);
-      if (pairing) {
-        getTeammates_(auth.email, body.activityId).forEach((m) => saveProjectState_(normalizeEmail_(m.email), body.activityId, body.stateJson));
-      }
-      return jsonOut_({ ok: true });
-    }
-
-    // Teacher-only, writes. Removes this one student from their pairing (a
-    // partner/teammate absent for the rest of the project, or the wrong
-    // student added to a team by mistake) so a teacher can re-pair them -
-    // see unpair_() for exactly what gets removed, which differs for a
-    // classic 2-person pair (both sides) vs. a TeamId-tagged group (only
-    // this student). Reuses the identical scoping check as teacher-reset
-    // below.
-    if (body.type === 'teacher-unpair') {
-      if (!isTeacher_(auth.email)) return jsonOut_({ ok: false, error: 'Not authorized' });
-      const scope = getTeacherScope_(auth.email);
-      const emailSet = getScopedEmailSet_(scope);
-      if (emailSet && !emailSet[body.studentEmail]) {
-        return jsonOut_({ ok: false, error: 'Not authorized for this student' });
-      }
-      const result = unpair_(body.studentEmail, body.activityId);
-      if (!result.ok) return jsonOut_({ ok: false, error: result.error });
-      return jsonOut_({ ok: true, unpaired: result.unpaired });
-    }
-
-    // Teacher-only, writes. Gives a student's locked item(s) their 2
-    // attempts back - scope is 'item' (body.target = the item's key),
-    // 'section' (body.target = the tab/section name), or 'activity' (every
-    // resettable key on this Progress row, body.target unused). See
-    // applyTeacherReset_ for what actually gets written, and /CLAUDE.md's
-    // reset-mechanism notes for the full design.
-    if (body.type === 'teacher-reset') {
-      if (!isTeacher_(auth.email)) return jsonOut_({ ok: false, error: 'Not authorized' });
-      const scope = getTeacherScope_(auth.email);
-      const emailSet = getScopedEmailSet_(scope);
-      // Same raw (non-normalized) comparison getAllProgressForDashboard_
-      // already uses for this exact emailSet - body.studentEmail comes
-      // straight from a Progress row's own Email cell round-tripped
-      // through the dashboard, so it's already in the same spelling.
-      if (emailSet && !emailSet[body.studentEmail]) {
-        return jsonOut_({ ok: false, error: 'Not authorized for this student' });
-      }
-      const result = applyTeacherReset_(auth.email, body.studentEmail, body.activityId, body.scope, body.target);
-      if (!result.ok) return jsonOut_({ ok: false, error: result.error });
-      return jsonOut_({ ok: true, progress: result.progress, resetCount: result.resetCount, skippedNoSection: result.skippedNoSection });
-    }
-
-    // Teacher-only, writes. Marks (or clears) a review of this activity's
-    // flags for one student - body.reviewValid is 'valid'/'invalid'/''
-    // (see applyTeacherReview_). Same scoping check as teacher-reset above.
-    if (body.type === 'teacher-review') {
-      if (!isTeacher_(auth.email)) return jsonOut_({ ok: false, error: 'Not authorized' });
-      const scope = getTeacherScope_(auth.email);
-      const emailSet = getScopedEmailSet_(scope);
-      if (emailSet && !emailSet[body.studentEmail]) {
-        return jsonOut_({ ok: false, error: 'Not authorized for this student' });
-      }
-      const result = applyTeacherReview_(auth.email, body.studentEmail, body.activityId, body.reviewValid || '');
-      if (!result.ok) return jsonOut_({ ok: false, error: result.error });
-      return jsonOut_({ ok: true, progress: result.progress });
-    }
-
-    return jsonOut_({ ok: false, error: 'Unknown request type' });
-  } finally {
-    lock.releaseLock();
+    const access = checkAccess_(auth.email, body.activityId);
+    if (!access.allowed) return jsonOut_({ ok: true, allowed: false, reason: access.reason });
+    const progress = getOrCreateProgressRow_(auth.email, body.activityId, access.student, access.activityTitle);
+    // pairing/projectState are both undefined (dropped by JSON.stringify)
+    // for the vast majority of activities, which have no Pairs/
+    // ProjectState rows at all - every existing page's response shape is
+    // unchanged.
+    const pairing = getPairingWithPartnerName_(auth.email, body.activityId);
+    const projectState = getProjectState_(auth.email, body.activityId);
+    return jsonOut_({
+      ok: true, allowed: true, role: 'student', student: access.student, progress,
+      pairing: pairing || undefined,
+      projectState: projectState || undefined
+    });
   }
+
+  if (body.type === 'submission') {
+    const access = checkAccess_(auth.email, body.activityId);
+    if (!access.allowed) return jsonOut_({ ok: false, error: access.reason });
+    const pairing = getPairing_(auth.email, body.activityId);
+    // Defense in depth: a Navigator's own inputs are disabled client-side
+    // and never call LessonCheck.check()/.submit() in the first place,
+    // but the backend never trusts the front-end's claimed role either -
+    // same principle as every other access check in this file.
+    if (pairing && normalizeRole_(pairing.role) === 'navigator') {
+      return jsonOut_({ ok: false, error: "Your partner is driving this activity - you can only view their answers." });
+    }
+    const updated = recordSubmission_(auth.email, body.activityId, access.student, access.activityTitle, body.item);
+    if (pairing) {
+      // getTeammates_() is 1 entry for a classic pair (identical to the
+      // old pairing.partnerEmail-only mirror) or 2+ for a team - either
+      // way, every OTHER student on the team gets this item mirrored.
+      // access.activityTitle is passed through instead of mirrorSubmissionToPartner_
+      // re-deriving it from a fresh ActivityCatalog scan per teammate - it's
+      // a property of the activity, not the student, so the driver's own
+      // already-resolved value is identical for every teammate.
+      getTeammates_(auth.email, body.activityId).forEach((m) => mirrorSubmissionToPartner_(m.email, body.activityId, access.activityTitle, body.item));
+    }
+    return jsonOut_({ ok: true, progress: updated });
+  }
+
+  // Free-form app-state save (see the "Paired/team activities" block
+  // above) - mirrored to every teammate's own ProjectState row the same
+  // way a submission mirrors, and rejected from a Navigator the same way.
+  if (body.type === 'project-state-save') {
+    const access = checkAccess_(auth.email, body.activityId);
+    if (!access.allowed) return jsonOut_({ ok: false, error: access.reason });
+    const pairing = getPairing_(auth.email, body.activityId);
+    if (pairing && normalizeRole_(pairing.role) === 'navigator') {
+      return jsonOut_({ ok: false, error: "Your partner is driving this activity - you can only view their progress." });
+    }
+    saveProjectState_(normalizeEmail_(auth.email), body.activityId, body.stateJson);
+    if (pairing) {
+      getTeammates_(auth.email, body.activityId).forEach((m) => saveProjectState_(normalizeEmail_(m.email), body.activityId, body.stateJson));
+    }
+    return jsonOut_({ ok: true });
+  }
+
+  // Teacher-only, writes. Removes this one student from their pairing (a
+  // partner/teammate absent for the rest of the project, or the wrong
+  // student added to a team by mistake) so a teacher can re-pair them -
+  // see unpair_() for exactly what gets removed, which differs for a
+  // classic 2-person pair (both sides) vs. a TeamId-tagged group (only
+  // this student). Reuses the identical scoping check as teacher-reset
+  // below.
+  if (body.type === 'teacher-unpair') {
+    if (!isTeacher_(auth.email)) return jsonOut_({ ok: false, error: 'Not authorized' });
+    const scope = getTeacherScope_(auth.email);
+    const emailSet = getScopedEmailSet_(scope);
+    if (emailSet && !emailSet[body.studentEmail]) {
+      return jsonOut_({ ok: false, error: 'Not authorized for this student' });
+    }
+    const result = unpair_(body.studentEmail, body.activityId);
+    if (!result.ok) return jsonOut_({ ok: false, error: result.error });
+    return jsonOut_({ ok: true, unpaired: result.unpaired });
+  }
+
+  // Teacher-only, writes. Gives a student's locked item(s) their 2
+  // attempts back - scope is 'item' (body.target = the item's key),
+  // 'section' (body.target = the tab/section name), or 'activity' (every
+  // resettable key on this Progress row, body.target unused). See
+  // applyTeacherReset_ for what actually gets written, and /CLAUDE.md's
+  // reset-mechanism notes for the full design.
+  if (body.type === 'teacher-reset') {
+    if (!isTeacher_(auth.email)) return jsonOut_({ ok: false, error: 'Not authorized' });
+    const scope = getTeacherScope_(auth.email);
+    const emailSet = getScopedEmailSet_(scope);
+    // Same raw (non-normalized) comparison getAllProgressForDashboard_
+    // already uses for this exact emailSet - body.studentEmail comes
+    // straight from a Progress row's own Email cell round-tripped
+    // through the dashboard, so it's already in the same spelling.
+    if (emailSet && !emailSet[body.studentEmail]) {
+      return jsonOut_({ ok: false, error: 'Not authorized for this student' });
+    }
+    const result = applyTeacherReset_(auth.email, body.studentEmail, body.activityId, body.scope, body.target);
+    if (!result.ok) return jsonOut_({ ok: false, error: result.error });
+    return jsonOut_({ ok: true, progress: result.progress, resetCount: result.resetCount, skippedNoSection: result.skippedNoSection });
+  }
+
+  // Teacher-only, writes. Marks (or clears) a review of this activity's
+  // flags for one student - body.reviewValid is 'valid'/'invalid'/''
+  // (see applyTeacherReview_). Same scoping check as teacher-reset above.
+  if (body.type === 'teacher-review') {
+    if (!isTeacher_(auth.email)) return jsonOut_({ ok: false, error: 'Not authorized' });
+    const scope = getTeacherScope_(auth.email);
+    const emailSet = getScopedEmailSet_(scope);
+    if (emailSet && !emailSet[body.studentEmail]) {
+      return jsonOut_({ ok: false, error: 'Not authorized for this student' });
+    }
+    const result = applyTeacherReview_(auth.email, body.studentEmail, body.activityId, body.reviewValid || '');
+    if (!result.ok) return jsonOut_({ ok: false, error: result.error });
+    return jsonOut_({ ok: true, progress: result.progress });
+  }
+
+  return jsonOut_({ ok: false, error: 'Unknown request type' });
 }
 
+// Called on EVERY access-check - i.e. every single page load/navigation,
+// site-wide - but only ever needs to actually write on a student's FIRST
+// visit to a given activity; every later visit just finds the existing
+// row. So the common case is a plain, lock-free read: only when nothing
+// is found does this fall through to acquiring the lock and re-checking
+// (another request may have created the row in the gap between the first
+// scan and acquiring the lock) before appending. This is what used to
+// hold the single shared script-wide lock unconditionally on every
+// access-check regardless of whether it was actually about to write - see
+// doPost's locking comment for why that was the main site-wide latency
+// source.
 function getOrCreateProgressRow_(email, activityId, student, activityTitle) {
   const sheet = ss_().getSheetByName('Progress');
   const map = colMap_(sheet);
-  const data = sheet.getDataRange().getValues();
-  // Normalized (not strict ===) so a mirrored write for a paired
-  // activity - whose email comes from a teacher's hand-typed
-  // Pairs.PartnerEmail cell, not from that student's own Google token -
-  // still finds the row that student's own sign-in already created. Safe
-  // to broaden for every page: this only makes matching more permissive,
-  // never less, so an existing exact-cased match still matches.
-  for (let r = 1; r < data.length; r++) {
-    if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(email) && data[r][map['ActivityId']] === activityId) {
-      return rowToProgress_(data[r], map);
+  const findExisting = () => {
+    const data = sheet.getDataRange().getValues();
+    // Normalized (not strict ===) so a mirrored write for a paired
+    // activity - whose email comes from a teacher's hand-typed
+    // Pairs.PartnerEmail cell, not from that student's own Google token -
+    // still finds the row that student's own sign-in already created. Safe
+    // to broaden for every page: this only makes matching more permissive,
+    // never less, so an existing exact-cased match still matches.
+    for (let r = 1; r < data.length; r++) {
+      if (normalizeEmail_(data[r][map['Email']]) === normalizeEmail_(email) && data[r][map['ActivityId']] === activityId) {
+        return rowToProgress_(data[r], map);
+      }
     }
+    return null;
+  };
+
+  const existing = findExisting();
+  if (existing) return existing;
+
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    // Re-check under the lock - another request may have created this
+    // exact row between the unlocked scan above and acquiring the lock.
+    const stillMissing = findExisting();
+    if (stillMissing) return stillMissing;
+
+    const now = new Date();
+    const newRow = [];
+    newRow[map['Email']] = email;
+    newRow[map['StudentName']] = student.name;
+    newRow[map['Grade']] = student.grade;
+    newRow[map['Teacher']] = student.teacher;
+    newRow[map['ActivityId']] = activityId;
+    newRow[map['ActivityTitle']] = activityTitle;
+    newRow[map['FirstStartedAt']] = now;
+    newRow[map['LastSubmittedAt']] = '';
+    newRow[map['ItemsTotal']] = 0;
+    newRow[map['ItemsAttempted']] = 0;
+    newRow[map['ItemsCorrect']] = 0;
+    newRow[map['ScorePct']] = 0;
+    newRow[map['Status']] = 'In Progress';
+    newRow[map['SubmissionsLog']] = '[]';
+    newRow[map['FlagReason']] = '';
+    newRow[map['ReviewedByTeacher']] = false;
+    newRow[map['ReviewedAt']] = '';
+    sheet.appendRow(newRow);
+    return rowToProgress_(newRow, map);
+  } finally {
+    lock.releaseLock();
   }
-  const now = new Date();
-  const newRow = [];
-  newRow[map['Email']] = email;
-  newRow[map['StudentName']] = student.name;
-  newRow[map['Grade']] = student.grade;
-  newRow[map['Teacher']] = student.teacher;
-  newRow[map['ActivityId']] = activityId;
-  newRow[map['ActivityTitle']] = activityTitle;
-  newRow[map['FirstStartedAt']] = now;
-  newRow[map['LastSubmittedAt']] = '';
-  newRow[map['ItemsTotal']] = 0;
-  newRow[map['ItemsAttempted']] = 0;
-  newRow[map['ItemsCorrect']] = 0;
-  newRow[map['ScorePct']] = 0;
-  newRow[map['Status']] = 'In Progress';
-  newRow[map['SubmissionsLog']] = '[]';
-  newRow[map['FlagReason']] = '';
-  newRow[map['ReviewedByTeacher']] = false;
-  newRow[map['ReviewedAt']] = '';
-  sheet.appendRow(newRow);
-  return rowToProgress_(newRow, map);
 }
 
 // How many times this key has already been attempted, counting only
@@ -681,6 +763,13 @@ function attemptsSinceReset_(submissions, key) {
   return count;
 }
 
+// The row-lookup scan below is a plain read and runs lock-free; only the
+// actual read-modify-write of this one row (fetch -> mutate ->
+// setValues) is wrapped in the lock, and only for as long as that takes -
+// this used to sit inside doPost's single script-wide lock for the
+// entire submission handler (including checkAccess_'s Roster/
+// ActivityCatalog scans and, for a paired activity, every teammate's own
+// mirrorSubmissionToPartner_ call) - see doPost's locking comment.
 function recordSubmission_(email, activityId, student, activityTitle, item) {
   const sheet = ss_().getSheetByName('Progress');
   const map = colMap_(sheet);
@@ -697,40 +786,46 @@ function recordSubmission_(email, activityId, student, activityTitle, item) {
     return recordSubmission_(email, activityId, student, activityTitle, item);
   }
 
-  const row = sheet.getRange(rowNumber, 1, 1, sheet.getLastColumn()).getValues()[0];
-  const submissions = JSON.parse(row[map['SubmissionsLog']] || '[]');
-  const attemptNumber = attemptsSinceReset_(submissions, item.key) + 1;
-  // item.section is sent by every LessonProgress.record() call (see
-  // lesson-auth.js's onRecord) but was never actually persisted here until
-  // now - needed so a teacher's "reset this section" action (see
-  // applyTeacherReset_) can find every key that belongs to a given tab.
-  // item.lockAfterSubmit is only ever explicitly false (LessonCheck.submit()
-  // opted this item out of locking - see lesson-shared.js/CLAUDE.md's
-  // reset-mechanism notes); anything else (undefined for every graded
-  // item and the vast majority of submit-only ones) is left off the
-  // stored entry entirely rather than writing a redundant `true` onto
-  // every single row.
-  const entry = { key: item.key, label: item.label, answer: item.answer, verdict: item.verdict, section: item.section || '', attemptNumber, timestamp: new Date().toISOString() };
-  if (item.lockAfterSubmit === false) entry.lockAfterSubmit = false;
-  submissions.push(entry);
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const row = sheet.getRange(rowNumber, 1, 1, sheet.getLastColumn()).getValues()[0];
+    const submissions = JSON.parse(row[map['SubmissionsLog']] || '[]');
+    const attemptNumber = attemptsSinceReset_(submissions, item.key) + 1;
+    // item.section is sent by every LessonProgress.record() call (see
+    // lesson-auth.js's onRecord) but was never actually persisted here until
+    // now - needed so a teacher's "reset this section" action (see
+    // applyTeacherReset_) can find every key that belongs to a given tab.
+    // item.lockAfterSubmit is only ever explicitly false (LessonCheck.submit()
+    // opted this item out of locking - see lesson-shared.js/CLAUDE.md's
+    // reset-mechanism notes); anything else (undefined for every graded
+    // item and the vast majority of submit-only ones) is left off the
+    // stored entry entirely rather than writing a redundant `true` onto
+    // every single row.
+    const entry = { key: item.key, label: item.label, answer: item.answer, verdict: item.verdict, section: item.section || '', attemptNumber, timestamp: new Date().toISOString() };
+    if (item.lockAfterSubmit === false) entry.lockAfterSubmit = false;
+    submissions.push(entry);
 
-  const uniqueKeys = {};
-  submissions.forEach((s) => { uniqueKeys[s.key] = s.verdict; });
-  const itemsAttempted = Object.keys(uniqueKeys).length;
-  const itemsCorrect = Object.values(uniqueKeys).filter((v) => v === 'correct').length;
+    const uniqueKeys = {};
+    submissions.forEach((s) => { uniqueKeys[s.key] = s.verdict; });
+    const itemsAttempted = Object.keys(uniqueKeys).length;
+    const itemsCorrect = Object.values(uniqueKeys).filter((v) => v === 'correct').length;
 
-  row[map['LastSubmittedAt']] = new Date();
-  row[map['ItemsAttempted']] = itemsAttempted;
-  row[map['ItemsCorrect']] = itemsCorrect;
-  row[map['ScorePct']] = itemsAttempted ? Math.round((itemsCorrect / itemsAttempted) * 100) : 0;
-  row[map['SubmissionsLog']] = JSON.stringify(submissions);
-  row[map['Status']] = 'In Progress';
+    row[map['LastSubmittedAt']] = new Date();
+    row[map['ItemsAttempted']] = itemsAttempted;
+    row[map['ItemsCorrect']] = itemsCorrect;
+    row[map['ScorePct']] = itemsAttempted ? Math.round((itemsCorrect / itemsAttempted) * 100) : 0;
+    row[map['SubmissionsLog']] = JSON.stringify(submissions);
+    row[map['Status']] = 'In Progress';
 
-  const asObj = rowToProgress_(row, map);
-  row[map['FlagReason']] = computeFlag_(asObj);
+    const asObj = rowToProgress_(row, map);
+    row[map['FlagReason']] = computeFlag_(asObj);
 
-  sheet.getRange(rowNumber, 1, 1, row.length).setValues([row]);
-  return rowToProgress_(row, map);
+    sheet.getRange(rowNumber, 1, 1, row.length).setValues([row]);
+    return rowToProgress_(row, map);
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 // A key logged by lesson-auth.js's own engagement/integrity tracking
@@ -767,78 +862,84 @@ function applyTeacherReset_(teacherEmail, studentEmail, activityId, scope, targe
 
   const sheet = ss_().getSheetByName('Progress');
   const map = colMap_(sheet);
-  const data = sheet.getDataRange().getValues();
-  let rowNumber = -1;
-  for (let r = 1; r < data.length; r++) {
-    if (data[r][map['Email']] === studentEmail && data[r][map['ActivityId']] === activityId) { rowNumber = r + 1; break; }
-  }
-  if (rowNumber === -1) return { ok: false, error: 'No progress found for that student/activity' };
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const data = sheet.getDataRange().getValues();
+    let rowNumber = -1;
+    for (let r = 1; r < data.length; r++) {
+      if (data[r][map['Email']] === studentEmail && data[r][map['ActivityId']] === activityId) { rowNumber = r + 1; break; }
+    }
+    if (rowNumber === -1) return { ok: false, error: 'No progress found for that student/activity' };
 
-  const row = sheet.getRange(rowNumber, 1, 1, sheet.getLastColumn()).getValues()[0];
-  const submissions = JSON.parse(row[map['SubmissionsLog']] || '[]');
+    const row = sheet.getRange(rowNumber, 1, 1, sheet.getLastColumn()).getValues()[0];
+    const submissions = JSON.parse(row[map['SubmissionsLog']] || '[]');
 
-  // Most recent entry per key, so a key already reset (nothing done since)
-  // isn't reset again, and a section reset knows which section a key's
-  // current attempt actually belongs to.
-  const latestByKey = {};
-  submissions.forEach((s) => { latestByKey[s.key] = s; });
+    // Most recent entry per key, so a key already reset (nothing done since)
+    // isn't reset again, and a section reset knows which section a key's
+    // current attempt actually belongs to.
+    const latestByKey = {};
+    submissions.forEach((s) => { latestByKey[s.key] = s; });
 
-  // A key logged before section started being persisted (see /CLAUDE.md's
-  // "section had to start being persisted server-side" note) has no
-  // `section` field at all - it can never match a section-scope target, no
-  // matter which section it actually belongs to on the page. Tracked
-  // separately so the caller can tell a teacher "N item(s) couldn't be
-  // included" instead of a section reset silently doing much less than
-  // expected with no explanation (this is exactly what was reported: a
-  // section reset that only affected the one item logged after this fix
-  // shipped, leaving every older item in that same section untouched).
-  let skippedNoSection = 0;
-  let targetKeys;
-  if (scope === 'item') {
-    targetKeys = latestByKey[target] ? [target] : [];
-  } else {
-    targetKeys = Object.keys(latestByKey).filter((key) => {
-      if (!isResettableKey_(key)) return false;
-      if (latestByKey[key].verdict === 'reset') return false;
-      if (scope === 'section') {
-        if (!latestByKey[key].section) { skippedNoSection++; return false; }
-        if (latestByKey[key].section !== target) return false;
-      }
-      return true;
+    // A key logged before section started being persisted (see /CLAUDE.md's
+    // "section had to start being persisted server-side" note) has no
+    // `section` field at all - it can never match a section-scope target, no
+    // matter which section it actually belongs to on the page. Tracked
+    // separately so the caller can tell a teacher "N item(s) couldn't be
+    // included" instead of a section reset silently doing much less than
+    // expected with no explanation (this is exactly what was reported: a
+    // section reset that only affected the one item logged after this fix
+    // shipped, leaving every older item in that same section untouched).
+    let skippedNoSection = 0;
+    let targetKeys;
+    if (scope === 'item') {
+      targetKeys = latestByKey[target] ? [target] : [];
+    } else {
+      targetKeys = Object.keys(latestByKey).filter((key) => {
+        if (!isResettableKey_(key)) return false;
+        if (latestByKey[key].verdict === 'reset') return false;
+        if (scope === 'section') {
+          if (!latestByKey[key].section) { skippedNoSection++; return false; }
+          if (latestByKey[key].section !== target) return false;
+        }
+        return true;
+      });
+    }
+    if (scope === 'item') targetKeys = targetKeys.filter((key) => latestByKey[key].verdict !== 'reset');
+    if (!targetKeys.length) {
+      return {
+        ok: false,
+        error: skippedNoSection
+          ? `Nothing to reset - the ${skippedNoSection} item(s) logged for this activity have no recorded section (they predate section tracking). Use "Reset entire activity" instead.`
+          : 'Nothing to reset - no prior attempts found for that item/section.'
+      };
+    }
+
+    const now = new Date().toISOString();
+    targetKeys.forEach((key) => {
+      submissions.push({
+        // The item's own real label (not a generic "Reset by teacher (item)"
+        // string) - keeps the Item column consistent with every other row
+        // for this key, since the dashboard's Verdict pill (`reset (<scope>)`)
+        // already says what happened; repeating the scope in both columns
+        // read as redundant/confusing (see /CLAUDE.md's reset-mechanism notes).
+        key,
+        label: latestByKey[key].label || key,
+        answer: '',
+        verdict: 'reset',
+        section: latestByKey[key].section || '',
+        resetScope: scope,
+        resetBy: teacherEmail,
+        timestamp: now
+      });
     });
-  }
-  if (scope === 'item') targetKeys = targetKeys.filter((key) => latestByKey[key].verdict !== 'reset');
-  if (!targetKeys.length) {
-    return {
-      ok: false,
-      error: skippedNoSection
-        ? `Nothing to reset - the ${skippedNoSection} item(s) logged for this activity have no recorded section (they predate section tracking). Use "Reset entire activity" instead.`
-        : 'Nothing to reset - no prior attempts found for that item/section.'
-    };
-  }
 
-  const now = new Date().toISOString();
-  targetKeys.forEach((key) => {
-    submissions.push({
-      // The item's own real label (not a generic "Reset by teacher (item)"
-      // string) - keeps the Item column consistent with every other row
-      // for this key, since the dashboard's Verdict pill (`reset (<scope>)`)
-      // already says what happened; repeating the scope in both columns
-      // read as redundant/confusing (see /CLAUDE.md's reset-mechanism notes).
-      key,
-      label: latestByKey[key].label || key,
-      answer: '',
-      verdict: 'reset',
-      section: latestByKey[key].section || '',
-      resetScope: scope,
-      resetBy: teacherEmail,
-      timestamp: now
-    });
-  });
-
-  row[map['SubmissionsLog']] = JSON.stringify(submissions);
-  sheet.getRange(rowNumber, 1, 1, row.length).setValues([row]);
-  return { ok: true, progress: rowToDashboardRow_(row, map), resetCount: targetKeys.length, skippedNoSection };
+    row[map['SubmissionsLog']] = JSON.stringify(submissions);
+    sheet.getRange(rowNumber, 1, 1, row.length).setValues([row]);
+    return { ok: true, progress: rowToDashboardRow_(row, map), resetCount: targetKeys.length, skippedNoSection };
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 // Marks (or clears) a teacher's own review of an activity's flags, on the
@@ -855,19 +956,25 @@ function applyTeacherReview_(teacherEmail, studentEmail, activityId, reviewValid
   }
   const sheet = ss_().getSheetByName('Progress');
   const map = colMap_(sheet);
-  const data = sheet.getDataRange().getValues();
-  let rowNumber = -1;
-  for (let r = 1; r < data.length; r++) {
-    if (data[r][map['Email']] === studentEmail && data[r][map['ActivityId']] === activityId) { rowNumber = r + 1; break; }
-  }
-  if (rowNumber === -1) return { ok: false, error: 'No progress found for that student/activity' };
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const data = sheet.getDataRange().getValues();
+    let rowNumber = -1;
+    for (let r = 1; r < data.length; r++) {
+      if (data[r][map['Email']] === studentEmail && data[r][map['ActivityId']] === activityId) { rowNumber = r + 1; break; }
+    }
+    if (rowNumber === -1) return { ok: false, error: 'No progress found for that student/activity' };
 
-  const row = sheet.getRange(rowNumber, 1, 1, sheet.getLastColumn()).getValues()[0];
-  row[map['ReviewedByTeacher']] = !!reviewValid;
-  row[map['ReviewedAt']] = reviewValid ? new Date().toISOString() : '';
-  if (map['ReviewValid'] !== undefined) row[map['ReviewValid']] = reviewValid;
-  sheet.getRange(rowNumber, 1, 1, row.length).setValues([row]);
-  return { ok: true, progress: rowToDashboardRow_(row, map) };
+    const row = sheet.getRange(rowNumber, 1, 1, sheet.getLastColumn()).getValues()[0];
+    row[map['ReviewedByTeacher']] = !!reviewValid;
+    row[map['ReviewedAt']] = reviewValid ? new Date().toISOString() : '';
+    if (map['ReviewValid'] !== undefined) row[map['ReviewValid']] = reviewValid;
+    sheet.getRange(rowNumber, 1, 1, row.length).setValues([row]);
+    return { ok: true, progress: rowToDashboardRow_(row, map) };
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 function rowToProgress_(row, map) {
