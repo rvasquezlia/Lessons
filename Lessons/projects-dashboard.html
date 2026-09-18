@@ -402,6 +402,10 @@
     let allSubmissions = [];
     try { allSubmissions = JSON.parse(row.submissionsLog || '[]'); } catch (e) { allSubmissions = []; }
     allSubmissions.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    // Kept in sync with teacher-dashboard.html's identical guard - a
+    // malformed/hand-edited SubmissionsLog entry missing `key` would
+    // otherwise throw on the `.startsWith` calls below.
+    allSubmissions.forEach((s) => { s.key = String(s.key || ''); });
     const isIntegrityKey = (key) => key.startsWith('paste-') || key.startsWith('focus-lost-') || key.startsWith('focus-back-') || key.startsWith('rightclick-');
     const submissions = allSubmissions.filter((s) => !s.key.startsWith('tab-') && s.key !== 'reached-end' && !isIntegrityKey(s.key));
     return Object.assign({}, row, { submissions });
@@ -888,16 +892,34 @@
   }
 
   function onDataLoaded(result) {
-    allRows = (result.rows || []).map(decorateProjectRow);
     roster = result.roster || [];
     activityCatalog = result.activityCatalog || [];
     teacherScope = result.scope || null;
     allProjectStates = result.projectStates || [];
     allPairs = result.pairs || [];
 
+    // Kept in sync with teacher-dashboard.html's identical guard - a
+    // throw while decorating rows used to abort onDataLoaded before
+    // hideLoadingIndicator()/the gate ever ran.
+    let decorateFailed = false;
+    try {
+      allRows = (result.rows || []).map(decorateProjectRow);
+    } catch (err) {
+      console.error('Projects dashboard data processing failed:', err);
+      allRows = allRows || [];
+      decorateFailed = true;
+    }
+
     hideLoadingIndicator();
     document.getElementById('lesson-gate').hidden = true;
     document.getElementById('dashboard').hidden = false;
+
+    if (decorateFailed) {
+      document.getElementById('loaded-as').textContent =
+        'Something went wrong reading the submitted data - try Refresh, or reload the page.';
+      return;
+    }
+
     const activeStudents = roster.filter((s) => isActiveStatus(s.status)).length;
     const scopeNote = teacherScope ? ` - showing only ${teacherScope}'s students` : '';
     document.getElementById('loaded-as').textContent = `${activeStudents} active students${scopeNote}.`;
