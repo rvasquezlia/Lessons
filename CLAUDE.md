@@ -179,7 +179,26 @@ directly instead.
 `onload` never fires (network filter, ad blocker). `onDataLoaded()`'s
 `populateFilters()`/`renderAll()` call (dashboard) is wrapped in
 try/catch the same way, so a render bug surfaces as a visible message
-instead of a silent partial render or a stuck spinner.
+instead of a silent partial render or a stuck spinner. **A second,
+earlier try/catch wraps `decorateRow`/`applyDuplicateAnswerFlags`/
+`applyLookedUpFlags`** (`teacher-dashboard.html`) and `decorateProjectRow`
+(`projects-dashboard.html`) too — these run *before*
+`hideLoadingIndicator()`/the gate-hiding lines, so without their own
+guard a throw there (not just in the render pass) would leave the page
+stuck on the spinner or gate with no visible error at all. **Why:**
+`teacher-dashboard.html` is the only page doing this per-row/cross-row
+analysis at all — `projects-dashboard.html` skips the two cross-row
+passes (`decorateProjectRow` is deliberately lighter, no integrity
+engine — see §18), and `index.html` never touches `Progress`/
+`SubmissionsLog` data in the first place (its own `identify` payload
+is just email/role/grade) — so this exact failure mode was only ever
+reachable from the teacher dashboard, which is why it was the one page
+that would intermittently "just not load" while the other two never
+did. `decorateRow`/`decorateProjectRow` also normalize every parsed
+submission's `key` to a string right after parsing
+(`String(s.key || '')`) — every downstream check calls
+`.startsWith()`/`.slice()`/`===` on it, and a legacy or hand-edited
+`SubmissionsLog` entry missing `key` used to throw exactly there.
 
 ### Cache-busting
 Every page references `token-cache.js`/`lesson-auth.js` with a `?v=`
