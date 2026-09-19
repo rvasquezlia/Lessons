@@ -268,13 +268,13 @@ for every team using Eco-Garden/Ethical-Auditor/Youth-Festival-
 Logistics/Ethical-Linear-Budgeting — and was previously paid inside the
 old global lock on every single submission.
 
-**Redeploy required, cannot be pushed live from here.** Claude cannot
-edit the live Apps Script deployment (see §1) — this file
-(`automation/apps-script/Code.gs`) is the source of truth, but taking
-effect requires a human to paste its full contents into the Apps Script
-editor and Deploy → Manage deployments → edit the existing deployment →
-New version (keeps the `/exec` URL stable). Until that redeploy happens,
-the live backend still runs the old, single-global-lock version.
+**Deployed and live.** This narrowed, per-critical-section locking is
+the version currently running in production. Claude cannot edit the
+live Apps Script deployment directly (see §1) — `automation/apps-
+script/Code.gs` in this repo is the source of truth, and any future
+edit to it takes effect only once a human pastes its full contents into
+the Apps Script editor and Deploy → Manage deployments → edit the
+existing deployment → New version (keeps the `/exec` URL stable).
 
 ---
 
