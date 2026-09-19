@@ -2665,7 +2665,25 @@ pairing is completely unaffected)
     (every field optional — `StateJSON`'s shape is whatever that
     specific project's own `buildStatePayload()` produces, never
     standardized across projects), plus an **"Open & download real
-    files"** button (see below) next to the text summary.
+    files"** button (see below) next to the text summary. The
+    Deliverables table's 3rd column, `studentAttemptSummaryHtml(row,
+    itemCount)`, is that same row's own **individual** completion/avg-
+    attempts — added because the "Attempts to reach the answer" card
+    above the table (`computeAttemptInsights`) only ever showed a
+    whole-activity average, with no per-student breakdown short of
+    opening that student's full detail view. `itemCount` (also a new
+    field on `computeAttemptInsights`'s return) is the distinct count of
+    unlimited-attempt items seen across *every* student on the activity
+    (there's no fixed item-catalog count anywhere in `Code.gs`/`Progress`
+    to read instead — same empirical `byItem`-keying `computeAttemptInsights`
+    already used), passed in as the shared denominator so every student's
+    "N/M items" reads against the same M. `attemptSummaryForRow(row)` is
+    the per-row counterpart of `computeAttemptInsights` — same
+    `lastEntriesByKey`/`parseAttemptCount` filtering, one row instead of
+    every row. Kept in sync between `teacher-dashboard.html`'s Project
+    Insights panel and `projects-dashboard.html`'s own per-project
+    Deliverables `<details>` table, same pattern as every other duplicated
+    function in this section.
 
 **Getting a student's actual, full-resolution deliverable (not a
 stored copy).** The certificate/badge/garden/sign/flyer/infographic a
