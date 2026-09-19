@@ -533,15 +533,38 @@
 
   function computeAttemptInsights(rows) {
     let totalAttempts = 0, solvedCount = 0;
+    const itemKeys = new Set();
     rows.forEach((r) => {
       lastEntriesByKey(r).forEach((s) => {
         const n = parseAttemptCount(s.answer);
         if (n === null) return;
         totalAttempts += n;
         solvedCount++;
+        itemKeys.add(`${s.key}|${s.label}`);
       });
     });
-    return { totalAttempts, solvedCount, avgAttemptsOverall: solvedCount ? Math.round((totalAttempts / solvedCount) * 10) / 10 : null };
+    // itemKeys.size - distinct unlimited-attempt items seen across every
+    // student on this activity - is the denominator for one student's own
+    // completion fraction (attemptSummaryForRow() below); kept in sync
+    // with teacher-dashboard.html's identical itemCount field.
+    return { totalAttempts, solvedCount, avgAttemptsOverall: solvedCount ? Math.round((totalAttempts / solvedCount) * 10) / 10 : null, itemCount: itemKeys.size };
+  }
+
+  // Per-student version of computeAttemptInsights() above - kept in sync
+  // with teacher-dashboard.html's identical copy. itemCount is the whole
+  // activity's own computeAttemptInsights(a.rows).itemCount, so every
+  // student's "N/M items" reads against the same shared denominator.
+  function attemptSummaryForRow(row) {
+    const solved = lastEntriesByKey(row).map((s) => parseAttemptCount(s.answer)).filter((n) => n !== null);
+    return {
+      solvedCount: solved.length,
+      avgAttempts: solved.length ? Math.round((solved.reduce((a, b) => a + b, 0) / solved.length) * 10) / 10 : null
+    };
+  }
+  function studentAttemptSummaryHtml(row, itemCount) {
+    const s = attemptSummaryForRow(row);
+    const completion = itemCount ? `${s.solvedCount}/${itemCount} items` : (s.solvedCount ? `${s.solvedCount} item${s.solvedCount === 1 ? '' : 's'}` : 'Not started');
+    return `<strong>Completion:</strong> ${completion}<br><strong>Avg attempts:</strong> ${s.avgAttempts === null ? '-' : s.avgAttempts}`;
   }
 
   // Pairing lookups - kept in sync with teacher-dashboard.html's own
@@ -828,7 +851,7 @@
     const deliverableRows = a.rows
       .slice()
       .sort((x, y) => x.studentName.localeCompare(y.studentName))
-      .map((r) => `<tr><td>${r.studentName}</td><td>${deliverableSummaryHtml(r.email, a.activityId)}</td></tr>`)
+      .map((r) => `<tr><td>${r.studentName}</td><td>${deliverableSummaryHtml(r.email, a.activityId)}</td><td>${studentAttemptSummaryHtml(r, attempts.itemCount)}</td></tr>`)
       .join('');
     return `
       <div class="project-card">
@@ -846,7 +869,7 @@
           ${startedCount ? `
             <button class="btn-refresh" style="padding:5px 12px; font-size:0.78rem; margin-bottom:8px;" onclick="downloadAllCertificatesForActivity('${a.activityId}')">Download all certificates</button>
             <table class="deliverables-table">
-              <thead><tr><th>Student</th><th>What they built</th></tr></thead>
+              <thead><tr><th>Student</th><th>What they built</th><th>Completion</th></tr></thead>
               <tbody>${deliverableRows}</tbody>
             </table>` : '<p class="empty-note">No student has started this project yet.</p>'}
         </details>

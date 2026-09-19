@@ -2692,8 +2692,33 @@
       totalAttempts,
       solvedCount,
       avgAttemptsOverall: solvedCount ? Math.round((totalAttempts / solvedCount) * 10) / 10 : null,
-      topItems: items.slice(0, 5)
+      topItems: items.slice(0, 5),
+      // Distinct unlimited-attempt items seen across every student on this
+      // activity - the denominator for one student's own completion
+      // fraction below (there's no fixed item-catalog count anywhere in
+      // Code.gs/Progress to read instead; this is derived the same
+      // empirical way byItem itself is).
+      itemCount: items.length
     };
+  }
+
+  // The per-student version of computeAttemptInsights() above - that
+  // function only ever reported a whole-activity average, with no way to
+  // see one student's own completion/attempts without opening their full
+  // detail view. `itemCount` is computeAttemptInsights(a.rows).itemCount
+  // (the group total), so "3/5 items" reads against the same denominator
+  // every student on this activity shares.
+  function attemptSummaryForRow(row) {
+    const solved = lastEntriesByKey(row).map((s) => parseAttemptCount(s.answer)).filter((n) => n !== null);
+    return {
+      solvedCount: solved.length,
+      avgAttempts: solved.length ? Math.round((solved.reduce((a, b) => a + b, 0) / solved.length) * 10) / 10 : null
+    };
+  }
+  function studentAttemptSummaryHtml(row, itemCount) {
+    const s = attemptSummaryForRow(row);
+    const completion = itemCount ? `${s.solvedCount}/${itemCount} items` : (s.solvedCount ? `${s.solvedCount} item${s.solvedCount === 1 ? '' : 's'}` : 'Not started');
+    return `<strong>Completion:</strong> ${completion}<br><strong>Avg attempts:</strong> ${s.avgAttempts === null ? '-' : s.avgAttempts}`;
   }
 
   // `activityId` is optional - pass it only when the caller wants a
@@ -2914,8 +2939,8 @@
           <h3 style="margin:0;">Deliverables</h3>
           <button class="btn-lg" style="padding:6px 14px; font-size:0.82rem;" onclick="downloadAllCertificatesForActivity('${a.activityId}')">Download all certificates</button>
         </div>
-        <table><thead><tr><th>Student</th><th>What they built</th></tr></thead><tbody>
-          ${a.rows.map((r) => `<tr><td class="row-label">${r.studentName}</td><td>${deliverableSummaryHtml(r.email, a.activityId)}</td></tr>`).join('')}
+        <table><thead><tr><th>Student</th><th>What they built</th><th>Completion</th></tr></thead><tbody>
+          ${a.rows.map((r) => `<tr><td class="row-label">${r.studentName}</td><td>${deliverableSummaryHtml(r.email, a.activityId)}</td><td>${studentAttemptSummaryHtml(r, attempts.itemCount)}</td></tr>`).join('')}
         </tbody></table>
       </div>`;
     return attemptsCard + pillarsCard + deliverablesCard;
